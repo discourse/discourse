@@ -1768,7 +1768,6 @@ te:
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         silence_reason: "కారణం"
-        delete_all_posts: "అన్ని టపాలూ తొలగించు"
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
         suspended: "సస్పెండయ్యాడా? "
@@ -1803,6 +1802,10 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
+        delete_posts:
+          button: "అన్ని టపాలూ తొలగించు"
+          confirmation:
+            cancel: "రద్దుచేయి"
         merge:
           prompt:
             cancel: "రద్దుచేయి"

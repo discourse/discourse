@@ -1057,7 +1057,13 @@ gl:
         latest: "Últimos"
         sent: "Enviadas"
         unread: "Sen ler"
+        unread_with_count:
+          one: "(%{count}) pendente de ler"
+          other: "(%{count}) pendente de ler"
         new: "Novo"
+        new_with_count:
+          one: "(%{count}) novo"
+          other: "(%{count}) novo"
         archive: "Arquivo"
         groups: "Os meus grupos"
         move_to_inbox: "Mover á caixa de entrada"
@@ -4383,8 +4389,6 @@ gl:
         silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
-        delete_all_posts: "Eliminar todas as publicacións"
-        delete_posts_progress: "Eliminando publicacións..."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
         post_edits: "Edicións publicadas"
         penalty_post_actions: "Que quere facer coa publicación asociada?"
@@ -4447,8 +4451,12 @@ gl:
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
         delete_posts:
+          button: "Eliminar todas as publicacións"
           progress:
             title: "Progreso na eliminación de publicacións"
+            description: "Eliminando publicacións..."
+          confirmation:
+            cancel: "Cancelar"
         merge:
           button: "Combinar"
           prompt:
@@ -4843,7 +4851,5 @@ gl:
           moderator: "Moderador"
           regular: "Usuario normal"
       previews:
-        topic_title: "Tema de discusión"
-        font_title: "Tipo de letra %{font}"
         share_button: "Compartir"
         reply_button: "Responder"

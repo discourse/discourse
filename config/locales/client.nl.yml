@@ -965,6 +965,7 @@ nl:
         Begin een bladwijzer te maken voor berichten met de %{icon} knop en ze worden hier weergegeven voor gemakkelijke referentie. U kunt ook een herinnering plannen!
       no_bookmarks_search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       no_notifications_title: "U hebt nog geen meldingen"
+      no_notifications_page_title: "U hebt nog geen meldingen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
       skip_new_user_tips:
@@ -1070,7 +1071,13 @@ nl:
         latest: "Nieuwste"
         sent: "Verzonden"
         unread: "Ongelezen"
+        unread_with_count:
+          one: "Ongelezen (%{count})"
+          other: "Ongelezen (%{count})"
         new: "Nieuw"
+        new_with_count:
+          one: "Nieuw (%{count})"
+          other: "Nieuw (%{count})"
         archive: "Archief"
         groups: "Mijn groepen"
         move_to_inbox: "Verplaatsen naar Postvak IN"
@@ -4431,8 +4438,6 @@ nl:
         silence_message_placeholder: "(laat leeg om standaardbericht te sturen)"
         suspended_until: "(tot %{until})"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
-        delete_all_posts: "Alle berichten verwijderen"
-        delete_posts_progress: "Berichten verwijderen..."
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
         post_edits: "Berichtbewerkingen"
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
@@ -4495,8 +4500,12 @@ nl:
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
         delete: "Gebruiker verwijderen"
         delete_posts:
+          button: "Alle berichten verwijderen"
           progress:
             title: "Voortgang van het verwijderen van berichten"
+            description: "Berichten verwijderen..."
+          confirmation:
+            cancel: "Annuleren"
         merge:
           button: "Samenvoegen"
           prompt:
@@ -4899,7 +4908,5 @@ nl:
           moderator: "Moderator"
           regular: "Vaste gebruiker"
       previews:
-        topic_title: "Discussietopic"
-        font_title: "Lettertype %{font}"
         share_button: "Delen"
         reply_button: "Antwoorden"

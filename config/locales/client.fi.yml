@@ -996,6 +996,7 @@ fi:
       no_notifications_title: "Sinulla ei ole vielä ilmoituksia"
       no_notifications_body: >
         Tässä paneelissa näytetään ilmoituksia sinulle relevantista toiminnasta, kuten omien ketjujesi viestit ja vastaukset, kun joku <b>@mainitsee</b> nimesi tai lainaa sinua, tai vastaa ketjuihin joita tarkkailet. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Napsauta painiketta %{icon}, kun haluat ilmoituksia tietystä ketjusta, alueesta tai tunnisteesta. Lisää valintoja löydät <a href='%{preferencesUrl}'>ilmoitusasetuksista</a>.
+      no_notifications_page_title: "Sinulla ei ole vielä ilmoituksia"
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se aloittaaksesi."
       dynamic_favicon: "Näytä määrät selaimen kuvakkeessa"
       skip_new_user_tips:
@@ -1102,7 +1103,13 @@ fi:
         latest: "Tuoreimmat"
         sent: "Lähetetyt"
         unread: "Lukemattomat"
+        unread_with_count:
+          one: "Lukematta (%{count})"
+          other: "Lukematta (%{count})"
         new: "Uudet"
+        new_with_count:
+          one: "Uudet (%{count})"
+          other: "Uudet (%{count})"
         archive: "Arkisto"
         groups: "Omat ryhmät"
         move_to_inbox: "Siirrä saapuneisiin"
@@ -4525,8 +4532,6 @@ fi:
         silence_message_placeholder: "(jätä tyhjäksi, jos haluat lähettää oletusviestin)"
         suspended_until: "(%{until} asti)"
         cant_suspend: "Käyttäjää ei voi hyllyttää."
-        delete_all_posts: "Poista kaikki viestit"
-        delete_posts_progress: "Poistetaan viestejä..."
         delete_posts_failed: "Viestien poistaminen epäonnistui."
         post_edits: "Viestimuokkaukset"
         penalty_post_actions: "Mitä haluat tehdä kyseiselle viestille?"
@@ -4591,8 +4596,12 @@ fi:
         anonymize_failed: "Tilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
         delete_posts:
+          button: "Poista kaikki viestit"
           progress:
             title: "Viestien poistamisen eteneminen"
+            description: "Poistetaan viestejä..."
+          confirmation:
+            cancel: "Peruuta"
         merge:
           button: "Yhdistä"
           prompt:
@@ -4996,7 +5005,5 @@ fi:
           moderator: "Valvoja"
           regular: "Tavallinen käyttäjä"
       previews:
-        topic_title: "Keskusteluketju"
-        font_title: "Fontti %{font}"
         share_button: "Jaa"
         reply_button: "Vastaa"

@@ -483,7 +483,7 @@ de:
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast mehr als %{percent}% der Antworten hier gepostet, gibt es noch jemanden, von dem du gerne hören würdest?
-    get_a_room: Du hast %{count} Mal auf @%{reply_username}geantwortet. Wusstest Du, dass Du ihnen stattdessen eine persönliche Nachricht senden kannst?
+    get_a_room: Du hast @%{reply_username} %{count} mal geantwortet, wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -3588,6 +3588,11 @@ de:
     png_to_jpg_conversion_failure_message: "Beim Konvertieren von PNG in JPG ist ein Fehler aufgetreten."
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
+    size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Abschnittes überein. %{additional_detail}"
+    create_mutlipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
+    abort_mutlipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
+    complete_mutlipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
+    external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
@@ -4399,17 +4404,34 @@ de:
           city_for_disputes:
             label: "Stadt für Rechtsstreitigkeiten"
             placeholder: "Berlin"
-      colors:
-        title: "Farben"
-      fonts:
-        title: "Schriftarten"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Farbschema"
           body_font:
             label: "Textkörper-Schriftart"
           heading_font:
             label: "Überschrift-Schriftart"
-          font_preview:
+          styling_preview:
             label: "Vorschau"
+          homepage_style:
+            label: "Homepage-Stil"
+            choices:
+              latest:
+                label: "Aktuelle Themen"
+              categories_only:
+                label: "Nur Kategorien"
+              categories_with_featured_topics:
+                label: "Kategorien mit hervorgehobenen Themen"
+              categories_and_latest_topics:
+                label: "Kategorien und aktuelle Themen"
+              categories_and_top_topics:
+                label: "Kategorien und angesagte Themen"
+              categories_boxes:
+                label: "Kategorie-Boxen"
+              categories_boxes_with_topics:
+                label: "Kategorie-Boxen mit Themen"
       logos:
         title: "Logos"
         fields:
@@ -4428,26 +4450,6 @@ de:
           large_icon:
             label: "Großes Symbol"
             description: "Symbol, um deine Website auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
-      homepage:
-        description: "Wir empfehlen, die aktuellen Themen auf deiner Startseite anzuzeigen, aber du kannst dich auch dafür entscheiden, Kategorien (Gruppen von Themen) auf der Startseite anzuzeigen, wenn dir das lieber ist."
-        title: "Homepage"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Aktuelle Themen"
-              categories_only:
-                label: "nur Kategorien"
-              categories_with_featured_topics:
-                label: "Kategorien mit hervorgehobenen Themen"
-              categories_and_latest_topics:
-                label: "Kategorien und aktuelle Themen"
-              categories_and_top_topics:
-                label: "Kategorien und angesagte Themen"
-              categories_boxes:
-                label: "Kategorie-Boxen"
-              categories_boxes_with_topics:
-                label: "Kategorie-Boxen mit Themen"
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."

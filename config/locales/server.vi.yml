@@ -1976,14 +1976,10 @@ vi:
       corporate:
         title: "Công ty"
         description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
-      colors:
-        title: "Màu sắc"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Xem trước"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

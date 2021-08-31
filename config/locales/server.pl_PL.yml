@@ -534,6 +534,7 @@ pl_PL:
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
+    get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
 
@@ -4558,17 +4559,34 @@ pl_PL:
           city_for_disputes:
             label: "Miasto dyskusji"
             placeholder: "Kalifornia, San Francisco"
-      colors:
-        title: "Kolory"
-      fonts:
-        title: "Czcionki"
+      styling:
+        title: "Stylizacja"
         fields:
+          color_scheme:
+            label: "Schemat kolorów"
           body_font:
             label: "Czcionka"
           heading_font:
             label: "Czcionka nagłówków"
-          font_preview:
+          styling_preview:
             label: "Podgląd"
+          homepage_style:
+            label: "Styl strony głównej"
+            choices:
+              latest:
+                label: "Ostatnie Tematy"
+              categories_only:
+                label: "Tylko kategorie"
+              categories_with_featured_topics:
+                label: "Kategorie z wybranymi tematami"
+              categories_and_latest_topics:
+                label: "Kategorie i ostatnie tematy"
+              categories_and_top_topics:
+                label: "Kategorie i najlepsze tematy"
+              categories_boxes:
+                label: "Bloki kategorii"
+              categories_boxes_with_topics:
+                label: "Bloki kategorii z tematami"
       logos:
         title: "Loga"
         fields:
@@ -4587,26 +4605,6 @@ pl_PL:
           large_icon:
             label: "Duża ikona"
             description: "Obraz ikony używany do reprezentowania Twojej witryny na nowoczesnych urządzeniach, który dobrze wygląda w większych rozmiarach. Idealnie większy niż 512 × 512. Domyślnie użyjemy kwadratowego logo."
-      homepage:
-        description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
-        title: "Strona Główna"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ostatnie Tematy"
-              categories_only:
-                label: "Tylko kategorie"
-              categories_with_featured_topics:
-                label: "Kategorie z wybranymi tematami"
-              categories_and_latest_topics:
-                label: "Kategorie i ostatnie tematy"
-              categories_and_top_topics:
-                label: "Kategorie i najlepsze tematy"
-              categories_boxes:
-                label: "Bloki kategorii"
-              categories_boxes_with_topics:
-                label: "Bloki kategorii z tematami"
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

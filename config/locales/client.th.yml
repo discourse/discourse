@@ -793,7 +793,11 @@ th:
         latest: "ล่าสุด"
         sent: "ส่ง"
         unread: "ยังไม่อ่าน"
+        unread_with_count:
+          other: "ยังไม่อ่าน (%{count})"
         new: "ใหม่"
+        new_with_count:
+          other: "ใหม่ (%{count})"
         archive: "คลัง"
         groups: "กลุ่มของฉัน"
         move_to_inbox: "ย้ายไปกล่องขาเข้า"
@@ -2857,8 +2861,6 @@ th:
         silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
-        delete_all_posts: "ลบโพสต์ทั้งหมด"
-        delete_posts_progress: "กำลังลบโพสต์"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"
         penalty_post_delete: "ลบโพสต์"
         penalty_post_delete_replies: "ลบโพสต์ + คำตอบ"
@@ -2883,6 +2885,12 @@ th:
         time_read: "เวลาอ่าน"
         anonymize: "ผู้ใช้ที่ไม่ระบุ"
         delete: "ลบผู้ใช้"
+        delete_posts:
+          button: "ลบโพสต์ทั้งหมด"
+          progress:
+            description: "กำลังลบโพสต์"
+          confirmation:
+            cancel: "ยกเลิก"
         merge:
           prompt:
             title: "ย้ายและลบ @%{username}"

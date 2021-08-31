@@ -998,7 +998,13 @@ ur:
         latest: "تازہ ترین"
         sent: "بھیجا جا چکا"
         unread: "بغیر پڑھے"
+        unread_with_count:
+          one: "بغیر پڑھا (%{count})"
+          other: "بغیر پڑھا (%{count})"
         new: "نیا"
+        new_with_count:
+          one: "نیا (%{count})"
+          other: "نیا (%{count})"
         archive: "آر کائیو"
         groups: "میرے گروپ"
         move_to_inbox: "اِنباکس میں منتقل کریں"
@@ -3923,8 +3929,6 @@ ur:
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
-        delete_all_posts: "تمام پوسٹس حذف کریں"
-        delete_posts_progress: "پوسٹس حذف کی جا رہی ہیں..."
         delete_posts_failed: "پوسٹس حذف کرنے میں ایک مسئلہ پیش آیا۔"
         post_edits: "پوسٹ ترامیم"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
@@ -3984,6 +3988,12 @@ ur:
         anonymize_yes: "جی ہاں، اِس اکاؤنٹ کو گمنام بنائیں"
         anonymize_failed: "اِس اکاؤنٹ کو گمنام بنانے میں ایک مسئلہ پیش آیا۔"
         delete: "صارف حذف کریں"
+        delete_posts:
+          button: "تمام پوسٹس حذف کریں"
+          progress:
+            description: "پوسٹس حذف کی جا رہی ہیں..."
+          confirmation:
+            cancel: "منسوخ"
         merge:
           prompt:
             cancel: "منسوخ"
@@ -4320,6 +4330,5 @@ ur:
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       previews:
-        topic_title: "بحث ٹاپک"
         share_button: "شیئر"
         reply_button: "جواب"

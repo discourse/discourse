@@ -990,6 +990,7 @@ da:
       no_notifications_title: "Du har ingen notifikationer endnu"
       no_notifications_body: >
         Du vil blive underrettet i dette panel om aktivitet, der er direkte relevant for dig, herunder svar på dine emner og indlæg, når nogen <b>@omtaler</b> dig eller citerer dig, og svarer på emner, du læser. Underretninger sendes også til din e-mail, når du ikke har været logget ind i et stykke tid. <br><br> Se efter %{icon} ikonet der bestemmer, hvilke specifikke emner, kategorier og mærker du vil have besked om. For mere, se dine <a href='%{preferencesUrl}'>meddelelsesindstillinger</a>.
+      no_notifications_page_title: "Du har ingen notifikationer endnu"
       first_notification: "Din første notifikation! Vælg den for at begynde."
       dynamic_favicon: "Vis tællinger på browser-ikonet"
       skip_new_user_tips:
@@ -1097,7 +1098,13 @@ da:
         latest: "Seneste"
         sent: "Sendt"
         unread: "Ulæste"
+        unread_with_count:
+          one: "Ulæst (%{count})"
+          other: "Ulæst (%{count})"
         new: "Nye"
+        new_with_count:
+          one: "Nye (%{count})"
+          other: "Nye (%{count})"
         archive: "Arkiv"
         groups: "Mine Grupper"
         move_to_inbox: "Flyt til Indbakke"
@@ -1357,7 +1364,7 @@ da:
         never: "aldrig"
       email_messages_level: "Send mig en e-mail, når nogen sender beskeder til mig"
       include_tl0_in_digests: "Inkluder indhold fra nye brugere i opsummerende mails"
-      email_in_reply_to: "Inkluder et uddrag af svaret indlæg i emails"
+      email_in_reply_to: "Inkluder et uddrag af svaret på indlæg i emails"
       other_settings: "Andre"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -4483,8 +4490,6 @@ da:
         silence_message_placeholder: "(lad være tom for at sende standard besked)"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
-        delete_all_posts: "Slet alle indlæg"
-        delete_posts_progress: "Sletter indlæg ..."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."
         post_edits: "Indlægs Redigeringer"
         view_edits: "Vis Redigeringer"
@@ -4549,8 +4554,12 @@ da:
         anonymize_failed: "Der var problemer med at anonymisere denne konto."
         delete: "Slet bruger"
         delete_posts:
+          button: "Slet alle indlæg"
           progress:
             title: "Fremskridt med sletning af indlæg"
+            description: "Sletter indlæg ..."
+          confirmation:
+            cancel: "Afbryd"
         merge:
           button: "Flet"
           prompt:
@@ -4958,7 +4967,5 @@ da:
           moderator: "Moderator"
           regular: "Fast bruger"
       previews:
-        topic_title: "Diskussionsemne"
-        font_title: "%{font} Skrifttype"
         share_button: "Del"
         reply_button: "Svar"

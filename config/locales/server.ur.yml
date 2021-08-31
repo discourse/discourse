@@ -3335,12 +3335,26 @@ ur:
           city_for_disputes:
             label: "تنازعات کیلئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
-      colors:
-        title: "رنگ"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "پیشگی دیکھیں"
+          homepage_style:
+            choices:
+              latest:
+                label: "تازہ ترین ٹاپک"
+              categories_only:
+                label: "صرف زمرہ جات"
+              categories_with_featured_topics:
+                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
+              categories_and_latest_topics:
+                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
+              categories_and_top_topics:
+                label: "زمرہ جات اور ٹاپ ٹاپکس"
+              categories_boxes:
+                label: "زُمرَہ جات بکسے"
+              categories_boxes_with_topics:
+                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       logos:
         title: "لَوگَو"
         fields:
@@ -3359,26 +3373,6 @@ ur:
           large_icon:
             label: "بڑا آئیکن"
             description: "آئیکن کی تصویر جو جدید ڈِیوائیسِز پر آپ کی ویب سائٹ کی نمائندگی کرنے کیلئے استعمال کی جاتی ہے اور جو بڑے سائزوں پر اچھی لگتی ہے۔ مثالی طور پر 512 × 512 سے زائد۔ ہم ڈیفالٹ کے طور پر چکور لَوگَو استعمال کریں گے۔"
-      homepage:
-        description: "ہم آپ کے ہَوم پَیج پر تازہ ترین ٹاپک پیش کرنے کو تجویز کرتے ہیں، لیکن اگر آپ چاہیں تو ہَوم پَیج پر زُمرہ جات (ٹاپکس کے گروپوں) کو بھی دکھا سکتے ہیں۔"
-        title: "ہَوم پَیج"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "تازہ ترین ٹاپک"
-              categories_only:
-                label: "صرف زمرہ جات"
-              categories_with_featured_topics:
-                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
-              categories_and_latest_topics:
-                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
-              categories_and_top_topics:
-                label: "زمرہ جات اور ٹاپ ٹاپکس"
-              categories_boxes:
-                label: "زُمرَہ جات بکسے"
-              categories_boxes_with_topics:
-                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       invites:
         title: "سٹاف مدعو کریں"
         description: "آپ تقریباً کام مکمل کر چکے ہیں! چلیے لوگوں کو دعوت دیتے ہیں کہ <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>آپ کے مباحثوں میں</a> دلچسپ ٹاپک اور جوابات شامل کرنے میں آپ کی مدد کریں تاکہ آپ کی کمیونٹی کا آغاز ہو سکے۔"

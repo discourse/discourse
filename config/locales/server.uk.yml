@@ -3133,17 +3133,30 @@ uk:
           city_for_disputes:
             label: "Місто для суперечок"
             placeholder: "Сан-Франциско, Каліфорнія"
-      colors:
-        title: "Кольори"
-      fonts:
-        title: "Шрифти"
+      styling:
         fields:
           body_font:
             label: "Основний шрифт"
           heading_font:
             label: "Шрифт заголовка"
-          font_preview:
+          styling_preview:
             label: "Попередній перегляд"
+          homepage_style:
+            choices:
+              latest:
+                label: "Останні теми"
+              categories_only:
+                label: "Тільки розділи"
+              categories_with_featured_topics:
+                label: "Розділи та їх найкращі теми"
+              categories_and_latest_topics:
+                label: "Розділи та список останніх тем форуму"
+              categories_and_top_topics:
+                label: "Категорії та головні теми"
+              categories_boxes:
+                label: "Категорії в коробках"
+              categories_boxes_with_topics:
+                label: "Категорії в коробках з Темами"
       logos:
         title: "Логотипи"
         fields:
@@ -3162,26 +3175,6 @@ uk:
           large_icon:
             label: "Велика іконка"
             description: "Іконка використовується для представлення вашого сайту на сучасних пристроях, що добре виглядає на великих розмірах. В ідеалі більший за 512 × 512. Ми будемо використовувати квадратний логотип за замовчуванням."
-      homepage:
-        description: "Ми рекомендуємо показувати останні теми на Вашій домашній сторінці, але Ви також можете показувати розділи (групи тем), якщо матимете таке бажання."
-        title: "Головна сторінка"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Останні теми"
-              categories_only:
-                label: "Тільки Категорії"
-              categories_with_featured_topics:
-                label: "Категорії і їх Кращі Теми"
-              categories_and_latest_topics:
-                label: "Категорії та список Останніх Тим"
-              categories_and_top_topics:
-                label: "Категорії і Важливі Теми"
-              categories_boxes:
-                label: "Категорії в коробках"
-              categories_boxes_with_topics:
-                label: "Категорії в коробках з Темами"
       invites:
         title: "Запросити як персонал"
         description: "Ви майже закінчили! Давайте запросимо людей, які допоможуть вам <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>почати обговорення</a> з цікавих тем і відповідей, щоб ваше співтовариство почало роботу."

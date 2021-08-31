@@ -1000,6 +1000,7 @@ tr_TR:
       no_notifications_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
+      no_notifications_page_title: "Henüz herhangi bir bildiriminiz yok"
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonu üzerinde göster"
       skip_new_user_tips:
@@ -1106,7 +1107,13 @@ tr_TR:
         latest: "En Son"
         sent: "Gönderilen"
         unread: "Okunmamış"
+        unread_with_count:
+          one: "Okunmamış (%{count})"
+          other: "Okunmamış (%{count})"
         new: "Yeni"
+        new_with_count:
+          one: "Yeni (%{count}) "
+          other: "Yeni (%{count}) "
         archive: " Arşiv"
         groups: "Gruplarım"
         move_to_inbox: "Gelen kutusuna taşı"
@@ -4544,8 +4551,6 @@ tr_TR:
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         suspended_until: "(%{until} a kadar)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
-        delete_all_posts: "Tüm gönderileri sil"
-        delete_posts_progress: "Gönderiler siliniyor..."
         delete_posts_failed: "Gönderiler silinirken bir sorun oluştu."
         post_edits: "Gönderi Düzenleme"
         view_edits: "Düzenlemeleri gör"
@@ -4612,8 +4617,12 @@ tr_TR:
         anonymize_failed: "Hesap anonimleştirilirken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
         delete_posts:
+          button: "Tüm gönderileri sil"
           progress:
             title: "Gönderilerin silinmesi ilerleme durumu"
+            description: "Gönderiler siliniyor..."
+          confirmation:
+            cancel: "İptal"
         merge:
           button: "Birleştir"
           prompt:
@@ -5022,7 +5031,5 @@ tr_TR:
           moderator: "Moderatör"
           regular: "Devamlı Kullanıcı"
       previews:
-        topic_title: "Tartışma konusu"
-        font_title: "%{font} İsimli Font"
         share_button: "Paylaş"
         reply_button: "Cevap"

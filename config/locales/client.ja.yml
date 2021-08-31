@@ -950,6 +950,7 @@ ja:
       no_notifications_title: "まだ通知はありません"
       no_notifications_body: >
         あなたのトピックや投稿に対する返信があったとき、誰かがあなたを <b>@メンション</b>または引用したとき、あなたがウォッチ中のトピックに返信があったときなど、あなたに直接関連するアクティビティはこのパネルで通知されます。あなたがしばらくログインしていない場合は、メールにも通知が送信されます。<br><br>%{icon} を探して、どの特定のトピック、カテゴリ、およびタグについて通知するかを決めましょう。詳細については、<a href='%{preferencesUrl}'>通知の設定</a>をご覧ください。
+      no_notifications_page_title: "まだ通知はありません"
       first_notification: "最初の通知です！選択して開始してください。"
       dynamic_favicon: "ブラウザのアイコンに件数を表示する"
       skip_new_user_tips:
@@ -1056,7 +1057,11 @@ ja:
         latest: "最新"
         sent: "送信済み"
         unread: "未読"
+        unread_with_count:
+          other: "未読 (%{count})"
         new: "新規"
+        new_with_count:
+          other: "新規 (%{count})"
         archive: "アーカイブ"
         groups: "自分のグループ"
         move_to_inbox: "受信トレイに移動"
@@ -4376,8 +4381,6 @@ ja:
         silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"
         suspended_until: "(%{until} まで)"
         cant_suspend: "このユーザーを凍結できません。"
-        delete_all_posts: "すべての投稿を削除する"
-        delete_posts_progress: "投稿を削除中..."
         delete_posts_failed: "投稿を削除中に問題が発生しました。"
         post_edits: "投稿の編集"
         penalty_post_actions: "関連する投稿についてどうしますか？"
@@ -4443,8 +4446,12 @@ ja:
         anonymize_failed: "アカウントの匿名化中に問題が発生しました。"
         delete: "ユーザーを削除"
         delete_posts:
+          button: "すべての投稿を削除する"
           progress:
             title: "投稿の削除状況"
+            description: "投稿を削除中..."
+          confirmation:
+            cancel: "キャンセル"
         merge:
           button: "マージ"
           prompt:
@@ -4847,7 +4854,5 @@ ja:
           moderator: "モデレーター"
           regular: "レギュラーユーザー"
       previews:
-        topic_title: "ディスカッショントピック"
-        font_title: "%{font} フォント"
         share_button: "共有"
         reply_button: "返信"

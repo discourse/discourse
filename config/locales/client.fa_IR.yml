@@ -1009,7 +1009,13 @@ fa_IR:
         latest: "آخرین"
         sent: "ارسال شد"
         unread: "خوانده‌ نشده‌"
+        unread_with_count:
+          one: " (%{count}) خوانده‌ نشده‌"
+          other: " (%{count}) خوانده‌ نشده‌"
         new: "جدید"
+        new_with_count:
+          one: "(%{count}) جدید"
+          other: "(%{count}) جدید"
         archive: "بایگانی"
         groups: "گروه‌های من"
         move_to_inbox: "انتقال به صندوق دریافت"
@@ -3750,8 +3756,6 @@ fa_IR:
         silence_reason: "دلیل"
         suspended_until: "(تا %{until})"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."
-        delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
-        delete_posts_progress: "درحال حذف فرسته‌ها..."
         penalty_post_edit: "ویرایش فرسته"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
@@ -3794,6 +3798,12 @@ fa_IR:
         anonymize_yes: "بله، حساب‌کاربری را بینام کن"
         anonymize_failed: "یک مشکل با حساب‌کاربری بینام وجود دارد"
         delete: "حذف کاربر"
+        delete_posts:
+          button: "پاک کردن همه‌ی نوشته‌ها"
+          progress:
+            description: "درحال حذف فرسته‌ها..."
+          confirmation:
+            cancel: "لغو کردن"
         merge:
           prompt:
             cancel: "لغو کردن"

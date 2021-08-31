@@ -1103,6 +1103,9 @@ pl_PL:
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_body: >
         W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
+      no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
+      no_notifications_page_body: >
+        Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
@@ -1210,7 +1213,17 @@ pl_PL:
         latest: "Aktualne"
         sent: "Wysłane"
         unread: "Nieprzeczytane"
+        unread_with_count:
+          one: "Nieprzeczytane (%{count})"
+          few: "Nieprzeczytane (%{count})"
+          many: "Nieprzeczytane (%{count})"
+          other: "Nieprzeczytane (%{count})"
         new: "Nowe"
+        new_with_count:
+          one: "Nowe (%{count})"
+          few: "Nowe (%{count})"
+          many: "Nowe (%{count})"
+          other: "Nowe (%{count})"
         archive: "Archiwum"
         groups: "Moje grupy"
         move_to_inbox: "Przenieś do skrzynki odbiorczej"
@@ -4882,8 +4895,6 @@ pl_PL:
         silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"
         suspended_until: "(do %{until})"
         cant_suspend: "Nie można zawiesić tego użytkownika."
-        delete_all_posts: "Usuń wszystkie wpisy"
-        delete_posts_progress: "Usuwanie wpisów..."
         delete_posts_failed: "Podczas usuwania wpisów wystąpił problem."
         post_edits: "Edycje wpisu"
         view_edits: "Wyświetl zmiany"
@@ -4950,8 +4961,21 @@ pl_PL:
         anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
         delete_posts:
+          button: "Usuń wszystkie wpisy"
           progress:
             title: "Postęp usuwania postów"
+            description: "Usuwanie wpisów..."
+          confirmation:
+            title: "Usuń wszystkie posty użytkownika @%{username}"
+            description: |
+              <p>Czy na pewno chcesz usunąć <b>%{post_count}</b> posty użytkownika @%{username}?
+
+              <p><b>Tego nie można cofnąć!</b></p>
+
+              <p>Aby kontynuować, wpisz: <code>%{text}</code></p>
+            text: "usuń posty użytkownika @%{username}"
+            delete: "Usuń posty użytkownika @%{username}"
+            cancel: "Anuluj"
         merge:
           button: "Połącz"
           prompt:
@@ -5372,7 +5396,8 @@ pl_PL:
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
       previews:
-        topic_title: "Temat dyskusji"
-        font_title: "%{font} czcionka"
+        topic_title: "Nagłówek tematu dyskusji"
         share_button: "Udostępnij"
         reply_button: "Odpowiedz"
+        topic_preview: "Podgląd tematu"
+        homepage_preview: "Podgląd strony głównej"

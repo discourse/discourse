@@ -4314,17 +4314,30 @@ fi:
           city_for_disputes:
             label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
-      colors:
-        title: "Värit"
-      fonts:
-        title: "Fontit"
+      styling:
         fields:
           body_font:
             label: "Leipätekstin fontti"
           heading_font:
             label: "Otsikon fontti"
-          font_preview:
+          styling_preview:
             label: "Esikatselu"
+          homepage_style:
+            choices:
+              latest:
+                label: "Tuoreimmat ketjut"
+              categories_only:
+                label: "Vain alueet"
+              categories_with_featured_topics:
+                label: "Alueet, joissa on esiteltyjä ketjuja"
+              categories_and_latest_topics:
+                label: "Alueet ja tuoreimmat ketjut"
+              categories_and_top_topics:
+                label: "Alueet ja suosittuja ketjuja"
+              categories_boxes:
+                label: "Alueet laatikoissa"
+              categories_boxes_with_topics:
+                label: "Alueet laatikoissa, joissa ketjuja"
       logos:
         title: "Logot"
         fields:
@@ -4343,26 +4356,6 @@ fi:
           large_icon:
             label: "Suuri kuvake"
             description: "Kuvake, jota käytetään kuvaamaan sivustoa moderneilla laitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliön muotoista logoa."
-      homepage:
-        description: "Suosittelemme näyttämään tuoreimmat ketjut aloitussivullasi, mutta voit halutessasi näyttää myös keskustelualueet (ketjut ryhmiteltynä aihealueen mukaan)."
-        title: "Aloitussivu"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Tuoreimmat ketjut"
-              categories_only:
-                label: "Vain keskustelualueet"
-              categories_with_featured_topics:
-                label: "Alueet, joissa on esiteltyjä ketjuja"
-              categories_and_latest_topics:
-                label: "Alueet ja tuoreimmat ketjut"
-              categories_and_top_topics:
-                label: "Alueet ja suosittuja ketjuja"
-              categories_boxes:
-                label: "Alueet laatikoissa"
-              categories_boxes_with_topics:
-                label: "Alueet laatikoissa, joissa ketjuja"
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

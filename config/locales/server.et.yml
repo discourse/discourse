@@ -1061,25 +1061,10 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-      colors:
-        title: "Värvid"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Eelvaade"
-      logos:
-        title: "Logod"
-        fields:
-          logo:
-            label: "Peamine logo"
-      icons:
-        title: "Ikoonid"
-        fields:
-          large_icon:
-            label: "Suur ikoon"
-      homepage:
-        title: "Avaleht"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1090,6 +1075,16 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
+      logos:
+        title: "Logod"
+        fields:
+          logo:
+            label: "Peamine logo"
+      icons:
+        title: "Ikoonid"
+        fields:
+          large_icon:
+            label: "Suur ikoon"
       invites:
         title: "Kutsu meeskonda"
       finished:

@@ -938,6 +938,11 @@ cs:
         latest: "Aktuální"
         sent: "Odeslané"
         unread: "Nepřečtená"
+        unread_with_count:
+          one: "Nepřečtená (%{count})"
+          few: "Nepřečtená (%{count})"
+          many: "Nepřečtená (%{count})"
+          other: "Nepřečtená (%{count})"
         new: "Nová"
         archive: "Archív"
         groups: "Moje skupiny"
@@ -3519,7 +3524,6 @@ cs:
         silence_message_placeholder: "()"
         suspended_until: "(až %{until})"
         cant_suspend: "Tento uživatel nemůže být suspendován"
-        delete_all_posts: "Smazat všechny příspěvky"
         penalty_post_actions: "Co chceš dělat s připojeným příspěvkem? "
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
@@ -3571,6 +3575,10 @@ cs:
         anonymize_yes: "Ano, udělejte tento účet anonymním"
         anonymize_failed: "Nastal problém při anonymizování účtu."
         delete: "Smazat uživatele"
+        delete_posts:
+          button: "Smazat všechny příspěvky"
+          confirmation:
+            cancel: "Zrušit"
         merge:
           prompt:
             cancel: "Zrušit"
@@ -3893,6 +3901,5 @@ cs:
           moderator: "Moderátor"
           regular: "pravidelný uživatel"
       previews:
-        topic_title: "Diskuzní téma"
         share_button: "Sdílet"
         reply_button: "Odpovědět"

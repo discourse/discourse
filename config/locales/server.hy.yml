@@ -3046,12 +3046,26 @@ hy:
           city_for_disputes:
             label: "Վեճերի Քաղաք"
             placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
-      colors:
-        title: "Գույներ"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Նախադիտում"
+          homepage_style:
+            choices:
+              latest:
+                label: "Վերջին Թեմաներ"
+              categories_only:
+                label: "Միայն Կատեգորիաները"
+              categories_with_featured_topics:
+                label: "Հանրահայտ Թեմաներով Կատեգորիաները"
+              categories_and_latest_topics:
+                label: "Կատեգորիաները և Վերջին Թեմաները"
+              categories_and_top_topics:
+                label: "Կատեգորիաները և Թոփ Թեմաները"
+              categories_boxes:
+                label: "Կատեգորիաների արկղեր"
+              categories_boxes_with_topics:
+                label: "Կատեգորիաների արկղեր Թեմաներով"
       logos:
         title: "Լոգոներ"
         fields:
@@ -3063,26 +3077,6 @@ hy:
         fields:
           large_icon:
             label: "Մեծ Պատկերակ"
-      homepage:
-        description: "Մենք խորհուրդ ենք տալիս Ձեր գլխավոր էջում ցուցադրել վերջին թեմաները, բայց Դուք կարող եք նաև Ձեր գլխավոր էջում ցուցադրել կատեգորիաները (թեմաների խմբերը), եթե այսպես եք նախընտրում:"
-        title: "Գլխավոր էջ"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Վերջին Թեմաներ"
-              categories_only:
-                label: "Միայն Կատեգորիաներ"
-              categories_with_featured_topics:
-                label: "Կատեգորիաներ և Կապակցված Թեմաներ"
-              categories_and_latest_topics:
-                label: "Կատեգորիաներ և Վերջին Թեմաներ"
-              categories_and_top_topics:
-                label: "Կատեգորիաներ և Թոփ Թեմաներ"
-              categories_boxes:
-                label: "Կատեգորիաների արկղեր"
-              categories_boxes_with_topics:
-                label: "Կատեգորիաների արկղեր Թեմաներով"
       invites:
         title: "Հրավիրել Անձնակազմին"
         description: "Դուք գրեթե վերջացրել եք! Եկեք հրավիրենք որոշ մարդկանց՝ օգնելու <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>լցնել Ձեր քննարկումները</a> հետաքրքիր թեմաներով և պատասխաններով՝ Ձեր համայնքին սկիզբ դնելու համար:"

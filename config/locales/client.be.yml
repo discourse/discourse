@@ -1747,7 +1747,6 @@ be:
         suspend_reason: "прычына"
         silence_reason: "прычына"
         silence_modal_title: "Silence Карыстальнік"
-        delete_all_posts: "прычына..."
         post_edits: "паведамленне рэдагуе"
         silenced: "глушыцелем?"
         moderator: "Мадэратар?"
@@ -1785,6 +1784,10 @@ be:
         anonymize: "ананімны карыстальнік"
         anonymize_yes: "Так, схаваць гэты рахунак"
         delete: "выдаліць карыстальніка"
+        delete_posts:
+          button: "прычына..."
+          confirmation:
+            cancel: "Адмяніць"
         merge:
           prompt:
             cancel: "адмяніць"

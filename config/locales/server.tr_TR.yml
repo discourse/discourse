@@ -3758,17 +3758,30 @@ tr_TR:
           city_for_disputes:
             label: "Anlaşmazlıklar Şehri"
             placeholder: "San Francisco, Kaliforniya"
-      colors:
-        title: "Renkler"
-      fonts:
-        title: "Yazı Tipleri"
+      styling:
         fields:
           body_font:
             label: "Gövde yazı tipi"
           heading_font:
             label: "Başlık yazı tipi"
-          font_preview:
+          styling_preview:
             label: "Önizleme"
+          homepage_style:
+            choices:
+              latest:
+                label: "Son Konular"
+              categories_only:
+                label: "Yalnızca Kategoriler"
+              categories_with_featured_topics:
+                label: "Öne çıkan konulardaki kategoriler"
+              categories_and_latest_topics:
+                label: "Kategoriler ve Son Konular"
+              categories_and_top_topics:
+                label: "Kategoriler ve Popüler Konular"
+              categories_boxes:
+                label: "Kategori kutuları"
+              categories_boxes_with_topics:
+                label: "Başlıkları olan kategori kutuları"
       logos:
         title: "Görseller"
         fields:
@@ -3787,26 +3800,6 @@ tr_TR:
           large_icon:
             label: "Büyük Simge"
             description: "Sitenizi daha büyük boyutlarda iyi görünen modern cihazlarda göstermek için kullanılan simge resmi. İdeal olarak 512 × 512'den daha büyük. Varsayılan olarak kare logosunu kullanacağız."
-      homepage:
-        description: "En son konuları ana sayfanızda göstermenizi öneririz, ancak isterseniz ana sayfada kategorileri (konu grupları) da gösterebilirsiniz."
-        title: "Ana Sayfa"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Son Konular"
-              categories_only:
-                label: "Yalnızca Kategoriler"
-              categories_with_featured_topics:
-                label: "Öne çıkan konulardaki kategoriler"
-              categories_and_latest_topics:
-                label: "Kategoriler ve Son Konular"
-              categories_and_top_topics:
-                label: "Kategoriler ve Popüler Konular"
-              categories_boxes:
-                label: "Kategori kutuları"
-              categories_boxes_with_topics:
-                label: "Başlıkları olan kategori kutuları"
       invites:
         title: "Görevli Davet Et"
         description: "Neredeyse bitti! Bazı insanları, topluluğunuzu başlatmak için ilginç konular ve yanıtlarla <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınıza</a> yardımcı olmaya davet edelim."

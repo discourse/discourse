@@ -3383,6 +3383,11 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    create_mutlipart_failure: "Det gick inte att skapa uppladdning med flera delar i den externa butiken."
+    abort_mutlipart_failure: "Det gick inte att avbryta uppladdning med flera delar i den externa butiken."
+    complete_mutlipart_failure: "Det gick inte att slutföra uppladdning med flera delar i den externa butiken."
+    external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
@@ -4023,17 +4028,34 @@ sv:
           city_for_disputes:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
-      colors:
-        title: "Färger"
-      fonts:
-        title: "Typsnitt"
+      styling:
+        title: "Formatering"
         fields:
+          color_scheme:
+            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:
             label: "Typsnitt för rubrik"
-          font_preview:
+          styling_preview:
             label: "Förhandsgranska"
+          homepage_style:
+            label: "Hemsidans stil"
+            choices:
+              latest:
+                label: "Senaste ämnen"
+              categories_only:
+                label: "Endast kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med utvalda ämnen"
+              categories_and_latest_topics:
+                label: "Kategorier med senaste ämnen"
+              categories_and_top_topics:
+                label: "Kategorier och toppämnen"
+              categories_boxes:
+                label: "Kategorilådor"
+              categories_boxes_with_topics:
+                label: "Kategorilådor med ämnen"
       logos:
         title: "Logotyper"
         fields:
@@ -4052,26 +4074,6 @@ sv:
           large_icon:
             label: "Stor ikon"
             description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
-      homepage:
-        description: "Vi rekommenderar att du visar de senaste ämnena på din hemsida, men du kan också visa kategorier (grupper av ämnen) där, om du föredrar det."
-        title: "Hemsida"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategorilådor"
-              categories_boxes_with_topics:
-                label: "Kategorilådor med ämnen"
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

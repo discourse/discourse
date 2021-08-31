@@ -934,7 +934,13 @@ ca:
         latest: "Més recents"
         sent: "Enviat"
         unread: "No llegits"
+        unread_with_count:
+          one: "No llegit (%{count})"
+          other: "No llegit (%{count})"
         new: "Nous"
+        new_with_count:
+          one: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arxiva"
         groups: "Els meus grups"
         move_to_inbox: "Mou a la safata d'entrada"
@@ -3738,8 +3744,6 @@ ca:
         silence_message_placeholder: "(deixeu-ho en blanc per a enviar el missatge per defecte)"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
-        delete_all_posts: "Suprimeix totes les publicacions"
-        delete_posts_progress: "Suprimint publicacions..."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."
         post_edits: "Edicions de la publicació"
         penalty_post_actions: "Què voleu fer amb la publicació associada?"
@@ -3799,6 +3803,12 @@ ca:
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
+        delete_posts:
+          button: "Suprimeix totes les publicacions"
+          progress:
+            description: "Suprimint publicacions..."
+          confirmation:
+            cancel: "Cancel·la"
         merge:
           prompt:
             cancel: "Cancel·la"
@@ -4137,6 +4147,5 @@ ca:
           moderator: "Moderador"
           regular: "Usuari habitual"
       previews:
-        topic_title: "Tema de discussió"
         share_button: "Comparteix"
         reply_button: "Respon"

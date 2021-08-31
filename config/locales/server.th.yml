@@ -465,14 +465,10 @@ th:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
-      colors:
-        title: "สี"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "แสดงตัวอย่าง"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

@@ -502,8 +502,6 @@ sr:
             placeholder: "ime@primer.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Boje"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

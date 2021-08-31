@@ -985,6 +985,7 @@ nb_NO:
       no_notifications_title: "Du har ingen varsler enda"
       no_notifications_body: >
         Du vil bli varslet i dette panelet om aktivitet som er direkte relevant for deg, inkludert svar på dine emner og innlegg, når noen <b>@mentions</b> du eller siterer deg, og svarer på emner du våker. Varsler vil også bli sendt til e-post når du ikke har logget inn en stund. <br><br> Se etter %{icon} for å bestemme hvilke spesielle emner, kategorier og tagger du ønsker å få beskjed om. For mer, se dine <a href='%{preferencesUrl}'>varselpreferanser</a>.
+      no_notifications_page_title: "Du har ingen varsler enda"
       first_notification: "Ditt første varsel! Velg det for å komme i gang."
       dynamic_favicon: "Vis antall på nettleserikonet"
       skip_new_user_tips:
@@ -1091,7 +1092,13 @@ nb_NO:
         latest: "Siste"
         sent: "Sendt"
         unread: "Uleste"
+        unread_with_count:
+          one: "Ulest (%{count})"
+          other: "Ulest (%{count})"
         new: "Nye"
+        new_with_count:
+          one: "Nye (%{count})"
+          other: "Nye (%{count})"
         archive: "Arkiver"
         groups: "Mine grupper"
         move_to_inbox: "Flytt til innboks"
@@ -4311,7 +4318,6 @@ nb_NO:
         silence_message_placeholder: "(la stå tom for forvalgt melding)"
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke utestenges."
-        delete_all_posts: "Slett alle innlegg"
         penalty_post_actions: "Hva ønsker du å gjøre med det assosierte innlegg"
         penalty_post_delete: "Slett innlegget"
         penalty_post_edit: "Rediger innlegget"
@@ -4367,6 +4373,10 @@ nb_NO:
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett bruker"
+        delete_posts:
+          button: "Slett alle innlegg"
+          confirmation:
+            cancel: "Avbryt"
         merge:
           prompt:
             cancel: "Avbryt"
@@ -4683,6 +4693,5 @@ nb_NO:
           moderator: "Moderator"
           regular: "Aktivt medlem"
       previews:
-        topic_title: "Diskusjonsemne"
         share_button: "Del"
         reply_button: "Svar"

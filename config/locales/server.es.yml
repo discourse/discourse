@@ -4314,17 +4314,30 @@ es:
           city_for_disputes:
             label: "Ciudad para disputas"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Colores"
-      fonts:
-        title: "Tipos de letra"
+      styling:
         fields:
           body_font:
             label: "Fuente del cuerpo"
           heading_font:
             label: "Tipo de letra para encabezados"
-          font_preview:
+          styling_preview:
             label: "Vista previa"
+          homepage_style:
+            choices:
+              latest:
+                label: "Temas recientes"
+              categories_only:
+                label: "Solo categorías"
+              categories_with_featured_topics:
+                label: "Categorías con temas destacados"
+              categories_and_latest_topics:
+                label: "Categorías y temas recientes"
+              categories_and_top_topics:
+                label: "Categorías y temas destacados"
+              categories_boxes:
+                label: "Cuadros de categorías"
+              categories_boxes_with_topics:
+                label: "Cuadros de categorías con temas"
       logos:
         title: "Logos"
         fields:
@@ -4343,26 +4356,6 @@ es:
           large_icon:
             label: "Icono grande"
             description: "Imagen de icono utilizada para representar tu sitio en dispositivos modernos que se ve bien en tamaños más grandes. Idealmente mayor que 512 × 512. Usaremos el logo cuadrado por defecto."
-      homepage:
-        description: "Recomendamos mostrar los últimos temas en tu página principal, pero siempre puedes mostrar categorías (grupos de temas) en la página principal si prefieres."
-        title: "Página de inicio"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Temas recientes"
-              categories_only:
-                label: "Solo categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas destacados"
-              categories_and_latest_topics:
-                label: "Categorías y temas recientes"
-              categories_and_top_topics:
-                label: "Categorías y temas destacados"
-              categories_boxes:
-                label: "Cuadros de categorías"
-              categories_boxes_with_topics:
-                label: "Cuadros de categorías con temas"
       invites:
         title: "Invitar personal"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."

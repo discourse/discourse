@@ -996,6 +996,7 @@ fr:
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
         Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
+      no_notifications_page_title: "Vous n'avez pas encore reçu de notifications"
       first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
@@ -1102,7 +1103,13 @@ fr:
         latest: "Récents"
         sent: "Envoyés"
         unread: "Non lues"
+        unread_with_count:
+          one: "Non lu (%{count})"
+          other: "Non lu (%{count})"
         new: "Nouveau"
+        new_with_count:
+          one: "Nouveau (%{count})"
+          other: "Nouveau (%{count})"
         archive: "Archivés"
         groups: "Mes groupes"
         move_to_inbox: "Déplacer dans la boîte de réception"
@@ -4523,8 +4530,6 @@ fr:
         silence_message_placeholder: "(laissez vide pour envoyer un message par défaut)"
         suspended_until: "(jusqu'à %{until})"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
-        delete_all_posts: "Supprimer tous les messages"
-        delete_posts_progress: "Messages en cours de suppression…"
         delete_posts_failed: "Un problème est survenu lors de la suppression des messages."
         post_edits: "Modifications de message"
         penalty_post_actions: "Que souhaitez-vous faire du message associé ?"
@@ -4589,8 +4594,12 @@ fr:
         anonymize_failed: "Un problème est survenu lors de l'anonymisation du compte."
         delete: "Supprimer l'utilisateur"
         delete_posts:
+          button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
+            description: "Messages en cours de suppression…"
+          confirmation:
+            cancel: "Annuler"
         merge:
           button: "Fusionner"
           prompt:
@@ -4994,7 +5003,5 @@ fr:
           moderator: "Modérateur"
           regular: "Utilisateur normal"
       previews:
-        topic_title: "Sujet de discussion"
-        font_title: "Police %{font}"
         share_button: "Partager"
         reply_button: "Répondre"

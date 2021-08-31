@@ -2250,26 +2250,10 @@ fa_IR:
             label: "پیام‌های خودکار"
       corporate:
         title: "سازمان"
-      colors:
-        title: "رنگ‌ها"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "پیش‌نمایش"
-      logos:
-        title: "لوگو‌ها"
-        fields:
-          logo:
-            label: "لوگو اصلی"
-      icons:
-        title: "آیکن‌ها"
-        fields:
-          large_icon:
-            label: "آیکن بزرگ"
-      homepage:
-        description: "توصیه می‌کنیم آخرین موضوعات را در صفحه اصلی سایت نمایش دهید. اما می‌توانید دسته‌بندی‌ها (گروه‌های موضوعات) را نیز نمایش دهید."
-        title: "صفحه اصلی"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2282,6 +2266,16 @@ fa_IR:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
+      logos:
+        title: "لوگو‌ها"
+        fields:
+          logo:
+            label: "لوگو اصلی"
+      icons:
+        title: "آیکن‌ها"
+        fields:
+          large_icon:
+            label: "آیکن بزرگ"
       invites:
         title: "دعوت همکاران"
       finished:

@@ -3492,6 +3492,10 @@ ko:
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
     optimize_failure_message: "업로드된 이미지를 최적화하는 동안 오류가 발생했습니다."
     download_failure: "외부 공급자로부터 파일을 다운로드하지 못했습니다."
+    create_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 생성하지 못했습니다."
+    abort_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 중단하지 못했습니다."
+    complete_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 완료하지 못했습니다."
+    external_upload_not_found: "업로드를 외부 저장소에서 찾을 수 없습니다. %{additional_detail}"
     checksum_mismatch_failure: "업로드한 파일의 체크섬이 일치하지 않습니다. 업로드 시 파일 내용이 변경되었을 수 있습니다. 다시 시도해 주세요."
     cannot_promote_failure: "업로드를 완료할 수 없습니다. 이미 완료되었거나 이전에 실패했을 수 있습니다."
     attachments:
@@ -4131,17 +4135,34 @@ ko:
           city_for_disputes:
             label: "분쟁의 도시"
             placeholder: "샌프란시스코, 캘리포니아"
-      colors:
-        title: "색상"
-      fonts:
-        title: "글꼴"
+      styling:
+        title: "스타일링"
         fields:
+          color_scheme:
+            label: "색 구성표"
           body_font:
             label: "본문 글꼴"
           heading_font:
             label: "제목 글꼴"
-          font_preview:
-            label: "미리 보기"
+          styling_preview:
+            label: "미리보기"
+          homepage_style:
+            label: "홈페이지 스타일"
+            choices:
+              latest:
+                label: "최신 토픽"
+              categories_only:
+                label: "카테고리만"
+              categories_with_featured_topics:
+                label: "주요 글이 있는 카테고리"
+              categories_and_latest_topics:
+                label: "카테고리와 최신 글"
+              categories_and_top_topics:
+                label: "카테고리 및 주요 글"
+              categories_boxes:
+                label: "카테고리 상자"
+              categories_boxes_with_topics:
+                label: "주제가있는 카테고리 상자"
       logos:
         title: "로고"
         fields:
@@ -4160,26 +4181,6 @@ ko:
           large_icon:
             label: "큰 아이콘"
             description: "더 큰 크기로보기 좋은 최신 장치에서 사이트를 나타내는 데 사용되는 아이콘 이미지. 이상적으로 512 × 512보다 큽니다. 기본적으로 정사각형 로고를 사용합니다."
-      homepage:
-        description: "저희는 최근 토픽을 홈페이지에 노출하는 것을 추천합니다. 하지만, 원하신다면 홈페이지에 카테고리(토픽의 그룹)를 보이게 할 수도 있습니다."
-        title: "홈페이지"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "최신 토픽"
-              categories_only:
-                label: "카테고리 만"
-              categories_with_featured_topics:
-                label: "주요 토픽이 있는 카테고리"
-              categories_and_latest_topics:
-                label: "카테고리 및 최신 토픽"
-              categories_and_top_topics:
-                label: "카테고리 및 주요 주제"
-              categories_boxes:
-                label: "카테고리 상자"
-              categories_boxes_with_topics:
-                label: "주제가있는 카테고리 상자"
       invites:
         title: "운영진 초청하기"
         description: "거의 다 끝났습니다! 흥미로운 주제와 답변을 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>통해 토론</a> 을 시작하여 커뮤니티를 시작하는 데 도움을 줄 사람들을 초대합시다."

@@ -2567,26 +2567,10 @@ el:
             description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       corporate:
         title: "Οργάνωση"
-      colors:
-        title: "Χρώματα"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Προεπισκόπηση"
-      logos:
-        title: "Λογότυπα"
-        fields:
-          logo:
-            label: "Κυρίως Λογότυπο"
-      icons:
-        title: "Εικονίδια"
-        fields:
-          large_icon:
-            label: "Μεγάλο εικονίδιο"
-      homepage:
-        description: "Σου προτείνουμε να εμφανίζονται τα τελευταία νήματα στην αρχική σου σελίδα, αλλά μπορείς επίσης να επιλέξεις να εμφανίζονται κατηγορίες (ομάδες ή νήματα) στην αρχική σου σελίδα, εάν το προτιμάς."
-        title: "Αρχική Σελίδα"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2599,6 +2583,16 @@ el:
                 label: "Κατηγορίες και Τελευταία Νήματα"
               categories_and_top_topics:
                 label: "Κατηγορίες και κορυφαία θέματα"
+      logos:
+        title: "Λογότυπα"
+        fields:
+          logo:
+            label: "Κυρίως Λογότυπο"
+      icons:
+        title: "Εικονίδια"
+        fields:
+          large_icon:
+            label: "Μεγάλο εικονίδιο"
       invites:
         title: "Πρόσκληση Συνεργάτη"
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "

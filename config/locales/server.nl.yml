@@ -2936,17 +2936,30 @@ nl:
           city_for_disputes:
             label: "Stad voor geschillen"
             placeholder: "San Francisco, Californië"
-      colors:
-        title: "Kleuren"
-      fonts:
-        title: "Lettertypen"
+      styling:
         fields:
           body_font:
             label: "Lettertype voor hoofdtekst"
           heading_font:
             label: "Lettertype voor koptekst"
-          font_preview:
+          styling_preview:
             label: "Voorbeeld"
+          homepage_style:
+            choices:
+              latest:
+                label: "Nieuwste topics"
+              categories_only:
+                label: "Alleen categorieën"
+              categories_with_featured_topics:
+                label: "Categorieën met aanbevolen topics"
+              categories_and_latest_topics:
+                label: "Categorieën en nieuwste topics"
+              categories_and_top_topics:
+                label: "Categorieën en toptopics"
+              categories_boxes:
+                label: "Categorievakken"
+              categories_boxes_with_topics:
+                label: "Categorievakken met topics"
       logos:
         title: "Logo's"
         fields:
@@ -2965,26 +2978,6 @@ nl:
           large_icon:
             label: "Groot pictogram"
             description: "Pictogramafbeelding die uw website vertegenwoordigt op moderne apparaten en er goed uitziet bij grotere afmetingen. Moet idealiter groter zijn dan 512 x 512. Standaard wordt het vierkante logo gebruikt."
-      homepage:
-        description: "Het tonen van de nieuwste topics op uw startpagina wordt aanbevolen, maar als u dat liever hebt, kunt u ook categorieën (groepen of topics) op de startpagina tonen."
-        title: "Startpagina"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Nieuwste topics"
-              categories_only:
-                label: "Alleen categorieën"
-              categories_with_featured_topics:
-                label: "Categorieën met aanbevolen topics"
-              categories_and_latest_topics:
-                label: "Categorieën en nieuwste topics"
-              categories_and_top_topics:
-                label: "Categorieën en toptopics"
-              categories_boxes:
-                label: "Categorievakken"
-              categories_boxes_with_topics:
-                label: "Categorievakken met topics"
       invites:
         title: "Staf uitnodigen"
         description: "U bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seeden van uw discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."

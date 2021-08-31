@@ -2026,14 +2026,10 @@ sl:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Barve"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Predogled"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

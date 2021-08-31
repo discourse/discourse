@@ -1201,6 +1201,7 @@ ar:
       no_notifications_title: "ليس لديك أي إشعارات بعد"
       no_notifications_body: >
         سيتم إعلامك في هذه اللوحة بالنشاط ذي الصلة المباشرة بك، بما في ذلك الردود على موضوعاتك ومنشوراتك، وعندما يشير إليك شخص ما <b>@mentions</b> أو يقتبس منك، وعندما يرد على الموضوعات التي تراقبها. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم قيامك بتسجيل الدخول لفترة من الوقت. <br><br> ابحث عن %{icon} لتحديد الموضوعات والفئات والوسوم المحدَّدة التي تريد أن يتم إرسال إشعار إليك بشأنها. لمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
+      no_notifications_page_title: "ليس لديك أي إشعارات بعد"
       first_notification: "أول إشعار تستلمه! اضغط عليه للبدء."
       dynamic_favicon: "عرض الأعداد على أيقونة المتصفح"
       skip_new_user_tips:
@@ -1307,7 +1308,21 @@ ar:
         latest: "الحديثة"
         sent: "المُرسَلة"
         unread: "غير المقروءة"
+        unread_with_count:
+          zero: "غير المقروءة (%{count})"
+          one: "غير المقروءة (%{count})"
+          two: "غير المقروءة (%{count})"
+          few: "غير المقروءة (%{count})"
+          many: "غير المقروءة (%{count})"
+          other: "غير المقروءة (%{count})"
         new: "الجديدة"
+        new_with_count:
+          zero: "الجديدة (%{count})"
+          one: "الجديدة (%{count})"
+          two: "الجديدة (%{count})"
+          few: "الجديدة (%{count})"
+          many: "الجديدة (%{count})"
+          other: "الجديدة (%{count})"
         archive: "الأرشيف"
         groups: "مجموعاتي"
         move_to_inbox: "النقل إلى صندوق الوارد"
@@ -2982,7 +2997,7 @@ ar:
       filters:
         n_posts:
           zero: "%{count} منشور"
-          one: "منشور واحد (%{count})"
+          one: "منشور واحد"
           two: "منشوران (%{count})"
           few: "%{count} منشورات"
           many: "%{count} منشورًا"
@@ -5174,8 +5189,6 @@ ar:
         silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"
         suspended_until: "(حتى %{until})"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."
-        delete_all_posts: "حذف جميع المنشورات"
-        delete_posts_progress: "جارٍ حذف المنشورات..."
         delete_posts_failed: "حدثت مشكلة في أثناء حذف المنشورات."
         post_edits: "تعديلات المنشور"
         penalty_post_actions: "ما الذي ترغب في فعله بالمنشور ذي الصلة؟"
@@ -5241,8 +5254,12 @@ ar:
         anonymize_failed: "حدثت مشكلة في أثناء إخفاء هوية الحساب."
         delete: "حذف المستخدم"
         delete_posts:
+          button: "حذف جميع المنشورات"
           progress:
             title: "تقدُّم حذف المنشورات"
+            description: "جارٍ حذف المنشورات..."
+          confirmation:
+            cancel: "إلغاء"
         merge:
           button: "دمج"
           prompt:
@@ -5675,7 +5692,5 @@ ar:
           moderator: "مشرف"
           regular: "مستخدم منتظم"
       previews:
-        topic_title: "موضوع المناقشة"
-        font_title: "الخط %{font}"
         share_button: "مشاركة"
         reply_button: "الرد"

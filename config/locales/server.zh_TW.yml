@@ -3101,12 +3101,26 @@ zh_TW:
           city_for_disputes:
             label: "爭議"
             placeholder: "舊金山，加洲（California）"
-      colors:
-        title: "顏色"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "預覽"
+          homepage_style:
+            choices:
+              latest:
+                label: "最新主題"
+              categories_only:
+                label: "僅分類"
+              categories_with_featured_topics:
+                label: "有精選話題的分類"
+              categories_and_latest_topics:
+                label: "分類和最新話題"
+              categories_and_top_topics:
+                label: "分類與熱門話題"
+              categories_boxes:
+                label: "分類框"
+              categories_boxes_with_topics:
+                label: "分類框與討論話題"
       logos:
         title: "標誌"
         fields:
@@ -3125,26 +3139,6 @@ zh_TW:
           large_icon:
             label: "大表徵圖"
             description: "用於在現代設備上代表您的網站 Icon 圖像，建議上傳大尺寸，理想情況下大於512×512，預設值為使用正方形 Logo。"
-      homepage:
-        description: "我們推薦在你的主頁顯示最新主題，但若你喜歡也可以顯示分類 ( 一組主題 )。"
-        title: "主頁"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "最新主題"
-              categories_only:
-                label: "僅分類"
-              categories_with_featured_topics:
-                label: "有精選話題的分類"
-              categories_and_latest_topics:
-                label: "分類和最新話題"
-              categories_and_top_topics:
-                label: "分類與熱門話題"
-              categories_boxes:
-                label: "分類框"
-              categories_boxes_with_topics:
-                label: "分類框與討論話題"
       invites:
         title: "邀請工作人員"
         description: "您就快完成啦！讓我們邀請一些人來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"

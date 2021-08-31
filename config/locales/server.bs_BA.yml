@@ -1061,24 +1061,20 @@ bs_BA:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Colors"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Pregled"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
                 label: "Samo kategorije"
               categories_with_featured_topics:
-                label: "Kategorije sa Izdvojenim temama"
+                label: "Kategorije s istaknutim temama"
               categories_and_latest_topics:
-                label: "Kategorije i Novije teme"
+                label: "Kategorije i zadnje teme"
               categories_and_top_topics:
-                label: "Kategorije i Top teme"
+                label: "Kategorije i top teme"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:

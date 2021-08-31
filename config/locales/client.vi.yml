@@ -1011,7 +1011,11 @@ vi:
         latest: "Mới nhất"
         sent: "Đã gửi"
         unread: "Chưa đọc"
+        unread_with_count:
+          other: "Chưa đọc (%{count})"
         new: "Mới"
+        new_with_count:
+          other: "Mới (%{count})"
         archive: "Lưu Trữ"
         groups: "Nhóm của tôi"
         move_to_inbox: "Chuyển sang hộp thư"
@@ -4177,8 +4181,6 @@ vi:
         silence_message_placeholder: "(để trống để gửi tin nhắn mặc định)"
         suspended_until: "(cho đến %{until})"
         cant_suspend: "Thành viên này không thể bị tạm ngưng"
-        delete_all_posts: "Xóa tất cả bài viết"
-        delete_posts_progress: "Đang xóa bài đăng..."
         delete_posts_failed: "Đã xảy ra sự cố khi xóa các bài đăng."
         post_edits: "Sửa Bài Viết"
         penalty_post_actions: "Bạn muốn làm gì với bài đăng được liên kết?"
@@ -4238,6 +4240,12 @@ vi:
         anonymize_yes: "Đồng ý, đây là tài khoản nặc danh."
         anonymize_failed: "Có vấn đề với những tài khoản nặc danh."
         delete: "Xóa thành viên"
+        delete_posts:
+          button: "Xóa tất cả bài viết"
+          progress:
+            description: "Đang xóa bài đăng..."
+          confirmation:
+            cancel: "Hủy"
         merge:
           button: "Hợp nhất"
           prompt:
@@ -4607,7 +4615,5 @@ vi:
           moderator: "Điều hành"
           regular: "Người sử dụng thường xuyên"
       previews:
-        topic_title: "Đề tài thảo luận"
-        font_title: "%{font} Phông chữ"
         share_button: "Chia sẻ"
         reply_button: "Trả lời "
