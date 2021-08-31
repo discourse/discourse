@@ -362,6 +362,13 @@
   .collapsed-info & {
     display: none;
   }
+
+  .user-field-value-list-item:not(:last-of-type) {
+    &:after {
+      // create comma separated list
+      content: ",";
+    }
+  }
 }
 
 .avatar-selector {
