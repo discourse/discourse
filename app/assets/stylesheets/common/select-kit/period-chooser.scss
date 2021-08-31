@@ -9,9 +9,9 @@
       }
 
       .period-chooser-header {
+        display: inline-block; // safari 14 has issues with summary elements and flexbox
         background: none;
         border: none;
-        justify-content: flex-start;
         width: auto;
         height: auto;
         padding: 0;
@@ -20,6 +20,11 @@
           color: var(--secondary);
           display: inline-block;
           box-sizing: border-box;
+
+          // for text + caret alignment
+          line-height: 1;
+          vertical-align: bottom;
+          margin-bottom: 10px;
 
           .date-section {
             color: var(--primary);
