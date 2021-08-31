@@ -1434,25 +1434,10 @@ nb_NO:
             label: "Automatiserte meldinger"
       corporate:
         title: "Organisasjon"
-      colors:
-        title: "Farger"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Forhåndsvis"
-      logos:
-        title: "Logoer"
-        fields:
-          logo:
-            label: "Primær logo"
-      icons:
-        title: "Ikoner"
-        fields:
-          large_icon:
-            label: "Stort ikon"
-      homepage:
-        title: "Hjemmeside"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1465,6 +1450,16 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+      logos:
+        title: "Logoer"
+        fields:
+          logo:
+            label: "Primær logo"
+      icons:
+        title: "Ikoner"
+        fields:
+          large_icon:
+            label: "Stort ikon"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

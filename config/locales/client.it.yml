@@ -1000,6 +1000,7 @@ it:
       no_notifications_title: "Non hai ancora notifiche"
       no_notifications_body: >
         Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie ed etichette essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
+      no_notifications_page_title: "Non hai ancora notifiche"
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1106,7 +1107,13 @@ it:
         latest: "Più recenti"
         sent: "Inviati"
         unread: "Non letti"
+        unread_with_count:
+          one: "Non letto (%{count})"
+          other: "Non letto (%{count})"
         new: "Nuovi"
+        new_with_count:
+          one: "Nuovo (%{count})"
+          other: "Nuovo (%{count})"
         archive: "Archiviati"
         groups: "I Miei Gruppi"
         move_to_inbox: "Sposta nella posta in arrivo"
@@ -4535,8 +4542,6 @@ it:
         silence_message_placeholder: "(lasciare vuoto per inviare il messaggio predefinito)"
         suspended_until: "(fino a %{until})"
         cant_suspend: "Questo utente non può essere sospeso."
-        delete_all_posts: "Cancella tutti i messaggi"
-        delete_posts_progress: "Cancellazione messaggi..."
         delete_posts_failed: "C'è stato un problema con la cancellazione dei messaggi."
         post_edits: "Modifiche Messaggio"
         penalty_post_actions: "Cosa vorresti fare con il messaggio associato?"
@@ -4602,8 +4607,12 @@ it:
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
         delete_posts:
+          button: "Cancella tutti i messaggi"
           progress:
             title: "Avanzamento dell'eliminazione dei messaggi"
+            description: "Cancellazione messaggi..."
+          confirmation:
+            cancel: "Annulla"
         merge:
           button: "Unisci"
           prompt:
@@ -5012,7 +5021,5 @@ it:
           moderator: "Moderatore"
           regular: "Utente Normale"
       previews:
-        topic_title: "Argomento di discussione"
-        font_title: "Carattere %{font}"
         share_button: "Condividi"
         reply_button: "Rispondi"

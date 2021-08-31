@@ -1093,7 +1093,17 @@ sl:
         latest: "Najnovejše"
         sent: "Poslano"
         unread: "Neprebrane"
+        unread_with_count:
+          one: "Neprebrana (%{count})"
+          two: "Neprebrana (%{count})"
+          few: "Neprebrana (%{count})"
+          other: "Neprebrana (%{count})"
         new: "Nove"
+        new_with_count:
+          one: "Nova (%{count})"
+          two: "Nova (%{count})"
+          few: "Nova (%{count})"
+          other: "Nova (%{count})"
         archive: "Arhiv"
         groups: "Moje Skupine"
         move_to_inbox: "Prestavi v Prejeto"
@@ -3962,7 +3972,6 @@ sl:
         silence_message_placeholder: "(pustite prazno, če hočete poslati privzeto sporočilo)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
-        delete_all_posts: "Izbriši vse prispevke"
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"
         penalty_post_delete: "Izbriši prispevek"
         penalty_post_edit: "Uredi prispevek"
@@ -4013,8 +4022,11 @@ sl:
         anonymize_yes: "Da, anonimiziraj tega uporabnika"
         delete: "Izbriši uporabnika"
         delete_posts:
+          button: "Izbriši vse prispevke"
           progress:
             title: "Napredek pri brisanju objav"
+          confirmation:
+            cancel: "Prekliči"
         merge:
           prompt:
             cancel: "Prekliči"
@@ -4305,6 +4317,5 @@ sl:
           moderator: "Moderator"
           regular: "Običajni uporabnik"
       previews:
-        topic_title: "Tema pogovora"
         share_button: "Deli"
         reply_button: "Odgovori"

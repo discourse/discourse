@@ -4146,17 +4146,30 @@ gl:
           city_for_disputes:
             label: "Cidade para disputas"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Cores"
-      fonts:
-        title: "Tipos de letra"
+      styling:
         fields:
           body_font:
             label: "Tipo de letra do corpo"
           heading_font:
             label: "Tipo de letra de título"
-          font_preview:
-            label: "Visualizar"
+          styling_preview:
+            label: "Previsualizar"
+          homepage_style:
+            choices:
+              latest:
+                label: "Últimos temas"
+              categories_only:
+                label: "Só categorías"
+              categories_with_featured_topics:
+                label: "Categorías con temas de actualidade"
+              categories_and_latest_topics:
+                label: "Categorías e últimos temas"
+              categories_and_top_topics:
+                label: "Categorías e temas destacados"
+              categories_boxes:
+                label: "Caixas de categorías"
+              categories_boxes_with_topics:
+                label: "Caixas de categorías con temas"
       logos:
         title: "Logotipos"
         fields:
@@ -4175,26 +4188,6 @@ gl:
           large_icon:
             label: "Icona grande"
             description: "Imaxe de icona utilizada para representar o seu sitio en dispositivos modernos que se ve ben en tamaños máis grandes. Idealmente debe ser maior que 512 × 512. Utilizaremos o logo cadrado por defecto."
-      homepage:
-        description: "Recomendamos mostrar os últimos temas na súa páxina principal, mais, se o prefire, tamén pode mostrar categorías (grupos de temas)."
-        title: "Páxina de inicio"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Últimos temas"
-              categories_only:
-                label: "Só categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas salientados"
-              categories_and_latest_topics:
-                label: "Categorías e últimos temas"
-              categories_and_top_topics:
-                label: "Categorías e temas destacados"
-              categories_boxes:
-                label: "Caixas de categorías"
-              categories_boxes_with_topics:
-                label: "Caixas de categorías con temas"
       invites:
         title: "Convidar o equipo"
         description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."

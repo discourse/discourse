@@ -840,7 +840,17 @@ lt:
         latest: "Paskutinės"
         sent: "Išsiųsti"
         unread: "Neperskaitytos"
+        unread_with_count:
+          one: "Neperskaitytas (%{count})"
+          few: "Neperskaitytas (%{count})"
+          many: "Neperskaitytas (%{count})"
+          other: "Neperskaitytas (%{count})"
         new: "Naujos"
+        new_with_count:
+          one: "Naujas (%{count})"
+          few: "Naujas (%{count})"
+          many: "Naujas (%{count})"
+          other: "Naujas (%{count})"
         archive: "Archyvuoti"
         groups: "Grupės"
         move_to_inbox: "Perkelti į Pranešimų dėžutę"
@@ -2967,7 +2977,6 @@ lt:
         silence_reason: "Priežastis"
         silence_modal_title: "Nutildyti narį"
         silence_message: "E-pašto žinutė"
-        delete_all_posts: "Ištrinti visus pranešimus"
         penalty_post_delete: "Pašalinti įrašą"
         penalty_post_edit: "Redaguoti įrašą"
         silence: "Nutildyti"
@@ -3015,6 +3024,10 @@ lt:
         anonymize_yes: "Taip, Anonimizuoti šįą paskyrą"
         anonymize_failed: "Įvyko klaida anonimizuojant šią paskyrą"
         delete: "Ištrinti vartotoją"
+        delete_posts:
+          button: "Ištrinti visus pranešimus"
+          confirmation:
+            cancel: "Atšaukti"
         merge:
           prompt:
             cancel: "Atšaukti"
@@ -3310,6 +3323,5 @@ lt:
           moderator: "Moderatorius"
           regular: "Regulerus narys"
       previews:
-        topic_title: "Diskusijos tema"
         share_button: "Dalintis"
         reply_button: "Atsakyti"

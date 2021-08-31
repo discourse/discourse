@@ -988,7 +988,13 @@ hu:
         latest: "Legutóbbi"
         sent: "Elküldött"
         unread: "Olvasatlan"
+        unread_with_count:
+          one: "Olvasatlan (%{count})"
+          other: "Olvasatlan (%{count})"
         new: "Új"
+        new_with_count:
+          one: "Új (%{count})"
+          other: "Új (%{count})"
         archive: "Archívum"
         groups: "Saját csoportok"
         move_to_inbox: "Áthelyezés a bejövő üzenetek közé"
@@ -3351,8 +3357,6 @@ hu:
         silence_message_placeholder: "(Hagyd üresen hogy az alapértelmezett üzenetet küldje el)"
         suspended_until: "(eddig %{until})"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"
-        delete_all_posts: "Összes hozzászólás törlése"
-        delete_posts_progress: "Bejegyzések törlése ..."
         penalty_post_actions: "Mit szeretnél csinálni ezzel az összekapcsolt bejegyzéssel?"
         penalty_post_delete: "Bejegyzés eltávolítása"
         penalty_post_edit: "Bejegyzés szerkesztése"
@@ -3394,6 +3398,12 @@ hu:
         anonymize: "Felhasználó névtelenítése"
         anonymize_confirm: "TELJESEN biztos, hogy anonimizálni szeretné ezt a fiókot? Ez megváltoztatja a felhasználónevet és az e-mail-címet, és visszaállítja az összes profiladatot."
         delete: "Felhasználó törlése"
+        delete_posts:
+          button: "Összes hozzászólás törlése"
+          progress:
+            description: "Bejegyzések törlése ..."
+          confirmation:
+            cancel: "Mégse"
         merge:
           prompt:
             cancel: "Mégse"
@@ -3629,6 +3639,5 @@ hu:
           moderator: "Moderátor"
           regular: "Felhasználó"
       previews:
-        topic_title: "Vita téma"
         share_button: "Megosztás"
         reply_button: "Válasz"

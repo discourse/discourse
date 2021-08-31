@@ -947,7 +947,14 @@ lv:
       dismiss_notifications: "Vairs nerādīt visus"
       dismiss_notifications_tooltip: "Atzīmēt visus nelasītos paziņojumus kā izlasītus"
       no_messages_title: "Jums nav ziņu"
+      no_notifications_title: "Jums vēl nav paziņojumu"
+      no_notifications_body: >
+        Šajā panelī jums tiks paziņots par darbībām, kas tieši attiecas uz jums, tostarp atbildēm uz jūsu tēmām un ziņām, kad kāds <b>@piemin</b> vai citē jūs, un atbildes uz skatītajām tēmām. Paziņojumi tiks nosūtīti arī uz jūsu e -pastu, ja kādu laiku neesat pieteicies. <br><br> Meklējiet %{icon} lai izlemtu, par kurām konkrētām tēmām, kategorijām un tagiem vēlaties saņemt paziņojumu. Lai iegūtu vairāk, skatiet savas <a href='%{preferencesUrl}'>paziņojumu preferences</a>.
+      no_notifications_page_title: "Jums vēl nav paziņojumu"
+      no_notifications_page_body: >
+        Jūs saņemsiet paziņojumu par darbībām, kas tieši attiecas uz jums, tostarp atbildēm uz jūsu tēmām un ziņām, kad kāds <b>@minēs</b> vai citēs jūs, un atbildes uz skatītajām tēmām. Paziņojumi tiks nosūtīti arī uz jūsu e -pastu, ja kādu laiku neesat pieteicies. <br><br> Meklējiet %{icon} lai izlemtu, par kurām konkrētām tēmām, kategorijām un tagiem vēlaties saņemt paziņojumu. Lai iegūtu vairāk, skatiet savas <a href='%{preferencesUrl}'>paziņojumu preferences</a>.
       first_notification: "Jūsu pirmais paziņojums! Izvēlieties to, lai sāktu."
+      dynamic_favicon: "Rādīt skaitļus pārlūkprogrammas ikonā"
       skip_new_user_tips:
         description: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti"
         not_first_time: "Vai ne pirmo reizi?"
@@ -965,9 +972,14 @@ lv:
         dark: "Tumšais režīms"
         default_dark_scheme: "(vietnes noklusējums)"
       dark_mode: "Tumšais režīms"
+      dark_mode_enable: "Iespējot automātisko tumšā režīma krāsu shēmu"
+      text_size_default_on_all_devices: "Padarīt to par noklusējuma teksta izmēru visās manās ierīcēs"
+      allow_private_messages: "Atļaut citiem lietotājiem sūtīt man personiskas ziņas"
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
+      enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
       change: "mainīt"
+      featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
       admin: "%{user} ir administrators"
       moderator_tooltip: "Šis lietotājs ir moderators"
@@ -1049,7 +1061,15 @@ lv:
         latest: "Jaunākie"
         sent: "Nosūtne"
         unread: "Nelasīts"
+        unread_with_count:
+          zero: "Nelasīts (%{count})"
+          one: "Nelasīts (%{count})"
+          other: "Nelasīts (%{count})"
         new: "Jaunie"
+        new_with_count:
+          zero: "Jauns (%{count})"
+          one: "Jauns (%{count})"
+          other: "Jauns (%{count})"
         archive: "Arhīvs"
         groups: "Manas grupas"
         move_to_inbox: "Pārvietot uz iesūtni"
@@ -1091,16 +1111,33 @@ lv:
         enable_prerequisites: "Pirms rezerves kodu ģenerēšanas jums ir jāiespējo primārā divu faktoru metode."
         codes:
           title: "Izveidoti rezerves kodi"
+          description: "Katru no šiem rezerves kodiem var izmantot tikai vienu reizi. Glabājiet tos drošā, bet pieejamā vietā."
       second_factor:
         title: "Divu faktoru autentifikācija"
+        enable: "Pārvaldiet divu faktoru autentifikāciju"
         disable_all: "Atspējot visu"
+        forgot_password: "Aizmirsi paroli?"
+        confirm_password_description: "Lai turpinātu, lūdzu, apstipriniet savu paroli"
         name: "Vārds"
         label: "Kods"
+        rate_limit: "Lūdzu, uzgaidiet, pirms izmēģināt citu autentifikācijas kodu."
+        enable_description: |
+          Skenējiet šo QR kodu atbalstītā lietotnē (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) un ievadiet savu autentifikācijas kodu.
+        disable_description: "Lūdzu, ievadiet lietotnes autentifikācijas kodu"
         show_key_description: "Ievadiet manuāli"
+        short_description: |
+          Aizsargājiet savu kontu, izmantojot vienreizējus drošības kodus.
+        extended_description: |
+          Divu faktoru autentifikācija jūsu kontam piešķir papildu drošību, papildus parolei pieprasot vienreizēju marķieri. Žetonus var ģenerēt <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> un <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> ierīcēs.
+        oauth_enabled_warning: "Lūdzu, ņemiet vērā, ka sociālā pieteikšanās tiks atspējota līdz jūsu kontā būs iespējota divu faktoru autentifikācija."
         use: "Izmantojiet lietotni Autentifikators"
+        enforced_notice: "Pirms piekļuves šai vietnei jums ir jāiespējo divu faktoru autentifikācija."
         disable: "Atslēgt"
+        disable_confirm: "Vai tiešām vēlaties atspējot visas divu faktoru metodes?"
         save: "Saglabāt"
         edit: "Labot"
+        edit_title: "Rediģēt autentifikatoru"
+        edit_description: "Autentifikatora nosaukums"
         enable_security_key_description: |
           Kad esat <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">aparatūras drošības atslēgu</a> , nospiediet zemāk esošo pogu Reģistrēties.
         totp:
@@ -1135,18 +1172,29 @@ lv:
         taken: "Atvainojiet, šis e-pasts nav pieejams."
         error: "Mainot jūsu e-pasta adresi, notika kļūda. Varbūt šī adrese jau tiek izmantota?"
         success: "Mēs aizsūtījām e-pastu uz šo adresi. Lūdzu sekojiet apstiprināšanas instrukcijām vēstulē."
+        success_via_admin: "Mēs nosūtījām e -pastu uz šo adresi. Lietotājam būs jāievēro apstiprinājuma norādījumi e -pastā."
+        success_staff: "Mēs nosūtījām e -pastu uz jūsu pašreizējo adresi. Lūdzu, izpildiet apstiprinājuma norādījumus."
       change_avatar:
         title: "Nomainīt savu profila bildi"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, pamatojoties uz"
+        gravatar_title: "Mainiet savu avatar %{gravatarName}vietnē"
+        gravatar_failed: "Mēs nevarējām atrast %{gravatarName} ar šo e -pasta adresi."
+        refresh_gravatar_title: "Atsvaidziniet savu %{gravatarName}"
         letter_based: "Sistēmas piešķirtais profila attēls"
         uploaded_avatar: "Savs attēls"
         uploaded_avatar_empty: "Pievienot savu attēlu"
         upload_title: "Augšupielādēt savu attēlu"
         image_is_not_a_square: "Uzmanību: mēs apgriezām jūsu attēlu; platums un augstums nebija vienādi."
+        logo_small: "Vietnes mazais logotips. Izmanto pēc noklusējuma."
       change_profile_background:
         title: "Profila galvene"
+        instructions: "Profilu galvenes tiks centrētas, un to noklusējuma platums būs 1110 pikseļi."
       change_card_background:
         title: "Lietotāja kartiņas fons"
         instructions: "Fona attēli būs centrēti un ar noklusējuma platumu 590px."
+      change_featured_topic:
+        title: "Piedāvātā tēma"
+        instructions: "Saite uz šo tēmu būs jūsu lietotāja kartē un profilā."
       email:
         title: "E-pasts"
         primary: "Primārais e-pasts"
@@ -1163,10 +1211,13 @@ lv:
         auth_override_instructions: "E -pastu var atjaunināt no autentifikācijas pakalpojumu sniedzēja."
         no_secondary: "Nav sekundāru e -pasta ziņojumu"
         instructions: "Nekad nav parādīts sabiedrībai."
+        admin_note: "Piezīme. Administratora lietotājs, kas maina cita lietotāja e-pasta adresi, kas nav administrators, norāda, ka lietotājs ir zaudējis piekļuvi savam sākotnējam e-pasta kontam, tāpēc uz jauno adresi tiks nosūtīts paroles atiestatīšanas e-pasts. Lietotāja e -pasts nemainīsies, kamēr nebūs pabeidzis paroles atiestatīšanas procesu."
         ok: "Mēs jums nosūtīsim apstiprinājuma e-pastu"
         required: "Lūdzu ievadiet derīgu e-pasta adresi"
         invalid: "Lūdzu ievadiet derīgu e-pasta adresi"
         authenticated: "Jūsu e-pastu autentificēja %{provider}"
+        invite_auth_email_invalid: "Jūsu ielūguma e -pasta adrese neatbilst e -pasta adresei, kuras autentificēts ar %{provider}"
+        authenticated_by_invite: "Jūsu e -pasta adrese ir apstiprināta ar uzaicinājumu"
         frequency_immediately: "Mēs nekavējoties sūtīsim jums epastu par jaunām neizlasītām ziņām."
         frequency:
           zero: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo %{count} minūšu laikā."
@@ -1336,6 +1387,8 @@ lv:
           invite_saved: "Uzaicinājums saglabāts."
           invite_copied: "Uzaicinājuma saite ir nokopēta."
         bulk_invite:
+          progress: "Augšupielādēts %{progress}%..."
+          success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
         title: "Parole"
@@ -1345,10 +1398,12 @@ lv:
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
         ok: "Jūsu parole izskatās labi."
         instructions: "vismaz %{count} rakstzīmes"
+        required: "Lūdzu, ievadiet paroli"
       summary:
         title: "Kopsavilkums"
         stats: "Statistika"
         time_read: "lasīšanas laiks"
+        recent_time_read: "Nesenais lasīšanas laiks"
         topic_count:
           zero: "nav izveidotu tēmu"
           one: "viena tēma izveidota"
@@ -1392,6 +1447,7 @@ lv:
         most_liked_users: "Visvairāk atzinību"
         most_replied_to_users: "Visvairāk atbildēja"
         no_likes: "Pagaidām atzinību nav."
+        top_categories: "Populārākās kategorijas"
         topics: "Tēmas"
         replies: "Atbildes"
       ip_address:
@@ -1401,11 +1457,16 @@ lv:
       avatar:
         title: "Profila attēls"
         header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
+        name_and_description: "%{name} - %{description}"
+        edit: "Rediģēt profila attēlu"
       title:
         title: "Virsraksts"
         none: "(neviens)"
+        instructions: "parādās aiz jūsu lietotājvārda"
       flair:
+        title: "Nojauta"
         none: "(neviens)"
+        instructions: "ikona, kas tiek parādīta blakus jūsu profila attēlam"
       primary_group:
         title: "Galvenā grupa"
         none: "(neviens)"
@@ -1438,13 +1499,18 @@ lv:
         fixed: "Ielādēt lapu"
     modal:
       close: "aizvērt"
+      dismiss_error: "Noraidīt kļūdu"
     close: "Aizvērt"
+    assets_changed_confirm: "Šī vietne tikko saņēma programmatūras jauninājumu. Vai iegūt jaunāko versiju tūlīt?"
     logout: "Jūs izgājāt."
     refresh: "Pārlādēt"
+    home: "Mājas"
     read_only_mode:
       enabled: "Vietne ir \"tikai lasīšanas\" režīmā. Lūdzu turpiniet lasīt, taču atbildēšana, atzinības izteikšana un citas funkcijas šobrīd ir atslēgtas."
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
+    too_few_topics_and_posts_notice_MF: >-
+      Sāksim diskusiju <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/"></a> Tur {currentTopics, plural, zero {} one {ir <strong>#</strong> tēma} other {ir <strong>#</strong> tēmas}} un {currentPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Apmeklētājiem ir nepieciešams vairāk lasīt un atbildēt - mēs vismaz iesakām {requiredTopics, plural, one {<strong>#</strong> tēma} other {<strong>#</strong> tēmas}} un {requiredPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Šo ziņojumu var redzēt tikai darbinieki.
     learn_more: "uzzināt vairāk..."
     first_post: Pirmais ieraksts
     mute: Noklusināt
@@ -1476,7 +1542,11 @@ lv:
       disable: "Rādīt dzēstos ierakstus"
     private_message_info:
       title: "Ziņa"
+      invite: "Uzaicināt citus ..."
+      edit: "Pievienot vai noņemt ..."
+      remove: "Noņemt ..."
       add: "Pievienot..."
+      leave_message: "Vai tiešām vēlaties atstāt šo ziņu?"
       remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
     email: "E-pasts"
@@ -1487,7 +1557,12 @@ lv:
     trust_level: "Uzticības līmenis"
     search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
+      header_title: "Sveicināti!"
+      subheader_title: "Izveidosim jūsu kontu"
+      disclaimer: "Reģistrējoties jūs piekrītat <a href='%{privacy_link}' target='blank'>privātuma politikas</a> un <a href='%{tos_link}' target='blank'>pakalpojumu sniegšanas noteikumiem</a>."
+      title: "izveido savu kontu"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
+      associate: "Jau ir konts? <a href='%{associate_link}'>Piesakieties</a> lai saistītu savu %{provider} kontu."
     forgot_password:
       title: "Paroles atjaunošana"
       action: "Es aizmirsu savu paroli "
@@ -1495,16 +1570,30 @@ lv:
       reset: "Atjaunot paroli"
       complete_username: "Ja konts atbildīs lietotājvārdam <b>%{username}</b>, jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
       complete_email: "Ja konts atbildīs<b>%{email}</b>, Jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
+      complete_username_found: "Mēs atradām kontu, kas atbilst lietotājvārdam <b>%{username}</b>. Drīzumā jums jāsaņem e -pasts ar norādījumiem par paroles atiestatīšanu."
+      complete_email_found: "Ja konts atbildīs lietotājvārdam <b>%{email}</b>, jūs drīz saņemsiet e-pastu ar paroles atjaunošanas instrukcijām."
       complete_username_not_found: "Neviens konts neatbilst lietotājvārdam <b>%{username}</b>"
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
       help: "Nesaņēmāt e-pastu? Pārbaudiet savu surogātpasta mapi. <p>Neesat drošs par to, kuru e-pasta adresi izmantojāt? Ievadiet e-pasta adresi, un mēs paziņosim, ja tā ir izmantota.</p> <p>Ja jums vairs nav piekļuves sava konta e-pasta adresei, lūdzu, sazinieties <a href='%{basePath}/about'>ar mūsu izpalīdzīgajiem darbiniekiem.</a></p>"
       button_ok: "Labi"
       button_help: "Palīdzība"
     email_login:
+      link_label: "Nosūtiet man e -pastu pieteikšanās saiti"
+      button_label: "ar e -pastu"
+      login_link: "Izlaist paroli; nosūtiet man e -pastu pieteikšanās saiti"
+      emoji: "bloķēt emocijzīmes"
+      complete_username: "Ja konts atbilst lietotājvārdam <b>%{username}</b>, drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
+      complete_email: "Ja konts atbilst <b>%{email}</b>, drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
+      complete_username_found: "Mēs atradām kontu, kas atbilst lietotājvārdam <b>%{username}</b>Drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
+      complete_email_found: "Mēs atradām kontu, kas atbilst <b>%{email}</b>Drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
       complete_username_not_found: "Neviens konts neatbilst lietotājvārdam <b>%{username}</b>"
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
       confirm_title: Turpināt %{site_name}
+      logging_in_as: Piesakoties kā %{email}
+      confirm_button: Pabeigt pieteikšanos
     login:
+      header_title: "Laipni lūdzam"
+      subheader_title: "Ielogojieties savā kontā"
       title: "Pieslēgties"
       username: "Lietotājs"
       password: "Parole"
@@ -3277,7 +3366,6 @@ lv:
         suspend_reason: "Iemesls"
         suspended_by: "Apturēja"
         silence_reason: "Iemesls"
-        delete_all_posts: "Dzēst visus ierakstus"
         moderator: "Moderātors?"
         admin: "Administrators?"
         suspended: "Neapturēts?"
@@ -3319,6 +3407,10 @@ lv:
         anonymize_yes: "Jā, anonimizēt kontu. (anonymize)"
         anonymize_failed: "Radās problēma ar konta anonimizēšanu (anonymizing)."
         delete: "Dzēst lietotāju."
+        delete_posts:
+          button: "Dzēst visus ierakstus"
+          confirmation:
+            cancel: "Atcelt"
         merge:
           prompt:
             cancel: "Atcelt"

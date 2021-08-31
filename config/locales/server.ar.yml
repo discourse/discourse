@@ -4473,17 +4473,30 @@ ar:
           city_for_disputes:
             label: "مدينة النزاعات"
             placeholder: "سان فرانسيسكو، كاليفورنيا"
-      colors:
-        title: "الألوان"
-      fonts:
-        title: "الخطوط"
+      styling:
         fields:
           body_font:
             label: "خط النص الأساسي"
           heading_font:
             label: "خط العنوان"
-          font_preview:
+          styling_preview:
             label: "معاينة"
+          homepage_style:
+            choices:
+              latest:
+                label: "أحدث الموضوعات"
+              categories_only:
+                label: "الفئات فقط"
+              categories_with_featured_topics:
+                label: "الفئات ذات الموضوعات المميزة"
+              categories_and_latest_topics:
+                label: "الفئات وأحدث الموضوعات"
+              categories_and_top_topics:
+                label: "الفئات والموضوعات الأكثر نشاطًا"
+              categories_boxes:
+                label: "مربعات الفئات"
+              categories_boxes_with_topics:
+                label: "مربعات الفئات ذات الموضوعات"
       logos:
         title: "الشعارات"
         fields:
@@ -4502,26 +4515,6 @@ ar:
           large_icon:
             label: "الأيقونة الكبيرة"
             description: "صورة الأيقونة المُستخدَمة لتمثيل موقعك على الأجهزة الحديثة التي تبدو جيدة في الأحجام الأكبر. يجب أن يكون الحجم المثالي أكبر من 512 × 512. سنستخدم الشعار المربع بشكلٍ افتراضي."
-      homepage:
-        description: "نوصي بعرض أحدث الموضوعات على صفحتك الرئيسية، ولكن يمكنك أيضًا عرض الفئات (مجموعات الموضوعات) على الصفحة الرئيسية إذا كنت تفضِّل ذلك."
-        title: "الصفحة الرئيسية"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "أحدث الموضوعات"
-              categories_only:
-                label: "الفئات فقط"
-              categories_with_featured_topics:
-                label: "الفئات ذات الموضوعات المميزة"
-              categories_and_latest_topics:
-                label: "الفئات وأحدث الموضوعات"
-              categories_and_top_topics:
-                label: "الفئات والموضوعات الأكثر نشاطًا"
-              categories_boxes:
-                label: "مربعات الفئات"
-              categories_boxes_with_topics:
-                label: "مربعات الفئات ذات الموضوعات"
       invites:
         title: "دعوة فريق العمل"
         description: "أنت على وشك الانتهاء! لندعو بعض الأشخاص للمساعدة في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>تغذية مناقشاتك</a> بموضوعات وردود شيقة لبدء مجتمعك."

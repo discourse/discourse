@@ -3953,17 +3953,30 @@ it:
           city_for_disputes:
             label: "Sede per eventuali controversie"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Colori"
-      fonts:
-        title: "Caratteri"
+      styling:
         fields:
           body_font:
             label: "Carattere Corpo"
           heading_font:
             label: "Carattere Intestazione"
-          font_preview:
+          styling_preview:
             label: "Anteprima"
+          homepage_style:
+            choices:
+              latest:
+                label: "Ultimi Argomenti"
+              categories_only:
+                label: "Solo Categorie"
+              categories_with_featured_topics:
+                label: "Categorie con argomenti in evidenza"
+              categories_and_latest_topics:
+                label: "Categorie e Argomenti Recenti"
+              categories_and_top_topics:
+                label: "Categorie e Argomenti Popolari"
+              categories_boxes:
+                label: "Riquadri Categorie"
+              categories_boxes_with_topics:
+                label: "Riquadri Categorie con Argomenti"
       logos:
         title: "Loghi"
         fields:
@@ -3982,26 +3995,6 @@ it:
           large_icon:
             label: "Icona Grande"
             description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita useremo il logo quadrato."
-      homepage:
-        description: "Ti consigliamo di mostrare gli ultimi argomenti sulla tua homepage, ma se preferisci puoi anche mostrare le categorie (gruppi di argomenti)."
-        title: "Homepage"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ultimi Argomenti"
-              categories_only:
-                label: "Solo Categorie"
-              categories_with_featured_topics:
-                label: "Categorie con Argomenti in Evidenza"
-              categories_and_latest_topics:
-                label: "Categorie e Argomenti Recenti"
-              categories_and_top_topics:
-                label: "Categorie e Argomenti Popolari"
-              categories_boxes:
-                label: "Riquadri Categorie"
-              categories_boxes_with_topics:
-                label: "Riquadri Categorie con Argomenti"
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."

@@ -1944,12 +1944,22 @@ hu:
           company_name:
             label: "Cégnév"
             placeholder: "Példa szervezet"
-      colors:
-        title: "Színek"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Előnézet"
+          homepage_style:
+            choices:
+              latest:
+                label: "Legutóbbi témák"
+              categories_only:
+                label: "Csak kategóriák szerint"
+              categories_with_featured_topics:
+                label: "Kategóriák funkciók szerint"
+              categories_and_latest_topics:
+                label: "Kategóriák és legutóbbi témák"
+              categories_and_top_topics:
+                label: "Kategóriák és legfelső témák"
       logos:
         title: "Logók"
         fields:
@@ -1960,21 +1970,6 @@ hu:
         fields:
           large_icon:
             label: "Nagy ikon"
-      homepage:
-        title: "Főoldal"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Legutóbbi témák"
-              categories_only:
-                label: "Csak kategóriák"
-              categories_with_featured_topics:
-                label: "Kategóriák kiemelt témákkal"
-              categories_and_latest_topics:
-                label: "Kategóriák és legutóbbi témák"
-              categories_and_top_topics:
-                label: "Kategóriák és legnépszerűbb témák"
       invites:
         title: "Stáb meghívása"
       finished:

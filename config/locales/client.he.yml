@@ -1100,6 +1100,7 @@ he:
         ניתן להתחיל להוסיף פוסטים לסימניות עם הכפתור %{icon} והן תופענה כאן לפנייה בקלות. ניתן גם לתזמן תזכורת!
       no_bookmarks_search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
       no_notifications_title: "אין לך התראות עדיין"
+      no_notifications_page_title: "אין לך התראות עדיין"
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       skip_new_user_tips:
@@ -1208,7 +1209,17 @@ he:
         latest: "אחרונות"
         sent: "נשלח"
         unread: "טרם נקראו"
+        unread_with_count:
+          one: "לא נקראה (%{count})"
+          two: "לא נקראה (%{count})"
+          many: "לא נקראה (%{count})"
+          other: "לא נקראה (%{count})"
         new: "חדשות"
+        new_with_count:
+          one: "חדש (%{count})"
+          two: "חדש (%{count})"
+          many: "חדש (%{count})"
+          other: "חדש (%{count})"
         archive: "ארכיון"
         groups: "הקבוצות שלי"
         move_to_inbox: "העברה לדואר נכנס"
@@ -2393,6 +2404,7 @@ he:
           other: "התקדמות: <strong>%{count}</strong> נושאים"
       none:
         unread: "אין לך נושאים שלא נקראו."
+        unseen: "אין לך נושאים שלא ראית."
         new: "אין לך נושאים חדשים."
         read: "עדיין לא קראת אף נושא."
         posted: "עדיין לא פרסמתם באף נושא."
@@ -2482,6 +2494,7 @@ he:
       browse_all_categories: עיינו בכל הקטגוריות
       browse_all_tags: עיון בכל התגיות
       view_latest_topics: הצגת נושאים אחרונים
+      suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
@@ -4851,8 +4864,6 @@ he:
         silence_message_placeholder: "(להשאיר ריק כדי לשלוח את הודעת בררת המחדל)"
         suspended_until: "(עד %{until})"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
-        delete_all_posts: "מחיקת כל הפוסטים"
-        delete_posts_progress: "פוסטים נמחקים…"
         delete_posts_failed: "אירעה תקלה בעת מחיקת הפוסטים."
         post_edits: "עריכות של פוסטים"
         view_edits: "הצגת עריכות"
@@ -4919,8 +4930,21 @@ he:
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
         delete_posts:
+          button: "מחיקת כל הפוסטים"
           progress:
             title: "התקדמות מחיקת הפוסטים"
+            description: "פוסטים נמחקים…"
+          confirmation:
+            title: "למחוק את כל הפוסטים מאת ‎@%{username}"
+            description: |
+              <p>למחוק <b>%{post_count}</b> פוסטים מאת ‎@%{username}?
+
+              <p><b>תהליך זה הוא בלתי הפיך!</b></p>
+
+              <p>כדי להמשיך יש להקליד: <code>%{text}</code></p>
+            text: "מחיקת פוסטים מאת ‎@%{username}"
+            delete: "מחיקת פוסטים מאת ‎@%{username}"
+            cancel: "ביטול"
         merge:
           button: "מיזוג"
           prompt:
@@ -5341,7 +5365,8 @@ he:
           moderator: "מפקח"
           regular: "משתמש רגיל"
       previews:
-        topic_title: "נושא דיון"
-        font_title: "הגופן %{font}"
+        topic_title: "כותרת נושא דיון"
         share_button: "לשתף"
         reply_button: "להגיב"
+        topic_preview: "תצוגה מקדימה של נושא"
+        homepage_preview: "תצוגה מקדימה של עמוד הבית"

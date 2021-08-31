@@ -1061,32 +1061,27 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Spalvos"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Peržiūrėti"
-      logos:
-        title: "Logotipas"
-        fields:
-          logo:
-            label: "Pirminis logotipas"
-      homepage:
-        title: "Pagrindinis puslapis"
-        fields:
           homepage_style:
             choices:
               latest:
                 label: "Naujausios temos"
               categories_only:
-                label: "Tik kategrijos"
+                label: "Tiktai Kategorijos"
               categories_with_featured_topics:
-                label: "Kategorijos su Išskirtinėmis temomis"
+                label: "Kategorijos su populiariomis temomis"
               categories_and_latest_topics:
-                label: "Kategorijos su Naujausiomis temomis"
+                label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
-                label: "Kategorijos su Top temomis"
+                label: "Kategorijos ir Top temos"
+      logos:
+        title: "Logotipas"
+        fields:
+          logo:
+            label: "Pirminis logotipas"
       invites:
         title: "Pakviesti valdytojus"
       finished:

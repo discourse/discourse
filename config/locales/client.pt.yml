@@ -993,6 +993,7 @@ pt:
       no_notifications_title: "Você ainda não possui quaisquer notificações"
       no_notifications_body: >
         Você será notificado neste painel sobre atividades diretamente relevantes para você, incluindo respostas aos seus tópicos e postagens, quando alguém <b>@menciona</b> você ou cita você, e responde aos tópicos que você está observando. As notificações também serão enviadas para o seu e-mail quando você não estiver logado por um tempo. <br><br> Procure o %{icon} para decidir sobre quais tópicos, categorias e marcas específicas você deseja ser notificado. Para obter mais informações, consulte suas <a href='%{preferencesUrl}'>preferências de notificação</a>.
+      no_notifications_page_title: "Você ainda não possui quaisquer notificações"
       first_notification: "A sua primeira notificação! Seleccione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
@@ -1101,7 +1102,13 @@ pt:
         latest: "Recentes"
         sent: "Enviado"
         unread: "Não Lido"
+        unread_with_count:
+          one: "Não Lido (%{count})"
+          other: "Não Lido (%{count})"
         new: "Novo"
+        new_with_count:
+          one: "Novo (%{count})"
+          other: "Novo (%{count})"
         archive: "Arquivo"
         groups: "Os Meus Grupos"
         move_to_inbox: "Mover para Caixa de Entrada"
@@ -4206,7 +4213,6 @@ pt:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         silence_modal_title: "Silenciar Usuário"
-        delete_all_posts: "Eliminar todas as publicações"
         penalty_post_edit: "Editar a mensagem"
         silenced: "Silenciado?"
         moderator: "Moderador?"
@@ -4248,6 +4254,10 @@ pt:
         anonymize_yes: "Sim, tornar esta conta anónima"
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."
         delete: "Eliminar Utilizador"
+        delete_posts:
+          button: "Eliminar todas as publicações"
+          confirmation:
+            cancel: "Cancelar"
         merge:
           prompt:
             cancel: "Cancelar"

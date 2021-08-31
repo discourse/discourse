@@ -857,6 +857,8 @@ id:
         sent: "Mengirim"
         unread: "Belum dibaca"
         new: "Baru"
+        new_with_count:
+          other: "Baru (%{count})"
         archive: "Arsip"
         groups: "Kelompok Saya"
         move_to_inbox: "Pindah ke Kotak Masuk"
@@ -1863,6 +1865,9 @@ id:
         approve: "Terima"
         time_read: "Waktu Baca"
         delete: "Hapus Pengguna"
+        delete_posts:
+          confirmation:
+            cancel: "Batal"
         merge:
           prompt:
             cancel: "Batal"

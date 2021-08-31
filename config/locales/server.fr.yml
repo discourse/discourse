@@ -4325,17 +4325,30 @@ fr:
           city_for_disputes:
             label: "Ville pour les litiges"
             placeholder: "San Francisco, Californie"
-      colors:
-        title: "Couleurs"
-      fonts:
-        title: "Polices"
+      styling:
         fields:
           body_font:
             label: "Police de contenu"
           heading_font:
             label: "Police de titre"
-          font_preview:
-            label: "Aperçu"
+          styling_preview:
+            label: "Prévisualiser"
+          homepage_style:
+            choices:
+              latest:
+                label: "Sujets récents"
+              categories_only:
+                label: "Catégories seules"
+              categories_with_featured_topics:
+                label: "Catégories avec sujets à la une"
+              categories_and_latest_topics:
+                label: "Catégories et sujets récents"
+              categories_and_top_topics:
+                label: "Catégories et meilleurs sujets"
+              categories_boxes:
+                label: "Boîtes catégories"
+              categories_boxes_with_topics:
+                label: "Boîtes catégorie avec sujets"
       logos:
         title: "Logos"
         fields:
@@ -4354,26 +4367,6 @@ fr:
           large_icon:
             label: "Grande icône"
             description: "Icône d’image utilisée pour représenter votre site sur des appareils modernes et qui s'affiche correctement en grandes tailles. Idéalement plus grand que 512 × 512. Nous utiliserons le logo carré par défaut."
-      homepage:
-        description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
-        title: "Page d'accueil"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Sujets récents"
-              categories_only:
-                label: "Catégories seules"
-              categories_with_featured_topics:
-                label: "Catégories avec sujets à la une"
-              categories_and_latest_topics:
-                label: "Catégories et sujets récents"
-              categories_and_top_topics:
-                label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes catégorie avec sujets"
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."

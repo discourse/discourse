@@ -2453,12 +2453,26 @@ be:
           city_for_disputes:
             label: "Горад для спрэчак"
             placeholder: "Сан - Францыска, Каліфорнія"
-      colors:
-        title: "<......"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "папярэдні прагляд"
+          homepage_style:
+            choices:
+              latest:
+                label: "апошнія тэмы"
+              categories_only:
+                label: "Толькі катэгорыі"
+              categories_with_featured_topics:
+                label: "Катэгорыі з Выбранымі Тэмамі"
+              categories_and_latest_topics:
+                label: "Катэгорыі і Апошнія тэмы"
+              categories_and_top_topics:
+                label: "Катэгорыі і асноўныя тэмы"
+              categories_boxes:
+                label: "катэгорыі скрынкі"
+              categories_boxes_with_topics:
+                label: "Катэгорыі скрынка з Тэмай"
       logos:
         title: "лагатыпы"
         fields:
@@ -2477,26 +2491,6 @@ be:
           large_icon:
             label: "вялікая абразок"
             description: "Значок выява выкарыстоўваецца для прадстаўлення вашага сайта на сучасных прыладах, якія добра выглядаюць пры вялікіх памерах. У ідэале больш, чым 512 × 512. Мы будзем выкарыстоўваць квадратны лагатып па змаўчанні."
-      homepage:
-        description: "Мы рэкамендуем паказваць апошнія тэмы на галоўнай старонцы сайта, але вы можаце таксама паказаць катэгорыі (групы тэм) на хатняй старонцы, калі вы аддаеце перавагу."
-        title: "хатняя старонка"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "апошнія тэмы"
-              categories_only:
-                label: "катэгорыі толькі"
-              categories_with_featured_topics:
-                label: "Катэгорыі з Выбранымі Тэмамі"
-              categories_and_latest_topics:
-                label: "Катэгорыі і Апошнія тэмы"
-              categories_and_top_topics:
-                label: "Катэгорыі і асноўныя тэмы"
-              categories_boxes:
-                label: "катэгорыі скрынкі"
-              categories_boxes_with_topics:
-                label: "Катэгорыі скрынка з Тэмай"
       invites:
         title: "запрасіць Staff"
         description: "Вы амаль скончылі! Давайце запросім людзей, каб дапамагчы <HTTPS A HREF = ':"

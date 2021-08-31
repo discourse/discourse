@@ -4349,17 +4349,30 @@ pt_BR:
           city_for_disputes:
             label: "Cidade para disputas"
             placeholder: "São Francisco, Califórnia"
-      colors:
-        title: "Cores"
-      fonts:
-        title: "Fontes"
+      styling:
         fields:
           body_font:
             label: "Fonte do corpo"
           heading_font:
             label: "Fonte do cabeçalho"
-          font_preview:
+          styling_preview:
             label: "Pré-visualização"
+          homepage_style:
+            choices:
+              latest:
+                label: "Tópicos mais recentes"
+              categories_only:
+                label: "Apenas categorias"
+              categories_with_featured_topics:
+                label: "Categorias com tópicos em destaque"
+              categories_and_latest_topics:
+                label: "Categorias e últimos tópicos"
+              categories_and_top_topics:
+                label: "Categorias e melhores tópicos"
+              categories_boxes:
+                label: "Caixas de categorias"
+              categories_boxes_with_topics:
+                label: "Caixas de categorias com tópicos"
       logos:
         title: "Logotipos"
         fields:
@@ -4378,26 +4391,6 @@ pt_BR:
           large_icon:
             label: "Ícone grande"
             description: "Imagem do ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512×512. Usaremos o logotipo quadrado por padrão."
-      homepage:
-        description: "Recomendamos mostrar os tópicos mais recentes na sua página inicial, mas você também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
-        title: "Página Inicial"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Tópicos mais recentes"
-              categories_only:
-                label: "Apenas categorias"
-              categories_with_featured_topics:
-                label: "Categorias com tópicos em destaque"
-              categories_and_latest_topics:
-                label: "Categorias e tópicos mais recentes"
-              categories_and_top_topics:
-                label: "Categorias e tópicos principais"
-              categories_boxes:
-                label: "Caixas de categorias"
-              categories_boxes_with_topics:
-                label: "Caixas de categorias com tópicos"
       invites:
         title: "Convidar equipe"
         description: "Você está quase pronto(as)! Vamos convidar algumas pessoas para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\ndivulgar as suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."

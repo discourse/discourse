@@ -4311,17 +4311,30 @@ zh_CN:
           city_for_disputes:
             label: "争议之城"
             placeholder: "加利福尼亚州旧金山"
-      colors:
-        title: "颜色"
-      fonts:
-        title: "字体"
+      styling:
         fields:
           body_font:
             label: "正文字体"
           heading_font:
             label: "标题字体"
-          font_preview:
+          styling_preview:
             label: "预览"
+          homepage_style:
+            choices:
+              latest:
+                label: "最新话题"
+              categories_only:
+                label: "仅类别"
+              categories_with_featured_topics:
+                label: "包含精选话题的类别"
+              categories_and_latest_topics:
+                label: "类别和最新话题"
+              categories_and_top_topics:
+                label: "类别和热门话题"
+              categories_boxes:
+                label: "类别框"
+              categories_boxes_with_topics:
+                label: "带有话题的类别框"
       logos:
         title: "徽标"
         fields:
@@ -4340,26 +4353,6 @@ zh_CN:
           large_icon:
             label: "大图标"
             description: "用于在现代设备上表示您的站点的图标图片，在较大尺寸下效果不错。理想情况下，大于 512 × 512。默认情况下，我们将使用方形徽标。"
-      homepage:
-        description: "我们建议在您的首页上显示最新话题，但如果您愿意，您也可以在首页上显示类别（话题组）。"
-        title: "首页"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "最新话题"
-              categories_only:
-                label: "仅类别"
-              categories_with_featured_topics:
-                label: "包含精选话题的类别"
-              categories_and_latest_topics:
-                label: "类别和最新话题"
-              categories_and_top_topics:
-                label: "类别和热门话题"
-              categories_boxes:
-                label: "类别框"
-              categories_boxes_with_topics:
-                label: "带有话题的类别框"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

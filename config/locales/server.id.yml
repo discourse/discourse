@@ -671,7 +671,7 @@ id:
                 label: "Pribadi"
       corporate:
         title: "Organisasi"
-      homepage:
+      styling:
         fields:
           homepage_style:
             choices:

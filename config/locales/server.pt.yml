@@ -2215,25 +2215,10 @@ pt:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
-      colors:
-        title: "Cores"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Pré-visualização"
-      logos:
-        title: "Logos"
-        fields:
-          logo:
-            label: "Logo Primário"
-      icons:
-        title: "Ícones"
-        fields:
-          large_icon:
-            label: "Ícone Grande"
-      homepage:
-        title: "Página de início"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2246,6 +2231,16 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
+      logos:
+        title: "Logos"
+        fields:
+          logo:
+            label: "Logo Primário"
+      icons:
+        title: "Ícones"
+        fields:
+          large_icon:
+            label: "Ícone Grande"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:

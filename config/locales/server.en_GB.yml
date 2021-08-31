@@ -165,8 +165,6 @@ en_GB:
     step:
       corporate:
         title: "Organisation"
-      colors:
-        title: "Colours"
       finished:
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>

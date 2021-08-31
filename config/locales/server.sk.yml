@@ -1402,14 +1402,10 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizácia"
-      colors:
-        title: "Farby"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Ukážka"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

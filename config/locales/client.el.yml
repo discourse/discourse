@@ -988,7 +988,13 @@ el:
         latest: "Πρόσφατες"
         sent: "Απεσταλμένα"
         unread: "Αδιάβαστα"
+        unread_with_count:
+          one: "Μη αναγνωσμένα (%{count})"
+          other: "Μη αναγνωσμένα (%{count})"
         new: "Νέα"
+        new_with_count:
+          one: "Νέα (%{count})"
+          other: "Νέα (%{count})"
         archive: "Αρχείο"
         groups: "Οι Ομάδες Μου"
         move_to_inbox: "Μετακίνηση στα Εισερχόμενα"
@@ -4031,8 +4037,6 @@ el:
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
-        delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
-        delete_posts_progress: "Διαγραφή αναρτήσεων..."
         delete_posts_failed: "Παρουσιάστηκε πρόβλημα κατά τη διαγραφή των αναρτήσεων."
         penalty_post_actions: "Τι θα θέλατε να κάνετε με τη σχετική ανάρτηση;"
         penalty_post_delete: "Διαγραφή ανάρτησης"
@@ -4090,6 +4094,12 @@ el:
         anonymize_yes: "Ναι, ανωνυμοποίησε αυτόν τον λογαριασμό"
         anonymize_failed: "Παρουσιάστηκε ένα σφάλμα κατά την ανωνυμοποίηση του λογαριασμού."
         delete: "Διαγραφή χρήστη"
+        delete_posts:
+          button: "Σβήσε όλες τις αναρτήσεις"
+          progress:
+            description: "Διαγραφή αναρτήσεων..."
+          confirmation:
+            cancel: "Άκυρο"
         merge:
           button: "Συγχώνευση"
           prompt:
@@ -4467,6 +4477,5 @@ el:
           moderator: "Συντονιστής"
           regular: "Τακτικός χρήστης"
       previews:
-        topic_title: "Θέμα συζήτησης"
         share_button: "Κοινοποίηση"
         reply_button: "Απάντηση"

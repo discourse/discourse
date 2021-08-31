@@ -952,6 +952,7 @@ ko:
       no_notifications_title: "아직 알림이 없습니다."
       no_notifications_body: >
         이 패널에서는 글 및 댓글에 대한 답글을 포함하여 직접적으로 관련된 활동에 대한 알림을 받게됩니다. 누군가 사용자님을 <b>@멘션</b> 또는 인용하고 사용자님이 팔로우중인 글에 댓글을 올릴 때. 한동안 로그인하지 않은 경우에도 알림이 이메일로 전송됩니다. <br><br> 알림을받을 특정 주제, 카테고리 및 태그를 살펴보세요 %{icon}. 자세한 내용은 <a href='%{preferencesUrl}'>알림 기본 설정</a>을 참조하십시오.
+      no_notifications_page_title: "아직 알림이 없습니다."
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
       skip_new_user_tips:
@@ -1060,7 +1061,11 @@ ko:
         latest: "최신"
         sent: "보낸 편지함"
         unread: "읽지 않음"
+        unread_with_count:
+          other: "읽지 않은 글 (%{count})"
         new: "새글"
+        new_with_count:
+          other: "새글 (%{count})"
         archive: "저장함"
         groups: "내 그룹"
         move_to_inbox: "받은 편지함으로 이동"
@@ -1735,6 +1740,8 @@ ko:
       select_to_filter: "필터링 기준 선택"
       default_header_text: 선택...
       no_content: 일치하는 항목을 찾을 수 없음
+      results_count:
+        other: "%{count}개의 결과"
       filter_placeholder: 검색...
       filter_placeholder_with_any: 검색 또는 생성...
       create: "만들기: '%{content}'"
@@ -2813,7 +2820,7 @@ ko:
         group: "그룹"
         see: "보기"
         reply: "댓글"
-        create: "만들기"
+        create: "글"
         no_groups_selected: "접근 권한이 부여된 그룹이 없습니다. 이 카테고리는 관리자만 볼 수 있습니다."
         everyone_has_access: '이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 작성 하고, 글을 쓸 수 있습니다. 사용 권한을 제한하려면 "everyone" 그룹에 부여된 사용 권한 중 하나 이상을 제거해야 합니다.'
         toggle_reply: "토글 댓글 권한"
@@ -4383,8 +4390,6 @@ ko:
         silence_message_placeholder: "(기본 메시지를 보내려면 비워 두십시오)"
         suspended_until: "(%{until} 까지)"
         cant_suspend: "이 사용자는 일시정지할 수 없습니다."
-        delete_all_posts: "모든 글을 삭제합니다"
-        delete_posts_progress: "글 삭제중..."
         delete_posts_failed: "글을 삭제하는 중 문제가 발생했습니다."
         post_edits: "게시물 수정"
         view_edits: "수정사항 보기"
@@ -4451,8 +4456,15 @@ ko:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
         delete_posts:
+          button: "모든 글을 삭제합니다"
           progress:
             title: "게시물 삭제 진행률"
+            description: "글 삭제중..."
+          confirmation:
+            title: "%{username}님의 모든 게시물 삭제"
+            text: "%{username}님의 게시물 삭제"
+            delete: "%{username}님의 게시물 삭제"
+            cancel: "취소"
         merge:
           button: "병합"
           prompt:
@@ -4852,7 +4864,7 @@ ko:
           moderator: "운영자"
           regular: "일반 유저"
       previews:
-        topic_title: "토론 주제"
-        font_title: "%{font} 글꼴"
         share_button: "공유"
         reply_button: "댓글"
+        topic_preview: "글 미리보기"
+        homepage_preview: "홈페이지 미리보기"

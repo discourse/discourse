@@ -1965,12 +1965,22 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-      colors:
-        title: "Culori"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previzualizează"
+          homepage_style:
+            choices:
+              latest:
+                label: "Subiecte recente"
+              categories_only:
+                label: "Numai categorii"
+              categories_with_featured_topics:
+                label: "Categorii cu subiecte promovate"
+              categories_and_latest_topics:
+                label: "Categorii și subiecte recente"
+              categories_and_top_topics:
+                label: "Categorii și discuții în top"
       logos:
         title: "Logo-uri"
         fields:
@@ -1981,21 +1991,6 @@ ro:
         fields:
           large_icon:
             label: "Iconiță mare"
-      homepage:
-        title: "Pagina principală"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu discuții promovate"
-              categories_and_latest_topics:
-                label: "Categorii și cele mai noi discuții"
-              categories_and_top_topics:
-                label: "Categorii și discuții de top"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

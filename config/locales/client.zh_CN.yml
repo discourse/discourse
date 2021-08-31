@@ -953,6 +953,7 @@ zh_CN:
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
+      no_notifications_page_title: "您还没有任何通知"
       first_notification: "您的第一个通知！选中它以开始。"
       dynamic_favicon: "在浏览器图标上显示数量"
       skip_new_user_tips:
@@ -1061,7 +1062,11 @@ zh_CN:
         latest: "最新"
         sent: "已发送"
         unread: "未读"
+        unread_with_count:
+          other: "未读 (%{count})"
         new: "新"
+        new_with_count:
+          other: "新 (%{count})"
         archive: "归档"
         groups: "我的群组"
         move_to_inbox: "移至收件箱"
@@ -4404,8 +4409,6 @@ zh_CN:
         silence_message_placeholder: "（留空以发送默认消息）"
         suspended_until: "（直到 %{until}）"
         cant_suspend: "无法封禁此用户。"
-        delete_all_posts: "删除所有帖子"
-        delete_posts_progress: "正在删除帖子…"
         delete_posts_failed: "删除帖子时出现问题。"
         post_edits: "帖子编辑"
         view_edits: "查看编辑"
@@ -4472,8 +4475,12 @@ zh_CN:
         anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"
         delete_posts:
+          button: "删除所有帖子"
           progress:
             title: "删除帖子的进度"
+            description: "正在删除帖子…"
+          confirmation:
+            cancel: "取消"
         merge:
           button: "合并"
           prompt:
@@ -4876,7 +4883,5 @@ zh_CN:
           moderator: "版主"
           regular: "普通用户"
       previews:
-        topic_title: "讨论话题"
-        font_title: "%{font} 字体"
         share_button: "分享"
         reply_button: "回复"

@@ -4229,17 +4229,30 @@ ja:
           city_for_disputes:
             label: "紛争都市"
             placeholder: "カリフォルニア州サンフランシスコ"
-      colors:
-        title: "色"
-      fonts:
-        title: "フォント"
+      styling:
         fields:
           body_font:
             label: "本文のフォント"
           heading_font:
             label: "見出しのフォント"
-          font_preview:
+          styling_preview:
             label: "プレビュー"
+          homepage_style:
+            choices:
+              latest:
+                label: "最新のトピック"
+              categories_only:
+                label: "カテゴリのみ"
+              categories_with_featured_topics:
+                label: "注目のトピックのカテゴリ"
+              categories_and_latest_topics:
+                label: "カテゴリと最新トピック"
+              categories_and_top_topics:
+                label: "カテゴリと人気トピック"
+              categories_boxes:
+                label: "カテゴリボックス"
+              categories_boxes_with_topics:
+                label: "トピック付きのカテゴリボックス"
       logos:
         title: "ロゴ"
         fields:
@@ -4258,26 +4271,6 @@ ja:
           large_icon:
             label: "大きなアイコン"
             description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
-      homepage:
-        description: "ホームページには最新トピックを表示することを推奨しますが、カテゴリ (トピックをグループ化したもの) を表示することもできます。"
-        title: "ホームページ"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "最新のトピック"
-              categories_only:
-                label: "カテゴリのみ"
-              categories_with_featured_topics:
-                label: "注目のトピックのカテゴリ"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-              categories_and_top_topics:
-                label: "カテゴリと人気トピック"
-              categories_boxes:
-                label: "カテゴリボックス"
-              categories_boxes_with_topics:
-                label: "トピック付きのカテゴリボックス"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

@@ -1003,6 +1003,9 @@ de:
       no_notifications_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_body: >
         Du wirst in diesem Panel über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
+      no_notifications_page_title: "Du hast noch keine Benachrichtigungen"
+      no_notifications_page_body: >
+        Du wirst über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus, um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -1111,7 +1114,13 @@ de:
         latest: "Aktuelle"
         sent: "Gesendet"
         unread: "Ungelesen"
+        unread_with_count:
+          one: "Ungelesen (%{count})"
+          other: "Ungelesen (%{count})"
         new: "Neu"
+        new_with_count:
+          one: "Neu (%{count})"
+          other: "Neu (%{count})"
         archive: "Archiv"
         groups: "Meine Gruppen"
         move_to_inbox: "In Posteingang verschieben"
@@ -4564,8 +4573,6 @@ de:
         silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
-        delete_all_posts: "Lösche alle Beiträge"
-        delete_posts_progress: "Beiträge werden gelöscht …"
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
         post_edits: "Beitragsbearbeitungen"
         view_edits: "Bearbeitungen anzeigen"
@@ -4632,8 +4639,21 @@ de:
         anonymize_failed: "Beim Anonymisieren des Kontos ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
         delete_posts:
+          button: "Lösche alle Beiträge"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
+            description: "Beiträge werden gelöscht …"
+          confirmation:
+            title: "Lösche alle Beiträge von @%{username}"
+            description: |
+              <p>Bist Du sicher, dass Du <b>%{post_count}</b> Beiträge von @%{username}löschen möchtest?
+
+              <p><b>Dies kann nicht rückgängig gemacht werden!</b></p>
+
+              <p>Um fortzufahren bitte eingeben: <code>%{text}</code></p>
+            text: "lösche Beiträge von @%{username}"
+            delete: "Beiträge löschen von @%{username}"
+            cancel: "Abbrechen"
         merge:
           button: "Zusammenführen"
           prompt:
@@ -5042,7 +5062,8 @@ de:
           moderator: "Moderator"
           regular: "Normaler Benutzer"
       previews:
-        topic_title: "Diskussionsthema"
-        font_title: "Schriftart „%{font}“"
+        topic_title: "Überschrift eines Diskussionsthemas"
         share_button: "Teilen"
         reply_button: "Antworten"
+        topic_preview: "Themenvorschau"
+        homepage_preview: "Vorschau der Homepage"

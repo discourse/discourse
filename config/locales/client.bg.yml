@@ -812,7 +812,13 @@ bg:
         latest: "Последни"
         sent: "Изпратени"
         unread: "Непрочетени"
+        unread_with_count:
+          one: "Непрочетен (%{count})"
+          other: "Непрочетен (%{count})"
         new: "Нов"
+        new_with_count:
+          one: "Нов (%{count})"
+          other: "Нов (%{count})"
         archive: "Архив"
         groups: "Моите групи"
         move_to_inbox: "Премести във входящи"
@@ -2707,7 +2713,6 @@ bg:
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
         silence_reason: "Причина"
-        delete_all_posts: "Изтрий всички публикации. "
         moderator: "Модератор? "
         admin: "Админ? "
         suspended: "Отстранен? "
@@ -2747,6 +2752,10 @@ bg:
         anonymize_yes: "Да, анонимизирай този профил"
         anonymize_failed: "Възникна грешка по време на анонимизирането на профила."
         delete: "Изтрий потребител "
+        delete_posts:
+          button: "Изтрий всички публикации. "
+          confirmation:
+            cancel: "Отмени"
         merge:
           prompt:
             cancel: "Отмени"

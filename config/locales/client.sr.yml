@@ -708,7 +708,15 @@ sr:
         latest: "Poslednje"
         sent: "Poslato"
         unread: "Nepročitano"
+        unread_with_count:
+          one: "Nepročitane (%{count})"
+          few: "Nepročitane (%{count})"
+          other: "Nepročitane (%{count})"
         new: "Novo"
+        new_with_count:
+          one: "Nove (%{count})"
+          few: "Nove (%{count})"
+          other: "Nove (%{count})"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
       preferences_nav:
@@ -2188,7 +2196,6 @@ sr:
         suspend_reason: "Razlog"
         suspended_by: "Suspendovan od"
         silence_reason: "Razlog"
-        delete_all_posts: "Obriši sve poruke"
         moderator: "Moderator?"
         admin: "Administrator?"
         suspended: "Suspendovan?"
@@ -2223,6 +2230,10 @@ sr:
         approve_bulk_success: "Uspeh! Svi označeni korisnici su odobreni i obavešteni."
         time_read: "Vreme Čitanja"
         delete: "Obriši Korisnika"
+        delete_posts:
+          button: "Obriši sve poruke"
+          confirmation:
+            cancel: "Odustani"
         merge:
           prompt:
             cancel: "Odustani"

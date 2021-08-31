@@ -2050,26 +2050,10 @@ sw:
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       corporate:
         title: "Shirika"
-      colors:
-        title: "Rangi"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Kihakiki"
-      logos:
-        title: "Nembo"
-        fields:
-          logo:
-            label: "Nembo Msingi"
-      icons:
-        title: "Ikoni"
-        fields:
-          large_icon:
-            label: "Ikoni Kubwa"
-      homepage:
-        description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
-        title: "Ukurasa mkuu"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2082,6 +2066,16 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
+      logos:
+        title: "Nembo"
+        fields:
+          logo:
+            label: "Nembo Msingi"
+      icons:
+        title: "Ikoni"
+        fields:
+          large_icon:
+            label: "Ikoni Kubwa"
       invites:
         title: "Alika Wasaidizi"
         description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."

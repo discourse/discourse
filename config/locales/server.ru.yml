@@ -534,6 +534,7 @@ ru:
 
       Для большинства людей намного проще читать темы, содержащие несколько ответов в одном сообщении, чем много отдельных коротких ответов.
     dominating_topic: Вы опубликовали здесь более %{percent}% ответов, возможно, стоит услышать ещё чьё-то мнение?
+    get_a_room: Вы ответили пользователю @%{reply_username} %{count} раза; знаете ли вы, что вместо этого ему можно отправить личное сообщение?
     too_many_replies: |
       ### Вы дали максимально возможное количество ответов в этой теме.
 
@@ -3740,6 +3741,11 @@ ru:
     png_to_jpg_conversion_failure_message: "Произошла ошибка при конвертации из PNG в JPG."
     optimize_failure_message: "При оптимизации загруженного изображения произошла ошибка."
     download_failure: "Не удалось загрузить файл от внешнего провайдера."
+    size_mismatch_failure: "Размер файла, загруженного в S3, не совпадает с предполагаемым размером файла. %{additional_detail}"
+    create_mutlipart_failure: "Не удалось создать многокомпонентную загрузку во внешнем хранилище."
+    abort_mutlipart_failure: "Не удалось прервать многокомпонентную загрузку во внешнем хранилище."
+    complete_mutlipart_failure: "Не удалось выполнить многокомпонентную загрузку во внешнем хранилище."
+    external_upload_not_found: "Загрузка не найдена во внешнем хранилище. %{additional_detail}"
     checksum_mismatch_failure: "Контрольная сумма загруженного файла не совпадает. В процессе загрузки содержимое файла могло измениться. Пожалуйста, попробуйте ещё раз."
     cannot_promote_failure: "Загрузка не может быть завершена, возможно, она уже была завершена или ранее не удалась."
     attachments:
@@ -4462,17 +4468,34 @@ ru:
           city_for_disputes:
             label: "Город для разрешения споров"
             placeholder: "Глупов, Российская империя"
-      colors:
-        title: "Цвета"
-      fonts:
-        title: "Шрифты"
+      styling:
+        title: "Оформление"
         fields:
+          color_scheme:
+            label: "Цветовая схема"
           body_font:
             label: "Шрифт текста"
           heading_font:
             label: "Шрифт заголовка"
-          font_preview:
+          styling_preview:
             label: "Предварительный просмотр"
+          homepage_style:
+            label: "Стиль главной страницы"
+            choices:
+              latest:
+                label: "Последние темы"
+              categories_only:
+                label: "Только разделы"
+              categories_with_featured_topics:
+                label: "Разделы с избранными темами"
+              categories_and_latest_topics:
+                label: "Разделы и список последних тем форума"
+              categories_and_top_topics:
+                label: "Разделы и популярные темы"
+              categories_boxes:
+                label: "Блоки с подразделами"
+              categories_boxes_with_topics:
+                label: "Блоки с избранными темами"
       logos:
         title: "Логотипы"
         fields:
@@ -4491,26 +4514,6 @@ ru:
           large_icon:
             label: "Большая иконка"
             description: "Иконка, используемая для представления вашего сайта на современных устройствах, должна хорошо выглядеть при больших размерах. В идеале должна быть больше чем 512x512 пикселей. Мы будем использовать квадратный логотип по умолчанию."
-      homepage:
-        description: "Мы рекомендуем по умолчанию отображать на главной странице сайта секцию 'Последние', но вы, по вашему усмотрению, можете отображать по умолчанию и другие секции (Разделы/Новые/Обсуждаемые)."
-        title: "Главная страница"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Последние темы"
-              categories_only:
-                label: "Только разделы"
-              categories_with_featured_topics:
-                label: "Разделы с избранными темами"
-              categories_and_latest_topics:
-                label: "Разделы и список последних тем форума"
-              categories_and_top_topics:
-                label: "Разделы и обсуждаемые темы"
-              categories_boxes:
-                label: "Блоки с подразделами"
-              categories_boxes_with_topics:
-                label: "Блоки с избранными темами"
       invites:
         title: "Пригласить персонал"
         description: "Вы почти закончили! Давайте пригласим сюда людей, которые помогут вам <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>начать обсуждение </a> с интересных тем и ответов, чтобы ваше сообщество начало работу."

@@ -1003,6 +1003,9 @@ sv:
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
         Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      no_notifications_page_title: "Du har inga aviseringar än"
+      no_notifications_page_body: >
+        Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -1110,7 +1113,13 @@ sv:
         latest: "Senaste"
         sent: "Skickat"
         unread: "Olästa"
+        unread_with_count:
+          one: "Oläst (%{count})"
+          other: "Oläst (%{count})"
         new: "Nya"
+        new_with_count:
+          one: "Ny (%{count})"
+          other: "Ny (%{count})"
         archive: "Arkiv"
         groups: "Mina grupper"
         move_to_inbox: "Flytta till inkorg"
@@ -4564,8 +4573,6 @@ sv:
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"
         suspended_until: "(till %{until})"
         cant_suspend: "Denna användare kan inte uteslutas."
-        delete_all_posts: "Radera alla inlägg"
-        delete_posts_progress: "Raderar inlägg..."
         delete_posts_failed: "Det uppstod ett problem vid radering av inläggen."
         post_edits: "Publicera redigeringar"
         view_edits: "Visa redigeringar"
@@ -4632,8 +4639,21 @@ sv:
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
         delete_posts:
+          button: "Radera alla inlägg"
           progress:
             title: "Förlopp för radering av inlägg"
+            description: "Raderar inlägg..."
+          confirmation:
+            title: "Radera alla inlägg av @%{username}"
+            description: |
+              <p>Är du säker på att du vill radera <b>%{post_count}</b> inlägg av @%{username}?
+
+              <p><b>Detta kan inte ångras!</b></p>
+
+              <p>Om du vill fortsätta skriver du: <code>%{text}</code></p>
+            text: "radera inlägg av @%{username}"
+            delete: "Radera inlägg av @%{username}"
+            cancel: "Avbryt"
         merge:
           button: "Slå ihop"
           prompt:
@@ -5042,7 +5062,8 @@ sv:
           moderator: "Moderator"
           regular: "Regelbunden användare"
       previews:
-        topic_title: "Diskussionsämne"
-        font_title: "Typsnittet %{font}"
+        topic_title: "En diskussionsämnesrubrik"
         share_button: "Dela"
         reply_button: "Svara"
+        topic_preview: "Ämnesförhandsgranskning"
+        homepage_preview: "Förhandsgranskning av hemsida"

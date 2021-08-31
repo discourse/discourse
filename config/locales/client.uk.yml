@@ -1166,7 +1166,17 @@ uk:
         latest: "Останні"
         sent: "Надіслано"
         unread: "Непрочитані"
+        unread_with_count:
+          one: "Непрочитані (%{count})"
+          few: "Непрочитані (%{count})"
+          many: "Непрочитані (%{count})"
+          other: "Непрочитані (%{count})"
         new: "Новий"
+        new_with_count:
+          one: "Нові (%{count})"
+          few: "Нові (%{count})"
+          many: "Нові (%{count})"
+          other: "Нові (%{count})"
         archive: "Архів"
         groups: "Мої групи"
         move_to_inbox: "Перемістити у Вхідні"
@@ -4747,8 +4757,6 @@ uk:
         silence_message_placeholder: "(Залиште незаповненим, щоб відправити дефолтне повідомлення)"
         suspended_until: "(Поки не буде %{until})"
         cant_suspend: "Цього користувача не можна заморозити."
-        delete_all_posts: "Видалити всі дописи"
-        delete_posts_progress: "Видалення постів..."
         delete_posts_failed: "При видаленні постів виникла проблема."
         post_edits: "Редагувати допис"
         penalty_post_actions: "Що потрібно зробити зі зв’язаним повідомленням?"
@@ -4811,8 +4819,12 @@ uk:
         anonymize_failed: "Не вдалося анонімізувати обліковий запис."
         delete: "Видалити користувача"
         delete_posts:
+          button: "Видалити всі дописи"
           progress:
             title: "Хід видалення дописів"
+            description: "Видалення постів..."
+          confirmation:
+            cancel: "Скасувати"
         merge:
           button: "Об' єднати"
           prompt:
@@ -5223,7 +5235,5 @@ uk:
           moderator: "Модератор"
           regular: "Звичайний користувач"
       previews:
-        topic_title: "Тема обговорення"
-        font_title: "%{font} Шрифт"
         share_button: "Поширити"
         reply_button: "Відповісти"

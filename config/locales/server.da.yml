@@ -3652,17 +3652,26 @@ da:
           city_for_disputes:
             label: "By for tvister"
             placeholder: "San Francisco, Californien"
-      colors:
-        title: "Farver"
-      fonts:
-        title: "Skrifttyper"
+      styling:
         fields:
           body_font:
             label: "Indholds skrifttype"
           heading_font:
             label: "Overskrifts skrifttype"
-          font_preview:
+          styling_preview:
             label: "Forhåndsvisning"
+          homepage_style:
+            choices:
+              latest:
+                label: "Seneste emner"
+              categories_only:
+                label: "Kun Kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med Fremhævede Emner"
+              categories_and_latest_topics:
+                label: "Kategorier og Seneste Emner"
+              categories_and_top_topics:
+                label: "Kategorier og top emner"
       logos:
         title: "Logoer"
         fields:
@@ -3677,22 +3686,6 @@ da:
             label: "Browser Ikon"
           large_icon:
             label: "Stort ikon"
-      homepage:
-        description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
-        title: "Hjemmeside"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
       invites:
         title: "Inviter hjælpere"
       finished:
