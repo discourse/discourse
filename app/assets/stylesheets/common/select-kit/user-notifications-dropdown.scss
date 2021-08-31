@@ -1,6 +1,7 @@
 .select-kit {
   &.dropdown-select-box {
     &.user-notifications-dropdown {
+      display: flex;
       text-align: left;
 
       .d-icon {
@@ -12,8 +13,8 @@
         max-width: 485px;
       }
 
-      .dropdown-select-box-header {
-        align-items: center;
+      .select-kit-header-wrapper {
+        justify-content: center;
       }
     }
   }

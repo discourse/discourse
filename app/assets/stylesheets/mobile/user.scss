@@ -244,7 +244,6 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        margin-left: -1em;
         li,
         > span {
           display: flex;
@@ -262,6 +261,10 @@
             }
           }
         }
+      }
+
+      > ul {
+        margin-left: -1em; // negates left button margin, for alignment
       }
 
       .user-profile-controls-outlet {
