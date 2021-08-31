@@ -157,10 +157,10 @@ class GroupsController < ApplicationController
 
     categories, tags = []
     if !group.automatic || current_user.admin
-      categories, tags = user_default_notifications(group, params_with_permitted)
+      notification_level, categories, tags = user_default_notifications(group, params_with_permitted)
 
       if params[:update_existing_users].blank?
-        user_count = count_existing_users(group.group_users, categories, tags)
+        user_count = count_existing_users(group.group_users, notification_level, categories, tags)
 
         if user_count > 0
           render json: { user_count: user_count }
@@ -173,7 +173,7 @@ class GroupsController < ApplicationController
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
-      update_existing_users(group.group_users, categories, tags) if categories.present? || tags.present?
+      update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
 
       if guardian.can_see?(group)
         render json: success_json
@@ -847,17 +847,37 @@ class GroupsController < ApplicationController
       tags[tag_id] = { action: :delete, old_value: tag_notifications[tag_id] }
     end
 
-    [categories, tags]
+    notification_level = nil
+    default_notification_level = params[:default_notification_level]&.to_i
+
+    if default_notification_level.present? && group.default_notification_level != default_notification_level
+      notification_level = {
+        old_value: group.default_notification_level,
+        new_value: default_notification_level
+      }
+    end
+
+    [notification_level, categories, tags]
   end
 
   %i{
     count
     update
   }.each do |action|
-    define_method("#{action}_existing_users") do |group_users, categories, tags|
-      return 0 if categories.blank? && tags.blank?
+    define_method("#{action}_existing_users") do |group_users, notification_level, categories, tags|
+      return 0 if notification_level.blank? && categories.blank? && tags.blank?
 
       ids = []
+
+      if notification_level.present?
+        users = group_users.where(notification_level: notification_level[:old_value])
+
+        if action == :update
+          users.update_all(notification_level: notification_level[:new_value])
+        else
+          ids += users.pluck(:user_id)
+        end
+      end
 
       categories.each do |category_id, data|
         if data[:action] == :update || data[:action] == :delete
