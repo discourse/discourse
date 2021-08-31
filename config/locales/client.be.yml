@@ -796,6 +796,7 @@ be:
     conditional_loading_section:
       loading: Загрузка ...
     select_kit:
+      delete_item: "Выдаліць %{name}"
       filter_placeholder_with_any: Знайсці альбо стварыць...
     date_time_picker:
       from: ад

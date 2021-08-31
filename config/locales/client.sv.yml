@@ -316,6 +316,9 @@ sv:
     topic_count_latest:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
+    topic_count_unseen:
+      one: "Visa %{count} nytt eller uppdaterat ämne"
+      other: "Visa %{count} nya eller uppdaterade ämnen"
     topic_count_unread:
       one: "Visa %{count} oläst ämne"
       other: "Visa %{count} olästa ämnen"
@@ -925,6 +928,7 @@ sv:
           all: "Alla"
           read: "Lästa"
           unread: "Olästa"
+          unseen: "Osedda"
         ignore_duration_title: "Ignorera användare"
         ignore_duration_username: "Användarnamn"
         ignore_duration_when: "Varaktighet:"
@@ -995,6 +999,7 @@ sv:
       no_bookmarks_title: "Du har inte bokmärkt något än"
       no_bookmarks_body: >
         Börja bokmärka inlägg med %{icon} -knappen, så visas de i listan här för enkel referens. Du kan också schemalägga en påminnelse!
+      no_bookmarks_search: "Det hittades inga bokmärken med den angivna sökfrågan."
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
         Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
@@ -1273,6 +1278,7 @@ sv:
         not_connected: "(inte kopplade)"
         confirm_modal_title: "Koppla %{provider}-konto"
         confirm_description:
+          disconnect: "Ditt befintliga %{provider} -konto '%{account_description}' kommer att kopplas bort."
           account_specific: "Ditt %{provider}-konto '%{account_description}' kommer att användas för autentisering."
           generic: "Ditt %{provider}-konto kommer att användas för autentisering."
       name:
@@ -1653,6 +1659,7 @@ sv:
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
       title: "Skapa ditt konto"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
+      associate: "Har du redan ett konto? <a href='%{associate_link}'>Logga in</a> för att länka ditt %{provider}-konto."
     forgot_password:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
@@ -1794,10 +1801,14 @@ sv:
         one: "+ %{count} underkategori"
         other: "+ %{count} underkategorier"
     select_kit:
+      delete_item: "Radera %{name}"
       filter_by: "Filtrera efter: %{name}"
       select_to_filter: "Välj ett värde att filtrera"
       default_header_text: Välj...
       no_content: Inga matchningar hittades
+      results_count:
+        one: "%{count} resultat"
+        other: "%{count} resultat"
       filter_placeholder: Sök...
       filter_placeholder_with_any: Sök eller skapa...
       create: "Skapa: '%{content}'"
@@ -2223,6 +2234,7 @@ sv:
           other: "Förlopp: <strong>%{count}</strong> ämnen"
       none:
         unread: "Du har inga olästa ämnen."
+        unseen: "Du har inga osedda ämnen."
         new: "Du har inga nya ämnen."
         read: "Du har inte läst några ämnen ännu."
         posted: "Du har inte postat i några ämnen ännu."
@@ -2239,6 +2251,7 @@ sv:
         read: "Det finns inga fler lästa ämnen."
         new: "Det finns inga fler nya ämnen."
         unread: "Det finns inga fler olästa ämnen."
+        unseen: "Det finns inga fler osedda ämnen."
         category: "Det finns inga fler ämnen i %{category}."
         tag: "Det finns inga fler %{tag}-ämnen."
         top: "Det finns inga fler toppämnen."
@@ -3140,7 +3153,8 @@ sv:
       one: "användare"
       other: "användare"
     category_title: "Kategori"
-    history: "Historik, senaste 100 versionerna"
+    history_capped_revisions: "Historik, senaste 100 versionerna"
+    history: "Historik"
     changed_by: "av %{author}"
     raw_email:
       title: "Inkommande e-post"
@@ -3171,6 +3185,10 @@ sv:
         lower_title_with_count:
           one: "%{count} oläst"
           other: "%{count} olästa"
+      unseen:
+        title: "Osedda"
+        lower_title: "osedda"
+        help: "nya ämnen och ämnen som du bevakar eller följer med olästa inlägg"
       new:
         lower_title_with_count:
           one: "%{count} ny"
@@ -3455,6 +3473,7 @@ sv:
       topics:
         none:
           unread: "Du har inga olästa ämnen."
+          unseen: "Du har inga osedda ämnen."
           new: "Du har inga nya ämnen."
           read: "Du har inte lästa några ämnen ännu."
           posted: "Du har inte skrivit i några ämnen ännu."
@@ -3631,7 +3650,7 @@ sv:
               description: "Administratörer kan se alla grupper."
             members_visibility_levels:
               title: "Vem kan se denna grupps medlemmar?"
-              description: "Administratörer kan se medlemmar i alla grupper."
+              description: "Administratörer kan se medlemmar av alla grupper. Underikonen är synlig för alla användare."
             publish_read_state: "För gruppmeddelanden, publicera gruppens lästillstånd"
           membership:
             automatic: Automatisk

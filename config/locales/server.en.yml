@@ -526,14 +526,7 @@ en:
 
     dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
-    get_a_room: |
-      ### Encourage everyone to get involved in the conversation
-
-      You’ve replied %{count} times to @%{reply_username} in this particular topic!
-
-      A great discussion includes many voices and perspectives. Can you get anybody else involved?
-
-      And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
+    get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -1457,6 +1450,7 @@ en:
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
+    disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -4015,6 +4009,11 @@ en:
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
+    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload stub's intended size. %{additional_detail}"
+    create_mutlipart_failure: "Failed to create multipart upload in the external store."
+    abort_mutlipart_failure: "Failed to abort multipart upload in the external store."
+    complete_mutlipart_failure: "Failed to complete multipart upload in the external store."
+    external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
     attachments:
@@ -4864,18 +4863,34 @@ en:
             label: "City for Disputes"
             placeholder: "San Francisco, California"
 
-      colors:
-        title: "Colors"
-
-      fonts:
-        title: "Fonts"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Color scheme"
           body_font:
             label: "Body font"
           heading_font:
             label: "Heading font"
-          font_preview:
+          styling_preview:
             label: "Preview"
+          homepage_style:
+            label: "Homepage style"
+            choices:
+              latest:
+                label: "Latest Topics"
+              categories_only:
+                label: "Categories Only"
+              categories_with_featured_topics:
+                label: "Categories with Featured Topics"
+              categories_and_latest_topics:
+                label: "Categories and Latest Topics"
+              categories_and_top_topics:
+                label: "Categories and Top Topics"
+              categories_boxes:
+                label: "Categories boxes"
+              categories_boxes_with_topics:
+                label: "Categories boxes with Topics"
 
       logos:
         title: "Logos"
@@ -4896,28 +4911,6 @@ en:
           large_icon:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
-
-      homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
-        title: "Homepage"
-
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
-              categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
-              categories_boxes:
-                label: "Categories boxes"
-              categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
 
       invites:
         title: "Invite Staff"

@@ -25,6 +25,19 @@ class TopicList
     end
   end
 
+  def self.on_preload_user_ids(&blk)
+    (@preload_user_ids ||= Set.new) << blk
+  end
+
+  def self.preload_user_ids(topics, user_ids, object)
+    if @preload_user_ids
+      @preload_user_ids.each do |preload_user_ids|
+        user_ids = preload_user_ids.call(topics, user_ids, object)
+      end
+    end
+    user_ids
+  end
+
   attr_accessor(
     :more_topics_url,
     :prev_topics_url,
@@ -113,6 +126,7 @@ class TopicList
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
     end
 
+    user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
 
     @topics.each do |ft|

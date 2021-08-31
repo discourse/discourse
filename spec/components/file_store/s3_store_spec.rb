@@ -420,6 +420,18 @@ describe FileStore::S3Store do
 
       expect(store.signed_url_for_path("special/optimized/file.png")).not_to eq(upload.url)
     end
+
+    it "does not prefix the s3_bucket_folder_path onto temporary upload prefixed keys" do
+      SiteSetting.s3_upload_bucket = "s3-upload-bucket/folder_path"
+      uri = URI.parse(store.signed_url_for_path("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz"))
+      expect(uri.path).to eq(
+        "/#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz"
+      )
+      uri = URI.parse(store.signed_url_for_path("uploads/default/blah/def.xyz"))
+      expect(uri.path).to eq(
+        "/folder_path/uploads/default/blah/def.xyz"
+      )
+    end
   end
 
   def expect_copy_from(s3_object, source)

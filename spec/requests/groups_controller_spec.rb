@@ -384,6 +384,23 @@ describe GroupsController do
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
+    it "returns the right response for 'messageable' field" do
+      sign_in(user)
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['group']['messageable']).to eq(true)
+
+      SiteSetting.enable_personal_messages = false
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['group']['messageable']).to eq(false)
+    end
+
     context 'as an admin' do
       it "returns the right response" do
         sign_in(Fabricate(:admin))
@@ -624,6 +641,14 @@ describe GroupsController do
 
       body = response.parsed_body
       expect(body["messageable"]).to eq(true)
+
+      SiteSetting.enable_personal_messages = false
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
+      expect(body["messageable"]).to eq(false)
     end
   end
 

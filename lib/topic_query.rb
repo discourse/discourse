@@ -390,7 +390,7 @@ class TopicQuery
     end
 
     unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
-    pinned_topics = topics.dup.offset(nil).where(pinned_clause)
+    pinned_topics = topics.dup.offset(nil).where(pinned_clause).reorder(pinned_at: :desc)
 
     per_page = options[:per_page] || per_page_setting
     limit = per_page unless options[:limit] == false

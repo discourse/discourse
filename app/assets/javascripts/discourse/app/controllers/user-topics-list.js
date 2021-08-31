@@ -1,8 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { action } from "@ember/object";
 import Topic from "discourse/models/topic";
@@ -18,13 +16,14 @@ export default Controller.extend(BulkTopicSelection, {
 
   hideCategory: false,
   showPosters: false,
-  incomingCount: 0,
   channel: null,
   tagsForUser: null,
+  pmTopicTrackingState: null,
+  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
-  @on("init")
-  _initialize() {
-    this.newIncoming = [];
+  @discourseComputed("emptyState", "model.topics.length", "incomingCount")
+  showEmptyStatePlaceholder(emptyState, topicsLength, incomingCount) {
+    return emptyState && topicsLength === 0 && incomingCount === 0;
   },
 
   saveScrollPosition() {
@@ -34,11 +33,6 @@ export default Controller.extend(BulkTopicSelection, {
   @observes("model.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
-  },
-
-  @discourseComputed("incomingCount")
-  hasIncoming(incomingCount) {
-    return incomingCount > 0;
   },
 
   @discourseComputed("filter", "model.topics.length")
@@ -51,31 +45,16 @@ export default Controller.extend(BulkTopicSelection, {
     return filter === UNREAD_FILTER && hasTopics;
   },
 
-  subscribe(channel) {
-    this.set("channel", channel);
-
-    this.messageBus.subscribe(channel, (data) => {
-      if (this.newIncoming.indexOf(data.topic_id) === -1) {
-        this.newIncoming.push(data.topic_id);
-        this.incrementProperty("incomingCount");
-      }
-    });
+  subscribe() {
+    this.pmTopicTrackingState?.trackIncoming(
+      this.inbox,
+      this.filter,
+      this.group
+    );
   },
 
   unsubscribe() {
-    const channel = this.channel;
-    if (channel) {
-      this.messageBus.unsubscribe(channel);
-    }
-    this._resetTracking();
-    this.set("channel", null);
-  },
-
-  _resetTracking() {
-    this.setProperties({
-      newIncoming: [],
-      incomingCount: 0,
-    });
+    this.pmTopicTrackingState?.resetTracking();
   },
 
   @action
@@ -105,8 +84,8 @@ export default Controller.extend(BulkTopicSelection, {
 
   @action
   showInserted() {
-    this.model.loadBefore(this.newIncoming);
-    this._resetTracking();
+    this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
+    this.pmTopicTrackingState.resetTracking();
     return false;
   },
 });

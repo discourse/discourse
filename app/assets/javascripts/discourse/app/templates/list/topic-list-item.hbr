@@ -35,6 +35,7 @@
   <div class="link-bottom-line">
     {{#unless hideCategory}}
       {{#unless topic.isPinnedUncategorized}}
+        {{~raw-plugin-outlet name="topic-list-before-category"}}
         {{category-link topic.category}}
       {{/unless}}
     {{/unless}}

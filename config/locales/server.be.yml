@@ -890,6 +890,7 @@ be:
   dashboard:
     rails_env_warning: "Сервер працуе ў рэжыме %{env}."
   site_settings:
+    disabled: "адключана"
     search_recent_posts_size: "Колькі апошніх паведамленняў захваных у індэксе"
     log_search_queries: "Уваход пошукавых запытаў, што выконваюцца карыстальнікі"
     search_query_log_max_size: "Максімальную колькасць пошукавых запытаў, каб захаваць"

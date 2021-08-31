@@ -285,6 +285,9 @@ hy:
     topic_count_latest:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
+    topic_count_unseen:
+      one: "Տեսնել %{count} նոր կամ թարմացված թեման"
+      other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
     topic_count_unread:
       one: "Տեսնել %{count} չկարդացած թեման"
       other: "Դիտել %{count} չկարդացած թեմաները"
@@ -1451,6 +1454,7 @@ hy:
     conditional_loading_section:
       loading: Բեռնվում է...
     select_kit:
+      delete_item: "Ջնջել %{name}"
       default_header_text: Ընտրել...
       no_content: Համընկնումներ չեն գտնվել
       filter_placeholder: Որոնում...
@@ -3002,7 +3006,6 @@ hy:
               description: "Ադմինները կարող են տեսնել բոլոր խմբերը:"
             members_visibility_levels:
               title: "Ո՞վ կարող է տեսնել այս խմբի անդամներին: "
-              description: "Ադմինները կարող են տեսնել բոլոր խմբերի անդամներին:"
             publish_read_state: "Խմբերի նամակներում հրապարակվում է խմբի ընթերցումների վիճակը"
           membership:
             automatic: Ավտոմատ

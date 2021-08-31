@@ -12,18 +12,20 @@ export default class MediaOptimizationWorkerService extends Service {
   promiseResolvers = null;
 
   startWorker() {
+    this.logIfDebug("Starting media-optimization-worker");
     this.worker = new Worker(this.workerUrl); // TODO come up with a workaround for FF that lacks type: module support
   }
 
   stopWorker() {
+    this.logIfDebug("Stopping media-optimization-worker...");
     this.worker.terminate();
     this.worker = null;
   }
 
-  ensureAvailiableWorker(usingUppy) {
+  ensureAvailiableWorker() {
     if (!this.worker) {
       this.startWorker();
-      this.registerMessageHandler(usingUppy);
+      this.registerMessageHandler();
       this.appEvents.on("composer:closed", this, "stopWorker");
     }
   }
@@ -35,43 +37,47 @@ export default class MediaOptimizationWorkerService extends Service {
     }
   }
 
-  optimizeImage(data) {
-    const usingUppy = data.id && data.id.includes("uppy");
+  optimizeImage(data, opts = {}) {
+    this.usingUppy = data.id && data.id.includes("uppy");
     this.promiseResolvers = this.promiseResolvers || {};
+    this.stopWorkerOnError = opts.hasOwnProperty("stopWorkerOnError")
+      ? opts.stopWorkerOnError
+      : true;
 
-    let file = usingUppy ? data : data.files[data.index];
+    let file = this.usingUppy ? data : data.files[data.index];
     if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
-      return usingUppy ? Promise.resolve() : data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
     if (
       file.size <
       this.siteSettings
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
-      return usingUppy ? Promise.resolve() : data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
-    this.ensureAvailiableWorker(usingUppy);
+    this.ensureAvailiableWorker();
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
-      this.promiseResolvers[file.name] = resolve;
+      this.promiseResolvers[this.usingUppy ? file.id : file.name] = resolve;
 
       let imageData;
       try {
-        if (usingUppy) {
+        if (this.usingUppy) {
           imageData = await fileToImageData(file.data);
         } else {
           imageData = await fileToImageData(file);
         }
       } catch (error) {
         this.logIfDebug(error);
-        return usingUppy ? resolve() : resolve(data);
+        return this.usingUppy ? resolve() : resolve(data);
       }
 
       this.worker.postMessage(
         {
           type: "compress",
+          fileId: file.id,
           file: imageData.data.buffer,
           fileName: file.name,
           width: imageData.width,
@@ -108,19 +114,19 @@ export default class MediaOptimizationWorkerService extends Service {
     });
   }
 
-  registerMessageHandler(usingUppy) {
+  registerMessageHandler() {
     this.worker.onmessage = (e) => {
       switch (e.data.type) {
         case "file":
-          let optimizedFile = new File([e.data.file], `${e.data.fileName}`, {
+          let optimizedFile = new File([e.data.file], e.data.fileName, {
             type: "image/jpeg",
           });
           this.logIfDebug(
             `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
           );
 
-          if (usingUppy) {
-            this.promiseResolvers[optimizedFile.name](optimizedFile);
+          if (this.usingUppy) {
+            this.promiseResolvers[e.data.fileId](optimizedFile);
           } else {
             let data = this.currentComposerUploadData;
             data.files[data.index] = optimizedFile;
@@ -129,9 +135,16 @@ export default class MediaOptimizationWorkerService extends Service {
 
           break;
         case "error":
-          this.stopWorker();
-          if (usingUppy) {
-            this.promiseResolvers[e.data.fileName]();
+          this.logIfDebug(
+            `Handling error message from image optimization for ${e.data.fileName}.`
+          );
+
+          if (this.stopWorkerOnError) {
+            this.stopWorker();
+          }
+
+          if (this.usingUppy) {
+            this.promiseResolvers[e.data.fileId]();
           } else {
             this.promiseResolvers[e.data.fileName](
               this.currentComposerUploadData

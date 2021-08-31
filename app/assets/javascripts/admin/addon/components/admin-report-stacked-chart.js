@@ -89,21 +89,24 @@ export default Component.extend({
         animation: {
           duration: 0,
         },
-        tooltips: {
-          mode: "index",
-          intersect: false,
-          callbacks: {
-            beforeFooter: (tooltipItem) => {
-              let total = 0;
-              tooltipItem.forEach(
-                (item) => (total += parseInt(item.yLabel || 0, 10))
-              );
-              return `= ${total}`;
+        plugins: {
+          tooltip: {
+            mode: "index",
+            intersect: false,
+            callbacks: {
+              beforeFooter: (tooltipItem) => {
+                let total = 0;
+                tooltipItem.forEach(
+                  (item) => (total += parseInt(item.parsed.y || 0, 10))
+                );
+                return `= ${total}`;
+              },
+              title: (tooltipItem) =>
+                moment(tooltipItem[0].label, "YYYY-MM-DD").format("LL"),
             },
-            title: (tooltipItem) =>
-              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL"),
           },
         },
+
         layout: {
           padding: {
             left: 0,
@@ -113,16 +116,11 @@ export default Component.extend({
           },
         },
         scales: {
-          yAxes: [
+          y: [
             {
               stacked: true,
               display: true,
               ticks: {
-                userCallback: (label) => {
-                  if (Math.floor(label) === label) {
-                    return label;
-                  }
-                },
                 callback: (label) => number(label),
                 sampleSize: 5,
                 maxRotation: 25,
@@ -130,8 +128,7 @@ export default Component.extend({
               },
             },
           ],
-
-          xAxes: [
+          x: [
             {
               display: true,
               gridLines: { display: false },

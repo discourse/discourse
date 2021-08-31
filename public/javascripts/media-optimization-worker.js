@@ -131,7 +131,8 @@ onmessage = async function (e) {
           {
             type: "file",
             file: optimized,
-            fileName: e.data.fileName
+            fileName: e.data.fileName,
+            fileId: e.data.fileId
           },
           [optimized]
         );
@@ -140,7 +141,8 @@ onmessage = async function (e) {
         postMessage({
           type: "error",
           file: e.data.file,
-          fileName: e.data.fileName
+          fileName: e.data.fileName,
+          fileId: e.data.fileId
         });
       }
       break;

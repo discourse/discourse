@@ -8,7 +8,15 @@
       }
 
       .select-kit-header {
-        height: 32px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:focus {
+          border-color: var(--tertiary);
+        }
+
         .d-icon {
           color: var(--primary-medium);
         }

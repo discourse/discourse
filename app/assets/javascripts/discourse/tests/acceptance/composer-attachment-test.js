@@ -27,7 +27,7 @@ async function writeInComposer(assert) {
 
   assert.equal(
     queryAll(".d-editor-preview:visible").html().trim(),
-    '<p><a href="/404">test</a></p>'
+    '<p><a href="/404" tabindex="-1">test</a></p>'
   );
 
   await fillIn(".d-editor-input", "[test|attachment](upload://asdsad.png)");
@@ -41,7 +41,7 @@ acceptance("Composer Attachment - Cooking", function (needs) {
     await writeInComposer(assert);
     assert.equal(
       queryAll(".d-editor-preview:visible").html().trim(),
-      '<p><a class="attachment" href="/uploads/short-url/asdsad.png">test</a></p>'
+      '<p><a class="attachment" href="/uploads/short-url/asdsad.png" tabindex="-1">test</a></p>'
     );
   });
 });
@@ -55,7 +55,7 @@ acceptance("Composer Attachment - Secure Media Enabled", function (needs) {
     await writeInComposer(assert);
     assert.equal(
       queryAll(".d-editor-preview:visible").html().trim(),
-      '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
+      '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png" tabindex="-1">test</a></p>'
     );
   });
 });

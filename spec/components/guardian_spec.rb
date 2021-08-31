@@ -2512,7 +2512,50 @@ describe Guardian do
       expect(Guardian.new(user).can_delete_all_posts?(coding_horror)).to be_falsey
     end
 
-    shared_examples "can_delete_all_posts examples" do
+    context "for moderators" do
+      let(:actor) { moderator }
+
+      it "is true if user has no posts" do
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago))).to be_truthy
+      end
+
+      it "is true if user's first post is newer than delete_user_max_post_age days old" do
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.user_stat.update!(first_post_created_at: 9.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
+      end
+
+      it "is false if user's first post is older than delete_user_max_post_age days old" do
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.user_stat.update!(first_post_created_at: 11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+      end
+
+      it "is false if user is an admin" do
+        expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
+      end
+
+      it "is true if number of posts is small" do
+        user = Fabricate(:user, created_at: 1.day.ago)
+        user.user_stat.update!(post_count: 1)
+        SiteSetting.delete_all_posts_max = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
+      end
+
+      it "is false if number of posts is not small" do
+        user = Fabricate(:user, created_at: 1.day.ago)
+        user.user_stat.update!(post_count: 11)
+        SiteSetting.delete_all_posts_max = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+      end
+    end
+
+    context "for admins" do
+      let(:actor) { admin }
+
       it "is true if user has no posts" do
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago))).to be_truthy
@@ -2525,11 +2568,11 @@ describe Guardian do
         expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
       end
 
-      it "is false if user's first post is older than delete_user_max_post_age days old" do
+      it "is true if user's first post is older than delete_user_max_post_age days old" do
         user = Fabricate(:user, created_at: 100.days.ago)
         user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.delete_user_max_post_age = 10
-        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
       end
 
       it "is false if user is an admin" do
@@ -2543,22 +2586,12 @@ describe Guardian do
         expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
 
-      it "is false if number of posts is not small" do
+      it "is true if number of posts is not small" do
         u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(11)
         SiteSetting.delete_all_posts_max = 10
-        expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_falsey
+        expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
-    end
-
-    context "for moderators" do
-      let(:actor) { moderator }
-      include_examples "can_delete_all_posts examples"
-    end
-
-    context "for admins" do
-      let(:actor) { admin }
-      include_examples "can_delete_all_posts examples"
     end
   end
 

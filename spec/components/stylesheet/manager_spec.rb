@@ -152,10 +152,6 @@ describe Stylesheet::Manager do
         end
       end
 
-      before do
-        SiteSetting.order_stylesheets = true
-      end
-
       it 'output remote child, then sort children alphabetically, then local parent' do
         theme.add_relative_theme!(:child, z_child_theme)
         theme.add_relative_theme!(:child, child_remote)

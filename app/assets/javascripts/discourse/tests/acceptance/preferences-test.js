@@ -117,7 +117,11 @@ acceptance("User Preferences", function (needs) {
     await savePreferences();
 
     await click(".preferences-nav .nav-categories a");
-    await fillIn(".tracking-controls .category-selector input", "faq");
+    const categorySelector = selectKit(
+      ".tracking-controls .category-selector "
+    );
+    await categorySelector.expand();
+    await categorySelector.fillInFilter("faq");
     await savePreferences();
 
     assert.ok(
@@ -510,8 +514,9 @@ acceptance("Security", function (needs) {
       "it should display three tokens"
     );
 
-    await click(".auth-token-dropdown button:nth-of-type(1)");
-    await click("li[data-value='notYou']");
+    const authTokenDropdown = selectKit(".auth-token-dropdown");
+    await authTokenDropdown.expand();
+    await authTokenDropdown.selectRowByValue("notYou");
 
     assert.equal(count(".d-modal:visible"), 1, "modal should appear");
 

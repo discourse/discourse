@@ -290,12 +290,8 @@ export default function selectKit(selector) {
       );
     },
 
-    async deselectItem(value) {
-      await click(
-        queryAll(selector)
-          .find(".select-kit-header")
-          .find(`[data-value="${value}"]`)[0]
-      );
+    async deselectItemByValue(value) {
+      await click(`${selector} .selected-content [data-value="${value}"]`);
     },
 
     exists() {

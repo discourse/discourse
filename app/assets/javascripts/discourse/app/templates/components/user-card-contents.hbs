@@ -222,7 +222,7 @@
                 {{/if}}
               </h3>
             {{/if}}
-            {{plugin-outlet name="user-card-metadata" args=(hash user=this.user)}}
+            {{plugin-outlet name="user-card-metadata" args=(hash user=this.user) tagName=""}}
           </div>
         {{/unless}}
         {{plugin-outlet name="user-card-after-metadata" args=(hash user=this.user) tagName=""}}

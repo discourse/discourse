@@ -300,6 +300,7 @@ fi:
     copy_codeblock:
       copied: "kopioitiin!"
     drafts:
+      label: "Luonnokset"
       resume: "Jatka"
       remove: "Poista"
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
@@ -310,6 +311,9 @@ fi:
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
     topic_count_latest:
+      one: "Katso %{count} uusi tai päivitetty ketju"
+      other: "Katso %{count} uutta tai päivitettyä ketjua"
+    topic_count_unseen:
       one: "Katso %{count} uusi tai päivitetty ketju"
       other: "Katso %{count} uutta tai päivitettyä ketjua"
     topic_count_unread:
@@ -825,6 +829,10 @@ fi:
       flair_type:
         icon: "Valitse kuvake"
         image: "Lataa kuva"
+      default_notifications:
+        modal_description: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count} olemassa olevan käyttäjän asetusta."
+        modal_yes: "Kyllä"
+        modal_no: "Ei, käytä muutosta vain jatkossa"
     user_action_groups:
       "1": "Tykkäykset"
       "2": "Tykkäykset"
@@ -984,6 +992,7 @@ fi:
       no_bookmarks_title: "Et ole vielä lisännyt mitään kirjanmerkkeihin"
       no_bookmarks_body: >
         Aloita kirjanmerkkien lisääminen painikkeella %{icon} ja ne listataan tähän helposti löydettäväksi. Voit ajastaa myös muistutuksen!
+      no_bookmarks_search: "Kirjanmerkkejä ei löytynyt näillä hakusanoilla."
       no_notifications_title: "Sinulla ei ole vielä ilmoituksia"
       no_notifications_body: >
         Tässä paneelissa näytetään ilmoituksia sinulle relevantista toiminnasta, kuten omien ketjujesi viestit ja vastaukset, kun joku <b>@mainitsee</b> nimesi tai lainaa sinua, tai vastaa ketjuihin joita tarkkailet. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Napsauta painiketta %{icon}, kun haluat ilmoituksia tietystä ketjusta, alueesta tai tunnisteesta. Lisää valintoja löydät <a href='%{preferencesUrl}'>ilmoitusasetuksista</a>.
@@ -1090,7 +1099,10 @@ fi:
         rejected_posts: "hylättyjä viestejä"
       messages:
         inbox: "Saapuneet"
+        latest: "Tuoreimmat"
         sent: "Lähetetyt"
+        unread: "Lukemattomat"
+        new: "Uudet"
         archive: "Arkisto"
         groups: "Omat ryhmät"
         move_to_inbox: "Siirrä saapuneisiin"
@@ -1778,6 +1790,7 @@ fi:
         one: "+ %{count} ala-alue"
         other: "+ %{count} ala-aluetta"
     select_kit:
+      delete_item: "Poista %{name}"
       filter_by: "Suodata: %{name}"
       select_to_filter: "Valitse suodatettava arvo"
       default_header_text: Valitse...
@@ -2837,6 +2850,7 @@ fi:
         name: "Nimi"
         name_placeholder: "Mitä varten kirjanmerkki on?"
         set_reminder: "Muistuta minua"
+        options: "Asetukset"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
@@ -3112,7 +3126,7 @@ fi:
       one: "käyttäjä"
       other: "käyttäjää"
     category_title: "Alue"
-    history: "Historia, viimeiset 100 versiota"
+    history_capped_revisions: "Historia, viimeiset 100 versiota"
     changed_by: "käyttäjältä %{author}"
     raw_email:
       title: "Saapuva sähköposti"
@@ -3601,7 +3615,6 @@ fi:
               description: "Ylläpitäjät näkevät kaikki ryhmät."
             members_visibility_levels:
               title: "Ketkä voivat nähdä ryhmän jäsenet?"
-              description: "Ylläpitäjät voivat nähdä kaikki ryhmän jäsenet."
             publish_read_state: "Näytä ryhmäviesteissä ryhmän lukutila"
           membership:
             automatic: Automaattinen
@@ -4515,6 +4528,7 @@ fi:
         delete_all_posts: "Poista kaikki viestit"
         delete_posts_progress: "Poistetaan viestejä..."
         delete_posts_failed: "Viestien poistaminen epäonnistui."
+        post_edits: "Viestimuokkaukset"
         penalty_post_actions: "Mitä haluat tehdä kyseiselle viestille?"
         penalty_post_delete: "Poista viesti"
         penalty_post_delete_replies: "Poista viesti + kaikki vastaukset"
@@ -4570,6 +4584,7 @@ fi:
         approve_success: "Käyttäjä on hyväksytty, ja hänelle on lähetetty sähköpostitse ohjeet tilin vahvistamiseen."
         approve_bulk_success: "Kaikki valitut käyttäjät on hyväksytty, ja heille on lähetetty ilmoitus."
         time_read: "Lukuaika"
+        post_edits_count: "Viestimuokkaukset"
         anonymize: "Anonymisoi käyttäjä"
         anonymize_confirm: "Oletko VARMA, että haluat anonymisoida tämän käyttäjätilin? Tämä muuttaa käyttäjätunnuksen ja sähköpostiosoitteen sekä nollaa kaikki profiilitiedot."
         anonymize_yes: "Kyllä, anonymisoi tämä tili"
@@ -4654,6 +4669,8 @@ fi:
         trust_level_unlocked_tip: "luottamustason lukitus on poistettu, järjestelmä voi ylentää tai alentaa käyttäjän"
         lock_trust_level: "Lukitse luottamustaso"
         unlock_trust_level: "Poista luottamustason lukitus"
+        silenced_count: "Hiljennetty"
+        suspended_count: "Hyllytetyt"
         tl3_requirements:
           title: "Luottamustason 3 vaatimukset"
           table_title:

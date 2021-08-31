@@ -28,12 +28,13 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
 
     // Live changes without reload
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("larger");
+    const textSize = selectKit(".text-size .combo-box");
+    await textSize.expand();
+    await textSize.selectRowByValue("larger");
     assert.ok(document.documentElement.classList.contains("text-size-larger"));
 
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("largest");
+    await textSize.expand();
+    await textSize.selectRowByValue("largest");
     assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
     assert.equal(cookie("text_size"), null, "cookie is not set");
@@ -43,16 +44,16 @@ acceptance("User Preferences - Interface", function (needs) {
 
     assert.equal(cookie("text_size"), null, "cookie is not set");
 
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("larger");
+    await textSize.expand();
+    await textSize.selectRowByValue("larger");
     await click(".text-size input[type=checkbox]");
 
     await savePreferences();
 
     assert.equal(cookie("text_size"), "larger|1", "cookie is set");
     await click(".text-size input[type=checkbox]");
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("largest");
+    await textSize.expand();
+    await textSize.selectRowByValue("largest");
 
     await savePreferences();
     assert.equal(cookie("text_size"), null, "cookie is removed");

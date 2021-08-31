@@ -240,6 +240,9 @@ sw:
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
+    topic_count_unseen:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_unread:
       one: "Angalia Topiki %{count} Zisizosomwa"
       other: "Angalia Topiki %{count} Zisizosomwa"
@@ -1152,6 +1155,7 @@ sw:
     conditional_loading_section:
       loading: Inaandaa....
     select_kit:
+      delete_item: "Futa %{name}"
       default_header_text: Chagua
       no_content: Hakuna uwiano uliopatikana
       filter_placeholder: Tafuta

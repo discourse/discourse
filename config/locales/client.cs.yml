@@ -352,6 +352,11 @@ cs:
       few: "Zobrazit %{count} nová nebo upravená témata"
       many: "Zobrazit %{count} nových nebo upravených témat"
       other: "Zobrazit %{count} nových nebo upravených témat"
+    topic_count_unseen:
+      one: "Zobrazit %{count} nové nebo upravené téma"
+      few: "Zobrazit %{count} nová nebo upravená témata"
+      many: "Zobrazit %{count} nových nebo upravených témat"
+      other: "Zobrazit %{count} nových nebo upravených témat"
     topic_count_unread:
       one: "Zobrazit %{count} nepřečtené téma"
       few: "Zobrazit %{count} nepřečtená témata"
@@ -1482,6 +1487,7 @@ cs:
     conditional_loading_section:
       loading: Načítá se...
     select_kit:
+      delete_item: "Smazat %{name}"
       default_header_text: Vybrat…
       no_content: Nebyly nalezeny žádné výsledky
       filter_placeholder: Hledat...

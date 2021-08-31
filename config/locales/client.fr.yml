@@ -300,6 +300,7 @@ fr:
     copy_codeblock:
       copied: "copié !"
     drafts:
+      label: "Brouillons"
       resume: "Reprendre"
       remove: "Supprimer"
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
@@ -310,6 +311,9 @@ fr:
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
     topic_count_latest:
+      one: "Voir %{count} sujet récent ou mis à jour"
+      other: "Voir %{count} sujets récents ou mis à jour"
+    topic_count_unseen:
       one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_unread:
@@ -825,6 +829,10 @@ fr:
       flair_type:
         icon: "Sélectionner une icône"
         image: "Insérer une image"
+      default_notifications:
+        modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
+        modal_yes: "Oui"
+        modal_no: "Non, appliquer ce changement à partir de maintenant"
     user_action_groups:
       "1": "« J'aime » attribués"
       "2": "« J'aime » reçus"
@@ -984,6 +992,7 @@ fr:
       no_bookmarks_title: "Vous n'avez pas encore créé de signet"
       no_bookmarks_body: >
         Le bouton %{icon} vous permet de marquer d'un signet les messages qui vous intéressent particulièrement. Ils seront ensuite affichés ici pour faciliter leur consultation. Vous pouvez également planifier un rappel associé à un signet !
+      no_bookmarks_search: "Aucun signet trouvé avec la requête de recherche fournie."
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
         Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
@@ -1090,7 +1099,10 @@ fr:
         rejected_posts: "messages rejetés"
       messages:
         inbox: "Boîte de réception"
+        latest: "Récents"
         sent: "Envoyés"
+        unread: "Non lues"
+        new: "Nouveau"
         archive: "Archivés"
         groups: "Mes groupes"
         move_to_inbox: "Déplacer dans la boîte de réception"
@@ -1523,6 +1535,8 @@ fr:
       title:
         title: "Titre"
         none: "(aucun)"
+      flair:
+        none: "(aucun)"
       primary_group:
         title: "Groupe principal"
         none: "(aucun)"
@@ -1773,6 +1787,7 @@ fr:
         one: "+ %{count} sous-catégorie"
         other: "+ %{count} sous-catégories"
     select_kit:
+      delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
       select_to_filter: "Sélectionner une valeur à filtrer"
       default_header_text: Sélectionner…
@@ -2832,6 +2847,7 @@ fr:
         name: "Nom"
         name_placeholder: "À quoi correspond ce signet ?"
         set_reminder: "Me le rappeler"
+        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -3107,7 +3123,7 @@ fr:
       one: "utilisateur"
       other: "utilisateurs"
     category_title: "Catégorie"
-    history: "Historique des 100 dernières modifications"
+    history_capped_revisions: "Historique des 100 dernières modifications"
     changed_by: "par %{author}"
     raw_email:
       title: "Courriel entrant"
@@ -3596,7 +3612,6 @@ fr:
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
               title: "Qui peut voir les membres de ce groupe ?"
-              description: "Les administrateurs peuvent voir les membres de tous les groupes."
             publish_read_state: "Publier le statut de lecture du groupe lors des messages directs de groupe"
           membership:
             automatic: Automatique
@@ -4511,6 +4526,7 @@ fr:
         delete_all_posts: "Supprimer tous les messages"
         delete_posts_progress: "Messages en cours de suppression…"
         delete_posts_failed: "Un problème est survenu lors de la suppression des messages."
+        post_edits: "Modifications de message"
         penalty_post_actions: "Que souhaitez-vous faire du message associé ?"
         penalty_post_delete: "Supprimer le message"
         penalty_post_delete_replies: "Supprimer le message et les réponses éventuelles"
@@ -4566,6 +4582,7 @@ fr:
         approve_success: "Utilisateur approuvé et un courriel avec les instructions d'activation a été envoyé."
         approve_bulk_success: "Bravo ! Tous les utilisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
+        post_edits_count: "Modifications de message"
         anonymize: "Rendre l'utilisateur anonyme"
         anonymize_confirm: "Voulez-vous vraiment rendre ce compte anonyme ? Cela entraînera la modification du nom d'utilisateur et de l'adresse courriel, et réinitialisera les informations du profil."
         anonymize_yes: "Oui, rendre ce compte anonyme"
@@ -4650,6 +4667,8 @@ fr:
         trust_level_unlocked_tip: "le niveau de confiance est déverrouillé, le système pourra changer le niveau de confiance de cet utilisateur"
         lock_trust_level: "Verrouiller le niveau de confiance"
         unlock_trust_level: "Déverrouiller le niveau de confiance"
+        silenced_count: "En sourdine"
+        suspended_count: "Suspendus"
         tl3_requirements:
           title: "Prérequis pour le niveau de confiance 3"
           table_title:

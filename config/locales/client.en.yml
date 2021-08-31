@@ -1067,9 +1067,15 @@ en:
       no_bookmarks_title: "You haven’t bookmarked anything yet"
       no_bookmarks_body: >
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_bookmarks_search: "No bookmarks found with the provided search query."
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
+        <br><br>
+        Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_notifications_page_title: "You don’t have any notifications yet"
+      no_notifications_page_body: >
+        You will be notified about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
       first_notification: "Your first notification! Select it to begin."
@@ -1183,7 +1189,13 @@ en:
         latest: "Latest"
         sent: "Sent"
         unread: "Unread"
+        unread_with_count:
+          one: "Unread (%{count})"
+          other: "Unread (%{count})"
         new: "New"
+        new_with_count:
+          one: "New (%{count})"
+          other: "New (%{count})"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"
@@ -1955,10 +1967,14 @@ en:
         other: "+ %{count} subcategories"
 
     select_kit:
+      delete_item: "Delete %{name}"
       filter_by: "Filter by: %{name}"
       select_to_filter: "Select a value to filter"
       default_header_text: Select...
       no_content: No matches found
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
       filter_placeholder: Search...
       filter_placeholder_with_any: Search or create...
       create: "Create: '%{content}'"
@@ -3444,6 +3460,7 @@ en:
       unseen:
         title: "Unseen"
         lower_title: "unseen"
+        help: "new topics and topics you are currently watching or tracking with unread posts"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -4866,8 +4883,7 @@ en:
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
-        delete_all_posts: "Delete all posts"
-        delete_posts_progress: "Deleting posts..."
+
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
         view_edits: "View Edits"
@@ -4936,8 +4952,22 @@ en:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         delete_posts:
+          button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
+            description: "Deleting posts..."
+          confirmation:
+            title: "Delete all posts by @%{username}"
+            description: |
+              <p>Are you sure you would like to delete <b>%{post_count}</b> posts by @%{username}?
+
+              <p><b>This can not be undone!</b></p>
+
+              <p>To continue type: <code>%{text}</code></p>
+
+            text: "delete posts by @%{username}"
+            delete: "Delete posts by @%{username}"
+            cancel: "Cancel"
         merge:
           button: "Merge"
           prompt:
@@ -5365,7 +5395,8 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "Discussion topic"
-        font_title: "%{font} Font"
+        topic_title: "A discussion topic heading"
         share_button: "Share"
         reply_button: "Reply"
+        topic_preview: "Topic preview"
+        homepage_preview: "Homepage preview"

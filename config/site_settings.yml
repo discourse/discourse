@@ -283,6 +283,7 @@ basic:
   enable_upload_debug_mode:
     default: false
     hidden: true
+    client: true
   default_theme_id:
     default: -1
     hidden: true
@@ -365,9 +366,6 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
-  order_stylesheets:
-    default: false
-    hidden: true
 
 login:
   invite_only:
@@ -1365,7 +1363,8 @@ files:
   automatically_download_gravatars: true
   allow_uploaded_avatars:
     client: true
-    default: true
+    default: "0"
+    enum: "TrustLevelAndStaffAndDisabledSetting"
   default_avatars:
     default: ""
     type: url_list

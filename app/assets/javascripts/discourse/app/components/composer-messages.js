@@ -86,6 +86,12 @@ export default Component.extend({
         topic: topic,
       });
     },
+
+    switchPM(message) {
+      this.composer.set("action", "privateMessage");
+      this.composer.set("targetRecipients", message.reply_username);
+      this._removeMessage(message);
+    },
   },
 
   // Resets all active messages.
@@ -130,7 +136,12 @@ export default Component.extend({
       }
     }
 
-    this.queuedForTyping.forEach((msg) => this.send("popup", msg));
+    this.queuedForTyping.forEach((msg) => {
+      if (composer.whisper && msg.hide_if_whisper) {
+        return;
+      }
+      this.send("popup", msg);
+    });
   },
 
   _create(info) {

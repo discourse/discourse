@@ -210,6 +210,16 @@ class Plugin::Instance
     TopicView.add_custom_filter(trigger, &block)
   end
 
+  # Allows to add more user IDs to the list of preloaded users. This can be
+  # useful to efficiently change the list of posters or participants.
+  # Example usage:
+  #   register_topic_list_preload_user_ids do |topics, user_ids, topic_list|
+  #     user_ids << Discourse::SYSTEM_USER_ID
+  #   end
+  def register_topic_list_preload_user_ids(&block)
+    TopicList.on_preload_user_ids(&block)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|
@@ -911,6 +921,12 @@ class Plugin::Instance
       type: type,
       param: param
       }, self)
+  end
+
+  # Register a new PresenceChannel prefix. See {PresenceChannel.register_prefix}
+  # for usage instructions
+  def register_presence_channel_prefix(prefix, &block)
+    DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
   protected

@@ -100,8 +100,9 @@ module PostGuardian
     is_staff? &&
     user &&
     !user.admin? &&
-    (user.first_post_created_at.nil? || user.first_post_created_at >= SiteSetting.delete_user_max_post_age.days.ago) &&
-    user.post_count <= SiteSetting.delete_all_posts_max.to_i
+    (is_admin? ||
+      ((user.first_post_created_at.nil? || user.first_post_created_at >= SiteSetting.delete_user_max_post_age.days.ago) &&
+      user.post_count <= SiteSetting.delete_all_posts_max.to_i))
   end
 
   def can_create_post?(parent)

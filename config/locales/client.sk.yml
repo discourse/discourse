@@ -306,6 +306,11 @@ sk:
       few: "Pozri si %{count} nových alebo upravených tém."
       many: "Pozri si %{count} nových alebo upravených tém."
       other: "Pozri si %{count} nových alebo upravených tém."
+    topic_count_unseen:
+      one: "Pozri si %{count} novú alebo upravenú tému."
+      few: "Pozri si %{count} nových alebo upravených tém."
+      many: "Pozri si %{count} nových alebo upravených tém."
+      other: "Pozri si %{count} nových alebo upravených tém."
     topic_count_unread:
       one: "Pozrieť %{count} neprečítanú tému."
       few: "Pozrieť %{count} neprečítaných tém."
@@ -1242,6 +1247,7 @@ sk:
     conditional_loading_section:
       loading: Prebieha načítavanie...
     select_kit:
+      delete_item: "Zmazaných %{name}"
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
     date_time_picker:

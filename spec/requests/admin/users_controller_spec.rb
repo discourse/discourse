@@ -327,6 +327,14 @@ RSpec.describe Admin::UsersController do
       another_admin.reload
       expect(another_admin.admin).to eq(false)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_admin.id}/revoke_admin.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_deleted']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
+      expect(response.parsed_body['can_delete_all_posts']).to eq(true)
+    end
   end
 
   describe '#grant_admin' do
@@ -505,6 +513,12 @@ RSpec.describe Admin::UsersController do
       another_user.reload
       expect(another_user.moderator).to eq(true)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_user.id}/grant_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(false)
+      expect(response.parsed_body['can_be_anonymized']).to eq(false)
+    end
   end
 
   describe '#revoke_moderation' do
@@ -523,6 +537,12 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       moderator.reload
       expect(moderator.moderator).to eq(false)
+    end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{moderator.id}/revoke_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
     end
   end
 

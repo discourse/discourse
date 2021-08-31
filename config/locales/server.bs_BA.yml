@@ -595,6 +595,7 @@ bs_BA:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
+    disabled: "deaktiviran"
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     allow_user_locale: "Allow users to choose their own language interface preference"

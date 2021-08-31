@@ -240,13 +240,6 @@ def copy_ember_cli_assets
   assets = {}
   files = {}
 
-  log_task_duration('yarn install') {
-    unless system("yarn --cwd #{ember_dir} install")
-      STDERR.puts "Error running yarn install"
-      exit 1
-    end
-  }
-
   log_task_duration('ember build -prod') {
     unless system("yarn --cwd #{ember_dir} run ember build -prod")
       STDERR.puts "Error running ember build"

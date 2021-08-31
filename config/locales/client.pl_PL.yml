@@ -370,6 +370,11 @@ pl_PL:
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
       many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
       other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+    topic_count_unseen:
+      one: "Zobacz %{count} nowy albo zaktualizowany temat"
+      few: "Zobacz %{count} nowe albo zaktualizowane tematy"
+      many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+      other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
     topic_count_unread:
       one: "Zobacz %{count} nieprzeczytany temat"
       few: "Zobacz %{count} nieprzeczytane tematy"
@@ -1023,6 +1028,7 @@ pl_PL:
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
+          unseen: "Niewidziany"
         ignore_duration_title: "Ignoruj użytkownika"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
@@ -1093,6 +1099,7 @@ pl_PL:
       no_bookmarks_title: "Nie masz jeszcze żadnych zakładek"
       no_bookmarks_body: >
         Rozpocznij zakładki za pomocą przycisku %{icon} i zostaną one wymienione tutaj w celu ułatwienia odniesienia się do nich w późniejszym czasie. Możesz też zaplanować przypomnienie!
+      no_bookmarks_search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_body: >
         W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
@@ -1376,6 +1383,7 @@ pl_PL:
         not_connected: "(nie połączony)"
         confirm_modal_title: "Połącz konto %{provider}"
         confirm_description:
+          disconnect: "Twoje istniejące konto %{provider} '%{account_description}' zostanie odłączone."
           account_specific: "Twoje konto %{provider} „%{account_description}” zostanie użyte do uwierzytelnienia."
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
       name:
@@ -1778,6 +1786,7 @@ pl_PL:
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
       title: "Utwórz swoje konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
+      associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
@@ -1925,10 +1934,16 @@ pl_PL:
         many: "+ %{count} podkategorii"
         other: "+ %{count} podkategorii"
     select_kit:
+      delete_item: "Usuń %{name}"
       filter_by: "Filtruj według: %{name}"
       select_to_filter: "Wybierz wartość do filtrowania"
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
+      results_count:
+        one: "%{count} wynik"
+        few: "%{count} wyniki"
+        many: "%{count} wyników"
+        other: "%{count} wyników"
       filter_placeholder: Wyszukiwanie...
       filter_placeholder_with_any: Wyszukaj lub utwórz...
       create: "Stwórz: '%{content}'"
@@ -2400,6 +2415,7 @@ pl_PL:
           other: "Postęp: <strong>%{count}</strong> tematów"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
+        unseen: "Nie masz niewidzianych tematów."
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
         posted: "Jeszcze nie zamieściłeś/łaś wpisu w żadnym z tematów."
@@ -2416,6 +2432,7 @@ pl_PL:
         read: "Nie ma więcej przeczytanych tematów."
         new: "Nie ma więcej nowych tematów."
         unread: "Nie ma więcej nieprzeczytanych tematów."
+        unseen: "Nie ma już więcej niewidzianych tematów."
         category: "Nie ma więcej tematów w kategorii %{category}."
         tag: "Nie ma więcej tematów z %{tag}."
         top: "Nie ma już więcej najlepszych tematów."
@@ -3407,7 +3424,8 @@ pl_PL:
       many: "użytkowników"
       other: "użytkowników"
     category_title: "Kategoria"
-    history: "Historia, ostatnie 100 wersji"
+    history_capped_revisions: "Historia, ostatnie 100 wersji"
+    history: "Historia"
     changed_by: "przez %{author}"
     raw_email:
       title: "Email przychodzący"
@@ -3444,6 +3462,10 @@ pl_PL:
           few: "%{count} nieprzeczytane"
           many: "%{count} nieprzeczytanych"
           other: "%{count} nieprzeczytanych"
+      unseen:
+        title: "Niewidziany"
+        lower_title: "niewidziany"
+        help: "nowe tematy i tematy, które aktualnie oglądasz lub śledzisz z nieprzeczytanymi postami"
       new:
         lower_title_with_count:
           one: "%{count} nowy"
@@ -3756,6 +3778,7 @@ pl_PL:
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
+          unseen: "Nie masz niewidzianych tematów."
           new: "Nie masz nowych tematów."
           read: "Nie przeczytałeś/łaś jeszcze żadnych tematów."
           posted: "Jeszcze nie zamieściłeś/łaś postów w żadnym z tematów."
@@ -3934,7 +3957,6 @@ pl_PL:
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
               title: "Kto może widzieć członków grupy?"
-              description: "Administratorzy mogą widzieć członków wszystkich grup."
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne

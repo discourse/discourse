@@ -865,6 +865,7 @@ fa_IR:
     poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
     poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
   site_settings:
+    disabled: "غیرفعال شده"
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "تمام فرسته‌هایی که بیش از ۳۰ روز پنهان باقی می‌مانند پاک شوند."
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."

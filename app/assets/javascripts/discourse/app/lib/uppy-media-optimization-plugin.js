@@ -1,8 +1,8 @@
-import { Plugin } from "@uppy/core";
+import { BasePlugin } from "@uppy/core";
 import { warn } from "@ember/debug";
 import { Promise } from "rsvp";
 
-export default class UppyMediaOptimization extends Plugin {
+export default class UppyMediaOptimization extends BasePlugin {
   constructor(uppy, opts) {
     super(uppy, opts);
     this.id = opts.id || "uppy-media-optimization";
@@ -23,14 +23,17 @@ export default class UppyMediaOptimization extends Plugin {
 
     this.uppy.emit("preprocess-progress", this.pluginClass, file);
 
-    return this.optimizeFn(file)
+    return this.optimizeFn(file, { stopWorkerOnError: !this.runParallel })
       .then((optimizedFile) => {
         if (!optimizedFile) {
           warn("Nothing happened, possible error or other restriction.", {
             id: "discourse.uppy-media-optimization",
           });
         } else {
-          this.uppy.setFileState(fileId, { data: optimizedFile });
+          this.uppy.setFileState(fileId, {
+            data: optimizedFile,
+            size: optimizedFile.size,
+          });
         }
         this.uppy.emit("preprocess-complete", this.pluginClass, file);
       })

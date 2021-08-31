@@ -315,6 +315,9 @@ tr_TR:
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
+    topic_count_unseen:
+      one: "%{count} yeni ya da güncellenmiş konu."
+      other: "%{count} yeni ya da güncellenmiş konu."
     topic_count_unread:
       one: "%{count} Okunmamış konuyu görün"
       other: "%{count} Okunmamış konuları görün"
@@ -993,6 +996,7 @@ tr_TR:
       no_bookmarks_title: "Henüz hiçbir şeye yer işareti koymadınız"
       no_bookmarks_body: >
         %{icon} düğmesiyle gönderileri işaretlemeye başlayın ve bunlar kolayca erişilebilecek şekilde burada listelensin. Ayrıca bir hatırlatıcı da ekleyebilirsiniz!
+      no_bookmarks_search: "Bu arama koşullarıyla bir yer işareti bulunamadı."
       no_notifications_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
@@ -1790,6 +1794,7 @@ tr_TR:
         one: "+ %{count} alt kategori"
         other: "+ %{count} alt kategori"
     select_kit:
+      delete_item: "Sil %{name}"
       filter_by: "Şuna göre filtrele: %{name}"
       select_to_filter: "Filtrelemek için bir değer seçin"
       default_header_text: Seç...
@@ -3136,7 +3141,7 @@ tr_TR:
       one: "kullanıcı"
       other: "kullanıcılar"
     category_title: "Kategori"
-    history: "Geçmiş, son 100 revizyon"
+    history_capped_revisions: "Geçmiş, son 100 revizyon"
     changed_by: "Yazan %{author}"
     raw_email:
       title: "Gelen e-posta"
@@ -3627,7 +3632,6 @@ tr_TR:
               description: "Yöneticiler tüm grupları görebilir."
             members_visibility_levels:
               title: "Bu grubun üyelerini kim görebilir?"
-              description: "Yöneticiler tüm grupların üyelerini görebilir."
             publish_read_state: "Grup mesajlarında grup okuma durumunu yayınla"
           membership:
             automatic: Otomatik
