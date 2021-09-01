@@ -7,11 +7,6 @@
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
           <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
         </div>
-        {{#unless hasAuthOptions}}
-          <div class="create-account-login-buttons">
-            {{login-buttons externalLogin=(action "externalLogin")}}
-          </div>
-        {{/unless}}
         {{#if showCreateForm}}
 
           <div class="login-form">
@@ -164,6 +159,11 @@
           {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
 
         {{/if}}
+        {{#unless hasAuthOptions}}
+          <div class="create-account-login-buttons">
+            {{login-buttons externalLogin=(action "externalLogin")}}
+          </div>
+        {{/unless}}
 
         {{#if skipConfirmation}}
           {{loading-spinner size="large"}}
