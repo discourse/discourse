@@ -99,10 +99,21 @@ describe TopicEmbed do
 
       it "creates the topic in the category passed as a parameter" do
         Jobs.run_immediately!
-        SiteSetting.embed_unlisted = false
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", category_id: category.id)
         expect(imported_post.topic.category).not_to eq(embeddable_host.category)
         expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "respects overriding the cook_method when asked" do
+        Jobs.run_immediately!
+        SiteSetting.embed_support_markdown = false
+        stub_request(:get, "https://www.youtube.com/watch?v=K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+        stub_request(:get, "https://www.youtube.com/embed/K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "https://www.youtube.com/watch?v=K56soYl0U1w", cook_method: Post.cook_methods[:regular])
+        expect(imported_post.cooked).to match(/onebox|iframe/)
       end
     end
 
