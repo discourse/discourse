@@ -60,5 +60,8 @@ export default class WidgetGlue {
     traverseCustomWidgets(this._tree, (w) => w.destroy());
 
     cancel(this._timeout);
+
+    this._rootNode = patch(this._rootNode, diff(this._tree, null));
+    this._tree = null;
   }
 }
