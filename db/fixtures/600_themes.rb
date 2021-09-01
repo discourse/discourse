@@ -18,4 +18,11 @@ if !Theme.exists?
   name = I18n.t('color_schemes.default_theme_name')
   default_theme = Theme.create!(name: name, user_id: -1)
   default_theme.set_default!
+
+  if SiteSetting.default_dark_mode_color_scheme_id == SiteSetting.defaults[:default_dark_mode_color_scheme_id]
+    dark_scheme = ColorScheme.find_by(base_scheme_id: "Dark")
+    if dark_scheme.present?
+      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+    end
+  end
 end

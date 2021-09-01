@@ -203,6 +203,14 @@ class Wizard
           updater.update_setting(:base_font, updater.fields[:body_font])
           updater.update_setting(:heading_font, updater.fields[:heading_font])
 
+          if updater.fields[:homepage_style] == 'latest'
+            top_menu = "latest|new|unread|top|categories"
+          else
+            top_menu = "categories|latest|new|unread|top"
+            updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
+          end
+          updater.update_setting(:top_menu, top_menu)
+
           scheme_name = (
             (updater.fields[:color_scheme] || "") ||
             ColorScheme::LIGHT_THEME_ID
@@ -228,13 +236,9 @@ class Wizard
             theme.set_default!
           end
 
-          if updater.fields[:homepage_style] == 'latest'
-            top_menu = "latest|new|unread|top|categories"
-          else
-            top_menu = "categories|latest|new|unread|top"
-            updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
+          if scheme.is_dark?
+            updater.update_setting(:default_dark_mode_color_scheme_id, -1)
           end
-          updater.update_setting(:top_menu, top_menu)
         end
       end
 
