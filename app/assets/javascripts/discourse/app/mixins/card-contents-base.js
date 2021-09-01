@@ -318,14 +318,16 @@ export default Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
-    const previewClickEvent = this.previewClickEvent;
+
     document.removeEventListener("mousedown", this._clickOutsideHandler);
+
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
         .removeEventListener("click", this.boundCardClickHandler);
     });
 
+    const previewClickEvent = this.previewClickEvent;
     this.appEvents.off(previewClickEvent, this, "_previewClick");
 
     this.appEvents.off(
