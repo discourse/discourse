@@ -125,7 +125,7 @@ describe TopicEmbed do
           ).to_return(status: 200, body: "", headers: {})
 
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "https://www.youtube.com/watch?v=K56soYl0U1w", cook_method: Post.cook_methods[:regular])
-        expect(imported_post.cooked).to match(/iframe/)
+        expect(imported_post.cooked).to match(/onebox|iframe/)
       end
     end
 
