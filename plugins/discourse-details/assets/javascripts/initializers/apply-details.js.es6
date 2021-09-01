@@ -15,6 +15,7 @@ function initializeDetails(api) {
   });
 
   api.modifyClass("controller:composer", {
+    pluginId: "discourse-details",
     actions: {
       insertDetails() {
         this.toolbarEvent.applySurround(
