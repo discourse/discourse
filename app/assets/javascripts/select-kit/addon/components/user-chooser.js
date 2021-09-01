@@ -70,6 +70,7 @@ export default MultiSelectComponent.extend({
       categoryId: options.categoryId,
       exclude: this.excludedUsers,
       includeGroups: options.includeGroups,
+      customGroupsScope: options.customGroupsScope,
       allowedUsers: options.allowedUsers,
       includeMentionableGroups: options.includeMentionableGroups,
       includeMessageableGroups: options.includeMessageableGroups,

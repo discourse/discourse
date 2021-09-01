@@ -376,6 +376,13 @@ class Plugin::Instance
     end
   end
 
+  # Add a custom group scopes for search to Group, respecting if the plugin is enabled
+  def add_custom_group_scope_for_search(scope_name)
+    reloadable_patch do |plugin|
+      ::Group.plugin_custom_group_scopes_for_search[scope_name] = { plugin: plugin }
+    end
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize

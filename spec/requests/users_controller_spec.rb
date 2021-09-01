@@ -4083,6 +4083,18 @@ describe UsersController do
             .to_not include(private_group.name)
         end
 
+        it "allows plugin to filter by additional scope" do
+          Group.expects(:custom_scope).never
+          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'custom_scope', term: 'a' }
+          expect(response.status).to eq(200)
+
+          Group.expects(:custom_scope).once
+          plugin = Plugin::Instance.new
+          plugin.add_custom_group_scope_for_search(:custom_scope)
+          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'custom_scope', term: 'a' }
+          expect(response.status).to eq(200)
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',

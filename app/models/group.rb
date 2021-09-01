@@ -14,10 +14,11 @@ class Group < ActiveRecord::Base
   include HasDestroyedWebHook
   include GlobalPath
 
-  cattr_accessor :preloaded_custom_field_names, :plugin_permitted_params
+  cattr_accessor :preloaded_custom_field_names, :plugin_permitted_params, :plugin_custom_group_scopes_for_search
   self.preloaded_custom_field_names = Set.new
 
   self.plugin_permitted_params = {}
+  self.plugin_custom_group_scopes_for_search = {}
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
