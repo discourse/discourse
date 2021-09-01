@@ -310,6 +310,7 @@ bs_BA:
     copy_codeblock:
       copied: "kopirano!"
     drafts:
+      label: "Skice"
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
@@ -317,6 +318,10 @@ bs_BA:
       abandon:
         yes_value: "Odbaci"
     topic_count_latest:
+      one: "Pogledajte %{count} novu ili ažuriranu temu"
+      few: "Pogledajte %{count} nove ili ažurirane teme"
+      other: "Pogledajte %{count} novih ili ažuriranih tema"
+    topic_count_unseen:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
       other: "Pogledajte %{count} novih ili ažuriranih tema"
@@ -1008,9 +1013,19 @@ bs_BA:
         warnings_received: "upozorenja"
         rejected_posts: "odbijeni postovi"
       messages:
-        all: "Sve"
         inbox: "Inbox"
+        latest: "Zadnje"
         sent: "Poslano"
+        unread: "Nepročitano"
+        unread_with_count:
+          one: "Nepročitano (%{count})"
+          few: "Nepročitano (%{count})"
+          other: "Nepročitano (%{count})"
+        new: "Novo"
+        new_with_count:
+          one: "Novo (%{count})"
+          few: "Novo (%{count})"
+          other: "Novo (%{count})"
         archive: "Arhiva"
         groups: "Moje grupe"
         move_to_inbox: "Idi u inbox"
@@ -1600,6 +1615,7 @@ bs_BA:
     conditional_loading_section:
       loading: Obrađuje...
     select_kit:
+      delete_item: "Izbriši %{name}"
       default_header_text: Označava...
       no_content: Nije pronađen traženi pojam
       filter_placeholder: Pretraga...
@@ -1941,11 +1957,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        change_category: "Postavi kategoriju"
         close_topics: "Zatvori teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
-        notification_level: "Obavijesti"
         choose_new_category: "Izaberi novu kategoriju za temu:"
         selected:
           one: "Označili ste <b>%{count}</b> temu."
@@ -2161,7 +2175,6 @@ bs_BA:
         invisible: "Ukloni temu s popisa"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        make_public: "Napiši temu javno"
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"
       feature:
@@ -2418,8 +2431,6 @@ bs_BA:
         revert_to_regular: "Ukloni boje osoblja"
         rebake: "Popravi HTML"
         unhide: "Unhide"
-        change_owner: "Izmijeni vlasništvo"
-        grant_badge: "Dodijeli bedž"
         lock_post: "Zaključaj objavu"
         lock_post_description: "spriječi objavljivača ove objave da izmijeni objavu"
         unlock_post: "Odključaj objavu"
@@ -2427,7 +2438,6 @@ bs_BA:
         delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako zaista želite da bude obrisan, pošaljite kaznu za pažnju moderatora zajedno s obrazloženjem."
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
-        add_post_notice: "Dodaj obavještenje moderatora"
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -3197,7 +3207,6 @@ bs_BA:
               description: "Administratori mogu vidjeti sve grupe."
             members_visibility_levels:
               title: "Ko može vidjeti članove ove grupe?"
-              description: "Administratori mogu vidjeti članove svih grupa."
             publish_read_state: "U grupnim porukama objavi stanje čitanja grupe"
           membership:
             automatic: Automatsko
@@ -3961,8 +3970,6 @@ bs_BA:
         silence_message_placeholder: "(ostavite prazno za slanje zadane poruke)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
-        delete_all_posts: "Delete all posts"
-        delete_posts_progress: "Brisanje postova ..."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
         penalty_post_actions: "Šta želite da uradite sa povezanim postom?"
         penalty_post_delete: "Obrišite poruku"
@@ -4020,6 +4027,12 @@ bs_BA:
         anonymize_yes: "Da, anonimiziraj ovaj račun"
         anonymize_failed: "Došlo je do problema sa anonimizacijom računa."
         delete: "Delete User"
+        delete_posts:
+          button: "Delete all posts"
+          progress:
+            description: "Brisanje postova ..."
+          confirmation:
+            cancel: "Odustani"
         merge:
           prompt:
             cancel: "Odustani"
@@ -4251,7 +4264,6 @@ bs_BA:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
-          post_processed: "Nakon objave posta"
         preview:
           link_text: "Preview granted badges"
           plan_text: "Preview with query plan"
@@ -4342,6 +4354,5 @@ bs_BA:
           moderator: "Moderator"
           regular: "Regularan korisnik"
       previews:
-        topic_title: "Tema diskusije"
         share_button: "Podijeli"
         reply_button: "Odgovori"

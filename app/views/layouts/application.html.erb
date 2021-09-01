@@ -59,12 +59,17 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
+    <meta name="discourse/config/environment" content="<%=u discourse_config_environment %>" />
     <%- if authentication_data %>
       <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
   </head>
 
   <body class="<%= body_classes %>">
+    <%- if allow_plugins? %>
+      <%= build_plugin_html 'server:after-body-open' %>
+    <%- end -%>
+
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>

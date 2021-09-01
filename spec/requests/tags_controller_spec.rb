@@ -473,7 +473,7 @@ describe TagsController do
       it "can't see pm tags" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(403)
       end
     end
 
@@ -485,7 +485,7 @@ describe TagsController do
       it "can't see pm tags for regular user" do
         get "/tags/personal_messages/#{regular_user.username}.json"
 
-        expect(response).not_to be_successful
+        expect(response.status).to eq(404)
       end
 
       it "can see their own pm tags" do
@@ -519,6 +519,14 @@ describe TagsController do
 
         tag = response.parsed_body['tags']
         expect(tag[0]["id"]).to eq('test')
+      end
+
+      it 'works with usernames with a period' do
+        admin.update!(username: "test.test")
+
+        get "/tags/personal_messages/#{admin.username}.json"
+
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -716,6 +724,11 @@ describe TagsController do
 
       topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
       expect(topic_ids).to eq([tag_topic.id])
+    end
+
+    it "raises an error if the period is not valid" do
+      get "/tag/#{tag.name}/l/top.json?period=decadely"
+      expect(response.status).to eq(400)
     end
   end
 

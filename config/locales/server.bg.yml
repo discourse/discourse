@@ -1297,8 +1297,12 @@ bg:
             label: "Автоматизирани съобщения"
       corporate:
         title: "Организация"
-      colors:
-        title: "Цветове"
+      styling:
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Последни теми"
       logos:
         title: "Логота"
         fields:
@@ -1306,13 +1310,6 @@ bg:
             label: "Главно лого"
       icons:
         title: "Икони"
-      homepage:
-        title: "Начална страница"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Последни теми"
       invites:
         title: "Поканете персонал"
       finished:

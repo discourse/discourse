@@ -256,6 +256,7 @@ id:
     copy_codeblock:
       copied: "disalin!"
     drafts:
+      label: "Konsep"
       resume: "Lanjut"
       remove: "Hapus"
       new_topic: "Konsep topik baru"
@@ -264,6 +265,8 @@ id:
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
     topic_count_latest:
+      other: "Lihat %{count} topik baru atau diperbarui"
+    topic_count_unseen:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unread:
       other: "Lihat %{count} topik belum dibaca"
@@ -849,9 +852,13 @@ id:
         suspensions: "penangguhan"
         warnings_received: "peringatan"
       messages:
-        all: "Semua"
         inbox: "Kotak Masuk"
+        latest: "Terbaru"
         sent: "Mengirim"
+        unread: "Belum dibaca"
+        new: "Baru"
+        new_with_count:
+          other: "Baru (%{count})"
         archive: "Arsip"
         groups: "Kelompok Saya"
         move_to_inbox: "Pindah ke Kotak Masuk"
@@ -1242,6 +1249,7 @@ id:
       topic_count:
         other: "%{count} topik dalam kategori ini"
     select_kit:
+      delete_item: "Hapus %{name}"
       default_header_text: Pilih...
       no_content: Tidak ditemukan yang cocok
       filter_placeholder: Cari...
@@ -1381,7 +1389,6 @@ id:
         select_all: "Pilih Semua"
         dismiss: "Bubar"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
-        notification_level: "Pemberitahuan"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
@@ -1858,6 +1865,9 @@ id:
         approve: "Terima"
         time_read: "Waktu Baca"
         delete: "Hapus Pengguna"
+        delete_posts:
+          confirmation:
+            cancel: "Batal"
         merge:
           prompt:
             cancel: "Batal"

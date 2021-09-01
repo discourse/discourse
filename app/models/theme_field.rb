@@ -180,10 +180,10 @@ class ThemeField < ActiveRecord::Base
       path = Discourse.store.path_for(upload)
     end
 
-    content = File.read(path)
     error = nil
 
     begin
+      content = File.read(path)
       svg_file = Nokogiri::XML(content) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end

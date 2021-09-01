@@ -19,6 +19,12 @@ module.exports = function (defaults) {
     "ember-qunit": {
       insertContentForTestBody: false,
     },
+    sourcemaps: {
+      // There seems to be a bug with brocolli-concat when sourcemaps are disabled
+      // that causes the `app.import` statements below to fail in production mode.
+      // This forces the use of `fast-sourcemap-concat` which works in production.
+      enabled: true,
+    },
   });
 
   // Ember CLI does this by default for the app tree, but for our extra bundles we
@@ -36,6 +42,7 @@ module.exports = function (defaults) {
   app.import(vendorJs + "jquery.fileupload.js");
   app.import(vendorJs + "jquery.fileupload-process.js");
   app.import(vendorJs + "jquery.autoellipsis-1.0.10.js");
+  app.import(vendorJs + "caret_position.js");
   app.import(vendorJs + "show-html.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -60,5 +67,12 @@ module.exports = function (defaults) {
       })
     ),
     digest(prettyTextEngine(vendorJs, "discourse-markdown")),
+    digest(
+      concat("public/assets/scripts", {
+        outputFile: `assets/start-discourse.js`,
+        headerFiles: [`start-app.js`],
+        inputFiles: [`discourse-boot.js`],
+      })
+    ),
   ]);
 };

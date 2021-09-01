@@ -62,7 +62,7 @@ describe TopicQuery do
     end
   end
 
-  context "list_topics_by" do
+  context "#list_topics_by" do
 
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)
@@ -74,7 +74,7 @@ describe TopicQuery do
 
   end
 
-  context "prioritize_pinned_topics" do
+  context "#prioritize_pinned_topics" do
     it "does the pagination correctly" do
       num_topics = 15
       per_page = 3
@@ -96,6 +96,63 @@ describe TopicQuery do
         per_page: per_page,
         page: 1)
       ).to eq(topics[per_page...num_topics])
+    end
+
+    it "orders globally pinned topics by pinned_at rather than bumped_at" do
+      pinned1 = Fabricate(
+        :topic,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      pinned2 = Fabricate(
+        :topic,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
+
+    it "orders pinned topics within a category by pinned_at rather than bumped_at" do
+      cat = Fabricate(:category)
+      pinned1 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      pinned2 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0, category_id: cat.id)
+        .pluck(:id)
+      ).to eq(expected_order)
     end
   end
 
@@ -730,7 +787,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_new' do
+  context '#list_new' do
 
     context 'without a new topic' do
       it "has no new topics" do
@@ -807,7 +864,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_posted' do
+  context '#list_posted' do
     let(:topics) { topic_query.list_posted.topics }
 
     it "returns blank when there are no posted topics" do
@@ -861,7 +918,58 @@ describe TopicQuery do
     end
   end
 
-  context 'list_related_for do' do
+  context '#list_unseen' do
+    it "returns an empty list when there aren't topics" do
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "doesn't return topics that were bumped last time before user joined the forum" do
+      user.first_seen_at = 10.minutes.ago
+      create_topic_with_three_posts(bumped_at: 15.minutes.ago)
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "returns only topics that contain unseen posts" do
+      user.first_seen_at = 10.minutes.ago
+      topic_with_unseen_posts = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_post(topic_with_unseen_posts, user, 1)
+
+      fully_read_topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_the_end(fully_read_topic, user)
+
+      expect(topic_query.list_unseen.topics).to eq([topic_with_unseen_posts])
+    end
+
+    it "ignores staff posts if user is not staff" do
+      user.first_seen_at = 10.minutes.ago
+      topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_the_end(topic, user)
+      create_post(topic: topic, post_type: Post.types[:whisper])
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    def create_topic_with_three_posts(bumped_at:)
+      topic = Fabricate(:topic, bumped_at: bumped_at)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      topic.highest_staff_post_number = 3
+      topic.highest_post_number = 3
+      topic
+    end
+
+    def read_to_post(topic, user, post_number)
+      TopicUser.update_last_read(user, topic.id, post_number, 0, 0)
+    end
+
+    def read_to_the_end(topic, user)
+      read_to_post topic, user, topic.highest_post_number
+    end
+  end
+
+  context '#list_related_for' do
 
     let(:user) do
       Fabricate(:admin)
@@ -1067,7 +1175,6 @@ describe TopicQuery do
 
             expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
           end
-
         end
       end
 
@@ -1193,75 +1300,6 @@ describe TopicQuery do
     end
   end
 
-  describe '#list_private_messages_group' do
-    fab!(:group) { Fabricate(:group) }
-
-    let!(:group_message) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
-        ]
-      )
-    end
-
-    before do
-      group.add(creator)
-    end
-
-    it 'should return the right list for a group user' do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(creator)
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it 'should return the right list for an admin not part of the group' do
-      group.update!(name: group.name.capitalize)
-
-      topics = TopicQuery.new(nil, group_name: group.name.upcase)
-        .list_private_messages_group(Fabricate(:admin))
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it "should not allow a moderator not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:moderator))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    it "should not allow a user not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:user))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    context "Calculating minimum unread count for a topic" do
-      before { group.update!(publish_read_state: true) }
-
-      let(:listed_message) do
-        TopicQuery.new(nil, group_name: group.name)
-          .list_private_messages_group(creator)
-          .topics.first
-      end
-
-      it 'returns the last read post number' do
-        topic_group = TopicGroup.create!(
-          topic: group_message, group: group, last_read_post_number: 10
-        )
-
-        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
-      end
-    end
-  end
-
   context "shared drafts" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
@@ -1347,18 +1385,6 @@ describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
       end
-    end
-  end
-
-  describe '#list_private_messages' do
-    it "includes topics with moderator posts" do
-      private_message_topic = Fabricate(:private_message_post, user: user).topic
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to be_empty
-
-      private_message_topic.add_moderator_post(admin, "Thank you for your flag")
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
     end
   end
 end

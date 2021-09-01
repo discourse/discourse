@@ -188,7 +188,10 @@ def dependencies
       source: 'qunit/qunit/qunit.js'
     },
     {
-      source: 'pretender/pretender.js'
+      source: 'pretender/dist/pretender.js'
+    },
+    {
+      source: 'fake-xml-http-request/fake_xml_http_request.js'
     },
     {
       source: 'sinon/pkg/sinon.js'

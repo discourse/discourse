@@ -34,7 +34,11 @@ class TimestampsUpdater
         next if @ignore_tables.include? table
         column = c["column_name"]
 
-        move_timestamps table, column, days
+        if has_unique_index(table, column)
+          move_timestamps_respect_constraints(table, column, days)
+        else
+          move_timestamps(table, column, days)
+        end
       end
     end
   end
@@ -60,11 +64,54 @@ class TimestampsUpdater
     @raw_connection.exec(sql)
   end
 
+  def has_unique_index(table, column)
+    # This detects unique indices created with "CREATE UNIQUE INDEX".
+    # This also detects unique constraints and primary keys,
+    # because postgresql creates unique indices for them.
+    sql = <<~SQL
+      SELECT 1
+      FROM pg_class t,
+           pg_class i,
+           pg_index ix,
+           pg_attribute a,
+           pg_namespace ns
+      WHERE t.oid = ix.indrelid
+        AND i.oid = ix.indexrelid
+        AND a.attrelid = t.oid
+        AND a.attnum = ANY (ix.indkey)
+        AND t.relnamespace = ns.oid
+        AND ns.nspname = '#{@schema}'
+        AND t.relname = '#{table}'
+        AND a.attname = '#{column}'
+        AND ix.indisunique
+      LIMIT 1;
+    SQL
+    result = @raw_connection.exec(sql)
+    result.any?
+  end
+
   def move_timestamps(table_name, column_name, days)
     operator = days < 0 ? "-" : "+"
+    interval_expression = "#{operator} INTERVAL '#{days.abs} days'"
+    update_table(table_name, column_name, interval_expression)
+  end
+
+  def move_timestamps_respect_constraints(table_name, column_name, days)
+    # add 1000 years to the interval to avoid uniqueness conflicts:
+    operator = days < 0 ? "-" : "+"
+    interval_expression = "#{operator} INTERVAL '1000 years #{days.abs} days'"
+    update_table(table_name, column_name, interval_expression)
+
+    # return back by 1000 years:
+    operator = days < 0 ? "+" : "-"
+    interval_expression = "#{operator} INTERVAL '1000 years'"
+    update_table(table_name, column_name, interval_expression)
+  end
+
+  def update_table(table_name, column_name, interval_expression)
     sql = <<~SQL
       UPDATE #{table_name}
-      SET #{column_name} = #{column_name} #{operator} INTERVAL '#{days.abs} day'
+      SET #{column_name} = #{column_name} #{interval_expression}
     SQL
     @raw_connection.exec(sql)
   end
@@ -79,7 +126,7 @@ def is_date?(string)
 end
 
 def create_updater
-  ignore_tables = %w[application_requests user_second_factors user_visits]
+  ignore_tables = %w[user_second_factors]
   TimestampsUpdater.new "public", ignore_tables
 end
 

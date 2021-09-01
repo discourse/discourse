@@ -267,6 +267,18 @@
       .search-item-prefix {
         margin-right: 0.5em;
       }
+
+      .search-item-tag {
+        color: var(--primary-high);
+        font-size: var(--font-down-1);
+      }
+
+      .d-icon-tag {
+        // match category badge styling
+        // tag/category suggestions can be displayed simultaneously
+        font-size: var(--font-down-2);
+        margin-right: 4px;
+      }
     }
   }
 

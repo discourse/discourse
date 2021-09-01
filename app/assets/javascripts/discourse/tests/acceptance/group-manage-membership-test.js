@@ -89,7 +89,7 @@ acceptance("Managing Group Membership", function (needs) {
     );
     await emailDomains.expand();
     await emailDomains.fillInFilter("foo.com");
-    await emailDomains.keyboard("enter");
+    await emailDomains.selectRowByValue("foo.com");
 
     assert.equal(emailDomains.header().value(), "foo.com");
   });

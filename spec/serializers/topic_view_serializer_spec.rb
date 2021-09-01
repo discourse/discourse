@@ -73,19 +73,6 @@ describe TopicViewSerializer do
           json = serialize_topic(topic, user)
         end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
       end
-
-      it 'should have thumbnails after jobs run' do
-        Jobs.run_immediately!
-        SiteSetting.create_thumbnails = true
-
-        Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
-        json = serialize_topic(topic, user)
-        topic.generate_thumbnails!
-        json = serialize_topic(topic, user)
-
-        # Original + Optimized
-        expect(json[:thumbnails].length).to eq(2)
-      end
     end
 
     describe 'when a topic does not contain an image' do
@@ -495,6 +482,28 @@ describe TopicViewSerializer do
 
         expect(json[:user_last_posted_at]).to be_present
       end
+    end
+  end
+
+  describe '#requested_group_name' do
+    fab!(:pm) { Fabricate(:private_message_post).topic }
+    fab!(:group) { Fabricate(:group) }
+
+    it 'should return the right group name when PM is a group membership request' do
+      pm.custom_fields[:requested_group_id] = group.id
+      pm.save!
+
+      user = pm.first_post.user
+      group.add_owner(user)
+      json = serialize_topic(pm, user)
+
+      expect(json[:requested_group_name]).to eq(group.name)
+    end
+
+    it 'should not include the attribute for a non group membership request PM' do
+      json = serialize_topic(pm, pm.first_post.user)
+
+      expect(json[:requested_group_name]).to eq(nil)
     end
   end
 end

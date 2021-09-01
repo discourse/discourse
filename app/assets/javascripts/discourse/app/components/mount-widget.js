@@ -63,6 +63,9 @@ export default Component.extend({
 
     this._connected.forEach((v) => v.destroy());
     this._connected.length = 0;
+
+    this._rootNode = patch(this._rootNode, diff(this._tree, null));
+    this._tree = null;
   },
 
   willDestroyElement() {
@@ -124,9 +127,7 @@ export default Component.extend({
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
 
-      if (this._tree) {
-        traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
-      }
+      traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
 
       this.beforePatch();
       this._rootNode = patch(this._rootNode, patches);

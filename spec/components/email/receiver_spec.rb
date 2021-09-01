@@ -412,6 +412,21 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
+    it "removes the trnaslated 'Previous Replies' marker" do
+      expect { process(:previous_replies_de) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
+    it "removes the 'type reply above' marker" do
+      expect { process(:reply_above) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
+    it "removes the translated 'Previous Replies' marker" do
+      expect { process(:reply_above_de) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
     it "handles multiple paragraphs" do
       expect { process(:paragraphs) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)")
@@ -854,6 +869,38 @@ describe Email::Receiver do
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
+    describe "reply-to header" do
+      it "handles emails where there is a reply-to address, using that instead of the from address" do
+        SiteSetting.block_auto_generated_emails = false
+        expect { process(:reply_to_different_to_from) }.to change(Topic, :count)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("arthurmorgan@reddeadtest.com")
+        expect(user.email).to eq("arthurmorgan@reddeadtest.com")
+      end
+
+      it "does not use the reply-to address if an X-Original-From header is not present" do
+        SiteSetting.block_auto_generated_emails = false
+        expect { process(:reply_to_different_to_from_no_x_original) }.to change(Topic, :count)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
+        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+      end
+
+      it "does not use the reply-to address if the X-Original-From header is different from the reply-to address" do
+        SiteSetting.block_auto_generated_emails = false
+        expect { process(:reply_to_different_to_from_x_original_different) }.to change(Topic, :count)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
+        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+      end
+    end
+
     describe "when 'find_related_post_with_key' is disabled" do
       before do
         SiteSetting.find_related_post_with_key = false
@@ -985,10 +1032,31 @@ describe Email::Receiver do
       end
     end
 
+    context "when a group forwards an email to its inbox" do
+      let!(:topic) do
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
+        process(:forwarded_by_group_to_group)
+        Topic.last
+      end
+
+      it "does not use the team's address as the from_address; it uses the original sender address" do
+        expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+        expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+      end
+    end
+
     context "emailing a group by email_username and following reply flow" do
       let!(:original_inbound_email_topic) do
         group.update!(
           email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
           smtp_server: "smtp.test.com",
           smtp_port: 587,
           smtp_ssl: true,

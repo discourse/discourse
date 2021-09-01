@@ -164,6 +164,9 @@ es:
       max_emojis: "no puede tener más de %{max_emojis_count} emojis"
       emojis_disabled: "no puede tener emojis"
       ip_address_already_screened: "ya está incluido en una regla existente"
+      restrict_dependent_destroy:
+        one: "No se puede eliminar el registro porque existe otro %{record} dependiente"
+        other: "No se puede eliminar el registro porque existen otros %{record} dependientes"
       too_long:
         one: es demasiado largo (el máximo es de %{count} carácter)
         other: es demasiado largo (el máximo es de %{count} caracteres)
@@ -450,7 +453,7 @@ es:
 
       - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
 
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
+      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     "new-reply": |
       Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
 
@@ -460,7 +463,7 @@ es:
 
       - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, y no a las personas.
 
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text} publicaciones.
+      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     avatar: |
       ### ¿Qué tal si eliges una imagen para tu cuenta?
 
@@ -477,14 +480,6 @@ es:
       Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
-    get_a_room: |
-      ### Anima a los demás a participar
-
-      Has respondido %{count} veces a @%{reply_username} en este tema en particular.
-
-      Un buen debate incluye muchas voces y perspectivas. ¿Puedes animar a que participe alguien más?
-
-      Y no olvides: si quieres seguir la conversación con esta persona en particular fuera de la vista de todo el mundo, [envíale un mensaje personal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
 
@@ -525,7 +520,6 @@ es:
               unable_to_tag: "Hubo un error al etiquetar el tema."
             featured_link:
               invalid: "no es válido. La URL debería incluir http:// o https://."
-              invalid_category: "no se puede editar en esta categoría."
         user:
           attributes:
             password:
@@ -1368,6 +1362,7 @@ es:
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
     unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
   site_settings:
+    disabled: "desactivado"
     display_local_time_in_user_card: "Mostrar la hora local basada en el la zona horaria cuando se abra la tarjeta de un usuario."
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente cualquier publicación que se mantenga oculta por mas de 30 días."
@@ -1677,6 +1672,7 @@ es:
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del equipo subir cualquier archivo en MP."
     strip_image_metadata: "Eliminar metadatos de imágenes."
     composer_media_optimization_image_enabled: "Permite la optimización multimedia en el lado del cliente de archivos de imágenes cargados."
+    composer_media_optimization_image_bytes_optimization_threshold: "Tamaño mínimo del archivo de imagen para activar la optimización del lado del cliente"
     composer_media_optimization_image_resize_dimensions_threshold: "Ancho mínimo de la imagen para activar el redimensionamiento del lado del cliente"
     composer_media_optimization_image_resize_width_target: "Las imágenes con una anchura mayor que «composer_media_optimization_image_dimensions_resize_threshold» serán redimensionadas a esta anchura. Debe ser >= que «composer_media_optimization_image_dimensions_resize_threshold»."
     composer_media_optimization_image_encode_quality: "Calidad de codificación JPEG utilizada en el proceso de recodificación."
@@ -2645,49 +2641,15 @@ es:
     backup_succeeded:
       title: "Copia de seguridad realizada con éxito"
       subject_template: "La copia de seguridad se completó con éxito"
-      text_body_template: |
-        Copia de seguridad realizada con éxito.
-
-        Visita la sección [administrador > copias de seguridad](%{base_url}/admin/backups) para descargar tu nueva copia de seguridad.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       title: "Error en la copia de seguridad"
       subject_template: "Error en la copia de seguridad"
-      text_body_template: |
-        La copia de seguridad ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Restauración realizada con éxito"
       subject_template: "Restauración completada exitosamente."
-      text_body_template: |
-        La restauración se ha completado con éxito.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     restore_failed:
       title: "Error en la restauración"
       subject_template: "Error en la restauración"
-      text_body_template: |
-        La restauración ha fallado.
-
-        Aquí está el registro:
-
-        ```text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Invitación en masa realizada con éxito"
       subject_template: "Invitación masiva procesada con éxito"
@@ -2922,7 +2884,7 @@ es:
 
         Has respondido a un correo electrónico de resumen, lo cual no es aceptable.
 
-        Si crees que se trata de un error, [ponte en contacto con un miembro del equipo] (%{base_url}/acerca de).
+        Si crees que se trata de un error, [ponte en contacto con un miembro del equipo](%{base_url}/acerca de).
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
@@ -3292,6 +3254,9 @@ es:
         Te han suspendido del foro hasta %{suspended_till}.
 
         Motivo: %{reason}
+    account_suspended_forever:
+      title: "Cuenta suspendida"
+      subject_template: "[%{email_prefix}] Tu cuenta ha sido suspendida"
     account_silenced:
       title: "Cuenta silenciada"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
@@ -3299,6 +3264,9 @@ es:
         Te han silenciado en el foro hasta %{silenced_till}.
 
         Motivo: %{reason}
+    account_silenced_forever:
+      title: "Cuenta silenciada"
+      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
     account_exists:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
@@ -3576,6 +3544,8 @@ es:
     sender_post_deleted: "La publicación fue eliminada"
     sender_message_to_invalid: "el destinatario tiene una dirección de correo electrónico no válida"
     sender_topic_deleted: "el tema fue eliminado"
+    group_smtp_post_deleted: "La publicación fue eliminada"
+    group_smtp_topic_deleted: "el tema fue eliminado"
   color_schemes:
     base_theme_name: "Base"
     light: "Claro"
@@ -4344,17 +4314,30 @@ es:
           city_for_disputes:
             label: "Ciudad para disputas"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Colores"
-      fonts:
-        title: "Tipos de letra"
+      styling:
         fields:
           body_font:
             label: "Fuente del cuerpo"
           heading_font:
             label: "Tipo de letra para encabezados"
-          font_preview:
+          styling_preview:
             label: "Vista previa"
+          homepage_style:
+            choices:
+              latest:
+                label: "Temas recientes"
+              categories_only:
+                label: "Solo categorías"
+              categories_with_featured_topics:
+                label: "Categorías con temas destacados"
+              categories_and_latest_topics:
+                label: "Categorías y temas recientes"
+              categories_and_top_topics:
+                label: "Categorías y temas destacados"
+              categories_boxes:
+                label: "Cuadros de categorías"
+              categories_boxes_with_topics:
+                label: "Cuadros de categorías con temas"
       logos:
         title: "Logos"
         fields:
@@ -4373,26 +4356,6 @@ es:
           large_icon:
             label: "Icono grande"
             description: "Imagen de icono utilizada para representar tu sitio en dispositivos modernos que se ve bien en tamaños más grandes. Idealmente mayor que 512 × 512. Usaremos el logo cuadrado por defecto."
-      homepage:
-        description: "Recomendamos mostrar los últimos temas en tu página principal, pero siempre puedes mostrar categorías (grupos de temas) en la página principal si prefieres."
-        title: "Página de inicio"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Temas recientes"
-              categories_only:
-                label: "Solo categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas destacados"
-              categories_and_latest_topics:
-                label: "Categorías y temas recientes"
-              categories_and_top_topics:
-                label: "Categorías y temas destacados"
-              categories_boxes:
-                label: "Cuadros de categorías"
-              categories_boxes_with_topics:
-                label: "Cuadros de categorías con temas"
       invites:
         title: "Invitar personal"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."

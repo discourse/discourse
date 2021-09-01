@@ -3,7 +3,11 @@ import ComposerEditor, {
   addComposerUploadMarkdownResolver,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
-import { addButton, removeButton } from "discourse/widgets/post-menu";
+import {
+  addButton,
+  apiExtraButtons,
+  removeButton,
+} from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
@@ -37,6 +41,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import Sharing from "discourse/lib/sharing";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
@@ -48,7 +53,10 @@ import { addPluginOutletDecorator } from "discourse/components/plugin-connector"
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
-import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
+import {
+  addGroupPostSmallActionCode,
+  addPostSmallActionIcon,
+} from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
@@ -76,7 +84,7 @@ import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.7";
+const PLUGIN_API_VERSION = "0.12.2";
 
 class PluginApi {
   constructor(version, container) {
@@ -427,6 +435,7 @@ class PluginApi {
    * ```
    **/
   addPostMenuButton(name, callback) {
+    apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
 
@@ -707,6 +716,17 @@ class PluginApi {
    **/
   addPostSmallActionIcon(key, icon) {
     addPostSmallActionIcon(key, icon);
+  }
+
+  /**
+   * Register a small action code to be used for small post actions containing a link to a group
+   *
+   * ```javascript
+   * api.addGroupPostSmallActionCode('group_assigned');
+   * ```
+   **/
+  addGroupPostSmallActionCode(actionCode) {
+    addGroupPostSmallActionCode(actionCode);
   }
 
   /**
@@ -1085,6 +1105,15 @@ class PluginApi {
   }
 
   /**
+   * Card contents mixin will add a listener to elements matching this selector
+   * that will open card contents when a mention of div with the correct data attribute
+   * is clicked
+   */
+  addCardClickListenerSelector(selector) {
+    addCardClickListenerSelector(selector);
+  }
+
+  /**
    * Registers a renderer that overrides the display of category links.
    *
    * Example:
@@ -1301,12 +1330,34 @@ class PluginApi {
    * Add a suggestion shortcut to search menu panel.
    *
    * ```
-   * addSearchSuggestion("in:assigned");
+   * api.addSearchSuggestion("in:assigned");
    * ```
    *
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Calls a method on a mounted widget whenever an app event happens.
+   *
+   * For example, if you have a widget with a `key` of `cool-widget` that lives inside the
+   * `site-header` component, and you wanted it to respond to `thing:happened`, you could do this:
+   *
+   * ```
+   * api.dispatchWidgetAppEvent('site-header', 'cool-widget', 'thing:happened');
+   * ```
+   *
+   * In this case, the `cool-widget` must have a method called `thingHappened`. The event name
+   * is converted to camelCase and used as the method name for you.
+   */
+  dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
+    this.modifyClass(`component:${mountedComponent}`, {
+      didInsertElement() {
+        this._super();
+        this.dispatch(appEvent, widgetKey);
+      },
+    });
   }
 }
 

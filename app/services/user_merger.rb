@@ -363,7 +363,9 @@ class UserMerger
 
     update_user_id(:user_custom_fields, conditions: "x.name = y.name")
 
-    update_user_id(:user_emails, conditions: "x.email = y.email OR y.primary = false", updates: '"primary" = false')
+    if @target_user.human?
+      update_user_id(:user_emails, conditions: "x.email = y.email OR y.primary = false", updates: '"primary" = false')
+    end
 
     UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 

@@ -424,6 +424,23 @@ RSpec.describe ListController do
     end
   end
 
+  describe 'Top' do
+    it 'renders top' do
+      get "/top"
+      expect(response.status).to eq(200)
+    end
+
+    it 'renders top with a period' do
+      get "/top?period=weekly"
+      expect(response.status).to eq(200)
+    end
+
+    it 'errors for invalid periods on top' do
+      get "/top?period=decadely"
+      expect(response.status).to eq(400)
+    end
+  end
+
   describe 'category' do
     context 'in a category' do
       let(:category) { Fabricate(:category_with_definition) }

@@ -275,12 +275,16 @@ et:
     copy_codeblock:
       copied: "kopeeritud!"
     drafts:
+      label: "Mustandid"
       resume: "Taasta"
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
       topic_reply: "Mustandi vastus"
     topic_count_latest:
+      one: "Vaata %{count} uut või uuendatud teemat"
+      other: "Vaata %{count} uut või uuendatud teemat"
+    topic_count_unseen:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
     topic_count_unread:
@@ -846,9 +850,17 @@ et:
         warnings_received: "hoiatused"
         rejected_posts: "tagasilükatud postitused"
       messages:
-        all: "Kõik"
         inbox: "Postkast"
+        latest: "Viimased"
         sent: "Saadetud"
+        unread: "Lugemata"
+        unread_with_count:
+          one: "Lugemata (%{count})"
+          other: "Lugemata (%{count})"
+        new: "Uus"
+        new_with_count:
+          one: "Uus (%{count})"
+          other: "Uus (%{count})"
         archive: "Arhiiv"
         groups: "Minu grupid"
         move_to_inbox: "Liiguta sisendkausta"
@@ -1303,6 +1315,7 @@ et:
     conditional_loading_section:
       loading: Laadimine...
     select_kit:
+      delete_item: "Kustuta %{name}"
       default_header_text: Vali...
       no_content: Midagi ei leitud
       filter_placeholder: Otsi...
@@ -1551,11 +1564,9 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Määra kategooria"
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
-        notification_level: "Teavitus"
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
@@ -1781,7 +1792,6 @@ et:
         invisible: "Ära avalda teemade nimekirjas"
         visible: "Avalda teemade nimekirjas"
         reset_read: "Nulli andmed teema lugemise kohta"
-        make_public: "Loo avalik teema"
         make_private: "Loo isiklik sõnum"
       feature:
         pin: "Tõsta teema esile"
@@ -2020,8 +2030,6 @@ et:
         revert_to_regular: "Eemalda meeskonna värv"
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
-        change_owner: "Omanikuvahetus"
-        grant_badge: "Anna märgis"
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
@@ -3178,7 +3186,6 @@ et:
         silenced_by: "Vaigistaja"
         silence_modal_title: "Vaigista kasutaja"
         silence_reason_placeholder: "Vaigistamise põhjus"
-        delete_all_posts: "Kustuta kõik postitused"
         penalty_post_edit: "Muuda postitust"
         penalty_post_none: "Ära tee midagi"
         silence: "Vaigista"
@@ -3224,6 +3231,10 @@ et:
         anonymize_yes: "Jah, anonümiseeri see konto"
         anonymize_failed: "Viga konto anonümiseerimisel."
         delete: "Kustuta kasutaja"
+        delete_posts:
+          button: "Kustuta kõik postitused"
+          confirmation:
+            cancel: "Tühista"
         merge:
           prompt:
             cancel: "Tühista"
@@ -3440,7 +3451,6 @@ et:
           post_revision: "Kui kasutaja muudab postitust või loob postituse"
           trust_level_change: "Kui kasutaja muudab usaldustaset"
           user_change: "Kui kasutajat muudetakse või luuakse"
-          post_processed: "Peale postituse toimetamist"
         preview:
           link_text: "Näita eelvaadet antud märgistest"
           plan_text: "Eelvaatle koos päringukavaga"

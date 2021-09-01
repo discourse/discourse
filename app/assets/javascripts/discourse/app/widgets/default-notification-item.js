@@ -29,6 +29,12 @@ export const DefaultNotificationItem = createWidget(
       if (attrs.is_warning) {
         classNames.push("is-warning");
       }
+      const notificationType = attrs.notification_type;
+      const lookup = this.site.get("notificationLookup");
+      const notificationName = lookup[notificationType];
+      if (notificationName) {
+        classNames.push(notificationName.replace(/_/g, "-"));
+      }
       return classNames;
     },
 
@@ -156,19 +162,14 @@ export const DefaultNotificationItem = createWidget(
       e.preventDefault();
 
       this.sendWidgetEvent("linkClicked");
-      DiscourseURL.routeTo(this.url(this.attrs.data), {
-        afterRouteComplete: () => {
-          if (!this.attrs.data.revision_number) {
-            return;
-          }
-
-          this.appEvents.trigger(
-            "post:show-revision",
-            this.attrs.post_number,
-            this.attrs.data.revision_number
-          );
-        },
-      });
+      if (this.attrs.data.revision_number) {
+        this.appEvents.trigger("edit-notification:clicked", {
+          topicId: this.attrs.topic_id,
+          postNumber: this.attrs.post_number,
+          revisionNumber: this.attrs.data.revision_number,
+        });
+      }
+      DiscourseURL.routeTo(this.url(this.attrs.data));
     },
 
     mouseUp(event) {

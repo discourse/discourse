@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { or } from "@ember/object/computed";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -24,6 +25,8 @@ export default Component.extend(UppyUploadMixin, {
       $("a.lightbox").magnificPopup("close");
     }
   },
+
+  uploadingOrProcessing: or("uploading", "processing"),
 
   @discourseComputed("imageUrl", "placeholderUrl")
   showingPlaceholder(imageUrl, placeholderUrl) {

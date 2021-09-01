@@ -21,7 +21,13 @@ module Onebox
       return if @uri.nil?
       return if @uri.port && !Onebox.options.allowed_ports.include?(@uri.port)
       return if @uri.scheme && !Onebox.options.allowed_schemes.include?(@uri.scheme)
-      ordered_engines.find { |engine| engine === @uri && has_allowed_iframe_origins?(engine) }
+
+      ordered_engines.find do |engine|
+        (
+          engine.respond_to?(:handles_content_type?) && engine.handles_content_type?(@options[:content_type]) ||
+          engine === @uri
+        ) && has_allowed_iframe_origins?(engine)
+      end
     end
 
     def has_allowed_iframe_origins?(engine)

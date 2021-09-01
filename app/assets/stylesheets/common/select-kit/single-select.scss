@@ -3,8 +3,6 @@
     display: flex;
 
     &.is-expanded {
-      padding: 0.25em 0.5em;
-      border-top: 1px solid var(--primary-low);
       border-bottom: 1px solid var(--primary-low);
     }
   }
@@ -15,10 +13,15 @@
     @include default-focus;
   }
 
+  .select-kit-header:focus {
+    @include default-focus;
+  }
+
   .select-kit-header.btn:focus,
   .select-kit-header.btn:active {
     outline: none;
   }
+
   &.is-disabled {
     .select-kit-header {
       opacity: 0.5;

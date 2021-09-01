@@ -26,7 +26,8 @@ module Email
   class Sender
 
     def initialize(message, email_type, user = nil)
-      @message =  message
+      @message = message
+      @message_attachments_index = {}
       @email_type = email_type
       @user = user
     end
@@ -240,7 +241,7 @@ module Email
       # Embeds any of the secure images that have been attached inline,
       # removing the redaction notice.
       if SiteSetting.secure_media_allow_embed_images_in_emails
-        style.inline_secure_images(@message.attachments)
+        style.inline_secure_images(@message.attachments, @message_attachments_index)
       end
 
       @message.html_part.body = style.to_s
@@ -328,6 +329,7 @@ module Email
             Discourse.store.download(attached_upload).path
           end
 
+          @message_attachments_index[original_upload.sha1] = @message.attachments.size
           @message.attachments[original_upload.original_filename] = File.read(path)
           email_size += File.size(path)
         rescue => e

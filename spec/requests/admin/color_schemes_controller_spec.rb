@@ -28,8 +28,13 @@ describe Admin::ColorSchemesController do
         get "/admin/color_schemes.json"
 
         expect(response.status).to eq(200)
-        schemes = response.parsed_body.map { |scheme| scheme["name"] }
-        expect(schemes).to include(scheme_name)
+        scheme_names = response.parsed_body.map { |scheme| scheme["name"] }
+        scheme_colors = response.parsed_body[0]["colors"]
+        base_scheme_colors = ColorScheme.base.colors
+
+        expect(scheme_names).to include(scheme_name)
+        expect(scheme_colors[0]["name"]).to eq(base_scheme_colors[0].name)
+        expect(scheme_colors[0]["hex"]).to eq(base_scheme_colors[0].hex)
       end
     end
 

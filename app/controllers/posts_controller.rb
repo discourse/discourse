@@ -555,6 +555,11 @@ class PostsController < ApplicationController
   end
 
   def flagged_posts
+    Discourse.deprecate(
+      'PostsController#flagged_posts is deprecated. Please use /review instead.',
+      since: '2.8.0.beta4', drop_from: '2.9'
+    )
+
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!
 

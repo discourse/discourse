@@ -42,6 +42,7 @@ sr:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} ranije"
+      wrap_on: "дана %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -172,6 +173,9 @@ sr:
     topic_admin_menu: "opcije teme"
     wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
+    software_update_prompt:
+      message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
+      dismiss: "Одбаци"
     bootstrap_mode_disabled: "Bootstrap mod će biti onemogućen u roku od 24 časa."
     themes:
       default_description: "zadato"
@@ -264,6 +268,9 @@ sr:
       moderators: "Moderatori"
       stat:
         all_time: "Sve vreme"
+        last_day: "Последња 24 сата"
+        last_7_days: "Последњих 7 дана"
+        last_30_days: "Последњих 30 дана"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
@@ -273,10 +280,13 @@ sr:
       contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Markiraj"
+      edit_bookmark: "Uredi marker"
       clear_bookmarks: "Očisti markere"
       help:
         bookmark: "Klikni da markiraš prvi post u ovoj temi"
+        edit_bookmark: "Klikni da bi obirsao sve markere sa ove teme"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
+        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme."
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -305,16 +315,23 @@ sr:
     copy_codeblock:
       copied: "kopirano!"
     drafts:
+      label: "Нацрти"
+      label_with_count: "Нацрти (%{count})"
       resume: "Nastavi"
       remove: "Ukloni"
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
+      new_private_message: "Nacrt nove privatne poruke"
       topic_reply: "Nacrt odgovora"
       abandon:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
     topic_count_latest:
+      one: "Pregledajte %{count} novu ili ažuriranu temu"
+      few: "Pregledajte %{count} nove ili ažurirane teme"
+      other: "Pregledajte %{count} novih ili ažuriranih tema"
+    topic_count_unseen:
       one: "Pregledajte %{count} novu ili ažuriranu temu"
       few: "Pregledajte %{count} nove ili ažurirane teme"
       other: "Pregledajte %{count} novih ili ažuriranih tema"
@@ -331,6 +348,7 @@ sr:
     upload: "Učitaj"
     uploading: "Učitava se..."
     uploading_filename: "Otpremanje: %{filename}..."
+    processing_filename: "Обрада: %{filename}..."
     clipboard: "klipbord"
     uploaded: "Učitano!"
     pasting: "Nalepljivanje..."
@@ -686,9 +704,19 @@ sr:
         suspensions: "suspenzije"
         warnings_received: "upozorenja"
       messages:
-        all: "sve"
         inbox: "Primljeno"
+        latest: "Poslednje"
         sent: "Poslato"
+        unread: "Nepročitano"
+        unread_with_count:
+          one: "Nepročitane (%{count})"
+          few: "Nepročitane (%{count})"
+          other: "Nepročitane (%{count})"
+        new: "Novo"
+        new_with_count:
+          one: "Nove (%{count})"
+          few: "Nove (%{count})"
+          other: "Nove (%{count})"
         archive: "Arhiviraj"
         move_to_archive: "Arhiviraj"
       preferences_nav:
@@ -1030,6 +1058,8 @@ sr:
       alt: "Alt"
     conditional_loading_section:
       loading: Učitavanje...
+    select_kit:
+      delete_item: "Obriši %{name}"
     emoji_picker:
       flags: Zastave
     composer:
@@ -1142,7 +1172,6 @@ sr:
         actions: "Grupne aktivnosti"
         close_topics: "Zatvori Teme"
         archive_topics: "Arhiviraj teme"
-        notification_level: "Obaveštenja"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
           one: "Odabrali ste <b>%{count}</b> temu."
@@ -1287,7 +1316,6 @@ sr:
         invisible: "Ukloni temu s popisa"
         visible: "Stavi na popis"
         reset_read: "Poništi podatke o pročitanom"
-        make_public: "Napravi javnu temu"
       feature:
         pin: "Zakači temu"
         unpin: "Otkači temu"
@@ -1411,7 +1439,6 @@ sr:
         revert_to_regular: "Ukloni Boje Osoblja"
         rebake: "Popravi HTML"
         unhide: "Poništi sakrivanje"
-        grant_badge: "Dodeli Značku"
         delete_topic: "obriši temu"
       actions:
         by_you:
@@ -2169,7 +2196,6 @@ sr:
         suspend_reason: "Razlog"
         suspended_by: "Suspendovan od"
         silence_reason: "Razlog"
-        delete_all_posts: "Obriši sve poruke"
         moderator: "Moderator?"
         admin: "Administrator?"
         suspended: "Suspendovan?"
@@ -2204,6 +2230,10 @@ sr:
         approve_bulk_success: "Uspeh! Svi označeni korisnici su odobreni i obavešteni."
         time_read: "Vreme Čitanja"
         delete: "Obriši Korisnika"
+        delete_posts:
+          button: "Obriši sve poruke"
+          confirmation:
+            cancel: "Odustani"
         merge:
           prompt:
             cancel: "Odustani"

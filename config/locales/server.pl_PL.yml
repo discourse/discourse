@@ -283,6 +283,7 @@ pl_PL:
   not_found: "Żądany URL lub źródło nie mógł/mogła zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
+  authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
   provider_not_enabled: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie został upoważniony w systemie."
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
@@ -532,14 +533,8 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    get_a_room: |
-      ### Zachęć wszystkich do zaangażowania się w rozmowę
-
-      W tym temacie odpowiedziałaś/eś %{reply_username} już %{count} razy!
-
-      Dobra dyskusja uwzględnia wiele głosów i perspektyw. Czy możesz tu zaangażować kogoś jeszcze?
-
-      Nie zapominaj, że jeśli chciał(a)byś kontynuować rozmowę z tym użytkownikiem poza widokiem publicznym, to możesz [wysłać im prywatną wiadomość](%{base_path}/u/%{reply_username}).
+    dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
+    get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
 
@@ -580,7 +575,6 @@ pl_PL:
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
-              invalid_category: "nie może być edytowany w tej kategorii."
         user:
           attributes:
             password:
@@ -1478,6 +1472,7 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
   site_settings:
+    disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
     censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -1566,6 +1561,7 @@ pl_PL:
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymusza na użytkownikach włączenie uwierzytelniania dwuskładnikowego. Wybierz opcję 'wszystkie', aby wymusić na wszystkich użytkownikach. Wybierz 'personel', aby wymusić tylko użytkownikach z personelu."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
+    same_site_cookies: "Używaj plików cookie tej samej witryny, eliminują wszystkie wektory Cross Site Request Forgery w obsługiwanych przeglądarkach (Lax lub Strict). Ostrzeżenie: Strict będzie działać tylko w witrynach, które wymuszają logowanie i używają zewnętrznej metody uwierzytelniania."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
@@ -2182,6 +2178,7 @@ pl_PL:
     create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     errors:
+      invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       invalid_group: "Nie ma grupy o takiej nazwie."
@@ -2851,9 +2848,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     backup_failed:
       title: "Kopia zapasowa nie została utworzona "
       subject_template: "Kopia zapasowa nieudana"
@@ -2862,9 +2857,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     restore_succeeded:
       title: "Przywracanie udane"
       subject_template: "Przywrócenie udane"
@@ -2873,9 +2866,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     restore_failed:
       title: "Przywracanie nieudane"
       subject_template: "Przywracanie nieudane"
@@ -2884,9 +2875,7 @@ pl_PL:
 
         Oto dziennik:
 
-        ``` text
         %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Zaproszenia hurtowe udane"
       subject_template: "Przetwarzanie masowej ilości zaproszeń zakończyło się sukcesem."
@@ -3751,8 +3740,12 @@ pl_PL:
     store_failure: "Błąd zapisu załączników #%{upload_id} dla użytkownika #%{user_id}."
     file_missing: "Przepraszamy, należy podać plik do przesłania."
     empty: "Przepraszamy, plik który wysłałeś/łaś jest pusty."
+    failed: "Przepraszamy, ale przesyłanie nie powiodło się. Proszę spróbuj ponownie."
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
+    download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
+    checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
+    cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
     images:
@@ -4566,17 +4559,34 @@ pl_PL:
           city_for_disputes:
             label: "Miasto dyskusji"
             placeholder: "Kalifornia, San Francisco"
-      colors:
-        title: "Kolory"
-      fonts:
-        title: "Czcionki"
+      styling:
+        title: "Stylizacja"
         fields:
+          color_scheme:
+            label: "Schemat kolorów"
           body_font:
             label: "Czcionka"
           heading_font:
             label: "Czcionka nagłówków"
-          font_preview:
+          styling_preview:
             label: "Podgląd"
+          homepage_style:
+            label: "Styl strony głównej"
+            choices:
+              latest:
+                label: "Ostatnie Tematy"
+              categories_only:
+                label: "Tylko kategorie"
+              categories_with_featured_topics:
+                label: "Kategorie z wybranymi tematami"
+              categories_and_latest_topics:
+                label: "Kategorie i ostatnie tematy"
+              categories_and_top_topics:
+                label: "Kategorie i najlepsze tematy"
+              categories_boxes:
+                label: "Bloki kategorii"
+              categories_boxes_with_topics:
+                label: "Bloki kategorii z tematami"
       logos:
         title: "Loga"
         fields:
@@ -4595,26 +4605,6 @@ pl_PL:
           large_icon:
             label: "Duża ikona"
             description: "Obraz ikony używany do reprezentowania Twojej witryny na nowoczesnych urządzeniach, który dobrze wygląda w większych rozmiarach. Idealnie większy niż 512 × 512. Domyślnie użyjemy kwadratowego logo."
-      homepage:
-        description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
-        title: "Strona Główna"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ostatnie Tematy"
-              categories_only:
-                label: "Tylko kategorie"
-              categories_with_featured_topics:
-                label: "Kategorie z wybranymi tematami"
-              categories_and_latest_topics:
-                label: "Kategorie i ostatnie tematy"
-              categories_and_top_topics:
-                label: "Kategorie i najlepsze tematy"
-              categories_boxes:
-                label: "Bloki kategorii"
-              categories_boxes_with_topics:
-                label: "Bloki kategorii z tematami"
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

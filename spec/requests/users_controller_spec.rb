@@ -1083,8 +1083,11 @@ describe UsersController do
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json['success']).to eq(true)
-          expect(User.last.username).to eq('testosama')
-          expect(User.last.name).to eq('Osama Test')
+
+          user = User.last
+
+          expect(user.username).to eq('testosama')
+          expect(user.name).to eq('Osama Test')
         end
 
       end
@@ -1257,6 +1260,120 @@ describe UsersController do
       end
 
       context "with values for the fields" do
+        let(:update_user_url) { "/u/#{user.username}.json" }
+        let(:field_id) { user_field.id.to_s }
+
+        before { sign_in(user) }
+
+        context "with multple select fields" do
+          let(:valid_options) { %w[Axe Sword] }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: 'multiselect') do
+              user_field_options do
+                [
+                  Fabricate(:user_field_option, value: 'Axe'),
+                  Fabricate(:user_field_option, value: 'Sword')
+                ]
+              end
+            end
+          end
+
+          it "shouldn't allow unregistered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Juice] } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it "should filter valid values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Axe Juice Sword] } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options)
+          end
+
+          it "allows registered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => valid_options } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options)
+          end
+
+          it "value can't be nil or empty if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            user_field.update!(required: true)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.not_to change { user.reload.user_fields[field_id] }
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it 'value can nil or empty if the field is not required' do
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            user_field.update!(required: false)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.to change { user.reload.user_fields[field_id] }.from(valid_options).to(nil)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to("")
+          end
+
+        end
+
+        context "with dropdown fields" do
+          let(:valid_options) { ['Black Mesa', 'Fox Hound'] }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: 'dropdown') do
+              user_field_options do
+                [
+                  Fabricate(:user_field_option, value: 'Black Mesa'),
+                  Fabricate(:user_field_option, value: 'Fox Hound')
+                ]
+              end
+            end
+          end
+
+          it "shouldn't allow unregistered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => 'Umbrella Corporation' } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it "allows registered field values" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => valid_options.first } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to(valid_options.first)
+          end
+
+          it "value can't be nil if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => valid_options.first } }
+
+            user_field.update!(required: true)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.not_to change { user.reload.user_fields[field_id] }
+          end
+
+          it 'value can be set to nil if the field is not required' do
+            put update_user_url, params: { user_fields: { field_id => valid_options.last } }
+
+            user_field.update!(required: false)
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => nil } }
+            end.to change { user.reload.user_fields[field_id] }.from(valid_options.last).to(nil)
+          end
+        end
+
         let(:create_params) { {
           name: @user.name,
           password: 'suChS3cuRi7y',
@@ -1821,6 +1938,17 @@ describe UsersController do
       end
     end
 
+    it "does not allow name to be updated if auth auth_overrides_name is enabled" do
+      SiteSetting.auth_overrides_name = true
+
+      sign_in(user)
+
+      put "/u/#{user.username}", params: { name: 'test.test' }
+
+      expect(response.status).to eq(200)
+      expect(user.reload.name).to_not eq('test.test')
+    end
+
     context "when username contains a period" do
       before do
         sign_in(user)
@@ -2355,7 +2483,7 @@ describe UsersController do
       end
 
       it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2363,8 +2491,50 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is admin" do
+        SiteSetting.allow_uploaded_avatars = 'admin'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(admin: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is staff" do
+        SiteSetting.allow_uploaded_avatars = 'staff'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(moderator: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is a trust level" do
+        SiteSetting.allow_uploaded_avatars = '3'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(trust_level: 3)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
       it 'ignores the upload if picking a system avatar' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
@@ -2376,7 +2546,7 @@ describe UsersController do
       end
 
       it 'raises an error if the type is invalid' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
@@ -3810,6 +3980,13 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
+    context 'limit' do
+      it "returns an error if value is invalid" do
+        get "/u/search/users.json", params: { limit: '-1' }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when `enable_names` is true" do
       before do
         SiteSetting.enable_names = true
@@ -4884,6 +5061,43 @@ describe UsersController do
       expect(response.parsed_body['no_results_help']).to eq(
         I18n.t('user_activity.no_bookmarks.search')
       )
+    end
+  end
+
+  describe "#private_message_topic_tracking_state" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:private_message) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    before do
+      sign_in(user_2)
+    end
+
+    it 'does not allow an unauthorized user to access the state of another user' do
+      get "/u/#{user.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns the right response' do
+      get "/u/#{user_2.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(200)
+
+      topic_state = response.parsed_body.first
+
+      expect(topic_state["topic_id"]).to eq(private_message.id)
+      expect(topic_state["highest_post_number"]).to eq(1)
+      expect(topic_state["last_read_post_number"]).to eq(nil)
+      expect(topic_state["notification_level"]).to eq(NotificationLevels.all[:watching])
+      expect(topic_state["group_ids"]).to eq([])
     end
   end
 

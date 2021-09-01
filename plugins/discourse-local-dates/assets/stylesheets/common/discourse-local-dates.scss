@@ -1,4 +1,8 @@
 .discourse-local-date {
+  > * {
+    pointer-events: none;
+  }
+
   &.cooked-date {
     color: var(--primary);
     cursor: pointer;

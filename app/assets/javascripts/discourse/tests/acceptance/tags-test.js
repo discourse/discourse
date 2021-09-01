@@ -1,3 +1,4 @@
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   count,
@@ -412,11 +413,14 @@ acceptance("Tag info", function (needs) {
     assert.ok(exists(".tag-info .tag-name"), "show tag");
 
     await click("#edit-synonyms");
-    await click("#add-synonyms .filter-input");
 
-    assert.equal(count(".tag-chooser-row"), 2);
+    const addSynonymsDropdown = selectKit("#add-synonyms");
+    await addSynonymsDropdown.expand();
+
     assert.deepEqual(
-      Array.from(find(".tag-chooser-row")).map((x) => x.dataset["value"]),
+      Array.from(addSynonymsDropdown.rows()).map((r) => {
+        return r.dataset.value;
+      }),
       ["monkey", "not-monkey"]
     );
   });

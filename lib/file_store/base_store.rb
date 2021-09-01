@@ -5,6 +5,7 @@ module FileStore
   class BaseStore
     UPLOAD_PATH_REGEX = %r|/(original/\d+X/.*)|
     OPTIMIZED_IMAGE_PATH_REGEX = %r|/(optimized/\d+X/.*)|
+    TEMPORARY_UPLOAD_PREFIX ||= "temp/"
 
     def store_upload(file, upload, content_type = nil)
       upload.url = nil
@@ -38,6 +39,16 @@ module FileStore
       path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
       return path if !Rails.env.test?
       File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
+    end
+
+    def temporary_upload_path(file_name, folder_prefix: "")
+      File.join(
+        TEMPORARY_UPLOAD_PREFIX,
+        folder_prefix,
+        upload_path,
+        SecureRandom.hex,
+        file_name
+      )
     end
 
     def has_been_uploaded?(url)

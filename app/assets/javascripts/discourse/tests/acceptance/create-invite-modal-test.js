@@ -3,8 +3,11 @@ import {
   acceptance,
   count,
   exists,
+  fakeTime,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   let deleted;
@@ -185,3 +188,68 @@ acceptance("Invites - Email Invites", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Invites - Create & Edit Invite Modal - timeframe choosing",
+  function (needs) {
+    let clock = null;
+
+    needs.user();
+    needs.pretender((server, helper) => {
+      const inviteData = {
+        id: 1,
+        invite_key: "52641ae8878790bc7b79916247cfe6ba",
+        link: "http://example.com/invites/52641ae8878790bc7b79916247cfe6ba",
+        max_redemptions_allowed: 1,
+        redemption_count: 0,
+        created_at: "2021-01-26T12:00:00.000Z",
+        updated_at: "2021-01-26T12:00:00.000Z",
+        expires_at: "2121-01-26T12:00:00.000Z",
+        expired: false,
+        topics: [],
+        groups: [],
+      };
+
+      server.post("/invites", () => helper.response(inviteData));
+      server.put("/invites/1", () => helper.response(inviteData));
+    });
+
+    needs.hooks.beforeEach(() => {
+      const timezone = moment.tz.guess();
+      clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
+    });
+
+    needs.hooks.afterEach(() => {
+      clock.restore();
+    });
+
+    test("shows correct timeframe options", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+
+      await click(".invite-controls .btn:first-child");
+      await click(".modal-footer .show-advanced");
+      await click(".future-date-input-selector-header");
+
+      const options = Array.from(
+        queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
+          x.innerText.trim()
+        )
+      );
+
+      const expected = [
+        I18n.t("topic.auto_update_input.later_today"),
+        I18n.t("topic.auto_update_input.tomorrow"),
+        I18n.t("topic.auto_update_input.next_week"),
+        I18n.t("topic.auto_update_input.two_weeks"),
+        I18n.t("topic.auto_update_input.next_month"),
+        I18n.t("topic.auto_update_input.two_months"),
+        I18n.t("topic.auto_update_input.three_months"),
+        I18n.t("topic.auto_update_input.four_months"),
+        I18n.t("topic.auto_update_input.six_months"),
+        I18n.t("topic.auto_update_input.pick_date_and_time"),
+      ];
+
+      assert.deepEqual(options, expected, "options are correct");
+    });
+  }
+);

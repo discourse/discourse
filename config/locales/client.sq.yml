@@ -600,9 +600,17 @@ sq:
         suspensions: "pezullimet"
         warnings_received: "paralajmërimet"
       messages:
-        all: "Të gjitha"
         inbox: "Inbox"
+        latest: "Të fundit"
         sent: "Të dërguara"
+        unread: "Të palexuara"
+        unread_with_count:
+          one: "Të palexuara (%{count})"
+          other: "Të palexuara (%{count})"
+        new: "Të reja"
+        new_with_count:
+          one: "Të reja (%{count})"
+          other: "Të reja (%{count})"
         archive: "Arkivi"
         groups: "Grupet e mia"
         move_to_inbox: "Transfero në inbox"
@@ -1002,6 +1010,8 @@ sq:
       alt: "Alt"
     conditional_loading_section:
       loading: Duke ngarkuar...
+    select_kit:
+      delete_item: "Fshi %{name}"
     date_time_picker:
       from: Nga
       to: Për
@@ -1154,7 +1164,6 @@ sq:
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
-        notification_level: "Njoftimet"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
         selected:
           one: "Keni zgjedhur <b>%{count}</b> temë."
@@ -1314,7 +1323,6 @@ sq:
         invisible: "Hiqeni nga Listat"
         visible: "Listojeni"
         reset_read: "Reset Read Data"
-        make_public: "Bëje temën publike"
       feature:
         pin: "Ngjite temën"
         unpin: "Çngjite temën"
@@ -1490,8 +1498,6 @@ sq:
         revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
         unhide: "Çfshi"
-        change_owner: "Ndrysho zotëruesin"
-        grant_badge: "Dhuroni Stemë"
         delete_topic: "fshi temën"
       actions:
         people:
@@ -2423,7 +2429,6 @@ sq:
         suspend_reason: "Arsye"
         suspended_by: "Përjashtuar nga:"
         silence_reason: "Arsye"
-        delete_all_posts: "Fshi gjithë postimet"
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Pezulluar?"
@@ -2463,6 +2468,10 @@ sq:
         anonymize_yes: "Po, anonimizo këtë llogari"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Fshi Përdoruesin"
+        delete_posts:
+          button: "Fshi gjithë postimet"
+          confirmation:
+            cancel: "Anulo"
         merge:
           prompt:
             cancel: "Anulo"

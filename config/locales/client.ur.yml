@@ -291,6 +291,7 @@ ur:
     copy_codeblock:
       copied: "کاپی کر لیا!"
     drafts:
+      label: "ڈرافٹس"
       resume: "جاری رکھیں"
       remove: "خارج کریں"
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
@@ -301,6 +302,9 @@ ur:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
     topic_count_latest:
+      one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+      other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+    topic_count_unseen:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
     topic_count_unread:
@@ -990,9 +994,17 @@ ur:
         suspensions: "معطلیاں"
         warnings_received: "تنبیہات"
       messages:
-        all: "تمام"
         inbox: "اِن باکس"
+        latest: "تازہ ترین"
         sent: "بھیجا جا چکا"
+        unread: "بغیر پڑھے"
+        unread_with_count:
+          one: "بغیر پڑھا (%{count})"
+          other: "بغیر پڑھا (%{count})"
+        new: "نیا"
+        new_with_count:
+          one: "نیا (%{count})"
+          other: "نیا (%{count})"
         archive: "آر کائیو"
         groups: "میرے گروپ"
         move_to_inbox: "اِنباکس میں منتقل کریں"
@@ -1594,6 +1606,7 @@ ur:
         one: "+ %{count} ذیلی زمرہ"
         other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
+      delete_item: "%{name} حذف کریں"
       filter_by: "فلٹر بذریعہ: %{name}"
       select_to_filter: "فلٹر کرنے کے لئے ایک قدر منتخب کریں"
       default_header_text: منتخب کریں...
@@ -1955,11 +1968,9 @@ ur:
         dismiss_new: "نیا برخاست کریں"
         toggle: "ٹاپکس کے بَلک انتخاب کو ٹَوگل کریں"
         actions: "بَلک عمل"
-        change_category: "زمرہ تبدیل کریں"
         close_topics: "ٹاپکس بند کریں"
         archive_topics: "ٹاپکس آر کائیو کریں"
         move_messages_to_inbox: "اِنباکس میں منتقل کریں"
-        notification_level: "اطلاعات"
         choose_new_category: "ٹاپکس کیلئے نئے زمرہ کا انتخاب کریں:"
         selected:
           one: "آپ نے <b>%{count}</b> ٹاپک منتخب کیا ہے۔"
@@ -2198,7 +2209,6 @@ ur:
         open: "ٹاپک کھولیں"
         close: "ٹاپک بند کریں"
         multi_select: "پوسٹس منتخب کریں..."
-        slow_mode: "سست موڈ مقرر کریں"
         timed_update: "ٹاپک ٹائمر مقرر کریں..."
         pin: "ٹاپک پِن کریں..."
         unpin: "ٹاپک سے پِن ہٹائیں..."
@@ -2207,7 +2217,6 @@ ur:
         invisible: "غیر مندرج بنائیں"
         visible: "مندرج بنائیں"
         reset_read: "\"پڑھ لیا گیا\" کا ڈیٹا رِی سَیٹ کریں"
-        make_public: "ٹاپک پبلک بنائیں"
         make_private: "ذاتی پیغام بنائیں"
         reset_bump_date: "بَمپ تاریخ رِی سَیٹ کریں"
       feature:
@@ -2476,8 +2485,6 @@ ur:
         rebake: "HTML دوبارہ بِلڈ کریں"
         publish_page: "صفحہ اشاعت"
         unhide: "چھپانا ختم کریں"
-        change_owner: "پوسٹس کے مالک کو تبدیل کریں"
-        grant_badge: "بَیج دیں"
         lock_post: "پوسٹ لاک کریں"
         lock_post_description: "شائع کرنے والے کو اِس پوسٹ میں ترمیم کرنے سے روک دیں"
         unlock_post: "پوسٹ کھول دیں"
@@ -2485,7 +2492,6 @@ ur:
         delete_topic_disallowed_modal: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔ اگر آپ واقعی اِسے حذف کروانا چاہتے ہیں تو، استدلال کے ساتھ ماڈریٹر کی توجہ کیلئے فلَیگ جمع کریں۔"
         delete_topic_disallowed: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔"
         delete_topic: "ٹاپک حذف کریں"
-        add_post_notice: "اسٹاف نوٹِس شامل کریں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
         people:
@@ -3173,7 +3179,6 @@ ur:
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
               title: "کون اِس گروپ  کے ممبران کو دیکھ سکتا ہے؟"
-              description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
             publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے
@@ -3924,9 +3929,8 @@ ur:
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
-        delete_all_posts: "تمام پوسٹس حذف کریں"
-        delete_posts_progress: "پوسٹس حذف کی جا رہی ہیں..."
         delete_posts_failed: "پوسٹس حذف کرنے میں ایک مسئلہ پیش آیا۔"
+        post_edits: "پوسٹ ترامیم"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
         penalty_post_delete: "پوسٹ حذف کریں"
         penalty_post_delete_replies: "پوسٹ حذف کریں + جوابات کو بھی"
@@ -3978,11 +3982,18 @@ ur:
         approve_success: "صارف منظور کر لیا گیا اور ایکٹیویشن ہدایات کے ساتھ اِیمیل بھیج دی گئی۔"
         approve_bulk_success: "کامیابی! تمام منتخب صارفین کو منظوری دے دی اور مطلع کر دیا گیا ہے۔"
         time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+        post_edits_count: "پوسٹ ترامیم"
         anonymize: "صارف گمنام بنائیں"
         anonymize_confirm: "کیا آپ واقعی اِس اکاؤنٹ کو گمنام بنانا چاہتے ہیں؟ یہ صارف نام اور اِیمیل تبدیل، اور تمام پروفائل معلومات رِی سَیٹ کر دے گا۔"
         anonymize_yes: "جی ہاں، اِس اکاؤنٹ کو گمنام بنائیں"
         anonymize_failed: "اِس اکاؤنٹ کو گمنام بنانے میں ایک مسئلہ پیش آیا۔"
         delete: "صارف حذف کریں"
+        delete_posts:
+          button: "تمام پوسٹس حذف کریں"
+          progress:
+            description: "پوسٹس حذف کی جا رہی ہیں..."
+          confirmation:
+            cancel: "منسوخ"
         merge:
           prompt:
             cancel: "منسوخ"
@@ -4220,7 +4231,6 @@ ur:
           post_revision: "جب صارف پوسٹ میں ترمیم یا اُسے تخلیق کرے"
           trust_level_change: "جب صارف ٹرسٹ لَیول تبدیل کرے"
           user_change: "جب ایک صارف ترمیم یا تخلیق کیا جاتا ہے۔"
-          post_processed: "پوسٹ کے پراسس ہونے کے بعد"
         preview:
           link_text: "دیے گئے بَیجز کا مشاہدہ کریں"
           plan_text: "قُوَیری پلان کا ساتھ مشاہدہ کریں"
@@ -4320,6 +4330,5 @@ ur:
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       previews:
-        topic_title: "بحث ٹاپک"
         share_button: "شیئر"
         reply_button: "جواب"

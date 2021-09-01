@@ -237,7 +237,7 @@ export default Controller.extend(
       "authOptions.email",
       "authOptions.email_valid"
     )
-    emailValidated() {
+    emailDisabled() {
       return (
         this.get("authOptions.email") === this.accountEmail &&
         this.get("authOptions.email_valid")
@@ -405,6 +405,17 @@ export default Controller.extend(
           this.set("skipConfirmation", false)
         );
       }
+    },
+
+    @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
+    associateHtml(url, provider) {
+      if (!url) {
+        return;
+      }
+      return I18n.t("create_account.associate", {
+        associate_link: url,
+        provider: I18n.t(`login.${provider}.name`),
+      });
     },
 
     actions: {

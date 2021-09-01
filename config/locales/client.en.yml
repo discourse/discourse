@@ -175,6 +175,7 @@ en:
       forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
+    skip_to_main_content: "Skip to main content"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -332,6 +333,8 @@ en:
       copied: "copied!"
 
     drafts:
+      label: "Drafts"
+      label_with_count: "Drafts (%{count})"
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
@@ -344,6 +347,10 @@ en:
         no_value: "Resume editing"
 
     topic_count_latest:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
+
+    topic_count_unseen:
       one: "See %{count} new or updated topic"
       other: "See %{count} new or updated topics"
 
@@ -848,6 +855,7 @@ en:
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
+        no_filter_matches: "No members match that search."
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
@@ -988,6 +996,7 @@ en:
           all: "All"
           read: "Read"
           unread: "Unread"
+          unseen: "Unseen"
         ignore_duration_title: "Ignore User"
         ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
@@ -1059,9 +1068,15 @@ en:
       no_bookmarks_title: "You haven’t bookmarked anything yet"
       no_bookmarks_body: >
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_bookmarks_search: "No bookmarks found with the provided search query."
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
+        <br><br>
+        Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_notifications_page_title: "You don’t have any notifications yet"
+      no_notifications_page_body: >
+        You will be notified about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
       first_notification: "Your first notification! Select it to begin."
@@ -1169,9 +1184,19 @@ en:
         rejected_posts: "rejected posts"
 
       messages:
-        all: "All"
+        all: "all inboxes"
         inbox: "Inbox"
+        personal: "Personal"
+        latest: "Latest"
         sent: "Sent"
+        unread: "Unread"
+        unread_with_count:
+          one: "Unread (%{count})"
+          other: "Unread (%{count})"
+        new: "New"
+        new_with_count:
+          one: "New (%{count})"
+          other: "New (%{count})"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"
@@ -1352,6 +1377,7 @@ en:
         not_connected: "(not connected)"
         confirm_modal_title: "Connect %{provider} Account"
         confirm_description:
+          disconnect: "Your existing %{provider} account '%{account_description}' will be disconnected."
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
 
@@ -1787,6 +1813,7 @@ en:
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Create your account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
 
     forgot_password:
       title: "Password Reset"
@@ -1941,10 +1968,14 @@ en:
         other: "+ %{count} subcategories"
 
     select_kit:
+      delete_item: "Delete %{name}"
       filter_by: "Filter by: %{name}"
       select_to_filter: "Select a value to filter"
       default_header_text: Select...
       no_content: No matches found
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
       filter_placeholder: Search...
       filter_placeholder_with_any: Search or create...
       create: "Create: '%{content}'"
@@ -2369,11 +2400,11 @@ en:
           other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Set Category"
+        change_category: "Set Category..."
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         move_messages_to_inbox: "Move to Inbox"
-        notification_level: "Notifications"
+        notification_level: "Notifications..."
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
         selected:
@@ -2394,6 +2425,7 @@ en:
 
       none:
         unread: "You have no unread topics."
+        unseen: "You have no unseen topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
@@ -2410,6 +2442,7 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
+        unseen: "There are no more unseen topics."
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
@@ -2669,7 +2702,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        slow_mode: "Set Slow Mode"
+        slow_mode: "Set Slow Mode..."
         timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
@@ -2678,7 +2711,7 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        make_public: "Make Public Topic"
+        make_public: "Make Public Topic..."
         make_private: "Make Personal Message"
         reset_bump_date: "Reset Bump Date"
 
@@ -3008,8 +3041,8 @@ en:
         rebake: "Rebuild HTML"
         publish_page: "Page Publishing"
         unhide: "Unhide"
-        change_owner: "Change Ownership"
-        grant_badge: "Grant Badge"
+        change_owner: "Change Ownership..."
+        grant_badge: "Grant Badge..."
         lock_post: "Lock Post"
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
@@ -3023,8 +3056,8 @@ en:
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
         delete_topic: "delete topic"
-        add_post_notice: "Add Staff Notice"
-        change_post_notice: "Change Staff Notice"
+        add_post_notice: "Add Staff Notice..."
+        change_post_notice: "Change Staff Notice..."
         delete_post_notice: "Delete Staff Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
@@ -3390,7 +3423,8 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History, last 100 revisions"
+    history_capped_revisions: "History, last 100 revisions"
+    history: "History"
     changed_by: "by %{author}"
 
     raw_email:
@@ -3424,6 +3458,10 @@ en:
         lower_title_with_count:
           one: "%{count} unread"
           other: "%{count} unread"
+      unseen:
+        title: "Unseen"
+        lower_title: "unseen"
+        help: "new topics and topics you are currently watching or tracking with unread posts"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -3719,6 +3757,7 @@ en:
       topics:
         none:
           unread: "You have no unread topics."
+          unseen: "You have no unseen topics."
           new: "You have no new topics."
           read: "You haven't read any topics yet."
           posted: "You haven't posted in any topics yet."
@@ -3911,7 +3950,7 @@ en:
               description: "Admins can see all groups."
             members_visibility_levels:
               title: "Who can see this group's members?"
-              description: "Admins can see members of all groups."
+              description: "Admins can see members of all groups. Flair is visible to all users."
             publish_read_state: "On group messages publish group read state"
 
           membership:
@@ -4845,9 +4884,10 @@ en:
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
-        delete_all_posts: "Delete all posts"
-        delete_posts_progress: "Deleting posts..."
+
         delete_posts_failed: "There was a problem deleting the posts."
+        post_edits: "Post Edits"
+        view_edits: "View Edits"
         penalty_post_actions: "What would you like to do with the associated post?"
         penalty_post_delete: "Delete the post"
         penalty_post_delete_replies: "Delete the post + any replies"
@@ -4906,14 +4946,29 @@ en:
         approve_success: "User approved and email sent with activation instructions."
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
+        post_edits_count: "Post Edits"
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         delete_posts:
+          button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
+            description: "Deleting posts..."
+          confirmation:
+            title: "Delete all posts by @%{username}"
+            description: |
+              <p>Are you sure you would like to delete <b>%{post_count}</b> posts by @%{username}?
+
+              <p><b>This can not be undone!</b></p>
+
+              <p>To continue type: <code>%{text}</code></p>
+
+            text: "delete posts by @%{username}"
+            delete: "Delete posts by @%{username}"
+            cancel: "Cancel"
         merge:
           button: "Merge"
           prompt:
@@ -5211,7 +5266,6 @@ en:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
-          post_processed: "After a post is processed"
         preview:
           link_text: "Preview granted badges"
           plan_text: "Preview with query plan"
@@ -5342,7 +5396,8 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "Discussion topic"
-        font_title: "%{font} Font"
+        topic_title: "A discussion topic heading"
         share_button: "Share"
         reply_button: "Reply"
+        topic_preview: "Topic preview"
+        homepage_preview: "Homepage preview"

@@ -1,5 +1,4 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import Ember from "ember";
 import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
@@ -8,6 +7,7 @@ acceptance("CustomHTML template", function (needs) {
   needs.hooks.beforeEach(() => {
     Ember.TEMPLATES["top"] = hbs`<span class='top-span'>TOP</span>`;
   });
+
   needs.hooks.afterEach(() => {
     delete Ember.TEMPLATES["top"];
   });

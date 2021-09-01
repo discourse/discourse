@@ -297,6 +297,7 @@ nl:
     copy_codeblock:
       copied: "gekopieerd!"
     drafts:
+      label: "Concepten"
       resume: "Hervatten"
       remove: "Verwijderen"
       remove_confirmation: "Weet u zeker dat u dit concept wilt verwijderen?"
@@ -307,6 +308,9 @@ nl:
         yes_value: "Negeren"
         no_value: "Bewerken hervatten"
     topic_count_latest:
+      one: "%{count} nieuw of bijgewerkt topic bekijken"
+      other: "%{count} nieuwe of bijgewerkte topics bekijken"
+    topic_count_unseen:
       one: "%{count} nieuw of bijgewerkt topic bekijken"
       other: "%{count} nieuwe of bijgewerkte topics bekijken"
     topic_count_unread:
@@ -959,7 +963,9 @@ nl:
       no_bookmarks_title: "U hebt nog geen bladwijzers gemaakt"
       no_bookmarks_body: >
         Begin een bladwijzer te maken voor berichten met de %{icon} knop en ze worden hier weergegeven voor gemakkelijke referentie. U kunt ook een herinnering plannen!
+      no_bookmarks_search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       no_notifications_title: "U hebt nog geen meldingen"
+      no_notifications_page_title: "U hebt nog geen meldingen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
       skip_new_user_tips:
@@ -1061,9 +1067,17 @@ nl:
         warnings_received: "waarschuwingen"
         rejected_posts: "geweigerde berichten"
       messages:
-        all: "Alle"
         inbox: "Postvak IN"
+        latest: "Nieuwste"
         sent: "Verzonden"
+        unread: "Ongelezen"
+        unread_with_count:
+          one: "Ongelezen (%{count})"
+          other: "Ongelezen (%{count})"
+        new: "Nieuw"
+        new_with_count:
+          one: "Nieuw (%{count})"
+          other: "Nieuw (%{count})"
         archive: "Archief"
         groups: "Mijn groepen"
         move_to_inbox: "Verplaatsen naar Postvak IN"
@@ -1741,6 +1755,7 @@ nl:
         one: "+ %{count} subcategorie"
         other: "+ %{count} subcategorieën"
     select_kit:
+      delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
       select_to_filter: "Een waarde selecteren om te filteren"
       default_header_text: Selecteren...
@@ -2135,11 +2150,9 @@ nl:
         dismiss_new: "Nieuwe berichten negeren"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie wijzigen"
         close_topics: "Topics sluiten"
         archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Naar Postvak IN verplaatsen"
-        notification_level: "Meldingen"
         change_notification_level: "Wijzig meldingsniveau"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
         selected:
@@ -2400,7 +2413,6 @@ nl:
         open: "Topic openen"
         close: "Topic sluiten"
         multi_select: "Berichten selecteren..."
-        slow_mode: "Langzame modus instellen"
         timed_update: "Topictimer instellen..."
         pin: "Topic vastmaken..."
         unpin: "Topic losmaken..."
@@ -2409,7 +2421,6 @@ nl:
         invisible: "Onzichtbaar maken"
         visible: "Zichtbaar maken"
         reset_read: "Leesgegevens herinitialiseren"
-        make_public: "Topic openbaar maken"
         make_private: "Persoonlijk bericht maken"
         reset_bump_date: "Bumpdatum terugzetten"
       feature:
@@ -2699,8 +2710,6 @@ nl:
         rebake: "HTML opnieuw opbouwen"
         publish_page: "Pagina's publiceren"
         unhide: "Tonen"
-        change_owner: "Eigendom wijzigen"
-        grant_badge: "Badge toekennen"
         lock_post: "Bericht vergrendelen"
         lock_post_description: "voorkomen dat de schrijver dit bericht bewerkt"
         unlock_post: "Bericht ontgrendelen"
@@ -2714,8 +2723,6 @@ nl:
         delete_topic_confirm_modal_no: "Nee, dit topic behouden"
         delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
-        add_post_notice: "Stafmelding toevoegen"
-        change_post_notice: "Stafmelding wijzigen"
         delete_post_notice: "Stafmelding verwijderen"
         remove_timer: "timer verwijderen"
         edit_timer: "timer bewerken"
@@ -3064,7 +3071,7 @@ nl:
       one: "gebruiker"
       other: "gebruikers"
     category_title: "Categorie"
-    history: "Geschiedenis, laatste 100 herzieningen"
+    history_capped_revisions: "Geschiedenis, laatste 100 herzieningen"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -3536,7 +3543,6 @@ nl:
               description: "Beheerders kunnen alle groepen zien."
             members_visibility_levels:
               title: "Wie kan de leden van deze groep zien?"
-              description: "Beheerders kunnen leden van alle groepen zien."
             publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch
@@ -4432,9 +4438,8 @@ nl:
         silence_message_placeholder: "(laat leeg om standaardbericht te sturen)"
         suspended_until: "(tot %{until})"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
-        delete_all_posts: "Alle berichten verwijderen"
-        delete_posts_progress: "Berichten verwijderen..."
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
+        post_edits: "Berichtbewerkingen"
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
         penalty_post_delete: "Het bericht verwijderen"
         penalty_post_delete_replies: "Het bericht + alle antwoorden verwijderen"
@@ -4488,14 +4493,19 @@ nl:
         approve_success: "Gebruiker goedgekeurd en e-mail met instructies voor activering verzonden."
         approve_bulk_success: "Gelukt! Alle geselecteerde gebruikers zijn goedgekeurd en op de hoogte gebracht."
         time_read: "Leestijd"
+        post_edits_count: "Berichtbewerkingen"
         anonymize: "Gebruiker anonimiseren"
         anonymize_confirm: "Weet u ZEKER dat u deze account wilt anonimiseren? Hierdoor worden de gebruikersnaam en het e-mailadres gewijzigd, en alle profielgegevens opnieuw ingesteld."
         anonymize_yes: "Ja, deze account anonimiseren"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van de account."
         delete: "Gebruiker verwijderen"
         delete_posts:
+          button: "Alle berichten verwijderen"
           progress:
             title: "Voortgang van het verwijderen van berichten"
+            description: "Berichten verwijderen..."
+          confirmation:
+            cancel: "Annuleren"
         merge:
           button: "Samenvoegen"
           prompt:
@@ -4782,7 +4792,6 @@ nl:
           post_revision: "Wanneer een gebruiker een bericht bewerkt of aanmaakt"
           trust_level_change: "Wanneer een gebruiker van vertrouwensniveau verandert"
           user_change: "Wanneer een gebruiker wordt bewerkt of aangemaakt"
-          post_processed: "Nadat een bericht is verwerkt"
         preview:
           link_text: "Voorbeeld van toegekende badges"
           plan_text: "Voorbeeld met queryplan"
@@ -4899,7 +4908,5 @@ nl:
           moderator: "Moderator"
           regular: "Vaste gebruiker"
       previews:
-        topic_title: "Discussietopic"
-        font_title: "Lettertype %{font}"
         share_button: "Delen"
         reply_button: "Antwoorden"

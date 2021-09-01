@@ -164,6 +164,9 @@ fi:
       max_emojis: "ei voi sisältää yli %{max_emojis_count} emojia"
       emojis_disabled: "ei voi sisältää emojeita"
       ip_address_already_screened: "sisältyy jo olemassa olevaan sääntöön"
+      restrict_dependent_destroy:
+        one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
+        other: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
       too_long:
         one: on liian pitkä (enintään %{count} merkki)
         other: on liian pitkä (enintään %{count} merkkiä)
@@ -478,14 +481,6 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
-    get_a_room: |
-      ### Rohkaise kaikkia osallistumaan keskusteluun
-
-      Olet vastannut %{count} kertaa käyttäjälle @%{reply_username} tässä ketjussa!
-
-      Parhaissa keskusteluissa on monia ääniä ja näkökulmia. Voitko saada jonkun liittymään keskusteluun?
-
-      Pidä mielessä, että jos haluat keskustella syvällisemmin tämän käyttäjän kanssa ei-julkisesti, [lähetä hänelle yksityisviesti](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -526,7 +521,6 @@ fi:
               unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
             featured_link:
               invalid: "ei ole kelvollinen. URL-osoitteen tulisi sisältää http:// tai https://."
-              invalid_category: "ei ole muokattavissa tällä alueella."
         user:
           attributes:
             password:
@@ -1369,6 +1363,7 @@ fi:
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
     unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
   site_settings:
+    disabled: "poistettu käytöstä"
     display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
@@ -1678,6 +1673,7 @@ fi:
     allow_staff_to_upload_any_file_in_pm: "Salli henkilökunnan ladata minkätyyppisiä liitteitä tahansa yksityisviesteihin."
     strip_image_metadata: "Poista metatiedot kuvista."
     composer_media_optimization_image_enabled: "Mahdollistaa palvelimeen ladattujen kuvatiedostojen mediaoptimoinnin asiakkaan päässä."
+    composer_media_optimization_image_bytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
     composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
@@ -2551,7 +2547,7 @@ fi:
 
         Viestisi pysyy piilossa, kunnes henkilökunnan jäsen tarkistaa sen.
 
-        Lisätietoja on [yhteisön ohjeissa] (%{base_url}/guidelines).
+        Lisätietoja on [yhteisön ohjeissa](%{base_url}/guidelines).
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -2644,49 +2640,15 @@ fi:
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
-      text_body_template: |
-        Varmuuskopiointi onnistui.
-
-        Lataa varmuuskopio siirtymällä kohtaan [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
-
-        Tässä loki:
-
-        ```vtext
-        %{logs}
-        ```
     backup_failed:
       title: "Varmuuskopiointi epäonnistui"
       subject_template: "Varmuuskopiointi epäonnistui"
-      text_body_template: |
-        Varmuuskopiointi epäonnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Palautus onnistui"
       subject_template: "Palautus suoritettu onnistuneesti"
-      text_body_template: |
-        Palautus onnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Palautus epäonnistui"
       subject_template: "Palautus epäonnistui"
-      text_body_template: |
-        Palautus epäonnistui.
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui"
@@ -3291,6 +3253,9 @@ fi:
         Sinut hyllytettiin foorumilta %{suspended_till} asti.
 
         Syy – %{reason}
+    account_suspended_forever:
+      title: "Tili hyllytetty"
+      subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
     account_silenced:
       title: "Tili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
@@ -3298,6 +3263,9 @@ fi:
         Sinut hiljennettiin foorumilta %{silenced_till} asti.
 
         Syy – %{reason}
+    account_silenced_forever:
+      title: "Tili hiljennetty"
+      subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
@@ -4346,17 +4314,30 @@ fi:
           city_for_disputes:
             label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
-      colors:
-        title: "Värit"
-      fonts:
-        title: "Fontit"
+      styling:
         fields:
           body_font:
             label: "Leipätekstin fontti"
           heading_font:
             label: "Otsikon fontti"
-          font_preview:
+          styling_preview:
             label: "Esikatselu"
+          homepage_style:
+            choices:
+              latest:
+                label: "Tuoreimmat ketjut"
+              categories_only:
+                label: "Vain alueet"
+              categories_with_featured_topics:
+                label: "Alueet, joissa on esiteltyjä ketjuja"
+              categories_and_latest_topics:
+                label: "Alueet ja tuoreimmat ketjut"
+              categories_and_top_topics:
+                label: "Alueet ja suosittuja ketjuja"
+              categories_boxes:
+                label: "Alueet laatikoissa"
+              categories_boxes_with_topics:
+                label: "Alueet laatikoissa, joissa ketjuja"
       logos:
         title: "Logot"
         fields:
@@ -4375,26 +4356,6 @@ fi:
           large_icon:
             label: "Suuri kuvake"
             description: "Kuvake, jota käytetään kuvaamaan sivustoa moderneilla laitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliön muotoista logoa."
-      homepage:
-        description: "Suosittelemme näyttämään tuoreimmat ketjut aloitussivullasi, mutta voit halutessasi näyttää myös keskustelualueet (ketjut ryhmiteltynä aihealueen mukaan)."
-        title: "Aloitussivu"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Tuoreimmat ketjut"
-              categories_only:
-                label: "Vain keskustelualueet"
-              categories_with_featured_topics:
-                label: "Alueet, joissa on esiteltyjä ketjuja"
-              categories_and_latest_topics:
-                label: "Alueet ja tuoreimmat ketjut"
-              categories_and_top_topics:
-                label: "Alueet ja suosittuja ketjuja"
-              categories_boxes:
-                label: "Alueet laatikoissa"
-              categories_boxes_with_topics:
-                label: "Alueet laatikoissa, joissa ketjuja"
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

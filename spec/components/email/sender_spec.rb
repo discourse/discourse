@@ -498,6 +498,21 @@ describe Email::Sender do
           SiteSetting.secure_media_allow_embed_images_in_emails = true
         end
 
+        it "can inline images with duplicate names" do
+          @secure_image_2 = UploadCreator.new(file_from_fixtures("logo-dev.png", "images"), "logo.png").create_for(Discourse.system_user.id)
+          @secure_image_2.update_secure_status(override: true)
+          @secure_image_2.update(access_control_post_id: reply.id)
+
+          Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+          reply.update(raw: "#{UploadMarkdown.new(@secure_image).image_markdown}\n#{UploadMarkdown.new(@secure_image_2).image_markdown}")
+          reply.rebake!
+
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.size).to eq(2)
+          expect(message.to_s.scan(/cid:[\w\-@.]+/).length).to eq(2)
+          expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
+        end
+
         it "does not attach images that are not marked as secure" do
           Email::Sender.new(message, :valid_type).send
           expect(message.attachments.length).to eq(4)

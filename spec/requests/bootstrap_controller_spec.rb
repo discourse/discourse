@@ -81,4 +81,16 @@ describe BootstrapController do
     expect(response.status).to eq(200)
     expect(response.parsed_body).to be_present
   end
+
+  context "authentication data is present" do
+    it "returns authentication data" do
+      cookie_data = 'someauthenticationdata'
+      cookies['authentication_data'] = cookie_data
+
+      get "/bootstrap.json"
+
+      bootstrap = response.parsed_body['bootstrap']
+      expect(bootstrap['authentication_data']).to eq(cookie_data)
+    end
+  end
 end

@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, gt, or } from "@ember/object/computed";
+import { equal, filterBy, gt, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -561,6 +561,8 @@ const User = RestModel.extend({
       return !group.automatic || group.name === "moderators";
     });
   },
+
+  groupsWithMessages: filterBy("groups", "has_messages", true),
 
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {

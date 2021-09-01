@@ -2,17 +2,10 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
-  displayErrorForUpload,
-  getUploadMarkdown,
-  validateUploadedFiles,
 } from "discourse/lib/uploads";
-import {
-  cacheShortUploadUrl,
-  resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import {
   caretPosition,
-  clipboardHelpers,
   formatUsername,
   inCodeBlock,
   tinyAvatar,
@@ -29,16 +22,15 @@ import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { later, next, run, schedule, throttle } from "@ember/runloop";
+import { later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
+import ComposerUpload from "discourse/mixins/composer-upload";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
@@ -77,29 +69,17 @@ export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];
 }
 
-export default Component.extend({
+export default Component.extend(ComposerUpload, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
-  uploadProgress: 0,
-  _xhr: null,
   shouldBuildScrollMap: true,
   scrollMap: null,
-  uploadFilenamePlaceholder: null,
+  processPreview: true,
 
-  @discourseComputed("uploadFilenamePlaceholder")
-  uploadPlaceholder(uploadFilenamePlaceholder) {
-    const clipboard = I18n.t("clipboard");
-    const filename = uploadFilenamePlaceholder
-      ? uploadFilenamePlaceholder
-      : clipboard;
-
-    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
-    if (!this._cursorIsOnEmptyLine()) {
-      placeholder = `\n${placeholder}`;
-    }
-
-    return placeholder;
-  },
+  uploadMarkdownResolvers,
+  uploadProcessorActions,
+  uploadProcessorQueue,
+  uploadHandlers,
 
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
@@ -126,20 +106,6 @@ export default Component.extend({
   @discourseComputed("composer.requiredCategoryMissing", "composer.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
-  },
-
-  @observes("composer.uploadCancelled")
-  _cancelUpload() {
-    if (!this.get("composer.uploadCancelled")) {
-      return;
-    }
-    this.set("composer.uploadCancelled", false);
-
-    if (this._xhr) {
-      this._xhr._userCancelled = true;
-      this._xhr.abort();
-    }
-    this._resetUpload(true);
   },
 
   @observes("focusTarget")
@@ -301,54 +267,6 @@ export default Component.extend({
         lastShownAt: lastValidatedAt,
       });
     }
-  },
-
-  _setUploadPlaceholderSend(data) {
-    const filename = this._filenamePlaceholder(data);
-    this.set("uploadFilenamePlaceholder", filename);
-
-    // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png...]
-    // and add order nr to the next one: [Uploading: test.png(1)...]
-    const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
-    })}\\]\\(\\)`;
-    const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
-    if (matchingPlaceholder) {
-      // get last matching placeholder and its consecutive nr in regex
-      // capturing group and apply +1 to the placeholder
-      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
-      const regex = new RegExp(regexString);
-      const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
-        : 1;
-      data.orderNr = orderNr;
-      const filenameWithOrderNr = `${filename}(${orderNr})`;
-      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
-    }
-  },
-
-  _setUploadPlaceholderDone(data) {
-    const filename = this._filenamePlaceholder(data);
-    const filenameWithSize = `${filename} (${data.total})`;
-    this.set("uploadFilenamePlaceholder", filenameWithSize);
-
-    if (data.orderNr) {
-      const filenameWithOrderNr = `${filename}(${data.orderNr})`;
-      this.set("uploadFilenamePlaceholder", filenameWithOrderNr);
-    } else {
-      this.set("uploadFilenamePlaceholder", filename);
-    }
-  },
-
-  _filenamePlaceholder(data) {
-    return data.files[0].name.replace(/\u200B-\u200D\uFEFF]/g, "");
-  },
-
-  _resetUploadFilenamePlaceholder() {
-    this.set("uploadFilenamePlaceholder", null);
   },
 
   _enableAdvancedEditorPreviewSync() {
@@ -643,223 +561,6 @@ export default Component.extend({
     });
   },
 
-  _resetUpload(removePlaceholder) {
-    next(() => {
-      if (this._validUploads > 0) {
-        this._validUploads--;
-      }
-      if (this._validUploads === 0) {
-        this.setProperties({
-          uploadProgress: 0,
-          isUploading: false,
-          isCancellable: false,
-        });
-      }
-      if (removePlaceholder) {
-        this.appEvents.trigger(
-          "composer:replace-text",
-          this.uploadPlaceholder,
-          ""
-        );
-      }
-      this._resetUploadFilenamePlaceholder();
-    });
-  },
-
-  _bindUploadTarget() {
-    this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
-    this._pasted = false;
-
-    const $element = $(this.element);
-
-    $.blueimp.fileupload.prototype.processActions = uploadProcessorActions;
-
-    $element.fileupload({
-      url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      dataType: "json",
-      pasteZone: $element,
-      processQueue: uploadProcessorQueue,
-    });
-
-    $element
-      .on("fileuploadprocessstart", () => {
-        this.setProperties({
-          uploadProgress: 0,
-          isUploading: true,
-          isProcessingUpload: true,
-          isCancellable: false,
-        });
-      })
-      .on("fileuploadprocess", (e, data) => {
-        this.appEvents.trigger(
-          "composer:insert-text",
-          `[${I18n.t("processing_filename", {
-            filename: data.files[data.index].name,
-          })}]()\n`
-        );
-      })
-      .on("fileuploadprocessalways", (e, data) => {
-        this.appEvents.trigger(
-          "composer:replace-text",
-          `[${I18n.t("processing_filename", {
-            filename: data.files[data.index].name,
-          })}]()\n`,
-          ""
-        );
-      })
-      .on("fileuploadprocessstop", () => {
-        this.setProperties({
-          uploadProgress: 0,
-          isUploading: false,
-          isProcessingUpload: false,
-          isCancellable: false,
-        });
-      });
-
-    $element.on("fileuploadpaste", (e) => {
-      this._pasted = true;
-
-      if (!$(".d-editor-input").is(":focus")) {
-        return;
-      }
-
-      const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
-        siteSettings: this.siteSettings,
-        canUpload: true,
-      });
-
-      if (!canUpload || canPasteHtml || types.includes("text/plain")) {
-        e.preventDefault();
-      }
-    });
-
-    $element.on("fileuploadsubmit", (e, data) => {
-      const max = this.siteSettings.simultaneous_uploads;
-
-      // Limit the number of simultaneous uploads
-      if (max > 0 && data.files.length > max) {
-        bootbox.alert(
-          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-            count: max,
-          })
-        );
-        return false;
-      }
-
-      // Look for a matching file upload handler contributed from a plugin
-      const matcher = (handler) => {
-        const ext = handler.extensions.join("|");
-        const regex = new RegExp(`\\.(${ext})$`, "i");
-        return regex.test(data.files[0].name);
-      };
-
-      const matchingHandler = uploadHandlers.find(matcher);
-      if (data.files.length === 1 && matchingHandler) {
-        if (!matchingHandler.method(data.files[0], this)) {
-          return false;
-        }
-      }
-
-      // If no plugin, continue as normal
-      const isPrivateMessage = this.get("composer.privateMessage");
-
-      data.formData = { type: "composer" };
-      if (isPrivateMessage) {
-        data.formData.for_private_message = true;
-      }
-      if (this._pasted) {
-        data.formData.pasted = true;
-      }
-
-      const opts = {
-        user: this.currentUser,
-        siteSettings: this.siteSettings,
-        isPrivateMessage,
-        allowStaffToUploadAnyFileInPm: this.siteSettings
-          .allow_staff_to_upload_any_file_in_pm,
-      };
-
-      const isUploading = validateUploadedFiles(data.files, opts);
-
-      run(() => {
-        this.setProperties({ uploadProgress: 0, isUploading });
-      });
-
-      return isUploading;
-    });
-
-    $element.on("fileuploadprogressall", (e, data) => {
-      run(() => {
-        this.set(
-          "uploadProgress",
-          parseInt((data.loaded / data.total) * 100, 10)
-        );
-      });
-    });
-
-    $element.on("fileuploadsend", (e, data) => {
-      run(() => {
-        this._pasted = false;
-        this._validUploads++;
-
-        this._setUploadPlaceholderSend(data);
-
-        this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
-
-        if (data.xhr && data.originalFiles.length === 1) {
-          this.set("isCancellable", true);
-          this._xhr = data.xhr();
-        }
-      });
-    });
-
-    $element.on("fileuploaddone", (e, data) => {
-      run(() => {
-        let upload = data.result;
-        this._setUploadPlaceholderDone(data);
-        if (!this._xhr || !this._xhr._userCancelled) {
-          const markdown = uploadMarkdownResolvers.reduce(
-            (md, resolver) => resolver(upload) || md,
-            getUploadMarkdown(upload)
-          );
-
-          cacheShortUploadUrl(upload.short_url, upload);
-          this.appEvents.trigger(
-            "composer:replace-text",
-            this.uploadPlaceholder.trim(),
-            markdown
-          );
-          this._resetUpload(false);
-        } else {
-          this._resetUpload(true);
-        }
-      });
-    });
-
-    $element.on("fileuploadfail", (e, data) => {
-      run(() => {
-        this._setUploadPlaceholderDone(data);
-        this._resetUpload(true);
-
-        const userCancelled = this._xhr && this._xhr._userCancelled;
-        this._xhr = null;
-
-        if (!userCancelled) {
-          displayErrorForUpload(data, this.siteSettings);
-        }
-      });
-    });
-
-    if (this.site.mobileView) {
-      const uploadButton = document.getElementById("mobile-file-upload");
-      uploadButton.addEventListener(
-        "click",
-        () => document.getElementById("file-uploader").click(),
-        false
-      );
-    }
-  },
-
   _registerImageScaleButtonClick($preview) {
     // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
     // group 1 `image|foo=bar`
@@ -905,20 +606,6 @@ export default Component.extend({
   },
 
   @on("willDestroyElement")
-  _unbindUploadTarget() {
-    this._validUploads = 0;
-    $("#reply-control .mobile-file-upload").off("click.uploader");
-    this.messageBus.unsubscribe("/uploads/composer");
-    const $uploadTarget = $(this.element);
-    try {
-      $uploadTarget.fileupload("destroy");
-    } catch (e) {
-      /* wasn't initialized yet */
-    }
-    $uploadTarget.off();
-  },
-
-  @on("willDestroyElement")
   _composerClosed() {
     this.appEvents.trigger("composer:will-close");
     next(() => {
@@ -932,10 +619,6 @@ export default Component.extend({
     if (this._enableAdvancedEditorPreviewSync()) {
       this._teardownInputPreviewSync();
     }
-  },
-
-  showUploadSelector(toolbarEvent) {
-    this.send("showUploadSelector", toolbarEvent);
   },
 
   onExpandPopupMenuOptions(toolbarEvent) {
@@ -999,6 +682,7 @@ export default Component.extend({
 
     extraButtons(toolbar) {
       toolbar.addButton({
+        tabindex: "0",
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",

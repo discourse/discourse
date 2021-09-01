@@ -536,13 +536,13 @@ export default {
   _bindToClick(selector, binding) {
     binding = binding.split(",");
     this.keyTrapper.bind(binding, function (e) {
-      const $sel = $(selector);
+      const selection = document.querySelector(selector);
 
       // Special case: We're binding to enter.
-      if (e && e.keyCode === 13) {
+      if (e && e.key === "Enter") {
         // Binding to enter should only be effective when there is something
         // to select.
-        if ($sel.length === 0) {
+        if (!selection) {
           return;
         }
 
@@ -550,10 +550,7 @@ export default {
         e.preventDefault();
       }
 
-      // If there is more than one match for the selector, just click
-      // the first one, we don't want to click multiple things from one
-      // shortcut.
-      $sel[0].click();
+      selection?.click();
     });
   },
 

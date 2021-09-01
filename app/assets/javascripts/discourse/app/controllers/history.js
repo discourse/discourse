@@ -46,6 +46,15 @@ export default Controller.extend(ModalFunctionality, {
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
 
+  @discourseComputed("post.version")
+  modalTitleKey(version) {
+    if (version > 100) {
+      return "history_capped_revisions";
+    } else {
+      return "history";
+    }
+  },
+
   @discourseComputed(
     "previousVersion",
     "model.current_version",
@@ -211,17 +220,17 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("displayingInline")
   inlineClass(displayingInline) {
-    return displayingInline ? "btn-danger" : "btn-flat";
+    return displayingInline ? "active" : "";
   },
 
   @discourseComputed("displayingSideBySide")
   sideBySideClass(displayingSideBySide) {
-    return displayingSideBySide ? "btn-danger" : "btn-flat";
+    return displayingSideBySide ? "active" : "";
   },
 
   @discourseComputed("displayingSideBySideMarkdown")
   sideBySideMarkdownClass(displayingSideBySideMarkdown) {
-    return displayingSideBySideMarkdown ? "btn-danger" : "btn-flat";
+    return displayingSideBySideMarkdown ? "active" : "";
   },
 
   @discourseComputed("model.category_id_changes")

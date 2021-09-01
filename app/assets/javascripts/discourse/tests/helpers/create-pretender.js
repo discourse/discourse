@@ -207,12 +207,18 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/topics/private-messages/eviltrout.json", () => {
-    return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
+  [
+    "/topics/private-messages-all/:username.json",
+    "/topics/private-messages/:username.json",
+    "/topics/private-messages-warnings/eviltrout.json",
+  ].forEach((url) => {
+    pretender.get(url, () => {
+      return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
+    });
   });
 
-  pretender.get("/topics/private-messages-warnings/eviltrout.json", () => {
-    return response(fixturesByUrl["/topics/private-messages/eviltrout.json"]);
+  pretender.get("/u/:username/private-message-topic-tracking-state", () => {
+    return response([]);
   });
 
   pretender.get("/topics/feature_stats.json", () => {
@@ -744,6 +750,7 @@ export function applyDefaultHandlers(pretender) {
       username: "eviltrout",
       email: "eviltrout@example.com",
       admin: true,
+      post_edits_count: 6,
     });
   });
 

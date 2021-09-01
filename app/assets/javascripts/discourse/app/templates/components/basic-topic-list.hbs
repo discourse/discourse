@@ -1,12 +1,4 @@
 {{#conditional-loading-spinner condition=loading}}
-  {{#if hasIncoming}}
-    <div class="show-mores">
-      <a tabindex="0" href {{action showInserted}} class="alert alert-info clickable">
-        {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
-      </a>
-    </div>
-  {{/if}}
-
   {{#if topics}}
     {{topic-list
       showPosters=showPosters

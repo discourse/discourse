@@ -16,7 +16,6 @@
 #
 # See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
-
   include ActiveModel::SerializerSupport
 
   UNREAD_MESSAGE_TYPE = "unread"
@@ -31,15 +30,6 @@ class TopicTrackingState
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
   MAX_TOPICS = 5000
 
-  attr_accessor :user_id,
-                :topic_id,
-                :highest_post_number,
-                :last_read_post_number,
-                :created_at,
-                :category_id,
-                :notification_level,
-                :tags
-
   def self.publish_new(topic)
     return unless topic.regular?
 
@@ -52,7 +42,6 @@ class TopicTrackingState
       last_read_post_number: nil,
       highest_post_number: 1,
       created_at: topic.created_at,
-      topic_id: topic.id,
       category_id: topic.category_id,
       archetype: topic.archetype,
       created_in_new_period: true
@@ -246,7 +235,6 @@ class TopicTrackingState
       payload: {
         last_read_post_number: last_read_post_number,
         highest_post_number: highest_post_number,
-        topic_id: topic_id,
         notification_level: notification_level
       }
     }
@@ -396,7 +384,7 @@ class TopicTrackingState
       if skip_unread
         "1=0"
       else
-        unread_filter_sql
+        unread_filter_sql(staff: staff)
       end
 
     filter_old_unread_sql =
@@ -486,8 +474,8 @@ class TopicTrackingState
       JOIN user_options AS uo ON uo.user_id = u.id
       JOIN categories c ON c.id = topics.category_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
-      LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
+      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = :user_id
+      #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = :user_id"}
       #{additional_join_sql}
       WHERE u.id = :user_id AND
             #{filter_old_unread_sql}
@@ -519,59 +507,6 @@ class TopicTrackingState
 
   def self.highest_post_number_column_select(staff)
     "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
-  end
-
-  def self.publish_private_message(topic, archive_user_id: nil,
-                                          post: nil,
-                                          group_archive: false)
-
-    return unless topic.private_message?
-    channels = {}
-
-    allowed_user_ids = topic.allowed_users.pluck(:id)
-
-    if post && allowed_user_ids.include?(post.user_id)
-      channels["/private-messages/sent"] = [post.user_id]
-    end
-
-    if archive_user_id
-      user_ids = [archive_user_id]
-
-      [
-        "/private-messages/archive",
-        "/private-messages/inbox",
-        "/private-messages/sent",
-      ].each do |channel|
-        channels[channel] = user_ids
-      end
-    end
-
-    if channels.except("/private-messages/sent").blank?
-      channels["/private-messages/inbox"] = allowed_user_ids
-    end
-
-    topic.allowed_groups.each do |group|
-      group_user_ids = group.users.pluck(:id)
-      next if group_user_ids.blank?
-      group_channels = []
-      group_channels << "/private-messages/group/#{group.name.downcase}"
-      group_channels << "#{group_channels.first}/archive" if group_archive
-      group_channels.each { |channel| channels[channel] = group_user_ids }
-    end
-
-    message = {
-      topic_id: topic.id
-    }
-
-    channels.each do |channel, ids|
-      if ids.present?
-        MessageBus.publish(
-          channel,
-          message.as_json,
-          user_ids: ids
-        )
-      end
-    end
   end
 
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)

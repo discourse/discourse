@@ -808,9 +808,17 @@ bg:
         suspensions: "отстранявания"
         warnings_received: "предупреждения"
       messages:
-        all: "Всички"
         inbox: "Входяща кутия"
+        latest: "Последни"
         sent: "Изпратени"
+        unread: "Непрочетени"
+        unread_with_count:
+          one: "Непрочетен (%{count})"
+          other: "Непрочетен (%{count})"
+        new: "Нов"
+        new_with_count:
+          one: "Нов (%{count})"
+          other: "Нов (%{count})"
         archive: "Архив"
         groups: "Моите групи"
         move_to_inbox: "Премести във входящи"
@@ -1226,6 +1234,7 @@ bg:
     conditional_loading_section:
       loading: Зарежда се...
     select_kit:
+      delete_item: "Изтрий %{name}"
       default_header_text: Изберете...
       filter_placeholder: Търсене ...
     date_time_picker:
@@ -1392,7 +1401,6 @@ bg:
         close_topics: "Затвори темите"
         archive_topics: "Архивирай темите"
         move_messages_to_inbox: "Премести във входящи"
-        notification_level: "Известия"
         choose_new_category: "Избери нова категория за тези теми:"
         selected:
           one: "Вие сте избрали <b>%{count}</b> тема."
@@ -1558,7 +1566,6 @@ bg:
         invisible: "Премахни от списъците"
         visible: "Включи в списъците"
         reset_read: "Изчисти прочетените данни "
-        make_public: "Направи темата публична"
       feature:
         pin: "Закови темата"
         unpin: "Отгови темата"
@@ -1741,8 +1748,6 @@ bg:
         rebake: "Прегенерирай HTML "
         publish_page: "Публикуване на страници"
         unhide: "Покажи "
-        change_owner: "Смени Правомощията"
-        grant_badge: "Присъдени значка"
         lock_post: "Заключване на публикацията"
         lock_post_description: "не позволявайте на публикувалия да редактира тази публикация"
         unlock_post: "Отключи публикацията"
@@ -2708,7 +2713,6 @@ bg:
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
         silence_reason: "Причина"
-        delete_all_posts: "Изтрий всички публикации. "
         moderator: "Модератор? "
         admin: "Админ? "
         suspended: "Отстранен? "
@@ -2748,6 +2752,10 @@ bg:
         anonymize_yes: "Да, анонимизирай този профил"
         anonymize_failed: "Възникна грешка по време на анонимизирането на профила."
         delete: "Изтрий потребител "
+        delete_posts:
+          button: "Изтрий всички публикации. "
+          confirmation:
+            cancel: "Отмени"
         merge:
           prompt:
             cancel: "Отмени"
@@ -2951,7 +2959,6 @@ bg:
           post_revision: "Когато потребителят редактира или създава публикация"
           trust_level_change: "Когато потребителят променя Нивото на доверие"
           user_change: "Когато потребителят е редактиран или създаден "
-          post_processed: "След като публикацията се преработи"
         preview:
           link_text: "Покажи спечелените значки "
           plan_text: "Преглед с query plan "

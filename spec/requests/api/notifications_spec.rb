@@ -29,9 +29,9 @@ describe 'notifications' do
                 notification_type: { type: :integer },
                 read: { type: :boolean },
                 created_at: { type: :string },
-                post_number: { type: :string, nullable: true },
-                topic_id: { type: :integer, nullable: true },
-                slug: { type: :string, nullable: true },
+                post_number: { type: [:string, :null] },
+                topic_id: { type: [:integer, :null] },
+                slug: { type: [:string, :null] },
                 data: {
                   type: :object,
                   properties: {

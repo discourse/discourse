@@ -5,7 +5,6 @@ export default Component.extend({
   fixed: false,
   submitOnEnter: true,
   dismissable: true,
-  autoFocus: true,
 
   didInsertElement() {
     this._super(...arguments);
@@ -35,10 +34,8 @@ export default Component.extend({
       const maxHeightFloat = parseFloat(maxHeight) / 100.0;
       if (maxHeightFloat > 0) {
         const viewPortHeight = $(window).height();
-        $(this.element).css(
-          "max-height",
-          Math.floor(maxHeightFloat * viewPortHeight) + "px"
-        );
+        this.element.style.maxHeight =
+          Math.floor(maxHeightFloat * viewPortHeight) + "px";
       }
     }
 
@@ -52,8 +49,7 @@ export default Component.extend({
         "rawSubtitle",
         "submitOnEnter",
         "dismissable",
-        "headerClass",
-        "autoFocus"
+        "headerClass"
       )
     );
   },

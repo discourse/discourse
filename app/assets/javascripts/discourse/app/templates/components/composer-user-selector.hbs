@@ -1,11 +1,10 @@
 {{email-group-user-chooser
   id="private-message-users"
-  tabindex="1"
   value=splitRecipients
   onChange=(action "updateRecipients")
   options=(hash
     topicId=topicId
-    filterPlaceholder="composer.users_placeholder"
+    none="composer.users_placeholder"
     includeMessageableGroups=true
     allowEmails=currentUser.can_send_private_email_messages
     autoWrap=true

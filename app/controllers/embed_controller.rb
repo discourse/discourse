@@ -57,8 +57,13 @@ class EmbedController < ApplicationController
     end
 
     topic_query = TopicQuery.new(current_user, list_options)
-    top_period = params[:top_period]&.to_sym
-    valid_top_period = TopTopic.periods.include?(top_period)
+    top_period = params[:top_period]
+    begin
+      TopTopic.validate_period(top_period)
+      valid_top_period = true
+    rescue Discourse::InvalidParameters
+      valid_top_period = false
+    end
 
     @list = if valid_top_period
       topic_query.list_top_for(top_period)
@@ -91,17 +96,13 @@ class EmbedController < ApplicationController
                                   exclude_first: true,
                                   exclude_deleted_users: true,
                                   exclude_hidden: true)
+      raise Discourse::NotFound if @topic_view.blank?
 
-      @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
-      if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
-        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
-      end
-
-      if @topic_view
-        @reply_count = @topic_view.topic.posts_count - 1
-        @reply_count = 0 if @reply_count < 0
-      end
+      @second_post_url = "#{@topic_view.topic.url}/2"
+      @reply_count = @topic_view.filtered_posts.count - 1
+      @reply_count = 0 if @reply_count < 0
+      @posts_left = @reply_count - SiteSetting.embed_post_limit if @reply_count > SiteSetting.embed_post_limit
     elsif embed_url.present?
       Jobs.enqueue(:retrieve_topic,
                       user_id: current_user.try(:id),

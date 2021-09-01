@@ -257,6 +257,7 @@ da:
   not_found: "Den anmodede URL eller ressource kunne ikke findes."
   invalid_access: "Du har ikke tilladelse til at se den anmodede ressource."
   authenticator_not_found: "Autentificeringsmetode findes ikke eller er deaktiveret."
+  authenticator_no_connect: "Denne godkendelsesudbyder tillader ikke forbindelse til en eksisterende forumkonto."
   invalid_api_credentials: "Du har ikke tilladelse til at se den ønskede ressource. API-brugernavnet eller -nøglen er ugyldig."
   provider_not_enabled: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen er ikke aktiveret."
   provider_not_found: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen findes ikke."
@@ -471,14 +472,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    get_a_room: |
-      ### Opfordre alle til at blive involveret i samtalen
-
-      Du har svaret %{count} gange til @%{reply_username} i dette emne!
-
-      En god diskussion indeholder mange stemmer og perspektiver. Kan du få andre involveret?
-
-      Og glem ikke, hvis du gerne vil fortsætte din længereverende samtale med denne særlige bruger uden for den offentlige visning, [send dem en personlig besked](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
 
@@ -513,7 +506,6 @@ da:
               unable_to_tag: "Der opstod en fejl under mærkning af emnet."
             featured_link:
               invalid: "er ugyldig. URL'en skal indeholde http:// eller https://. "
-              invalid_category: "kan ikke redigeres i denne kategori."
         user:
           attributes:
             password:
@@ -1319,6 +1311,7 @@ da:
     out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
     unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
   site_settings:
+    disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
@@ -1724,6 +1717,7 @@ da:
     company_name: "Virksomhedens navn"
     governing_law: "Gældende Lov"
     city_for_disputes: "By for tvister"
+    shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
     shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
     allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
@@ -2208,27 +2202,9 @@ da:
     backup_succeeded:
       title: "Sikkerhedskopiering Gennemført"
       subject_template: "Sikkerhedskopiering er gennemført"
-      text_body_template: |
-        Sikkerhedskopieringen lykkedes.
-
-        Besøg afsnittet [admin > backup](%{base_url}/admin/backupsr) for at hente din nye sikkerhedskopi.
-
-        Her er loggen:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Sikkerheskopiering Mislykkedes"
       subject_template: "Sikkerhedskopiering mislykkedes"
-      text_body_template: |
-        Sikkerhedskopieringen mislykkedes.
-
-        Her er loggen:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Gendannelse Gennemført"
       subject_template: "Gendannelse fuldført"
@@ -2968,8 +2944,12 @@ da:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
     file_missing: "Beklager, Du skal vælge en fil at overføre."
+    failed: "Beklager, men din overførsel mislykkedes. Prøv venligst igen."
     png_to_jpg_conversion_failure_message: "Der opstod en fejl ved konvertering fra PNG til JPG."
     optimize_failure_message: "Der opstod en fejl under optimering af det overførte billede."
+    download_failure: "Hentning af filen fra den eksterne udbyder mislykkedes."
+    checksum_mismatch_failure: "Kontrolsummen af den fil du overførte stemmer ikke overens. Filens indhold kan have ændret sig under overførsel. Prøv venligst igen."
+    cannot_promote_failure: "Overførslen kan ikke fuldføres, den kan allerede være fuldført eller tidligere mislykkedes."
     attachments:
       too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:
@@ -3672,17 +3652,26 @@ da:
           city_for_disputes:
             label: "By for tvister"
             placeholder: "San Francisco, Californien"
-      colors:
-        title: "Farver"
-      fonts:
-        title: "Skrifttyper"
+      styling:
         fields:
           body_font:
             label: "Indholds skrifttype"
           heading_font:
             label: "Overskrifts skrifttype"
-          font_preview:
+          styling_preview:
             label: "Forhåndsvisning"
+          homepage_style:
+            choices:
+              latest:
+                label: "Seneste emner"
+              categories_only:
+                label: "Kun Kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med Fremhævede Emner"
+              categories_and_latest_topics:
+                label: "Kategorier og Seneste Emner"
+              categories_and_top_topics:
+                label: "Kategorier og top emner"
       logos:
         title: "Logoer"
         fields:
@@ -3697,22 +3686,6 @@ da:
             label: "Browser Ikon"
           large_icon:
             label: "Stort ikon"
-      homepage:
-        description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
-        title: "Hjemmeside"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
       invites:
         title: "Inviter hjælpere"
       finished:

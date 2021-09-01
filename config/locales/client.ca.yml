@@ -280,6 +280,7 @@ ca:
     copy_codeblock:
       copied: "copiat!"
     drafts:
+      label: "Esborranys"
       resume: "Reprèn"
       remove: "Elimina"
       new_topic: "Esborrany de tema nou"
@@ -287,6 +288,9 @@ ca:
       abandon:
         yes_value: "Descarta"
     topic_count_latest:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
+    topic_count_unseen:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_unread:
@@ -926,9 +930,17 @@ ca:
         suspensions: "suspensions"
         warnings_received: "avisos"
       messages:
-        all: "Tot"
         inbox: "Safata d'entrada"
+        latest: "Més recents"
         sent: "Enviat"
+        unread: "No llegits"
+        unread_with_count:
+          one: "No llegit (%{count})"
+          other: "No llegit (%{count})"
+        new: "Nous"
+        new_with_count:
+          one: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arxiva"
         groups: "Els meus grups"
         move_to_inbox: "Mou a la safata d'entrada"
@@ -1477,6 +1489,7 @@ ca:
     conditional_loading_section:
       loading: Carregant...
     select_kit:
+      delete_item: "Suprimeix %{name}"
       default_header_text: Selecciona...
       no_content: No s'han trobat coincidències
       filter_placeholder: Cerca...
@@ -1810,11 +1823,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        change_category: "Defineix categoria"
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
-        notification_level: "Notificacions"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
         selected:
           one: "He seleccionat <b>%{count}</b> tema."
@@ -2024,7 +2035,6 @@ ca:
         invisible: "Fes invisible"
         visible: "Fes visible"
         reset_read: "Restableix data de lectura"
-        make_public: "Fes públic el tema"
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
       feature:
@@ -2267,8 +2277,6 @@ ca:
         revert_to_regular: "Elimina el color de l'equip responsable"
         rebake: "Refés HTML"
         unhide: "Desfés amagar"
-        change_owner: "Canvia la propietat"
-        grant_badge: "Atorga insígnia"
         lock_post: "Bloca la publicació"
         lock_post_description: "impedeix que l'autor editi aquesta publicació"
         unlock_post: "Desbloca la publicació"
@@ -2276,7 +2284,6 @@ ca:
         delete_topic_disallowed_modal: "No teniu permís per a suprimir aquest tema. Si realment voleu que se suprimeixi, envieu una bandera perquè un moderador hi pari atenció juntament amb una argumentació."
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
-        add_post_notice: "Afegeix un avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -2967,7 +2974,6 @@ ca:
               description: "Els administradors poden veure tots els grups."
             members_visibility_levels:
               title: "Qui pot veure els membres d’aquest grup?"
-              description: "Els administradors poden veure membres de tots els grups."
             publish_read_state: "En els missatges de grup publica l'estat de lectura del grup"
           membership:
             automatic: Automàtic
@@ -3738,9 +3744,8 @@ ca:
         silence_message_placeholder: "(deixeu-ho en blanc per a enviar el missatge per defecte)"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
-        delete_all_posts: "Suprimeix totes les publicacions"
-        delete_posts_progress: "Suprimint publicacions..."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."
+        post_edits: "Edicions de la publicació"
         penalty_post_actions: "Què voleu fer amb la publicació associada?"
         penalty_post_delete: "Suprimeix la publicació"
         penalty_post_delete_replies: "Suprimeix la publicació i qualsevol resposta"
@@ -3792,11 +3797,18 @@ ca:
         approve_success: "Usuari aprovat i correu enviat amb instruccions d'activació"
         approve_bulk_success: "Èxit! Tots els usuaris seleccionats han estat aprovats i avisats. "
         time_read: "Temps de lectura"
+        post_edits_count: "Edicions de la publicació"
         anonymize: "Fes anònim l'usuari"
         anonymize_confirm: "Esteu segur que voleu fer anònim aquest compte? Això canviarà el nom d'usuari i el correu electrònic, i restablirà tota la informació de perfil."
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
+        delete_posts:
+          button: "Suprimeix totes les publicacions"
+          progress:
+            description: "Suprimint publicacions..."
+          confirmation:
+            cancel: "Cancel·la"
         merge:
           prompt:
             cancel: "Cancel·la"
@@ -4036,7 +4048,6 @@ ca:
           post_revision: "Quan un usuari edita o crea una publicació"
           trust_level_change: "Quan un usuari canvia de nivell de confiança"
           user_change: "Quan s'edita o es crea un usuari"
-          post_processed: "Després de processar una publicació "
         preview:
           link_text: "Previsualitza les insígnies concedides"
           plan_text: "Previsualitza amb pla de consulta"
@@ -4136,6 +4147,5 @@ ca:
           moderator: "Moderador"
           regular: "Usuari habitual"
       previews:
-        topic_title: "Tema de discussió"
         share_button: "Comparteix"
         reply_button: "Respon"

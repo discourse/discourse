@@ -143,16 +143,16 @@ class UsersController < ApplicationController
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
-      fields.each do |f|
-        field_id = f.id.to_s
+      fields.each do |field|
+        field_id = field.id.to_s
         next unless params[:user_fields].has_key?(field_id)
 
-        val = params[:user_fields][field_id]
-        val = nil if val === "false"
-        val = val[0...UserField.max_length] if val
+        value = clean_custom_field_values(field)
+        value = nil if value === "false"
+        value = value[0...UserField.max_length] if value
 
-        return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
-        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{f.id}"] = val
+        return render_json_error(I18n.t("login.missing_user_field")) if value.blank? && field.required?
+        attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{field.id}"] = value
       end
     end
 
@@ -311,6 +311,21 @@ class UsersController < ApplicationController
     report = TopicTrackingState.report(user)
     serializer = ActiveModel::ArraySerializer.new(
       report, each_serializer: TopicTrackingStateSerializer, scope: guardian
+    )
+
+    render json: MultiJson.dump(serializer)
+  end
+
+  def private_message_topic_tracking_state
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    report = PrivateMessageTopicTrackingState.report(user)
+
+    serializer = ActiveModel::ArraySerializer.new(
+      report,
+      each_serializer: PrivateMessageTopicTrackingStateSerializer,
+      scope: guardian
     )
 
     render json: MultiJson.dump(serializer)
@@ -1080,7 +1095,10 @@ class UsersController < ApplicationController
 
     options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(params[:include_staged_users])
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
-    options[:limit] = params[:limit].to_i if params[:limit].present?
+    if params[:limit].present?
+      options[:limit] = params[:limit].to_i
+      raise Discourse::InvalidParameters.new(:limit) if options[:limit] <= 0
+    end
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
@@ -1135,7 +1153,7 @@ class UsersController < ApplicationController
 
     if type.blank? || type == 'system'
       upload_id = nil
-    elsif !SiteSetting.allow_uploaded_avatars
+    elsif !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, user)
       return render json: failed_json, status: 422
     else
       upload_id = params[:upload_id]
@@ -1580,6 +1598,21 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def clean_custom_field_values(field)
+    field_values = params[:user_fields][field.id.to_s]
+
+    return field_values if field_values.nil? || field_values.empty?
+
+    if field.field_type == "dropdown"
+      field.user_field_options.find_by_value(field_values)&.value
+    elsif field.field_type == "multiselect"
+      bad_values = field_values - field.user_field_options.map(&:value)
+      field_values - bad_values
+    else
+      field_values
+    end
+  end
 
   def password_reset_find_user(token, committing_change:)
     if EmailToken.valid_token_format?(token)

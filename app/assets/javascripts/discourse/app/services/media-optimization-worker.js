@@ -9,13 +9,15 @@ export default class MediaOptimizationWorkerService extends Service {
   worker = null;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
-  currentPromiseResolver = null;
+  promiseResolvers = null;
 
   startWorker() {
+    this.logIfDebug("Starting media-optimization-worker");
     this.worker = new Worker(this.workerUrl); // TODO come up with a workaround for FF that lacks type: module support
   }
 
   stopWorker() {
+    this.logIfDebug("Stopping media-optimization-worker...");
     this.worker.terminate();
     this.worker = null;
   }
@@ -35,36 +37,47 @@ export default class MediaOptimizationWorkerService extends Service {
     }
   }
 
-  optimizeImage(data) {
-    let file = data.files[data.index];
+  optimizeImage(data, opts = {}) {
+    this.usingUppy = data.id && data.id.includes("uppy");
+    this.promiseResolvers = this.promiseResolvers || {};
+    this.stopWorkerOnError = opts.hasOwnProperty("stopWorkerOnError")
+      ? opts.stopWorkerOnError
+      : true;
+
+    let file = this.usingUppy ? data : data.files[data.index];
     if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
-      return data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
     if (
       file.size <
       this.siteSettings
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
-      return data;
+      return this.usingUppy ? Promise.resolve() : data;
     }
     this.ensureAvailiableWorker();
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
-      this.currentPromiseResolver = resolve;
+      this.promiseResolvers[this.usingUppy ? file.id : file.name] = resolve;
 
       let imageData;
       try {
-        imageData = await fileToImageData(file);
+        if (this.usingUppy) {
+          imageData = await fileToImageData(file.data);
+        } else {
+          imageData = await fileToImageData(file);
+        }
       } catch (error) {
         this.logIfDebug(error);
-        return resolve(data);
+        return this.usingUppy ? resolve() : resolve(data);
       }
 
       this.worker.postMessage(
         {
           type: "compress",
+          fileId: file.id,
           file: imageData.data.buffer,
           fileName: file.name,
           width: imageData.width,
@@ -105,19 +118,38 @@ export default class MediaOptimizationWorkerService extends Service {
     this.worker.onmessage = (e) => {
       switch (e.data.type) {
         case "file":
-          let optimizedFile = new File([e.data.file], `${e.data.fileName}`, {
+          let optimizedFile = new File([e.data.file], e.data.fileName, {
             type: "image/jpeg",
           });
           this.logIfDebug(
             `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
           );
-          let data = this.currentComposerUploadData;
-          data.files[data.index] = optimizedFile;
-          this.currentPromiseResolver(data);
+
+          if (this.usingUppy) {
+            this.promiseResolvers[e.data.fileId](optimizedFile);
+          } else {
+            let data = this.currentComposerUploadData;
+            data.files[data.index] = optimizedFile;
+            this.promiseResolvers[optimizedFile.name](data);
+          }
+
           break;
         case "error":
-          this.stopWorker();
-          this.currentPromiseResolver(this.currentComposerUploadData);
+          this.logIfDebug(
+            `Handling error message from image optimization for ${e.data.fileName}.`
+          );
+
+          if (this.stopWorkerOnError) {
+            this.stopWorker();
+          }
+
+          if (this.usingUppy) {
+            this.promiseResolvers[e.data.fileId]();
+          } else {
+            this.promiseResolvers[e.data.fileName](
+              this.currentComposerUploadData
+            );
+          }
           break;
         default:
           this.logIfDebug(`Sorry, we are out of ${e}.`);

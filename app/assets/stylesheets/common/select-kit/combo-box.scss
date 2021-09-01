@@ -2,7 +2,6 @@
   &.combo-box {
     .select-kit-body {
       border-radius: 0;
-      box-shadow: shadow("dropdown");
     }
 
     .select-kit-row {
@@ -78,13 +77,6 @@
       }
     }
 
-    &.is-expanded {
-      .select-kit-wrapper {
-        display: block;
-        @include default-focus;
-      }
-    }
-
     &.tag-drop,
     &.group-dropdown {
       min-width: auto;
@@ -98,11 +90,6 @@
       .select-kit-row {
         font-weight: bold;
       }
-    }
-
-    &.is-expanded .select-kit-wrapper,
-    .select-kit-wrapper {
-      display: none;
     }
   }
 }

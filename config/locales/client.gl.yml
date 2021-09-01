@@ -293,6 +293,7 @@ gl:
     copy_codeblock:
       copied: "copiado!"
     drafts:
+      label: "Borradores"
       resume: "Retomar"
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
@@ -303,6 +304,9 @@ gl:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
     topic_count_latest:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
+    topic_count_unseen:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
     topic_count_unread:
@@ -947,6 +951,7 @@ gl:
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
+      no_bookmarks_search: "Non se atoparon marcadores coa busca fornecida."
       first_notification: "Xa ten a súa primeira notificación! Selecciónea para comezar."
       dynamic_favicon: "Amosar conta na icona do navegador"
       skip_new_user_tips:
@@ -1048,9 +1053,17 @@ gl:
         warnings_received: "advertencias"
         rejected_posts: "publicacións rexeitadas"
       messages:
-        all: "Todas"
         inbox: "Caixa de entrada"
+        latest: "Últimos"
         sent: "Enviadas"
+        unread: "Sen ler"
+        unread_with_count:
+          one: "(%{count}) pendente de ler"
+          other: "(%{count}) pendente de ler"
+        new: "Novo"
+        new_with_count:
+          one: "(%{count}) novo"
+          other: "(%{count}) novo"
         archive: "Arquivo"
         groups: "Os meus grupos"
         move_to_inbox: "Mover á caixa de entrada"
@@ -1722,6 +1735,7 @@ gl:
         one: "+ %{count} subcategoría"
         other: "+ %{count} subcategorías"
     select_kit:
+      delete_item: "Eliminar %{name}"
       filter_by: "Filtrado por: %{name}"
       select_to_filter: "Seleccione un valor para filtrar"
       default_header_text: Seleccionar...
@@ -2110,11 +2124,9 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        change_category: "Estabelecer categoría"
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
-        notification_level: "Notificacións"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
@@ -2372,7 +2384,6 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións…"
-        slow_mode: "Estabelecer modo lento"
         timed_update: "Estabelecer temporizador do tema..."
         pin: "Fixar tema…"
         unpin: "Desprender tema…"
@@ -2381,7 +2392,6 @@ gl:
         invisible: "Retirar da listaxe"
         visible: "Engadir á listaxe"
         reset_read: "Restabelecer datos de lecturas"
-        make_public: "Facer público o tema"
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
       feature:
@@ -2663,8 +2673,6 @@ gl:
         rebake: "Reconstruír HTML"
         publish_page: "Publicación da páxina"
         unhide: "Non agochar"
-        change_owner: "Cambiar propietario"
-        grant_badge: "Conceder insignia"
         lock_post: "Bloquear publicación"
         lock_post_description: "evitar que o autor edite esta publicación"
         unlock_post: "Desbloquear a publicación"
@@ -2678,8 +2686,6 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
-        add_post_notice: "Engadir aviso do equipo"
-        change_post_notice: "Cambiar o aviso do equipo"
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
@@ -3496,7 +3502,6 @@ gl:
               description: "Os administradores poden ver todos os grupos."
             members_visibility_levels:
               title: "Quen pode ver os membros deste grupo?"
-              description: "Os administradores poden ver os membros de todos os grupos."
             publish_read_state: "Publicar nas mensaxes de grupo o estado de lectura de grupo"
           membership:
             automatic: Automático
@@ -4384,9 +4389,8 @@ gl:
         silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
-        delete_all_posts: "Eliminar todas as publicacións"
-        delete_posts_progress: "Eliminando publicacións..."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
+        post_edits: "Edicións publicadas"
         penalty_post_actions: "Que quere facer coa publicación asociada?"
         penalty_post_delete: "Eliminar a publicación"
         penalty_post_delete_replies: "Eliminar a publicación e todas as respostas"
@@ -4440,14 +4444,19 @@ gl:
         approve_success: "Usuario aprobado, enviouse unha mensaxe de correo coas instrucións de activación."
         approve_bulk_success: "Todos os usuarios seleccionados foron aprobados e notificados."
         time_read: "Tempo de lectura"
+        post_edits_count: "Edicións publicadas"
         anonymize: "Facer o usuario anónimo"
         anonymize_confirm: "Confirma que desexa converter esta conta en anónima? Cambiaranse o nome do usuario e o correo electrónico e reiniciarase toda a información do perfil."
         anonymize_yes: "Si, converter a conta en anónima"
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
         delete_posts:
+          button: "Eliminar todas as publicacións"
           progress:
             title: "Progreso na eliminación de publicacións"
+            description: "Eliminando publicacións..."
+          confirmation:
+            cancel: "Cancelar"
         merge:
           button: "Combinar"
           prompt:
@@ -4726,7 +4735,6 @@ gl:
           post_revision: "Cando un usuario edita ou crea unha publicación"
           trust_level_change: "Cando un usuario cambia o nivel de confianza"
           user_change: "Cando se crea ou edita un usuario"
-          post_processed: "Despois de procesar unha publicación"
         preview:
           link_text: "Visualizar as insignias concedidas"
           plan_text: "Visualizar con plan de consulta"
@@ -4843,7 +4851,5 @@ gl:
           moderator: "Moderador"
           regular: "Usuario normal"
       previews:
-        topic_title: "Tema de discusión"
-        font_title: "Tipo de letra %{font}"
         share_button: "Compartir"
         reply_button: "Responder"

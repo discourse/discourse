@@ -191,6 +191,16 @@ lt:
       few: "%{count} pranešimai"
       many: "%{count} pranešimų"
       other: "%{count} pranešimų"
+    "new-topic": |
+      Sveiki atvykę į %{site_name} &mdash; ** ačiū, kad pradėjote naują pokalbį! **
+
+      - Ar pavadinimas skamba įdomiai, jei jį skaitote garsiai? Ar tai gera santrauka?
+
+      - Kam tai būtų įdomu? Kodėl tai svarbu? Kokių atsakymų norite?
+
+      - Į savo temą įtraukite dažniausiai naudojamus žodžius, kad kiti galėtų * ją rasti. Norėdami sugrupuoti temą su susijusiomis temomis, pasirinkite kategoriją (arba žymą).
+
+      Daugiau [žr. Mūsų bendruomenės gaires] (%{base_path}/gairės). Šis skydelis bus rodomas tik pirmiesiems %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -641,6 +651,7 @@ lt:
         filename: Dokumento pavadinimas
         author: Autorius
   site_settings:
+    disabled: "uždrausta"
     send_welcome_message: "Siųskite visiems naujiems vartotojams sveikinimo pranešimą su greitu pradžios vadovu."
     dark_mode_none: "Nieko"
     embed_truncate: "Truncate the embedded posts."
@@ -1050,32 +1061,27 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Spalvos"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Peržiūrėti"
-      logos:
-        title: "Logotipas"
-        fields:
-          logo:
-            label: "Pirminis logotipas"
-      homepage:
-        title: "Pagrindinis puslapis"
-        fields:
           homepage_style:
             choices:
               latest:
                 label: "Naujausios temos"
               categories_only:
-                label: "Tik kategrijos"
+                label: "Tiktai Kategorijos"
               categories_with_featured_topics:
-                label: "Kategorijos su Išskirtinėmis temomis"
+                label: "Kategorijos su populiariomis temomis"
               categories_and_latest_topics:
-                label: "Kategorijos su Naujausiomis temomis"
+                label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
-                label: "Kategorijos su Top temomis"
+                label: "Kategorijos ir Top temos"
+      logos:
+        title: "Logotipas"
+        fields:
+          logo:
+            label: "Pirminis logotipas"
       invites:
         title: "Pakviesti valdytojus"
       finished:

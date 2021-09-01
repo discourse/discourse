@@ -187,7 +187,7 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_admin!(@user)
     @user.revoke_admin!
     StaffActionLogger.new(current_user).log_revoke_admin(@user)
-    render body: nil
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def grant_admin
@@ -199,21 +199,22 @@ class Admin::UsersController < Admin::AdminController
     guardian.ensure_can_revoke_moderation!(@user)
     @user.revoke_moderation!
     StaffActionLogger.new(current_user).log_revoke_moderation(@user)
-    render body: nil
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def grant_moderation
     guardian.ensure_can_grant_moderation!(@user)
     @user.grant_moderation!
     StaffActionLogger.new(current_user).log_grant_moderation(@user)
-    render_serialized(@user, AdminUserSerializer)
+    render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
   def add_group
     group = Group.find(params[:group_id].to_i)
-
     raise Discourse::NotFound unless group
+
     return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
+    guardian.ensure_can_edit!(group)
 
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
@@ -223,12 +224,14 @@ class Admin::UsersController < Admin::AdminController
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
-
     raise Discourse::NotFound unless group
-    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
-    group.remove(@user)
-    GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
+    guardian.ensure_can_edit!(group)
+
+    if group.remove(@user)
+      GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
+    end
 
     render body: nil
   end

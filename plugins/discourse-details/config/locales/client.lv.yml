@@ -6,5 +6,8 @@
 
 lv:
   js:
+    details:
+      title: Slēpt detaļas
     composer:
       details_title: Kopsavilkums
+      details_text: "Šis teksts tiks paslēpts"

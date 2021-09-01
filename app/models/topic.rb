@@ -190,8 +190,9 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
-      Guardian.new.can_edit_featured_link?(category_id)
+    if featured_link_changed? && !Guardian.new(user).can_edit_featured_link?(category_id)
+      errors.add(:featured_link)
+    end
   end
 
   before_validation do
@@ -463,7 +464,7 @@ class Topic < ActiveRecord::Base
   # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since, opts = nil)
     opts = opts || {}
-    score = "#{ListController.best_period_for(since)}_score"
+    period = ListController.best_period_for(since)
 
     topics = Topic
       .visible
@@ -483,8 +484,12 @@ class Topic < ActiveRecord::Base
     end
 
     if !!opts[:top_order]
-      topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
-        .order(TopicQuerySQL.order_top_with_notification_levels(score))
+      topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id").order(<<~SQL)
+          COALESCE(topic_users.notification_level, 1) DESC,
+          COALESCE(category_users.notification_level, 1) DESC,
+          COALESCE(top_topics.#{TopTopic.score_column_for_period(period)}, 0) DESC,
+          topics.bumped_at DESC
+      SQL
     end
 
     if opts[:limit]

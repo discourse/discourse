@@ -394,7 +394,6 @@ ur:
               target_user_not_found: "جن صارفین کو آپ یہ پیغام بھیج رہے ہیں اُن میں سے ایک نہ مل سکا۔"
             featured_link:
               invalid: "غلط ہے۔ URL میں http:// یا https:// شامل ہونا چاہئے۔"
-              invalid_category: "اِس زُمرہ میں ترمیم نہیں کیا جا سکتا۔"
         user:
           attributes:
             password:
@@ -1144,6 +1143,7 @@ ur:
     out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
     unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
   site_settings:
+    disabled: "غیر فعال"
     censored_words: "الفاظ جو خود بخود &#9632;&#9632;&#9632;&#9632; سے تبدیل ہوجائیں گے"
     delete_old_hidden_posts: "کوئی چھپی ہوئی پوسٹ جو 30 دن سے زائد عرصہ سے چھپا رکھی ہو اُس کو خود کار طریقے سے حذف کر دیں۔"
     default_locale: "اِس ڈِسکورس سَیٹ اپ کی پہلے سے طہ شدہ زبان۔ آپ سسٹم کی طرف سے بنائے گئے زُمرہ جات اور ٹاپکس کے متن کو <a href='%{base_path}/admin/customize/site_texts' target='_blank'>مرضی کے مطابق / ٹَیکسٹ</a> پر تبدیل کر سکتے ہیں۔"
@@ -2119,49 +2119,15 @@ ur:
     backup_succeeded:
       title: "بیک اَپ کامیاب"
       subject_template: "بیک اَپ کامیابی سے مکمل کر لیا گیا"
-      text_body_template: |
-        بیک اَپ کامیاب ہو گیا تھا۔
-
-        اپنا نیا بیک اَپ ڈاؤن لوڈ کرنے کیلئے [ایڈمن > بیک اَپ سیکشن](%{base_url}/admin/backups) ملاحظہ کریں۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "بیک اَپ ناکام"
       subject_template: "بیک اَپ ناکام ہو گیا"
-      text_body_template: |
-        بیک اَپ ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "رِیسٹور کامیاب"
       subject_template: "رِیسٹور کامیابی سے مکمل ہو گیا"
-      text_body_template: |
-        رِیسٹور کامیاب ہو گیا تھا۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "رِیسٹور ناکام"
       subject_template: "رِیسٹور ناکام ہو گیا"
-      text_body_template: |
-        رِیسٹور ناکام ہو گیا ہے۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "بَلک مدعو کامیاب"
       subject_template: "بَلک صارف دعوت ناموں پر کامیابی سے عملدرآمد ہو گیا"
@@ -3369,12 +3335,26 @@ ur:
           city_for_disputes:
             label: "تنازعات کیلئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
-      colors:
-        title: "رنگ"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "پیشگی دیکھیں"
+          homepage_style:
+            choices:
+              latest:
+                label: "تازہ ترین ٹاپک"
+              categories_only:
+                label: "صرف زمرہ جات"
+              categories_with_featured_topics:
+                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
+              categories_and_latest_topics:
+                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
+              categories_and_top_topics:
+                label: "زمرہ جات اور ٹاپ ٹاپکس"
+              categories_boxes:
+                label: "زُمرَہ جات بکسے"
+              categories_boxes_with_topics:
+                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       logos:
         title: "لَوگَو"
         fields:
@@ -3393,26 +3373,6 @@ ur:
           large_icon:
             label: "بڑا آئیکن"
             description: "آئیکن کی تصویر جو جدید ڈِیوائیسِز پر آپ کی ویب سائٹ کی نمائندگی کرنے کیلئے استعمال کی جاتی ہے اور جو بڑے سائزوں پر اچھی لگتی ہے۔ مثالی طور پر 512 × 512 سے زائد۔ ہم ڈیفالٹ کے طور پر چکور لَوگَو استعمال کریں گے۔"
-      homepage:
-        description: "ہم آپ کے ہَوم پَیج پر تازہ ترین ٹاپک پیش کرنے کو تجویز کرتے ہیں، لیکن اگر آپ چاہیں تو ہَوم پَیج پر زُمرہ جات (ٹاپکس کے گروپوں) کو بھی دکھا سکتے ہیں۔"
-        title: "ہَوم پَیج"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "تازہ ترین ٹاپک"
-              categories_only:
-                label: "صرف زمرہ جات"
-              categories_with_featured_topics:
-                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
-              categories_and_latest_topics:
-                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
-              categories_and_top_topics:
-                label: "زمرہ جات اور ٹاپ ٹاپکس"
-              categories_boxes:
-                label: "زُمرَہ جات بکسے"
-              categories_boxes_with_topics:
-                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       invites:
         title: "سٹاف مدعو کریں"
         description: "آپ تقریباً کام مکمل کر چکے ہیں! چلیے لوگوں کو دعوت دیتے ہیں کہ <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>آپ کے مباحثوں میں</a> دلچسپ ٹاپک اور جوابات شامل کرنے میں آپ کی مدد کریں تاکہ آپ کی کمیونٹی کا آغاز ہو سکے۔"

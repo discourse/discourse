@@ -156,7 +156,7 @@ class SessionController < ApplicationController
 
     if !sso.nonce_valid?
       if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
+        Rails.logger.warn("Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}")
       end
       return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end

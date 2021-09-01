@@ -9,6 +9,8 @@ RSpec.describe TopicsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:trust_level_0) { Fabricate(:trust_level_0) }
+  fab!(:trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
   fab!(:category) { Fabricate(:category) }
@@ -1470,6 +1472,18 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
             expect(topic.tags).to eq([])
           end
+
+          it 'does not cause a revision when tags have not changed' do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: [tag.name]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(0)
+
+            expect(response.status).to eq(200)
+          end
         end
 
         context 'when topic is private' do
@@ -1636,6 +1650,60 @@ RSpec.describe TopicsController do
             expect(topic.reload.category).to eq(category)
           end
         end
+      end
+    end
+
+    describe "featured links" do
+      def fabricate_topic(user, category = nil)
+        topic = Fabricate(:topic, user: user, category: category)
+        Fabricate(:post, topic: topic)
+        topic
+      end
+
+      it "allows to update topic featured link" do
+        sign_in(trust_level_1)
+
+        topic = fabricate_topic(trust_level_1)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow TL0 users to update topic featured link" do
+        sign_in(trust_level_0)
+
+        topic = fabricate_topic(trust_level_0)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to update topic featured link if featured links are disabled in settings" do
+        sign_in(trust_level_1)
+
+        SiteSetting.topic_featured_link_enabled = false
+        topic = fabricate_topic(trust_level_1)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to update topic featured link in the category with forbidden feature links" do
+        sign_in(trust_level_1)
+
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        topic = fabricate_topic(trust_level_1, category)
+        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
       end
     end
   end
@@ -2438,6 +2506,17 @@ RSpec.describe TopicsController do
         body = response.body
         expect(body).to have_tag(:meta, with: { name: 'description', content: '[image_description]' })
       end
+
+      it "uses image cdn url for schema markup" do
+        set_cdn_url("http://cdn.localhost")
+        post = Fabricate(:post_with_uploaded_image)
+        cpp = CookedPostProcessor.new(post).update_post_image
+
+        get post.topic.url
+
+        body = response.body
+        expect(body).to have_tag(:link, with: { itemprop: 'image', href: post.image_url })
+      end
     end
   end
 
@@ -2815,6 +2894,134 @@ RSpec.describe TopicsController do
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
+      context "private message" do
+        fab!(:user_2) { Fabricate(:user) }
+
+        fab!(:group) do
+          Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+            g.add(user_2)
+          end
+        end
+
+        fab!(:group_message) do
+          create_post(
+            user: user,
+            target_group_names: [group.name],
+            archetype: Archetype.private_message
+          ).topic
+        end
+
+        fab!(:private_message) do
+          create_post(
+            user: user,
+            target_usernames: [user_2.username],
+            archetype: Archetype.private_message
+          ).topic
+        end
+
+        fab!(:private_message_2) do
+          create_post(
+            user: user,
+            target_usernames: [user_2.username],
+            archetype: Archetype.private_message
+          ).topic
+        end
+
+        fab!(:group_pm_topic_user) do
+          TopicUser.find_by(user: user_2, topic: group_message).tap do |tu|
+            tu.update!(last_read_post_number: 1)
+          end
+        end
+
+        fab!(:regular_pm_topic_user) do
+          TopicUser.find_by(user: user_2, topic: private_message).tap do |tu|
+            tu.update!(last_read_post_number: 1)
+          end
+        end
+
+        fab!(:regular_pm_topic_user_2) do
+          TopicUser.find_by(user: user_2, topic: private_message_2).tap do |tu|
+            tu.update!(last_read_post_number: 1)
+          end
+        end
+
+        before do
+          create_post(user: user, topic: group_message)
+          create_post(user: user, topic: private_message)
+          create_post(user: user, topic: private_message_2)
+          sign_in(user_2)
+        end
+
+        it "can dismiss all user and group private message topics" do
+          expect do
+            put "/topics/bulk.json", params: {
+              filter: "unread",
+              operation: { type: 'dismiss_posts' },
+              private_message_inbox: "all"
+            }
+
+            expect(response.status).to eq(200)
+          end.to change { group_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+            .and change { regular_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+        end
+
+        it "can dismiss all user unread private message topics" do
+          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+            expect do
+              put "/topics/bulk.json", params: {
+                filter: "unread",
+                operation: { type: 'dismiss_posts' },
+                private_message_inbox: "user"
+              }
+
+              expect(response.status).to eq(200)
+            end.to change { regular_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+              .and change { regular_pm_topic_user_2.reload.last_read_post_number }.from(1).to(2)
+
+            expect(group_pm_topic_user.reload.last_read_post_number).to eq(1)
+          end
+        end
+
+        it "returns the right response when trying to dismiss private messages of an invalid group" do
+          put "/topics/bulk.json", params: {
+            filter: "unread",
+            operation: { type: 'dismiss_posts' },
+            private_message_inbox: "group",
+            group_name: 'randomgroup'
+          }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns the right response when trying to dismiss private messages of a restricted group" do
+          sign_in(user)
+
+          put "/topics/bulk.json", params: {
+            filter: "unread",
+            operation: { type: 'dismiss_posts' },
+            private_message_inbox: "group",
+            group_name: group.name
+          }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "can dismiss all group unread private message topics" do
+          expect do
+            put "/topics/bulk.json", params: {
+              filter: "unread",
+              operation: { type: 'dismiss_posts' },
+              private_message_inbox: "group",
+              group_name: group.name
+            }
+
+            expect(response.status).to eq(200)
+          end.to change { group_pm_topic_user.reload.last_read_post_number }.from(1).to(2)
+
+          expect(regular_pm_topic_user.reload.last_read_post_number).to eq(1)
+        end
+      end
+
       it "can find unread" do
         # mark all unread muted
         put "/topics/bulk.json", params: {
@@ -3044,6 +3251,53 @@ RSpec.describe TopicsController do
         end.to change {
           DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
         }.by(4)
+      end
+
+      context "when tracked=false" do
+        it "updates the user_stat new_since column and dismisses all the new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+          old_new_since = user.user_stat.new_since
+
+          put "/topics/reset-new.json?tracked=false"
+          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
+          expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+        end
+
+        it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+
+          dismiss_ids = topic_ids[0..1]
+          other_ids = topic_ids[2..-1].sort.reverse
+
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+
+          expect { put "/topics/reset-new.json?tracked=false" }.to change {
+            DismissedTopicUser.where(user_id: user.id).count
+          }.by(5)
+        end
       end
     end
 
@@ -3640,11 +3894,11 @@ RSpec.describe TopicsController do
         it "should attach group to the invite" do
           post "/t/#{group_private_topic.id}/invite.json", params: {
             user: recipient,
-            group_ids: "#{group.id},123"
+            group_ids: "#{group.id},9999999"
           }
 
           expect(response.status).to eq(200)
-          expect(Invite.find_by(email: recipient).groups).to eq([group])
+          expect(Invite.find_by(email: recipient).groups).to contain_exactly(group)
         end
 
         describe 'when group is available to automatic groups only' do
@@ -4056,6 +4310,147 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(topic.reload.bumped_at).to eq_time(timestamp)
       end
+    end
+  end
+
+  describe '#private_message_reset_new' do
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+        g.add(user_2)
+      end
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    fab!(:private_message) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    fab!(:private_message_2) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    before do
+      sign_in(user_2)
+    end
+
+    it 'returns the right response when inbox param is missing' do
+      put "/topics/pm-reset-new.json"
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns the right response when trying to reset new private messages of an invalid group" do
+      put "/topics/pm-reset-new.json", params: {
+        inbox: "group",
+        group_name: "randomgroup"
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns the right response when trying to reset new private messages of a restricted group" do
+      sign_in(user)
+
+      put "/topics/pm-reset-new.json", params: {
+        inbox: "group",
+        group_name: group.name
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "can reset all new group private messages" do
+      put "/topics/pm-reset-new.json", params: {
+        inbox: "group",
+        group_name: group.name
+      }
+
+      expect(response.status).to eq(200)
+
+      expect(DismissedTopicUser.count).to eq(1)
+
+      expect(DismissedTopicUser.exists?(topic: group_message, user: user_2))
+        .to eq(true)
+    end
+
+    it "can reset new personal private messages" do
+      put "/topics/pm-reset-new.json", params: {
+        inbox: "user",
+      }
+
+      expect(response.status).to eq(200)
+
+      expect(DismissedTopicUser.count).to eq(2)
+
+      expect(DismissedTopicUser.exists?(user: user_2, topic: [
+        private_message,
+        private_message_2
+      ])).to eq(true)
+    end
+
+    it 'can reset new personal and group private messages' do
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        put "/topics/pm-reset-new.json", params: {
+          inbox: "all",
+        }
+
+        expect(response.status).to eq(200)
+
+        expect(DismissedTopicUser.count).to eq(3)
+
+        expect(DismissedTopicUser.exists?(user: user_2, topic: [
+          private_message,
+          private_message_2,
+          group_message
+        ])).to eq(true)
+      end
+    end
+
+    it 'returns the right response is topic_ids params is not valid' do
+      put "/topics/pm-reset-new.json", params: {
+        topic_ids: '1'
+      }
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'can reset new private messages from given topic ids' do
+      put "/topics/pm-reset-new.json", params: {
+        topic_ids: [group_message.id, '12345']
+      }
+
+      expect(response.status).to eq(200)
+
+      expect(DismissedTopicUser.count).to eq(1)
+
+      expect(DismissedTopicUser.exists?(topic: group_message, user: user_2))
+        .to eq(true)
+
+      put "/topics/pm-reset-new.json", params: {
+        topic_ids: [private_message.id, '12345']
+      }
+
+      expect(response.status).to eq(200)
+
+      expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
+        .to eq(true)
     end
   end
 end

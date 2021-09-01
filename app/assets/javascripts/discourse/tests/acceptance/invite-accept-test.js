@@ -451,3 +451,30 @@ acceptance(
     });
   }
 );
+
+acceptance(
+  "Invite link with authentication data, and associate link",
+  function (needs) {
+    needs.settings({ enable_local_logins: false });
+
+    setAuthenticationData(needs.hooks, {
+      auth_provider: "facebook",
+      email: "blah@example.com",
+      email_valid: true,
+      username: "foobar",
+      name: "barfoo",
+      associate_url: "/associate/abcde",
+    });
+
+    test("shows the associate link", async function (assert) {
+      preloadInvite({ link: true });
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.ok(
+        exists(".create-account-associate-link"),
+        "shows the associate account link"
+      );
+    });
+  }
+);

@@ -212,8 +212,9 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-message-button");
 
     assert.equal(count("#reply-control"), 1, "it opens the composer");
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      queryAll("#private-message-users .selected-name").text().trim(),
+      privateMessageUsers.header().value(),
       "discourse",
       "it prefills the group name"
     );
@@ -240,6 +241,12 @@ acceptance("Group - Authenticated", function (needs) {
       queryAll(".topic-list-item .link-top-line").text().trim(),
       "This is a private message 1",
       "it should display the list of group topics"
+    );
+
+    await click("#search-button");
+    assert.ok(
+      exists(".search-context input:checked"),
+      "scope to message checkbox is checked"
     );
   });
 

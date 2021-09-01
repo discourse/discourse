@@ -70,7 +70,7 @@ module Stylesheet
               end
 
               target = nil
-              target_match = long.match(/admin|desktop|mobile|publish/)
+              target_match = long.match(/admin|desktop|mobile|publish|wizard/)
               if target_match&.length
                 target = target_match[0]
               end

@@ -288,6 +288,7 @@ el:
     copy_codeblock:
       copied: "αντιγράφηκε!"
     drafts:
+      label: "Προσχέδια"
       resume: "Βιογραφικό"
       remove: "Αφαίρεση"
       new_topic: "Νέο προσχέδιο θέματος"
@@ -295,6 +296,9 @@ el:
       abandon:
         yes_value: "Απόρριψη"
     topic_count_latest:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
+    topic_count_unseen:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
     topic_count_unread:
@@ -980,9 +984,17 @@ el:
         warnings_received: "προειδοποιήσεις"
         rejected_posts: "απορριφθείσες αναρτήσεις"
       messages:
-        all: "Όλα"
         inbox: "Εισερχόμενα"
+        latest: "Πρόσφατες"
         sent: "Απεσταλμένα"
+        unread: "Αδιάβαστα"
+        unread_with_count:
+          one: "Μη αναγνωσμένα (%{count})"
+          other: "Μη αναγνωσμένα (%{count})"
+        new: "Νέα"
+        new_with_count:
+          one: "Νέα (%{count})"
+          other: "Νέα (%{count})"
         archive: "Αρχείο"
         groups: "Οι Ομάδες Μου"
         move_to_inbox: "Μετακίνηση στα Εισερχόμενα"
@@ -1571,6 +1583,7 @@ el:
         one: "+ %{count} υποκατηγορία"
         other: "+ %{count} υποκατηγορίες"
     select_kit:
+      delete_item: "Διαγραφή %{name}"
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
@@ -1929,11 +1942,9 @@ el:
         dismiss_new: "Αγνόησε τα νέα"
         toggle: "εναλλαγή μαζικής επιλογής νημάτων"
         actions: "Μαζικές Ενέργειες"
-        change_category: "Θέσε Κατηγορία"
         close_topics: "Κλείσιμο Νημάτων"
         archive_topics: "Αρχειοθέτηση Νημάτων"
         move_messages_to_inbox: "Μετακίνηση στα Εισερχόμενα"
-        notification_level: "Ειδοποιήσεις"
         choose_new_category: "Διάλεξε νέα κατηγορία για τα νήματα:"
         selected:
           one: "Έχεις διαλέξει <b>%{count}</b> νήμα."
@@ -2162,7 +2173,6 @@ el:
         invisible: "Απόκρυψη Νήματος"
         visible: "Εμφάνιση Νήματος"
         reset_read: "Μηδενισμός Διαβασμένων"
-        make_public: "Κάνε Δημόσιο το Νήμα"
         make_private: "Κάνε προσωπικό μήνυμα"
         reset_bump_date: "Επαναφορά ημερομηνίας ώθησης"
       feature:
@@ -2423,8 +2433,6 @@ el:
         rebake: "Ανανέωση HTML"
         publish_page: "Δημοσίευση σελίδας"
         unhide: "Επανεμφάνιση"
-        change_owner: "Αλλαγή Ιδιοκτησίας"
-        grant_badge: "Απονομή Παράσημου"
         lock_post: "Κλείδωμα ανάρτησης"
         lock_post_description: "αποτρέψτε τον συντάκτη από την επεξεργασία αυτής της ανάρτησης"
         unlock_post: "Ξεκλείδωμα ανάρτησης"
@@ -2432,7 +2440,6 @@ el:
         delete_topic_disallowed_modal: "Δεν έχετε άδεια διαγραφής αυτού του θέματος. Εάν θέλετε πραγματικά να διαγραφεί, υποβάλετε μια επισήμανση για προσοχή από συντονιστή μαζί με το σκεπτικό."
         delete_topic_disallowed: "δεν έχετε άδεια να διαγράψετε αυτό το θέμα"
         delete_topic: "διαγραφή νήματος"
-        add_post_notice: "Προσθήκη ειδοποίησης προσωπικού"
         remove_timer: "αφαίρεση χρονοδιακόπτη"
       actions:
         people:
@@ -3201,7 +3208,6 @@ el:
               description: "Οι διαχειριστές μπορούν να δουν όλες τις ομάδες."
             members_visibility_levels:
               title: "Ποιος μπορεί να δει τα μέλη αυτής της ομάδας;"
-              description: "Οι διαχειριστές μπορούν να δουν τα μέλη όλων των ομάδων."
             publish_read_state: "Σε ομαδικά μηνύματα δημοσιεύστε την ομαδική κατάσταση ανάγνωσης"
           membership:
             automatic: Αυτόματα
@@ -4031,8 +4037,6 @@ el:
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
-        delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
-        delete_posts_progress: "Διαγραφή αναρτήσεων..."
         delete_posts_failed: "Παρουσιάστηκε πρόβλημα κατά τη διαγραφή των αναρτήσεων."
         penalty_post_actions: "Τι θα θέλατε να κάνετε με τη σχετική ανάρτηση;"
         penalty_post_delete: "Διαγραφή ανάρτησης"
@@ -4090,6 +4094,12 @@ el:
         anonymize_yes: "Ναι, ανωνυμοποίησε αυτόν τον λογαριασμό"
         anonymize_failed: "Παρουσιάστηκε ένα σφάλμα κατά την ανωνυμοποίηση του λογαριασμού."
         delete: "Διαγραφή χρήστη"
+        delete_posts:
+          button: "Σβήσε όλες τις αναρτήσεις"
+          progress:
+            description: "Διαγραφή αναρτήσεων..."
+          confirmation:
+            cancel: "Άκυρο"
         merge:
           button: "Συγχώνευση"
           prompt:
@@ -4351,7 +4361,6 @@ el:
           post_revision: "Όταν ένας χρήστης επεξεργάζεται ή δημιουργεί μια ανάρτηση"
           trust_level_change: "Όταν το επίπεδο εμπιστοσύνης ενός χρήστη αλλάξει"
           user_change: "Όταν ένας χρήστης δημιουργείται ή υφίσταται επεξεργασία "
-          post_processed: "Αφού μια ανάρτηση έχει δεχτεί επεξεργασία"
         preview:
           link_text: "Προεπισκόπηση απονεμηθέντων παράσημων"
           plan_text: "Προεπισκόπηση του ερωτήματος"
@@ -4468,6 +4477,5 @@ el:
           moderator: "Συντονιστής"
           regular: "Τακτικός χρήστης"
       previews:
-        topic_title: "Θέμα συζήτησης"
         share_button: "Κοινοποίηση"
         reply_button: "Απάντηση"

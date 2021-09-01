@@ -1,19 +1,21 @@
-{{#if icons}}
-  <div class="future-date-input-selector-icons">
-    {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
-  </div>
-{{/if}}
+<div class="select-kit-header-wrapper">
+  {{#if icons}}
+    <div class="future-date-input-selector-icons">
+      {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+    </div>
+  {{/if}}
 
-{{component selectKit.options.selectedNameComponent
-  tabindex=tabindex
-  item=selectedContent
-  selectKit=selectKit
-}}
+  {{component selectKit.options.selectedNameComponent
+    tabindex=tabindex
+    item=selectedContent
+    selectKit=selectKit
+  }}
 
-{{#if selectedContent.datetime}}
-  <span class="future-date-input-selector-datetime">
-    {{selectedContent.datetime}}
-  </span>
-{{/if}}
+  {{#if selectedContent.datetime}}
+    <span class="future-date-input-selector-datetime">
+      {{selectedContent.datetime}}
+    </span>
+  {{/if}}
 
-{{d-icon caretIcon class="caret-icon"}}
+  {{d-icon caretIcon class="caret-icon"}}
+</div>

@@ -102,6 +102,7 @@ acceptance("Composer", function (needs) {
     const event = document.createEvent("Event");
     event.initEvent("keydown", true, true);
     event[mac ? "metaKey" : "ctrlKey"] = true;
+    event.key = "B";
     event.keyCode = 66;
 
     run(() => textarea.dispatchEvent(event));
@@ -749,12 +750,8 @@ acceptance("Composer", function (needs) {
       await click("button.compose-pm");
       await click(".modal .btn-default");
 
-      assert.equal(
-        queryAll("#private-message-users .selected-name:nth-of-type(1)")
-          .text()
-          .trim(),
-        "codinghorror"
-      );
+      const privateMessageUsers = selectKit("#private-message-users");
+      assert.equal(privateMessageUsers.header().value(), "codinghorror");
     } finally {
       toggleCheckDraftPopup(false);
     }
@@ -998,5 +995,16 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "@staff");
     assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
+  });
+
+  test("Does not save invalid draft", async function (assert) {
+    this.siteSettings.min_first_post_length = 20;
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "Something");
+    await fillIn(".d-editor-input", "Something");
+    await click(".save-or-cancel .cancel");
+    assert.notOk(exists(".discard-draft-modal .save-draft"));
   });
 });

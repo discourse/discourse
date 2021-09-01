@@ -54,6 +54,14 @@
     canCreateTopicOnTag=canCreateTopicOnTag
   }}
 
+  {{plugin-outlet name="after-create-topic-button" tagName=""
+    args=(hash
+      canCreateTopic=canCreateTopic
+      createTopicDisabled=createTopicDisabled
+      createTopicLabel=createTopicLabel
+      category=category)
+  }}
+
   {{#if category}}
     {{#unless tag}}
       {{!-- don't show category notification menu on tag pages --}}

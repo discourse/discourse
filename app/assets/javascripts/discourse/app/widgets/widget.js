@@ -38,6 +38,10 @@ export function decorateWidget(widgetName, cb) {
 }
 
 export function traverseCustomWidgets(tree, callback) {
+  if (!tree) {
+    return;
+  }
+
   if (tree.__type === "CustomWidget") {
     callback(tree);
   }
@@ -143,6 +147,11 @@ export default class Widget {
     this.store = register.lookup("service:store");
     this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
+
+    // We can inject services into widgets by passing a `services` parameter on creation
+    (this.services || []).forEach((s) => {
+      this[s] = register.lookup(`service:${s}`);
+    });
 
     this.init(this.attrs);
 

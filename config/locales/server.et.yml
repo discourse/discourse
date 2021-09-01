@@ -255,7 +255,6 @@ et:
               no_user_selected: "Pead valima sobiva kasutaja."
             featured_link:
               invalid: "on vigane. URL peab sisaldama http:// või https://."
-              invalid_category: "ei saa selles foorumis redigeerida."
         user:
           attributes:
             password:
@@ -739,6 +738,7 @@ et:
   dashboard:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
+    disabled: "välja lülitatud"
     min_post_length: "Lühim lubatud postituse pikkus"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
@@ -1061,25 +1061,10 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-      colors:
-        title: "Värvid"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Eelvaade"
-      logos:
-        title: "Logod"
-        fields:
-          logo:
-            label: "Peamine logo"
-      icons:
-        title: "Ikoonid"
-        fields:
-          large_icon:
-            label: "Suur ikoon"
-      homepage:
-        title: "Avaleht"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1090,6 +1075,16 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
+      logos:
+        title: "Logod"
+        fields:
+          logo:
+            label: "Peamine logo"
+      icons:
+        title: "Ikoonid"
+        fields:
+          large_icon:
+            label: "Suur ikoon"
       invites:
         title: "Kutsu meeskonda"
       finished:

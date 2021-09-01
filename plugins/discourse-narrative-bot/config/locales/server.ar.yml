@@ -12,6 +12,7 @@ ar:
     discourse_narrative_bot_disable_public_replies: "إيقاف الردود العامة من Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "نوع المنشور الترحيبي المفترض أن يُرسله Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_delay: "انتظر (ن) ثانية قبل إرسال المنشور الترحيبي من Discourse Narrative Bot."
+    discourse_narrative_bot_skip_tutorials: "تخطي روبوتات Discourse التعليمية"
   badges:
     certified:
       name: معتمد
@@ -24,6 +25,11 @@ ar:
       long_description: |
         يتم منح هذه الشارة عند الانتهاء بنجاح من الدرس التعليمي التفاعلي المتقدم للمستخدم. لقد أتقنت استخدام الأدوات المتقدمة للمناقشة - وأصبحت الآن مرخَّصًا بالكامل!
   discourse_narrative_bot:
+    bio: "مرحبًا، أنا لست شخصًا حقيقيًا. أنا روبوت يمكنه تعليمك طريقة استخدام هذا الموقع. للتفاعل معي، أرسل إليَّ رسالة أو قم بالإشارة إلى اسمي."
+    tl2_promotion_message:
+      subject_template: "الآن وبعد أن تمت ترقيتك، حان الوقت للتعرُّف على بعض الميزات المتقدمة!"
+      text_body_template: |
+        يمكنك الرد على هذه الرسالة بكتابة "@%{discobot_username} %{reset_trigger}" لمعرفة المزيد عما يمكنك فعله.
     timeout:
       message: |-
         مرحبًا @%{username}، نُرسل إليك لأننا لم نسمع منك منذ فترة.
@@ -39,6 +45,13 @@ ar:
       trigger: "رمي النرد"
       invalid: |-
         عذرًا، من المستحيل رياضيًا الحصول على هذه التركيبة في النرد. :confounded:
+      not_enough_dice:
+        zero: "لدي %{count} حجر نرد فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        one: "لدي حجر نرد واحد (%{count}) فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        two: "لدي حجرَي نرد (%{count}) فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        few: "لدي %{count} أحجار نرد فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        many: "لدي فقط %{count} حجر نرد. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
+        other: "لدي فقط %{count} حجر نرد. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
       out_of_range: |-
         هل تعلم أن [أقصى عدد من الجوانب](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) في نرد عادل رياضيًا هو 120؟
       results: |-
@@ -109,6 +122,21 @@ ar:
       random_mention:
         reply: |-
           أهلًا! لمعرفة ما يمكنني فعله، قُل `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          أعرف حاليًا كيفية القيام بالأشياء التالية:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > يبدأ درسًا تعليميًا تفاعليًا من أجلك أنت فقط، في رسالة خاصة. يمكن أن يكون `{name-of-tutorial}` واحد من: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3، 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: يمكنك الاعتماد عليه
+        discobot_disabled: لقد أوقفتني في تفضيلاتك. عليك السماح بعرض نصائح إعداد المستخدم الجديد للتفاعل معي.
       do_not_understand:
         first_response: |-
           مرحبًا، شكرًا على الرد!
@@ -127,14 +155,54 @@ ar:
       cert_title: "تقديرًا لإكمال الدرس التعليمي للمستخدم الجديد بنجاح"
       hello:
         title: "تحياتنا!"
+        message: |-
+          شكرًا على انضمامك إلى %{title}، ومرحبًا بك!
+
+          - أنا مجرد روبوت، لكن [فريق العمل](%{base_uri}/about) موجود أيضًا لمساعدتك إذا كنت بحاجة إلى التواصل مع شخص.
+
+          - لأسباب تتعلق بالسلامة، نقيِّد مؤقتًا ما يمكن للمستخدمين الجُدد القيام به. ستحصل على [قدرات جديدة](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (و[شارات](%{base_uri}/badges)) ونحن نتعرَّف عليك.
+
+          - إننا نؤمن [بالسلوك المتحضر للمجتمع](%{base_uri}/guidelines) في جميع الأوقات.
       onebox:
+        instructions: |-
+          بعد ذلك، هل يمكنك مشاركة أحد هذه الروابط معي؟ قم بالرد **برابط في سطر بمفرده**، وسيتم توسيعه تلقائيًا ليشمل ملخصًا أنيقًا.
+
+          لنسخ أي رابط، انقر مع الاستمرار على الهاتف الجوَّال، أو انقر بزر الماوس الأيمن:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          رائع! سيعمل ذلك مع معظم <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> الروابط. تذكَّر أنه يجب أن يكون في سطر _بمفرده_ دون أي شيء آخر أمامه أو خلفه.
         not_found: "عذرًا، لم أتمكن من العثور على الرابط في ردك! :cry:\n\nهل يمكنك محاولة إضافة الرابط التالي، في السطر الخاص به، في ردك التالي؟\n \n<https://en.wikipedia.org/wiki/Exotic_Shorthair>"
       images:
+        instructions: |-
+          هذه صورة لأحادي القرن:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          إذا أعجبتك، فتابع واضغط على زر الإعجاب :heart: الموجود أسفل هذا المنشور لإخباري بذلك.
+
+          هل يمكنك **الرد بصورة؟** أي صورة ستفي بالغرض! اسحبها وأفلتها، أو اضغط على زر التحميل، أو انسخها والصقها.
         reply: |-
           صورة رائعة - لقد ضغطت على الزر :heart: لإعلامك بمدى تقديري لها :heart_eyes:
         like_not_found: |-
           هل نسيت تسجيل إعجابك :heart: [بمنشوري؟](%{url}) :crying_cat_face:
+        not_found: |-
+          يبدو أنك لم تحمِّل صورة؛ لذا فقد اخترت صورة أنا _متأكد_ من أنك ستستمتع بها.
+
+          <%{image_url}>
+
+          حاول تحميل تلك الصورة بعد ذلك، أو لصق الرابط في سطر بمفرده!
       likes:
+        instructions: |-
+          هذه صورة لأحادي القرن:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          إذا أعجبتك، فتابع واضغط على زر الإعجاب :heart: الموجود أسفل هذا المنشور لإخباري بذلك.
+        reply: |-
+          شكرًا على تسجيل إعجابك بمنشوري!
         not_found: |-
           هل نسيت تسجيل إعجابك :heart: [بمنشوري؟](%{url}) :crying_cat_face:
       formatting:
@@ -158,9 +226,32 @@ ar:
           حسنًا، يبدو أنك لم تقتبس مني في ردك؟
 
           سيؤدي تحديد أي نص في رسالتي إلى إظهار الزر <kbd>**اقتباس**</kbd>. ويمكن أيضًا الضغط على **الرد** مع تحديد أي نص! هل يمكنك إعادة المحاولة؟
+      bookmark:
+        instructions: |-
+          إذا كنت ترغب في معرفة المزيد، فحدِّد <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> أدناه و<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ضع إشارة مرجعية على هذه الرسالة الخاصة**. إذا فعلت ذلك، فقد تحصل على :gift: في مستقبلك!
+        reply: |-
+          ممتاز! يمكنك الآن العثور طريق للعودة إلى محادثتنا الخاصة بسهولة في أي وقت، مباشرةً من [علامة تبويب الإشارات المرجعية في ملفك الشخصي](%{bookmark_url}). ما عليك سوى تحديد صورة ملفك الشخصي في الجزء العلوي الأيسر &#8599;
+        not_found: |-
+          عذرًا، لا أرى أي إشارات مرجعية في هذا الموضوع. هل وجدت الإشارة المرجعية تحت كل منشور؟ استخدم "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن الإجراءات الإضافية إذا لزم الأمر.
       emoji:
+        instructions: |-
+          ربما رأيتني أستخدم صورًا صغيرة في ردودي :blue_car::dash: تُسمَّى هذه الصور [رموز تعبيرية](https://en.wikipedia.org/wiki/Emoji). هل يمكنك**إضافة رمز تعبيري** إلى ردك؟ سيعمل أي مما يلي:
+
+          - Type `:) ;) :D :P :O`
+
+          - اكتب النقطتَين <kbd>:</kbd> ثم أكمل اسم الرمز التعبيري `:tada:`
+
+          - اضغط على زر الرموز التعبيرية <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">في المحرِّر أو في لوحة مفاتيح هاتفك الجوَّال
         reply: |-
           هذا :sparkles: _رائع!_ :sparkles:
+        not_found: |-
+          عذرًا، لا أرى أي رموز تعبيرية في ردك؟ أوه لا! :sob:
+
+          جرِّب كتابة نقطتين <kbd>:</kbd> لفتح منتقي الرموز التعبيرية، ثم اكتب الأحرف القليلة الأولى لما تريد، مثل `:bird:`
+
+           أو اضغط على زر الرموز التعبيرية <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> في المحرِّر.
+
+          (إذا كنت تستخدم جهازًا جوَّالًا، يمكنك أيضًا إدخال الرموز التعبيرية من لوحة المفاتيح مباشرةً.)
       mention:
         instructions: |-
           قد ترغب أحيانًا في جذب انتباه أحد الأشخاص، حتى إذا كنت لا ترد عليه مباشرةً. اكتب `@` ثم أكمل اسم المستخدم الخاص به للإشارة إليه.
@@ -172,7 +263,28 @@ ar:
           لا أرى اسمي هناك في أي مكان :frowning: هل يمكنك محاولة الإشارة إليَّ باستخدام الاسم `@%{discobot_username}` مرة أخرى؟
 
           (ونعم، اسم المستخدم الخاص بي هو _disco_، كما في جنون الرقص في السبعينيات. أنا [أحب الحياة الليلية!](https://www.youtube.com/watch؟v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          نود أن تكون مناقشاتنا ودية، ونحتاج إلى مساعدتك [للحفاظ على التحضُّر](%{guidelines_url}). في حال ظهور مشكلة، يُرجى الإبلاغ عنها لإعلام المؤلف أو [فريق العمل](%{about_url}) بها بشكلٍ خاص. هناك العديد من الأسباب التي قد تجعلك ترغب في الإبلاغ عن منشور، بدءًا من اقتراح التقسيم غير الضار لموضوع إلى انتهاك واضح لمعايير المجتمع. إذا حدَّدت **شيء آخر**، فستبدأ مناقشة في رسالة خاصة مع المشرفين، حيث يمكنك طرح المزيد من الأسئلة.
+
+          > :imp: لقد كتبت شيئًا سيئًا هنا
+
+          **أبلغ عن هذا المنشور** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> وحدِّد ** إنه غير لائق** كسبب!
+        reply: |-
+          سيتم إرسال إشعار إلى [فريق عملنا](%{base_uri}/groups/staff) بشأن بلاغك. إذا أبلغ عدد كافٍ من أعضاء المجتمع عن منشور، فسيتم إخفاؤه تلقائيًا كإجراء وقائي. (بما أنني لم أكتب في الواقع منشورًا مزعجًا :angel:، فقد مضيت قدمًا وأزلت البلاغ في الوقت الحالي.)
+        not_found: |-
+          أوه لا، لم يتم الإبلاغ عن منشوري المزعج على أنه غير لائق بعد. :worried: هل يمكنك الإبلاغ عنه كغير لائق باستخدام **العلم** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسَ استخدام الزر "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن المزيد من الإجراءات لكل منشور.
       search:
+        instructions: |-
+          _بسست_... لقد أخفيت مفاجأة في هذا الموضوع. إذا كنت مستعدًا للتحدي، **فحدِّد رمز البحث** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> أعلى اليسار &#8599; للبحث عنه.
+
+          جرِّب البحث عن المصطلح "كابيبارا" في هذا الموضوع
+        hidden_message: |-
+          كيف فاتك هذا الكابيبارا؟ :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          هل لاحظت أنك عُدت الآن إلى البداية؟ أطعِم هذا الكابيبارا المسكين الجائع **بالرد بكتابة الرمز التعبيري `%{search_answer}`** وسيتم نقلك تلقائيًا إلى النهاية.
         reply: |-
           رائع، لقد عثرت عليه :tada:
 
@@ -181,29 +293,61 @@ ar:
           - للانتقال إلى أي مكان في مناقشة طويلة، جرِّب عناصر التحكم في الجدول الزمني للموضوع على اليسار (وفي الأسفل، على الهاتف الجوَّال).
 
           - إذا كان لديك :keyboard: فعلية، فاضغط على <kbd>؟</kbd> لعرض اختصارات لوحة المفاتيح سهلة الاستخدام.
+        not_found: |-
+          حسنًا... يبدو أنك تواجه مشكلة. آسف بشأن ذلك. هل بحثت <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> عن المصطلح **كابيبارا**؟
+      end:
+        message: |-
+          شكرًا لك على البقاء معي يا @%{username}! لقد صنعت هذا من أجلك، وأعتقد أنك استحققته:
+
+          %{certificate}
+
+          هذا كل شيء في الوقت الحالي! اطَّلع على [**أحدث موضوعات المناقشة**](%{base_uri}/latest) or [**فئات المناقشة**](%{base_uri}/categories). :sunglasses:
+
+          (إذا كنت ترغب في التحدُّث إليَّ مرة أخرى لمعرفة المزيد، فما عليك سوى إرسال رسالة أو الإشارة إلى "@%{discobot_username}" في أي وقت!)
       certificate:
         alt: "شهادة الإنجاز"
     advanced_user_narrative:
       reset_trigger: "درس تعليمي متقدم"
       cert_title: "تقديرًا لإكمال الدرس التعليمي المتقدم بنجاح"
       title: ":arrow_up: ميزات المستخدم المتقدم"
+      start_message: |-
+        بصفتك مستخدمًا _متقدمًا_، هل انتقلت إلى [صفحة تفضيلاتك](%{base_uri}/my/preferences) بعد يا @%{username}؟ هناك العديد من الطرق لتخصيص تجربتك، مثل اختيار سمة داكنة أو فاتحة.
+
+        أنا أستطرد، فلنبدأ!
       edit:
         bot_created_post_raw: "@%{discobot_username} هو أروع روبوت أعرفه حتى الآن :wink:"
         instructions: |-
           الكل يخطئ. لكن لا تقلق، يمكنك دائمًا تعديل منشوراتك لإصلاحها!
 
           هل يمكنك البدء **بتعديل** المنشور الذي أنشأته للتو نيابةً عنك؟
+        not_found: |-
+          يبدو أنه لا يزال يتعيَّن عليك تعديل [المنشور](%{url}) الذي أنشأته لك. هل يمكنك إعادة المحاولة؟
+
+          استخدم الأيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> لفتح المحرِّر.
         reply: |-
           أحسنت!
 
           لاحظ أن التعديلات التي تم إجراؤها بعد 5 دقائق ستظهر كمراجعات عامة، وسيظهر رمز قلم رصاص صغير في الجزء العلوي الأيسر مع عدد المراجعات.
       delete:
+        instructions: |-
+          إذا كنت ترغب في سحب منشور أنشأته، يمكنك حذفه.
+
+          **احذف** أيًا من منشوراتك أعلاه باستخدام <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> إجراء **الحذف**. ولكن لا تحذف المنشور الأول!
+        not_found: |-
+          لا أرى أي منشورات محذوفة حتى الآن؟ تذكَّر أن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">"عرض المزيد" سيكشف عن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> "الحذف".
         reply: |-
           مهلًا! :boom:
 
           للحفاظ على استمرارية المناقشات، لا يتم الحذف فورًا؛ لذلك ستتم إزالة المنشور بعد مرور بعض الوقت.
       recover:
         deleted_post_raw: "لماذا حذف @%{discobot_username} منشوري؟ :anguished:"
+        instructions: "أوه لا! يبدو أنني حذفت عن طريق الخطأ منشورًا جديدًا أنشأته للتو من أجلك. \n \n هل يمكنك تقديم خدمة لي و<img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png\" width=\"16\" height=\"16\"> **إلغاء حذفه**؟"
+        not_found: |-
+          تواجه بعض المتاعب؟ تذكَّر أن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "عرض المزيد" سيكشف عن <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> "إلغاء الحذف".
+        reply: |-
+          مرحى، كان ذلك وشيكًا! شكرًا لك على إصلاح ذلك :wink:
+
+          لاحظ أن أمامك %{deletion_after} ساعة فقط لإلغاء حذف منشور.
       category_hashtag:
         instructions: |-
           هل تعلم أنه بإمكانك الإشارة إلي الفئات والوسوم في منشورك؟ مثلًا، هل عرضت الفئة %{category}؟
@@ -218,9 +362,22 @@ ar:
         reply: |-
           ممتاز! تذكَّر أن هذا ممكن مع كلتا الفئتين _ و_ الوسوم، إذا تم تفعيل الوسوم.
       change_topic_notification_level:
+        instructions: |-
+          لكل موضوع مستوى إشعارات معيَّن. يبدأ من "عادية"، مما يعني أنه سيتم إرسال الإشعارات إليك فقط عندما يتحدث شخص ما إليك مباشرةً.
+
+          يتم ضبط مستوى الإشعارات للرسائل الخاصة بشكلٍ افتراضي على أعلى مستوى من "المراقبة"، مما يعني أنه سيتم إرسال إشعار إليك بكل ردٍ جديد. ولكن يمكنك تجاوز مستوى الإشعارات _لأي_ موضوع إلى "مراقبة" أو "تتبُّع" أو "كتم".
+
+          دعنا نجرِّب تغيير مستوى الإشعارات لهذا الموضوع. ستجد في الجزء السفلي من الموضوع زرًا يوضِّح أنك **تراقب** هذا الموضوع. هل يمكنك تغيير مستوى الإشعارات إلى **تتبُّع**؟
         not_found: |-
           يبدو أنك ما زلت تراقب :eyes: هذا الموضوع! إذا كنت تواجه مشكلة في العثور عليه، فسيكون زر مستوى الإشعارات موجودًا في الجزء السفلي من الموضوع.
+        reply: |-
+          أحسنت! آمل أنك لم تكتم هذا الموضوع لأنني أصبح ثرثارًا في بعض الأحيان :grin:.
+
+          لاحظ أنه عند الرد على موضوع، أو قراءة موضوع لأكثر من بضع دقائق، ييتم ضبط مستوى الإشعارات تلقائيًا على "تتبُّع". يمكنك تغيير ذلك في [تفضيلات المستخدم](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          هل تعلم أنه يمكنك إضافة استطلاع إلى أي منشور؟ جرِّب استخدام <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> الترس في المحرِّر **لإنشاء استطلاع**.
+        not_found: "عذرًا! لم يكن هناك أي استطلاع في ردك.\n \nاستخدم <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png\" width=\"16\" height=\"16\"> أيقونة الترس في المحرِّر، أو انسخ هذا الاستطلاع والصقه في ردك التالي:\n\n```text\n[poll]\n* :cat:\n* :dog:\n[/poll]\n```"
         reply: |-
           مرحبًا، استطلاع رائع! كيف كان أدائي في تعليمك؟
 
@@ -231,6 +388,20 @@ ar:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          قد ترغب أحيانًا في **إخفاء التفاصيل** في ردودك:
+
+          - عندما تناقش نقاط حبكة فيلم أو برنامج تلفزيوني بطريقة يمكن اعتبارها حرقًا للأحداث.
+
+          - عندما تحتاج رسالتك إلى الكثير من التفاصيل الاختيارية التي قد تكون محيِّرة عند قراءتها كلها دفعة واحدة.
+
+          [details=حدِّد هذا لترى كيف تسير الأمور!]
+          1. حدِّد <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> الترس في المحرِّر.
+          2. حدِّد "إخفاء التفاصيل"
+          3. عدِّل ملخص التفاصيل وأضِف محتواك.
+          [/details]
+
+          هل يمكنك استخدام <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> الترس في المحرِّر لإضافة قسم التفاصيل إلى ردك التالي؟
         not_found: |-
           هل تواجه مشكلة في إنشاء عنصر واجهة للتفاصيل؟ حاول تضمين ما يلي في ردك التالي:
 

@@ -318,6 +318,7 @@ ro:
     copy_codeblock:
       copied: "copiat!"
     drafts:
+      label: "Ciorne"
       resume: "Reluați"
       remove: "Eliminați"
       remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
@@ -328,6 +329,10 @@ ro:
         yes_value: "Renunță"
         no_value: "Reia editarea"
     topic_count_latest:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
+    topic_count_unseen:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
       other: "%{count} de subiecte noi sau actualizate."
@@ -996,9 +1001,19 @@ ro:
         warnings_received: "Avertizări"
         rejected_posts: "postări respinse"
       messages:
-        all: "Toate"
         inbox: "Primite"
+        latest: "Cele mai recente"
         sent: "Trimise"
+        unread: "Necitite"
+        unread_with_count:
+          one: "Necitit (%{count})"
+          few: "Necitit (%{count})"
+          other: "Necitit (%{count})"
+        new: "Noi"
+        new_with_count:
+          one: "Nou (%{count})"
+          few: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arhivă"
         groups: "Grupurile mele"
         move_to_inbox: "Mută în „Primite”"
@@ -1523,6 +1538,7 @@ ro:
     conditional_loading_section:
       loading: Se încarcă...
     select_kit:
+      delete_item: "Șterge %{name}"
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...
@@ -1775,11 +1791,9 @@ ro:
         dismiss_new: "Anulează cele noi"
         toggle: "activează selecția multiplă a subiectelor"
         actions: "Acțiuni multiple"
-        change_category: "Alege categoria"
         close_topics: "Închide subiectele"
         archive_topics: "Arhivează subiectele"
         move_messages_to_inbox: "Mută în „Primite”"
-        notification_level: "Notificări"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:
           one: "Ai selectat <b>un</b> subiect."
@@ -1986,7 +2000,6 @@ ro:
         invisible: "Fă invizibil"
         visible: "Fă vizibil"
         reset_read: "Resetează datele despre subiecte citite"
-        make_public: "Transformă în subiect public"
         make_private: "Transformă în mesaj privat"
       feature:
         pin: "Fixează subiectul"
@@ -2205,8 +2218,6 @@ ro:
         revert_to_regular: "Șterge culoarea pentru membrii echipei"
         rebake: "Reconstruieşte HTML"
         unhide: "Arată"
-        change_owner: "Schimbă proprietarul"
-        grant_badge: "Acordă ecuson"
         lock_post: "Blochează postarea"
         unlock_post: "Deblochează postarea"
         delete_topic_disallowed_modal: "Nu ai permisiuni suficiente pentru a șterge această discuție. Dacă vrei ca ea să fie ștearsă, marcheaz-o trimițând un mesaj explicativ moderatorului."
@@ -3389,7 +3400,6 @@ ro:
         silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
-        delete_all_posts: "Șterge toate postările"
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"
         penalty_post_delete: "Șterge postarea"
         penalty_post_edit: "Modifică postarea"
@@ -3434,6 +3444,10 @@ ro:
         anonymize_yes: "Da, transformă acest cont în cont anonim"
         anonymize_failed: "A apărut o problemă în timpul transformării contului în cont anonim."
         delete: "Ștergere utilizator"
+        delete_posts:
+          button: "Șterge toate postările"
+          confirmation:
+            cancel: "Anulează"
         merge:
           prompt:
             target_username_placeholder: "Numele de utilizator al noului proprietar"
@@ -3655,7 +3669,6 @@ ro:
           post_revision: "Când un utlizator creează sau editează un mesaj"
           trust_level_change: "Când un utilizator schimbă nivelul de încredere"
           user_change: "Când un utilizator este editat sau creat"
-          post_processed: "După ce o postare este procesată"
         preview:
           link_text: "Previzualizare ecusoane acordate"
           plan_text: "Previzualizare cu interogare"
@@ -3746,6 +3759,5 @@ ro:
           moderator: "Moderator"
           regular: "Utilizator frecvent"
       previews:
-        topic_title: "Subiectul discuției"
         share_button: "Distribuie"
         reply_button: "Răspunde"

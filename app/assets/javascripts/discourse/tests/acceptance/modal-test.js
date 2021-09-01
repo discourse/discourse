@@ -132,10 +132,9 @@ acceptance("Modal Keyboard Events", function (needs) {
 
   test("modal-keyboard-events", async function (assert) {
     await visit("/t/internationalization-localization/280");
-
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    await triggerKeyEvent(".d-modal", "keyup", 13);
+    await triggerKeyEvent(".d-modal", "keydown", 13);
 
     assert.equal(
       count("#modal-alert:visible"),
@@ -148,14 +147,16 @@ acceptance("Modal Keyboard Events", function (needs) {
       "hitting Enter does not dismiss modal due to alert error"
     );
 
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    assert.ok(exists(".d-modal:visible"), "modal should be visible");
+
+    await triggerKeyEvent("#main-outlet", "keydown", 27);
+
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
-
     await click(".d-editor-button-bar .btn.link");
+    await triggerKeyEvent(".d-modal", "keydown", 13);
 
-    await triggerKeyEvent(".d-modal", "keyup", 13);
     assert.ok(
       !exists(".d-modal:visible"),
       "modal should disappear on hitting Enter"

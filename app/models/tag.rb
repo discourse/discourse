@@ -136,16 +136,16 @@ class Tag < ActiveRecord::Base
        WHERE topic_tags.topic_id IN (
           SELECT topic_id
             FROM topic_allowed_users
-           WHERE user_id = #{user_id}
+           WHERE user_id = #{user_id.to_i}
            UNION
           SELECT tg.topic_id
             FROM topic_allowed_groups tg
-            JOIN group_users gu ON gu.user_id = #{user_id}
+            JOIN group_users gu ON gu.user_id = #{user_id.to_i}
                                AND gu.group_id = tg.group_id
        )
        GROUP BY tags.name
        ORDER BY count DESC
-       LIMIT #{limit}
+       LIMIT #{limit.to_i}
     SQL
   end
 

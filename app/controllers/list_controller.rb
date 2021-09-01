@@ -146,35 +146,27 @@ class ListController < ApplicationController
   end
 
   def self.generate_message_route(action)
-    case action
-    when :private_messages_tag
-      define_method("#{action}") do
-        raise Discourse::NotFound if !guardian.can_tag_pms?
-        message_route(action)
-      end
-    when :private_messages_group, :private_messages_group_archive
-      define_method("#{action}") do
-        group = Group.find_by("LOWER(name) = ?", params[:group_name].downcase)
-        raise Discourse::NotFound if !group
-        raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
-
-        message_route(action)
-      end
-    else
-      define_method("#{action}") do
-        message_route(action)
-      end
+    define_method action do
+      message_route(action)
     end
   end
 
   def message_route(action)
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+
     case action
+    when :private_messages_tag
+      raise Discourse::NotFound if !guardian.can_tag_pms?
     when :private_messages_warnings
       guardian.ensure_can_see_warnings!(target_user)
+    when :private_messages_group, :private_messages_group_archive
+      group = Group.find_by("LOWER(name) = ?", params[:group_name].downcase)
+      raise Discourse::NotFound if !group
+      raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
     else
       guardian.ensure_can_see_private_messages!(target_user.id)
     end
+
     list_opts = build_topic_list_options
     list = generate_list_for(action.to_s, target_user, list_opts)
     url_prefix = "topics"
@@ -187,11 +179,19 @@ class ListController < ApplicationController
     private_messages
     private_messages_sent
     private_messages_unread
+    private_messages_new
     private_messages_archive
     private_messages_group
+    private_messages_group_new
+    private_messages_group_unread
     private_messages_group_archive
-    private_messages_tag
     private_messages_warnings
+    private_messages_all
+    private_messages_all_sent
+    private_messages_all_unread
+    private_messages_all_new
+    private_messages_all_archive
+    private_messages_tag
   }.each do |action|
     generate_message_route(action)
   end
@@ -218,6 +218,8 @@ class ListController < ApplicationController
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
     period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
+    TopTopic.validate_period(period)
+
     @topic_list = TopicQuery.new(nil).list_top_for(period)
 
     render 'list', formats: [:rss]
@@ -257,6 +259,7 @@ class ListController < ApplicationController
     options ||= {}
     period = params[:period]
     period ||= ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
+    TopTopic.validate_period(period)
     public_send("top_#{period}", options)
   end
 

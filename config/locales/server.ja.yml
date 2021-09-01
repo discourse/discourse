@@ -456,14 +456,6 @@ ja:
       前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
-    get_a_room: |
-      ### 全員が会話に参加できるように奨励しましょう
-
-      この特定のトピックで @%{reply_username} に %{count} 回返信しています！
-
-      素晴らしいディスカッションには多数の人の意見と観点が含まれるものです。ほかに参加できる人はいませんか？
-
-      周りの視線を気にせずにこの特定のユーザーと長い会話を続けるには、[個人メッセージを送信](%{base_path}/u/%{reply_username})できることもお忘れなく。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -504,7 +496,6 @@ ja:
               unable_to_tag: "トピックにタグ付け中にエラーが発生しました。"
             featured_link:
               invalid: "は無効です。URL には http:// または https:// を含める必要があります。"
-              invalid_category: "をこのカテゴリで編集することはできません。"
         user:
           attributes:
             password:
@@ -1321,6 +1312,7 @@ ja:
     unreachable_themes: "次のテーマの更新を確認できませんでした:"
     watched_word_regexp_error: "'%{action}' のウォッチ語の正規表現は無効です。<a href='%{base_path}/admin/customize/watched_words'>ウォッチ語の設定</a>を確認するか、'ウォッチ語の正規表現' サイト設定を無効にしてください。"
   site_settings:
+    disabled: "無効"
     display_local_time_in_user_card: "ユーザーカードが開いたときのユーザーのタイムゾーンに基づいて現地時間を表示します。"
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; に置換される語"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
@@ -1852,7 +1844,7 @@ ja:
     enable_user_directory: "閲覧用のユーザーディレクトリを提供"
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
-    group_in_subject: "メールの件名の %{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
+    group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_posting: "ユーザーに匿名モードへの切り替えを許可"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -2578,49 +2570,15 @@ ja:
     backup_succeeded:
       title: "バックアップに成功しました"
       subject_template: "バックアップは正常に完了しました"
-      text_body_template: |
-        バックアップに成功しました。
-
-        [管理者 > バックアップセクション](%{base_url}/admin/backups)にアクセスして、新しいバックアップをダウンロードしてください。
-
-        こちらはログです。
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "バックアップに失敗しました"
       subject_template: "バックアップに失敗しました"
-      text_body_template: |
-        バックアップに失敗しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "復元に成功しました"
       subject_template: "復元は正常に完了しました"
-      text_body_template: |
-        復元に成功しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "復元に失敗しました"
       subject_template: "復元に失敗しました"
-      text_body_template: |
-        復元に失敗しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"
@@ -3222,6 +3180,9 @@ ja:
         あなたは %{suspended_till} までフォーラムから凍結されました。
 
         理由 - %{reason}
+    account_suspended_forever:
+      title: "アカウントが凍結されました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
     account_silenced:
       title: "アカウントが投稿禁止にされました"
       subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
@@ -3229,6 +3190,9 @@ ja:
         あなたは %{silenced_till} までフォーラムから投稿禁止にされました。
 
         理由 - %{reason}
+    account_silenced_forever:
+      title: "アカウントが投稿禁止にされました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"
@@ -4265,17 +4229,30 @@ ja:
           city_for_disputes:
             label: "紛争都市"
             placeholder: "カリフォルニア州サンフランシスコ"
-      colors:
-        title: "色"
-      fonts:
-        title: "フォント"
+      styling:
         fields:
           body_font:
             label: "本文のフォント"
           heading_font:
             label: "見出しのフォント"
-          font_preview:
+          styling_preview:
             label: "プレビュー"
+          homepage_style:
+            choices:
+              latest:
+                label: "最新のトピック"
+              categories_only:
+                label: "カテゴリのみ"
+              categories_with_featured_topics:
+                label: "注目のトピックのカテゴリ"
+              categories_and_latest_topics:
+                label: "カテゴリと最新トピック"
+              categories_and_top_topics:
+                label: "カテゴリと人気トピック"
+              categories_boxes:
+                label: "カテゴリボックス"
+              categories_boxes_with_topics:
+                label: "トピック付きのカテゴリボックス"
       logos:
         title: "ロゴ"
         fields:
@@ -4294,26 +4271,6 @@ ja:
           large_icon:
             label: "大きなアイコン"
             description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
-      homepage:
-        description: "ホームページには最新トピックを表示することを推奨しますが、カテゴリ (トピックをグループ化したもの) を表示することもできます。"
-        title: "ホームページ"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "最新のトピック"
-              categories_only:
-                label: "カテゴリのみ"
-              categories_with_featured_topics:
-                label: "注目のトピックのカテゴリ"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-              categories_and_top_topics:
-                label: "カテゴリと人気トピック"
-              categories_boxes:
-                label: "カテゴリボックス"
-              categories_boxes_with_topics:
-                label: "トピック付きのカテゴリボックス"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

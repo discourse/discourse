@@ -49,7 +49,6 @@ const TopicTrackingState = EmberObject.extend({
   @on("init")
   _setup() {
     this.states = new Map();
-    this.messageIncrementCallbacks = {};
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
   },
@@ -214,14 +213,17 @@ const TopicTrackingState = EmberObject.extend({
 
     // always count a new_topic as incoming
     if (
-      ["all", "latest", "new"].includes(filter) &&
+      ["all", "latest", "new", "unseen"].includes(filter) &&
       data.message_type === "new_topic"
     ) {
       this._addIncoming(data.topic_id);
     }
 
     // count an unread topic as incoming
-    if (["all", "unread"].includes(filter) && data.message_type === "unread") {
+    if (
+      ["all", "unread", "unseen"].includes(filter) &&
+      data.message_type === "unread"
+    ) {
       const old = this.findState(data);
 
       // the highest post number is equal to last read post number here
@@ -381,7 +383,7 @@ const TopicTrackingState = EmberObject.extend({
    * in-memory state.
    *
    * Any state changes will make a callback to all state change callbacks defined
-   * via onStateChange and all message increment callbacks defined via onMessageIncrement
+   * via onStateChange.
    *
    * @method sync
    * @param {TopicList} list
@@ -410,17 +412,10 @@ const TopicTrackingState = EmberObject.extend({
 
   incrementMessageCount() {
     this.incrementProperty("messageCount");
-    Object.values(this.messageIncrementCallbacks).forEach((cb) => cb());
   },
 
   _generateCallbackId() {
     return Math.random().toString(12).substr(2, 9);
-  },
-
-  onMessageIncrement(cb) {
-    let callbackId = this._generateCallbackId();
-    this.messageIncrementCallbacks[callbackId] = cb;
-    return callbackId;
   },
 
   onStateChange(cb) {

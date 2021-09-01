@@ -315,7 +315,7 @@ describe Group do
   end
 
   it "Correctly handles removal of primary group" do
-    group = Fabricate(:group)
+    group = Fabricate(:group, flair_icon: "icon")
     user = Fabricate(:user)
     group.add(user)
     group.save
@@ -330,6 +330,7 @@ describe Group do
 
     user.reload
     expect(user.primary_group).to eq nil
+    expect(user.flair_group_id).to eq nil
   end
 
   it "Can update moderator/staff/admin groups correctly" do

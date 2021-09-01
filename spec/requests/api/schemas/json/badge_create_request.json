@@ -1,0 +1,17 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name for the new badge."
+    },
+    "badge_type_id": {
+      "type": "integer",
+      "description": "The ID for the badge type. 1 for Gold, 2 for Silver, 3 for Bronze."
+    }
+  },
+  "required": [
+    "name",
+    "badge_type_id"
+  ]
+}

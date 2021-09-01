@@ -280,8 +280,22 @@ const Composer = RestModel.extend({
     "notPrivateMessage"
   ),
 
-  @discourseComputed("canEditTitle", "creatingPrivateMessage", "categoryId")
-  canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
+  @discourseComputed(
+    "canEditTitle",
+    "creatingPrivateMessage",
+    "categoryId",
+    "user.trust_level"
+  )
+  canEditTopicFeaturedLink(
+    canEditTitle,
+    creatingPrivateMessage,
+    categoryId,
+    userTrustLevel
+  ) {
+    if (userTrustLevel === 0) {
+      return false;
+    }
+
     if (
       !this.siteSettings.topic_featured_link_enabled ||
       !canEditTitle ||
@@ -817,22 +831,13 @@ const Composer = RestModel.extend({
       this.setProperties(topicProps);
 
       promise = promise.then(() => {
-        let rawPromise = Promise.resolve();
-
-        if (!this.post.raw) {
-          rawPromise = this.store.find("post", opts.post.id).then((post) => {
-            this.setProperties({
-              post,
-              reply: post.raw,
-              originalText: post.raw,
-            });
-          });
-        } else {
+        let rawPromise = this.store.find("post", opts.post.id).then((post) => {
           this.setProperties({
-            reply: this.post.raw,
-            originalText: this.post.raw,
+            post,
+            reply: post.raw,
+            originalText: post.raw,
           });
-        }
+        });
 
         // edge case ... make a post then edit right away
         // store does not have topic for the post
@@ -1165,36 +1170,54 @@ const Composer = RestModel.extend({
     return "";
   },
 
-  saveDraft() {
+  @discourseComputed(
+    "draftSaving",
+    "disableDrafts",
+    "canEditTitle",
+    "title",
+    "reply",
+    "titleLengthValid",
+    "replyLength",
+    "minimumPostLength"
+  )
+  canSaveDraft() {
     if (this.draftSaving) {
-      return Promise.resolve();
+      return false;
     }
 
     // Do not save when drafts are disabled
     if (this.disableDrafts) {
-      return Promise.resolve();
+      return false;
     }
 
     if (this.canEditTitle) {
       // Save title and/or post body
       if (isEmpty(this.title) && isEmpty(this.reply)) {
-        return Promise.resolve();
+        return false;
       }
 
       // Do not save when both title and reply's length are too small
       if (!this.titleLengthValid && this.replyLength < this.minimumPostLength) {
-        return Promise.resolve();
+        return false;
       }
     } else {
       // Do not save when there is no reply
       if (isEmpty(this.reply)) {
-        return Promise.resolve();
+        return false;
       }
 
       // Do not save when the reply's length is too small
       if (this.replyLength < this.minimumPostLength) {
-        return Promise.resolve();
+        return false;
       }
+    }
+
+    return true;
+  },
+
+  saveDraft(user) {
+    if (!this.canSaveDraft) {
+      return Promise.resolve();
     }
 
     this.setProperties({
@@ -1225,6 +1248,10 @@ const Composer = RestModel.extend({
             draftConflictUser: result.conflict_user,
           });
         } else {
+          if (this.draftKey === NEW_TOPIC_KEY && user) {
+            user.set("has_topic_draft", true);
+          }
+
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,

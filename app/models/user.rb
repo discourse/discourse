@@ -433,7 +433,6 @@ class User < ActiveRecord::Base
   end
 
   def created_topic_count
-    stat = user_stat || create_user_stat
     stat.topic_count
   end
 
@@ -894,8 +893,15 @@ class User < ActiveRecord::Base
   end
 
   def post_count
-    stat = user_stat || create_user_stat
     stat.post_count
+  end
+
+  def post_edits_count
+    stat.post_edits_count
+  end
+
+  def increment_post_edits_count
+    stat.increment!(:post_edits_count)
   end
 
   def flags_given_count
@@ -1214,12 +1220,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    Post.with_deleted
-      .where(user_id: self.id)
-      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                             .where(disagreed_at: nil)
-                             .select(:post_id))
-      .count
+    ReviewableFlaggedPost.where(target_created_by: self.id).count
   end
 
   def number_of_rejected_posts
@@ -1468,9 +1469,7 @@ class User < ActiveRecord::Base
   end
 
   def create_user_stat
-    stat = UserStat.new(new_since: Time.now)
-    stat.user_id = id
-    stat.save!
+    UserStat.create!(new_since: Time.zone.now, user_id: id)
   end
 
   def create_user_option
@@ -1658,6 +1657,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def stat
+    user_stat || create_user_stat
+  end
 
   def trigger_user_automatic_group_refresh
     if !staged

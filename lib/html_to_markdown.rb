@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "nokogumbo"
 require "securerandom"
 
 class HtmlToMarkdown

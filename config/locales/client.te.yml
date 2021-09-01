@@ -439,9 +439,11 @@ te:
         suspensions: "సస్పెన్షన్లు"
         warnings_received: "హెచ్చరికలు"
       messages:
-        all: "అన్నీ"
         inbox: "ఇన్ బాక్స్"
+        latest: "తాజా"
         sent: "పంపిన"
+        unread: "చదవని"
+        new: "కొత్త"
         tags: "ట్యాగులు"
       preferences_nav:
         account: "ఖాతా"
@@ -717,6 +719,8 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:
       loading: లోడవుతోంది...
+    select_kit:
+      delete_item: "%{name} తొలగించు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -806,7 +810,6 @@ te:
         actions: "బహుళ చర్యలు"
         close_topics: "విషయాలు మూయు"
         archive_topics: "విషయాలు కట్టకట్టు"
-        notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
@@ -1043,7 +1046,6 @@ te:
         revert_to_regular: "సిబ్బంది రంగు తొలగించు"
         rebake: "హెచే టీ యం యల్ పునర్నిర్మించు"
         unhide: "చూపు"
-        grant_badge: "బ్యాడ్జి ఇవ్వు"
         delete_topic: "విషయం తొలగించు"
       actions:
         people:
@@ -1766,7 +1768,6 @@ te:
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         silence_reason: "కారణం"
-        delete_all_posts: "అన్ని టపాలూ తొలగించు"
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
         suspended: "సస్పెండయ్యాడా? "
@@ -1801,6 +1802,10 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
+        delete_posts:
+          button: "అన్ని టపాలూ తొలగించు"
+          confirmation:
+            cancel: "రద్దుచేయి"
         merge:
           prompt:
             cancel: "రద్దుచేయి"

@@ -44,11 +44,11 @@ export function seenUser() {
 }
 
 // register a callback for cases where presence changed
-export function onPresenceChange(maxUnseenTime, callback) {
-  if (maxUnseenTime < MIN_DELTA) {
+export function onPresenceChange({ unseenTime, callback }) {
+  if (unseenTime < MIN_DELTA) {
     throw "unseenTime is too short";
   }
-  callbacks.push({ unseenTime: maxUnseenTime, callback: callback });
+  callbacks.push({ unseenTime, callback });
 }
 
 // We could piggieback on the Scroll mixin, but it is not applied

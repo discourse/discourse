@@ -9,18 +9,18 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "@highlightjs/cdn-assets": "^10.6.0",
     "@json-editor/json-editor": "^2.5.2",
-    "@popperjs/core": "v2.0.6",
-    "@uppy/aws-s3": "^1.7.12",
-    "@uppy/aws-s3-multipart": "^1.8.18",
-    "@uppy/core": "^1.19.2",
-    "@uppy/drop-target": "^0.2.4",
-    "@uppy/xhr-upload": "^1.7.5",
+    "@popperjs/core": "v2.9.3",
+    "@uppy/core": "^2.0.1",
+    "@uppy/aws-s3": "^2.0.1",
+    "@uppy/aws-s3-multipart": "^2.0.2",
+    "@uppy/drop-target": "^1.0.1",
+    "@uppy/xhr-upload": "^2.0.1",
     "ace-builds": "1.4.12",
     "blueimp-file-upload": "10.13.0",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
-    "chart.js": "2.9.4",
-    "chartjs-plugin-datalabels": "^0.7.0",
+    "chart.js": "3.5.1",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.18",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.7",
@@ -51,7 +51,7 @@
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
-    "pretender": "^1.6",
+    "pretender": "^3.4.7",
     "puppeteer": "1.20",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
@@ -62,7 +62,11 @@
     "lodash": "4.17.21"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
     "postinstall": "yarn --cwd app/assets/javascripts/discourse"
+  },
+  "engines": {
+    "node": ">= 12.*",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
   }
 }

@@ -144,7 +144,7 @@ describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      SiteSetting.allow_uploaded_avatars = false
+      SiteSetting.allow_uploaded_avatars = 'disabled'
       expect(finder.check_avatar_notification).to be_blank
     end
   end
@@ -423,7 +423,7 @@ describe ComposerMessagesFinder do
           expect(message).to be_present
           expect(message[:id]).to eq('get_a_room')
           expect(message[:wait_for_typing]).to eq(true)
-          expect(message[:templateName]).to eq('education')
+          expect(message[:templateName]).to eq('get-a-room')
 
           expect(UserHistory.exists_for_user?(user, :notified_about_get_a_room)).to eq(true)
         end

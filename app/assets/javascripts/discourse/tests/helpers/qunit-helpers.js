@@ -24,6 +24,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
 import { initSearchData } from "discourse/widgets/search-menu";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -34,17 +35,20 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import { resetUserSearchCache } from "discourse/lib/user-search";
+import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearCustomNavItemHref } from "discourse/models/nav-item";
+import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
+import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -272,7 +276,10 @@ export function acceptance(name, optionsOrCallback) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
-      clearCustomNavItemHref();
+      resetUserSearchCache();
+      resetCardClickListenerSelector();
+      resetPostMenuExtraButtons();
+      clearNavItems();
       setTopicList(null);
       _clearSnapshots();
       setURLContainer(null);
@@ -280,6 +287,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
+      resetLastEditNotificationClick();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
           initializer.teardown(this.container);
