@@ -86,6 +86,25 @@ import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.12.2";
 
+// This helper prevents us from applying the same `modifyClass` over and over in test mode.
+function canModify(klass, type, resolverName, changes) {
+  if (!changes.pluginId) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "To prevent errors, add a `pluginId` key to your changes when calling `modifyClass`"
+    );
+    return true;
+  }
+
+  let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
+  if (klass.class[key]) {
+    return false;
+  } else {
+    klass.class[key] = 1;
+    return true;
+  }
+}
+
 class PluginApi {
   constructor(version, container) {
     this.version = version;
@@ -138,10 +157,14 @@ class PluginApi {
   /**
    * Allows you to overwrite or extend methods in a class.
    *
+   * You should add a `pluginId` property to identify your plugin
+   * to help Discourse reload classes properly.
+   *
    * For example:
    *
    * ```
    * api.modifyClass('controller:composer', {
+   *   pluginId: 'my-plugin',
    *   actions: {
    *     newActionHere() { }
    *   }
@@ -150,9 +173,15 @@ class PluginApi {
    **/
   modifyClass(resolverName, changes, opts) {
     const klass = this._resolveClass(resolverName, opts);
-    if (klass) {
+    if (!klass) {
+      return;
+    }
+
+    if (canModify(klass, "member", resolverName, changes)) {
+      delete changes.pluginId;
       klass.class.reopen(changes);
     }
+
     return klass;
   }
 
@@ -169,9 +198,15 @@ class PluginApi {
    **/
   modifyClassStatic(resolverName, changes, opts) {
     const klass = this._resolveClass(resolverName, opts);
-    if (klass) {
+    if (!klass) {
+      return;
+    }
+
+    if (canModify(klass, "static", resolverName, changes)) {
+      delete changes.pluginId;
       klass.class.reopenClass(changes);
     }
+
     return klass;
   }
 
