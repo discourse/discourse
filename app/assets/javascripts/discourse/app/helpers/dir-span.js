@@ -16,7 +16,7 @@ function setDir(text) {
 export default registerUnbound("dir-span", function (str, params = {}) {
   let isHtmlSafe = false;
   if (params.htmlSafe) {
-    isHtmlSafe = params.htmlSafe;
+    isHtmlSafe = params.htmlSafe === "true";
   }
   let text = isHtmlSafe ? str : escapeExpression(str);
   return htmlSafe(setDir(text));
