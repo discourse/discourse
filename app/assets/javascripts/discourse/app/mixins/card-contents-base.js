@@ -95,7 +95,7 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition($(this.element), this._hide.bind(this));
+
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
