@@ -108,21 +108,9 @@ describe TopicEmbed do
         Jobs.run_immediately!
         SiteSetting.embed_support_markdown = false
         stub_request(:get, "https://www.youtube.com/watch?v=K56soYl0U1w")
-          .with(
-            headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'User-Agent' => 'Discourse Forum Onebox v2.8.0.beta4'
-            }
-          ).to_return(status: 200, body: "", headers: {})
+          .to_return(status: 200, body: "", headers: {})
         stub_request(:get, "https://www.youtube.com/embed/K56soYl0U1w")
-          .with(
-            headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'User-Agent' => 'Discourse Forum Onebox v2.8.0.beta4'
-            }
-          ).to_return(status: 200, body: "", headers: {})
+          .to_return(status: 200, body: "", headers: {})
 
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "https://www.youtube.com/watch?v=K56soYl0U1w", cook_method: Post.cook_methods[:regular])
         expect(imported_post.cooked).to match(/onebox|iframe/)
