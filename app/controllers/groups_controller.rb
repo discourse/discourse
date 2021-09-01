@@ -736,6 +736,12 @@ class GroupsController < ApplicationController
       end
     end
 
+    Group.plugin_permitted_params.each do |key, value|
+      if value[:plugin].enabled?
+        permitted_params << key
+      end
+    end
+
     params.require(:group).permit(*permitted_params)
   end
 

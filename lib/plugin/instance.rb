@@ -369,6 +369,13 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_param to Group, respecting if the plugin is enabled
+  def add_permitted_group_param(attribute)
+    reloadable_patch do |plugin|
+      ::Group.plugin_permitted_params[attribute] = { plugin: plugin }
+    end
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize

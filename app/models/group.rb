@@ -14,8 +14,10 @@ class Group < ActiveRecord::Base
   include HasDestroyedWebHook
   include GlobalPath
 
-  cattr_accessor :preloaded_custom_field_names
+  cattr_accessor :preloaded_custom_field_names, :plugin_permitted_params
   self.preloaded_custom_field_names = Set.new
+
+  self.plugin_permitted_params = {}
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
