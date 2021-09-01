@@ -1897,21 +1897,27 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
+        a11y_title: "Login with Google"
       twitter:
         name: "Twitter"
         title: "with Twitter"
+        a11y_title: "Login with Twitter"
       instagram:
         name: "Instagram"
         title: "with Instagram"
+        a11y_title: "Login with Instagram"
       facebook:
         name: "Facebook"
         title: "with Facebook"
+        a11y_title: "Login with Facebook"
       github:
         name: "GitHub"
         title: "with GitHub"
+        a11y_title: "Login with GitHub"
       discord:
         name: "Discord"
         title: "with Discord"
+        a11y_title: "Login with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
