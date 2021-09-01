@@ -1,4 +1,7 @@
 import EmberObject from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { on } from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
@@ -15,20 +18,33 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   filter: null,
   activeGroup: null,
 
-  startTracking(data) {
+  @on("init")
+  _setup() {
     this.states = new Map();
+    this.statesModificationCounter = 0;
+    this.isTracking = false;
     this.newIncoming = [];
-    this._loadStates(data);
-    this.establishChannels();
   },
 
-  establishChannels() {
+  startTracking() {
+    if (this.isTracking) {
+      return;
+    }
+
+    this._establishChannels();
+
+    this._loadInitialState().finally(() => {
+      this.set("isTracking", true);
+    });
+  },
+
+  _establishChannels() {
     this.messageBus.subscribe(
-      this._userChannel(this.user.id),
+      this._userChannel(),
       this._processMessage.bind(this)
     );
 
-    this.user.groupsWithMessages?.forEach((group) => {
+    this.currentUser.groupsWithMessages?.forEach((group) => {
       this.messageBus.subscribe(
         this._groupChannel(group.id),
         this._processMessage.bind(this)
@@ -36,26 +52,21 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     });
   },
 
-  stopTracking() {
-    this.messageBus.unsubscribe(this._userChannel(this.user.id));
-
-    this.user.groupsWithMessages?.forEach((group) => {
-      this.messageBus.unsubscribe(this._groupChannel(group.id));
-    });
-  },
-
-  lookupCount(type) {
+  lookupCount(type, opts = {}) {
     const typeFilterFn = type === "new" ? this._isNew : this._isUnread;
+    const inbox = opts.inboxFilter || this.inbox;
     let filterFn;
 
-    if (this.inbox === "user") {
+    if (inbox === "user") {
       filterFn = this._isPersonal.bind(this);
-    } else if (this.inbox === "group") {
+    } else if (inbox === "group") {
       filterFn = this._isGroup.bind(this);
     }
 
     return Array.from(this.states.values()).filter((topic) => {
-      return typeFilterFn(topic) && (!filterFn || filterFn(topic));
+      return (
+        typeFilterFn(topic) && (!filterFn || filterFn(topic, opts.groupName))
+      );
     }).length;
   },
 
@@ -63,14 +74,14 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this.setProperties({ inbox, filter, activeGroup: group });
   },
 
-  resetTracking() {
+  resetIncomingTracking() {
     if (this.inbox) {
       this.set("newIncoming", []);
     }
   },
 
-  _userChannel(userId) {
-    return `${this.CHANNEL_PREFIX}/user/${userId}`;
+  _userChannel() {
+    return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   },
 
   _groupChannel(groupId) {
@@ -95,9 +106,9 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _isPersonal(topic) {
-    const groups = this.user.groups;
+    const groups = this.currentUser?.groups;
 
-    if (groups.length === 0) {
+    if (!groups || groups.length === 0) {
       return true;
     }
 
@@ -106,10 +117,10 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     });
   },
 
-  _isGroup(topic) {
-    return this.user.groups.some((group) => {
+  _isGroup(topic, activeGroupName) {
+    return this.currentUser.groups.some((group) => {
       return (
-        group.name === this.activeGroup.name &&
+        group.name === (activeGroupName || this.activeGroup.name) &&
         topic.group_ids?.includes(group.id)
       );
     });
@@ -182,14 +193,24 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     }
   },
 
-  _loadStates(data) {
-    (data || []).forEach((topic) => {
-      this._modifyState(topic.topic_id, topic);
-    });
+  _loadInitialState() {
+    return ajax(
+      `/u/${this.currentUser.username}/private-message-topic-tracking-state`
+    )
+      .then((pmTopicTrackingStateData) => {
+        pmTopicTrackingStateData.forEach((topic) => {
+          this._modifyState(topic.topic_id, topic, { skipIncrement: true });
+        });
+      })
+      .catch(popupAjaxError);
   },
 
-  _modifyState(topicId, data) {
+  _modifyState(topicId, data, opts = {}) {
     this.states.set(topicId, data);
+
+    if (!opts.skipIncrement) {
+      this.incrementProperty("statesModificationCounter");
+    }
   },
 });
 
