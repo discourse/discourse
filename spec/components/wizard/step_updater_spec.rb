@@ -288,11 +288,12 @@ describe Wizard::StepUpdater do
       end
 
       context "auto dark mode" do
-        let(:dark_scheme) { ColorScheme.where(name: "Dark").first }
+        before do
+          dark_scheme = ColorScheme.where(name: "Dark").first
+          SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+        end
 
         it "does nothing when selected scheme is light" do
-          SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
-
           updater = wizard.create_updater('styling',
             color_scheme: 'Neutral',
             body_font: 'arial',
@@ -304,8 +305,6 @@ describe Wizard::StepUpdater do
         end
 
         it "unsets auto dark mode site setting when default selected scheme is also dark" do
-          SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
-
           updater = wizard.create_updater('styling',
             color_scheme: 'Latte',
             body_font: 'arial',
