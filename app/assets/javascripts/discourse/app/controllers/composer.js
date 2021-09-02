@@ -919,6 +919,10 @@ export default Controller.extend({
       @param {Boolean} [opts.skipDraftCheck]
   **/
   open(opts) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     opts = opts || {};
 
     if (!opts.draftKey) {
