@@ -1,6 +1,7 @@
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
+  addComposerUploadPreProcessor,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
@@ -990,6 +991,10 @@ class PluginApi {
    */
   addComposerUploadProcessor(queueItem, actionItem) {
     addComposerUploadProcessor(queueItem, actionItem);
+  }
+
+  addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
+    addComposerUploadPreProcessor(pluginClass, optionsResolverFn);
   }
 
   /**
