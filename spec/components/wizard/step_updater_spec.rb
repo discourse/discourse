@@ -313,8 +313,7 @@ describe Wizard::StepUpdater do
             homepage_style: 'latest'
           )
 
-          expect { updater.update }.to change { SiteSetting.default_dark_mode_color_scheme_id }
-          expect(SiteSetting.default_dark_mode_color_scheme_id).to eq(-1)
+          expect { updater.update }.to change { SiteSetting.default_dark_mode_color_scheme_id }.to(-1)
         end
       end
 
