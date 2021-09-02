@@ -128,6 +128,10 @@ export default Mixin.create({
     this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
 
     this._uppyInstance.on("progress", (progress) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.set("uploadProgress", progress);
     });
 
