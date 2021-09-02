@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -39,7 +39,7 @@ acceptance("Create Account - User Fields", function (needs) {
 
     await click(".modal-footer .btn-primary");
     assert.equal(
-      queryAll("#account-email-validation").text().trim(),
+      query("#account-email-validation").text().trim(),
       "Please enter an email address"
     );
 

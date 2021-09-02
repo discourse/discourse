@@ -50,7 +50,7 @@ export default Component.extend({
       return "discourse-modal-title";
     }
 
-    return null;
+    return;
   },
 
   @on("didInsertElement")
