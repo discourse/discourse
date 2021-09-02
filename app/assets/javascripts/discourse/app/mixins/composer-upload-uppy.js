@@ -46,11 +46,6 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this.mobileUploadButton?.removeEventListener(
-      "click",
-      this.mobileUploadButtonEventListener
-    );
-
     this.fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
@@ -86,7 +81,6 @@ export default Mixin.create({
     this._unbindUploadTarget();
     this._bindFileInputChangeListener();
     this._bindPasteListener();
-    this._bindMobileUploadButton();
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,

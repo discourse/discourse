@@ -327,8 +327,6 @@ export default Mixin.create({
         }
       });
     });
-
-    this._bindMobileUploadButton();
   },
 
   _bindMobileUploadButton() {
@@ -345,13 +343,15 @@ export default Mixin.create({
     }
   },
 
-  @on("willDestroyElement")
-  _unbindUploadTarget() {
+  _unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
       this.mobileUploadButtonEventListener
     );
+  },
 
+  @on("willDestroyElement")
+  _unbindUploadTarget() {
     this._validUploads = 0;
     const $uploadTarget = $(this.element);
     try {

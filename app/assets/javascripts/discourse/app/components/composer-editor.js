@@ -219,6 +219,8 @@ export default Component.extend(ComposerUpload, {
     }
 
     this._bindUploadTarget();
+    this._bindMobileUploadButton();
+
     this.appEvents.trigger("composer:will-open");
   },
 
@@ -607,6 +609,7 @@ export default Component.extend(ComposerUpload, {
 
   @on("willDestroyElement")
   _composerClosed() {
+    this._unbindMobileUploadButton();
     this.appEvents.trigger("composer:will-close");
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer
