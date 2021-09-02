@@ -68,16 +68,10 @@
       }
 
       .select-kit-header {
-        box-sizing: border-box;
-        border: 1px solid transparent;
+        display: inline-flex;
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
-        display: inline-flex;
-
-        .select-kit-header-wrapper {
-          min-height: unset;
-        }
 
         .d-icon + .d-icon {
           margin-left: 0.25em;

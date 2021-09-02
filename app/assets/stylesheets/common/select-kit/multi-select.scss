@@ -49,12 +49,7 @@
 
     .multi-select-header {
       background: var(--secondary);
-      border: 1px solid var(--primary-medium);
-      padding: 0 0.25em 0 0.5em;
-      font-weight: 500;
-      font-size: var(--font-0);
-      box-sizing: border-box;
-      overflow: hidden;
+      border-color: var(--primary-medium);
 
       .formated-selection {
         margin: 0;

@@ -213,16 +213,15 @@ input {
   &[type="tel"],
   &[type="color"] {
     @include appearance-none;
+    @include form-item-sizing;
     display: inline-block;
-    padding: $input-padding;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-bottom: 9px;
-    font-size: $font-0;
-    line-height: $line-height-small;
     color: var(--primary);
     background-color: var(--secondary);
     border: 1px solid var(--primary-medium);
     border-radius: 0;
-    box-sizing: border-box;
     min-height: 30px;
     &:focus {
       @include default-focus;

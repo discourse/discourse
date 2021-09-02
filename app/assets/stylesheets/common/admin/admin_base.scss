@@ -889,13 +889,14 @@ table#user-badges {
   margin-left: 0;
 
   .emoji-details {
+    @include form-item-sizing;
     display: flex;
     align-items: center;
     min-height: 30px;
-    padding: $input-padding;
-    line-height: 1;
     color: var(--primary);
-    border: 1px solid var(--primary-low);
+    border-color: var(--primary-low);
+    padding-left: 10px;
+    padding-right: 10px;
 
     .emoji-name {
       margin-left: 0.5em;

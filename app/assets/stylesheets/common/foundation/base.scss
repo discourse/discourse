@@ -154,3 +154,38 @@ input[type="reset"],
 input[type="submit"] {
   cursor: pointer;
 }
+
+// Inline form
+// --------------------------------------------------
+
+.inline-form {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  input[type="text"] {
+    display: inline-flex;
+    flex: 1;
+  }
+
+  .select-kit,
+  input[type="text"],
+  label,
+  .btn {
+    margin-bottom: 0.5em;
+  }
+
+  .select-kit,
+  input[type="text"],
+  label {
+    margin-right: 0.5em;
+  }
+
+  .btn + .btn {
+    margin-left: 0.5em;
+  }
+
+  label {
+    font-weight: bold;
+  }
+}

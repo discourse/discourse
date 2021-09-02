@@ -13,16 +13,14 @@
   $hover-bg-color: var(--primary-medium),
   $hover-icon-color: var(--primary-low)
 ) {
-  box-sizing: border-box;
+  @include form-item-sizing;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0.53em 0.8em;
-  border: none;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
   font-weight: normal;
-  font-size: $font-0;
-  line-height: normal;
   color: $text-color;
   background: $bg-color;
   cursor: pointer;
@@ -35,7 +33,6 @@
   &.no-text {
     .d-icon {
       margin-right: 0;
-      min-height: 17px;
     }
   }
   @include hover {
