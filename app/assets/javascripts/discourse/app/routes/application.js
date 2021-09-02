@@ -267,18 +267,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account", {
-        signup: true,
-        titleAriaElementId: "create-account-title",
-      });
+      this._autoLogin("createAccount", "create-account", { signup: true });
     }
   },
 
-  _autoLogin(
-    modal,
-    modalClass,
-    { notAuto = null, signup = false, titleAriaElementId = null } = {}
-  ) {
+  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
@@ -286,7 +279,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         signup: signup,
       });
     } else {
-      showModal(modal, { titleAriaElementId });
+      showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);
       if (notAuto) {
         notAuto();

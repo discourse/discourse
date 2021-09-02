@@ -1,7 +1,8 @@
+import { computed } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { next, schedule } from "@ember/runloop";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import { bind, on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [
@@ -20,7 +21,6 @@ export default Component.extend({
   submitOnEnter: true,
   dismissable: true,
   title: null,
-  titleAriaElementId: null,
   subtitle: null,
   role: "dialog",
   headerClass: null,
@@ -41,17 +41,9 @@ export default Component.extend({
   // Inform screenreaders of the modal
   "aria-modal": "true",
 
-  @discourseComputed("title", "titleAriaElementId")
-  ariaLabelledby(title, titleAriaElementId) {
-    if (titleAriaElementId) {
-      return titleAriaElementId;
-    }
-    if (title) {
-      return "discourse-modal-title";
-    }
-
-    return;
-  },
+  ariaLabelledby: computed("title", function () {
+    return this.title ? "discourse-modal-title" : null;
+  }),
 
   @on("didInsertElement")
   setUp() {

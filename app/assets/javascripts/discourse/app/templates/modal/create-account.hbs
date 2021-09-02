@@ -1,12 +1,17 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
     {{plugin-outlet name="create-account-before-modal-body"}}
-    {{#d-modal-body class=modalBodyClasses preventModalAlertHiding=true}}
+    {{#d-modal-body class=modalBodyClasses}}
       <div class="create-account-form">
-        <div class="login-welcome-header" id="create-account-title">
+        <div class="login-welcome-header">
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
           <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
         </div>
+        {{#unless hasAuthOptions}}
+          <div class="create-account-login-buttons">
+            {{login-buttons externalLogin=(action "externalLogin")}}
+          </div>
+        {{/unless}}
         {{#if showCreateForm}}
 
           <div class="login-form">
@@ -17,18 +22,7 @@
                 </div>
               {{/if}}
               <div class="input-group create-account-email">
-                {{input
-                  type="email"
-                  disabled=emailDisabled
-                  value=accountEmail
-                  id="new-account-email"
-                  name="email"
-                  class=(value-entered accountEmail)
-                  autofocus="autofocus"
-                  focusOut=(action "checkEmailAvailability")
-                  aria-describedby="account-email-validation"
-                  aria-invalid=emailValidation.failed
-                }}
+                {{input type="email" disabled=emailDisabled value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail) autofocus="autofocus" focusOut=(action "checkEmailAvailability")}}
                 <label class="alt-placeholder" for="new-account-email">
                   {{i18n "user.email.title"}}
                   {{~#if userFields~}}
@@ -40,17 +34,8 @@
               </div>
 
               <div class="input-group">
-                {{input
-                  value=accountUsername
-                  disabled=usernameDisabled
-                  class=(value-entered accountUsername)
-                  id="new-account-username"
-                  name="username"
-                  maxlength=maxUsernameLength
-                  aria-describedby="username-validation"
-                  aria-invalid=usernameValidation.failed
-                  autocomplete="discourse"
-                }}
+                {{input value=accountUsername disabled=usernameDisabled class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength
+                autocomplete="discourse"}}
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
                   {{~#if userFields~}}
@@ -64,14 +49,7 @@
 
               <div class="input-group">
                 {{#if fullnameRequired}}
-                  {{text-field
-                    disabled=nameDisabled
-                    value=accountName
-                    id="new-account-name"
-                    class=(value-entered accountName)
-                    aria-describedby="fullname-validation"
-                    aria-invalid=nameValidation.failed
-                  }}
+                  {{text-field disabled=nameDisabled value=accountName id="new-account-name" class=(value-entered accountName)}}
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
                     {{#if siteSettings.full_name_required}}
@@ -81,35 +59,26 @@
                     {{/if}}
                   </label>
 
-                  {{input-tip validation=nameValidation id="fullname-validation"}}
+                  {{input-tip validation=nameValidation}}
                   <span class="more-info">{{nameInstructions}}</span>
                 {{/if}}
               </div>
 
               {{plugin-outlet
-                  name="create-account-before-password"
-                  noTags=true
-                  args=(hash
-                    accountName=accountName
-                    accountUsername=accountUsername
-                    accountPassword=accountPassword
-                    userFields=userFields
-                    authOptions=authOptions
-                  )
+              name="create-account-before-password"
+                noTags=true
+                args=(hash
+                  accountName=accountName
+                  accountUsername=accountUsername
+                  accountPassword=accountPassword
+                  userFields=userFields
+                  authOptions=authOptions
+                )
               }}
 
               <div class="input-group">
                 {{#if passwordRequired}}
-                  {{password-field
-                    value=accountPassword
-                    class=(value-entered accountPassword)
-                    type="password"
-                    id="new-account-password"
-                    autocomplete="current-password"
-                    capsLockOn=capsLockOn
-                    aria-describedby="password-validation"
-                    aria-invalid=passwordValidation.failed
-                  }}
+                  {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" autocomplete="current-password" capsLockOn=capsLockOn}}
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
                     {{~#if userFields~}}
@@ -117,7 +86,7 @@
                     {{/if}}
                   </label>
 
-                  {{input-tip validation=passwordValidation id="password-validation"}}
+                  {{input-tip validation=passwordValidation}}
                   <span class="more-info">{{passwordInstructions}}</span>
                   <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
                     {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
@@ -187,11 +156,6 @@
           {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
 
         {{/if}}
-        {{#unless hasAuthOptions}}
-          <div class="create-account-login-buttons">
-            {{login-buttons externalLogin=(action "externalLogin")}}
-          </div>
-        {{/unless}}
 
         {{#if skipConfirmation}}
           {{loading-spinner size="large"}}

@@ -428,10 +428,7 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     next(() => {
-      showModal("createAccount", {
-        modalClass: "create-account",
-        titleAriaElementId: "create-account-title",
-      });
+      showModal("createAccount", { modalClass: "create-account" });
     });
   },
 });
