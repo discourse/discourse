@@ -21,7 +21,7 @@ if !Theme.exists?
 
   if SiteSetting.default_dark_mode_color_scheme_id == SiteSetting.defaults[:default_dark_mode_color_scheme_id]
     dark_scheme_id = ColorScheme.where(base_scheme_id: "Dark").pluck_first(:id)
-    
+
     if dark_scheme_id.present?
       SiteSetting.default_dark_mode_color_scheme_id = dark_scheme_id
     end
