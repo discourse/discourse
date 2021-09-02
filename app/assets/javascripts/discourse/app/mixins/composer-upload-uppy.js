@@ -46,11 +46,6 @@ export default Mixin.create({
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this.mobileUploadButton?.removeEventListener(
-      "click",
-      this.mobileUploadButtonEventListener
-    );
-
     this.fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
