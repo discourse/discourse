@@ -327,8 +327,6 @@ export default Mixin.create({
         }
       });
     });
-
-    this._bindMobileUploadButton();
   },
 
   _bindMobileUploadButton() {

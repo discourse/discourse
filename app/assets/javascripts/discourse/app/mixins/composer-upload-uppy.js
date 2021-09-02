@@ -86,7 +86,6 @@ export default Mixin.create({
     this._unbindUploadTarget();
     this._bindFileInputChangeListener();
     this._bindPasteListener();
-    this._bindMobileUploadButton();
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,

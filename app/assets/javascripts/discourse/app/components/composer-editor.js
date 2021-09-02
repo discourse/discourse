@@ -219,6 +219,8 @@ export default Component.extend(ComposerUpload, {
     }
 
     this._bindUploadTarget();
+    this._bindMobileUploadButton();
+
     this.appEvents.trigger("composer:will-open");
   },
 
