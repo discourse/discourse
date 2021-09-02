@@ -6,10 +6,45 @@
   {{password-field type="password" placeholder="Placeholder"}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="text-field search"}}
-  {{text-field type="search" placeholder="Placeholder"}}
-{{/styleguide-example}}
-
 {{#styleguide-example title="textarea"}}
   {{textarea placeholder="Placeholder"}}
+{{/styleguide-example}}
+
+{{#styleguide-example title="inline-form"}}
+  <div class="inline-form">
+    {{text-field placeholder="Placeholder"}}
+    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="inline-form icon-only button"}}
+  <div class="inline-form">
+    {{text-field placeholder="Placeholder"}}
+    {{d-button class="btn-primary" icon="search" type="submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="inline-form with combo-box" initialValue=dummy.options.[0].name as |value|}}
+  <div class="inline-form">
+    {{text-field placeholder="Placeholder"}}
+    {{combo-box content=dummy.options value=value onChange=(fn (mut value))}}
+    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="inline-form with multi-select"}}
+  <div class="inline-form">
+    {{text-field}}
+    {{multi-select content=dummy.options onChange=(action "dummy")}}
+    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="inline-form with multi-select"}}
+  <div class="inline-form">
+    <label>Text:</label>
+    {{text-field}}
+    {{multi-select content=dummy.options onChange=(action "dummy")}}
+    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+  </div>
 {{/styleguide-example}}
