@@ -1124,9 +1124,8 @@ class UsersController < ApplicationController
 
     if groups
       custom_scope = params["custom_groups_scope"]&.to_sym
-      if custom_scope.present? && Group.plugin_custom_group_scopes_for_search[custom_scope].present?
-        plugin = Group.plugin_custom_group_scopes_for_search[custom_scope][:plugin]
-        groups = groups.send(custom_scope, current_user) if plugin.enabled?
+      if custom_scope.present? && DiscoursePluginRegistry.group_scope_for_search.include?(custom_scope)
+        groups = groups.send(custom_scope, current_user)
       end
 
       groups = Group.search_groups(term, groups: groups)

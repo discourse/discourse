@@ -4084,15 +4084,23 @@ describe UsersController do
         end
 
         it "allows plugin to filter by additional scope" do
-          Group.expects(:custom_scope).never
-          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'custom_scope', term: 'a' }
-          expect(response.status).to eq(200)
+          Group.update_all(messageable_level: Group::ALIAS_LEVELS[:nobody])
+          Fabricate(:group, name: "MessageableGroup", messageable_level: Group::ALIAS_LEVELS[:everyone])
 
-          Group.expects(:custom_scope).once
-          plugin = Plugin::Instance.new
-          plugin.add_custom_group_scope_for_search(:custom_scope)
-          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'custom_scope', term: 'a' }
+          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'messageable', term: 'a' }
           expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups.count).to eq(7)
+
+          plugin = Plugin::Instance.new
+          plugin.register_group_scope_for_search(:messageable)
+          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'messageable', term: 'a' }
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups.count).to eq(1)
+          expect(groups.first["name"]).to eq("MessageableGroup")
+
+          DiscoursePluginRegistry.reset!
         end
 
         it "doesn't search for groups" do

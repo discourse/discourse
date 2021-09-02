@@ -83,7 +83,6 @@ RSpec.describe Admin::GroupsController do
       end
 
       it 'filter unpermitted params' do
-        Group.plugin_permitted_params = {}
         params = group_params
         params[:group].merge!(allow_unknown_sender_topic_replies: true)
 
@@ -96,7 +95,7 @@ RSpec.describe Admin::GroupsController do
         params[:group].merge!(allow_unknown_sender_topic_replies: true)
 
         plugin = Plugin::Instance.new
-        plugin.add_permitted_group_param :allow_unknown_sender_topic_replies
+        plugin.register_group_param :allow_unknown_sender_topic_replies
 
         post "/admin/groups.json", params: params
         expect(Group.last.allow_unknown_sender_topic_replies).to eq(true)

@@ -370,17 +370,13 @@ class Plugin::Instance
   end
 
   # Add a permitted_param to Group, respecting if the plugin is enabled
-  def add_permitted_group_param(attribute)
-    reloadable_patch do |plugin|
-      ::Group.plugin_permitted_params[attribute] = { plugin: plugin }
-    end
+  def register_group_param(param)
+    DiscoursePluginRegistry.register_group_param(param, self)
   end
 
-  # Add a custom group scopes for search to Group, respecting if the plugin is enabled
-  def add_custom_group_scope_for_search(scope_name)
-    reloadable_patch do |plugin|
-      ::Group.plugin_custom_group_scopes_for_search[scope_name] = { plugin: plugin }
-    end
+  # Add a custom scopes for search to Group, respecting if the plugin is enabled
+  def register_group_scope_for_search(scope_name)
+    DiscoursePluginRegistry.register_group_scope_for_search(scope_name, self)
   end
 
   # Add validation method but check that the plugin is enabled
