@@ -2,6 +2,7 @@ import {
   acceptance,
   exists,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -38,8 +39,9 @@ acceptance("Create Account - User Fields", function (needs) {
     assert.ok(exists(".user-field"), "it has at least one user field");
 
     await click(".modal-footer .btn-primary");
+    assert.ok(exists("#modal-alert"), "it shows the required field alert");
     assert.equal(
-      query("#account-email-validation").innerText.trim(),
+      queryAll("#modal-alert").text(),
       "Please enter an email address"
     );
 
@@ -61,8 +63,12 @@ acceptance("Create Account - User Fields", function (needs) {
     );
 
     await click(".modal-footer .btn-primary");
+    assert.equal(query("#modal-alert").style.display, "");
+
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
+
     await click(".modal-footer .btn-primary");
+    assert.equal(query("#modal-alert").style.display, "none");
   });
 });

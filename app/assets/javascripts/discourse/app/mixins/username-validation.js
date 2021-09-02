@@ -11,7 +11,6 @@ function failedResult(attrs) {
   let result = EmberObject.create({
     shouldCheck: false,
     failed: true,
-    ok: false,
     element: document.querySelector("#new-account-username"),
   });
   result.setProperties(attrs);
@@ -61,12 +60,7 @@ export default Mixin.create({
     }
 
     if (isEmpty(username)) {
-      return failedResult({
-        message: I18n.t("user.username.required"),
-        reason: this.forceValidationReason
-          ? I18n.t("user.username.required")
-          : null,
-      });
+      return failedResult({ message: I18n.t("user.username.required") });
     }
 
     if (username.length < this.siteSettings.min_username_length) {

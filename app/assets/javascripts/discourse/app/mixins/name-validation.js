@@ -15,14 +15,12 @@ export default Mixin.create({
   },
 
   // Validate the name.
-  @discourseComputed("accountName", "forceValidationReason")
-  nameValidation(accountName, forceValidationReason) {
-    if (this.siteSettings.full_name_required && isEmpty(accountName)) {
+  @discourseComputed("accountName")
+  nameValidation() {
+    if (this.siteSettings.full_name_required && isEmpty(this.accountName)) {
       return EmberObject.create({
         failed: true,
-        ok: false,
         message: I18n.t("user.name.required"),
-        reason: forceValidationReason ? I18n.t("user.name.required") : null,
         element: document.querySelector("#new-account-name"),
       });
     }
