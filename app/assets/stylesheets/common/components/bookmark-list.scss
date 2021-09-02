@@ -70,10 +70,6 @@ $mobile-breakpoint: 700px;
     }
     .topic-statuses {
       float: none;
-      &:empty {
-        // avoids extra margin
-        display: none;
-      }
     }
   }
 

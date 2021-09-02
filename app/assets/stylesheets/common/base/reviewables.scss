@@ -465,11 +465,6 @@
       font-size: $font-up-2;
       margin-right: 0.75em;
     }
-    .topic-statuses {
-      &:empty {
-        display: none;
-      }
-    }
   }
 }
 
