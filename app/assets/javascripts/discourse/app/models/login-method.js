@@ -15,7 +15,7 @@ const LoginMethod = EmberObject.extend({
 
   @discourseComputed
   a11yTitle() {
-    return this.title_override || I18n.t(`login.${this.name}.a11y_title`);
+    return this.title_override || I18n.t(`login.${this.name}.sr_title`);
   },
 
   @discourseComputed
