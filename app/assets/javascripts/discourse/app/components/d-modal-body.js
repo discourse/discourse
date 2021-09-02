@@ -8,9 +8,9 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
-    if (!this.preventModalAlertHiding) {
-      $("#modal-alert").hide();
+    this._modalAlertElement = document.getElementById("modal-alert");
+    if (this._modalAlertElement) {
+      this._modalAlertElement.innerHTML = "";
     }
 
     let fixedParent = $(this.element).closest(".d-modal.fixed-modal");
@@ -58,15 +58,9 @@ export default Component.extend({
   },
 
   _clearFlash() {
-    const modalAlert = document.getElementById("modal-alert");
-    if (modalAlert) {
-      modalAlert.innerHTML = "";
-
-      if (!this.preventModalAlertHiding) {
-        modalAlert.style.display = "none";
-      }
-
-      modalAlert.classList.remove(
+    if (this._modalAlertElement) {
+      this._modalAlertElement.innerHTML = "";
+      this._modalAlertElement.classList.remove(
         "alert",
         "alert-error",
         "alert-info",
@@ -78,13 +72,14 @@ export default Component.extend({
 
   _flash(msg) {
     this._clearFlash();
-
-    let modalAlert = $("#modal-alert")
-      .addClass(`alert alert-${msg.messageClass || "success"}`)
-      .html(msg.text || "");
-
-    if (!this.preventModalAlertHiding) {
-      modalAlert.fadeIn();
+    if (!this._modalAlertElement) {
+      return;
     }
+
+    this._modalAlertElement.classList.add(
+      "alert",
+      `alert-${msg.messageClass || "success"}`
+    );
+    this._modalAlertElement.innerHTML = msg.text || "";
   },
 });

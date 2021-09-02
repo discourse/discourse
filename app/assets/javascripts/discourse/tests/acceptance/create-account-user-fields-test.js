@@ -39,7 +39,7 @@ acceptance("Create Account - User Fields", function (needs) {
 
     await click(".modal-footer .btn-primary");
     assert.equal(
-      query("#account-email-validation").text().trim(),
+      query("#account-email-validation").innerText.trim(),
       "Please enter an email address"
     );
 

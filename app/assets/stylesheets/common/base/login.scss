@@ -57,9 +57,13 @@
     width: 100%;
     max-width: 100%;
     margin-bottom: 0;
-    min-height: 50px;
-    position: absolute;
-    z-index: z("modal", "tooltip");
+    min-height: 35px;
+  }
+  #modal-alert:empty {
+    min-height: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: inline;
   }
   .login-welcome-header {
     z-index: z("modal", "content");
