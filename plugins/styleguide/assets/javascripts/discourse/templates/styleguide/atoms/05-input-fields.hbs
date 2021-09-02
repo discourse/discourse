@@ -17,8 +17,15 @@
   </div>
 {{/styleguide-example}}
 
-{{#styleguide-example title="inline-form icon-only button"}}
+{{#styleguide-example title="inline-form with icon button"}}
   <div class="inline-form">
+    {{text-field placeholder="Placeholder"}}
+    {{d-button class="btn-primary" icon="search" type="submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="full-width inline-form with icon button"}}
+  <div class="inline-form full-width">
     {{text-field placeholder="Placeholder"}}
     {{d-button class="btn-primary" icon="search" type="submit"}}
   </div>
@@ -40,7 +47,7 @@
   </div>
 {{/styleguide-example}}
 
-{{#styleguide-example title="inline-form with multi-select"}}
+{{#styleguide-example title="inline-form with multi-select and label"}}
   <div class="inline-form">
     <label>Text:</label>
     {{text-field}}

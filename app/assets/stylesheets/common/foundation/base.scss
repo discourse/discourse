@@ -162,6 +162,9 @@ input[type="submit"] {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
+  &.full-width {
+    display: flex;
+  }
 
   input[type="text"] {
     display: inline-flex;
