@@ -4083,26 +4083,6 @@ describe UsersController do
             .to_not include(private_group.name)
         end
 
-        it "allows plugin to filter by additional scope" do
-          Group.update_all(messageable_level: Group::ALIAS_LEVELS[:nobody])
-          Fabricate(:group, name: "MessageableGroup", messageable_level: Group::ALIAS_LEVELS[:everyone])
-
-          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'messageable', term: 'a' }
-          expect(response.status).to eq(200)
-          groups = response.parsed_body["groups"]
-          expect(groups.count).to eq(7)
-
-          plugin = Plugin::Instance.new
-          plugin.register_group_scope_for_search(:messageable)
-          get "/u/search/users.json", params: { include_groups: "true", custom_groups_scope: 'messageable', term: 'a' }
-          expect(response.status).to eq(200)
-          groups = response.parsed_body["groups"]
-          expect(groups.count).to eq(1)
-          expect(groups.first["name"]).to eq("MessageableGroup")
-
-          DiscoursePluginRegistry.reset!
-        end
-
         it "doesn't search for groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',

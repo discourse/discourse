@@ -370,6 +370,7 @@ class Plugin::Instance
   end
 
   # Add a permitted_param to Group, respecting if the plugin is enabled
+  # Used in GroupsController#update and Admin::GroupsController#create
   def register_group_param(param)
     DiscoursePluginRegistry.register_group_param(param, self)
   end

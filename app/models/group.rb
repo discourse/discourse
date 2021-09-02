@@ -557,8 +557,14 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_groups(name, groups: nil)
-    (groups || Group).where(
+  def self.search_groups(name, groups: nil, custom_scope: {})
+    groups ||= Group
+
+    if custom_scope.present? && DiscoursePluginRegistry.group_scope_for_search.include?(custom_scope[:name])
+      groups = groups.send(custom_scope[:name], *custom_scope[:arguments])
+    end
+
+    groups.where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
     )
   end
