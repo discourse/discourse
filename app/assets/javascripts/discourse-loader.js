@@ -163,6 +163,9 @@ var define, requirejs;
       "@ember/object/internals": {
         guidFor: Ember.guidFor,
       },
+      "@ember/views/text-support": {
+        default: Ember.TextSupport,
+      },
       I18n: {
         // eslint-disable-next-line
         default: I18n,
