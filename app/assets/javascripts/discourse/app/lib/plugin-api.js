@@ -1387,12 +1387,17 @@ class PluginApi {
    * is converted to camelCase and used as the method name for you.
    */
   dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
-    this.modifyClass(`component:${mountedComponent}`, {
-      didInsertElement() {
-        this._super();
-        this.dispatch(appEvent, widgetKey);
+    this.modifyClass(
+      `component:${mountedComponent}`,
+      {
+        pluginId: `#{mountedComponent}/#{widgetKey}/#{appEvent}`,
+        didInsertElement() {
+          this._super();
+          this.dispatch(appEvent, widgetKey);
+        },
       },
-    });
+      { ignoreMissing: true }
+    );
   }
 }
 
