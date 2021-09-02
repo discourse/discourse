@@ -158,6 +158,10 @@ export default Component.extend(UtilsMixin, {
     }
   },
 
+  focusIn(event) {
+    event.stopImmediatePropagation();
+  },
+
   keyDown(event) {
     if (this.selectKit.isExpanded) {
       if (event.key === "Backspace") {
