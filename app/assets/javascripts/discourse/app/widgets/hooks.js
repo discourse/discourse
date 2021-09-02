@@ -86,7 +86,6 @@ function findWidget(node, attrName) {
   }
 }
 
-let _watchingDocument = false;
 let _dragging;
 
 const DRAG_NAME = "mousemove.discourse-widget-drag";
@@ -105,11 +104,124 @@ function cancelDrag(e) {
   }
 }
 
-WidgetClickHook.setupDocumentCallback = function () {
-  if (_watchingDocument) {
-    return;
-  }
+function _handleMouseOver(event) {
+  nodeCallback(
+    event.target,
+    MOUSE_OVER_ATTRIBUTE_NAME,
+    (w) => w.mouseOver(event),
+    {
+      rerender: false,
+    }
+  );
+}
 
+function _handleMouseOut(event) {
+  nodeCallback(
+    event.target,
+    MOUSE_OUT_ATTRIBUTE_NAME,
+    (w) => w.mouseOut(event),
+    {
+      rerender: false,
+    }
+  );
+}
+
+function _handleDoubleClick(event) {
+  nodeCallback(event.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
+    w.doubleClick(event)
+  );
+}
+
+function _handleTouchStart(event) {
+  nodeCallback(
+    event.target,
+    TOUCH_START_ATTRIBUTE_NAME,
+    (w) => w.touchStart(event),
+    {
+      rerender: false,
+    }
+  );
+}
+
+function _handleTouchEnd(event) {
+  nodeCallback(
+    event.target,
+    TOUCH_END_ATTRIBUTE_NAME,
+    (w) => w.touchStart(event),
+    {
+      rerender: false,
+    }
+  );
+}
+
+function _handleMouseUp(event) {
+  nodeCallback(event.target, MOUSE_UP_ATTRIBUTE_NAME, (w) =>
+    w.doubleClick(event)
+  );
+}
+
+function _handleMouseMove(event) {
+  nodeCallback(event.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) =>
+    w.doubleClick(event)
+  );
+}
+
+function _handleKeyUp(event) {
+  nodeCallback(event.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(event));
+}
+
+function _handleKeyDown(event) {
+  nodeCallback(event.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(event));
+}
+
+function _handleInput(event) {
+  nodeCallback(event.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(event), {
+    rerender: false,
+  });
+}
+
+function _handleChange(event) {
+  nodeCallback(event.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(event), {
+    rerender: false,
+  });
+}
+
+function _handleClick(event) {
+  nodeCallback(event.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(event));
+
+  let node = event.target;
+  const outside = document.querySelectorAll("[data-click-outside]");
+  outside.forEach((outNode) => {
+    if (
+      outNode.contains(node) ||
+      (outNode === node && outNode.style.position === "absolute")
+    ) {
+      return;
+    }
+
+    const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
+    if (widget2) {
+      widget2.clickOutside(event);
+    }
+  });
+}
+
+WidgetClickHook.teardownDocumentCallback = function () {
+  document.removeEventListener("mouseover", _handleMouseOver);
+  document.removeEventListener("mouseout", _handleMouseOut);
+  document.removeEventListener("dbclick", _handleDoubleClick);
+  document.removeEventListener("click", _handleClick);
+  document.removeEventListener("keyup", _handleKeyUp);
+  document.removeEventListener("keydown", _handleKeyDown);
+  document.removeEventListener("input", _handleInput);
+  document.removeEventListener("change", _handleChange);
+  document.removeEventListener("touchstart", _handleTouchStart);
+  document.removeEventListener("touchend", _handleTouchEnd);
+  document.removeEventListener("mouseup", _handleMouseUp);
+  document.removeEventListener("mousemove", _handleMouseMove);
+};
+
+WidgetClickHook.setupDocumentCallback = function () {
   let widget;
   let onDrag = (dragE) => {
     const tt = dragE.targetTouches[0];
@@ -120,17 +232,18 @@ WidgetClickHook.setupDocumentCallback = function () {
     }
   };
 
-  $(document).on("mouseover.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, (w) => w.mouseOver(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("mouseout.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, (w) => w.mouseOut(e), {
-      rerender: false,
-    });
-  });
+  document.addEventListener("mouseover", _handleMouseOver);
+  document.addEventListener("mouseout", _handleMouseOut);
+  document.addEventListener("click", _handleClick);
+  document.addEventListener("dbclick", _handleDoubleClick);
+  document.addEventListener("keyup", _handleKeyUp);
+  document.addEventListener("keydown", _handleKeyDown);
+  document.addEventListener("input", _handleInput);
+  document.addEventListener("change", _handleChange);
+  document.addEventListener("touchstart", _handleTouchStart);
+  document.addEventListener("touchend", _handleTouchEnd);
+  document.addEventListener("mouseup", _handleMouseUp);
+  document.addEventListener("mousemove", _handleMouseMove);
 
   document.addEventListener("touchmove", onDrag, {
     passive: false,
@@ -164,32 +277,6 @@ WidgetClickHook.setupDocumentCallback = function () {
     }
   );
 
-  $(document).on("dblclick.discourse-widget", (e) => {
-    nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
-      w.doubleClick(e)
-    );
-  });
-
-  $(document).on("click.discourse-widget", (e) => {
-    nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(e));
-
-    let node = e.target;
-    const $outside = $("[data-click-outside]");
-    $outside.each((i, outNode) => {
-      if (
-        outNode.contains(node) ||
-        (outNode === node && outNode.style.position === "absolute")
-      ) {
-        return;
-      }
-
-      const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
-      if (widget2) {
-        widget2.clickOutside(e);
-      }
-    });
-  });
-
   $(document).on("mousedown.discourse-widget", (e) => {
     let node = e.target;
     const $outside = $("[data-mouse-down-outside]");
@@ -202,53 +289,9 @@ WidgetClickHook.setupDocumentCallback = function () {
         widget2.mouseDownOutside(e);
       }
     });
-  });
 
-  $(document).on("keyup.discourse-widget", (e) => {
-    nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(e));
-  });
-
-  $(document).on("keydown.discourse-widget", (e) => {
-    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(e));
-  });
-
-  $(document).on("input.discourse-widget", (e) => {
-    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("change.discourse-widget", (e) => {
-    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("touchstart.discourse-widget", (e) => {
-    nodeCallback(e.target, TOUCH_START_ATTRIBUTE_NAME, (w) => w.touchStart(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("touchend.discourse-widget", (e) => {
-    nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("mousedown.discourse-widget", (e) => {
     nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, (w) => {
       w.mouseDown(e);
     });
   });
-
-  $(document).on("mouseup.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e));
-  });
-
-  $(document).on("mousemove.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) => w.mouseMove(e));
-  });
-
-  _watchingDocument = true;
 };

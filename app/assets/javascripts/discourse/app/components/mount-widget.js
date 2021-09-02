@@ -3,7 +3,6 @@ import { diff, patch } from "virtual-dom";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
 import Component from "@ember/component";
 import DirtyKeys from "discourse/lib/dirty-keys";
-import { WidgetClickHook } from "discourse/widgets/hooks";
 import { camelize } from "@ember/string";
 import { getRegister } from "discourse-common/lib/get-owner";
 
@@ -48,8 +47,6 @@ export default Component.extend({
   },
 
   didInsertElement() {
-    WidgetClickHook.setupDocumentCallback();
-
     this._rootNode = document.createElement("div");
     this.element.appendChild(this._rootNode);
     this._timeout = scheduleOnce("render", this, this.rerenderWidget);
