@@ -111,5 +111,8 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   end
 end
 
-Sidekiq.error_handlers.clear
+unless Rails.env.development?
+  Sidekiq.error_handlers.clear
+end
+
 Sidekiq.error_handlers << SidekiqLogsterReporter.new

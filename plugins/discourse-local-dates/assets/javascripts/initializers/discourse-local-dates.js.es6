@@ -82,6 +82,7 @@ function initializeDiscourseLocalDates(api) {
   });
 
   api.modifyClass("component:d-editor", {
+    pluginId: "discourse-local-dates",
     actions: {
       insertDiscourseLocalDate(toolbarEvent) {
         showModal("discourse-local-dates-create-modal").setProperties({

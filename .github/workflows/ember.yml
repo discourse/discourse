@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: run
-    if: false # something is broken with this job so skip for now
+    if: true
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 40

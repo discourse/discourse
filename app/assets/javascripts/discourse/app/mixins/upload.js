@@ -103,6 +103,10 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadprogressall", (e, data) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       const progress = parseInt((data.loaded / data.total) * 100, 10);
       this.set("uploadProgress", progress);
     });
