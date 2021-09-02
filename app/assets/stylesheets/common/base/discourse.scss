@@ -829,19 +829,16 @@ table {
 }
 
 .topic-statuses {
-  display: inline;
+  // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
-  margin-right: 0.15em;
   .topic-status {
     margin: 0;
     display: inline-flex;
     color: var(--primary-medium);
+    margin-right: 0.2em;
     .d-icon {
       height: 0.74em;
       width: 0.75em;
-    }
-    &:not(:last-child) {
-      margin-right: 0.15em;
     }
   }
 
