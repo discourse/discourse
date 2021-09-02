@@ -147,6 +147,10 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("progress", (progress) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.set("uploadProgress", progress);
     });
 
