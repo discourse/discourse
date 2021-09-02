@@ -21,15 +21,18 @@ export default {
           }
         );
       } else {
-        addComposerUploadPreProcessor(UppyMediaOptimization, ({ site }) => {
-          return {
-            optimizeFn: (data, opts) =>
-              container
-                .lookup("service:media-optimization-worker")
-                .optimizeImage(data, opts),
-            runParallel: !site.isMobileDevice,
-          };
-        });
+        addComposerUploadPreProcessor(
+          UppyMediaOptimization,
+          ({ isMobileDevice }) => {
+            return {
+              optimizeFn: (data, opts) =>
+                container
+                  .lookup("service:media-optimization-worker")
+                  .optimizeImage(data, opts),
+              runParallel: !isMobileDevice,
+            };
+          }
+        );
       }
     }
   },

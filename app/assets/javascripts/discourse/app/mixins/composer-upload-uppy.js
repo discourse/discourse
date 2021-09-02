@@ -264,7 +264,7 @@ export default Mixin.create({
           composerModel: this.composerModel,
           composerElement: this.composerElement,
           capabilities: this.capabilities,
-          site: this.site,
+          isMobileDevice: this.site.isMobileDevice,
         })
       );
       this._trackPreProcessorStatus(pluginClass);
