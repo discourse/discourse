@@ -105,7 +105,10 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# Pinning oj until https://github.com/ohler55/oj/issues/699 is resolved.
+# Segfaults and stuck processes after upgrading.
+gem 'oj', '3.13.2'
+
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false

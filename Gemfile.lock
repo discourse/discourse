@@ -550,7 +550,7 @@ DEPENDENCIES
   multi_json
   mustache
   nokogiri
-  oj
+  oj (= 3.13.2)
   omniauth
   omniauth-facebook
   omniauth-github
@@ -609,4 +609,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.2.19
+   2.2.26
