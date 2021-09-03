@@ -13,6 +13,7 @@ async function checkSelectKitIsNotExpanded(selector) {
 
 async function checkSelectKitIsNotCollapsed(selector) {
   if (!queryAll(selector).hasClass("is-expanded")) {
+    // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be expanded but it is collapsed.");
     await expandSelectKit(selector);
   }
