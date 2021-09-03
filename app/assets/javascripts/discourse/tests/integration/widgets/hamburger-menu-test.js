@@ -108,6 +108,8 @@ discourseModule(
         assert.ok(exists(".top-topics-link"));
         assert.ok(exists(".badge-link"));
         assert.ok(exists(".category-link"));
+        assert.ok(exists(".about-link"));
+        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
 
@@ -266,15 +268,6 @@ discourseModule(
 
       test(assert) {
         assert.ok(!exists(".user-directory-link"));
-      },
-    });
-
-    componentTest("general links", {
-      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
-
-      test(assert) {
-        assert.ok(exists(".about-link"));
-        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
   }
