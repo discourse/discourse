@@ -1339,6 +1339,10 @@ export default Controller.extend({
   },
 
   close() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     // the 'fullscreen-composer' class is added to remove scrollbars from the
     // document while in fullscreen mode. If the composer is closed for any reason
     // this class should be removed
