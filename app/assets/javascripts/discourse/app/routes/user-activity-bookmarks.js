@@ -3,6 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default DiscourseRoute.extend({
   queryParams: {
     acting_username: { refreshModel: true },
+    q: { refreshModel: true },
   },
 
   model() {
