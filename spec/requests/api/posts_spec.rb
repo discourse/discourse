@@ -16,6 +16,7 @@ describe 'posts' do
 
     get 'List latest posts across topics' do
       tags 'Posts'
+      operationId 'listPosts'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       produces 'application/json'
@@ -98,6 +99,7 @@ describe 'posts' do
 
     post 'Creates a new topic, a new post, or a private message' do
       tags 'Posts', 'Topics', 'Private Messages'
+      operationId 'createTopicPostPM'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('topic_create_request')
       parameter name: :params, in: :body, schema: expected_request_schema
@@ -121,6 +123,7 @@ describe 'posts' do
 
     get 'Retrieve a single post' do
       tags 'Posts'
+      operationId 'getPost'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter name: :id, in: :path, schema: { type: :string }
@@ -194,6 +197,7 @@ describe 'posts' do
 
     put 'Update a single post' do
       tags 'Posts'
+      operationId 'updatePost'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -292,6 +296,7 @@ describe 'posts' do
   path '/posts/{id}/locked.json' do
     put 'Lock a post from being edited' do
       tags 'Posts'
+      operationId 'lockPost'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -324,6 +329,7 @@ describe 'posts' do
   path '/post_actions.json' do
     post 'Like a post and other actions' do
       tags 'Posts'
+      operationId 'performPostAction'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
