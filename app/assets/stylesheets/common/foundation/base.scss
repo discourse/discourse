@@ -166,29 +166,21 @@ input[type="submit"] {
     display: flex;
   }
 
-  input[type="text"] {
+  > input[type="text"] {
     display: inline-flex;
     flex: 1;
   }
 
-  .select-kit,
-  input[type="text"],
-  label,
-  .btn {
-    margin-bottom: 0.5em;
-  }
-
-  .select-kit,
-  input[type="text"],
-  label {
+  > .select-kit,
+  > input[type="text"],
+  > label,
+  > .btn {
+    margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
     margin-right: 0.5em;
-  }
-
-  .btn + .btn {
-    margin-left: 0.5em;
-  }
-
-  label {
-    font-weight: bold;
+    //
+    &:first-child:last-child,
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }

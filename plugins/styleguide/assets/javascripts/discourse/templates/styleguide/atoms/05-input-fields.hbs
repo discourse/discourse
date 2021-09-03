@@ -24,7 +24,13 @@
   </div>
 {{/styleguide-example}}
 
-{{#styleguide-example title="full-width inline-form with icon button"}}
+{{#styleguide-example title="full-width inline-form with single input"}}
+  <div class="inline-form full-width">
+    {{text-field placeholder="Placeholder"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="full-width inline-form with input and icon button"}}
   <div class="inline-form full-width">
     {{text-field placeholder="Placeholder"}}
     {{d-button class="btn-primary" icon="search" type="submit"}}
@@ -53,5 +59,12 @@
     {{text-field}}
     {{multi-select content=dummy.options onChange=(action "dummy")}}
     {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+  </div>
+{{/styleguide-example}}
+
+{{#styleguide-example title="category-notifications-button and regular button"}}
+  <div class="inline-form">
+    {{category-notifications-button category=dummy.categories.[0] value=1 onChange=(action "dummy")}}
+    {{d-button icon="reply" type="submit" translatedLabel="Button"}}
   </div>
 {{/styleguide-example}}
