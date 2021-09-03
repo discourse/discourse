@@ -231,6 +231,8 @@ input {
 }
 
 textarea {
+  padding: $vpad $hpad;
+  box-sizing: border-box;
   height: auto;
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);

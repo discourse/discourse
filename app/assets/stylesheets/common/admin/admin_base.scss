@@ -414,14 +414,7 @@ $mobile-breakpoint: 700px;
     clear: both;
     padding: 4px;
   }
-  @include breakpoint(tablet) {
-    .select-kit.period-chooser
-      .period-chooser-header
-      h2.selected-name
-      .top-date-string {
-      font-size: $font-down-3;
-    }
-  }
+
   .controls {
     @include clearfix;
   }
