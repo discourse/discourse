@@ -15,7 +15,7 @@ begin:":[ \\t]*(IApplication|IAccessRights|IAccountRepository|IAccountSelectionR
 end:"[ \\t]*=",excludeEnd:!0},A={className:"variable",keywords:C,begin:E,
 relevance:0,contains:[N,I]
 },e="[A-Za-z\u0410-\u042f\u0430-\u044f\u0451\u0401_][A-Za-z\u0410-\u042f\u0430-\u044f\u0451\u0401_0-9]*\\("
-;return{name:"ISBL",aliases:["isbl"],case_insensitive:!0,keywords:C,
+;return{name:"ISBL",case_insensitive:!0,keywords:C,
 illegal:"\\$|\\?|%|,|;$|~|#|@|</",contains:[{className:"function",begin:e,
 end:"\\)$",returnBegin:!0,keywords:C,illegal:"[\\[\\]\\|\\$\\?%,~#@]",
 contains:[{className:"title",keywords:{$pattern:E,

@@ -286,10 +286,10 @@
     "@glimmer/interfaces" "^0.54.2"
     "@simple-dom/interface" "^1.4.0"
 
-"@highlightjs/cdn-assets@^10.6.0":
-  version "10.6.0"
-  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.6.0.tgz#ec1404662cd20ed3de4e918d952f01af6350d5d0"
-  integrity sha512-u1nkZi2HRsZ3FuvnafUxhv6Bk3tyXboG4F0SE+QQJk+GhAxRQaENPMdZ6zVVQg6Vsv9r23VyWJLo4Vnw72NIxQ==
+"@highlightjs/cdn-assets@^11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-11.2.0.tgz#e571e554266de64e9f2e11f1aa491e1b0346a97b"
+  integrity sha512-W3BKP49Fs7+e+QJEIylbaOUtKWVgABVRdDj6GUtScYMC7U3CFFoHD2rWl4S6RXYJX6+dKAYkCL4lxmZJZpP2yQ==
 
 "@json-editor/json-editor@^2.5.2":
   version "2.5.2"

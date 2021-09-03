@@ -5,8 +5,8 @@ subLanguage:"xml",relevance:0},i={variants:[{begin:/\[.+?\]\[.*?\]/,relevance:0
 },{begin:/\[.+?\]\(((data|javascript|mailto):|(?:http|ftp)s?:\/\/).*?\)/,
 relevance:2},{begin:n(/\[.+?\]\(/,/[A-Za-z][A-Za-z0-9+.-]*/,/:\/\/.*?\)/),
 relevance:2},{begin:/\[.+?\]\([./?&#].*?\)/,relevance:1},{
-begin:/\[.+?\]\(.*?\)/,relevance:0}],returnBegin:!0,contains:[{
-className:"string",relevance:0,begin:"\\[",end:"\\]",excludeBegin:!0,
+begin:/\[.*?\]\(.*?\)/,relevance:0}],returnBegin:!0,contains:[{match:/\[(?=\])/
+},{className:"string",relevance:0,begin:"\\[",end:"\\]",excludeBegin:!0,
 returnEnd:!0},{className:"link",relevance:0,begin:"\\]\\(",end:"\\)",
 excludeBegin:!0,excludeEnd:!0},{className:"symbol",relevance:0,begin:"\\]\\[",
 end:"\\]",excludeBegin:!0,excludeEnd:!0}]},s={className:"strong",contains:[],

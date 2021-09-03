@@ -32,7 +32,7 @@ excludeBegin:!0,excludeEnd:!0,relevance:0,contains:[].concat("self",g,{
 begin:"(string|char|byte|int|long|bool|decimal|single|double|DateTime|xml|array|hashtable|void)",
 className:"built_in",relevance:0},{className:"type",begin:/[\.\w\d]+/,
 relevance:0})};return p.contains.unshift(m),{name:"PowerShell",
-aliases:["ps","ps1"],case_insensitive:!0,keywords:n,contains:g.concat(c,l,o,{
-variants:[{className:"operator",
+aliases:["pwsh","ps","ps1"],case_insensitive:!0,keywords:n,
+contains:g.concat(c,l,o,{variants:[{className:"operator",
 begin:"(-and|-as|-band|-bnot|-bor|-bxor|-casesensitive|-ccontains|-ceq|-cge|-cgt|-cle|-clike|-clt|-cmatch|-cne|-cnotcontains|-cnotlike|-cnotmatch|-contains|-creplace|-csplit|-eq|-exact|-f|-file|-ge|-gt|-icontains|-ieq|-ige|-igt|-ile|-ilike|-ilt|-imatch|-in|-ine|-inotcontains|-inotlike|-inotmatch|-ireplace|-is|-isnot|-isplit|-join|-le|-like|-lt|-match|-ne|-not|-notcontains|-notin|-notlike|-notmatch|-or|-regex|-replace|-shl|-shr|-split|-wildcard|-xor)\\b"
-},{className:"literal",begin:/(-)[\w\d]+/,relevance:0}]},m)}}})());
+},{className:"literal",begin:/(-){1,2}[\w\d-]+/,relevance:0}]},m)}}})());
