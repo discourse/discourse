@@ -1279,6 +1279,16 @@ describe UsersController do
             end
           end
 
+          it "should allow single values and not just arrays" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => 'Axe' } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to('Axe')
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Axe Juice Sword] } }
+            end.to change { user.reload.user_fields[field_id] }.from('Axe').to(%w[Axe Sword])
+          end
+
           it "shouldn't allow unregistered field values" do
             expect do
               put update_user_url, params: { user_fields: { field_id => %w[Juice] } }
