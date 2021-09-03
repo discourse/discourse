@@ -18,13 +18,14 @@ const searchData = {};
 
 export function initSearchData() {
   searchData.loading = false;
-  searchData.results = {};
+  searchData.results = [];
   searchData.noResults = false;
   searchData.term = undefined;
   searchData.typeFilter = null;
   searchData.invalidTerm = false;
   searchData.topicId = null;
   searchData.afterAutocomplete = false;
+  searchData.suggestionResults = [];
 }
 
 initSearchData();
