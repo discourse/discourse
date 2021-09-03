@@ -95,7 +95,11 @@ RSpec.configure do |config|
           url: 'https://discourse-meta.s3-us-west-1.amazonaws.com/optimized/3X/9/d/9d543e92b15b06924249654667a81441a55867eb_1_690x184.png',
         },
         version: 'latest',
-        description: api_docs_description
+        description: api_docs_description,
+        license: {
+          name: 'MIT',
+          url: 'https://docs.discourse.org/LICENSE.txt'
+        }
       },
       paths: {},
       servers: [
