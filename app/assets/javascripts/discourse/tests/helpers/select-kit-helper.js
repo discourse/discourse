@@ -3,32 +3,33 @@ import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
 import { moduleForComponent } from "ember-qunit";
 
-function checkSelectKitIsNotExpanded(selector) {
+async function checkSelectKitIsNotExpanded(selector) {
   if (queryAll(selector).hasClass("is-expanded")) {
     // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be collapsed but it is expanded.");
+    await collapseSelectKit(selector);
   }
 }
 
-function checkSelectKitIsNotCollapsed(selector) {
+async function checkSelectKitIsNotCollapsed(selector) {
   if (!queryAll(selector).hasClass("is-expanded")) {
-    // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be expanded but it is collapsed.");
+    await expandSelectKit(selector);
   }
 }
 
 async function expandSelectKit(selector) {
-  checkSelectKitIsNotExpanded(selector);
+  await checkSelectKitIsNotExpanded(selector);
   return await click(`${selector} .select-kit-header`);
 }
 
 async function collapseSelectKit(selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   return await click(`${selector} .select-kit-header`);
 }
 
 async function selectKitFillInFilter(filter, selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await fillIn(
     `${selector} .filter-input`,
     queryAll(`${selector} .filter-input`).val() + filter
@@ -36,27 +37,27 @@ async function selectKitFillInFilter(filter, selector) {
 }
 
 async function selectKitEmptyFilter(selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await fillIn(`${selector} .filter-input`, "");
 }
 
 async function selectKitSelectRowByValue(value, selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await click(`${selector} .select-kit-row[data-value='${value}']`);
 }
 
 async function selectKitSelectRowByName(name, selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await click(`${selector} .select-kit-row[data-name='${name}']`);
 }
 
 async function selectKitSelectNoneRow(selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await click(`${selector} .select-kit-row.none`);
 }
 
 async function selectKitSelectRowByIndex(index, selector) {
-  checkSelectKitIsNotCollapsed(selector);
+  await checkSelectKitIsNotCollapsed(selector);
   await click(queryAll(`${selector} .select-kit-row`)[index]);
 }
 
