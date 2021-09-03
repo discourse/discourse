@@ -11,6 +11,8 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
   attributeBindings: ["name"],
 
   focusIn(event) {
+    event.stopImmediatePropagation();
+
     document.querySelectorAll(".select-kit-header").forEach((header) => {
       if (header !== event.target) {
         header.parentNode.open = false;
