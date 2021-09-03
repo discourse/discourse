@@ -14,6 +14,7 @@ describe 'private messages' do
 
     get 'Get a list of private messages for a user' do
       tags 'Private Messages'
+      operationId 'listUserPrivateMessages'
       parameter name: :username, in: :path, schema: { type: :string }
 
       produces 'application/json'
@@ -123,6 +124,7 @@ describe 'private messages' do
 
     get 'Get a list of private messages sent for a user' do
       tags 'Private Messages'
+      operationId 'getUserSentPrivateMessages'
       parameter name: :username, in: :path, schema: { type: :string }
 
       produces 'application/json'

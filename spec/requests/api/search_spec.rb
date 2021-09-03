@@ -13,6 +13,7 @@ describe 'groups' do
   path '/search.json' do
     get 'Search for a term' do
       tags 'Search'
+      operationId 'search'
       consumes 'application/json'
       parameter(
         name: :q,

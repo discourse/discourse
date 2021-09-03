@@ -13,6 +13,7 @@ describe 'groups' do
   path '/admin/groups.json' do
     post 'Creates a group' do
       tags 'Groups'
+      operationId 'createGroup'
       consumes 'application/json'
       parameter name: :group, in: :body, schema: {
         type: :object,
@@ -78,6 +79,7 @@ describe 'groups' do
   path '/admin/groups/{id}.json' do
     delete 'Delete a group' do
       tags 'Groups'
+      operationId 'deleteGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = nil
@@ -99,6 +101,7 @@ describe 'groups' do
   path '/groups/{id}.json' do
     put 'Update a group' do
       tags 'Groups'
+      operationId 'updateGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       parameter name: :group, in: :body, schema: {
@@ -128,6 +131,7 @@ describe 'groups' do
 
     get 'Get a group' do
       tags 'Groups'
+      operationId 'getGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
       expected_request_schema = nil
@@ -150,6 +154,7 @@ describe 'groups' do
   path '/groups/{id}/members.json' do
     get 'List group members' do
       tags 'Groups'
+      operationId 'listGroupMembers'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
       expected_request_schema = nil
@@ -170,6 +175,7 @@ describe 'groups' do
 
     put 'Add group members' do
       tags 'Groups'
+      operationId 'addGroupMembers'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = load_spec_schema('group_add_members_request')
@@ -195,6 +201,7 @@ describe 'groups' do
 
     delete 'Remove group members' do
       tags 'Groups'
+      operationId 'removeGroupMembers'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = load_spec_schema('group_remove_members_request')
@@ -222,6 +229,7 @@ describe 'groups' do
   path '/groups.json' do
     get 'List groups' do
       tags 'Groups'
+      operationId 'listGroups'
       consumes 'application/json'
       expected_request_schema = nil
 
