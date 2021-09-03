@@ -177,8 +177,6 @@ input[type="submit"] {
   > .btn {
     margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
     margin-right: 0.5em;
-    //
-    &:first-child:last-child,
     &:last-child {
       margin-right: 0;
     }
