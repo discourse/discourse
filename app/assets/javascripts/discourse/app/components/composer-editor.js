@@ -64,7 +64,7 @@ export function cleanUpComposerUploadProcessor() {
 
 let uploadPreProcessors = [];
 export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
-  if (!pluginClass.prototype instanceof BasePlugin) {
+  if (!(pluginClass.prototype instanceof BasePlugin)) {
     throw new Error(
       "Composer upload preprocessors must inherit from the Uppy BasePlugin class."
     );
