@@ -783,14 +783,7 @@ export default Component.extend(
 
     select(value, item) {
       if (!isPresent(value)) {
-        if (!this.validateSelect(this.selectKit.highlighted)) {
-          return;
-        }
-
-        this.selectKit.change(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
+        this._onClearSelection();
       } else {
         const existingItem = this.findValue(this.mainCollection, item);
         if (existingItem) {
