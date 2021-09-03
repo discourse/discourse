@@ -1,4 +1,4 @@
-import QUnit, { module } from "qunit";
+import QUnit, { module, skip, test } from "qunit";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -467,4 +467,20 @@ export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .map((c) => c.func(...args));
+}
+
+export function conditionalTest(name, condition, testCase) {
+  if (condition) {
+    test(name, testCase);
+  } else {
+    skip(name, testCase);
+  }
+}
+
+export function chromeTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Chrome"), testCase);
+}
+
+export function firefoxTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }

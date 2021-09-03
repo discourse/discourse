@@ -1,5 +1,6 @@
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
   query,
@@ -400,18 +401,22 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with replyAsNewTopic keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
-    await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+  // Using J/K on Firefox clean the text selection, so this won't work there
+  chromeTest(
+    "Quoting a quote with replyAsNewTopic keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
   test("Quoting by selecting text can mark the quote as full", async function (assert) {
     await visit("/t/internationalization-localization/280");

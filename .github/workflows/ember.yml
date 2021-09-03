@@ -43,5 +43,5 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember test
+        run: sudo -E -u discourse -H yarn ember test
         timeout-minutes: 30
