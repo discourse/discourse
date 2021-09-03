@@ -75,16 +75,16 @@ $breakpoints: (
 //
 // --------------------------------------------------
 
-$vpad: 0.53em;
+$vpad: 0.5em;
+$hpad: 0.65em;
 
+// for consistent sizing across inputs, buttons and dropdowns
 @mixin form-item-sizing {
-  // for consistent sizing across inputs, buttons and dropdowns
   border: 1px solid transparent;
   font-size: var(--font-0);
   line-height: normal;
   box-sizing: border-box;
-  padding-top: $vpad;
-  padding-bottom: $vpad;
+  padding: $vpad $hpad;
   .ios-device & {
     font-size: var(--font-size-ios-input);
     padding-top: $vpad * 0.8;

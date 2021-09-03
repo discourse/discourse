@@ -215,14 +215,11 @@ input {
     @include appearance-none;
     @include form-item-sizing;
     display: inline-block;
-    padding-left: 10px;
-    padding-right: 10px;
     margin-bottom: 9px;
     color: var(--primary);
     background-color: var(--secondary);
     border: 1px solid var(--primary-medium);
     border-radius: 0;
-    min-height: 30px;
     &:focus {
       @include default-focus;
     }
