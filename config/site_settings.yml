@@ -2197,6 +2197,9 @@ uncategorized:
   use_site_small_logo_as_system_avatar:
     default: true
 
+  enable_listing_suspended_users_on_search:
+    default: false
+
   disable_system_edit_notifications: true
 
   notification_consolidation_threshold:

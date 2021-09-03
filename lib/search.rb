@@ -758,11 +758,11 @@ class Search
       # calling protected methods
       send("#{@results.type_filter}_search")
     else
-      unless @search_context
-        user_search if @term.present?
-        category_search if @term.present?
-        tags_search if @term.present?
-        groups_search if @term.present?
+      if @term.present? && !@search_context
+        user_search
+        category_search
+        tags_search
+        groups_search
       end
       topic_search
     end
@@ -831,6 +831,10 @@ class Search
       .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
       .order("last_posted_at DESC")
       .limit(limit)
+
+    if !SiteSetting.enable_listing_suspended_users_on_search && !@guardian.user&.admin
+      users = users.where(suspended_at: nil)
+    end
 
     users_custom_data_query = DB.query(<<~SQL, user_ids: users.pluck(:id), term: "%#{@original_term.downcase}%")
       SELECT user_custom_fields.user_id, user_fields.name, user_custom_fields.value FROM user_custom_fields
