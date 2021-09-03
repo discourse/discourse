@@ -257,6 +257,7 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      resetMobile();
       let app = getApplication();
       if (options && options.afterEach) {
         options.afterEach.call(this);
