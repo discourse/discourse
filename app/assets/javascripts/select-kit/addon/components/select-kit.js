@@ -139,12 +139,6 @@ export default Component.extend(
       );
     },
 
-    click(event) {
-      if (this.selectKit.options.preventsClickPropagation) {
-        event.stopPropagation();
-      }
-    },
-
     _modifyComponentForRowWrapper(collection, item) {
       let component = this.modifyComponentForRow(collection, item);
       return component || "select-kit/select-kit-row";
@@ -196,10 +190,9 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
-    didInsertElement() {
-      this._super(...arguments);
-
-      this.element.addEventListener("toggle", this.selectKit.toggle);
+    click(event) {
+      event.preventDefault();
+      event.stopPropagation();
     },
 
     willDestroyElement() {
@@ -211,8 +204,6 @@ export default Component.extend(
         this.popper.destroy();
         this.popper = null;
       }
-
-      this.element.removeEventListener("toggle", this.selectKit.toggle);
     },
 
     didReceiveAttrs() {
@@ -295,7 +286,6 @@ export default Component.extend(
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
       castInteger: false,
-      preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
       autofocus: false,
@@ -454,11 +444,8 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (
-            this.selectKit.options.closeOnChange &&
-            this.selectKit.mainElement()
-          ) {
-            this.selectKit.mainElement().open = false;
+          if (this.selectKit.options.closeOnChange) {
+            this.selectKit.close(event);
           }
 
           if (this.selectKit.options.focusAfterOnChange) {
@@ -828,6 +815,8 @@ export default Component.extend(
         return;
       }
 
+      this.selectKit.mainElement().open = false;
+
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
@@ -848,6 +837,8 @@ export default Component.extend(
       if (this.selectKit.isExpanded) {
         return;
       }
+
+      this.selectKit.mainElement().open = true;
 
       this.clearErrors();
 
