@@ -46,7 +46,22 @@ class PrivateMessageTopicTrackingState
       if skip_unread
         "1=0"
       else
-        TopicTrackingState.unread_filter_sql(staff: user.staff?)
+        first_unread_pm_at = DB.query_single(<<~SQL, user_id: user.id).first
+        SELECT
+          LEAST(
+            MIN(user_stats.first_unread_pm_at),
+            MIN(group_users.first_unread_pm_at)
+          )
+        FROM group_users
+        JOIN groups ON groups.id = group_users.group_id
+        JOIN user_stats ON user_stats.user_id = :user_id
+        WHERE group_users.user_id = :user_id;
+        SQL
+
+        <<~SQL
+        #{TopicTrackingState.unread_filter_sql(staff: user.staff?)}
+        #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
+        SQL
       end
 
     new =
@@ -74,7 +89,6 @@ class PrivateMessageTopicTrackingState
       LEFT JOIN topic_allowed_users tau ON tau.topic_id = topics.id AND tau.user_id = u.id
       #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id.to_i}"}
       WHERE (tau.topic_id IS NOT NULL OR tag.topic_id IS NOT NULL) AND
-        #{skip_unread ? "" : "topics.updated_at >= LEAST(us.first_unread_pm_at, gu.first_unread_pm_at) AND"}
         topics.archetype = 'private_message' AND
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
