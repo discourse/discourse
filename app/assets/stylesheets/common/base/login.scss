@@ -60,7 +60,10 @@
     min-height: 35px;
   }
   #modal-alert:empty {
-    display: none;
+    min-height: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: inline;
   }
   .login-welcome-header {
     z-index: z("modal", "content");

@@ -8,7 +8,10 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    $("#modal-alert").hide();
+    this._modalAlertElement = document.getElementById("modal-alert");
+    if (this._modalAlertElement) {
+      this._modalAlertElement.innerHTML = "";
+    }
 
     let fixedParent = $(this.element).closest(".d-modal.fixed-modal");
     if (fixedParent.length) {
@@ -55,10 +58,10 @@ export default Component.extend({
   },
 
   _clearFlash() {
-    const modalAlert = document.getElementById("modal-alert");
-    if (modalAlert) {
-      modalAlert.style.display = "none";
-      modalAlert.classList.remove(
+    if (this._modalAlertElement) {
+      this._modalAlertElement.innerHTML = "";
+      this._modalAlertElement.classList.remove(
+        "alert",
         "alert-error",
         "alert-info",
         "alert-success",
@@ -69,10 +72,14 @@ export default Component.extend({
 
   _flash(msg) {
     this._clearFlash();
+    if (!this._modalAlertElement) {
+      return;
+    }
 
-    $("#modal-alert")
-      .addClass(`alert alert-${msg.messageClass || "success"}`)
-      .html(msg.text || "")
-      .fadeIn();
+    this._modalAlertElement.classList.add(
+      "alert",
+      `alert-${msg.messageClass || "success"}`
+    );
+    this._modalAlertElement.innerHTML = msg.text || "";
   },
 });
