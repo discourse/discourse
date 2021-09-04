@@ -101,19 +101,21 @@ export default Controller.extend({
     this.model.more_bookmarks_url = response.more_bookmarks_url;
 
     if (response.bookmarks) {
-      const bookmarkModels = response.bookmarks.map((bookmark) => {
-        const bookmarkModel = Bookmark.create(bookmark);
-        bookmarkModel.topicStatus = EmberObject.create({
-          closed: bookmark.closed,
-          archived: bookmark.archived,
-          is_warning: bookmark.is_warning,
-          pinned: false,
-          unpinned: false,
-          invisible: bookmark.invisible,
-        });
-        return bookmarkModel;
-      });
+      const bookmarkModels = response.bookmarks.map(this.transform);
       this.content.pushObjects(bookmarkModels);
     }
+  },
+
+  transform(bookmark) {
+    const bookmarkModel = Bookmark.create(bookmark);
+    bookmarkModel.topicStatus = EmberObject.create({
+      closed: bookmark.closed,
+      archived: bookmark.archived,
+      is_warning: bookmark.is_warning,
+      pinned: false,
+      unpinned: false,
+      invisible: bookmark.invisible,
+    });
+    return bookmarkModel;
   },
 });
