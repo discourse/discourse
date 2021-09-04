@@ -1,3 +1,4 @@
+{{log loading}}
 {{#conditional-loading-spinner condition=loading}}
   {{#if permissionDenied}}
     <div class="alert alert-info">{{i18n "bookmarks.list_permission_denied"}}</div>
@@ -29,7 +30,7 @@
         loadMore=(action "loadMore")
         reload=(action "reload")
         loadingMore=loadingMore
-        content=content
+        content=model.bookmarks
       }}
     {{/if}}
   {{/if}}

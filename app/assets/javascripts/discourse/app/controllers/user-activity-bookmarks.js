@@ -3,42 +3,29 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { notEmpty } from "@ember/object/computed";
+import { equal, notEmpty } from "@ember/object/computed";
 
 export default Controller.extend({
   queryParams: ["q"],
+  q: null,
 
   application: controller(),
   user: controller(),
-
-  content: null,
   loading: false,
   permissionDenied: false,
-  searchTerm: null,
-  q: null,
   inSearchMode: notEmpty("q"),
+  noContent: equal("model.bookmarks.length", 0),
 
-  loadItems() {
-    this.setProperties({
-      content: [],
-      loading: true,
-      permissionDenied: false,
-      searchTerm: this.q,
-    });
-
-    return this.model
-      .loadItems({ q: this.q })
-      .then((response) => this._processLoadResponse(response))
-      .catch(() => this._bookmarksListDenied())
-      .finally(() => {
-        this.setProperties({
-          loaded: true,
-          loading: false,
-        });
-      });
-  },
+  searchTerm: computed("q", {
+    get() {
+      return this.q;
+    },
+    set(key, value) {
+      return value;
+    },
+  }),
 
   @discourseComputed()
   emptyStateBody() {
@@ -57,20 +44,16 @@ export default Controller.extend({
     return inSearchMode && noContent;
   },
 
-  @discourseComputed("loaded", "content.length")
-  noContent(loaded, contentLength) {
-    return loaded && contentLength === 0;
-  },
-
   @action
   search() {
-    this.set("q", this.searchTerm);
-    this.loadItems();
+    this.transitionToRoute({
+      queryParams: { q: this.searchTerm },
+    });
   },
 
   @action
   reload() {
-    this.loadItems();
+    this.send("triggerRefresh");
   },
 
   @action
@@ -98,11 +81,11 @@ export default Controller.extend({
     }
 
     response = response.user_bookmark_list;
-    this.model.more_bookmarks_url = response.more_bookmarks_url;
+    this.model.loadMoreUrl = response.more_bookmarks_url;
 
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
-      this.content.pushObjects(bookmarkModels);
+      this.model.bookmarks.pushObjects(bookmarkModels);
     }
   },
 
