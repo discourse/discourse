@@ -46,6 +46,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
+  cleanUpComposerUploadPreProcessor,
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
@@ -288,6 +289,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
+      cleanUpComposerUploadPreProcessor();
       resetLastEditNotificationClick();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {

@@ -1,5 +1,4 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import { warn } from "@ember/debug";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -285,17 +284,10 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed("model.isEncrypted")
-  composerComponent(isEncrypted) {
+  @discourseComputed()
+  composerComponent() {
     const defaultComposer = "composer-editor";
     if (this.siteSettings.enable_experimental_composer_uploader) {
-      if (isEncrypted) {
-        warn(
-          "Uppy cannot be used for composer uploads until upload handlers are developed, falling back to composer-editor.",
-          { id: "composer" }
-        );
-        return defaultComposer;
-      }
       return "composer-editor-uppy";
     }
     return defaultComposer;

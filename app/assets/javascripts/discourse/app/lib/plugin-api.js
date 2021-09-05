@@ -1,6 +1,7 @@
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
+  addComposerUploadPreProcessor,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
@@ -1025,6 +1026,39 @@ class PluginApi {
    */
   addComposerUploadProcessor(queueItem, actionItem) {
     addComposerUploadProcessor(queueItem, actionItem);
+  }
+
+  /**
+   * Registers a pre-processor for file uploads in the form
+   * of an Uppy preprocessor plugin.
+   *
+   * See https://uppy.io/docs/writing-plugins/ for the Uppy
+   * documentation, but other examples of preprocessors in core
+   * can be found in UppyMediaOptimization and UppyChecksum.
+   *
+   * Useful for transforming to-be uploaded files client-side.
+   *
+   * Example:
+   *
+   * api.addComposerUploadPreProcessor(UppyMediaOptimization, ({ composerModel, composerElement, capabilities, isMobileDevice }) => {
+   *   return {
+   *     composerModel,
+   *     composerElement,
+   *     capabilities,
+   *     isMobileDevice,
+   *     someOption: true,
+   *     someFn: () => {},
+   *   };
+   * });
+   *
+   * @param {BasePlugin} pluginClass The uppy plugin class to use for the preprocessor.
+   * @param {Function} optionsResolverFn This function should return an object which is passed into the constructor
+   *                                     of the uppy plugin as the options argument. The object passed to the function
+   *                                     contains references to the composer model, element, the capabilities of the
+   *                                     browser, and isMobileDevice.
+   */
+  addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
+    addComposerUploadPreProcessor(pluginClass, optionsResolverFn);
   }
 
   /**

@@ -2,7 +2,6 @@ import Mixin from "@ember/object/mixin";
 import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
-import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
@@ -228,14 +227,8 @@ export default Mixin.create({
       }
     });
 
-    this._setupPreprocessing();
-
-    // It is important that the UppyChecksum preprocessor is the last one to
-    // be added; the preprocessors are run in order and since other preprocessors
-    // may modify the file (e.g. the UppyMediaOptimization one), we need to
-    // checksum once we are sure the file data has "settled".
-    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
-    this._uppyInstance.use(DropTarget, { target: this.element });
+    this._setupPreProcessors();
+    this._setupUIPlugins();
 
     // TODO (martin) Need a more automatic way to do this for preprocessor
     // plugins like UppyChecksum and UppyMediaOptimization so people don't
@@ -261,20 +254,31 @@ export default Mixin.create({
     }
   },
 
-  _setupPreprocessing() {
-    Object.keys(this.uploadProcessorActions).forEach((action) => {
-      switch (action) {
-        case "optimizeJPEG":
-          this._uppyInstance.use(UppyMediaOptimization, {
-            optimizeFn: this.uploadProcessorActions[action],
-            runParallel: !this.site.isMobileDevice,
-          });
-          this._trackPreProcessorStatus(UppyMediaOptimization);
-          break;
-      }
+  _setupPreProcessors() {
+    this.uploadPreProcessors.forEach(({ pluginClass, optionsResolverFn }) => {
+      this._uppyInstance.use(
+        pluginClass,
+        optionsResolverFn({
+          composerModel: this.composerModel,
+          composerElement: this.composerElement,
+          capabilities: this.capabilities,
+          isMobileDevice: this.site.isMobileDevice,
+        })
+      );
+      this._trackPreProcessorStatus(pluginClass);
     });
 
+    // It is important that the UppyChecksum preprocessor is the last one to
+    // be added; the preprocessors are run in order and since other preprocessors
+    // may modify the file (e.g. the UppyMediaOptimization one), we need to
+    // checksum once we are sure the file data has "settled".
+    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+
     this._uppyInstance.on("preprocess-progress", (pluginClass, file) => {
+      this._debugLog(
+        `[${pluginClass}] processing file ${file.name} (${file.id})`
+      );
+
       this._preProcessorStatus[pluginClass].activeProcessing++;
       let placeholderData = this.placeholders[file.id];
       placeholderData.processingPlaceholder = `[${I18n.t(
@@ -292,6 +296,10 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("preprocess-complete", (pluginClass, file) => {
+      this._debugLog(
+        `[${pluginClass}] completed processing file ${file.name} (${file.id})`
+      );
+
       let placeholderData = this.placeholders[file.id];
       this.appEvents.trigger(
         `${this.eventPrefix}:replace-text`,
@@ -313,12 +321,17 @@ export default Mixin.create({
             isProcessingUpload: false,
             isCancellable: true,
           });
+          this._debugLog("All upload preprocessors complete.");
           this.appEvents.trigger(
             `${this.eventPrefix}:uploads-preprocessing-complete`
           );
         }
       }
     });
+  },
+
+  _setupUIPlugins() {
+    this._uppyInstance.use(DropTarget, { target: this.element });
   },
 
   _uploadFilenamePlaceholder(file) {
@@ -592,5 +605,12 @@ export default Mixin.create({
 
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
+  },
+
+  _debugLog(message) {
+    if (this.siteSettings.enable_upload_debug_mode) {
+      // eslint-disable-next-line no-console
+      console.log(message);
+    }
   },
 });

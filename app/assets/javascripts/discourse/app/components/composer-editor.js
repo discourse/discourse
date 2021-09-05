@@ -3,6 +3,7 @@ import {
   authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
 } from "discourse/lib/uploads";
+import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import {
   caretPosition,
@@ -61,6 +62,23 @@ export function cleanUpComposerUploadProcessor() {
   uploadProcessorActions = {};
 }
 
+let uploadPreProcessors = [];
+export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
+  if (!(pluginClass.prototype instanceof BasePlugin)) {
+    throw new Error(
+      "Composer upload preprocessors must inherit from the Uppy BasePlugin class."
+    );
+  }
+
+  uploadPreProcessors.push({
+    pluginClass,
+    optionsResolverFn,
+  });
+}
+export function cleanUpComposerUploadPreProcessor() {
+  uploadPreProcessors = [];
+}
+
 let uploadMarkdownResolvers = [];
 export function addComposerUploadMarkdownResolver(resolver) {
   uploadMarkdownResolvers.push(resolver);
@@ -79,6 +97,7 @@ export default Component.extend(ComposerUpload, {
   uploadMarkdownResolvers,
   uploadProcessorActions,
   uploadProcessorQueue,
+  uploadPreProcessors,
   uploadHandlers,
 
   @discourseComputed("composer.requiredCategoryMissing")
