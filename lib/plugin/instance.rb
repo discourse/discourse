@@ -369,6 +369,17 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_param to Group, respecting if the plugin is enabled
+  # Used in GroupsController#update and Admin::GroupsController#create
+  def register_group_param(param)
+    DiscoursePluginRegistry.register_group_param(param, self)
+  end
+
+  # Add a custom scopes for search to Group, respecting if the plugin is enabled
+  def register_group_scope_for_search(scope_name)
+    DiscoursePluginRegistry.register_group_scope_for_search(scope_name, self)
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize

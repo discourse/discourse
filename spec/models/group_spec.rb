@@ -920,6 +920,7 @@ describe Group do
 
   describe '.search_groups' do
     fab!(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
+    let(:messageable_group) { Fabricate(:group, name: "MessageableGroup", messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     it 'should return the right groups' do
       group
@@ -933,6 +934,18 @@ describe Group do
       expect(Group.search_groups('abc')).to eq([group])
       expect(Group.search_groups('sOmEthi')).to eq([group])
       expect(Group.search_groups('test2')).to eq([])
+    end
+
+    it 'allows to filter with additional scope' do
+      messageable_group
+
+      expect(Group.search_groups('es', custom_scope: { name: :messageable, arguments: [user] }).sort).to eq([messageable_group, group].sort)
+
+      plugin = Plugin::Instance.new
+      plugin.register_group_scope_for_search(:messageable)
+      expect(Group.search_groups('es', custom_scope: { name: :messageable, arguments: [user] }).sort).to eq([messageable_group].sort)
+
+      DiscoursePluginRegistry.reset!
     end
   end
 
