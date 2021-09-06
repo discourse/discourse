@@ -13,6 +13,10 @@ export default DiscourseRoute.extend({
 
     return this._loadBookmarks(params)
       .then((response) => {
+        if (!response.user_bookmark_list) {
+          return { bookmarks: [] };
+        }
+
         const bookmarks = response.user_bookmark_list.bookmarks.map(
           controller.transform
         );

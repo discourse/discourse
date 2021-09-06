@@ -141,30 +141,6 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  loadMore(additionalParams) {
-    if (!this.more_bookmarks_url) {
-      return Promise.resolve();
-    }
-
-    let moreUrl = this.more_bookmarks_url;
-    if (moreUrl) {
-      let [url, params] = moreUrl.split("?");
-      moreUrl = url;
-      if (params) {
-        moreUrl += "?" + params;
-      }
-      if (additionalParams) {
-        if (moreUrl.includes("?")) {
-          moreUrl += "&" + $.param(additionalParams);
-        } else {
-          moreUrl += "?" + $.param(additionalParams);
-        }
-      }
-    }
-
-    return ajax({ url: moreUrl });
-  },
-
   @discourseComputed(
     "post_user_username",
     "post_user_avatar_template",

@@ -6,6 +6,7 @@ import { Promise } from "rsvp";
 import EmberObject, { action, computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, notEmpty } from "@ember/object/computed";
+import { ajax } from "discourse/lib/ajax";
 
 export default Controller.extend({
   queryParams: ["q"],
@@ -14,6 +15,7 @@ export default Controller.extend({
   application: controller(),
   user: controller(),
   loading: false,
+  loadingMore: false,
   permissionDenied: false,
   inSearchMode: notEmpty("q"),
   noContent: equal("model.bookmarks.length", 0),
@@ -64,11 +66,34 @@ export default Controller.extend({
 
     this.set("loadingMore", true);
 
-    return this.model
-      .loadMore({ q: this.q })
+    return this._loadMoreBookmarks({ q: this.q })
       .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
+  },
+
+  _loadMoreBookmarks(additionalParams) {
+    if (!this.model.loadMoreUrl) {
+      return Promise.resolve();
+    }
+
+    let moreUrl = this.model.loadMoreUrl;
+    if (moreUrl) {
+      let [url, params] = moreUrl.split("?");
+      moreUrl = url;
+      if (params) {
+        moreUrl += "?" + params;
+      }
+      if (additionalParams) {
+        if (moreUrl.includes("?")) {
+          moreUrl += "&" + $.param(additionalParams);
+        } else {
+          moreUrl += "?" + $.param(additionalParams);
+        }
+      }
+    }
+
+    return ajax({ url: moreUrl });
   },
 
   _bookmarksListDenied() {
