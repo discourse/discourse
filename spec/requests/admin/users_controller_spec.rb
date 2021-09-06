@@ -665,6 +665,16 @@ RSpec.describe Admin::UsersController do
         expect(Topic.where(id: topic.id).count).to eq(0)
         expect(User.where(id: delete_me.id).count).to eq(0)
       end
+
+      context "user has reviewable flagged post which was handled" do
+        let!(:reviewable) { Fabricate(:reviewable_flagged_post, created_by: admin, target_created_by: delete_me, target: post, topic: topic, status: 4) }
+
+        it "deletes the user record" do
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, delete_as_spammer: true }
+          expect(response.status).to eq(200)
+          expect(User.where(id: delete_me.id).count).to eq(0)
+        end
+      end
     end
 
     it "deletes the user record" do
