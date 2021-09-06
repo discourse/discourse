@@ -1064,11 +1064,38 @@ describe Email::Receiver do
         end
 
         it "does not say the email was forwarded by the original sender, it says the email is forwarded by the group" do
-          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(2)
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
           topic = Topic.last
           forwarded_small_post = topic.ordered_posts.last
           expect(forwarded_small_post.action_code).to eq("forwarded")
           expect(forwarded_small_post.user).to eq(User.find_by_email("team@somesmtpaddress.com"))
+        end
+
+        it "keeps track of the cc addresses of the forwarded email and creates staged users for them" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, cc_user1.id, cc_user2.id
+          ])
+        end
+
+        it "keeps track of the cc addresses of the final forwarded email as well" do
+          expect { process(:forwarded_by_group_to_inbox_double_cc) }.to change { User.where(staged: true).count }.by(5)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          someother_user = User.find_by_email("someotherparty@test.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("someotherparty@test.com;terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, someother_user.id, cc_user1.id, cc_user2.id
+          ])
         end
 
         context "when staged user for the team email already exists" do
@@ -1082,7 +1109,7 @@ describe Email::Receiver do
           end
 
           it "uses that and does not create another staged user" do
-            expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(1)
+            expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(3)
             topic = Topic.last
             forwarded_small_post = topic.ordered_posts.last
             expect(forwarded_small_post.action_code).to eq("forwarded")
