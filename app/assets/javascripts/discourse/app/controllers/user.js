@@ -61,6 +61,9 @@ export default Controller.extend(CanCheckEmails, {
       isExpanded: !this.collapsedInfo,
       icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
       label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
+      ariaLabel: this.collapsedInfo
+        ? "user.sr_expand_profile"
+        : "user.sr_collapse_profile",
       action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
     };
   }),

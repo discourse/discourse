@@ -93,7 +93,6 @@ export default Component.extend({
     if (translatedAriaLabel) {
       return translatedAriaLabel;
     }
-    return computedLabel;
   },
 
   @discourseComputed("ariaExpanded")
