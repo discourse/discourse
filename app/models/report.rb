@@ -47,6 +47,7 @@ class Report
   include Reports::ProfileViews
   include Reports::TopUploads
   include Reports::TopUsersByReceivedLikes
+  include Reports::TopUsersByReceivedLikesFromInferiorTrustLevel
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,

@@ -1433,6 +1433,13 @@ en:
         user: User
         qtt_like: Received Likes
       description: "Top 10 users who have been received more likes."
+    top_users_by_received_likes_from_inferior_trust_level:
+      title: "Top Users by likes received from a user with a lower trust level"
+      labels:
+        user: User
+        trust_level: Trust level
+        qtt_like: Received Likes
+      description: "Top 10 users in a higher trust level being liked by people in a lower trust level."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
