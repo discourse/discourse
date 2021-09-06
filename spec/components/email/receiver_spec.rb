@@ -1033,7 +1033,7 @@ describe Email::Receiver do
     end
 
     context "when a group forwards an email to its inbox" do
-      let!(:topic) do
+      before do
         group.update!(
           email_username: "team@somesmtpaddress.com",
           incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
@@ -1042,13 +1042,53 @@ describe Email::Receiver do
           smtp_ssl: true,
           smtp_enabled: true
         )
-        process(:forwarded_by_group_to_group)
-        Topic.last
       end
 
       it "does not use the team's address as the from_address; it uses the original sender address" do
+        process(:forwarded_by_group_to_inbox)
+        topic = Topic.last
         expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
         expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+      end
+
+      context "with forwarded emails behaviour set to create replies" do
+        before do
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
+        end
+
+        it "does not use the team's address as the from_address; it uses the original sender address" do
+          process(:forwarded_by_group_to_inbox)
+          topic = Topic.last
+          expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+          expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+        end
+
+        it "does not say the email was forwarded by the original sender, it says the email is forwarded by the group" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(2)
+          topic = Topic.last
+          forwarded_small_post = topic.ordered_posts.last
+          expect(forwarded_small_post.action_code).to eq("forwarded")
+          expect(forwarded_small_post.user).to eq(User.find_by_email("team@somesmtpaddress.com"))
+        end
+
+        context "when staged user for the team email already exists" do
+          let!(:staged_team_user) do
+            User.create!(
+              email: "team@somesmtpaddress.com",
+              username: UserNameSuggester.suggest("team@somesmtpaddress.com"),
+              name: "team teamson",
+              staged: true
+            )
+          end
+
+          it "uses that and does not create another staged user" do
+            expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(1)
+            topic = Topic.last
+            forwarded_small_post = topic.ordered_posts.last
+            expect(forwarded_small_post.action_code).to eq("forwarded")
+            expect(forwarded_small_post.user).to eq(staged_team_user)
+          end
+        end
       end
     end
 
