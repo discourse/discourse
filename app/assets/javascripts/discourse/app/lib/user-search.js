@@ -25,7 +25,7 @@ function performSearch(
   topicId,
   categoryId,
   includeGroups,
-  customGroupsScope,
+  customGroupsFilter,
   includeMentionableGroups,
   includeMessageableGroups,
   allowedUsers,
@@ -50,22 +50,26 @@ function performSearch(
     return;
   }
 
+  let data = {
+    term: term,
+    topic_id: topicId,
+    category_id: categoryId,
+    include_groups: includeGroups,
+    include_mentionable_groups: includeMentionableGroups,
+    include_messageable_groups: includeMessageableGroups,
+    groups: groupMembersOf,
+    topic_allowed_users: allowedUsers,
+    include_staged_users: includeStagedUsers,
+    last_seen_users: lastSeenUsers,
+    limit: limit,
+  };
+  if (customGroupsFilter) {
+    data[customGroupsFilter] = true;
+  }
+
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
-    data: {
-      term: term,
-      topic_id: topicId,
-      category_id: categoryId,
-      include_groups: includeGroups,
-      custom_groups_scope: customGroupsScope,
-      include_mentionable_groups: includeMentionableGroups,
-      include_messageable_groups: includeMessageableGroups,
-      groups: groupMembersOf,
-      topic_allowed_users: allowedUsers,
-      include_staged_users: includeStagedUsers,
-      last_seen_users: lastSeenUsers,
-      limit: limit,
-    },
+    data,
   });
 
   let returnVal = CANCELLED_STATUS;
@@ -102,7 +106,7 @@ let debouncedSearch = function (
   topicId,
   categoryId,
   includeGroups,
-  customGroupsScope,
+  customGroupsFilter,
   includeMentionableGroups,
   includeMessageableGroups,
   allowedUsers,
@@ -119,7 +123,7 @@ let debouncedSearch = function (
     topicId,
     categoryId,
     includeGroups,
-    customGroupsScope,
+    customGroupsFilter,
     includeMentionableGroups,
     includeMessageableGroups,
     allowedUsers,
@@ -211,7 +215,7 @@ export default function userSearch(options) {
 
   let term = options.term || "",
     includeGroups = options.includeGroups,
-    customGroupsScope = options.customGroupsScope,
+    customGroupsFilter = options.customGroupsFilter,
     includeMentionableGroups = options.includeMentionableGroups,
     includeMessageableGroups = options.includeMessageableGroups,
     allowedUsers = options.allowedUsers,
@@ -253,7 +257,7 @@ export default function userSearch(options) {
       topicId,
       categoryId,
       includeGroups,
-      customGroupsScope,
+      customGroupsFilter,
       includeMentionableGroups,
       includeMessageableGroups,
       allowedUsers,

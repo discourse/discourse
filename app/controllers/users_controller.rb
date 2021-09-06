@@ -1123,12 +1123,13 @@ class UsersController < ApplicationController
       end
 
     if groups
-      groups = Group.search_groups(term,
-                                   groups: groups,
-                                   custom_scope: {
-                                     name: params["custom_groups_scope"]&.to_sym,
-                                     arguments: [current_user]
-                                   })
+      DiscoursePluginRegistry.group_filter_for_search.each do |param_name, block|
+        if params[param_name.to_s]
+          groups = block.call(groups, current_user)
+        end
+      end
+
+      groups = Group.search_groups(term, groups: groups)
       groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|
