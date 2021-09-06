@@ -1123,12 +1123,10 @@ class UsersController < ApplicationController
       end
 
     if groups
-      groups = Group.search_groups(term,
-                                   groups: groups,
-                                   custom_scope: {
-                                     name: params["custom_groups_scope"]&.to_sym,
-                                     arguments: [current_user]
-                                   })
+      if params["custom_groups_filter"].present?
+        groups = groups.custom_filter_scope(params["custom_groups_filter"], current_user)
+      end
+      groups = Group.search_groups(term, groups: groups)
       groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|

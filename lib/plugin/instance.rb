@@ -375,9 +375,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_group_param(param, self)
   end
 
-  # Add a custom scopes for search to Group, respecting if the plugin is enabled
-  def register_group_scope_for_search(scope_name)
-    DiscoursePluginRegistry.register_group_scope_for_search(scope_name, self)
+  # Add a custom filter for search to Group, respecting if the plugin is enabled
+  # Block takes groups and optional current_user
+  # For example:
+  # plugin.register_group_filter_for_search({
+  #   name: :admins,
+  #   value: Proc.new do |groups, _current_user|
+  #     groups.where(name: "admins")
+  #   end
+  # })
+  def register_group_filter_for_search(filter)
+    DiscoursePluginRegistry.register_group_filter_for_search(filter, self)
   end
 
   # Add validation method but check that the plugin is enabled

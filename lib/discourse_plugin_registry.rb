@@ -77,7 +77,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :editable_group_custom_fields
   define_filtered_register :group_params
-  define_filtered_register :group_scope_for_search
+  define_filtered_register :group_filter_for_search
 
   define_filtered_register :topic_thumbnail_sizes
 

@@ -245,6 +245,13 @@ class Group < ActiveRecord::Base
           )", levels: alias_levels(user), user_id: user && user.id)
   }
 
+  scope :custom_filter_scope, ->(filter_name, user) do
+    group_custom_filter = DiscoursePluginRegistry.group_filter_for_search.find do |custom_filter|
+      custom_filter[:name] == filter_name.to_sym
+    end
+    group_custom_filter ? group_custom_filter[:value].call(self, user) : self
+  end
+
   def self.mentionable_sql_clause(include_public: true)
     clause = +<<~SQL
       mentionable_level in (:levels)
@@ -559,10 +566,6 @@ class Group < ActiveRecord::Base
 
   def self.search_groups(name, groups: nil, custom_scope: {})
     groups ||= Group
-
-    if custom_scope.present? && DiscoursePluginRegistry.group_scope_for_search.include?(custom_scope[:name])
-      groups = groups.send(custom_scope[:name], *custom_scope[:arguments])
-    end
 
     groups.where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"

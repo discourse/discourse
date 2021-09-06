@@ -4083,6 +4083,28 @@ describe UsersController do
             .to_not include(private_group.name)
         end
 
+        it 'allows plugins to register custom groups filter' do
+          get "/u/search/users.json", params: { include_groups: "true", term: 'a' }
+
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups.count).to eq(6)
+
+          plugin = Plugin::Instance.new
+          plugin.register_group_filter_for_search({
+            name: :admins,
+            value: Proc.new do |orignal_groups|
+              orignal_groups.where(name: "admins")
+            end
+          })
+          get "/u/search/users.json", params: { include_groups: "true", custom_groups_filter: 'admins', term: 'a' }
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+
+          DiscoursePluginRegistry.reset!
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',

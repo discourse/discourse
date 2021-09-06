@@ -935,18 +935,6 @@ describe Group do
       expect(Group.search_groups('sOmEthi')).to eq([group])
       expect(Group.search_groups('test2')).to eq([])
     end
-
-    it 'allows to filter with additional scope' do
-      messageable_group
-
-      expect(Group.search_groups('es', custom_scope: { name: :messageable, arguments: [user] }).sort).to eq([messageable_group, group].sort)
-
-      plugin = Plugin::Instance.new
-      plugin.register_group_scope_for_search(:messageable)
-      expect(Group.search_groups('es', custom_scope: { name: :messageable, arguments: [user] }).sort).to eq([messageable_group].sort)
-
-      DiscoursePluginRegistry.reset!
-    end
   end
 
   describe '#bulk_add' do
