@@ -143,13 +143,17 @@ module Email
     end
 
     def create_incoming_email
+      cc_addresses = Array.wrap(@mail.cc)
+      if has_been_forwarded? && embedded_email&.cc
+        cc_addresses.concat(embedded_email.cc)
+      end
       IncomingEmail.create(
         message_id: @message_id,
         raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to,
-        cc_addresses: @mail.cc,
+        cc_addresses: cc_addresses,
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
@@ -956,7 +960,7 @@ module Email
       email, display_name = parse_from_field(embedded)
 
       if forwarded_by_address && forwarded_by_name
-        forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
+        @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
       end
 
       return false if email.blank? || !email["@"]
@@ -985,10 +989,10 @@ module Email
                        post_type: post_type,
                        skip_validations: user.staged?)
         else
-          if forwarded_by_user
-            post.topic.topic_allowed_users.find_or_create_by!(user_id: forwarded_by_user.id)
+          if @forwarded_by_user
+            post.topic.topic_allowed_users.find_or_create_by!(user_id: @forwarded_by_user.id)
           end
-          post.topic.add_small_action(forwarded_by_user || user, "forwarded")
+          post.topic.add_small_action(@forwarded_by_user || user, "forwarded")
         end
       end
 
@@ -1324,7 +1328,11 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic&.private_message? && !is_bounce?
-          add_other_addresses(result.post, user)
+          add_other_addresses(result.post, user, @mail)
+
+          if has_been_forwarded?
+            add_other_addresses(result.post, @forwarded_by_user || user, embedded_email)
+          end
         end
 
         # Alert the people involved in the topic now that the incoming email
@@ -1346,11 +1354,11 @@ module Email
       html
     end
 
-    def add_other_addresses(post, sender)
+    def add_other_addresses(post, sender, mail_object)
       %i(to cc bcc).each do |d|
-        next if @mail[d].blank?
+        next if mail_object[d].blank?
 
-        @mail[d].each do |address_field|
+        mail_object[d].each do |address_field|
           begin
             address_field.decoded
             email = address_field.address.downcase
