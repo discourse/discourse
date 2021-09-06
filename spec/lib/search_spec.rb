@@ -165,6 +165,33 @@ describe Search do
         { name: "another custom field", value: "second user test" }
       ])
     end
+
+    context "when using SiteSetting.enable_listing_suspended_users_on_search" do
+      fab!(:suspended_user) { Fabricate(:user, username: 'revolver_ocelot', suspended_at: Time.now, suspended_till: 5.days.from_now) }
+
+      before { SearchIndexer.index(suspended_user, force: true) }
+
+      it "should list suspended users to regular users if the setting is enabled" do
+        SiteSetting.enable_listing_suspended_users_on_search = true
+
+        result = Search.execute("revolver_ocelot", guardian: Guardian.new(user))
+        expect(result.users).to contain_exactly(suspended_user)
+      end
+
+      it "shouldn't list suspended users to regular users if the setting is disabled" do
+        SiteSetting.enable_listing_suspended_users_on_search = false
+
+        result = Search.execute("revolver_ocelot", guardian: Guardian.new(user))
+        expect(result.users).to be_empty
+      end
+
+      it "should list suspended users to admins regardless of the setting" do
+        SiteSetting.enable_listing_suspended_users_on_search = false
+
+        result = Search.execute("revolver_ocelot", guardian: Guardian.new(Fabricate(:admin)))
+        expect(result.users).to contain_exactly(suspended_user)
+      end
+    end
   end
 
   context "categories" do
