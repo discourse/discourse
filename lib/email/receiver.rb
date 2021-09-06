@@ -590,10 +590,7 @@ module Email
       if has_been_forwarded?
         if mail[:from].to_s =~ group_incoming_emails_regex && embedded_email[:from].errors.blank?
           from_address, from_display_name = extract_from_fields_from_header(embedded_email, :from)
-          if from_address
-            @forwarded_by_address, @forwarded_by_name = extract_from_fields_from_header(mail, :from)
-            return [from_address, from_display_name]
-          end
+          return [from_address, from_display_name] if from_address
         end
       end
 
@@ -958,8 +955,8 @@ module Email
       embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
 
-      if @forwarded_by_address && @forwarded_by_name
-        @forwarded_by_user = stage_sender_user(@forwarded_by_address, @forwarded_by_name)
+      if forwarded_by_address && forwarded_by_name
+        forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
       end
 
       return false if email.blank? || !email["@"]
@@ -988,14 +985,26 @@ module Email
                        post_type: post_type,
                        skip_validations: user.staged?)
         else
-          if @forwarded_by_user
-            post.topic.topic_allowed_users.find_or_create_by!(user_id: @forwarded_by_user.id)
+          if forwarded_by_user
+            post.topic.topic_allowed_users.find_or_create_by!(user_id: forwarded_by_user.id)
           end
-          post.topic.add_small_action(@forwarded_by_user || user, "forwarded")
+          post.topic.add_small_action(forwarded_by_user || user, "forwarded")
         end
       end
 
       true
+    end
+
+    def forwarded_by_sender
+      @forwarded_by_sender ||= extract_from_fields_from_header(@mail, :from)
+    end
+
+    def forwarded_by_address
+      @forwarded_by_address ||= forwarded_by_sender&.first
+    end
+
+    def forwarded_by_name
+      @forwarded_by_name ||= forwarded_by_sender&.first
     end
 
     def forwarded_email_quote_forwarded(destination, user)
@@ -1315,7 +1324,7 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic&.private_message? && !is_bounce?
-          add_other_addresses(result.post, user, @mail)
+          add_other_addresses(result.post, user)
         end
 
         # Alert the people involved in the topic now that the incoming email
@@ -1337,11 +1346,11 @@ module Email
       html
     end
 
-    def add_other_addresses(post, sender, mail_object)
+    def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
-        next if mail_object[d].blank?
+        next if @mail[d].blank?
 
-        mail_object[d].each do |address_field|
+        @mail[d].each do |address_field|
           begin
             address_field.decoded
             email = address_field.address.downcase
