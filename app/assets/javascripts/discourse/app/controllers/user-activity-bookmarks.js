@@ -78,18 +78,11 @@ export default Controller.extend({
     }
 
     let moreUrl = this.model.loadMoreUrl;
-    if (moreUrl) {
-      let [url, params] = moreUrl.split("?");
-      moreUrl = url;
-      if (params) {
-        moreUrl += "?" + params;
-      }
-      if (additionalParams) {
-        if (moreUrl.includes("?")) {
-          moreUrl += "&" + $.param(additionalParams);
-        } else {
-          moreUrl += "?" + $.param(additionalParams);
-        }
+    if (additionalParams) {
+      if (moreUrl.includes("?")) {
+        moreUrl += "&" + $.param(additionalParams);
+      } else {
+        moreUrl += "?" + $.param(additionalParams);
       }
     }
 
