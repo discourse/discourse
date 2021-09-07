@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -18,7 +19,7 @@ const searchData = {};
 
 export function initSearchData() {
   searchData.loading = false;
-  searchData.results = [];
+  searchData.results = {};
   searchData.noResults = false;
   searchData.term = undefined;
   searchData.typeFilter = null;
@@ -52,8 +53,9 @@ const SearchHelper = {
 
     if (matchSuggestions) {
       searchData.noResults = true;
-      searchData.results = [];
+      searchData.results = {};
       searchData.loading = false;
+      searchData.suggestionResults = [];
 
       if (matchSuggestions.type === "category") {
         const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
@@ -66,8 +68,10 @@ const SearchHelper = {
           widget.siteSettings
         );
         Promise.resolve(categoryTagSearch).then((results) => {
-          searchData.suggestionResults = results;
-          searchData.suggestionKeyword = "#";
+          if (results !== CANCELLED_STATUS) {
+            searchData.suggestionResults = results;
+            searchData.suggestionKeyword = "#";
+          }
           widget.scheduleRerender();
         });
       } else if (matchSuggestions.type === "username") {
