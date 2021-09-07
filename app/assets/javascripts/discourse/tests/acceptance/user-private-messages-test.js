@@ -1,5 +1,5 @@
 import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import I18n from "I18n";
 import {
   acceptance,
@@ -596,7 +596,7 @@ acceptance(
       );
     });
 
-    test("suggested messages without new or unread", async function (assert) {
+    skip("suggested messages without new or unread", async function (assert) {
       await visit("/t/12");
 
       assert.equal(
@@ -606,7 +606,7 @@ acceptance(
       );
     });
 
-    test("suggested messages with new and unread", async function (assert) {
+    skip("suggested messages with new and unread", async function (assert) {
       await visit("/t/12");
 
       publishNewToMessageBus({ userId: 5 });
@@ -630,7 +630,7 @@ acceptance(
       );
     });
 
-    test("suggested messages for group messages without new or unread", async function (assert) {
+    skip("suggested messages for group messages without new or unread", async function (assert) {
       await visit("/t/13");
 
       assert.equal(
@@ -640,7 +640,7 @@ acceptance(
       );
     });
 
-    test("suggested messages for group messages with new and unread", async function (assert) {
+    skip("suggested messages for group messages with new and unread", async function (assert) {
       await visit("/t/13");
 
       publishGroupNewToMessageBus([14]);
