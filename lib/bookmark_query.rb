@@ -71,7 +71,9 @@ class BookmarkQuery
     Bookmark.where(user: @user)
       .includes(topic: :tags)
       .includes(post: :user)
+      .includes(topic: :topic_users)
       .references(:topic)
       .references(:post)
+      .where(topic_users: { user_id: [@user.id, nil] })
   end
 end

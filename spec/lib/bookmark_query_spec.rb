@@ -32,6 +32,16 @@ RSpec.describe BookmarkQuery do
       expect(bookmark_query.list_all.count).to eq(1)
     end
 
+    it "does not query topic_users for the bookmark topic that are not the current user" do
+      topic_user1 = Fabricate(:topic_user, topic: bookmark1.topic, user: user)
+      topic_user2 = Fabricate(:topic_user, topic: bookmark1.topic)
+      expect(
+        bookmark_query.list_all.find do |b|
+          b.topic_id == bookmark1.topic_id
+        end.topic.topic_users.map(&:user_id)
+      ).to eq([user.id])
+    end
+
     it "runs the on_preload block provided passing in bookmarks" do
       preloaded_bookmarks = []
       BookmarkQuery.on_preload do |bookmarks, bq|

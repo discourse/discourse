@@ -125,9 +125,21 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
-  @discourseComputed("linked_post_number", "fancy_title", "topic_id")
-  topicLink(linked_post_number, fancy_title, id) {
-    return Topic.create({ id, fancy_title, linked_post_number });
+  @discourseComputed()
+  topicLink() {
+    // for topic level bookmarks we want to jump to the last unread post URL,
+    // which the topic-link helper does by default if no linked post number is
+    // provided
+    const linked_post_number =
+      this.linked_post_number === 1 ? null : this.linked_post_number;
+
+    return Topic.create({
+      id: this.topic_id,
+      fancy_title: this.fancy_title,
+      linked_post_number,
+      last_read_post_number: this.last_read_post_number,
+      highest_post_number: this.highest_post_number,
+    });
   },
 
   loadItems(params) {
