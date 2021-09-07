@@ -114,7 +114,7 @@ acceptance("Topic - Bulk Actions", function (needs) {
     await click(queryAll("input.bulk-select")[1]);
 
     await click(".bulk-select-btn");
-    await click(".modal-body button[aria-label='Delete Topics']");
+    await click(".modal-body .delete-topics");
 
     assert.ok(
       invisible(".topic-bulk-actions-modal"),

@@ -99,7 +99,7 @@ addBulkButton("removeTags", "remove_tags", {
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
-  class: "btn-danger",
+  class: "btn-danger delete-topics",
   buttonVisible: function () {
     return this.currentUser.staff;
   },
