@@ -1,7 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 
-function _clean() {
-  if (window.MiniProfiler) {
+function _clean(opts = {}) {
+  if (window.MiniProfiler && !opts.skipMiniProfilerPageTransition) {
     window.MiniProfiler.pageTransition();
   }
 
@@ -29,6 +29,6 @@ function _clean() {
   this.lookup("service:document-title").updateContextCount(0);
 }
 
-export function cleanDOM(container) {
-  scheduleOnce("afterRender", container, _clean);
+export function cleanDOM(container, opts) {
+  scheduleOnce("afterRender", container, _clean, opts);
 }
