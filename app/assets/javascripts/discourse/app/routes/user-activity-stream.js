@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   queryParams: {
@@ -27,10 +28,9 @@ export default DiscourseRoute.extend(ViewingActionType, {
     this.viewingActionType(this.userActionType);
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("user-activity")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("user-activity")._showFooter();
+    return true;
   },
 });
