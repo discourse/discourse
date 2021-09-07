@@ -41,13 +41,14 @@ class ImportScripts::Generic < ImportScripts::Base
           created_at: to_datetime(row["created_at"]),
           name: row["name"],
           email: row["email"],
-          last_seen_at: to_datetime(row[:"last_seen_at"]),
+          last_seen_at: to_datetime(row[:"last_seen_at"]) || to_datetime(row["created_at"]),
           bio_raw: row["bio"],
           location: row["location"],
           admin: to_boolean(row["admin"]),
           moderator: to_boolean(row["moderator"]),
           post_create_action: proc do |user|
             create_avatar(user, row["avatar_path"])
+            suspend_user(user, row["suspension"])
           end
         }
       end
@@ -62,6 +63,19 @@ class ImportScripts::Generic < ImportScripts::Base
       @uploader.create_avatar(user, avatar_path)
     else
       STDERR.puts "Could not find avatar: #{avatar_path}"
+    end
+  end
+
+  def suspend_user(user, suspension)
+    return if suspension.blank?
+    suspension = JSON.parse(suspension)
+
+    user.suspended_at = suspension["suspended_at"] || user.last_seen_at || Time.now
+    user.suspended_till = suspension["suspended_till"] || 200.years.from_now
+    user.save!
+
+    if suspension["reason"].present?
+      StaffActionLogger.new(Discourse.system_user).log_user_suspend(user, suspension["reason"])
     end
   end
 
