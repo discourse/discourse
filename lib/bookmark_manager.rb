@@ -7,22 +7,28 @@ class BookmarkManager
     @user = user
   end
 
-  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
-    post = Post.find_by(id: post_id)
+  def create(post_id:, topic_id: nil, name: nil, reminder_type: nil, reminder_at: nil, options: {})
+    if post_id == Bookmark::FOR_TOPIC_POST_ID
+      bookmark_for_topic = true
+      topic = Topic.find_by(id: topic_id)
+    else
+      post = Post.find_by(id: post_id)
+      topic = post&.topic
+    end
     reminder_type = parse_reminder_type(reminder_type)
 
     # no bookmarking deleted posts or topics
-    raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
+    raise Discourse::InvalidAccess if (!bookmark_for_topic && post.blank?) || topic.blank?
 
-    if !Guardian.new(@user).can_see_post?(post) || !Guardian.new(@user).can_see_topic?(post.topic)
+    if (!bookmark_for_topic && !Guardian.new(@user).can_see_post?(post)) || !Guardian.new(@user).can_see_topic?(topic)
       raise Discourse::InvalidAccess
     end
 
     bookmark = Bookmark.create(
       {
         user_id: @user.id,
-        topic: post.topic,
-        post: post,
+        topic: topic,
+        post_id: post_id,
         name: name,
         reminder_type: reminder_type,
         reminder_at: reminder_at,
@@ -34,7 +40,7 @@ class BookmarkManager
       return add_errors_from(bookmark)
     end
 
-    update_topic_user_bookmarked(post.topic)
+    update_topic_user_bookmarked(topic)
 
     bookmark
   end

@@ -5,6 +5,8 @@ class Bookmark < ActiveRecord::Base
     "delete_when_reminder_sent" # TODO(2021-07-22): remove
   ]
 
+  FOR_TOPIC_POST_ID = -1
+
   belongs_to :user
   belongs_to :post
   belongs_to :topic
@@ -43,6 +45,7 @@ class Bookmark < ActiveRecord::Base
   # we don't care whether the post or topic is deleted,
   # they hold important information about the bookmark
   def post
+    return if for_topic?
     Post.unscoped { super }
   end
 
@@ -51,7 +54,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def unique_per_post_for_user
-    existing_bookmark = Bookmark.find_by(user_id: user_id, post_id: post_id)
+    existing_bookmark = Bookmark.find_by(user_id: user_id, post_id: post_id, topic_id: topic_id)
     return if existing_bookmark.blank? || existing_bookmark.id == id
     self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
   end
@@ -78,6 +81,14 @@ class Bookmark < ActiveRecord::Base
         limit: SiteSetting.max_bookmarks_per_user
       )
     )
+  end
+
+  def for_topic?
+    self.post_id == FOR_TOPIC_POST_ID
+  end
+
+  def for_post?
+    !self.for_topic?
   end
 
   def no_reminder?
@@ -160,11 +171,11 @@ end
 #
 # Indexes
 #
-#  index_bookmarks_on_post_id              (post_id)
-#  index_bookmarks_on_reminder_at          (reminder_at)
-#  index_bookmarks_on_reminder_set_at      (reminder_set_at)
-#  index_bookmarks_on_reminder_type        (reminder_type)
-#  index_bookmarks_on_topic_id             (topic_id)
-#  index_bookmarks_on_user_id              (user_id)
-#  index_bookmarks_on_user_id_and_post_id  (user_id,post_id) UNIQUE
+#  index_bookmarks_on_post_id                           (post_id)
+#  index_bookmarks_on_reminder_at                       (reminder_at)
+#  index_bookmarks_on_reminder_set_at                   (reminder_set_at)
+#  index_bookmarks_on_reminder_type                     (reminder_type)
+#  index_bookmarks_on_topic_id                          (topic_id)
+#  index_bookmarks_on_user_id                           (user_id)
+#  index_bookmarks_on_user_id_and_post_id_and_topic_id  (user_id,post_id,topic_id) UNIQUE
 #

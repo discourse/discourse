@@ -719,11 +719,11 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    toggleBookmark(post) {
+    toggleBookmark(target) {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
-      } else if (post) {
-        return this._togglePostBookmark(post);
+      } else if (target) {
+        return this._toggleBookmark(target);
       } else {
         return this._toggleTopicBookmark(this.model).then((changedIds) => {
           if (!changedIds) {
@@ -1189,17 +1189,23 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  _togglePostBookmark(post) {
+  // target can be a topic, for topic-level bookmarks, or a post
+  _toggleBookmark(target) {
     return new Promise((resolve) => {
+      const bookmarkingTopic = target instanceof Topic;
+      const postId = bookmarkingTopic ? -1 : target.id;
+      const topicId = bookmarkingTopic ? target.id : target.topic_id;
+
       let modalController = showModal("bookmark", {
         model: {
-          postId: post.id,
-          id: post.bookmark_id,
-          reminderAt: post.bookmark_reminder_at,
-          autoDeletePreference: post.bookmark_auto_delete_preference,
-          name: post.bookmark_name,
+          postId,
+          topicId,
+          id: target.bookmark_id,
+          reminderAt: target.bookmark_reminder_at,
+          autoDeletePreference: target.bookmark_auto_delete_preference,
+          name: target.bookmark_name,
         },
-        title: post.bookmark_id
+        title: target.bookmark_id
           ? "post.bookmarks.edit"
           : "post.bookmarks.create",
         modalClass: "bookmark-with-reminder",
@@ -1207,19 +1213,29 @@ export default Controller.extend(bufferedProperty("model"), {
       modalController.setProperties({
         onCloseWithoutSaving: () => {
           resolve({ closedWithoutSaving: true });
-          post.appEvents.trigger("post-stream:refresh", { id: post.id });
+
+          if (postId > 0) {
+            target.appEvents.trigger("post-stream:refresh", {
+              id: postId,
+            });
+          }
         },
         afterSave: (savedData) => {
-          this._addOrUpdateBookmarkedPost(post.id, savedData.reminderAt);
-          post.createBookmark(savedData);
+          this._addOrUpdateBookmarkedPost(
+            savedData.postId,
+            savedData.reminderAt
+          );
+          target.createBookmark(savedData);
           resolve({ closedWithoutSaving: false });
         },
         afterDelete: (topicBookmarked) => {
           this.model.set(
             "bookmarked_posts",
-            this.model.bookmarked_posts.filter((x) => x.post_id !== post.id)
+            this.model.bookmarked_posts.filter(
+              (bookmarkedPost) => bookmarkedPost.post_id !== postId
+            )
           );
-          post.deleteBookmark(topicBookmarked);
+          target.deleteBookmark(topicBookmarked);
         },
       });
     });
@@ -1248,25 +1264,39 @@ export default Controller.extend(bufferedProperty("model"), {
       ? this.model.bookmarked_posts.length
       : 0;
 
-    const bookmarkPost = async (post) => {
-      const opts = await this._togglePostBookmark(post);
+    const bookmarkTarget = async (target) => {
+      const opts = await this._toggleBookmark(target);
       this.model.set("bookmarking", false);
       if (opts.closedWithoutSaving) {
         return;
       }
-      this.model.afterPostBookmarked(post);
-      return [post.id];
+
+      if (target instanceof Post) {
+        this.model.afterPostBookmarked(target);
+      }
+
+      return [target.id];
     };
 
     const toggleBookmarkOnServer = async () => {
+      // bookmark the topic if there are no bookmarked posts
       if (bookmarkedPostsCount === 0) {
-        const firstPost = await this.model.firstPost();
-        return bookmarkPost(firstPost);
+        return bookmarkTarget(this.model);
+
+        // if there is only one bookmarked post for the topic we want to
+        // get it in the stream and edit that one
       } else if (bookmarkedPostsCount === 1) {
         const postId = this.model.bookmarked_posts[0].post_id;
-        const post = await this.model.postById(postId);
-        return bookmarkPost(post);
+
+        if (postId === -1) {
+          return bookmarkTarget(this.model);
+        } else {
+          const post = await this.model.postById(postId);
+          return bookmarkTarget(post);
+        }
       } else {
+        // otherwise we want to clear all the bookmarks out if there is more
+        // than one bookmarked post in the topic
         return this.model
           .deleteBookmarks()
           .then(() => this.model.clearBookmarks())

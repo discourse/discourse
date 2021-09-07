@@ -184,6 +184,7 @@ export default Component.extend({
       reminder_at: reminderAtISO,
       name: this.model.name,
       post_id: this.model.postId,
+      topic_id: this.model.topicId,
       id: this.model.id,
       auto_delete_preference: this.autoDeletePreference,
     };
@@ -212,6 +213,7 @@ export default Component.extend({
       autoDeletePreference: this.autoDeletePreference,
       id: this.model.id || response.id,
       name: this.model.name,
+      postId: this.model.postId,
     });
   },
 

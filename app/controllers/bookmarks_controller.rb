@@ -5,6 +5,9 @@ class BookmarksController < ApplicationController
 
   def create
     params.require(:post_id)
+    if params[:post_id].to_i == Bookmark::FOR_TOPIC_POST_ID
+      params.require(:topic_id)
+    end
 
     RateLimiter.new(
       current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
@@ -12,7 +15,8 @@ class BookmarksController < ApplicationController
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark = bookmark_manager.create(
-      post_id: params[:post_id],
+      topic_id: params[:topic_id].to_i,
+      post_id: params[:post_id].to_i,
       name: params[:name],
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],

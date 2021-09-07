@@ -405,6 +405,11 @@ class TopicView
     end
   end
 
+  def bookmark
+    return if !has_bookmarks?
+    @bookmark ||= @topic.bookmarks.where(user_id: @user.id, post_id: Bookmark::FOR_TOPIC_POST_ID).first
+  end
+
   MAX_PARTICIPANTS = 24
 
   def post_counts_by_user

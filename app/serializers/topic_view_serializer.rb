@@ -62,6 +62,11 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
+    :bookmark_reminder_at,
+    :bookmark_id,
+    :bookmark_reminder_type,
+    :bookmark_name,
+    :bookmark_auto_delete_preference,
     :bookmarked_posts,
     :message_archived,
     :topic_timer,
@@ -190,7 +195,49 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    object.has_bookmarks?
+    @bookmarked ||= object.has_bookmarks?
+  end
+
+  def bookmark_id
+    return if !bookmarked
+    object.bookmark&.id
+  end
+
+  def include_bookmark_reminder_at?
+    bookmarked
+  end
+
+  def include_bookmark_reminder_type?
+    bookmarked
+  end
+
+  def include_bookmark_name?
+    bookmarked
+  end
+
+  def include_bookmark_auto_delete_preference?
+    bookmarked
+  end
+
+  def include_bookmark_id?
+    bookmarked
+  end
+
+  def bookmark_reminder_at
+    object.bookmark&.reminder_at
+  end
+
+  def bookmark_reminder_type
+    return if object.bookmark.blank?
+    Bookmark.reminder_types[object.bookmark.reminder_type].to_s
+  end
+
+  def bookmark_name
+    object.bookmark&.name
+  end
+
+  def bookmark_auto_delete_preference
+    object.bookmark&.auto_delete_preference
   end
 
   def bookmarked_posts

@@ -376,6 +376,38 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
   },
 
+  createBookmark(data) {
+    this.setProperties({
+      bookmarked: true,
+      bookmark_reminder_at: data.reminderAt,
+      bookmark_reminder_type: data.reminderType,
+      bookmark_auto_delete_preference: data.autoDeletePreference,
+      bookmark_name: data.name,
+      bookmark_id: data.id,
+    });
+    this.incrementProperty("bookmarksWereChanged");
+    this.appEvents.trigger("page:bookmark-post-toggled", this.firstPost());
+    this.appEvents.trigger("post-stream:refresh", { id: this.firstPost().id });
+  },
+
+  deleteBookmark(bookmarked) {
+    this.set("bookmarked", bookmarked);
+    this.clearBookmark();
+    this.incrementProperty("bookmarksWereChanged");
+  },
+
+  clearBookmark() {
+    this.setProperties({
+      bookmark_reminder_at: null,
+      bookmark_reminder_type: null,
+      bookmark_name: null,
+      bookmark_id: null,
+      bookmarked: false,
+      bookmark_auto_delete_preference: null,
+    });
+    this.incrementProperty("bookmarksWereChanged");
+  },
+
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 

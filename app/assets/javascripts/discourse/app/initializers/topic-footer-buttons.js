@@ -68,7 +68,10 @@ export default {
       id: "bookmark",
       icon() {
         const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (bookmarkedPosts && bookmarkedPosts.find((x) => x.reminder_at)) {
+        if (
+          bookmarkedPosts &&
+          bookmarkedPosts.find((bookmarkedPost) => bookmarkedPost.reminder_at)
+        ) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
@@ -101,7 +104,9 @@ export default {
           return I18n.t("bookmarked.help.bookmark");
         } else if (bookmarkedPosts.length === 1) {
           return I18n.t("bookmarked.help.edit_bookmark");
-        } else if (bookmarkedPosts.find((x) => x.reminder_at)) {
+        } else if (
+          bookmarkedPosts.find((bookmarkedPost) => bookmarkedPost.reminder_at)
+        ) {
           return I18n.t("bookmarked.help.unbookmark_with_reminder");
         } else {
           return I18n.t("bookmarked.help.unbookmark");
