@@ -224,6 +224,10 @@ input {
       @include default-focus;
     }
   }
+
+  &[type="time"] {
+    max-width: 140px;
+  }
 }
 
 ::placeholder {
