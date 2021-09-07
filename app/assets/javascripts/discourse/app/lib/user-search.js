@@ -25,9 +25,9 @@ function performSearch(
   topicId,
   categoryId,
   includeGroups,
-  customGroupsFilter,
   includeMentionableGroups,
   includeMessageableGroups,
+  customUserSearchOptions,
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
@@ -63,9 +63,11 @@ function performSearch(
     last_seen_users: lastSeenUsers,
     limit: limit,
   };
-  if (customGroupsFilter) {
-    data[customGroupsFilter] = true;
-  }
+
+  Object.keys(customUserSearchOptions).forEach((key) => {
+    data[key.replace(/([a-zA-Z])(?=[A-Z])/g, "$1_").toLowerCase()] =
+      customUserSearchOptions[key];
+  });
 
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
@@ -106,9 +108,9 @@ let debouncedSearch = function (
   topicId,
   categoryId,
   includeGroups,
-  customGroupsFilter,
   includeMentionableGroups,
   includeMessageableGroups,
+  customUserSearchOptions,
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
@@ -123,9 +125,9 @@ let debouncedSearch = function (
     topicId,
     categoryId,
     includeGroups,
-    customGroupsFilter,
     includeMentionableGroups,
     includeMessageableGroups,
+    customUserSearchOptions,
     allowedUsers,
     groupMembersOf,
     includeStagedUsers,
@@ -215,9 +217,9 @@ export default function userSearch(options) {
 
   let term = options.term || "",
     includeGroups = options.includeGroups,
-    customGroupsFilter = options.customGroupsFilter,
     includeMentionableGroups = options.includeMentionableGroups,
     includeMessageableGroups = options.includeMessageableGroups,
+    customUserSearchOptions = options.customUserSearchOptions,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
     categoryId = options.categoryId,
@@ -257,9 +259,9 @@ export default function userSearch(options) {
       topicId,
       categoryId,
       includeGroups,
-      customGroupsFilter,
       includeMentionableGroups,
       includeMessageableGroups,
+      customUserSearchOptions,
       allowedUsers,
       groupMembersOf,
       includeStagedUsers,

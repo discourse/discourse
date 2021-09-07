@@ -4091,7 +4091,7 @@ describe UsersController do
           expect(groups.count).to eq(6)
 
           plugin = Plugin::Instance.new
-          plugin.register_group_filter_for_search(:admins_filter) do |original_groups, user|
+          plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |original_groups, user|
             original_groups.where(name: "admins")
           end
           get "/u/search/users.json", params: { include_groups: "true", admins_filter: "true", term: "a" }

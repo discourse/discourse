@@ -1123,7 +1123,7 @@ class UsersController < ApplicationController
       end
 
     if groups
-      DiscoursePluginRegistry.group_filter_for_search.each do |param_name, block|
+      DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.each do |param_name, block|
         if params[param_name.to_s]
           groups = block.call(groups, current_user)
         end
