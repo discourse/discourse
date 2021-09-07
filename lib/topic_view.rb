@@ -464,11 +464,18 @@ class TopicView
     end
   end
 
+  def topic_allowed_group_ids
+    @topic_allowed_group_ids ||= begin
+      @topic.allowed_groups.map(&:id)
+    end
+  end
+
   def group_allowed_user_ids
     return @group_allowed_user_ids unless @group_allowed_user_ids.nil?
 
-    group_ids = @topic.allowed_groups.map(&:id)
-    @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
+    @group_allowed_user_ids = GroupUser
+      .where(group_id: topic_allowed_group_ids)
+      .pluck('distinct user_id')
   end
 
   def category_group_moderator_user_ids

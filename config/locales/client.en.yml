@@ -1204,6 +1204,38 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         tags: "Tags"
         warnings: "Official Warnings"
+        read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages/personal'>personal messages</a>."
+
+        read_more_group_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages}
+          } remaining, or browse other messages in {groupLink}"
+
+        read_more_personal_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/personal/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/personal/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># new</a> messages}
+          } remaining, or browse other <a href='{basePath}/u/{username}/messages/personal'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
