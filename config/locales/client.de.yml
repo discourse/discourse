@@ -157,6 +157,7 @@ de:
         disabled: "hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
       forwarded: "hat die obige E-Mail weitergeleitet"
     topic_admin_menu: "Themen-Administration"
+    skip_to_main_content: "Zum Hauptinhalt springen"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     software_update_prompt:
@@ -1746,21 +1747,27 @@ de:
       google_oauth2:
         name: "Google"
         title: "mit Google"
+        sr_title: "Mit Google anmelden"
       twitter:
         name: "Twitter"
         title: "mit Twitter"
+        sr_title: "Mit Twitter anmelden"
       instagram:
         name: "Instagram"
         title: "mit Instagram"
+        sr_title: "Mit Instagram anmelden"
       facebook:
         name: "Facebook"
         title: "mit Facebook"
+        sr_title: "Mit Facebook anmelden"
       github:
         name: "GitHub"
         title: "mit GitHub"
+        sr_title: "Mit GitHub anmelden"
       discord:
         name: "Discord"
         title: "mit Discord"
+        sr_title: "Mit Discord anmelden"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"

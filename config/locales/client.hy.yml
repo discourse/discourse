@@ -2938,7 +2938,7 @@ hy:
         show_traffic_report: "Ցուցադրել այցելությունների մանրամասն հաշվետվությունը"
         community_health: Համայնքի վիճակը
         moderators_activity: Մոդերատորների ակտիվությունը
-        whats_new_in_discourse: 'Ի՞նչ նորություն կա Discouse-ում:'
+        whats_new_in_discourse: 'Ի՞նչ նորություն կա Discourse-ում:'
         activity_metrics: Ակտիվության Չափումները
         all_reports: "Բոլոր հաշվետվությունները"
         general_tab: "Ընդհանուր"

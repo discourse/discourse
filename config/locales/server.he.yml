@@ -1756,6 +1756,7 @@ he:
     external_emoji_url: "כתובת שירות תמונות האמוג׳י החיצוני. ריק משבית את ההגדרה."
     use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
+    enable_listing_suspended_users_on_search: "לאפשר למשתמשים רגילים למצוא משתמשים מושעים."
     selectable_avatars_enabled: "לאלץ משתמשים לבחור בתמונה ייצוגית מהרשימה."
     selectable_avatars: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
@@ -2617,9 +2618,35 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
+    text_body_template: |
+      הידד, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - ניתן לשדרג בעזרת **[שדרוג מהיר בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
+
+      - מה שחדש בגרסה מופיע ב[הערות ההפצה](https://meta.discourse.org/tag/release-notes) או שניתן לצפות [ביומן השינויים הגולמי ב־GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ממליצים לך לבקר ב־[meta.discourse.org](https://meta.discourse.org) לקבלת חדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
+    text_body_template: |
+      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
+
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
+
+      ### הערות מהדורה
+
+      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
@@ -3672,6 +3699,10 @@ he:
     png_to_jpg_conversion_failure_message: "אירעה שגיאה בעת המרה מ־PNG ל־JPG."
     optimize_failure_message: "אירעה שגיאה בעת מיטוב התמונה שהועלתה."
     download_failure: "הורדת הקובץ מהספק החיצוני נכשלה."
+    create_mutlipart_failure: "יצירת העלאה מרובת חלקים באחסון החיצוני נכשלה."
+    abort_mutlipart_failure: "ביטול העלאה מרובת חלקים באחסון החיצוני נכשל."
+    complete_mutlipart_failure: "השלמת העלאה מרובת חלקים באחסון החיצוני נכשלה."
+    external_upload_not_found: "ההעלאה לא נמצאה באחסון החיצוני. %{additional_detail}"
     checksum_mismatch_failure: "בדיקת התקינות של הקובץ שהעלית שגויה. יכול להיות שתוכן הקובץ השתנה במהלך ההעלאה. נא לנסות שוב."
     cannot_promote_failure: "לא ניתן להשלים את ההעלאה, יתכן שהיא כבר הושלמה או נכשלה בעבר."
     attachments:
