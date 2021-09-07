@@ -20,6 +20,10 @@ export function resetUserSearchCache() {
   oldSearch = null;
 }
 
+export function camelCaseToSnakeCase(text) {
+  return text.replace(/([a-zA-Z])(?=[A-Z])/g, "$1_").toLowerCase();
+}
+
 function performSearch(
   term,
   topicId,
@@ -64,10 +68,11 @@ function performSearch(
     limit: limit,
   };
 
-  Object.keys(customUserSearchOptions).forEach((key) => {
-    data[key.replace(/([a-zA-Z])(?=[A-Z])/g, "$1_").toLowerCase()] =
-      customUserSearchOptions[key];
-  });
+  if (customUserSearchOptions) {
+    Object.keys(customUserSearchOptions).forEach((key) => {
+      data[camelCaseToSnakeCase(key)] = customUserSearchOptions[key];
+    });
+  }
 
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
