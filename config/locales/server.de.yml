@@ -773,7 +773,7 @@ de:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      discoursehub: "DiscouseHub-App"
+      discoursehub: "DiscourseHub-App"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       ie: "Internet Explorer"

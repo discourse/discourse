@@ -135,6 +135,7 @@ ko:
         disabled: "%{when}에 이 배너를 제거했습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "글 관리"
+    skip_to_main_content: "메인 콘텐츠로 건너뛰기"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     software_update_prompt:
@@ -1674,21 +1675,27 @@ ko:
       google_oauth2:
         name: "구글"
         title: "구글 사용"
+        sr_title: "구글로 로그인"
       twitter:
         name: "트위터"
         title: "트위터 사용"
+        sr_title: "트위터로 로그인"
       instagram:
         name: "인스타그램"
         title: "인스타그램 사용"
+        sr_title: "인스타그램으로 로그인"
       facebook:
         name: "페이스북"
         title: "페이스북 사용"
+        sr_title: "페이스북으로 로그인"
       github:
         name: "GitHub"
         title: "GitHub 사용"
+        sr_title: "GitHub로 로그인"
       discord:
         name: "디스코드"
         title: "디스코드 사용"
+        sr_title: "디스코드로 로그인"
       second_factor_toggle:
         totp: "대신 인증 자 앱을 사용하십시오."
         backup_code: "대신 백업 코드 사용"

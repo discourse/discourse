@@ -41,6 +41,7 @@ nl:
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH:mm"
       wrap_ago: "%{date} geleden"
+      wrap_on: "op %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:

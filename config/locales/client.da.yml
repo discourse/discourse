@@ -1723,21 +1723,27 @@ da:
       google_oauth2:
         name: "Google"
         title: "med google"
+        sr_title: "Log ind med Google"
       twitter:
         name: "Twitter"
         title: "med Twitter"
+        sr_title: "Log ind med Twitter"
       instagram:
         name: "Instagram"
         title: "med Instagram"
+        sr_title: "Log ind med Instagram"
       facebook:
         name: "Facebook"
         title: "med Facebook"
+        sr_title: "Log ind med Facebook"
       github:
         name: "GitHub"
         title: "med GitHub"
+        sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
         title: "med Discord"
+        sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
