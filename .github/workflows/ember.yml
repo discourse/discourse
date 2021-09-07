@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
   build:
@@ -36,6 +38,10 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
+      - name: Official Plugins Install
+        if: ${{ github.event_name == 'cron' }}
+        run: sudo -E -u discourse -H bundle exec rake plugin:install_all_official
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
