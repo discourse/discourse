@@ -20,14 +20,18 @@ export function resetUserSearchCache() {
   oldSearch = null;
 }
 
+export function camelCaseToSnakeCase(text) {
+  return text.replace(/([a-zA-Z])(?=[A-Z])/g, "$1_").toLowerCase();
+}
+
 function performSearch(
   term,
   topicId,
   categoryId,
   includeGroups,
-  customGroupsScope,
   includeMentionableGroups,
   includeMessageableGroups,
+  customUserSearchOptions,
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
@@ -50,22 +54,29 @@ function performSearch(
     return;
   }
 
+  let data = {
+    term: term,
+    topic_id: topicId,
+    category_id: categoryId,
+    include_groups: includeGroups,
+    include_mentionable_groups: includeMentionableGroups,
+    include_messageable_groups: includeMessageableGroups,
+    groups: groupMembersOf,
+    topic_allowed_users: allowedUsers,
+    include_staged_users: includeStagedUsers,
+    last_seen_users: lastSeenUsers,
+    limit: limit,
+  };
+
+  if (customUserSearchOptions) {
+    Object.keys(customUserSearchOptions).forEach((key) => {
+      data[camelCaseToSnakeCase(key)] = customUserSearchOptions[key];
+    });
+  }
+
   // need to be able to cancel this
   oldSearch = $.ajax(userPath("search/users"), {
-    data: {
-      term: term,
-      topic_id: topicId,
-      category_id: categoryId,
-      include_groups: includeGroups,
-      custom_groups_scope: customGroupsScope,
-      include_mentionable_groups: includeMentionableGroups,
-      include_messageable_groups: includeMessageableGroups,
-      groups: groupMembersOf,
-      topic_allowed_users: allowedUsers,
-      include_staged_users: includeStagedUsers,
-      last_seen_users: lastSeenUsers,
-      limit: limit,
-    },
+    data,
   });
 
   let returnVal = CANCELLED_STATUS;
@@ -102,9 +113,9 @@ let debouncedSearch = function (
   topicId,
   categoryId,
   includeGroups,
-  customGroupsScope,
   includeMentionableGroups,
   includeMessageableGroups,
+  customUserSearchOptions,
   allowedUsers,
   groupMembersOf,
   includeStagedUsers,
@@ -119,9 +130,9 @@ let debouncedSearch = function (
     topicId,
     categoryId,
     includeGroups,
-    customGroupsScope,
     includeMentionableGroups,
     includeMessageableGroups,
+    customUserSearchOptions,
     allowedUsers,
     groupMembersOf,
     includeStagedUsers,
@@ -211,9 +222,9 @@ export default function userSearch(options) {
 
   let term = options.term || "",
     includeGroups = options.includeGroups,
-    customGroupsScope = options.customGroupsScope,
     includeMentionableGroups = options.includeMentionableGroups,
     includeMessageableGroups = options.includeMessageableGroups,
+    customUserSearchOptions = options.customUserSearchOptions,
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
     categoryId = options.categoryId,
@@ -253,9 +264,9 @@ export default function userSearch(options) {
       topicId,
       categoryId,
       includeGroups,
-      customGroupsScope,
       includeMentionableGroups,
       includeMessageableGroups,
+      customUserSearchOptions,
       allowedUsers,
       groupMembersOf,
       includeStagedUsers,

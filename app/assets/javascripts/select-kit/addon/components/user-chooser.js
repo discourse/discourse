@@ -6,6 +6,8 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
+export const CUSTOM_USER_SEARCH_OPTIONS = [];
+
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["user-chooser"],
   classNames: ["user-chooser"],
@@ -64,19 +66,29 @@ export default MultiSelectComponent.extend({
       return;
     }
 
+    let customUserSearchOptions = CUSTOM_USER_SEARCH_OPTIONS.reduce(
+      (obj, option) => {
+        return {
+          ...obj,
+          [option]: options[option],
+        };
+      },
+      {}
+    );
+
     return userSearch({
       term: filter,
       topicId: options.topicId,
       categoryId: options.categoryId,
       exclude: this.excludedUsers,
       includeGroups: options.includeGroups,
-      customGroupsScope: options.customGroupsScope,
       allowedUsers: options.allowedUsers,
       includeMentionableGroups: options.includeMentionableGroups,
       includeMessageableGroups: options.includeMessageableGroups,
       groupMembersOf: options.groupMembersOf,
       allowEmails: options.allowEmails,
       includeStagedUsers: this.includeStagedUsers,
+      customUserSearchOptions,
     }).then((result) => {
       if (typeof result === "string") {
         // do nothing promise probably got cancelled

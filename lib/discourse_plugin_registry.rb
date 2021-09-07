@@ -68,6 +68,7 @@ class DiscoursePluginRegistry
   define_register :vendored_core_pretty_text, Set
   define_register :seedfu_filter, Set
   define_register :demon_processes, Set
+  define_register :groups_callback_for_users_search_controller_action, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -77,7 +78,6 @@ class DiscoursePluginRegistry
 
   define_filtered_register :editable_group_custom_fields
   define_filtered_register :group_params
-  define_filtered_register :group_scope_for_search
 
   define_filtered_register :topic_thumbnail_sizes
 
