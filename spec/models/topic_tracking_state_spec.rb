@@ -40,7 +40,7 @@ describe TopicTrackingState do
     end
   end
 
-  describe '#publish_read' do
+  describe '.publish_read' do
     it 'correctly publish read' do
       message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
         TopicTrackingState.publish_read(post.topic_id, 1, post.user)
