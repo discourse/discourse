@@ -113,6 +113,12 @@
       margin: 0;
       padding: 0.25em 0;
     }
+
+    &.automation-enabled {
+      .control-label.disabled {
+        color: var(--danger);
+      }
+    }
   }
 
   .controls-row {
