@@ -327,7 +327,12 @@ class TopicUser < ActiveRecord::Base
 
         if before_last_read < post_number
           # The user read at least one new post
-          TopicTrackingState.publish_read(topic_id, post_number, user.id, after)
+          TopicTrackingState.publish_read(
+            topic_id,
+            post_number,
+            user,
+            after
+          )
         end
 
         if new_posts_read > 0
@@ -345,7 +350,13 @@ class TopicUser < ActiveRecord::Base
         if (user.user_option.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) == 0
           args[:new_status] = notification_levels[:tracking]
         end
-        TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
+
+        TopicTrackingState.publish_read(
+          topic_id,
+          post_number,
+          user,
+          args[:new_status]
+        )
 
         user.update_posts_read!(new_posts_read, mobile: opts[:mobile])
 
