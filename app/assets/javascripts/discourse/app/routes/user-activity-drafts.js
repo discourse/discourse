@@ -1,8 +1,14 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   model() {
-    let userDraftsStream = this.modelFor("user").get("userDraftsStream");
+    const user = this.modelFor("user");
+    const userDraftsStream = user.get("userDraftsStream");
+
+    userDraftsStream.set("isAnotherUsersPage", this.isAnotherUsersPage(user));
+    userDraftsStream.set("emptyState", this.emptyState());
+
     return userDraftsStream.load(this.site).then(() => userDraftsStream);
   },
 
@@ -12,6 +18,12 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("model", model);
+  },
+
+  emptyState() {
+    const title = I18n.t("user_activity.no_drafts_title");
+    const body = I18n.t("user_activity.no_drafts_body");
+    return { title, body };
   },
 
   activate() {
