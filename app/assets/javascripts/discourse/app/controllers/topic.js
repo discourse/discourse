@@ -4,10 +4,7 @@ import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
-import {
-  AUTO_DELETE_PREFERENCES,
-  FOR_TOPIC_POST_ID,
-} from "discourse/models/bookmark";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
@@ -1196,7 +1193,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _toggleBookmark(target) {
     return new Promise((resolve) => {
       const bookmarkingTopic = target instanceof Topic;
-      const postId = bookmarkingTopic ? FOR_TOPIC_POST_ID : target.id;
+      const postId = bookmarkingTopic ? null : target.id;
       const topicId = bookmarkingTopic ? target.id : target.topic_id;
 
       let modalController = showModal("bookmark", {
@@ -1233,9 +1230,9 @@ export default Controller.extend(bufferedProperty("model"), {
         },
         afterDelete: (topicBookmarked) => {
           this.model.set(
-            "bookmarked_posts",
-            this.model.bookmarked_posts.filter(
-              (bookmarkedPost) => bookmarkedPost.post_id !== postId
+            "bookmarked_items",
+            this.model.bookmarked_items.filter(
+              (bookmarkedItem) => bookmarkedItem.post_id !== postId
             )
           );
           target.deleteBookmark(topicBookmarked);
@@ -1245,17 +1242,17 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _addOrUpdateBookmarkedPost(postId, reminderAt) {
-    if (!this.model.bookmarked_posts) {
-      this.model.set("bookmarked_posts", []);
+    if (!this.model.bookmarked_items) {
+      this.model.set("bookmarked_items", []);
     }
 
-    let bookmarkedPost = this.model.bookmarked_posts.findBy("post_id", postId);
-    if (!bookmarkedPost) {
-      bookmarkedPost = { post_id: postId };
-      this.model.bookmarked_posts.pushObject(bookmarkedPost);
+    let bookmarkedItem = this.model.bookmarked_items.findBy("post_id", postId);
+    if (!bookmarkedItem) {
+      bookmarkedItem = { post_id: postId };
+      this.model.bookmarked_items.pushObject(bookmarkedItem);
     }
 
-    bookmarkedPost.reminder_at = reminderAt;
+    bookmarkedItem.reminder_at = reminderAt;
   },
 
   _toggleTopicBookmark() {
@@ -1263,8 +1260,8 @@ export default Controller.extend(bufferedProperty("model"), {
       return Promise.resolve();
     }
     this.model.set("bookmarking", true);
-    const bookmarkedPostsCount = this.model.bookmarked_posts
-      ? this.model.bookmarked_posts.length
+    const bookmarkedCount = this.model.bookmarked_items
+      ? this.model.bookmarked_items.length
       : 0;
 
     const bookmarkTarget = async (target) => {
@@ -1283,15 +1280,15 @@ export default Controller.extend(bufferedProperty("model"), {
 
     const toggleBookmarkOnServer = async () => {
       // bookmark the topic if there are no bookmarked posts
-      if (bookmarkedPostsCount === 0) {
+      if (bookmarkedCount === 0) {
         return bookmarkTarget(this.model);
 
-        // if there is only one bookmarked post for the topic we want to
-        // get it in the stream and edit that one
-      } else if (bookmarkedPostsCount === 1) {
-        const postId = this.model.bookmarked_posts[0].post_id;
+        // if there is only one bookmarked item for the topic we want to
+        // get it in the stream and edit that one (could be a post or the topic-level bookmark)
+      } else if (bookmarkedCount === 1) {
+        const postId = this.model.bookmarked_items[0].post_id;
 
-        if (postId === FOR_TOPIC_POST_ID) {
+        if (!postId) {
           return bookmarkTarget(this.model);
         } else {
           const post = await this.model.postById(postId);
@@ -1299,7 +1296,7 @@ export default Controller.extend(bufferedProperty("model"), {
         }
       } else {
         // otherwise we want to clear all the bookmarks out if there is more
-        // than one bookmarked post in the topic
+        // than one bookmarked item in the topic
         return this.model
           .deleteBookmarks()
           .then(() => this.model.clearBookmarks())
@@ -1309,7 +1306,7 @@ export default Controller.extend(bufferedProperty("model"), {
     };
 
     return new Promise((resolve) => {
-      if (bookmarkedPostsCount > 1) {
+      if (bookmarkedCount > 1) {
         bootbox.confirm(
           I18n.t("bookmarks.confirm_clear"),
           I18n.t("no_value"),

@@ -67,10 +67,9 @@ export default {
       dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
+        const bookmarkedItems = this.topic.bookmarked_items || [];
         if (
-          bookmarkedPosts &&
-          bookmarkedPosts.find((bookmarkedPost) => bookmarkedPost.reminder_at)
+          bookmarkedItems.find((bookmarkedItem) => bookmarkedItem.reminder_at)
         ) {
           return "discourse-bookmark-clock";
         }
@@ -84,14 +83,14 @@ export default {
       },
       label() {
         if (!this.topic.isPrivateMessage || this.site.mobileView) {
-          const bookmarkedPosts = this.topic.bookmarked_posts;
-          const bookmarkedPostsCount = bookmarkedPosts
-            ? bookmarkedPosts.length
+          const bookmarkedItems = this.topic.bookmarked_items;
+          const bookmarkedItemsCount = bookmarkedItems
+            ? bookmarkedItems.length
             : 0;
 
-          if (bookmarkedPostsCount === 0) {
+          if (bookmarkedItemsCount === 0) {
             return "bookmarked.title";
-          } else if (bookmarkedPostsCount === 1) {
+          } else if (bookmarkedItemsCount === 1) {
             return "bookmarked.edit_bookmark";
           } else {
             return "bookmarked.clear_bookmarks";
@@ -99,13 +98,13 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (!bookmarkedPosts || bookmarkedPosts.length === 0) {
+        const bookmarkedItems = this.topic.bookmarked_items;
+        if (!bookmarkedItems || bookmarkedItems.length === 0) {
           return I18n.t("bookmarked.help.bookmark");
-        } else if (bookmarkedPosts.length === 1) {
+        } else if (bookmarkedItems.length === 1) {
           return I18n.t("bookmarked.help.edit_bookmark");
         } else if (
-          bookmarkedPosts.find((bookmarkedPost) => bookmarkedPost.reminder_at)
+          bookmarkedItems.find((bookmarkedItem) => bookmarkedItem.reminder_at)
         ) {
           return I18n.t("bookmarked.help.unbookmark_with_reminder");
         } else {

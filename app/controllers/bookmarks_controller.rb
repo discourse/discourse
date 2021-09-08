@@ -4,9 +4,13 @@ class BookmarksController < ApplicationController
   requires_login
 
   def create
-    params.require(:post_id)
-    if params[:post_id].to_i == Bookmark::FOR_TOPIC_POST_ID
-      params.require(:topic_id)
+    if params[:post_id].blank?
+      if params[:topic_id].blank?
+        raise Discourse::InvalidParameters.new("Either a post_id or a topic_id is required.")
+      end
+      topic_id = params[:topic_id].to_i
+    else
+      post_id = params[:post_id]&.to_i
     end
 
     RateLimiter.new(
@@ -15,8 +19,8 @@ class BookmarksController < ApplicationController
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark = bookmark_manager.create(
-      topic_id: params[:topic_id].to_i,
-      post_id: params[:post_id].to_i,
+      topic_id: topic_id,
+      post_id: post_id,
       name: params[:name],
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],

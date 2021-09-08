@@ -395,19 +395,20 @@ class TopicView
     @topic.bookmarks.exists?(user_id: @user.id)
   end
 
-  def bookmarked_posts
+  def bookmarked_items
     return nil unless has_bookmarks?
     @topic.bookmarks.where(user: @user).pluck(:post_id, :reminder_at).map do |post_id, reminder_at|
       {
         post_id: post_id,
-        reminder_at: reminder_at
+        reminder_at: reminder_at,
+        topic_level: post_id.blank?
       }
     end
   end
 
   def bookmark
     return if !has_bookmarks?
-    @bookmark ||= @topic.bookmarks.where(user_id: @user.id, post_id: Bookmark::FOR_TOPIC_POST_ID).first
+    @bookmark ||= @topic.bookmarks.where(user_id: @user.id, post_id: nil).first
   end
 
   MAX_PARTICIPANTS = 24

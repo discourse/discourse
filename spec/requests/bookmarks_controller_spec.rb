@@ -25,7 +25,7 @@ describe BookmarksController do
 
     it "creates a bookmark for the topic" do
       post "/bookmarks.json", params: {
-        post_id: Bookmark::FOR_TOPIC_POST_ID,
+        post_id: nil,
         topic_id: bookmark_post.topic.id,
         reminder_type: "tomorrow",
         reminder_at: (Time.zone.now + 1.day).iso8601
@@ -34,7 +34,7 @@ describe BookmarksController do
       expect(response.status).to eq(200)
       expect(
         Bookmark.exists?(
-          user: bookmark_user, post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: bookmark_post.topic.id
+          user: bookmark_user, post_id: nil, topic_id: bookmark_post.topic.id
         )
       ).to eq(true)
     end

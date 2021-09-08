@@ -4,7 +4,7 @@ class BookmarkReminderNotificationHandler
   def self.send_notification(bookmark)
     return if bookmark.blank?
     Bookmark.transaction do
-      if bookmark.post.blank? || bookmark.post.deleted_at.present?
+      if bookmark.post&.deleted_at.present?
         clear_reminder(bookmark)
       elsif bookmark.topic
         create_notification(bookmark)
@@ -31,7 +31,7 @@ class BookmarkReminderNotificationHandler
     user.notifications.create!(
       notification_type: Notification.types[:bookmark_reminder],
       topic_id: bookmark.topic_id,
-      post_number: bookmark.post.post_number,
+      post_number: bookmark.for_topic? ? 1 : bookmark.post.post_number,
       data: {
         topic_title: bookmark.topic.title,
         display_username: user.username,

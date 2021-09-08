@@ -35,13 +35,22 @@ class BookmarkQuery
     pms = Topic.private_messages_for_user(@user)
     results = results.merge(topics.or(pms))
 
-    results = results.merge(Post.secured(@guardian))
+    results = results.where(
+      "posts.post_type IN (?) OR bookmarks.post_id IS NULL", Topic.visible_post_types(@guardian&.user)
+    )
 
     if @params[:q].present?
       term = @params[:q]
       bookmark_ts_query = Search.ts_query(term: term)
       results = results
-        .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.post_id")
+        .joins(<<~SQL)
+          LEFT JOIN post_search_data ON post_search_data.post_id = CASE
+            WHEN bookmarks.post_id IS NULL THEN (
+              SELECT posts.id FROM posts WHERE post_number = 1 AND topic_id = bookmarks.topic_id
+            )
+            WHEN bookmarks.post_id IS NOT NULL THEN bookmarks.post_id
+            END
+        SQL
         .where(
           "bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data",
           q: "%#{term}%"

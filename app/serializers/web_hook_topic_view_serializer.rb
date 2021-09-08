@@ -22,7 +22,7 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     image_url
     slow_mode_seconds
     slow_mode_enabled_until
-    bookmarked_posts
+    bookmarked_items
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

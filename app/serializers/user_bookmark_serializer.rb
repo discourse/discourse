@@ -35,7 +35,15 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def post
-    @post ||= object.post || Post.unscoped.find(object.post_id)
+    if for_topic?
+      @post ||= topic.first_post
+    else
+      @post ||= object.post || Post.unscoped.find(object.post_id)
+    end
+  end
+
+  def for_topic?
+    object.for_topic?
   end
 
   def closed

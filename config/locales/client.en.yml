@@ -298,7 +298,7 @@ en:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Clear Bookmarks"
       help:
-        bookmark: "Click to bookmark the first post on this topic"
+        bookmark: "Click to bookmark this topic"
         edit_bookmark: "Click to edit the bookmark on this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."

@@ -67,7 +67,7 @@ class TopicViewSerializer < ApplicationSerializer
     :bookmark_reminder_type,
     :bookmark_name,
     :bookmark_auto_delete_preference,
-    :bookmarked_posts,
+    :bookmarked_items,
     :message_archived,
     :topic_timer,
     :unicode_title,
@@ -240,8 +240,8 @@ class TopicViewSerializer < ApplicationSerializer
     object.bookmark&.auto_delete_preference
   end
 
-  def bookmarked_posts
-    object.bookmarked_posts
+  def bookmarked_items
+    object.bookmarked_items
   end
 
   def topic_timer

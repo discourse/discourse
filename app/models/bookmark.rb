@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  FOR_TOPIC_POST_ID = -1
-
   belongs_to :user
   belongs_to :post
   belongs_to :topic
@@ -80,7 +78,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def for_topic?
-    self.post_id == FOR_TOPIC_POST_ID
+    self.post_id.blank?
   end
 
   def for_post?

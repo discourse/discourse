@@ -18,8 +18,6 @@ export const AUTO_DELETE_PREFERENCES = {
   ON_OWNER_REPLY: 2,
 };
 
-export const FOR_TOPIC_POST_ID = -1;
-
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
 

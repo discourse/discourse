@@ -266,7 +266,7 @@ acceptance("Topic Timeline", function (needs) {
         ],
         chunk_size: 20,
         bookmarked: false,
-        bookmarked_posts: null,
+        bookmarked_items: null,
         topic_timer: null,
         message_bus_last_id: 5,
         participant_count: 1,

@@ -1,5 +1,4 @@
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
-import { FOR_TOPIC_POST_ID } from "discourse/models/bookmark";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
@@ -412,18 +411,16 @@ const Topic = RestModel.extend({
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 
-    const postIds = this.bookmarked_posts.mapBy("post_id");
+    const postIds = this.bookmarked_items.mapBy("post_id");
     postIds.forEach((postId) => {
-      if (postId === FOR_TOPIC_POST_ID) {
-        return this.clearBookmark();
-      }
-
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {
         loadedPost.clearBookmark();
       }
     });
-    this.set("bookmarked_posts", []);
+
+    this.clearBookmark();
+    this.set("bookmarked_items", []);
 
     return postIds;
   },

@@ -62,6 +62,28 @@ RSpec.describe BookmarkQuery do
         bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
         expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
       end
+
+      context "for bookmarks that are topic level" do
+        before do
+          @bookmark3.update(post_id: nil)
+          @bookmark4.update(post_id: nil)
+        end
+
+        it "can search by bookmark name" do
+          bookmarks = bookmark_query(params: { q: 'check' }).list_all
+          expect(bookmarks.map(&:id)).to eq([@bookmark3.id])
+        end
+
+        it "can search by post content" do
+          bookmarks = bookmark_query(params: { q: 'content' }).list_all
+          expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+        end
+
+        it "can search by topic title" do
+          bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+          expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+        end
+      end
     end
 
     context "for a whispered post" do
@@ -173,6 +195,7 @@ RSpec.describe BookmarkQuery do
     let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago, reminder_type: nil, reminder_at: nil) }
     let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago, reminder_type: nil, reminder_at: nil) }
     let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark6) { Fabricate(:bookmark, user: user, updated_at: 7.days.ago, post: nil, reminder_type: nil, reminder_at: nil) }
 
     it "order defaults to updated_at DESC" do
       expect(bookmark_query.list_all.map(&:id)).to eq([
@@ -180,7 +203,8 @@ RSpec.describe BookmarkQuery do
         bookmark2.id,
         bookmark5.id,
         bookmark4.id,
-        bookmark3.id
+        bookmark3.id,
+        bookmark6.id
       ])
     end
 
@@ -195,7 +219,8 @@ RSpec.describe BookmarkQuery do
         bookmark5.id,
         bookmark1.id,
         bookmark2.id,
-        bookmark3.id
+        bookmark3.id,
+        bookmark6.id
       ])
 
     end
@@ -220,7 +245,8 @@ RSpec.describe BookmarkQuery do
         bookmark4.id,
         bookmark1.id,
         bookmark2.id,
-        bookmark5.id
+        bookmark5.id,
+        bookmark6.id
       ])
     end
   end

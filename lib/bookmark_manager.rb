@@ -8,7 +8,7 @@ class BookmarkManager
   end
 
   def create(post_id:, topic_id: nil, name: nil, reminder_type: nil, reminder_at: nil, options: {})
-    if post_id == Bookmark::FOR_TOPIC_POST_ID
+    if post_id.blank? && topic_id.present?
       bookmark_for_topic = true
       topic = Topic.find_by(id: topic_id)
     else

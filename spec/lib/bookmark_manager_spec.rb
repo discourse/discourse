@@ -42,22 +42,22 @@ RSpec.describe BookmarkManager do
     end
 
     context "when creating a topic-level bookmark" do
-      it "allows passing Bookmark::FOR_TOPIC_POST_ID as a post ID" do
-        subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+      it "allows passing nil as a post ID" do
+        subject.create(post_id: nil, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         expect(
-          Bookmark.exists?(user: user, topic: post.topic, post_id: Bookmark::FOR_TOPIC_POST_ID)
+          Bookmark.exists?(user: user, topic: post.topic, post_id: nil)
         ).to eq(true)
       end
 
       it "when topic is deleted it raises invalid access from guardian check" do
         post.topic.trash!
-        expect { subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name) }.to raise_error(
+        expect { subject.create(post_id: nil, topic_id: post.topic.id, name: name) }.to raise_error(
           Discourse::InvalidAccess
         )
       end
 
       it "updates the topic user bookmarked column to true" do
-        subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: nil, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
         tu = TopicUser.find_by(user: user)
         expect(tu.bookmarked).to eq(true)
         tu.update(bookmarked: false)

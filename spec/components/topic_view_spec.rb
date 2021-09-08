@@ -408,19 +408,31 @@ describe TopicView do
       end
     end
 
-    context "#bookmarked_posts" do
+    context "#bookmarked_items" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
       let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
+      let!(:bookmark3) { Fabricate(:bookmark_next_business_day_reminder, post: nil, user: user, topic: topic) }
 
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
-        first, second = topic_view.bookmarked_posts
+        first, second = topic_view.bookmarked_items
         expect(first[:post_id]).to eq(bookmark1.post_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
+        expect(first[:topic_level]).to eq(false)
         expect(second[:post_id]).to eq(bookmark2.post_id)
         expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
+        expect(second[:topic_level]).to eq(false)
+      end
+
+      it "gets the topic level bookmark reminder at for the user" do
+        topic_view = TopicView.new(topic.id, user)
+
+        topic_level_item = topic_view.bookmarked_items.last
+        expect(topic_level_item[:post_id]).to eq(nil)
+        expect(topic_level_item[:reminder_at]).to eq(bookmark3.reminder_at)
+        expect(topic_level_item[:topic_level]).to eq(true)
       end
 
       context "when the topic is deleted" do
@@ -429,7 +441,7 @@ describe TopicView do
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
 
-          first, second = topic_view.bookmarked_posts
+          first, second = topic_view.bookmarked_items
           expect(first[:post_id]).to eq(bookmark1.post_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
           expect(second[:post_id]).to eq(bookmark2.post_id)

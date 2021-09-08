@@ -28,6 +28,19 @@ RSpec.describe BookmarkReminderNotificationHandler do
       expect(data["bookmark_name"]).to eq(bookmark.name)
     end
 
+    it "creates a bookmark reminder notification for a topic-level bookmark" do
+      bookmark.update(post_id: nil)
+      subject.send_notification(bookmark)
+      notif = bookmark.user.notifications.last
+      expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
+      expect(notif.topic_id).to eq(bookmark.topic_id)
+      expect(notif.post_number).to eq(1)
+      data = JSON.parse(notif.data)
+      expect(data["topic_title"]).to eq(bookmark.topic.title)
+      expect(data["display_username"]).to eq(bookmark.user.username)
+      expect(data["bookmark_name"]).to eq(bookmark.name)
+    end
+
     it "clears the reminder" do
       subject.send_notification(bookmark)
       bookmark.reload
