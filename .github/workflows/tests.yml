@@ -54,6 +54,13 @@ jobs:
         with:
           fetch-depth: 1
 
+      - uses: actions/checkout@v2
+      - name: build
+        shell: bash
+        run: ./build-redis-with-openssl.sh "$REDIS_VERSION"
+        env:
+          REDIS_VERSION: ${{ matrix.redis }}
+
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"
