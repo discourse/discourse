@@ -61,7 +61,7 @@ class TopicTrackingState
     group_ids = topic.category && topic.category.secure_group_ids
 
     MessageBus.publish("/new", message.as_json, group_ids: group_ids)
-    publish_read(topic.id, 1, topic.user_id)
+    publish_read(topic.id, 1, topic.user)
   end
 
   def self.publish_latest(topic, staff_only = false)
@@ -226,8 +226,13 @@ class TopicTrackingState
     MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
   end
 
-  def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-    highest_post_number = DB.query_single("SELECT highest_post_number FROM topics WHERE id = ?", topic_id).first
+  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+    user_id = user.id
+
+    highest_post_number = DB.query_single(
+      "SELECT #{user.staff? ? "highest_staff_post_number" : "highest_post_number"} FROM topics WHERE id = ?",
+      topic_id
+    ).first
 
     message = {
       topic_id: topic_id,
