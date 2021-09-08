@@ -172,31 +172,6 @@
     margin-top: 0.25em;
   }
 
-  .future-date-input {
-    display: grid;
-    grid-template-columns: auto 1fr;
-
-    .control-group:nth-child(1) {
-      grid-column-start: 1;
-      grid-column-end: 3;
-    }
-    .control-group:nth-child(2) {
-      margin-left: 1.75em;
-      margin-right: 1.5em;
-    }
-    .control-group:nth-child(2),
-    .control-group:nth-child(3) {
-      grid-row-start: 2;
-      display: inline-flex;
-      align-items: center;
-      margin-bottom: 0;
-      input {
-        margin-bottom: 0;
-        margin-left: 0.5em;
-      }
-    }
-  }
-
   .input-group.input-email {
     display: flex;
     align-items: baseline;
@@ -231,7 +206,9 @@
     &.invite-to-topic input[type="text"],
     .group-chooser,
     .user-chooser,
-    .future-date-input-selector {
+    .future-date-input-selector,
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
       margin-left: 1.75em;
       width: calc(100% - 1.75em);
     }
