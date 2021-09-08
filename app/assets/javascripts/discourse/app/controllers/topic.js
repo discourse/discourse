@@ -4,7 +4,10 @@ import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import {
+  AUTO_DELETE_PREFERENCES,
+  FOR_TOPIC_POST_ID,
+} from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
@@ -1193,7 +1196,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _toggleBookmark(target) {
     return new Promise((resolve) => {
       const bookmarkingTopic = target instanceof Topic;
-      const postId = bookmarkingTopic ? -1 : target.id;
+      const postId = bookmarkingTopic ? FOR_TOPIC_POST_ID : target.id;
       const topicId = bookmarkingTopic ? target.id : target.topic_id;
 
       let modalController = showModal("bookmark", {
@@ -1214,7 +1217,7 @@ export default Controller.extend(bufferedProperty("model"), {
         onCloseWithoutSaving: () => {
           resolve({ closedWithoutSaving: true });
 
-          if (postId > 0) {
+          if (bookmarkingTopic) {
             target.appEvents.trigger("post-stream:refresh", {
               id: postId,
             });
@@ -1288,7 +1291,7 @@ export default Controller.extend(bufferedProperty("model"), {
       } else if (bookmarkedPostsCount === 1) {
         const postId = this.model.bookmarked_posts[0].post_id;
 
-        if (postId === -1) {
+        if (postId === FOR_TOPIC_POST_ID) {
           return bookmarkTarget(this.model);
         } else {
           const post = await this.model.postById(postId);

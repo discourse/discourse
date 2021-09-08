@@ -41,6 +41,32 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
+    context "when creating a topic-level bookmark" do
+      it "allows passing Bookmark::FOR_TOPIC_POST_ID as a post ID" do
+        subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        expect(
+          Bookmark.exists?(user: user, topic: post.topic, post_id: Bookmark::FOR_TOPIC_POST_ID)
+        ).to eq(true)
+      end
+
+      it "when topic is deleted it raises invalid access from guardian check" do
+        post.topic.trash!
+        expect { subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name) }.to raise_error(
+          Discourse::InvalidAccess
+        )
+      end
+
+      it "updates the topic user bookmarked column to true" do
+        subject.create(post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: post.topic.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        tu = TopicUser.find_by(user: user)
+        expect(tu.bookmarked).to eq(true)
+        tu.update(bookmarked: false)
+        subject.create(post_id: Fabricate(:post, topic: post.topic).id)
+        tu.reload
+        expect(tu.bookmarked).to eq(true)
+      end
+    end
+
     context "when a reminder time + type is provided" do
       it "saves the values correctly" do
         subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)

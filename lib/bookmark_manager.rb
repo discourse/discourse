@@ -17,7 +17,6 @@ class BookmarkManager
     end
     reminder_type = parse_reminder_type(reminder_type)
 
-    # no bookmarking deleted posts or topics
     raise Discourse::InvalidAccess if (!bookmark_for_topic && post.blank?) || topic.blank?
 
     if (!bookmark_for_topic && !Guardian.new(@user).can_see_post?(post)) || !Guardian.new(@user).can_see_topic?(topic)

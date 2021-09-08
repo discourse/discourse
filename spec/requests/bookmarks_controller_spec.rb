@@ -12,6 +12,33 @@ describe BookmarksController do
   end
 
   describe "#create" do
+    it "creates a bookmark for a post" do
+      post "/bookmarks.json", params: {
+        post_id: bookmark_post.id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601
+      }
+
+      expect(response.status).to eq(200)
+      expect(Bookmark.exists?(user: bookmark_user, post: bookmark_post)).to eq(true)
+    end
+
+    it "creates a bookmark for the topic" do
+      post "/bookmarks.json", params: {
+        post_id: Bookmark::FOR_TOPIC_POST_ID,
+        topic_id: bookmark_post.topic.id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601
+      }
+
+      expect(response.status).to eq(200)
+      expect(
+        Bookmark.exists?(
+          user: bookmark_user, post_id: Bookmark::FOR_TOPIC_POST_ID, topic_id: bookmark_post.topic.id
+        )
+      ).to eq(true)
+    end
+
     it "rate limits creates" do
       SiteSetting.max_bookmarks_per_day = 1
       RateLimiter.enable
