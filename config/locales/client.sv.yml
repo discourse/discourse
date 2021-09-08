@@ -157,6 +157,7 @@ sv:
         disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
       forwarded: "vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
+    skip_to_main_content: "Hoppa till huvudinnehållet"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     software_update_prompt:
@@ -1127,6 +1128,10 @@ sv:
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         tags: "Taggar"
         warnings: "Officiella varningar"
+        read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
+        read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages/personal'>personliga meddelanden</a>."
+        read_more_group_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra meddelanden i {groupLink}"
+        read_more_personal_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/personal/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/personal/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages/personal'>personliga meddelanden</a>"
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -1746,21 +1751,27 @@ sv:
       google_oauth2:
         name: "Google"
         title: "med Google"
+        sr_title: "Logga in med Google"
       twitter:
         name: "Twitter"
         title: "med Twitter"
+        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "med Instagram"
+        sr_title: "Logga in med Instagram"
       facebook:
         name: "Facebook"
         title: "med Facebook"
+        sr_title: "Logga in med Facebook"
       github:
         name: "GitHub"
         title: "med GitHub"
+        sr_title: "Logga in med GitHub"
       discord:
         name: "Discord"
         title: "med Discord"
+        sr_title: "Logga in med Discord"
       second_factor_toggle:
         totp: "Använd en autentiseringsapp istället"
         backup_code: "Använd en reservkod istället"

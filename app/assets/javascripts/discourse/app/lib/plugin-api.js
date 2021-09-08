@@ -83,9 +83,10 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.2";
+const PLUGIN_API_VERSION = "0.12.3";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1405,6 +1406,29 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Add custom user search options.
+   * It is heavily correlated with `register_groups_callback_for_users_search_controller_action` which allows defining custom filter.
+   * Example usage:
+   * ```
+   * api.addUserSearchOption("adminsOnly");
+
+   * register_groups_callback_for_users_search_controller_action(:admins_only) do |groups, user|
+   *   groups.where(name: "admins")
+   * end
+   *
+   * {{email-group-user-chooser
+   *   options=(hash
+   *     includeGroups=true
+   *     adminsOnly=true
+   *   )
+   * }}
+   * ```
+   */
+  addUserSearchOption(value) {
+    CUSTOM_USER_SEARCH_OPTIONS.push(value);
   }
 
   /**

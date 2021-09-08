@@ -61,8 +61,6 @@ export default (inboxType, path, filter) => {
         filter: filter,
         group: null,
         inbox: inboxType,
-        pmTopicTrackingState:
-          userPrivateMessagesController.pmTopicTrackingState,
         emptyState: this.emptyState(),
       });
 

@@ -2207,9 +2207,11 @@ pt_BR:
           other: "Descartar novos(as) (%{count})"
         toggle: "alternar seleção de tópicos em massa"
         actions: "Ações em massa"
+        change_category: "Definir categoria..."
         close_topics: "Fechar tópicos"
         archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para caixa de entrada"
+        notification_level: "Notificações..."
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -3141,6 +3143,7 @@ pt_BR:
       other: "usuários(as)"
     category_title: "Categoria"
     history_capped_revisions: "Histórico, últimas 100 revisões"
+    history: "Histórico"
     changed_by: "de %{author}"
     raw_email:
       title: "E-mails recebidos"

@@ -201,6 +201,7 @@ he:
         disabled: "באנר זה הוסר ב־%{when}. הוא לא יופיע יותר בראש כל דף."
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
+    skip_to_main_content: "דילוג לתוכן הראשי"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     software_update_prompt:
@@ -1227,6 +1228,8 @@ he:
         failed_to_move: "בעיה בהעברת ההודעות שנבחרו (אולי יש תקלה בהתחברות?)"
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
+        read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
+        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages/personal'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -1868,21 +1871,27 @@ he:
       google_oauth2:
         name: "Google"
         title: "עם Google"
+        sr_title: "כניסה עם Google"
       twitter:
         name: "Twitter"
         title: "עם Twitter"
+        sr_title: "כניסה עם טוויטר"
       instagram:
         name: "Instagram"
         title: "עם אינסטגרם"
+        sr_title: "כניסה עם אינסטגרם"
       facebook:
         name: "Facebook"
         title: "עם Facebook"
+        sr_title: "כניסה עם פייסבוק"
       github:
         name: "GitHub"
         title: "עם GitHub"
+        sr_title: "כניסה עם GitHub"
       discord:
         name: "Discord"
         title: "עם Discord"
+        sr_title: "כניסה עם Discord"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"

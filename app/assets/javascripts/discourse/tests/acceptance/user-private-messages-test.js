@@ -10,6 +10,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { PERSONAL_INBOX } from "discourse/controllers/user-private-messages";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -47,7 +48,11 @@ acceptance(
     let fetchUserNew;
     let fetchedGroupNew;
 
-    needs.user();
+    needs.user({
+      id: 5,
+      username: "charlie",
+      groups: [{ id: 14, name: "awesome_group", has_messages: true }],
+    });
 
     needs.site({
       can_tag_pms: true,
@@ -60,6 +65,12 @@ acceptance(
     });
 
     needs.pretender((server, helper) => {
+      server.get("/t/13.json", () => {
+        const response = { ...fixturesByUrl["/t/12/1.json"] };
+        response.suggested_group_name = "awesome_group";
+        return helper.response(response);
+      });
+
       server.get("/topics/private-messages-all/:username.json", () => {
         return helper.response({
           topic_list: {
@@ -159,46 +170,86 @@ acceptance(
       });
     });
 
-    const publishUnreadToMessageBus = function (group_ids) {
-      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
-        topic_id: Math.random(),
-        message_type: "unread",
-        payload: {
-          last_read_post_number: 1,
-          highest_post_number: 2,
-          notification_level: 2,
-          group_ids: group_ids || [],
-        },
-      });
-    };
-
-    const publishNewToMessageBus = function (group_ids) {
-      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
-        topic_id: Math.random(),
-        message_type: "new_topic",
-        payload: {
-          last_read_post_number: null,
-          highest_post_number: 1,
-          group_ids: group_ids || [],
-        },
-      });
-    };
-
-    const publishArchiveToMessageBus = function () {
-      publishToMessageBus("/private-message-topic-tracking-state/user/5", {
-        topic_id: Math.random(),
-        message_type: "archive",
-      });
-    };
-
-    const publishGroupArchiveToMessageBus = function (group_ids) {
+    const publishUnreadToMessageBus = function (opts = {}) {
       publishToMessageBus(
-        `/private-message-topic-tracking-state/group/${group_ids[0]}`,
+        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
+        {
+          topic_id: Math.random(),
+          message_type: "unread",
+          payload: {
+            last_read_post_number: 1,
+            highest_post_number: 2,
+            notification_level: 2,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
+
+    const publishNewToMessageBus = function (opts = {}) {
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
+        {
+          topic_id: Math.random(),
+          message_type: "new_topic",
+          payload: {
+            last_read_post_number: null,
+            highest_post_number: 1,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
+
+    const publishArchiveToMessageBus = function (userId) {
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/user/${userId || 5}`,
+        {
+          topic_id: Math.random(),
+          message_type: "archive",
+        }
+      );
+    };
+
+    const publishGroupArchiveToMessageBus = function (groupIds) {
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${groupIds[0]}`,
         {
           topic_id: Math.random(),
           message_type: "group_archive",
           payload: {
-            group_ids: group_ids,
+            group_ids: groupIds,
+          },
+        }
+      );
+    };
+
+    const publishGroupUnreadToMessageBus = function (groupIds) {
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${groupIds[0]}`,
+        {
+          topic_id: Math.random(),
+          message_type: "unread",
+          payload: {
+            last_read_post_number: 1,
+            highest_post_number: 2,
+            notification_level: 2,
+            group_ids: groupIds || [],
+          },
+        }
+      );
+    };
+
+    const publishGroupNewToMessageBus = function (groupIds) {
+      publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${groupIds[0]}`,
+        {
+          topic_id: Math.random(),
+          message_type: "new_topic",
+          payload: {
+            last_read_post_number: null,
+            highest_post_number: 1,
+            group_ids: groupIds || [],
           },
         }
       );
@@ -332,8 +383,8 @@ acceptance(
     test("incoming unread messages while viewing group unread", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
-      publishUnreadToMessageBus([14]);
-      publishNewToMessageBus([14]);
+      publishUnreadToMessageBus({ groupIds: [14] });
+      publishNewToMessageBus({ groupIds: [14] });
 
       await visit("/u/charlie/messages/group/awesome_group/unread"); // wait for re-render
 
@@ -542,6 +593,74 @@ acceptance(
       assert.ok(
         !exists(".messages-nav .tags"),
         "does not display the tags filter"
+      );
+    });
+
+    test("suggested messages without new or unread", async function (assert) {
+      await visit("/t/12");
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "Want to read more? Browse other messages in personal messages.",
+        "displays the right browse more message"
+      );
+    });
+
+    test("suggested messages with new and unread", async function (assert) {
+      await visit("/t/12");
+
+      publishNewToMessageBus({ userId: 5 });
+
+      await visit("/t/12"); // await re-render
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 new message remaining, or browse other personal messages",
+        "displays the right browse more message"
+      );
+
+      publishUnreadToMessageBus({ userId: 5 });
+
+      await visit("/t/12"); // await re-render
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 unread and 1 new message remaining, or browse other personal messages",
+        "displays the right browse more message"
+      );
+    });
+
+    test("suggested messages for group messages without new or unread", async function (assert) {
+      await visit("/t/13");
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "Want to read more? Browse other messages in  awesome_group.",
+        "displays the right browse more message"
+      );
+    });
+
+    test("suggested messages for group messages with new and unread", async function (assert) {
+      await visit("/t/13");
+
+      publishGroupNewToMessageBus([14]);
+
+      await visit("/t/13"); // await re-render
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 new message remaining, or browse other messages in  awesome_group",
+        "displays the right browse more message"
+      );
+
+      publishGroupUnreadToMessageBus([14]);
+
+      await visit("/t/13"); // await re-render
+
+      assert.equal(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 unread and 1 new message remaining, or browse other messages in  awesome_group",
+        "displays the right browse more message"
       );
     });
   }

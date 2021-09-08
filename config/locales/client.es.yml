@@ -41,6 +41,7 @@ es:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "hace %{date}"
+      wrap_on: "el %{date}"
       tiny:
         half_a_minute: "< 1 m"
         less_than_x_seconds:
@@ -156,6 +157,7 @@ es:
         disabled: "quitó este banner %{when}. Ya no aparecerá en la parte superior de cada página."
       forwarded: "reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
+    skip_to_main_content: "Saltar al contenido principal"
     wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     software_update_prompt:
@@ -306,6 +308,7 @@ es:
       remove: "Eliminar"
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
+      new_private_message: "Nuevo borrador de mensaje personal"
       topic_reply: "Borrador de respuesta"
       abandon:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
@@ -382,6 +385,7 @@ es:
         type_bonus:
           name: "tipo de bonificación"
           title: "Algunos tipos revisables pueden recibir una bonificación por parte del personal para que tengan mayor prioridad."
+      stale_help: "Este revisable ha sido resuelto por <b>%{username}</b>."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
         required: "Debes reclamar los elementos antes de poder revisarlos."
@@ -789,6 +793,7 @@ es:
         owner: "Propietario"
         primary: "Principal"
         forbidden: "No tienes permitido ver los miembros del grupo."
+        no_filter_matches: "Ningún miembro coincide con esa búsqueda."
       topics: "Temas"
       posts: "Publicaciones"
       mentions: "Menciones"
@@ -831,6 +836,7 @@ es:
         icon: "Selecciona un icono"
         image: "Sube una imagen"
       default_notifications:
+        modal_title: "Notificaciones predeterminadas del usuario"
         modal_description: "¿Quieres aplicar este cambio retroactivamente? Esto cambiará las preferencias de %{count} usuarios existentes."
         modal_yes: "Sí"
         modal_no: "No, solo aplicar el cambio a partir de ahora"
@@ -923,6 +929,7 @@ es:
           all: "Todo"
           read: "Leídos"
           unread: "Sin leer"
+          unseen: "No vistas"
         ignore_duration_title: "Ignorar usuario"
         ignore_duration_username: "Nombre de usuario"
         ignore_duration_when: "Duración:"

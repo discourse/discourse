@@ -1657,6 +1657,7 @@ sv:
     external_emoji_url: "URL till den externa tjänsten för emoji-bilder. Lämna tomt om du vill inaktivera den."
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
+    enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."

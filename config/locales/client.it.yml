@@ -1121,6 +1121,8 @@ it:
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         tags: "Etichette"
         warnings: "Avvertimenti ufficiali"
+        read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
+        read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages/personal'>messaggi personali</a>."
       preferences_nav:
         account: "Account"
         security: "Sicurezza"

@@ -85,15 +85,14 @@ export default Component.extend({
     return translatedLabel;
   },
 
-  @discourseComputed("ariaLabel", "translatedAriaLabel", "computedLabel")
-  computedAriaLabel(ariaLabel, translatedAriaLabel, computedLabel) {
+  @discourseComputed("ariaLabel", "translatedAriaLabel")
+  computedAriaLabel(ariaLabel, translatedAriaLabel) {
     if (ariaLabel) {
       return I18n.t(ariaLabel);
     }
     if (translatedAriaLabel) {
       return translatedAriaLabel;
     }
-    return computedLabel;
   },
 
   @discourseComputed("ariaExpanded")

@@ -1,6 +1,7 @@
 import TopicTrackingState, {
   startTracking,
 } from "discourse/models/topic-tracking-state";
+import PrivateMessageTopicTrackingState from "discourse/models/private-message-topic-tracking-state";
 import DiscourseLocation from "discourse/lib/discourse-location";
 import KeyValueStore from "discourse/lib/key-value-store";
 import MessageBus from "message-bus-client";
@@ -50,16 +51,27 @@ export default {
     app.register("current-user:main", currentUser, { instantiate: false });
     app.currentUser = currentUser;
 
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "topicTrackingState", "topic-tracking-state:main")
-    );
+    ALL_TARGETS.forEach((t) => {
+      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
+      app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
+    });
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus: MessageBus,
       siteSettings,
       currentUser,
     });
+
     app.register("topic-tracking-state:main", topicTrackingState, {
+      instantiate: false,
+    });
+
+    const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
+      messageBus: MessageBus,
+      currentUser,
+    });
+
+    app.register("pm-topic-tracking-state:main", pmTopicTrackingState, {
       instantiate: false,
     });
 

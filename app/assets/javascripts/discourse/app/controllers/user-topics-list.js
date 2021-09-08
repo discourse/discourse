@@ -18,7 +18,6 @@ export default Controller.extend(BulkTopicSelection, {
   showPosters: false,
   channel: null,
   tagsForUser: null,
-  pmTopicTrackingState: null,
   incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
   @discourseComputed("emptyState", "model.topics.length", "incomingCount")
@@ -46,15 +45,11 @@ export default Controller.extend(BulkTopicSelection, {
   },
 
   subscribe() {
-    this.pmTopicTrackingState?.trackIncoming(
-      this.inbox,
-      this.filter,
-      this.group
-    );
+    this.pmTopicTrackingState.trackIncoming(this.inbox, this.filter);
   },
 
   unsubscribe() {
-    this.pmTopicTrackingState?.resetTracking();
+    this.pmTopicTrackingState.resetIncomingTracking();
   },
 
   @action
@@ -85,7 +80,7 @@ export default Controller.extend(BulkTopicSelection, {
   @action
   showInserted() {
     this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
-    this.pmTopicTrackingState.resetTracking();
+    this.pmTopicTrackingState.resetIncomingTracking();
     return false;
   },
 });

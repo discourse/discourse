@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  self.ignored_columns = [
-    "delete_when_reminder_sent" # TODO(2021-07-22): remove
-  ]
-
   FOR_TOPIC_POST_ID = -1
 
   belongs_to :user

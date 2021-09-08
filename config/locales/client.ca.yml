@@ -122,6 +122,7 @@ ca:
       twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
       email: "Envia per correu electrònic"
+      url: "Copiar i compartir URL"
     action_codes:
       public_topic: "tema fet públic %{when}"
       private_topic: "s'ha convertit el tema en un missatge personal %{when}"
@@ -185,6 +186,7 @@ ca:
         us_gov_west_1: "AWS GovCloud (oest dels EUA)"
         us_west_1: "EUA Oest (N. Califòrnia)"
         us_west_2: "EUA Oest (Oregon)"
+    clear_input: "Esborra l'entrada"
     edit: "edita el títol i la categoria d'aquest tema"
     expand: "Expandeix"
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
@@ -246,6 +248,9 @@ ca:
       moderators: "Moderadors"
       stat:
         all_time: "Sempre"
+        last_day: "Últimes 24 hores"
+        last_7_days: "Els darrers 7 dies"
+        last_30_days: "Els darrers 30 dies"
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -255,14 +260,20 @@ ca:
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
     bookmarked:
       title: "Preferit"
+      edit_bookmark: "Edita el marcador"
       clear_bookmarks: "Neteja preferits"
       help:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
+        edit_bookmark: "Feu clic per editar el marcador sobre aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
+        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       not_bookmarked: "marca aquesta publicació com a preferit"
+      created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
       remove: "Elimina preferit"
+      delete: "Suprimeix el marcador"
+      confirm_delete: "Esteu segur que voleu suprimir aquest marcador? El recordatori també se suprimirà."
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
