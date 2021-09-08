@@ -10,9 +10,9 @@
     "@highlightjs/cdn-assets": "^10.6.0",
     "@json-editor/json-editor": "^2.5.2",
     "@popperjs/core": "v2.9.3",
-    "@uppy/core": "^2.0.1",
     "@uppy/aws-s3": "^2.0.1",
     "@uppy/aws-s3-multipart": "^2.0.2",
+    "@uppy/core": "^2.0.1",
     "@uppy/drop-target": "^1.0.1",
     "@uppy/xhr-upload": "^2.0.1",
     "ace-builds": "1.4.12",
@@ -33,7 +33,6 @@
     "moment": "2.29.1",
     "moment-timezone": "0.5.31",
     "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
-    "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
     "pikaday": "1.8.0",
     "resumablejs": "1.1.0",
     "spectrum-colorpicker": "1.8.0",
@@ -42,7 +41,8 @@
     "workbox-expiration": "^4.3.1",
     "workbox-routing": "^4.3.1",
     "workbox-strategies": "^4.3.1",
-    "workbox-sw": "^4.3.1"
+    "workbox-sw": "^4.3.1",
+    "@discourse/itsatrap": "^2.0.10"
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.2",

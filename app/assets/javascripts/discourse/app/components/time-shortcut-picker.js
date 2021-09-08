@@ -67,6 +67,8 @@ export default Component.extend({
   customDate: null,
   customTime: null,
 
+  _itsatrap: null,
+
   defaultCustomReminderTime: `0${START_OF_DAY_HOUR}:00`,
 
   @on("init")
@@ -101,7 +103,8 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this.mousetrap.unbind(Object.keys(BINDINGS));
+
+    this._itsatrap.unbind(Object.keys(BINDINGS));
   },
 
   parsePrefilledDatetime() {
@@ -143,7 +146,7 @@ export default Component.extend({
 
   _bindKeyboardShortcuts() {
     Object.keys(BINDINGS).forEach((shortcut) => {
-      this.mousetrap.bind(shortcut, () => {
+      this._itsatrap.bind(shortcut, () => {
         let binding = BINDINGS[shortcut];
         this.send(binding.handler, ...binding.args);
         return false;

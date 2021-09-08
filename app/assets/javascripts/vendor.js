@@ -18,8 +18,7 @@
 //= require jquery.tagsinput.js
 //= require jquery.sortable.js
 //= require lodash.js
-//= require mousetrap.js
-//= require mousetrap-global-bind.js
+//= require itsatrap.js
 //= require rsvp.js
 //= require show-html.js
 //= require uppy.js

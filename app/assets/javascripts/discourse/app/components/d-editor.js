@@ -9,7 +9,7 @@ import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { later, schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
-import Mousetrap from "mousetrap";
+import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
@@ -238,7 +238,7 @@ export default Component.extend(TextareaTextManipulation, {
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,
-  _mouseTrap: null,
+  _itsatrap: null,
   showLink: true,
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
@@ -278,12 +278,12 @@ export default Component.extend(TextareaTextManipulation, {
 
     scheduleOnce("afterRender", this, this._readyNow);
 
-    this._mouseTrap = new Mousetrap(this._textarea);
+    this._itsatrap = new ItsATrap(this._textarea);
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
-      this._mouseTrap.bind(sc, () => {
+      this._itsatrap.bind(sc, () => {
         button.action(button);
         return false;
       });
@@ -335,7 +335,9 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.off("composer:replace-text", this, "_replaceText");
     }
 
-    this._mouseTrap.reset();
+    this._itsatrap?.destroy();
+    this._itsatrap = null;
+
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
 
     if (isTesting()) {
