@@ -390,6 +390,8 @@ export default Component.extend(TextareaTextManipulation, {
 
       this.set("preview", cooked);
 
+      let previewPromise = Promise.resolve();
+
       if (this.siteSettings.enable_diffhtml_preview) {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
@@ -407,40 +409,34 @@ export default Component.extend(TextareaTextManipulation, {
           true
         );
 
-        loadScript("/javascripts/diffhtml.min.js").then(() => {
-          // changing the contents of the preview element between two uses of
-          // diff.innerHTML did not apply the diff correctly
-          window.diff.release(this.element.querySelector(".d-editor-preview"));
+        previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
           window.diff.innerHTML(
             this.element.querySelector(".d-editor-preview"),
-            cookedElement.innerHTML,
-            {
-              parser: {
-                rawElements: ["script", "noscript", "style", "template"],
-              },
-            }
+            cookedElement.innerHTML
           );
         });
       }
 
-      schedule("afterRender", () => {
-        if (this._state !== "inDOM" || !this.element) {
-          return;
-        }
+      previewPromise.then(() => {
+        schedule("afterRender", () => {
+          if (this._state !== "inDOM" || !this.element) {
+            return;
+          }
 
-        const preview = this.element.querySelector(".d-editor-preview");
-        if (!preview) {
-          return;
-        }
+          const preview = this.element.querySelector(".d-editor-preview");
+          if (!preview) {
+            return;
+          }
 
-        // prevents any tab focus in preview
-        preview.querySelectorAll("a").forEach((anchor) => {
-          anchor.setAttribute("tabindex", "-1");
+          // prevents any tab focus in preview
+          preview.querySelectorAll("a").forEach((anchor) => {
+            anchor.setAttribute("tabindex", "-1");
+          });
+
+          if (this.previewUpdated) {
+            this.previewUpdated($(preview));
+          }
         });
-
-        if (this.previewUpdated) {
-          this.previewUpdated($(preview));
-        }
       });
     });
   },
