@@ -20,6 +20,10 @@ import Mixin from "@ember/object/mixin";
  *                        which is determined by the preprocess-complete event.
  * - allComplete - Whether all files have completed the preprocessing for the plugin.
  *
+ * There is a caveat - you must call _addNeedProcessing(data.fileIDs.length) when
+ * handling the "upload" event with uppy, otherwise this mixin does not know how
+ * many files need to be processed.
+ *
  * If you need to do something else on progress or completion of preprocessors,
  * hook into the _onPreProcessProgress(callback) or _onPreProcessComplete(callback, allCompleteCallback)
  * functions. Note the _onPreProcessComplete function takes a second callback
@@ -67,10 +71,6 @@ export default Mixin.create({
     if (pluginClass.pluginType === "preprocessor") {
       this._trackPreProcessorStatus(pluginClass.pluginId);
     }
-
-    this._uppyInstance.on("upload", (data) => {
-      this._addNeedProcessing(data.fileIds.length);
-    });
   },
 
   // TODO (martin) This and _onPreProcessComplete will need to be tweaked

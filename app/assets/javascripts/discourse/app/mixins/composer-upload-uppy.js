@@ -155,13 +155,11 @@ export default Mixin.create(ExtendableUploader, {
     });
 
     this._uppyInstance.on("upload", (data) => {
+      this._addNeedProcessing(data.fileIDs.length);
+
       const files = data.fileIDs.map((fileId) =>
         this._uppyInstance.getFile(fileId)
       );
-
-      this._eachPreProcessor((pluginName, status) => {
-        status.needProcessing = files.length;
-      });
 
       this.setProperties({
         isProcessingUpload: true,
