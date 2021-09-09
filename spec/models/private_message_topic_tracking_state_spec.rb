@@ -203,4 +203,22 @@ describe PrivateMessageTopicTrackingState do
       expect(data['payload']['group_ids']).to contain_exactly(group.id)
     end
   end
+
+  describe '.publish_read' do
+    it 'should publish the right message_bus message' do
+      message = MessageBus.track_publish(described_class.user_channel(user.id)) do
+        PrivateMessageTopicTrackingState.publish_read(private_message.id, 1, user)
+      end.first
+
+      data = message.data
+
+      expect(message.user_ids).to contain_exactly(user.id)
+      expect(message.group_ids).to eq(nil)
+      expect(data["topic_id"]).to eq(private_message.id)
+      expect(data["message_type"]).to eq(described_class::READ_MESSAGE_TYPE)
+      expect(data["payload"]["last_read_post_number"]).to eq(1)
+      expect(data["payload"]["highest_post_number"]).to eq(1)
+      expect(data["payload"]["notification_level"]).to eq(nil)
+    end
+  end
 end

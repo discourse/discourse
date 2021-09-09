@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { on } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
@@ -139,6 +140,15 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         }
 
         break;
+      case "read":
+        this._modifyState(message.topic_id, message.payload);
+
+        if (
+          this.filter === UNREAD_FILTER &&
+          this._shouldDisplayMessageForInbox(message)
+        ) {
+          this._notifyIncoming(message.topic_id);
+        }
       case "unread":
         this._modifyState(message.topic_id, message.payload);
 
@@ -206,7 +216,14 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _modifyState(topicId, data, opts = {}) {
-    this.states.set(topicId, data);
+    const oldState = this.states.get(topicId);
+    let newState = data;
+
+    if (oldState && !deepEqual(oldState, newState)) {
+      newState = deepMerge(oldState, newState);
+    }
+
+    this.states.set(topicId, newState);
 
     if (!opts.skipIncrement) {
       this.incrementProperty("statesModificationCounter");

@@ -15,9 +15,12 @@
 # done on the client side based on the in-memory state in order to derive the
 # count of new and unread topics efficiently.
 class PrivateMessageTopicTrackingState
+  include TopicTrackingStatePublishable
+
   CHANNEL_PREFIX = "/private-message-topic-tracking-state"
   NEW_MESSAGE_TYPE = "new_topic"
   UNREAD_MESSAGE_TYPE = "unread"
+  READ_MESSAGE_TYPE = "read"
   ARCHIVE_MESSAGE_TYPE = "archive"
   GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
 
@@ -183,6 +186,17 @@ class PrivateMessageTopicTrackingState
     }.as_json
 
     MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
+  end
+
+  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+    self.publish_read_message(
+      message_type: READ_MESSAGE_TYPE,
+      channel_name: self.user_channel(user.id),
+      topic_id: topic_id,
+      user: user,
+      last_read_post_number: last_read_post_number,
+      notification_level: notification_level
+    )
   end
 
   def self.user_channel(user_id)

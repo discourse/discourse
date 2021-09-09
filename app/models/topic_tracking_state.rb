@@ -17,6 +17,7 @@
 # See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
   include ActiveModel::SerializerSupport
+  include TopicTrackingStatePublishable
 
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
@@ -227,24 +228,14 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
-    user_id = user.id
-
-    highest_post_number = DB.query_single(
-      "SELECT #{user.staff? ? "highest_staff_post_number" : "highest_post_number"} FROM topics WHERE id = ?",
-      topic_id
-    ).first
-
-    message = {
-      topic_id: topic_id,
+    self.publish_read_message(
       message_type: READ_MESSAGE_TYPE,
-      payload: {
-        last_read_post_number: last_read_post_number,
-        highest_post_number: highest_post_number,
-        notification_level: notification_level
-      }
-    }
-
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+      channel_name: self.unread_channel_key(user.id),
+      topic_id: topic_id,
+      user: user,
+      last_read_post_number: last_read_post_number,
+      notification_level: notification_level
+    )
   end
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
