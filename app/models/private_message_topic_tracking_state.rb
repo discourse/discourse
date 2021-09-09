@@ -21,7 +21,6 @@ class PrivateMessageTopicTrackingState
   NEW_MESSAGE_TYPE = "new_topic"
   UNREAD_MESSAGE_TYPE = "unread"
   READ_MESSAGE_TYPE = "read"
-  ARCHIVE_MESSAGE_TYPE = "archive"
   GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
 
   def self.report(user)
@@ -163,29 +162,23 @@ class PrivateMessageTopicTrackingState
     end
   end
 
-  def self.publish_group_archived(topic, group_id)
+  def self.publish_group_archived(topic:, group_id:, acting_user_id: nil)
     return unless topic.private_message?
 
     message = {
       message_type: GROUP_ARCHIVE_MESSAGE_TYPE,
       topic_id: topic.id,
       payload: {
-        group_ids: [group_id]
+        group_ids: [group_id],
+        acting_user_id: acting_user_id
       }
     }.as_json
 
-    MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
-  end
-
-  def self.publish_user_archived(topic, user_id)
-    return unless topic.private_message?
-
-    message = {
-      message_type: ARCHIVE_MESSAGE_TYPE,
-      topic_id: topic.id,
-    }.as_json
-
-    MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
+    MessageBus.publish(
+      self.group_channel(group_id),
+      message,
+      group_ids: [group_id]
+    )
   end
 
   def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
