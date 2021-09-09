@@ -633,9 +633,12 @@ acceptance(
     test("suggested messages for group messages without new or unread", async function (assert) {
       await visit("/t/13");
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "Want to read more? Browse other messages in  awesome_group.",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /Want to read more\? Browse other messages in\s+awesome_group\./
+          ),
         "displays the right browse more message"
       );
     });
@@ -647,9 +650,12 @@ acceptance(
 
       await visit("/t/13"); // await re-render
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "There is 1 new message remaining, or browse other messages in  awesome_group",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
         "displays the right browse more message"
       );
 
@@ -657,9 +663,12 @@ acceptance(
 
       await visit("/t/13"); // await re-render
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "There is 1 unread and 1 new message remaining, or browse other messages in  awesome_group",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
         "displays the right browse more message"
       );
     });
