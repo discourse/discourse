@@ -962,13 +962,13 @@ class TopicsController < ApplicationController
       topic_scope = topic_query.filter_private_message_new(current_user, filter)
     end
 
-    TopicsBulkAction.new(
+    topic_ids = TopicsBulkAction.new(
       current_user,
       topic_scope.pluck(:id),
       type: "dismiss_topics"
     ).perform!
 
-    render json: success_json
+    render json: success_json.merge(topic_ids: topic_ids)
   end
 
   def reset_new
