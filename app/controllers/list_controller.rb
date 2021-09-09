@@ -155,6 +155,14 @@ class ListController < ApplicationController
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
 
     case action
+    when :private_messages_unread,
+         :private_messages_new,
+         :private_messages_group_new,
+         :private_messages_group_unread,
+         :private_messages_all_new,
+         :private_messages_all_unread
+
+      raise Discourse::NotFound if target_user.id != current_user.id
     when :private_messages_tag
       raise Discourse::NotFound if !guardian.can_tag_pms?
     when :private_messages_warnings
