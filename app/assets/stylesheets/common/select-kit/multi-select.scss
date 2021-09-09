@@ -2,7 +2,6 @@
   &.multi-select {
     width: 300px;
     background: var(--secondary);
-    border-radius: 0;
 
     .select-kit-filter {
       & + .selected-content,
@@ -13,7 +12,6 @@
 
     .select-kit-row {
       min-height: 1px;
-      border-radius: 0;
     }
 
     &.is-disabled {
@@ -53,25 +51,15 @@
 
       .formated-selection {
         margin: 0;
-        border: 0;
-        padding: 0;
-        outline: none;
-        box-shadow: none;
         cursor: pointer;
         @include ellipsis;
+        display: inline-block;
       }
     }
 
+    &.is-expanded .multi-select-header,
     .multi-select-header:focus {
-      border-radius: 0;
       @include default-focus;
-    }
-
-    &.is-expanded {
-      .multi-select-header {
-        border-radius: 0;
-        @include default-focus;
-      }
     }
   }
 }
