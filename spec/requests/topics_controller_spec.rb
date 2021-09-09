@@ -4383,6 +4383,7 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(group_message.id)
 
       expect(DismissedTopicUser.count).to eq(1)
 
@@ -4396,6 +4397,10 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(
+        private_message.id,
+        private_message_2.id
+      )
 
       expect(DismissedTopicUser.count).to eq(2)
 
