@@ -119,6 +119,14 @@ export function setup(helper) {
                 continue;
               }
 
+              if (
+                matches[ln].index > 0 &&
+                (text[matches[ln].index - 1] === "@" ||
+                  text[matches[ln].index - 1] === "#")
+              ) {
+                continue;
+              }
+
               if (matches[ln].index > lastPos) {
                 token = new state.Token("text", "", 0);
                 token.content = text.slice(lastPos, matches[ln].index);
