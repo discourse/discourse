@@ -63,6 +63,11 @@ export default Controller.extend({
     return (resultCount || 0) > 0;
   },
 
+  @discourseComputed("expanded")
+  expandFilters(expanded) {
+    return expanded === "true";
+  },
+
   @discourseComputed("q")
   hasAutofocus(q) {
     return isEmpty(q);

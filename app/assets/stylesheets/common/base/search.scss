@@ -148,12 +148,12 @@
 
     .search-advanced-filters {
       background: var(--primary-very-low);
-      padding: 0 2em 2em 2em;
+      padding: 0em 10% 2em 10%;
 
       @include breakpoint(medium, min-width) {
         .search-advanced-options {
-          column-count: 3;
-          column-gap: 2.5em;
+          column-count: 2;
+          column-gap: 6em;
           .container {
             break-inside: avoid;
           }
