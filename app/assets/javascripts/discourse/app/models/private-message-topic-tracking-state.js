@@ -81,6 +81,15 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     }
   },
 
+  removeTopics(topicIds) {
+    if (!this.isTracking) {
+      return;
+    }
+
+    topicIds.forEach((topicId) => this.states.delete(topicId));
+    this.incrementProperty("statesModificationCounter");
+  },
+
   _userChannel() {
     return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   },

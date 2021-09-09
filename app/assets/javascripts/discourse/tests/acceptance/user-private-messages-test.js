@@ -166,7 +166,9 @@ acceptance(
           fetchUserNew = true;
         }
 
-        return helper.response({});
+        return helper.response({
+          topic_ids: [1, 2, 3],
+        });
       });
     });
 
@@ -459,6 +461,10 @@ acceptance(
     test("dismissing all unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
+      publishUnreadToMessageBus({ topicId: 1, userId: 5 });
+      publishUnreadToMessageBus({ topicId: 2, userId: 5 });
+      publishUnreadToMessageBus({ topicId: 3, userId: 5 });
+
       assert.equal(
         count(".topic-list-item"),
         3,
@@ -467,6 +473,12 @@ acceptance(
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
+
+      assert.equal(
+        query(".messages-nav li a.unread").innerText.trim(),
+        I18n.t("user.messages.unread"),
+        "displays the right count"
+      );
 
       assert.equal(
         count(".topic-list-item"),

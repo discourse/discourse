@@ -51,7 +51,11 @@ export default Mixin.create({
 
       promise.then((result) => {
         if (result && result.topic_ids) {
-          this.topicTrackingState.removeTopics(result.topic_ids);
+          if (options.private_message_inbox) {
+            this.pmTopicTrackingState.removeTopics(result.topic_ids);
+          } else {
+            this.topicTrackingState.removeTopics(result.topic_ids);
+          }
         }
 
         this.send("closeModal");
