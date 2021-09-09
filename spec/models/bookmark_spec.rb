@@ -7,12 +7,11 @@ describe Bookmark do
 
   context 'validations' do
     it 'does not allow user to bookmark a post twice' do
-      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
+      bookmark = Fabricate(:bookmark, post: post)
       user = bookmark.user
 
       bookmark_2 = Fabricate.build(:bookmark,
         post: post,
-        topic: post.topic,
         user: user
       )
 
@@ -22,7 +21,7 @@ describe Bookmark do
 
   describe "#cleanup!" do
     it "deletes bookmarks attached to a deleted post which has been deleted for > 3 days" do
-      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
+      bookmark = Fabricate(:bookmark, post: post)
       bookmark2 = Fabricate(:bookmark, post: Fabricate(:post, topic: post.topic))
       post.trash!
       post.update(deleted_at: 4.days.ago)
@@ -33,10 +32,10 @@ describe Bookmark do
 
     it "runs a SyncTopicUserBookmarked job for all deleted bookmark unique topics to make sure topic_user.bookmarked is in sync" do
       post2 = Fabricate(:post)
-      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
+      bookmark = Fabricate(:bookmark, post: post)
       bookmark2 = Fabricate(:bookmark, post: Fabricate(:post, topic: post.topic))
-      bookmark3 = Fabricate(:bookmark, post: post2, topic: post2.topic)
-      bookmark4 = Fabricate(:bookmark, post: post2, topic: post2.topic)
+      bookmark3 = Fabricate(:bookmark, post: post2)
+      bookmark4 = Fabricate(:bookmark, post: post2)
       post.trash!
       post.update(deleted_at: 4.days.ago)
       post2.trash!
@@ -51,8 +50,8 @@ describe Bookmark do
     end
 
     it "deletes bookmarks attached to a deleted topic which has been deleted for > 3 days" do
-      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
-      bookmark2 = Fabricate(:bookmark, topic: post.topic, post: Fabricate(:post, topic: post.topic))
+      bookmark = Fabricate(:bookmark, post: post)
+      bookmark2 = Fabricate(:bookmark, post: Fabricate(:post, topic: post.topic))
       bookmark3 = Fabricate(:bookmark)
       post.topic.trash!
       post.topic.update(deleted_at: 4.days.ago)
@@ -63,7 +62,7 @@ describe Bookmark do
     end
 
     it "does not delete bookmarks attached to posts that are not deleted or that have not met the 3 day grace period" do
-      bookmark = Fabricate(:bookmark, post: post, topic: post.topic)
+      bookmark = Fabricate(:bookmark, post: post)
       bookmark2 = Fabricate(:bookmark)
       Bookmark.cleanup!
       expect(Bookmark.find(bookmark.id)).to eq(bookmark)

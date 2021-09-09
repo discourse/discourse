@@ -3,7 +3,6 @@
 Fabricator(:bookmark) do
   user
   post { Fabricate(:post) }
-  topic { |attrs| attrs[:post].topic }
   name "This looked interesting"
   reminder_type { Bookmark.reminder_types[:tomorrow] }
   reminder_at { 1.day.from_now.iso8601 }

@@ -20,7 +20,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       subject.send_notification(bookmark)
       notif = bookmark.user.notifications.last
       expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
-      expect(notif.topic_id).to eq(bookmark.topic_id)
+      expect(notif.topic_id).to eq(bookmark.topic.id)
       expect(notif.post_number).to eq(bookmark.post.post_number)
       data = JSON.parse(notif.data)
       expect(data["topic_title"]).to eq(bookmark.topic.title)
@@ -30,8 +30,31 @@ RSpec.describe BookmarkReminderNotificationHandler do
 
     it "clears the reminder" do
       subject.send_notification(bookmark)
-      bookmark.reload
       expect(bookmark.reload.no_reminder?).to eq(true)
+    end
+
+    context "when the topic is deleted" do
+      before do
+        bookmark.topic.trash!
+        bookmark.reload
+      end
+
+      it "does not send a notification and clears the reminder" do
+        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect(bookmark.reload.no_reminder?).to eq(true)
+      end
+    end
+
+    context "when the post is deleted" do
+      before do
+        bookmark.post.trash!
+        bookmark.reload
+      end
+
+      it "does not send a notification and clears the reminder" do
+        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect(bookmark.reload.no_reminder?).to eq(true)
+      end
     end
 
     context "when the auto_delete_preference is when_reminder_sent" do
@@ -52,7 +75,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
 
       context "if there are still other bookmarks in the topic" do
         before do
-          Fabricate(:bookmark, topic: bookmark.topic, post: Fabricate(:post, topic: bookmark.topic), user: user)
+          Fabricate(:bookmark, post: Fabricate(:post, topic: bookmark.topic), user: user)
         end
 
         it "does not change the TopicUser bookmarked column to false" do

@@ -21,7 +21,6 @@ class BookmarkManager
     bookmark = Bookmark.create(
       {
         user_id: @user.id,
-        topic: post.topic,
         post: post,
         name: name,
         reminder_type: reminder_type,
@@ -50,7 +49,7 @@ class BookmarkManager
   end
 
   def destroy_for_topic(topic, filter = {}, opts = {})
-    topic_bookmarks = Bookmark.where(user_id: @user.id, topic_id: topic.id)
+    topic_bookmarks = Bookmark.for_user_in_topic(@user.id, topic.id)
     topic_bookmarks = topic_bookmarks.where(filter)
 
     Bookmark.transaction do
@@ -113,7 +112,7 @@ class BookmarkManager
   def update_topic_user_bookmarked(topic, opts = {})
     # PostCreator can specify whether auto_track is enabled or not, don't want to
     # create a TopicUser in that case
-    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: topic.id, user: @user)
+    bookmarks_remaining_in_topic = Bookmark.for_user_in_topic(@user.id, topic.id).exists?
     return bookmarks_remaining_in_topic if opts.key?(:auto_track) && !opts[:auto_track]
 
     TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)

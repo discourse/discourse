@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
+  self.ignored_columns = [
+    "topic_id" # TODO (martin) (2021-12-01): remove
+  ]
+
   belongs_to :user
   belongs_to :post
-  belongs_to :topic
+
+  delegate :topic, to: :post
+  delegate :topic_id, to: :post
 
   def self.reminder_types
     @reminder_types ||= Enum.new(
@@ -38,16 +44,6 @@ class Bookmark < ActiveRecord::Base
   validate :ensure_sane_reminder_at_time
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
-
-  # we don't care whether the post or topic is deleted,
-  # they hold important information about the bookmark
-  def post
-    Post.unscoped { super }
-  end
-
-  def topic
-    Topic.unscoped { super }
-  end
 
   def unique_per_post_for_user
     if Bookmark.exists?(user_id: user_id, post_id: post_id)
@@ -108,11 +104,17 @@ class Bookmark < ActiveRecord::Base
     pending_reminders.where(user: user)
   end
 
+  scope :for_user_in_topic, ->(user_id, topic_id) {
+    joins(:post).where(user_id: user_id, posts: { topic_id: topic_id })
+  }
+
   def self.count_per_day(opts = nil)
     opts ||= {}
     result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('bookmarks.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
+    result = result.joins("INNER JOIN posts ON posts.id = bookmarks.post_id AND posts.deleted_at IS NULL")
+      .joins("INNER JOIN topics ON topics.id = posts.topic_id AND topics.deleted_at IS NULL")
+      .merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
     result.group('date(bookmarks.created_at)')
       .order('date(bookmarks.created_at)')
       .count
@@ -127,9 +129,9 @@ class Bookmark < ActiveRecord::Base
     topics_deleted = DB.query(<<~SQL, grace_time: grace_time)
       DELETE FROM bookmarks b
       USING topics t, posts p
-      WHERE (b.topic_id = t.id AND b.post_id = p.id)
+      WHERE (t.id = p.topic_id AND b.post_id = p.id)
         AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
-       RETURNING b.topic_id
+       RETURNING t.id AS topic_id
     SQL
 
     topics_deleted_ids = topics_deleted.map(&:topic_id).uniq
