@@ -545,3 +545,15 @@ task 'db:rebuild_indexes' => 'environment' do
     Discourse.disable_readonly_mode
   end
 end
+
+desc 'Check that the DB can be accessed'
+task 'db:status:json' do
+  begin
+    Rake::Task['environment'].invoke
+    DB.query('SELECT 1')
+  rescue
+    puts({ status: 'error' }.to_json)
+  else
+    puts({ status: 'ok' }.to_json)
+  end
+end
