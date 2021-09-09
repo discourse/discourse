@@ -835,7 +835,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
+    default: "com|net|org|io|onion|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
   markdown_typographer_quotation_marks:
     client: true
