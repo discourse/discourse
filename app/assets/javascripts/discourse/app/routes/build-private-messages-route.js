@@ -40,7 +40,12 @@ export default (inboxType, path, filter) => {
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter: topicListFilter });
+        : this.store
+            .findFiltered("topicList", { filter: topicListFilter })
+            .then((model) => {
+              model.set("emptyState", this.emptyState());
+              return model;
+            });
     },
 
     setupController() {
@@ -61,7 +66,6 @@ export default (inboxType, path, filter) => {
         filter: filter,
         group: null,
         inbox: inboxType,
-        emptyState: this.emptyState(),
       });
 
       userTopicsListController.subscribe();

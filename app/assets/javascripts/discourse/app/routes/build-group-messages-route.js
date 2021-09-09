@@ -14,7 +14,10 @@ export default (type) => {
       if (this._isArchive()) {
         filter = `${filter}/archive`;
       }
-      return this.store.findFiltered("topicList", { filter });
+      return this.store.findFiltered("topicList", { filter }).then((model) => {
+        model.set("emptyState", this.emptyState());
+        return model;
+      });
     },
 
     setupController() {
@@ -38,6 +41,12 @@ export default (type) => {
         id: currentUser.get("username_lower"),
         user: currentUser,
       });
+    },
+
+    emptyState() {
+      const title = I18n.t("no_group_messages_title");
+      const body = "";
+      return { title, body };
     },
 
     _isArchive() {

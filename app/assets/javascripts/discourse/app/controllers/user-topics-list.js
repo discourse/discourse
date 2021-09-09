@@ -20,9 +20,9 @@ export default Controller.extend(BulkTopicSelection, {
   tagsForUser: null,
   incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
-  @discourseComputed("emptyState", "model.topics.length", "incomingCount")
-  showEmptyStatePlaceholder(emptyState, topicsLength, incomingCount) {
-    return emptyState && topicsLength === 0 && incomingCount === 0;
+  @discourseComputed("model.topics.length", "incomingCount")
+  noContent(topicsLength, incomingCount) {
+    return topicsLength === 0 && incomingCount === 0;
   },
 
   saveScrollPosition() {

@@ -3850,6 +3850,14 @@ en:
     pick_files_button:
       unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
 
+    user_activity:
+      no_topics_title: "You have not started any topics yet"
+      no_read_topics_title: "You haven’t read any topics yet"
+      no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
+
+    no_group_messages_title: "No group messages found"
+
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
