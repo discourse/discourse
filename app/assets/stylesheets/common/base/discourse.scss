@@ -880,8 +880,8 @@ table {
 
 a#skip-link {
   padding: 0.25em 0.5em;
-  position: absolute;
-  top: -200px;
+  position: fixed;
+  top: -50px;
   left: 1em;
   color: var(--secondary);
   background: var(--tertiary);
