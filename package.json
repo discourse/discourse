@@ -6,6 +6,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "dependencies": {
+    "@discourse/itsatrap": "^2.0.10",
     "@fortawesome/fontawesome-free": "5.11.2",
     "@highlightjs/cdn-assets": "^10.6.0",
     "@json-editor/json-editor": "^2.5.2",
@@ -21,7 +22,7 @@
     "bootstrap": "v3.4.1",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
-    "diffhtml": "^1.0.0-beta.18",
+    "diffhtml": "^1.0.0-beta.20",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.7",
     "jquery": "3.5.1",
@@ -41,8 +42,7 @@
     "workbox-expiration": "^4.3.1",
     "workbox-routing": "^4.3.1",
     "workbox-strategies": "^4.3.1",
-    "workbox-sw": "^4.3.1",
-    "@discourse/itsatrap": "^2.0.10"
+    "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.2",
