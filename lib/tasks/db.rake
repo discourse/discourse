@@ -231,10 +231,10 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
       SiteIconManager.ensure_optimized!
     end
+  end
 
-    if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-      system("RAILS_DB=discourse_test_multisite rake db:migrate")
-    end
+  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
+    system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end
 
