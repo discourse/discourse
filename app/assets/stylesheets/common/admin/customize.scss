@@ -678,23 +678,8 @@
 }
 
 .permalink-form {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  @include breakpoint(tablet, min-width) {
-    align-items: center;
-    flex-direction: row;
-  }
-
   .select-kit {
-    width: 200px;
-  }
-  input {
-    margin: 5px 0;
-    @include breakpoint(tablet, min-width) {
-      margin: 0 5px;
-    }
+    max-width: 200px;
   }
 }
 

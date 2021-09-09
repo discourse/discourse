@@ -17,7 +17,7 @@ import { schedule } from "@ember/runloop";
 **/
 
 export default Component.extend({
-  classNames: ["screened-ip-address-form"],
+  classNames: ["screened-ip-address-form", "inline-form"],
   formSubmitted: false,
   actionName: "block",
 

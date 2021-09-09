@@ -12,27 +12,8 @@ body {
 .ios-device {
   textarea {
     background-color: var(--secondary);
-    font-size: $font-size-ios-input;
+    font-size: var(--font-size-ios-input);
     -webkit-tap-highlight-color: transparent;
-  }
-
-  input {
-    &[type="text"],
-    &[type="password"],
-    &[type="datetime"],
-    &[type="datetime-local"],
-    &[type="date"],
-    &[type="month"],
-    &[type="time"],
-    &[type="week"],
-    &[type="number"],
-    &[type="email"],
-    &[type="url"],
-    &[type="search"],
-    &[type="tel"],
-    &[type="color"] {
-      font-size: $font-size-ios-input;
-    }
   }
 
   input#reply-title {

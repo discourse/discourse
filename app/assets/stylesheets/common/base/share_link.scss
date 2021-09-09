@@ -129,10 +129,6 @@
   .select-kit.multi-select .choices {
     padding: 0;
   }
-
-  .select-kit.multi-select.is-expanded + button {
-    outline: 1px solid var(--tertiary); // outline the button when the input is outlined, to match height
-  }
 }
 
 // topic invite modal
@@ -140,11 +136,6 @@
 .create-invite-modal {
   form {
     margin: 0;
-    input[type="text"],
-    .btn,
-    .select-kit-header {
-      height: 2.27rem;
-    }
   }
 
   input {
@@ -181,33 +172,6 @@
     margin-top: 0.25em;
   }
 
-  .future-date-input {
-    display: grid;
-    grid-template-columns: auto 1fr;
-
-    .control-group:nth-child(1) {
-      grid-column-start: 1;
-      grid-column-end: 3;
-    }
-    .control-group:nth-child(2) {
-      margin-left: 1.75em;
-      margin-right: 1.5em;
-    }
-    .control-group:nth-child(2),
-    .control-group:nth-child(3) {
-      grid-row-start: 2;
-      display: inline-flex;
-      align-items: center;
-      margin-bottom: 0;
-      input {
-        height: 100%;
-        margin-bottom: 0;
-        margin-left: 0.5em;
-        width: 150px;
-      }
-    }
-  }
-
   .input-group.input-email {
     display: flex;
     align-items: baseline;
@@ -242,7 +206,9 @@
     &.invite-to-topic input[type="text"],
     .group-chooser,
     .user-chooser,
-    .future-date-input-selector {
+    .future-date-input-selector,
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
       margin-left: 1.75em;
       width: calc(100% - 1.75em);
     }

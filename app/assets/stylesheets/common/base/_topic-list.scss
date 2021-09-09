@@ -5,10 +5,6 @@
     &:not(:first-child) {
       margin-left: 0.5em;
     }
-    .d-button-label {
-      font-size: $font-up-1;
-      font-weight: normal;
-    }
   }
 
   .notifications-button {
@@ -61,7 +57,8 @@
 #navigation-bar {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 var(--nav-space);
+  margin: 0;
+  margin-bottom: var(--nav-space);
   margin-right: auto;
 }
 
@@ -71,17 +68,6 @@
   margin-bottom: var(--nav-space);
   > * {
     white-space: nowrap;
-  }
-  .select-kit button {
-    height: 100%; // ensures nested select-kit button matches height of button siblings
-  }
-  .btn {
-    // need to reduce vertical padding for consistent height
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    @include breakpoint(mobile-medium) {
-      font-size: var(--font-down-1);
-    }
   }
   @include breakpoint(mobile-large) {
     .edit-category {

@@ -65,12 +65,17 @@
   }
 
   .select-kit-header {
-    box-sizing: border-box;
+    @include form-item-sizing;
+    font-weight: 500;
     overflow: hidden;
     transition: all 0.25s;
     cursor: pointer;
     display: flex;
     align-items: stretch;
+    &:not(.btn) {
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+    }
 
     /* hide native indicator */
     &::-webkit-details-marker {
@@ -79,12 +84,9 @@
 
     .select-kit-header-wrapper {
       box-sizing: border-box;
-      min-height: 28px;
       display: flex;
       flex: 1 0 auto;
       align-items: center;
-      height: 100%;
-      max-width: 100%;
     }
 
     .d-icon-spinner {

@@ -154,3 +154,31 @@ input[type="reset"],
 input[type="submit"] {
   cursor: pointer;
 }
+
+// Inline form
+// --------------------------------------------------
+
+.inline-form {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  &.full-width {
+    display: flex;
+  }
+
+  > input[type="text"] {
+    display: inline-flex;
+    flex: 1;
+  }
+
+  > .select-kit,
+  > input[type="text"],
+  > label,
+  > .btn {
+    margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
+    margin-right: 0.5em;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
