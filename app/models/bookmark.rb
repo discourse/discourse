@@ -31,7 +31,10 @@ class Bookmark < ActiveRecord::Base
     if: -> { reminder_type.present? }
   }
 
-  validate :unique_per_post_for_user
+  validate :unique_per_post_for_user,
+    on: [:create, :update],
+    if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_user_id? }
+
   validate :ensure_sane_reminder_at_time
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
@@ -47,9 +50,9 @@ class Bookmark < ActiveRecord::Base
   end
 
   def unique_per_post_for_user
-    existing_bookmark = Bookmark.find_by(user_id: user_id, post_id: post_id)
-    return if existing_bookmark.blank? || existing_bookmark.id == id
-    self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
+    if Bookmark.exists?(user_id: user_id, post_id: post_id)
+      self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
+    end
   end
 
   def ensure_sane_reminder_at_time
