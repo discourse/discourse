@@ -17,6 +17,7 @@ describe TopicEmbed do
     let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
     fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -102,6 +103,13 @@ describe TopicEmbed do
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", category_id: category.id)
         expect(imported_post.topic.category).not_to eq(embeddable_host.category)
         expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "creates the topic with the tag passed as a parameter" do
+        Jobs.run_immediately!
+        SiteSetting.tagging_enabled = true
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", tags: [tag.name])
+        expect(imported_post.topic.tags).to include(tag)
       end
 
       it "respects overriding the cook_method when asked" do
