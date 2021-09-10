@@ -444,6 +444,36 @@ describe CategoriesController do
           category.reload
           expect(category.required_tag_group).to be_nil
         end
+
+        it "does not update other fields" do
+          SiteSetting.tagging_enabled = true
+          tag_group_1 = Fabricate(:tag_group)
+          tag_group_2 = Fabricate(:tag_group)
+
+          category.update!(
+            allowed_tags: ["hello", "world"],
+            allowed_tag_groups: [tag_group_1.name],
+            required_tag_group_name: tag_group_2.name
+          )
+
+          put "/categories/#{category.id}.json"
+          category.reload
+          expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
+          expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
+          expect(category.required_tag_group).to eq(tag_group_2)
+
+          put "/categories/#{category.id}.json", params: { allowed_tags: [] }
+          category.reload
+          expect(category.tags).to contain_exactly()
+          expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
+          expect(category.required_tag_group).to eq(tag_group_2)
+
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil }
+          category.reload
+          expect(category.tags).to contain_exactly()
+          expect(category.tag_groups).to contain_exactly()
+          expect(category.required_tag_group).to eq(nil)
+        end
       end
     end
   end

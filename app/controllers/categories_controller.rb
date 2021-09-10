@@ -286,9 +286,13 @@ class CategoriesController < ApplicationController
       end
 
       if SiteSetting.tagging_enabled
-        params[:allowed_tags] ||= []
-        params[:allowed_tag_groups] ||= []
-        params[:required_tag_group_name] ||= ''
+        params[:allowed_tags] = params[:allowed_tags].presence || [] if params[:allowed_tags]
+        params[:allowed_tag_groups] = params[:allowed_tag_groups].presence || [] if params[:allowed_tag_groups]
+        params[:required_tag_group_name] = params[:required_tag_group_name].presence || '' if params[:required_tag_group_name]
+      end
+
+      if SiteSetting.enable_category_group_moderation?
+        params[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id if params[:reviewable_by_group_id]
       end
 
       result = params.permit(
@@ -332,9 +336,6 @@ class CategoriesController < ApplicationController
         allowed_tags: [],
         allowed_tag_groups: []
       )
-      if SiteSetting.enable_category_group_moderation?
-        result[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id
-      end
 
       result
     end
