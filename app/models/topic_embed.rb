@@ -59,7 +59,7 @@ class TopicEmbed < ActiveRecord::Base
           skip_validations: true,
           cook_method: cook_method,
           category: category_id || eh.try(:category_id),
-          tags: tags,
+          tags: SiteSetting.tagging_enabled ? tags : nil,
         }
         if SiteSetting.embed_unlisted?
           create_args[:visible] = false
