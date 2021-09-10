@@ -82,6 +82,7 @@ export function addAdvancedSearchOptions(options) {
 export default Component.extend({
   tagName: "details",
   attributeBindings: ["expandFilters:open"],
+  classNames: ["advanced-filters"],
   category: null,
 
   init() {

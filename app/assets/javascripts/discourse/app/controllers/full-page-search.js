@@ -44,10 +44,18 @@ export default Controller.extend({
   bulkSelectEnabled: null,
 
   loading: false,
-  queryParams: ["q", "expanded", "context_id", "context", "skip_context"],
+  queryParams: [
+    "q",
+    "expanded",
+    "context_id",
+    "context",
+    "skip_context",
+    "search_type",
+  ],
   q: null,
   selected: [],
   context_id: null,
+  search_type: 0,
   context: null,
   searching: false,
   sortOrder: 0,
@@ -55,7 +63,6 @@ export default Controller.extend({
   invalidSearch: false,
   page: 1,
   resultCount: null,
-  searchType: 0,
   searchTypes: SearchTypes,
 
   @discourseComputed("resultCount")
@@ -201,9 +208,17 @@ export default Controller.extend({
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.posts.length")
+  @observes("model.[posts,categories,tags,users].length")
   resultCountChanged() {
-    this.set("resultCount", this.get("model.posts.length"));
+    if (!this.model.posts) {
+      return 0;
+    }
+    const totalCount =
+      this.model.posts.length +
+      this.model.categories.length +
+      this.model.tags.length +
+      this.model.users.length;
+    this.set("resultCount", totalCount);
   },
 
   @discourseComputed("hasResults")
@@ -221,9 +236,16 @@ export default Controller.extend({
     return page === PAGE_LIMIT;
   },
 
-  @discourseComputed("searchType")
+  @discourseComputed("search_type")
   usingDefaultSearchType(searchType) {
     return searchType === 0;
+  },
+
+  @discourseComputed("bulkSelectEnabled")
+  searchInfoClassNames(bulkSelectEnabled) {
+    return bulkSelectEnabled
+      ? "search-info bulk-select-visible"
+      : "search-info";
   },
 
   searchButtonDisabled: or("searching", "loading"),
@@ -268,12 +290,16 @@ export default Controller.extend({
 
     const searchKey = getSearchKey(args);
 
-    switch (this.searchType) {
+    switch (parseInt(this.search_type, 10)) {
       case 1:
-        const categoryTagSearch = searchCategoryTag(args.q, this.siteSettings);
+        const categoryTagSearch = searchCategoryTag(
+          searchTerm,
+          this.siteSettings
+        );
         Promise.resolve(categoryTagSearch).then(async (results) => {
-          const model = (await translateResults({ categories: results })) || {};
-          // TODO: Tags aren't working
+          const categories = results.filter((c) => Boolean(c.model));
+          const tags = results.filter((c) => !Boolean(c.model));
+          const model = (await translateResults({ categories, tags })) || {};
           this.set("model", model);
           this.set("searching", false);
           this.set("loading", false);
@@ -281,7 +307,7 @@ export default Controller.extend({
 
         break;
       case 2:
-        userSearch({ term: args.q }).then(async (results) => {
+        userSearch({ term: searchTerm, limit: 20 }).then(async (results) => {
           const model = (await translateResults({ users: results })) || {};
           this.set("model", model);
           this.set("searching", false);

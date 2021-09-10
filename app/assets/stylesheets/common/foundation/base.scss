@@ -174,7 +174,8 @@ input[type="submit"] {
   > .select-kit,
   > input[type="text"],
   > label,
-  > .btn {
+  > .btn,
+  > .d-date-input {
     margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
     margin-right: 0.5em;
     &:last-child {

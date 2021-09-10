@@ -1,8 +1,18 @@
+@mixin search-page-spacing {
+  padding: 1rem 10%;
+  @include breakpoint(medium) {
+    padding: 1rem;
+  }
+}
 .search-highlight {
   font-weight: bold;
 }
 
 .search-container {
+  .search-header {
+    @include search-page-spacing();
+    background: var(--primary-very-low);
+  }
   .warning {
     background-color: var(--danger-medium);
     padding: 5px 8px;
@@ -11,9 +21,6 @@
 
   .search-page-heading {
     font-size: var(--font-up-3);
-    padding: 1em 10% 0 10%;
-    margin-bottom: 0;
-    background: var(--primary-very-low);
 
     // spans can be in different orders depending of locale
     span + span {
@@ -29,26 +36,30 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    padding: 2em 10%;
     background: var(--primary-very-low);
 
-    .search-query {
+    input.search-query {
       flex: 1 0 0px;
       margin: 0 1em 0 0;
-      font-size: var(--font-up-1);
     }
 
     .select-kit {
       margin-right: 1em;
-      .select-kit-header {
-        font-size: var(--font-up-1);
-        padding-top: 0.25em;
-        padding-bottom: 0.25em;
+    }
+
+    @include breakpoint(medium) {
+      flex-direction: column;
+
+      input.search-query,
+      .select-kit {
+        margin-right: 0;
+        margin-bottom: 0.5em;
       }
     }
   }
 
   .search-advanced {
+    position: relative;
     .search-actions,
     .search-title,
     .search-bar {
@@ -56,39 +67,30 @@
     }
 
     .search-results {
-      padding: 1em 10%;
+      @include search-page-spacing();
+      padding-bottom: 3em;
     }
 
     .search-info {
       display: flex;
-      padding: 1em 10%;
+      @include search-page-spacing();
       flex-wrap: wrap;
       border-bottom: 1px solid var(--primary-low);
+      padding-top: 2em;
       margin-bottom: 2em;
       flex-direction: row;
       align-items: flex-start;
       justify-content: flex-start;
 
-      .result-count {
-        display: flex;
-
-        .term {
-          font-weight: bold;
-        }
+      &.bulk-select-visible {
+        @include sticky;
+        top: 60px;
+        background-color: var(--secondary);
+        z-index: 10;
       }
 
       .sort-by {
-        display: flex;
         margin-left: auto;
-        align-items: center;
-
-        .desc {
-          margin-right: 0.5em;
-        }
-
-        .combo-box {
-          min-width: 150px;
-        }
       }
 
       button {
@@ -100,21 +102,23 @@
         right: unset;
         margin: 0;
         padding: 0;
+        display: inline;
         button {
-          margin: 0px;
           margin-right: 0.5em;
         }
       }
     }
+  }
 
-    .search-notice {
-      .fps-invalid {
-        padding: 0.5em;
-        background-color: var(--danger-low);
-        border: 1px solid var(--danger-medium);
-        color: var(--danger);
-      }
-    }
+  .search-notice .fps-invalid {
+    padding: 0.5em;
+    background-color: var(--danger-low);
+    border: 1px solid var(--danger-medium);
+    color: var(--danger);
+  }
+
+  .search-context {
+    margin-top: 1em;
   }
 
   .search-filters {
@@ -122,52 +126,47 @@
     display: flex;
     flex-direction: column;
 
-    > details {
+    details.advanced-filters,
+    details.search-advanced-additional-options {
+      margin-top: 1em;
+
       > summary {
-        padding: 0em 10% 2em 10%;
+        color: var(--tertiary);
         cursor: pointer;
+      }
+      &[open] > summary {
+        color: var(--primary);
+        margin-bottom: 1em;
       }
     }
 
-    .input-small,
-    .combo-box,
-    .ac-wrap,
+    details.search-advanced-additional-options {
+      > summary {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .combo-box:not(#postTime),
     .control-group,
-    .multi-select,
-    .search-advanced-category-chooser {
-      box-sizing: border-box;
+    .multi-select {
       width: 100%;
       min-width: 100%;
-      margin: 0;
-
-      input,
-      .item {
-        padding-left: 4px; // temporarily normalizing input padding for this section
-      }
     }
 
     .search-advanced-filters {
       background: var(--primary-very-low);
-      padding: 0em 10% 2em 10%;
 
       @include breakpoint(medium, min-width) {
         .search-advanced-options {
           column-count: 2;
           column-gap: 6em;
-          .container {
+          .control-group {
             break-inside: avoid;
           }
         }
       }
-      .control-group {
-        margin-bottom: 1em;
-      }
-      section.field {
-        margin-top: 5px;
-      }
+
       @include breakpoint(medium) {
-        padding: 0.75em 0.5em;
-        .ac-wrap,
         .choices,
         .select-kit.multi-select {
           // overriding inline width from JS
@@ -178,26 +177,18 @@
         }
       }
 
-      .count-group {
-        .count {
-          width: 45%;
-        }
-        .count-dash {
-          padding-left: 6px;
-          vertical-align: middle;
-        }
+      .control-group {
+        margin-bottom: 1em;
       }
 
-      .full-search-dates {
-        display: flex;
-        > .select-kit,
-        > .d-date-input {
-          width: auto;
-          min-width: auto;
-          flex: auto;
+      .count-group {
+        input[type="number"] {
+          width: 8em;
         }
-        > .select-kit {
-          margin-right: 1em;
+
+        .d-icon {
+          margin-left: 0.25em;
+          margin-right: 0.25em;
         }
       }
     }
@@ -205,6 +196,7 @@
 }
 
 .fps-invalid {
+  margin-top: 1em;
   margin-bottom: 1em;
 }
 
@@ -245,7 +237,6 @@
       background: var(--tertiary-very-low);
       input[type="checkbox"] {
         margin: 0;
-        background: yellow;
       }
     }
     .search-link {
@@ -326,30 +317,43 @@
   }
 }
 
-.no-results-suggestion {
-  margin-top: 30px;
-}
-
-.search-footer {
-  margin-bottom: 30px;
-}
-
-.panel-body-contents .search-context label {
-  float: left;
-}
-
+.no-results-suggestion,
 .google-search-form {
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 // temporary
 
 .search-results {
   .user-item {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .avatar {
+      margin-right: 0.5em;
+      min-width: 25px;
+    }
+    .user-titles {
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+      .name {
+        color: var(--primary-high-or-secondary-low);
+        font-size: var(--font-0);
+        font-weight: 700;
+        @include ellipsis;
+      }
+      .username {
+        color: var(--primary-high-or-secondary-low);
+        font-size: var(--font-down-1);
+        @include ellipsis;
+      }
+    }
   }
 
-  .category-item {
-    font-size: var(--font-up-3);
+  .category-items,
+  .tag-items {
+    margin-bottom: 1em;
   }
 }
