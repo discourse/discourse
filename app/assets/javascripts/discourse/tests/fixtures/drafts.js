@@ -47,7 +47,7 @@ export default {
         draft_username: "eviltrout",
         avatar_template: "/user_avatar/localhost/eviltrout/{size}/2_1.png",
         data:
-          '{"reply":"here goes a reply to a PM.","action":"reply","categoryId":null,"postId":212,"archetypeId":"regular","whisper":false,"metaData":null,"composerTime":455711,"typingTime":5400}',
+          '{"reply":"here goes a reply to a PM :slight_smile:","action":"reply","categoryId":3,"postId":212,"archetypeId":"regular","whisper":false,"metaData":null,"composerTime":455711,"typingTime":5400}',
         topic_id: 93,
         username: "eviltrout",
         name: null,

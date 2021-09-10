@@ -11,24 +11,17 @@ class DraftsController < ApplicationController
     params.permit(:limit)
 
     user = fetch_user_from_params
+    raise Discourse::InvalidAccess unless user == current_user
 
-    unless user == current_user
-      raise Discourse::InvalidAccess
-    end
-
-    opts = {
+    stream = Draft.stream(
       user: user,
       offset: params[:offset],
       limit: params[:limit]
-    }
-
-    stream = Draft.stream(opts)
+    )
 
     render json: {
       drafts: stream ? serialize_data(stream, DraftSerializer) : [],
       no_results_help: I18n.t("user_activity.no_drafts.self")
     }
-
   end
-
 end
