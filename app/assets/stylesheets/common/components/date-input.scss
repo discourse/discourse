@@ -30,8 +30,14 @@
     &:focus {
       @include default-focus;
     }
-  }
 
+    // iOS doesn't display the placeholder attribute for date inputs
+    .ios-device &:after {
+      font-size: var(--font-0);
+      color: var(--primary-medium);
+      content: attr(placeholder);
+    }
+  }
   .pika-single {
     margin-left: -1px;
     margin-top: 1px;
