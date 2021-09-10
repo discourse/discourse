@@ -68,9 +68,6 @@ export default RestModel.extend({
 
     return ajax(findUrl)
       .then((result) => {
-        if (result && result.no_results_help) {
-          this.set("noContentHelp", result.no_results_help);
-        }
         if (result && result.drafts) {
           const copy = A();
           result.drafts.forEach((draft) => {
