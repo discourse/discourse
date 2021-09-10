@@ -144,7 +144,7 @@ createWidget("timeline-padding", {
 
 createWidget("timeline-scrollarea", {
   tagName: "div.timeline-scrollarea",
-  buildKey: (attrs) => `timeline-scrollarea-${attrs.topic.id}`,
+  buildKey: () => `timeline-scrollarea`,
 
   buildAttributes() {
     return { style: `height: ${scrollareaHeight()}px` };
@@ -411,7 +411,7 @@ createWidget("timeline-footer-controls", {
 export default createWidget("topic-timeline", {
   tagName: "div.topic-timeline",
 
-  buildKey: (attrs) => `topic-timeline-area-${attrs.topic.id}`,
+  buildKey: () => "topic-timeline-area",
 
   defaultState() {
     return { position: null, excerpt: null };
