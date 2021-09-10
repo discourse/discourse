@@ -1605,7 +1605,7 @@ security:
     list_type: compact
   browser_update_user_agents:
     hidden: true
-    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9|Xbox|PlayStation"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
