@@ -331,9 +331,11 @@ export default Mixin.create({
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      this.mobileUploadButton = document.getElementById("mobile-file-upload");
-      this.mobileUploadButtonEventListener = function mobileButtonEventListener() {
-        document.getElementById("file-uploader").click();
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
       };
       this.mobileUploadButton.addEventListener(
         "click",
