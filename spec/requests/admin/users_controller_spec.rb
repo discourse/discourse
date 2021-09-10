@@ -364,28 +364,25 @@ RSpec.describe Admin::UsersController do
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(true)
     end
 
-    context 'second_factor_confirmation is true' do
-      before do
-        SiteSetting.second_factor_confirmation = true
-      end
+    it 'asks user for second factor if it is enabled' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      it 'grants admin if second factor is correct' do
-        user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+      put "/admin/users/#{another_user.id}/grant_admin.json"
 
-        put "/admin/users/#{another_user.id}/grant_admin.json", params: {
-          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-          second_factor_method: UserSecondFactor.methods[:totp]
-        }
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(another_user.reload.admin).to eq(false)
+    end
 
-        expect(response.parsed_body["success"]).to eq("OK")
-        expect(another_user.reload.admin).to eq(true)
-      end
+    it 'grants admin if second factor is correct' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      it 'falls back to admin if second factor is not set' do
-        put "/admin/users/#{another_user.id}/grant_admin.json"
-        expect(response.parsed_body["email_confirmation_required"]).to eq(true)
-        expect(another_user.reload.admin).to eq(false)
-      end
+      put "/admin/users/#{another_user.id}/grant_admin.json", params: {
+        second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+        second_factor_method: UserSecondFactor.methods[:totp]
+      }
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(another_user.reload.admin).to eq(true)
     end
   end
 

@@ -1573,8 +1573,6 @@ security:
       - "no"
       - "staff"
       - "all"
-  second_factor_confirmation:
-    default: false
   force_https:
     default: false
   same_site_cookies:

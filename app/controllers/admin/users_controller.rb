@@ -191,7 +191,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    if SiteSetting.second_factor_confirmation && current_user.has_any_second_factor_methods_enabled?
+    if current_user.has_any_second_factor_methods_enabled?
       second_factor_authentication_result = current_user.authenticate_second_factor(params, secure_session)
 
       if second_factor_authentication_result.ok
