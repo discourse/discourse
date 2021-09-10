@@ -235,16 +235,6 @@ acceptance(
       );
     };
 
-    const publishArchiveToMessageBus = function (opts) {
-      publishToMessageBus(
-        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
-        {
-          topic_id: opts.topicId,
-          message_type: "archive",
-        }
-      );
-    };
-
     const publishGroupArchiveToMessageBus = function (opts) {
       publishToMessageBus(
         `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
@@ -253,6 +243,7 @@ acceptance(
           message_type: "group_archive",
           payload: {
             group_ids: opts.groupIds,
+            acting_user_id: opts.actingUserId,
           },
         }
       );
@@ -289,42 +280,6 @@ acceptance(
       );
     };
 
-    test("incoming archive message on all and archive filter", async function (assert) {
-      for (const url of [
-        "/u/charlie/messages",
-        "/u/charlie/messages/archive",
-        "/u/charlie/messages/personal",
-        "/u/charlie/messages/personal/archive",
-      ]) {
-        await visit(url);
-
-        publishArchiveToMessageBus({ topicId: 1 });
-
-        await visit(url); // wait for re-render
-
-        assert.ok(
-          exists(".show-mores"),
-          `${url} displays the topic incoming info`
-        );
-      }
-
-      for (const url of [
-        "/u/charlie/messages/group/awesome_group/archive",
-        "/u/charlie/messages/group/awesome_group",
-      ]) {
-        await visit(url);
-
-        publishArchiveToMessageBus({ topicId: 1 });
-
-        await visit(url); // wait for re-render
-
-        assert.ok(
-          !exists(".show-mores"),
-          `${url} does not display the topic incoming info`
-        );
-      }
-    });
-
     test("incoming read message on unread filter", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
@@ -333,6 +288,23 @@ acceptance(
       await visit("/u/charlie/messages/unread"); // wait for re-render
 
       assert.ok(exists(".show-mores"), `displays the topic incoming info`);
+    });
+
+    test("incoming group archive message acted by current user", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      publishGroupArchiveToMessageBus({
+        groupIds: [14],
+        topicId: 1,
+        actingUserId: 5,
+      });
+
+      await visit("/u/charlie/messages"); // wait for re-render
+
+      assert.ok(
+        !exists(".show-mores"),
+        `does not display the topic incoming info`
+      );
     });
 
     test("incoming group archive message on all and archive filter", async function (assert) {

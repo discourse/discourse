@@ -169,17 +169,11 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         }
 
         break;
-      case "archive":
-        if (
-          [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
-          ["user", "all"].includes(this.inbox)
-        ) {
-          this._notifyIncoming(message.topic_id);
-        }
-        break;
       case "group_archive":
         if (
           [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
+          (!message.payload.acting_user_id ||
+            message.payload.acting_user_id !== this.currentUser.id) &&
           (this.inbox === "all" || this._displayMessageForGroupInbox(message))
         ) {
           this._notifyIncoming(message.topic_id);

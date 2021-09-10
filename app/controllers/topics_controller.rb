@@ -548,12 +548,22 @@ class TopicsController < ApplicationController
     if group_ids.present?
       allowed_groups = topic.allowed_groups
         .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
+
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(id, topic)
+          GroupArchivedMessage.archive!(
+            id,
+            topic,
+            acting_user_id: current_user.id
+          )
+
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(id, topic)
+          GroupArchivedMessage.move_to_inbox!(
+            id,
+            topic,
+            acting_user_id: current_user.id
+          )
         end
       end
     end

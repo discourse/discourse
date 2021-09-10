@@ -168,26 +168,17 @@ describe PrivateMessageTopicTrackingState do
     end
   end
 
-  describe '.publish_user_archived' do
-    it 'should publish the right message_bus message' do
-      message = MessageBus.track_publish(described_class.user_channel(user.id)) do
-        described_class.publish_user_archived(private_message, user.id)
-      end.first
-
-      data = message.data
-
-      expect(data['topic_id']).to eq(private_message.id)
-      expect(data['message_type']).to eq(described_class::ARCHIVE_MESSAGE_TYPE)
-    end
-  end
-
   describe '.publish_group_archived' do
     it 'should publish the right message_bus message' do
       user_3 = Fabricate(:user)
       group.add(user_3)
 
       messages = MessageBus.track_publish do
-        described_class.publish_group_archived(group_message, group.id)
+        described_class.publish_group_archived(
+          topic: group_message,
+          group_id: group.id,
+          acting_user_id: user_3.id
+        )
       end
 
       expect(messages.map(&:channel)).to contain_exactly(
@@ -201,6 +192,7 @@ describe PrivateMessageTopicTrackingState do
       expect(data['message_type']).to eq(described_class::GROUP_ARCHIVE_MESSAGE_TYPE)
       expect(data['topic_id']).to eq(group_message.id)
       expect(data['payload']['group_ids']).to contain_exactly(group.id)
+      expect(data['payload']['acting_user_id']).to eq(user_3.id)
     end
   end
 
