@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Official Plugins Install
-        if: ${{ github.event_name == 'cron' }}
+        if: ${{ github.event_name == 'schedule' }}
         run: sudo -E -u discourse -H bundle exec rake plugin:install_all_official
 
       - name: Yarn install
