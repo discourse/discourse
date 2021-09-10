@@ -43,7 +43,7 @@ describe TopicQuery::PrivateMessageLists do
 
       expect(topics).to eq([])
 
-      GroupArchivedMessage.archive!(user_2.id, group_message)
+      GroupArchivedMessage.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all(user_2).topics
 
@@ -75,7 +75,7 @@ describe TopicQuery::PrivateMessageLists do
       create_post(user: user_2, topic: group_message)
 
       UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(user_2.id, group_message)
+      GroupArchivedMessage.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
 
@@ -86,7 +86,7 @@ describe TopicQuery::PrivateMessageLists do
   describe '#list_private_messages_all_archive' do
     it 'returns a list of all private messages that has been archived' do
       UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(user_2.id, group_message)
+      GroupArchivedMessage.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all_archive(user_2).topics
 

@@ -143,16 +143,20 @@ class TopicQuery
       elsif type == :user
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
       elsif type == :all
-        result = result.where("topics.id IN (
-              SELECT topic_id
-              FROM topic_allowed_users
-              WHERE user_id = #{user.id.to_i}
-              UNION ALL
-              SELECT topic_id FROM topic_allowed_groups
-              WHERE group_id IN (
-                SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}
-              )
-      )")
+        group_ids = group_with_messages_ids(user)
+
+        result = result.joins(<<~SQL)
+        LEFT JOIN topic_allowed_users tau
+          ON tau.topic_id = topics.id
+          AND tau.user_id = #{user.id.to_i}
+        LEFT JOIN topic_allowed_groups tag
+          ON tag.topic_id = topics.id
+          #{group_ids.present? ? "AND tag.group_id IN (#{group_ids.join(",")})" : ""}
+        SQL
+
+        result = result
+          .where("tag.topic_id IS NOT NULL OR tau.topic_id IS NOT NULL")
+          .distinct
       end
 
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
@@ -229,8 +233,15 @@ class TopicQuery
     end
 
     def filter_archived(list, user, archived: true)
+      # Executing an extra query instead of a sub-query because it is more
+      # efficient for the PG planner. Caution should be used when changing the
+      # query here as it can easily lead to an inefficient query.
+      group_ids = group_with_messages_ids(user)
+
       list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
+      LEFT JOIN group_archived_messages gm
+        ON gm.topic_id = topics.id
+        #{group_ids.present? ? "AND gm.group_id IN (#{group_ids.join(",")})" : ""}
       LEFT JOIN user_archived_messages um
         ON um.user_id = #{user.id.to_i}
         AND um.topic_id = topics.id
@@ -263,6 +274,16 @@ class TopicQuery
 
     def user_first_unread_pm_at(user)
       UserStat.where(user: user).pluck_first(:first_unread_pm_at)
+    end
+
+    def group_with_messages_ids(user)
+      @group_with_messages_ids ||= {}
+
+      if ids = @group_with_messages_ids[user.id]
+        return ids
+      end
+
+      @group_with_messages_ids[user.id] = user.groups.where(has_messages: true).pluck(:id)
     end
   end
 end
