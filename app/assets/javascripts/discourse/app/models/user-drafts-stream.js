@@ -1,6 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import { cookAsync, emojiUnescape } from "discourse/lib/text";
+import { cookAsync, emojiUnescape, excerpt } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -9,59 +9,6 @@ import {
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
 import { Promise } from "rsvp";
-
-function encode(str) {
-  return str.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-}
-
-function traverse(element, callback) {
-  if (callback(element)) {
-    for (let i = 0; i < element.childNodes.length; ++i) {
-      traverse(element.childNodes[i], callback);
-    }
-  }
-}
-
-function excerpt(cooked, length) {
-  const div = document.createElement("div");
-  div.innerHTML = cooked;
-
-  let result = "";
-  let resultLength = 0;
-  traverse(div, (element) => {
-    if (resultLength >= length) {
-      return;
-    }
-
-    if (element.nodeType === Node.TEXT_NODE) {
-      if (resultLength + element.textContent.length > length) {
-        const text = element.textContent.substr(0, length - resultLength);
-        result += encode(text);
-        result += "&hellip;";
-        resultLength += text.length;
-        return;
-      } else {
-        result += encode(element.textContent);
-        resultLength += element.textContent.length;
-      }
-    } else if (element.tagName === "A") {
-      element.innerHTML = element.innerText;
-      result += element.outerHTML;
-      resultLength += element.innerText.length;
-    } else if (element.tagName === "IMG") {
-      if (element.classList.contains("emoji")) {
-        result += element.outerHTML;
-      } else {
-        result += "[image]";
-        resultLength += "[image]".length;
-      }
-    } else {
-      return true;
-    }
-  });
-
-  return result;
-}
 
 export default RestModel.extend({
   limit: 30,
@@ -124,20 +71,21 @@ export default RestModel.extend({
         this.set("hasMore", result.drafts.size >= this.limit);
 
         const promises = result.drafts.map((draft) => {
-          const data = JSON.parse(draft.data);
-          return cookAsync(data.reply).then((cooked) => {
+          draft.data = JSON.parse(draft.data);
+          return cookAsync(draft.data.reply).then((cooked) => {
             draft.excerpt = excerpt(cooked.string, 300);
-            draft.post_number = data.postId || null;
+            draft.post_number = draft.data.postId || null;
             if (
               draft.draft_key === NEW_PRIVATE_MESSAGE_KEY ||
               draft.draft_key === NEW_TOPIC_KEY
             ) {
-              draft.title = data.title;
+              draft.title = draft.data.title;
             }
             draft.title = emojiUnescape(escapeExpression(draft.title));
-            if (data.categoryId) {
+            if (draft.data.categoryId) {
               draft.category =
-                this.site.categories.findBy("id", data.categoryId) || null;
+                this.site.categories.findBy("id", draft.data.categoryId) ||
+                null;
             }
             this.content.push(UserDraft.create(draft));
           });

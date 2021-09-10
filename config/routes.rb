@@ -887,10 +887,10 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: [:index]
-    get "draft" => "draft#show"
-    post "draft" => "draft#update"
-    delete "draft" => "draft#destroy"
+    get "drafts" => "drafts#index"
+    get "draft" => "drafts#show"
+    post "draft" => "drafts#update"
+    delete "draft" => "drafts#destroy"
 
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
