@@ -6,15 +6,11 @@ class DraftsController < ApplicationController
   skip_before_action :check_xhr, :preload_json
 
   def index
-    params.require(:username)
     params.permit(:offset)
     params.permit(:limit)
 
-    user = fetch_user_from_params
-    raise Discourse::InvalidAccess unless user == current_user
-
     stream = Draft.stream(
-      user: user,
+      user: current_user,
       offset: params[:offset],
       limit: params[:limit]
     )

@@ -53,7 +53,7 @@ export default RestModel.extend({
 
     this.set("loading", true);
 
-    const url = `/drafts.json?offset=${this.content.length}&limit=${this.limit}&username=${this.user.username_lower}`;
+    const url = `/drafts.json?offset=${this.content.length}&limit=${this.limit}`;
     return ajax(url)
       .then((result) => {
         if (!result) {
