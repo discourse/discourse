@@ -237,8 +237,10 @@ export default Component.extend(ComposerUpload, {
       putCursorAtEnd(this.element.querySelector(".d-editor-input"));
     }
 
-    this._bindUploadTarget();
-    this._bindMobileUploadButton();
+    if (this.allowUpload) {
+      this._bindUploadTarget();
+      this._bindMobileUploadButton();
+    }
 
     this.appEvents.trigger("composer:will-open");
   },
