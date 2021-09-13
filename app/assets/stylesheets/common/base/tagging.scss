@@ -296,9 +296,10 @@ header .discourse-tag {
     }
 
     .tag-groups-sidebar {
+      max-width: 90px;
       ul li a {
         word-break: break-word;
-        max-width: 65px;
+        max-width: 90px;
         font-size: var(--font-down-1);
       }
     }
