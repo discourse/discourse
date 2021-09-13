@@ -41,6 +41,21 @@ class GroupMessage
     end
   end
 
+  def delete_previous!
+    posts = Post
+      .joins(topic: { topic_allowed_groups: :group })
+      .where(topic: { posts_count: 1 })
+      .where(topic: { archetype: Archetype.private_message })
+      .where(topic: { subtype: TopicSubtype.system_message })
+      .where(topic: { title: I18n.t("system_messages.#{@message_type}.subject_template", message_params) })
+      .where(topic: { topic_allowed_groups: { groups: { name: @group_name } } })
+      .where(raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params).rstrip)
+
+    posts.find_each do |post|
+      PostDestroyer.new(Discourse.system_user, post).destroy
+    end
+  end
+
   def message_params
     @message_params ||= begin
       h = { base_url: Discourse.base_url }.merge(@opts[:message_params] || {})
