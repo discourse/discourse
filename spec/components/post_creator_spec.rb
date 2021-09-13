@@ -1134,6 +1134,26 @@ describe PostCreator do
 
       expect(target_user1.notifications.count).to eq(1)
       expect(target_user2.notifications.count).to eq(1)
+
+      GroupArchivedMessage.create!(group: group, topic: post.topic)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+        PostCreator.create!(user,
+          raw: "this is a reply to the group message",
+          topic_id: post.topic_id
+        )
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      expect(GroupArchivedMessage.exists?(group: group, topic: post.topic))
+        .to eq(false)
     end
   end
 

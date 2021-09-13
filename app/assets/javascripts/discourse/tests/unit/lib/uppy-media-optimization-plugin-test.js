@@ -37,13 +37,12 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("sets the options passed in", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: true,
       optimizeFn: function () {
         return "wow such optimized";
       },
     });
-    assert.equal(plugin.id, "test-uppy");
+    assert.equal(plugin.id, "uppy-media-optimization");
     assert.equal(plugin.runParallel, true);
     assert.equal(plugin.optimizeFn(), "wow such optimized");
   });
@@ -51,7 +50,6 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("installation uses the correct function", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: true,
     });
     plugin._optimizeParallel = function () {
@@ -71,7 +69,6 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("sets the file state when successfully optimizing the file and emits events", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: true,
       optimizeFn: () => {
         return Promise.resolve("new file state");
@@ -93,7 +90,6 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("handles optimizer errors gracefully by leaving old file state and calling preprocess-complete", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: true,
       optimizeFn: () => {
         return new Promise(() => {
@@ -117,7 +113,6 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("handles serial file optimization successfully", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: false,
       optimizeFn: () => {
         return Promise.resolve("new file state");
@@ -144,7 +139,6 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
   test("handles parallel file optimization successfully", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
-      id: "test-uppy",
       runParallel: true,
       optimizeFn: () => {
         return Promise.resolve("new file state");

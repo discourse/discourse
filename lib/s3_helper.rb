@@ -86,6 +86,10 @@ class S3Helper
   end
 
   def copy(source, destination, options: {})
+    if options[:apply_metadata_to_destination]
+      options = options.except(:apply_metadata_to_destination).merge(metadata_directive: "REPLACE")
+    end
+
     destination = get_path_for_s3_upload(destination)
     if !Rails.configuration.multisite
       options[:copy_source] = File.join(@s3_bucket_name, source)
@@ -102,7 +106,21 @@ class S3Helper
       end
     end
 
-    response = s3_bucket.object(destination).copy_from(options)
+    destination_object = s3_bucket.object(destination)
+
+    # TODO: copy_source is a legacy option here and may become unsupported
+    # in later versions, we should change to use Aws::S3::Client#copy_object
+    # at some point.
+    #
+    # See https://github.com/aws/aws-sdk-ruby/blob/version-3/gems/aws-sdk-s3/lib/aws-sdk-s3/customizations/object.rb#L67-L74
+    #
+    # ----
+    #
+    # Also note, any options for metadata (e.g. content_disposition, content_type)
+    # will not be applied unless the metadata_directive = "REPLACE" option is passed
+    # in. If this is not passed in, the source object's metadata will be used.
+    response = destination_object.copy_from(options)
+
     [destination, response.copy_object_result.etag.gsub('"', '')]
   end
 

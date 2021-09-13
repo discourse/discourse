@@ -47,7 +47,7 @@ class TopicsBulkAction
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
         if group
-          GroupArchivedMessage.move_to_inbox!(group.id, t)
+          GroupArchivedMessage.move_to_inbox!(group.id, t, acting_user_id: @user.id)
         else
           UserArchivedMessage.move_to_inbox!(@user.id, t)
         end
@@ -60,7 +60,7 @@ class TopicsBulkAction
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
         if group
-          GroupArchivedMessage.archive!(group.id, t)
+          GroupArchivedMessage.archive!(group.id, t, acting_user_id: @user.id)
         else
           UserArchivedMessage.archive!(@user.id, t)
         end

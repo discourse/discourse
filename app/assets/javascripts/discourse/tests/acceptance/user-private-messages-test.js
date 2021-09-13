@@ -7,6 +7,7 @@ import {
   exists,
   publishToMessageBus,
   query,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { PERSONAL_INBOX } from "discourse/controllers/user-private-messages";
@@ -36,6 +37,22 @@ acceptance(
       assert.ok(
         !exists(".group-notifications-button"),
         "displays the group notifications button"
+      );
+    });
+
+    test("viewing messages of another user", async function (assert) {
+      updateCurrentUser({ id: 5, username: "charlie" });
+
+      await visit("/u/eviltrout/messages");
+
+      assert.ok(
+        !exists(".messages-nav li a.new"),
+        "it does not display new filter"
+      );
+
+      assert.ok(
+        !exists(".messages-nav li a.unread"),
+        "it does not display unread filter"
       );
     });
   }
@@ -144,7 +161,7 @@ acceptance(
           fetchedNew = true;
         }
 
-        return helper.response({});
+        return helper.response({ topic_ids: [1, 2, 3] });
       });
 
       server.put("/topics/bulk", (request) => {
@@ -218,16 +235,6 @@ acceptance(
       );
     };
 
-    const publishArchiveToMessageBus = function (opts) {
-      publishToMessageBus(
-        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
-        {
-          topic_id: opts.topicId,
-          message_type: "archive",
-        }
-      );
-    };
-
     const publishGroupArchiveToMessageBus = function (opts) {
       publishToMessageBus(
         `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
@@ -236,6 +243,7 @@ acceptance(
           message_type: "group_archive",
           payload: {
             group_ids: opts.groupIds,
+            acting_user_id: opts.actingUserId,
           },
         }
       );
@@ -272,42 +280,6 @@ acceptance(
       );
     };
 
-    test("incoming archive message on all and archive filter", async function (assert) {
-      for (const url of [
-        "/u/charlie/messages",
-        "/u/charlie/messages/archive",
-        "/u/charlie/messages/personal",
-        "/u/charlie/messages/personal/archive",
-      ]) {
-        await visit(url);
-
-        publishArchiveToMessageBus({ topicId: 1 });
-
-        await visit(url); // wait for re-render
-
-        assert.ok(
-          exists(".show-mores"),
-          `${url} displays the topic incoming info`
-        );
-      }
-
-      for (const url of [
-        "/u/charlie/messages/group/awesome_group/archive",
-        "/u/charlie/messages/group/awesome_group",
-      ]) {
-        await visit(url);
-
-        publishArchiveToMessageBus({ topicId: 1 });
-
-        await visit(url); // wait for re-render
-
-        assert.ok(
-          !exists(".show-mores"),
-          `${url} does not display the topic incoming info`
-        );
-      }
-    });
-
     test("incoming read message on unread filter", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
@@ -316,6 +288,23 @@ acceptance(
       await visit("/u/charlie/messages/unread"); // wait for re-render
 
       assert.ok(exists(".show-mores"), `displays the topic incoming info`);
+    });
+
+    test("incoming group archive message acted by current user", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      publishGroupArchiveToMessageBus({
+        groupIds: [14],
+        topicId: 1,
+        actingUserId: 5,
+      });
+
+      await visit("/u/charlie/messages"); // wait for re-render
+
+      assert.ok(
+        !exists(".show-mores"),
+        `does not display the topic incoming info`
+      );
     });
 
     test("incoming group archive message on all and archive filter", async function (assert) {
@@ -528,6 +517,10 @@ acceptance(
     test("dismissing all new messages", async function (assert) {
       await visit("/u/charlie/messages/new");
 
+      publishNewToMessageBus({ topicId: 1, userId: 5 });
+      publishNewToMessageBus({ topicId: 2, userId: 5 });
+      publishNewToMessageBus({ topicId: 3, userId: 5 });
+
       assert.equal(
         count(".topic-list-item"),
         3,
@@ -535,6 +528,12 @@ acceptance(
       );
 
       await click(".btn.dismiss-read");
+
+      assert.equal(
+        query(".messages-nav li a.new").innerText.trim(),
+        I18n.t("user.messages.new"),
+        "displays the right count"
+      );
 
       assert.equal(
         count(".topic-list-item"),
@@ -680,9 +679,12 @@ acceptance(
     test("suggested messages for group messages without new or unread", async function (assert) {
       await visit("/t/13");
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "Want to read more? Browse other messages in  awesome_group.",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /Want to read more\? Browse other messages in\s+awesome_group\./
+          ),
         "displays the right browse more message"
       );
     });
@@ -694,9 +696,12 @@ acceptance(
 
       await visit("/t/13"); // await re-render
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "There is 1 new message remaining, or browse other messages in  awesome_group",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
         "displays the right browse more message"
       );
 
@@ -704,9 +709,12 @@ acceptance(
 
       await visit("/t/13"); // await re-render
 
-      assert.equal(
-        query(".suggested-topics-message").innerText.trim(),
-        "There is 1 unread and 1 new message remaining, or browse other messages in  awesome_group",
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
         "displays the right browse more message"
       );
     });

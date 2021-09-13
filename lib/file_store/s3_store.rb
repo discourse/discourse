@@ -98,6 +98,7 @@ module FileStore
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
         original_path = opts[:existing_external_upload_key]
+        options[:apply_metadata_to_destination] = true
         path, etag = s3_helper.copy(
           original_path,
           path,

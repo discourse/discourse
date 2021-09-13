@@ -9,7 +9,7 @@
       </div>
     </div>
   {{else}}
-    <div class="form-horizontal bookmark-search-form">
+    <div class="inline-form full-width bookmark-search-form">
       {{input type="text"
         value=searchTerm
         placeholder=(i18n "bookmarks.search_placeholder")
@@ -19,7 +19,8 @@
         class="btn-primary"
         action=(action "search")
         type="button"
-        icon="search"}}
+        icon="search"
+      }}
     </div>
     {{#if nothingFound}}
       <div class="alert alert-info">{{i18n "user.no_bookmarks_search"}}</div>
@@ -28,7 +29,8 @@
         loadMore=(action "loadMore")
         reload=(action "reload")
         loadingMore=loadingMore
-        content=content}}
+        content=content
+      }}
     {{/if}}
   {{/if}}
 {{/conditional-loading-spinner}}

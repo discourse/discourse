@@ -4383,6 +4383,7 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(group_message.id)
 
       expect(DismissedTopicUser.count).to eq(1)
 
@@ -4396,6 +4397,10 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(
+        private_message.id,
+        private_message_2.id
+      )
 
       expect(DismissedTopicUser.count).to eq(2)
 
@@ -4451,6 +4456,45 @@ RSpec.describe TopicsController do
 
       expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
         .to eq(true)
+    end
+  end
+
+  describe '#archive_message' do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+        g.add(user)
+      end
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'should be able to archive a private message' do
+      sign_in(user)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+
+        put "/t/#{group_message.id}/archive-message.json"
+
+        expect(response.status).to eq(200)
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      body = response.parsed_body
+
+      expect(body["group_name"]).to eq(group.name)
     end
   end
 end

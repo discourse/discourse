@@ -200,6 +200,16 @@
         }
       }
     }
+
+    .formated-selection {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .without-tags {
+    .category-input {
+      margin-left: 5px;
+    }
   }
 
   .user-selector {

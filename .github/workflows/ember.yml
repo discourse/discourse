@@ -14,7 +14,7 @@ jobs:
     if: true
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
-    timeout-minutes: 40
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@master
@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Official Plugins Install
-        if: ${{ github.event_name == 'cron' }}
+        if: ${{ github.event_name == 'schedule' }}
         run: sudo -E -u discourse -H bundle exec rake plugin:install_all_official
 
       - name: Yarn install
@@ -50,4 +50,4 @@ jobs:
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember test
-        timeout-minutes: 30
+        timeout-minutes: 60

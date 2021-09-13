@@ -29,7 +29,7 @@ export default Mixin.create({
     if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
         I18n.t("select_kit.max_content_reached", {
-          count: this.selectKit.limit,
+          count: parseInt(maximum, 10),
         })
       );
       return false;
