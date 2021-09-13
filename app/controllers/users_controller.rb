@@ -1598,7 +1598,11 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
-        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+        @bookmark_reminders = Bookmark.with_reminders
+          .where(user_id: user.id)
+          .joins(post: :topic)
+          .includes(post: :topic)
+          .order(:reminder_at)
       end
     end
   end
