@@ -1,4 +1,4 @@
-name: Ember CLI tests
+name: (experimental) Ember CLI tests
 
 on:
   pull_request:
