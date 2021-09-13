@@ -155,7 +155,6 @@ end
 #
 #  id                     :bigint           not null, primary key
 #  user_id                :bigint           not null
-#  topic_id               :bigint           not null
 #  post_id                :bigint           not null
 #  name                   :string(100)
 #  reminder_type          :integer
