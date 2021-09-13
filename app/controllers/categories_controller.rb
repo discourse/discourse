@@ -292,7 +292,7 @@ class CategoriesController < ApplicationController
       end
 
       if SiteSetting.enable_category_group_moderation?
-        params[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id if params[:reviewable_by_group_id]
+        params[:reviewable_by_group_id] = Group.where(name: params[:reviewable_by_group_name]).pluck_first(:id) if params[:reviewable_by_group_name]
       end
 
       result = params.permit(
@@ -331,10 +331,11 @@ class CategoriesController < ApplicationController
         :min_tags_from_required_group,
         :read_only_banner,
         :default_list_filter,
+        :reviewable_by_group_id,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
-        allowed_tag_groups: []
+        allowed_tag_groups: [],
       )
 
       result
