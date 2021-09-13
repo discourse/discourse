@@ -19,9 +19,10 @@ export default UserTopicListRoute.extend({
   },
 
   emptyState() {
-    const title = I18n.t("user_activity.no_topics_title");
-    const body = "";
-    return { title, body };
+    return {
+      title: I18n.t("user_activity.no_topics_title"),
+      body: "",
+    };
   },
 
   @action

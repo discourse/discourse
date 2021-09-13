@@ -44,9 +44,10 @@ export default (type) => {
     },
 
     emptyState() {
-      const title = I18n.t("no_group_messages_title");
-      const body = "";
-      return { title, body };
+      return {
+        title: I18n.t("no_group_messages_title"),
+        body: "",
+      };
     },
 
     _isArchive() {
