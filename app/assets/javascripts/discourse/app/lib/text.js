@@ -117,9 +117,7 @@ function encode(str) {
 
 function traverse(element, callback) {
   if (callback(element)) {
-    for (let i = 0; i < element.childNodes.length; ++i) {
-      traverse(element.childNodes[i], callback);
-    }
+    element.childNodes.forEach((child) => traverse(child, callback));
   }
 }
 
