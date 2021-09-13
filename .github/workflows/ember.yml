@@ -6,12 +6,11 @@ on:
     branches:
       - main
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
   build:
     name: run
-    if: true
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 60
@@ -41,7 +40,13 @@ jobs:
 
       - name: Official Plugins Install
         if: ${{ github.event_name == 'schedule' }}
-        run: sudo -E -u discourse -H bundle exec rake plugin:install_all_official
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+          bundle exec rake plugin:install_all_official
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
