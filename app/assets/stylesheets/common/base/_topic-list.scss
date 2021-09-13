@@ -364,9 +364,10 @@
 }
 
 .top-title-buttons {
-  display: inline-flex;
-  margin: 0.25em 0;
+  display: flex;
+  margin: 0.5em 0;
   flex-wrap: wrap;
+  font-size: var(--font-0-rem);
 
   button {
     margin-right: 0.5em;
