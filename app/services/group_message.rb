@@ -45,8 +45,10 @@ class GroupMessage
     posts = Post
       .joins(topic: { topic_allowed_groups: :group })
       .where(topic: { posts_count: 1 })
+      .where(topic: { user_id: Discourse.system_user })
       .where(topic: { archetype: Archetype.private_message })
       .where(topic: { subtype: TopicSubtype.system_message })
+      .where("posts.created_at > ?", 3.months.ago)
       .where(topic: { title: I18n.t("system_messages.#{@message_type}.subject_template", message_params) })
       .where(topic: { topic_allowed_groups: { groups: { name: @group_name } } })
       .where(raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params).rstrip)

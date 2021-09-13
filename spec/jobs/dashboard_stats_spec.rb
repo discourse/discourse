@@ -39,4 +39,14 @@ describe ::Jobs::DashboardStats do
     _reply_1 = Fabricate(:post, topic: Topic.last)
     expect { described_class.new.execute({}) }.to change { Topic.count }
   end
+
+  it 'duplicates message if previous was 3 months ago' do
+    freeze_time 4.months.ago do
+      Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
+      expect { described_class.new.execute({}) }.to change { Topic.count }
+      clear_recently_sent!
+    end
+
+    expect { described_class.new.execute({}) }.to change { Topic.count }
+  end
 end
