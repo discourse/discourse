@@ -345,6 +345,10 @@
       padding-bottom: 0;
       margin-top: 18px;
       min-height: 35px;
+
+      .input-setting-textarea {
+        height: unset;
+      }
     }
     .setting-label {
       width: 25%;
