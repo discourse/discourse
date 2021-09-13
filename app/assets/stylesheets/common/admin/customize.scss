@@ -46,6 +46,9 @@
     input {
       margin-bottom: 0;
       font-size: $font-down-2;
+      .ios-device & {
+        font-size: var(--font-down-2);
+      }
     }
   }
 
@@ -84,7 +87,7 @@
       font-weight: bold;
       margin-bottom: 0.25em;
       display: flex;
-      align-items: stretch;
+      align-items: center;
 
       input {
         margin: 0;
@@ -519,7 +522,8 @@
     .controls {
       display: flex;
       align-items: center;
-      button,
+      margin-bottom: 1em;
+      button:not(:last-child),
       a {
         margin-right: 10px;
       }
@@ -539,6 +543,9 @@
     }
     td.hex {
       width: 160px;
+      .color-picker {
+        display: inline-flex;
+      }
     }
     td.actions {
       width: 200px;
