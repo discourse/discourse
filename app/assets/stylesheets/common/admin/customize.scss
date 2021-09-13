@@ -152,7 +152,13 @@
     }
 
     &.color-scheme .admin-controls {
-      padding: 0.5em;
+      padding: 1em;
+      label {
+        margin-bottom: 0;
+        input[type="checkbox"] {
+          margin-top: 0;
+        }
+      }
     }
   }
   .add-component-button {
