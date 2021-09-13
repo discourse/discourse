@@ -191,11 +191,10 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
+    guardian.ensure_can_grant_admin!(@user)
     if current_user.has_any_second_factor_methods_enabled?
       second_factor_authentication_result = current_user.authenticate_second_factor(params, secure_session)
-
       if second_factor_authentication_result.ok
-        guardian.ensure_can_grant_admin!(@user)
         @user.grant_admin!
         StaffActionLogger.new(current_user).log_grant_admin(@user)
         render json: success_json
