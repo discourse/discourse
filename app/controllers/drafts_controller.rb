@@ -22,13 +22,13 @@ class DraftsController < ApplicationController
   end
 
   def show
-    raise Discourse::NotFound.new if params[:draft_key].blank?
+    raise Discourse::NotFound.new if params[:id].blank?
 
-    seq = params[:sequence] || DraftSequence.current(current_user, params[:draft_key])
-    render json: { draft: Draft.get(current_user, params[:draft_key], seq), draft_sequence: seq }
+    seq = params[:sequence] || DraftSequence.current(current_user, params[:id])
+    render json: { draft: Draft.get(current_user, params[:id], seq), draft_sequence: seq }
   end
 
-  def update
+  def create
     raise Discourse::NotFound.new if params[:draft_key].blank?
 
     sequence =
@@ -92,7 +92,7 @@ class DraftsController < ApplicationController
 
   def destroy
     begin
-      Draft.clear(current_user, params[:draft_key], params[:sequence].to_i)
+      Draft.clear(current_user, params[:id], params[:sequence].to_i)
     rescue Draft::OutOfSequence
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
     end

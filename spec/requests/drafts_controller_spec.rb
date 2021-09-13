@@ -15,7 +15,7 @@ describe DraftsController do
       get "/drafts.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["drafts"].length).to eq(1)
+      expect(response.parsed_body["drafts"].length).to eq(1)
     end
 
     it 'has empty stream after deleting last draft' do
@@ -24,8 +24,7 @@ describe DraftsController do
       Draft.clear(user, 'xxx', 0)
       get "/drafts.json"
       expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["drafts"].length).to eq(0)
+      expect(response.parsed_body["drafts"].length).to eq(0)
     end
 
     it 'does not include topic details when user cannot see topic' do
@@ -38,27 +37,36 @@ describe DraftsController do
       sign_in(topic_user)
       get "/drafts.json"
       expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["drafts"].first["title"]).to eq(topic.title)
+      expect(response.parsed_body["drafts"].first["title"]).to eq(topic.title)
 
       sign_in(other_user)
       get "/drafts.json"
       expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["drafts"].first["title"]).to eq(nil)
+      expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
   end
 
-  describe "#update" do
+  describe "#show" do
+    it "returns a draft if requested" do
+      user = sign_in(Fabricate(:user))
+      Draft.set(user, 'hello', 0, 'test')
+
+      get "/drafts/hello.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['draft']).to eq('test')
+    end
+  end
+
+  describe "#create" do
     it 'requires you to be logged in' do
-      post "/draft.json"
+      post "/drafts.json"
       expect(response.status).to eq(403)
     end
 
-    it 'saves a draft on update' do
+    it 'saves a draft' do
       user = sign_in(Fabricate(:user))
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: 'xyz',
         data: { my: "data" }.to_json,
         sequence: 0
@@ -70,19 +78,7 @@ describe DraftsController do
 
     it "returns 404 when the key is missing" do
       sign_in(Fabricate(:user))
-      post "/draft.json", params: { data: { my: "data" }.to_json, sequence: 0 }
-      expect(response.status).to eq(404)
-    end
-
-    it "returns a draft if requested" do
-      user = sign_in(Fabricate(:user))
-      Draft.set(user, 'hello', 0, 'test')
-
-      get "/draft.json", params: { draft_key: 'hello' }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body['draft']).to eq('test')
-
-      get "/draft.json"
+      post "/drafts.json", params: { data: { my: "data" }.to_json, sequence: 0 }
       expect(response.status).to eq(404)
     end
 
@@ -90,7 +86,7 @@ describe DraftsController do
       user = sign_in(Fabricate(:user))
       post = Fabricate(:post, user: user)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "topic",
         sequence: 0,
         data: {
@@ -100,9 +96,10 @@ describe DraftsController do
         }.to_json
       }
 
+      expect(response.status).to eq(200)
       expect(response.parsed_body['conflict_user']).to eq(nil)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "topic",
         sequence: 0,
         data: {
@@ -112,6 +109,7 @@ describe DraftsController do
         }.to_json
       }
 
+      expect(response.status).to eq(200)
       expect(response.parsed_body['conflict_user']['id']).to eq(post.last_editor.id)
       expect(response.parsed_body['conflict_user']).to include('avatar_template')
     end
@@ -122,7 +120,7 @@ describe DraftsController do
 
       DraftSequence.next!(user, "abc")
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: 0,
         data: { a: "test" }.to_json,
@@ -136,7 +134,7 @@ describe DraftsController do
     it 'has a clean protocol for ownership handover' do
       user = sign_in(Fabricate(:user))
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: 0,
         data: { a: "test" }.to_json,
@@ -146,7 +144,7 @@ describe DraftsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["draft_sequence"]).to eq(0)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: 0,
         data: { b: "test" }.to_json,
@@ -158,7 +156,7 @@ describe DraftsController do
 
       expect(DraftSequence.current(user, "abc")).to eq(1)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: 1,
         data: { c: "test" }.to_json,
@@ -168,7 +166,7 @@ describe DraftsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["draft_sequence"]).to eq(2)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: 2,
         data: { c: "test" }.to_json,
@@ -184,7 +182,7 @@ describe DraftsController do
       seq = DraftSequence.next!(user, "abc")
       Draft.set(user, "abc", seq, { b: "test" }.to_json)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: seq - 1,
         data: { a: "test" }.to_json
@@ -192,7 +190,7 @@ describe DraftsController do
 
       expect(response.status).to eq(409)
 
-      post "/draft.json", params: {
+      post "/drafts.json", params: {
         draft_key: "abc",
         sequence: seq + 1,
         data: { a: "test" }.to_json
@@ -206,7 +204,7 @@ describe DraftsController do
     it 'destroys drafts when required' do
       user = sign_in(Fabricate(:user))
       Draft.set(user, 'xxx', 0, 'hi')
-      delete "/draft.json", params: { draft_key: 'xxx', sequence: 0 }
+      delete "/drafts/xxx.json", params: { sequence: 0 }
       expect(response.status).to eq(200)
       expect(Draft.get(user, 'xxx', 0)).to eq(nil)
     end

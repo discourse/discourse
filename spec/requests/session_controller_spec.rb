@@ -478,7 +478,7 @@ RSpec.describe SessionController do
       UserAuthToken.destroy_all
 
       # we need a route that will call current user
-      post '/draft.json', params: {}
+      post '/drafts.json', params: {}
       expect(response.headers['Discourse-Logged-Out']).to eq("1")
     end
   end
