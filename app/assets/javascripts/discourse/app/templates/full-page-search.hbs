@@ -148,10 +148,6 @@
             {{/conditional-loading-spinner}}
           {{else}}
             {{#conditional-loading-spinner condition=loading }}
-              {{#unless hasResults}}
-                <h3>{{i18n "search.no_results"}}</h3>
-              {{/unless}}
-
               {{#if hasResults}}
                 {{#if model.categories.length}}
                   <h4 class="category-heading">
@@ -194,7 +190,12 @@
                     {{/user-link}}
                   {{/each}}
                 {{/if}}
+              {{else}}
+                {{#if searchActive}}
+                  <h3>{{i18n "search.no_results"}}</h3>
+                {{/if}}
               {{/if}}
+
             {{/conditional-loading-spinner}}
           {{/if}}
         {{/load-more}}

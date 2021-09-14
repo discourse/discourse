@@ -39,15 +39,16 @@
     background: var(--primary-very-low);
 
     input.search-query {
-      flex: 1 0 0px;
+      flex: 1 0 60%;
       margin: 0 1em 0 0;
     }
 
     .select-kit {
       margin-right: 1em;
+      flex: 1 0 20%;
     }
 
-    @include breakpoint(medium) {
+    @include breakpoint(mobile-extra-large) {
       flex-direction: column;
 
       input.search-query,
@@ -156,13 +157,19 @@
     .search-advanced-filters {
       background: var(--primary-very-low);
 
-      @include breakpoint(medium, min-width) {
+      @include breakpoint(mobile-extra-large, min-width) {
         .search-advanced-options {
           column-count: 2;
-          column-gap: 6em;
+          column-gap: 2em;
           .control-group {
             break-inside: avoid;
           }
+        }
+      }
+
+      @include breakpoint(medium, min-width) {
+        .search-advanced-options {
+          column-gap: 5em;
         }
       }
 
