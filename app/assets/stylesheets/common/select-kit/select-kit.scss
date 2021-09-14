@@ -166,6 +166,11 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+
+    .selected-content {
+      max-height: 300px;
+      overflow-y: scroll;
+    }
   }
 
   .select-kit-row {
