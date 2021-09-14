@@ -383,7 +383,12 @@ export default Controller.extend({
       this.selected.clear();
     },
 
-    search() {
+    search(collapseFilters = false) {
+      if (collapseFilters) {
+        document
+          .querySelector("details.advanced-filters")
+          .removeAttribute("open");
+      }
       this.set("page", 1);
       this._search();
     },

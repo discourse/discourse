@@ -1,5 +1,6 @@
 {{#d-section pageClass="search" class="search-container"}}
   {{scroll-tracker name="full-page-search" tag=searchTerm class="hidden"}}
+
   <div class="search-header">
     <h1 class="search-page-heading">
       {{#if hasResults}}
@@ -15,7 +16,7 @@
         value=searchTerm
         class="full-page-search search no-blur search-query"
         aria-label=(i18n "search.search_term_label")
-        enter=(action "search")
+        enter=(action "search" true)
         hasAutofocus=hasAutofocus
         aria-controls="search-result-count"
       }}
@@ -26,7 +27,7 @@
         onChange=(action (mut search_type))
       }}
       {{d-button
-        action=(action "search")
+        action=(action "search" true)
         icon="search"
         label="search.search_button"
         class="btn-primary search-cta"
