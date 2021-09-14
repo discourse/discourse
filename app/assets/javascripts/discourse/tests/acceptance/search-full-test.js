@@ -419,7 +419,9 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn("#search-min-post-count", "5");
 
     assert.equal(
-      queryAll(".search-advanced-options #search-min-post-count").val(),
+      queryAll(
+        ".search-advanced-additional-options #search-min-post-count"
+      ).val(),
       "5",
       'has "5" populated'
     );
@@ -436,7 +438,9 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn("#search-max-post-count", "5");
 
     assert.equal(
-      queryAll(".search-advanced-options #search-max-post-count").val(),
+      queryAll(
+        ".search-advanced-additional-options #search-max-post-count"
+      ).val(),
       "5",
       'has "5" populated'
     );
