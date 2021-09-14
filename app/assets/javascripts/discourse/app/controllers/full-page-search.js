@@ -387,7 +387,7 @@ export default Controller.extend({
       if (collapseFilters) {
         document
           .querySelector("details.advanced-filters")
-          .removeAttribute("open");
+          ?.removeAttribute("open");
       }
       this.set("page", 1);
       this._search();
