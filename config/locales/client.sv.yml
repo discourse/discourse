@@ -116,6 +116,8 @@ sv:
       previous_month: "Föregående månad"
       next_month: "Nästkommande månad"
       placeholder: datum
+      from_placeholder: "från-datum"
+      to_placeholder: "till-datum"
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber}"
@@ -364,6 +366,7 @@ sv:
         placeholder: "skriv meddelandets titel, url eller id här"
     review:
       order_by: "Sortera efter"
+      date_filter: "Publicerat mellan"
       in_reply_to: "som svar till"
       explain:
         why: "förklara varför detta föremål hamnade i kön"
@@ -973,7 +976,9 @@ sv:
       use_current_timezone: "Använd nuvarande tidszon"
       profile_hidden: "Den här användarens offentliga profil är dold."
       expand_profile: "Utvidga"
+      sr_expand_profile: "Expandera profilinformation"
       collapse_profile: "Förminska"
+      sr_collapse_profile: "Dölj profilinformation"
       bookmarks: "Bokmärken"
       bio: "Om mig"
       timezone: "Tidszon"
@@ -4614,6 +4619,7 @@ sv:
         logged_out: "Användaren loggades ut från alla enheter."
         revoke_admin: "Återkalla Administratör"
         grant_admin: "Bevilja Administratör"
+        grant_admin_success: "Ny administratör bekräftades."
         grant_admin_confirm: "Vi har skickat e-post till dig för att bekräfta den nya administratören. Vi ber dig öppna meddelandet och följ instruktionerna."
         revoke_moderation: "Återkalla Moderering"
         grant_moderation: "Bevilja Moderering"

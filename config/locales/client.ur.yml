@@ -112,6 +112,7 @@ ur:
       previous_month: "پچھلے ماہ"
       next_month: "اگلے ماہ"
       placeholder: تاریخ
+      to_placeholder: "اِس تاریخ تک"
     share:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
       post: "پوسٹ #%{postNumber}"

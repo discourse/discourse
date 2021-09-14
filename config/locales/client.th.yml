@@ -93,6 +93,7 @@ th:
       previous_month: "เดือนที่แล้ว"
       next_month: "เดือนถัดไป"
       placeholder: วัน
+      to_placeholder: "ไปวันที่"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber}"

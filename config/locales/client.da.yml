@@ -115,6 +115,7 @@ da:
       previous_month: "Forrige måned"
       next_month: "Næste måned"
       placeholder: dato
+      to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber}"

@@ -90,6 +90,7 @@ zh_TW:
       previous_month: "上個月"
       next_month: "下個月"
       placeholder: 日期
+      to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "貼文 #%{postNumber} "

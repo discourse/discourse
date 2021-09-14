@@ -159,6 +159,7 @@ sl:
       previous_month: "Prejšnji mesec"
       next_month: "Naslednji mesec"
       placeholder: datum
+      to_placeholder: "na datum"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "prispevek #%{postNumber}"

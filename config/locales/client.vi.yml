@@ -93,6 +93,7 @@ vi:
       previous_month: "Tháng trước"
       next_month: "Tháng sau"
       placeholder: ngày
+      to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "đăng #%{postNumber}"
