@@ -31,14 +31,12 @@
   {{/if}}
 
   {{#if siteSettings.enable_fast_edit}}
-    {{#if _displayFastEditButton}}
-      {{d-button
-        icon="pencil-alt"
-        action=(action "_toggleFastEditForm")
-        label="post.quote_edit"
-        class="btn-flat quote-edit-label"
-      }}
-    {{/if}}
+    {{d-button
+      icon="pencil-alt"
+      action=(action "_toggleFastEditForm")
+      label="post.quote_edit"
+      class="btn-flat quote-edit-label"
+    }}
   {{/if}}
 </div>
 

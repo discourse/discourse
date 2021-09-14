@@ -37,7 +37,7 @@ export default Component.extend({
   visible: false,
   privateCategory: alias("topic.category.read_restricted"),
 
-  _displayFastEditButton: false,
+  _isFastEditable: false,
   _displayFastEditInput: false,
   _fastEditInitalSelection: null,
   _fastEditNewSelection: null,
@@ -50,7 +50,7 @@ export default Component.extend({
     this.quoteState.clear();
     this.set("visible", false);
 
-    this.set("_displayFastEditButton", false);
+    this.set("_isFastEditable", false);
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitalSelection", null);
     this.set("_fastEditNewSelection", null);
@@ -134,11 +134,11 @@ export default Component.extend({
         quoteState.buffer.match(/\n/g) ||
         postBody.match(regexp).length > 1
       ) {
-        this.set("_displayFastEditButton", false);
+        this.set("_isFastEditable", false);
         this.set("_fastEditInitalSelection", null);
         this.set("_fastEditNewSelection", null);
       } else {
-        this.set("_displayFastEditButton", true);
+        this.set("_isFastEditable", true);
         this.set("_fastEditInitalSelection", quoteState.buffer.toString());
         this.set("_fastEditNewSelection", quoteState.buffer.toString());
       }
@@ -327,11 +327,17 @@ export default Component.extend({
 
   @action
   _toggleFastEditForm() {
-    this.toggleProperty("_displayFastEditInput");
+    if (this._isFastEditable) {
+      this.toggleProperty("_displayFastEditInput");
 
-    schedule("afterRender", () => {
-      document.querySelector("#fast-edit-input")?.focus();
-    });
+      schedule("afterRender", () => {
+        document.querySelector("#fast-edit-input")?.focus();
+      });
+    } else {
+      const postId = this.quoteState?.postId;
+      const postModel = this.topic.postStream.findLoadedPost(postId);
+      this.editPost(postModel);
+    }
   },
 
   @action
