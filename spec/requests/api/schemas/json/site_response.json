@@ -94,6 +94,9 @@
         },
         "chat_mention": {
           "type": "integer"
+        },
+        "chat_message": {
+          "type": "integer"
         }
       },
       "required": [

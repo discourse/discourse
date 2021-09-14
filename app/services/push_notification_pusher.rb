@@ -7,7 +7,7 @@ class PushNotificationPusher
   def self.push(user, payload)
     I18n.with_locale(user.effective_locale) do
       message = {
-        title: I18n.t(
+        title: payload[:translated_title] || I18n.t(
           "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
           site_title: SiteSetting.title,
           topic: payload[:topic_title],
