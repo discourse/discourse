@@ -513,7 +513,7 @@ end
 #  id                           :integer          not null, primary key
 #  user_id                      :integer          not null
 #  original_filename            :string           not null
-#  filesize                     :integer          not null
+#  filesize                     :bigint           not null
 #  width                        :integer
 #  height                       :integer
 #  url                          :string           not null
