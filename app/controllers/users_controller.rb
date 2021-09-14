@@ -1600,8 +1600,7 @@ class UsersController < ApplicationController
       format.ics do
         @bookmark_reminders = Bookmark.with_reminders
           .where(user_id: user.id)
-          .joins(post: :topic)
-          .includes(post: :topic)
+          .includes(:topic)
           .order(:reminder_at)
       end
     end

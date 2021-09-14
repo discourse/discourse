@@ -87,8 +87,8 @@ class Bookmark < ActiveRecord::Base
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
-  def reminder_at_ics(offset: nil)
-    (offset.present? ? reminder_at + offset : reminder_at).strftime(I18n.t("datetime_formats.formats.calendar_ics"))
+  def reminder_at_ics(offset: 0)
+    (reminder_at + offset).strftime(I18n.t("datetime_formats.formats.calendar_ics"))
   end
 
   def clear_reminder!
