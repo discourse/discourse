@@ -30,7 +30,7 @@ module Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
       ]
 
       sql = <<~SQL
-        SELECT 
+        SELECT
             p.user_id,
             u.username as username,
             u.uploaded_avatar_id as uploaded_avatar_id,
