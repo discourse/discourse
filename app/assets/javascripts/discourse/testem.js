@@ -3,6 +3,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
+  tap_failed_tests_only: true,
   parallel: 1, // disable parallel tests for stability
   browser_args: {
     Chrome: [
