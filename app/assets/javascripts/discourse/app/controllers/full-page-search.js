@@ -164,6 +164,14 @@ export default Controller.extend({
     }
   },
 
+  @observes("search_type")
+  triggerSearchOnTypeChange() {
+    if (this.searchActive) {
+      this.set("page", 1);
+      this._search();
+    }
+  },
+
   @observes("model")
   modelChanged() {
     if (this.searchTerm !== this.q) {
@@ -296,23 +304,33 @@ export default Controller.extend({
           searchTerm,
           this.siteSettings
         );
-        Promise.resolve(categoryTagSearch).then(async (results) => {
-          const categories = results.filter((c) => Boolean(c.model));
-          const tags = results.filter((c) => !Boolean(c.model));
-          const model = (await translateResults({ categories, tags })) || {};
-          this.set("model", model);
-          this.set("searching", false);
-          this.set("loading", false);
-        });
+        Promise.resolve(categoryTagSearch)
+          .then(async (results) => {
+            const categories = results.filter((c) => Boolean(c.model));
+            const tags = results.filter((c) => !Boolean(c.model));
+            const model = (await translateResults({ categories, tags })) || {};
+            this.set("model", model);
+          })
+          .finally(() => {
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
+          });
 
         break;
       case 2:
-        userSearch({ term: searchTerm, limit: 20 }).then(async (results) => {
-          const model = (await translateResults({ users: results })) || {};
-          this.set("model", model);
-          this.set("searching", false);
-          this.set("loading", false);
-        });
+        userSearch({ term: searchTerm, limit: 20 })
+          .then(async (results) => {
+            const model = (await translateResults({ users: results })) || {};
+            this.set("model", model);
+          })
+          .finally(() => {
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
+          });
 
         break;
       default:
@@ -340,8 +358,10 @@ export default Controller.extend({
             }
           })
           .finally(() => {
-            this.set("searching", false);
-            this.set("loading", false);
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
           });
         break;
     }
