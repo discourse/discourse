@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Reports::TopUsersByReceivedLikesFromInferiorTrustLevel
+module Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   extend ActiveSupport::Concern
 
   class_methods do
-    def report_top_users_by_received_likes_from_inferior_trust_level(report)
+    def report_top_users_by_likes_received_from_inferior_trust_level(report)
       report.icon = 'heart'
       report.data = []
 
@@ -20,17 +20,17 @@ module Reports::TopUsersByReceivedLikesFromInferiorTrustLevel
             username: :username,
             avatar: :user_avatar_template,
           },
-          title: I18n.t("reports.top_users_by_received_likes_from_inferior_trust_level.labels.user")
+          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.user")
         },
         {
           type: :number,
           property: :trust_level,
-          title: I18n.t("reports.top_users_by_received_likes_from_inferior_trust_level.labels.trust_level")
+          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.trust_level")
         },
         {
           type: :number,
           property: :qtt_like,
-          title: I18n.t("reports.top_users_by_received_likes_from_inferior_trust_level.labels.qtt_like")
+          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.qtt_like")
         },
       ]
 

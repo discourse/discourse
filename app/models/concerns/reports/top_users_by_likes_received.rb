@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Reports::TopUsersByReceivedLikes
+module Reports::TopUsersByLikesReceived
   extend ActiveSupport::Concern
 
   class_methods do
-    def report_top_users_by_received_likes(report)
+    def report_top_users_by_likes_received(report)
       report.icon = 'heart'
       report.data = []
 
@@ -20,12 +20,12 @@ module Reports::TopUsersByReceivedLikes
             username: :username,
             avatar: :user_avatar_template,
           },
-          title: I18n.t("reports.top_users_by_received_likes.labels.user")
+          title: I18n.t("reports.top_users_by_likes_received.labels.user")
         },
         {
           type: :number,
           property: :qtt_like,
-          title: I18n.t("reports.top_users_by_received_likes.labels.qtt_like")
+          title: I18n.t("reports.top_users_by_likes_received.labels.qtt_like")
         },
       ]
 
