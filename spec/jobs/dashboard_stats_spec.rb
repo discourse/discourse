@@ -9,7 +9,7 @@ describe ::Jobs::DashboardStats do
     Discourse.redis.del(group_message.sent_recently_key)
   end
 
-  before do
+  after do
     clear_recently_sent!
   end
 
@@ -18,35 +18,37 @@ describe ::Jobs::DashboardStats do
     expect { described_class.new.execute({}) }.not_to change { Topic.count }
 
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
-    expect { described_class.new.execute({}) }.to change { Topic.count }
+    expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
   end
 
-  it 'does not duplicate messages' do
+  it 'replaces old message' do
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
-    expect { described_class.new.execute({}) }.to change { Topic.count }
-    topic = Topic.last
+    expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
+    old_topic = Topic.last
     clear_recently_sent!
 
-    expect { described_class.new.execute({}) }.not_to change { Topic.count }
-    expect(topic.reload.deleted_at.present?).to eq(true)
+    new_topic = described_class.new.execute({}).topic
+    expect(old_topic.reload.deleted_at.present?).to eq(true)
+    expect(new_topic.reload.deleted_at).to be_nil
+    expect(new_topic.title).to eq(old_topic.title)
   end
 
   it 'duplicates message if previous one has replies' do
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
-    expect { described_class.new.execute({}) }.to change { Topic.count }
+    expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
     clear_recently_sent!
 
     _reply_1 = Fabricate(:post, topic: Topic.last)
-    expect { described_class.new.execute({}) }.to change { Topic.count }
+    expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
   end
 
   it 'duplicates message if previous was 3 months ago' do
-    freeze_time 4.months.ago do
+    freeze_time 3.months.ago do
       Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
-      expect { described_class.new.execute({}) }.to change { Topic.count }
+      expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
       clear_recently_sent!
     end
 
-    expect { described_class.new.execute({}) }.to change { Topic.count }
+    expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)
   end
 end

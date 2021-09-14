@@ -14,6 +14,8 @@ class GroupMessage
 
   include Rails.application.routes.url_helpers
 
+  RECENT_MESSAGE_PERIOD = 3.months
+
   def self.create(group_name, message_type, opts = {})
     GroupMessage.new(group_name, message_type, opts).create
   end
@@ -50,11 +52,11 @@ class GroupMessage
         archetype: Archetype.private_message,
         subtype: TopicSubtype.system_message,
         title: I18n.t("system_messages.#{@message_type}.subject_template", message_params),
-        topic_allowed_groups: { 
-          groups: { name: @group_name } 
+        topic_allowed_groups: {
+          groups: { name: @group_name }
         }
       })
-      .where("posts.created_at > ?", 3.months.ago)
+      .where("posts.created_at > ?", RECENT_MESSAGE_PERIOD.ago)
       .where(raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params).rstrip)
 
     posts.find_each do |post|
