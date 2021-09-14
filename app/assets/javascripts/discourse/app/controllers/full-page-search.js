@@ -52,7 +52,7 @@ export default Controller.extend({
     "skip_context",
     "search_type",
   ],
-  q: null,
+  q: undefined,
   selected: [],
   context_id: null,
   search_type: 0,
