@@ -20,7 +20,7 @@ hu:
         Ez a jelvényt az interaktív új felhasználói eligazítás sikeres teljesítéséért jár. Kezdeményező volt és megtanulta a beszélgetés alapvető eszközeit, és ezzel hitelesített lett!
     licensed:
       name: Hivatalos
-      description: "Teljesítette az haladó felhasználói eligazítást"
+      description: "Teljesítette a haladó felhasználói eligazítást"
       long_description: |
         Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen hivatalos lett!
   discourse_narrative_bot:
@@ -39,6 +39,9 @@ hu:
       trigger: "kockadobás"
       invalid: |-
         Sajnálom, matematikailag lehetetlen ezt a kockakombinációt dobni. :confounded:
+      not_enough_dice:
+        one: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
+        other: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
       out_of_range: |-
         Tudta, hogy a [legtöbb oldallal rendelkező](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematikailag fair kocka 120 oldalas?
       results: |-
@@ -84,7 +87,7 @@ hu:
         "2": "Határozottan így van"
         "3": "Kétségtelenül"
         "4": "Igen, határozottan"
-        "5": "Számíthatsz rá"
+        "5": "Számíthat rá"
         "6": "Ahogy látom, igen"
         "7": "Egészen valószínű"
         "8": "Jók a kilátások"
@@ -138,17 +141,17 @@ hu:
     new_user_narrative:
       reset_trigger: "eligazítás"
       title: "Új felhasználói eligazítás elvégzési tanúsítványa"
-      cert_title: "Az új felhasználói eligazítás teljesítése elismeréseképp"
+      cert_title: "Az új felhasználói eligazítás teljesítése elismeréseként"
       hello:
         title: "Üdvözlet!"
         message: |-
-          Köszönjük, hogy csatlakoztál a(z) %{title} oldalhoz, és üdvözlünk!
+          Köszönjük, hogy csatlakozott a(z) %{title} oldalhoz, és üdvözöljük!
 
-          – Én ugyan csak egy robot vagyok, de itt [a barátságos stábunkat](%{base_uri}/about) is elérheted, ha élő emberrel szeretnél beszélni.
+          - Csak egy robot vagyok, de [a barátságos stábunk](%{base_uri}/about) is itt van, hogy segítsen, ha egy emberrel kell beszélnie.
 
-          – A frissen regisztrált felhasználók jogköreit biztonsági okokból ideiglenesen korlátozzuk. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fogsz kapni, és ahogy megismerünk, egyre jobban fognak bővülni a lehetőségeid is!
+          - Biztonsági okokból ideiglenesen korlátozzuk, hogy mit tehetnek az új felhasználók. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fog kapni, ahogy megismerjük.
 
-          – Kérjük, mindig tartsd be a [civilizált közösségi viselkedés](%{base_uri}/guidelines) írott és íratlan szabályait!
+          - Mindig hiszünk a [civilizált közösségi viselkedésben](%{base_uri}/guidelines).
       onebox:
         instructions: |-
           Következőnek meg tudnád osztani velem az egyik linket? Válaszolj egy **linket magában beillesztve** , ami figyeld meg, hogy automatikusan ki fog bővülni, és beillesztve egy összefoglalót is tartalmazz majd.
@@ -166,7 +169,7 @@ hu:
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       likes:
         reply: |-
-          Köszönöm, hogy kedvelted a hozzászólásom!
+          Köszönöm, hogy kedvelte a hozzászólásom!
       formatting:
         instructions: |-
           Tudnál néhány szót ** félkövérre ** vagy _dőltre_ állítani a válaszodban?
@@ -204,21 +207,23 @@ hu:
           Sajnos nem látok könyvjelzőket ebben a témában. Megtaláltad a könyvjelzőt minden egyes bejegyzés alatt? Használd a mutass többet gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, hogy további opciókat jeleníts meg, ha szükséges.
       emoji:
         instructions: |-
-          Talán észrevetted már, hogy kis képeket használok a válaszaimban :blue_car::dash:. Ezeket [emoji]nak hívják (https://en.wikipedia.org/wiki/Emoji). Megpróbálnál **hozzáadni egy hangulatjelet ** a válaszodhoz? Ezek közül bármelyikkel működni fog:
+          Talán észrevette már, hogy kis képeket használok a válaszaimban :blue_car::dash:. Ezeket [emodzsinak](https://hu.wikipedia.org/wiki/Emodzsi) hívják. Megpróbálna **hozzáadni egy emodzsit** a válaszához? Ezek közül bármelyikkel működni fog:
 
-          - Írd be így: `:);): D: P: O`
+          - Írja be így: `:) ;): D: P: O`
 
-          - Írj kettőspontot <kbd>:</kbd> , majd írd be az emoji nevét `:tada:`
+          - Írjon kettőspontot <kbd>:</kbd> , majd írd be az emodzsi nevét `:tada:`
 
-          - nyomd meg az emoji-gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> a szerkesztőben, vagy a mobilod billentyűzetén!
+          - Nyomja meg az emodzsi gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> a szerkesztőben, vagy a mobilja billentyűzetén
+        reply: |-
+          Ez :sparkles: _emodzsitasztikus!_ :sparkles:
         not_found: |-
-          Upsz, nem látok hangulatjelet a válaszodban... Jaj, ne! :sob:
+          Hoppá, nem látok emodzsit a válaszában. Jaj, ne! :sob:
 
-          Próbálj beírni egy kettőspontot <kbd>:</kbd> az emoji kiválasztó előhívásához, majd írd be a kívánt emoji első néhány betűjét, például: ':bird:'
+          Próbáljon beírni egy kettőspontot <kbd>:</kbd> az emodzsi kiválasztó előhívásához, majd írjad be a kívánt emodzsi első néhány betűjét, például: ':bird:'
 
-          Vagy nyomd meg a szerkesztőben az emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> gombot.
+          Vagy nyomja meg a szerkesztőben az emodzsi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> gombot.
 
-          (Ha mobileszközön vagy, akkor közvetlenül a billentyűzetről is beírhatod az emojit.)
+          (Ha mobileszközön van, akkor közvetlenül a billentyűzetről is beírhatja az emodzsit.)
       mention:
         instructions: |-
           Néha fel akarhatod hívni valakinek a figyelmét a válaszodra még akkor is, ha nem kifejezetten neki válaszolsz. Ilyenkore írj be egy „@”-t, majd add meg a felhasználónevét, az említéshez.
@@ -231,11 +236,11 @@ hu:
           [Munkatársainkat](%{base_uri}/groups/staff) privát módon értesítjük a bejelentésedről. Ha elegendő közösségi tag megjelöl egy bejegyzést, az elővigyázatosságból automatikusan el is lesz rejtve. (Mivel valójában nem írtam egy csúnya bejegyzést :angel:, ezért egyelőre eltávolítottam a zászlót.)
       search:
         hidden_message: |-
-          Hogyan is hagyhattad ki ezt a vízidisznót? :wink:
+          Hogyan is hagyhatta ki ezt a vízidisznót? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Észrevetted, hogy most újra az elején vagy? Etesd meg ezt a szegény éhes vízidisznót azzal, hogy ** válaszolsz a `%{search_answer}` emoji elküldésével ** és máris automatikusan a végére ugorharsz!
+          Észrevette, hogy most újra az elején van? Etesse meg ezt a szegény éhes vízidisznót azzal, hogy **ezzel `%{search_answer}` az emodzsival válaszol**, és így automatikusan a végére ugorhat!
       end:
         message: |-
           Köszönöm, hogy velem tartottál @%{username}! Ezt neked készítettem, azt hiszem, kiérdemelted:

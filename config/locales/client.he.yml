@@ -160,6 +160,8 @@ he:
       previous_month: "חודש קודם"
       next_month: "חודש הבא"
       placeholder: תאריך
+      from_placeholder: "מתאריך"
+      to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber}"
@@ -424,6 +426,7 @@ he:
         placeholder: "נא להקליד כאן את כותרת ההודעה, הכתובת או את המזהה"
     review:
       order_by: "סידור לפי"
+      date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
       explain:
         why: "נא להסביר למה הפריט הזה הגיע לתור"
@@ -1072,7 +1075,9 @@ he:
       use_current_timezone: "להשתמש באזור הזמן הנוכחי"
       profile_hidden: "הפרופיל הציבורי של משתמש זה מוסתר"
       expand_profile: "הרחב"
+      sr_expand_profile: "הרחבת פרטי הפרופיל"
       collapse_profile: "הקטן"
+      sr_collapse_profile: "צמצום פרטי הפרופיל"
       bookmarks: "סימניות"
       bio: "אודותיי"
       timezone: "אזור זמן"

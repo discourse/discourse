@@ -94,6 +94,8 @@ ko:
       previous_month: "지난 달"
       next_month: "다음 달"
       placeholder: 날짜
+      from_placeholder: "시작 날짜"
+      to_placeholder: "현재까지"
     share:
       topic_html: '글: <span class="topic-title">%{topicTitle}</span>'
       post: "댓글 #%{postNumber}"
@@ -334,6 +336,7 @@ ko:
         placeholder: "여기에 글 제목, URL 또는 ID를 입력하십시오"
     review:
       order_by: "정렬"
+      date_filter: "작성된 기간"
       in_reply_to: "다음에 댓글"
       explain:
         why: "이 항목이 대기열에있는 이유 설명"
@@ -922,7 +925,9 @@ ko:
       use_current_timezone: "현재 시간대 사용"
       profile_hidden: "이 사용자의 프로필은 비공개 상태입니다."
       expand_profile: "확장"
+      sr_expand_profile: "프로필 세부정보 펼치기"
       collapse_profile: "축소"
+      sr_collapse_profile: "프로필 세부정보 축소"
       bookmarks: "북마크"
       bio: "내 소개"
       timezone: "시간대"

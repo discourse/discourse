@@ -1,4 +1,4 @@
-name: Ember CLI tests
+name: (experimental) Ember CLI tests
 
 on:
   pull_request:
@@ -6,15 +6,19 @@ on:
     branches:
       - main
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
   build:
     name: run
-    if: true
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ["Chrome", "Firefox", "Headless Firefox"]
 
     steps:
       - uses: actions/checkout@master
@@ -41,7 +45,13 @@ jobs:
 
       - name: Official Plugins Install
         if: ${{ github.event_name == 'schedule' }}
-        run: sudo -E -u discourse -H bundle exec rake plugin:install_all_official
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+          bundle exec rake plugin:install_all_official
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
@@ -49,5 +59,5 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember test
+        run: sudo -E -u discourse -H yarn ember test --launch "${{ matrix.browser }}"
         timeout-minutes: 60

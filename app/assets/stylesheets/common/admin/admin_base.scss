@@ -556,50 +556,37 @@ $mobile-breakpoint: 700px;
       }
     }
   }
-  .controls .menu-toggle {
-    display: none;
-    float: left;
-    padding: 5px 10px;
-    margin-right: 15px;
-    border: 1px solid var(--primary-medium);
+  .menu-toggle {
+    border-color: var(--primary-medium);
     border-radius: 3px;
     background: transparent;
     color: var(--primary);
     &:hover {
       background-color: var(--primary-low-mid);
     }
-    @media (max-width: $mobile-breakpoint) {
-      display: inline-block;
+
+    .not-mobile-device & {
+      display: none;
     }
   }
-  button {
-    margin-right: 5px;
-  }
-  input[type="text"] {
-    display: inline-block;
-    float: left;
-  }
+
   .result-message {
     display: inline-block;
     padding-left: 10px;
   }
-  .username {
-    input[type="text"] {
-      width: 240px;
-    }
-  }
+
   .search {
     label {
-      margin-top: 5px;
+      margin-bottom: 0px;
     }
-    .controls {
-      margin-left: 0;
-    } // Hide the search checkbox for very small screens
+
+    // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
     @media (max-width: 550px) {
       display: none;
     }
   }
+
   .toggle {
     span {
       font-weight: bold;
@@ -609,14 +596,6 @@ $mobile-breakpoint: 700px;
     display: inline-block;
     margin-right: 5px;
   }
-  .pull-right {
-    padding-right: 10px;
-  }
-}
-
-.paste-users {
-  width: 400px;
-  height: 150px;
 }
 
 .groups,

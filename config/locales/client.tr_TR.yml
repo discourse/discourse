@@ -116,6 +116,7 @@ tr_TR:
       previous_month: "Önceki Ay"
       next_month: "Sonraki Ay"
       placeholder: tarih
+      to_placeholder: "şimdiye kadar"
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "gönderi #%{postNumber}"
@@ -973,7 +974,9 @@ tr_TR:
       use_current_timezone: "Mevcut Saat Dilimini Kullan"
       profile_hidden: "Bu kullanıcının genel profili gizli."
       expand_profile: "Genişlet"
+      sr_expand_profile: "Profil detaylarını göster"
       collapse_profile: "Daralt"
+      sr_collapse_profile: "Profil detaylarını gizle"
       bookmarks: "İşaretlenenler"
       bio: "Hakkımda"
       timezone: "Saat dilimi"
