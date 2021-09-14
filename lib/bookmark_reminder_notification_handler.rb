@@ -33,7 +33,7 @@ class BookmarkReminderNotificationHandler
     user = bookmark.user
     user.notifications.create!(
       notification_type: Notification.types[:bookmark_reminder],
-      topic_id: bookmark.topic.id,
+      topic_id: bookmark.topic_id,
       post_number: bookmark.post.post_number,
       data: {
         topic_title: bookmark.topic.title,

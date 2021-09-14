@@ -7,8 +7,8 @@ class Bookmark < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :post
+  has_one :topic, through: :post
 
-  delegate :topic, to: :post
   delegate :topic_id, to: :post
 
   def self.reminder_types
@@ -119,10 +119,15 @@ class Bookmark < ActiveRecord::Base
   def self.count_per_day(opts = nil)
     opts ||= {}
     result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
-    result = result.where('bookmarks.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins("INNER JOIN posts ON posts.id = bookmarks.post_id AND posts.deleted_at IS NULL")
-      .joins("INNER JOIN topics ON topics.id = posts.topic_id AND topics.deleted_at IS NULL")
-      .merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
+
+    if opts[:end_date]
+      result = result.where('bookmarks.created_at <= ?', opts[:end_date])
+    end
+
+    if opts[:category_id]
+      result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id]))
+    end
+
     result.group('date(bookmarks.created_at)')
       .order('date(bookmarks.created_at)')
       .count

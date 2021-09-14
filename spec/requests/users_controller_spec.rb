@@ -5062,8 +5062,8 @@ describe UsersController do
     end
 
     it "returns an .ics file of bookmark reminders for the user in date order" do
-      bookmark1.update(name: nil, reminder_at: 1.day.from_now)
-      bookmark2.update(name: "Some bookmark note", reminder_at: 1.week.from_now)
+      bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+      bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
 
       sign_in(user)
       get "/u/#{user.username}/bookmarks.ics"

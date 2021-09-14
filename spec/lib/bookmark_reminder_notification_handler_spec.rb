@@ -20,7 +20,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       subject.send_notification(bookmark)
       notif = bookmark.user.notifications.last
       expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
-      expect(notif.topic_id).to eq(bookmark.topic.id)
+      expect(notif.topic_id).to eq(bookmark.topic_id)
       expect(notif.post_number).to eq(bookmark.post.post_number)
       data = JSON.parse(notif.data)
       expect(data["topic_title"]).to eq(bookmark.topic.title)
