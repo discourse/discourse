@@ -2,8 +2,9 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   model() {
-    let userDraftsStream = this.modelFor("user").get("userDraftsStream");
-    return userDraftsStream.load(this.site).then(() => userDraftsStream);
+    const model = this.modelFor("user").get("userDraftsStream");
+    model.reset();
+    return model.findItems(this.site).then(() => model);
   },
 
   renderTemplate() {
