@@ -115,6 +115,7 @@ pt:
       previous_month: "Mês Anterior"
       next_month: "Próximo Mês"
       placeholder: data
+      to_placeholder: "ir para data"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "publicação #%{postNumber}"

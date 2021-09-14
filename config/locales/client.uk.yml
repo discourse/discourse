@@ -159,6 +159,7 @@ uk:
       previous_month: "Попередній місяць"
       next_month: "Наступний місяць"
       placeholder: дата
+      to_placeholder: "дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "допис #%{postNumber}"

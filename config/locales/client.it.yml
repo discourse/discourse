@@ -116,6 +116,8 @@ it:
       previous_month: "Mese Precedente"
       next_month: "Mese Prossimo"
       placeholder: data
+      from_placeholder: "dalla data"
+      to_placeholder: "ad oggi"
     share:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber}"
@@ -362,6 +364,7 @@ it:
         placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
     review:
       order_by: "Ordina per"
+      date_filter: "Pubblicato tra"
       in_reply_to: "in risposta a"
       explain:
         why: "spiega perché questo oggetto è stato aggiunto alla coda"
@@ -969,7 +972,9 @@ it:
       use_current_timezone: "Usa Fuso Orario Corrente"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
+      sr_expand_profile: "Espandi i dettagli del profilo"
       collapse_profile: "Comprimi"
+      sr_collapse_profile: "Comprimi i dettagli del profilo"
       bookmarks: "Segnalibri"
       bio: "Info su di me"
       timezone: "Fuso orario"
@@ -4573,6 +4578,7 @@ it:
         logged_out: "L'utente è stato disconnesso da tutti i terminali"
         revoke_admin: "Revoca privilegi di amministrazione"
         grant_admin: "Assegna privilegi di amministrazione"
+        grant_admin_success: "Nuovo amministratore confermato."
         grant_admin_confirm: "Ti abbiamo inviato una email per verificare il nuovo amministratore. Per favore aprila e segui le istruzioni."
         revoke_moderation: "Revoca diritti di moderazione"
         grant_moderation: "Assegna diritti di moderazione"

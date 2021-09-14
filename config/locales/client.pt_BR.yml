@@ -116,6 +116,7 @@ pt_BR:
       previous_month: "Mês anterior"
       next_month: "Próximo mês"
       placeholder: data
+      to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber}"

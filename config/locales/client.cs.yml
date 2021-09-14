@@ -154,6 +154,7 @@ cs:
       previous_month: "Předchozí měsíc"
       next_month: "Další měsíc"
       placeholder: datum
+      to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek #%{postNumber}"

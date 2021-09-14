@@ -160,6 +160,7 @@ pl_PL:
       previous_month: "Poprzedni miesiąc"
       next_month: "Następny miesiąc"
       placeholder: data
+      to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
