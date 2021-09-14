@@ -191,7 +191,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.equal(
-      queryAll(".modal-header").text().trim(),
+      queryAll(".modal-header .title").text().trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
@@ -212,8 +212,9 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-message-button");
 
     assert.equal(count("#reply-control"), 1, "it opens the composer");
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      queryAll("#private-message-users .selected-name").text().trim(),
+      privateMessageUsers.header().value(),
       "discourse",
       "it prefills the group name"
     );

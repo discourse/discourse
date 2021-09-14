@@ -85,6 +85,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         const textarea = jumpEnd(query("textarea.d-editor-input"));
         testFunc.call(this, assert, textarea);
       },
+      skip: !navigator.userAgent.includes("Chrome"),
     });
   }
 

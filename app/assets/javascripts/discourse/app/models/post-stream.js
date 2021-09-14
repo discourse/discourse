@@ -1076,9 +1076,7 @@ export default RestModel.extend({
     const store = this.store;
 
     return ajax(url, { data }).then((result) => {
-      if (result.suggested_topics) {
-        this.set("topic.suggested_topics", result.suggested_topics);
-      }
+      this._setSuggestedTopics(result);
 
       const posts = get(result, "post_stream.posts");
 
@@ -1124,9 +1122,7 @@ export default RestModel.extend({
       data,
       headers,
     }).then((result) => {
-      if (result.suggested_topics) {
-        this.set("topic.suggested_topics", result.suggested_topics);
-      }
+      this._setSuggestedTopics(result);
 
       const posts = get(result, "post_stream.posts");
 
@@ -1244,5 +1240,18 @@ export default RestModel.extend({
         });
       }
     }
+  },
+
+  _setSuggestedTopics(result) {
+    if (!result.suggested_topics) {
+      return;
+    }
+
+    this.topic.setProperties({
+      suggested_topics: result.suggested_topics,
+      suggested_group_name: result.suggested_group_name,
+    });
+
+    this.pmTopicTrackingState.startTracking();
   },
 });

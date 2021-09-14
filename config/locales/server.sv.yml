@@ -265,6 +265,7 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   authenticator_not_found: "Autentiseringsmetod finns inte eller har inaktiverats."
+  authenticator_no_connect: "Denna autentiseringsleverantör tillåter inte anslutning till ett befintligt forumkonto."
   invalid_api_credentials: "Du har inte behörighet att se den begärda resursen. API-användarnamnet eller -nyckeln är ogiltig(t)."
   provider_not_enabled: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören är inte aktiverad."
   provider_not_found: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören finns inte."
@@ -482,14 +483,7 @@ sv:
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
-    get_a_room: |
-      ### Uppmuntra alla att delta i samtalet
-
-      Du svarade @%{reply_username} %{count} gånger i just detta ämne!
-
-      En riktigt bra diskussion involverar flera röster och perspektiv. Kan du få någon annan involverad?
-
-      Glöm inte att om du vill fortsätta diskussionen med just denna användare, utan att alla andra ser det, kan du [skicka ett personligt meddelande](%{base_path}/u/%{reply_username}).
+    get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
 
@@ -1353,6 +1347,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
+    disabled: "inaktiverade"
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -1662,6 +1657,7 @@ sv:
     external_emoji_url: "URL till den externa tjänsten för emoji-bilder. Lämna tomt om du vill inaktivera den."
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
+    enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
@@ -3388,6 +3384,11 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    create_mutlipart_failure: "Det gick inte att skapa uppladdning med flera delar i den externa butiken."
+    abort_mutlipart_failure: "Det gick inte att avbryta uppladdning med flera delar i den externa butiken."
+    complete_mutlipart_failure: "Det gick inte att slutföra uppladdning med flera delar i den externa butiken."
+    external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
@@ -4028,17 +4029,34 @@ sv:
           city_for_disputes:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
-      colors:
-        title: "Färger"
-      fonts:
-        title: "Typsnitt"
+      styling:
+        title: "Formatering"
         fields:
+          color_scheme:
+            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:
             label: "Typsnitt för rubrik"
-          font_preview:
+          styling_preview:
             label: "Förhandsgranska"
+          homepage_style:
+            label: "Hemsidans stil"
+            choices:
+              latest:
+                label: "Senaste ämnen"
+              categories_only:
+                label: "Endast kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med utvalda ämnen"
+              categories_and_latest_topics:
+                label: "Kategorier med senaste ämnen"
+              categories_and_top_topics:
+                label: "Kategorier och toppämnen"
+              categories_boxes:
+                label: "Kategorilådor"
+              categories_boxes_with_topics:
+                label: "Kategorilådor med ämnen"
       logos:
         title: "Logotyper"
         fields:
@@ -4057,26 +4075,6 @@ sv:
           large_icon:
             label: "Stor ikon"
             description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
-      homepage:
-        description: "Vi rekommenderar att du visar de senaste ämnena på din hemsida, men du kan också visa kategorier (grupper av ämnen) där, om du föredrar det."
-        title: "Hemsida"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategorilådor"
-              categories_boxes_with_topics:
-                label: "Kategorilådor med ämnen"
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

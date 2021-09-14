@@ -509,6 +509,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/private-message-topic-tracking-state" => "users#private_message_topic_tracking_state", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
       put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
@@ -541,8 +542,15 @@ Discourse::Application.routes.draw do
     post "uploads" => "uploads#create"
     post "uploads/lookup-urls" => "uploads#lookup_urls"
 
-    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put"
-    post "uploads/complete-external-upload" => "uploads#complete_external_upload"
+    # direct to s3 uploads
+    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put", format: :json
+    post "uploads/complete-external-upload" => "uploads#complete_external_upload", format: :json
+
+    # multipart uploads
+    post "uploads/create-multipart" => "uploads#create_multipart", format: :json
+    post "uploads/complete-multipart" => "uploads#complete_multipart", format: :json
+    post "uploads/abort-multipart" => "uploads#abort_multipart", format: :json
+    post "uploads/batch-presign-multipart-parts" => "uploads#batch_presign_multipart_parts", format: :json
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
@@ -879,10 +887,7 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: [:index]
-    get "draft" => "draft#show"
-    post "draft" => "draft#update"
-    delete "draft" => "draft#destroy"
+    resources :drafts, only: [:index, :create, :show, :destroy]
 
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
@@ -997,6 +1002,9 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
+
+    post "/presence/update" => "presence#update"
+    get "/presence/get" => "presence#get"
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

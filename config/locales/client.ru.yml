@@ -201,6 +201,7 @@ ru:
         disabled: "Удалил объявление %{when}. Оно больше не будет отображаться в верхней части каждой страницы."
       forwarded: "Переадресовал вышеуказанное письмо"
     topic_admin_menu: "Действия администратора над темой"
+    skip_to_main_content: "Перейти к основному контенту"
     wizard_required: "Добро пожаловать в ваш новый Discourse! Начните с <a href='%{url}' data-auto-route='true'>мастера настройки</a> ✨"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
     software_update_prompt:
@@ -366,6 +367,11 @@ ru:
         yes_value: "Удалить"
         no_value: "Возобновить редактирование"
     topic_count_latest:
+      one: "Есть %{count} новая или обновлённая тема"
+      few: "Есть %{count} новых или обновлённых темы"
+      many: "Есть %{count} новых или обновлённых тем"
+      other: "Есть %{count} новых или обновлённых тем"
+    topic_count_unseen:
       one: "Есть %{count} новая или обновлённая тема"
       few: "Есть %{count} новых или обновлённых темы"
       many: "Есть %{count} новых или обновлённых тем"
@@ -908,14 +914,14 @@ ru:
         muted:
           title: "Выключено"
           description: "Вы не будете получать уведомления о сообщениях в этой группе."
-      flair_url: "Иконка на аватаре"
+      flair_url: "Иконка флаера"
       flair_upload_description: "Используйте квадратные картинки размером не менее чем 20х20 пикселей."
-      flair_bg_color: "Фоновый цвет аватара"
+      flair_bg_color: "Фоновый цвет флаера"
       flair_bg_color_placeholder: "(Необязательно) Hex-код цвета"
-      flair_color: "Цвет аватара"
+      flair_color: "Цвет флаера"
       flair_color_placeholder: "(Необязательно) Hex-код цвета"
-      flair_preview_icon: "Иконка предпросмотра"
-      flair_preview_image: "Изображение предпросмотра"
+      flair_preview_icon: "Предпросмотр иконки"
+      flair_preview_image: "Предпросмотр изображения"
       flair_type:
         icon: "Выбрать иконку"
         image: "Загрузить картинку"
@@ -1023,6 +1029,7 @@ ru:
           all: "Все"
           read: "Прочитанные"
           unread: "Непрочитанные"
+          unseen: "Непросмотренные"
         ignore_duration_title: "Игнорировать пользователя"
         ignore_duration_username: "Псевдоним"
         ignore_duration_when: "Продолжительность:"
@@ -1093,9 +1100,13 @@ ru:
       no_bookmarks_title: "Вы ещё ничего не добавили в закладки"
       no_bookmarks_body: >
         Начните добавлять сообщения в закладки с помощью кнопки %{icon} , и они будут перечислены здесь для быстрого доступа. Вы также можете настроить напоминание о закладке!
+      no_bookmarks_search: "По заданному поисковому запросу закладок не обнаружено."
       no_notifications_title: "У вас пока нет уведомлений"
       no_notifications_body: >
         На этой странице будут отображаться уведомления о любой активности на форуме, имеющей прямое отношение к вам, включая: ответы на ваши темы и сообщения, <b>@ упоминание</b> или цитирование вас в сообщениях, ответы на темы, которые вы отслеживаете. Уведомления будут отправляться на вашу электронную почту, если вы какое-то время не входили в систему. <br><br> Используйте иконку %{icon}, чтобы решить, о каких темах, категориях и тегах вы хотите получать уведомления. Дополнительные параметры доступны в <a href='%{preferencesUrl}'>настройках пользователя</a>.
+      no_notifications_page_title: "У вас пока нет уведомлений"
+      no_notifications_page_body: >
+        Вы будете получать уведомления о любой активности на форуме, имеющей отношение к вам, включая: ответы на темы, которые вы отслеживаете, <b>@ упоминания</b> вас в сообщениях или ответы на ваши сообщения. Уведомления также будут отправляться на вашу электронную почту, если вы какое-то время не входили в систему. <br><br> Используйте иконку %{icon}, чтобы решить, за какими темами, категориями и тегами вы хотите наблюдать или следить, а какие наоборот - оставить без уведомлений. Дополнительные параметры уведомлений доступны в <a href='%{preferencesUrl}'>настройках пользователя</a>.
       first_notification: "Ваше первое уведомление! Выберите его, чтобы начать."
       dynamic_favicon: "Показывать количество на значке браузера"
       skip_new_user_tips:
@@ -1204,7 +1215,17 @@ ru:
         latest: "Последние"
         sent: "Отправленные"
         unread: "Непрочитанные"
+        unread_with_count:
+          one: "Непрочитанные (%{count})"
+          few: "Непрочитанные (%{count})"
+          many: "Непрочитанные (%{count})"
+          other: "Непрочитанные (%{count})"
         new: "Новые"
+        new_with_count:
+          one: "Новые (%{count})"
+          few: "Новые (%{count})"
+          many: "Новые (%{count})"
+          other: "Новые (%{count})"
         archive: "Архив"
         groups: "Мои группы"
         move_to_inbox: "Переместить во входящие"
@@ -1212,6 +1233,10 @@ ru:
         failed_to_move: "Невозможно переместить выделенные сообщения (возможно, у вас проблемы с сетевым подключением)"
         tags: "Теги"
         warnings: "Официальные предупреждения"
+        read_more_in_group: "Хотите узнать больше? Просмотрите другие сообщения в группе %{groupLink}."
+        read_more: "Хотите узнать больше? Просмотрите другие сообщения в разделе <a href='%{basePath}/u/%{username}/messages/personal'>'Личные сообщения'</a>."
+        read_more_group_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений} }, вы также можете посмотреть другие сообщения в группе {groupLink}"
+        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новое</a> личное сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новых</a> личных сообщения} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новых</a> личных сообщений} }, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages/personal'>личные сообщения</a>"
       preferences_nav:
         account: "Учётная запись"
         security: "Безопасность"
@@ -1377,6 +1402,7 @@ ru:
         not_connected: "(не подключённый)"
         confirm_modal_title: "Подключить аккаунт %{provider}"
         confirm_description:
+          disconnect: "Ваш существующий %{provider}-аккаунт '%{account_description}' будет отключён."
           account_specific: "Ваш аккаунт %{provider} '%{account_description}' будет использоваться для аутентификации."
           generic: "Ваш аккаунт %{provider} будет использоваться для аутентификации."
       name:
@@ -1663,9 +1689,9 @@ ru:
         none: "(нет)"
         instructions: "Отображается после имени пользователя"
       flair:
-        title: "Иконка"
+        title: "Флаер"
         none: "(нет)"
-        instructions: "Иконка, появляющаяся рядом с изображением вашего профиля"
+        instructions: "Иконка, появляющаяся в правой нижней части изображения вашего профиля"
       primary_group:
         title: "Основная группа"
         none: "(нет)"
@@ -1779,6 +1805,7 @@ ru:
       disclaimer: "Регистрируясь, вы соглашаетесь с <a href='%{privacy_link}' target='blank'>политикой конфиденциальности</a> и <a href='%{tos_link}' target='blank'> условиями предоставления услуг</a>."
       title: "Создать учётную запись"
       failed: "Произошла ошибка. Возможно, этот Email уже используется. Попробуйте восстановить пароль"
+      associate: "Уже есть учётная запись? <a href='%{associate_link}'>Войдите в систему</a> для привязки вашей учётной записи %{provider}."
     forgot_password:
       title: "Сброс пароля"
       action: "Я забыл свой пароль"
@@ -1856,21 +1883,27 @@ ru:
       google_oauth2:
         name: "Google"
         title: "Google"
+        sr_title: "Войти через Google"
       twitter:
         name: "Twitter"
         title: "Twitter"
+        sr_title: "Войти через Twitter"
       instagram:
         name: "Instagram"
         title: "Instagram"
+        sr_title: "Войти через Instagram"
       facebook:
         name: "Facebook"
         title: "Facebook"
+        sr_title: "Войти через Facebook"
       github:
         name: "GitHub"
         title: "GitHub"
+        sr_title: "Войти через GitHub"
       discord:
         name: "Discord"
         title: "Discord"
+        sr_title: "Войти через Discord"
       second_factor_toggle:
         totp: "Вместо этого используйте приложение для проверки подлинности"
         backup_code: "Вместо этого используйте резервный код"
@@ -1926,10 +1959,16 @@ ru:
         many: "+ %{count} подразделов"
         other: "+ %{count} подразделов"
     select_kit:
+      delete_item: "Удалить %{name}"
       filter_by: "Фильтровать по: %{name}"
       select_to_filter: "Выберите значение для фильтра"
       default_header_text: Выбрать...
       no_content: Совпадений не найдено
+      results_count:
+        one: "%{count} результат"
+        few: "%{count} результата"
+        many: "%{count} результатов"
+        other: "%{count} результатов"
       filter_placeholder: Поиск...
       filter_placeholder_with_any: Найти или создать...
       create: "Создать: '%{content}'"
@@ -2401,6 +2440,7 @@ ru:
           other: "Выполнено: <strong>%{count}</strong> тем"
       none:
         unread: "У вас нет непрочитанных тем."
+        unseen: "У вас нет непросмотренных тем."
         new: "У вас нет новых тем."
         read: "Вы ещё не прочитали ни одной темы."
         posted: "Вы ещё не принимали участие в обсуждении."
@@ -2417,6 +2457,7 @@ ru:
         read: "Прочитанных тем больше нет."
         new: "Новых тем больше нет."
         unread: "Непрочитанных тем больше нет."
+        unseen: "Больше нет непросмотренных тем."
         category: "В разделе %{category} больше нет тем."
         tag: "Нет больше тем, помеченных тегом %{tag}."
         top: "Обсуждаемых тем больше нет."
@@ -3408,7 +3449,8 @@ ru:
       many: "пользователей"
       other: "пользователей"
     category_title: "Раздел"
-    history: "История, последние 100 изменений"
+    history_capped_revisions: "История, последние 100 изменений"
+    history: "История"
     changed_by: "автором %{author}"
     raw_email:
       title: "Входящее сообщение"
@@ -3445,6 +3487,10 @@ ru:
           few: "%{count} непрочитанных"
           many: "%{count} непрочитанных"
           other: "%{count} непрочитанных"
+      unseen:
+        title: "Непросмотренные"
+        lower_title: "непросмотренные"
+        help: "Новые темы, а также наблюдаемые или отслеживаемые темы с непрочитанными сообщениями"
       new:
         lower_title_with_count:
           one: "%{count} новая"
@@ -3757,6 +3803,7 @@ ru:
       topics:
         none:
           unread: "Нет непрочитанных тем."
+          unseen: "У вас нет непросмотренных тем."
           new: "Нет новых тем."
           read: "Вы ещё не прочитали ни одной темы."
           posted: "Вы ещё не принимали участие ни в одной теме."
@@ -3935,7 +3982,7 @@ ru:
               description: "Администраторы могут видеть все группы."
             members_visibility_levels:
               title: "Кто может видеть участников этой группы?"
-              description: "Администраторы могут видеть участников всех групп."
+              description: "Администраторы могут видеть участников всех групп. Флаер виден всем пользователям."
             publish_read_state: "В сообщениях группы публиковать состояние чтения группы"
           membership:
             automatic: Автоматическая
@@ -4853,8 +4900,6 @@ ru:
         silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"
         suspended_until: "(заморожен до %{until})"
         cant_suspend: "Этого пользователя нельзя заморозить."
-        delete_all_posts: "Удалить все сообщения"
-        delete_posts_progress: "Удаление сообщений..."
         delete_posts_failed: "При удалении сообщений возникла ошибка."
         post_edits: "Отредактированные сообщения"
         view_edits: "Просмотр правок"
@@ -4921,8 +4966,21 @@ ru:
         anonymize_failed: "Не удалось анонимизировать учётную запись."
         delete: "Удалить пользователя"
         delete_posts:
+          button: "Удалить все сообщения"
           progress:
             title: "Удаление сообщений"
+            description: "Удаление сообщений..."
+          confirmation:
+            title: "Удалить все сообщения от пользователя @%{username}"
+            description: |
+              <p>Вы действительно хотите удалить <b>%{post_count}</b> сообщений от пользователя @%{username}?
+
+              <p><b>Это действие нельзя отменить!</b></p>
+
+              <p>Для продолжения наберите: <code>%{text}</code></p>
+            text: "удалить все сообщения от пользователя @%{username}"
+            delete: "Удалить все сообщения от пользователя @%{username}"
+            cancel: "Отменить"
         merge:
           button: "Объединить пользователей"
           prompt:
@@ -5343,7 +5401,8 @@ ru:
           moderator: "Модератор"
           regular: "Активный пользователь"
       previews:
-        topic_title: "Тема обсуждения"
-        font_title: "Шрифт %{font}"
+        topic_title: "Заголовок темы"
         share_button: "Поделиться"
         reply_button: "Ответить"
+        topic_preview: "Предпросмотр темы"
+        homepage_preview: "Предпросмотр главной страницы"

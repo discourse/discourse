@@ -26,12 +26,12 @@ const Wizard = EmberObject.extend({
 
   // A bit clunky, but get the current colors from the appropriate step
   getCurrentColors(schemeId) {
-    const colorStep = this.steps.findBy("id", "colors");
+    const colorStep = this.steps.findBy("id", "styling");
     if (!colorStep) {
       return this.current_color_scheme;
     }
 
-    const themeChoice = colorStep.get("fieldsById.theme_previews");
+    const themeChoice = colorStep.get("fieldsById.color_scheme");
     if (!themeChoice) {
       return;
     }
@@ -55,7 +55,7 @@ const Wizard = EmberObject.extend({
   },
 
   getCurrentFont(fontId, type = "body_font") {
-    const fontsStep = this.steps.findBy("id", "fonts");
+    const fontsStep = this.steps.findBy("id", "styling");
     if (!fontsStep) {
       return;
     }

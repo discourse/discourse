@@ -201,6 +201,7 @@ he:
         disabled: "באנר זה הוסר ב־%{when}. הוא לא יופיע יותר בראש כל דף."
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
+    skip_to_main_content: "דילוג לתוכן הראשי"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     software_update_prompt:
@@ -366,6 +367,11 @@ he:
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
     topic_count_latest:
+      one: "הצגת נושא %{count} חדש או עדכני"
+      two: "הצגת %{count} נושאים חדשים או עדכניים"
+      many: "הצגת %{count} נושאים חדשים או עדכניים"
+      other: "הצגת %{count} נושאים חדשים או עדכניים"
+    topic_count_unseen:
       one: "הצגת נושא %{count} חדש או עדכני"
       two: "הצגת %{count} נושאים חדשים או עדכניים"
       many: "הצגת %{count} נושאים חדשים או עדכניים"
@@ -1093,7 +1099,9 @@ he:
       no_bookmarks_title: "עדיין לא הוספת שום דבר לסימניות"
       no_bookmarks_body: >
         ניתן להתחיל להוסיף פוסטים לסימניות עם הכפתור %{icon} והן תופענה כאן לפנייה בקלות. ניתן גם לתזמן תזכורת!
+      no_bookmarks_search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
       no_notifications_title: "אין לך התראות עדיין"
+      no_notifications_page_title: "אין לך התראות עדיין"
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       skip_new_user_tips:
@@ -1202,7 +1210,17 @@ he:
         latest: "אחרונות"
         sent: "נשלח"
         unread: "טרם נקראו"
+        unread_with_count:
+          one: "לא נקראה (%{count})"
+          two: "לא נקראה (%{count})"
+          many: "לא נקראה (%{count})"
+          other: "לא נקראה (%{count})"
         new: "חדשות"
+        new_with_count:
+          one: "חדש (%{count})"
+          two: "חדש (%{count})"
+          many: "חדש (%{count})"
+          other: "חדש (%{count})"
         archive: "ארכיון"
         groups: "הקבוצות שלי"
         move_to_inbox: "העברה לדואר נכנס"
@@ -1210,6 +1228,8 @@ he:
         failed_to_move: "בעיה בהעברת ההודעות שנבחרו (אולי יש תקלה בהתחברות?)"
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
+        read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
+        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages/personal'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -1375,6 +1395,7 @@ he:
         not_connected: "(לא מחובר)"
         confirm_modal_title: "חיבור חשבון %{provider}"
         confirm_description:
+          disconnect: "חשבון %{provider} הקיים שלך ‚%{account_description}’ ינותק."
           account_specific: "החשבון שלך ‚%{account_description}’ ב־%{provider} ישמש לאימות."
           generic: "החשבון של אצל %{provider} ישמש לאימות."
       name:
@@ -1772,6 +1793,7 @@ he:
       disclaimer: "עצם הרשמתך מביעה את הסכמתך ל<a href='%{privacy_link}' target='blank'>מדיניות הפרטיות</a> ול<a href='%{tos_link}' target='blank'>תנאי השירות</a>."
       title: "יצירת חשבון משלך"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
+      associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
     forgot_password:
       title: "אתחול סיסמה"
       action: "שכחתי את ססמתי"
@@ -1849,21 +1871,27 @@ he:
       google_oauth2:
         name: "Google"
         title: "עם Google"
+        sr_title: "כניסה עם Google"
       twitter:
         name: "Twitter"
         title: "עם Twitter"
+        sr_title: "כניסה עם טוויטר"
       instagram:
         name: "Instagram"
         title: "עם אינסטגרם"
+        sr_title: "כניסה עם אינסטגרם"
       facebook:
         name: "Facebook"
         title: "עם Facebook"
+        sr_title: "כניסה עם פייסבוק"
       github:
         name: "GitHub"
         title: "עם GitHub"
+        sr_title: "כניסה עם GitHub"
       discord:
         name: "Discord"
         title: "עם Discord"
+        sr_title: "כניסה עם Discord"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"
@@ -1919,10 +1947,16 @@ he:
         many: "+ %{count} תת־קטגוריות"
         other: "+ %{count} תת־קטגוריות"
     select_kit:
+      delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
       select_to_filter: "נא לבחור ערך לסינון"
       default_header_text: בחירה…
       no_content: לא נמצאו התאמות
+      results_count:
+        one: "תוצאה %{count}"
+        two: "%{count} תוצאות"
+        many: "%{count} תוצאות"
+        other: "%{count} תוצאות"
       filter_placeholder: חיפוש...
       filter_placeholder_with_any: חיפוש או יצירה…
       create: "יצירה: ‚%{content}’"
@@ -2379,6 +2413,7 @@ he:
           other: "התקדמות: <strong>%{count}</strong> נושאים"
       none:
         unread: "אין לך נושאים שלא נקראו."
+        unseen: "אין לך נושאים שלא ראית."
         new: "אין לך נושאים חדשים."
         read: "עדיין לא קראת אף נושא."
         posted: "עדיין לא פרסמתם באף נושא."
@@ -2395,6 +2430,7 @@ he:
         read: "אין עוד נושאים שנקראו."
         new: "אין עוד נושאים חדשים."
         unread: "אין עוד נושאים שלא נקראו."
+        unseen: "אין יותר נושאים שלא נראו."
         category: "אין עוד נושאים בקטגוריה %{category}."
         tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
@@ -2467,6 +2503,7 @@ he:
       browse_all_categories: עיינו בכל הקטגוריות
       browse_all_tags: עיון בכל התגיות
       view_latest_topics: הצגת נושאים אחרונים
+      suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
@@ -3384,7 +3421,8 @@ he:
       many: "משתמשים"
       other: "משתמשים"
     category_title: "קטגוריה"
-    history: "היסטוריה, 100 התיקונים האחרונים"
+    history_capped_revisions: "היסטוריה, 100 התיקונים האחרונים"
+    history: "היסטוריה"
     changed_by: "מאת %{author}"
     raw_email:
       title: "דוא״ל נכנס"
@@ -3421,6 +3459,8 @@ he:
           two: "לא-נקראו %{count} "
           many: "לא-נקראו %{count} "
           other: "לא-נקראו %{count} "
+      unseen:
+        help: "נושאים חדשים ונושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
       new:
         lower_title_with_count:
           one: "חדש (%{count})"
@@ -3732,6 +3772,7 @@ he:
       topics:
         none:
           unread: "אין לך נושאים שלא נקראו."
+          unseen: "אין לך נושאים שלא ראית."
           new: "אין לך נושאים חדשים."
           read: "טרם קראת נושאים."
           posted: "עדיין לא פרסמתם באף נושא."
@@ -3910,7 +3951,6 @@ he:
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
               title: "מי יכול לראות את חברי הקבוצה הזו?"
-              description: "מנהלים יכולים לראות את רשימות חברי כל הקבוצות."
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
@@ -4833,8 +4873,6 @@ he:
         silence_message_placeholder: "(להשאיר ריק כדי לשלוח את הודעת בררת המחדל)"
         suspended_until: "(עד %{until})"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
-        delete_all_posts: "מחיקת כל הפוסטים"
-        delete_posts_progress: "פוסטים נמחקים…"
         delete_posts_failed: "אירעה תקלה בעת מחיקת הפוסטים."
         post_edits: "עריכות של פוסטים"
         view_edits: "הצגת עריכות"
@@ -4901,8 +4939,21 @@ he:
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
         delete_posts:
+          button: "מחיקת כל הפוסטים"
           progress:
             title: "התקדמות מחיקת הפוסטים"
+            description: "פוסטים נמחקים…"
+          confirmation:
+            title: "למחוק את כל הפוסטים מאת ‎@%{username}"
+            description: |
+              <p>למחוק <b>%{post_count}</b> פוסטים מאת ‎@%{username}?
+
+              <p><b>תהליך זה הוא בלתי הפיך!</b></p>
+
+              <p>כדי להמשיך יש להקליד: <code>%{text}</code></p>
+            text: "מחיקת פוסטים מאת ‎@%{username}"
+            delete: "מחיקת פוסטים מאת ‎@%{username}"
+            cancel: "ביטול"
         merge:
           button: "מיזוג"
           prompt:
@@ -5323,7 +5374,8 @@ he:
           moderator: "מפקח"
           regular: "משתמש רגיל"
       previews:
-        topic_title: "נושא דיון"
-        font_title: "הגופן %{font}"
+        topic_title: "כותרת נושא דיון"
         share_button: "לשתף"
         reply_button: "להגיב"
+        topic_preview: "תצוגה מקדימה של נושא"
+        homepage_preview: "תצוגה מקדימה של עמוד הבית"

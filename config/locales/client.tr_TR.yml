@@ -157,6 +157,7 @@ tr_TR:
         disabled: "Pankart kaldırıldı %{when}. Bundan sonra her sayfanın en üstünde gözükmeyecek. "
       forwarded: "yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
+    skip_to_main_content: "Ana içeriğe atla"
     wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     software_update_prompt:
@@ -302,6 +303,7 @@ tr_TR:
       copied: "kopyalandı!"
     drafts:
       label: "Taslaklar"
+      label_with_count: "Taslaklar (%{count})"
       resume: "Sürdür"
       remove: "Kaldır"
       remove_confirmation: "Bu taslağı silmek istediğinizden emin misiniz?"
@@ -313,6 +315,9 @@ tr_TR:
         yes_value: "At"
         no_value: "Düzenlemeye devam et"
     topic_count_latest:
+      one: "%{count} yeni ya da güncellenmiş konu."
+      other: "%{count} yeni ya da güncellenmiş konu."
+    topic_count_unseen:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
     topic_count_unread:
@@ -788,6 +793,7 @@ tr_TR:
         owner: "Sahip"
         primary: "Birincil"
         forbidden: "Üyeleri görmek için yetkiniz yok."
+        no_filter_matches: "Bu aramayla eşleşen üye yok."
       topics: "Konular"
       posts: "Gönderiler"
       mentions: "Bahsedilenler"
@@ -923,6 +929,7 @@ tr_TR:
           all: "Tümü"
           read: "Okunan"
           unread: "Okunmamış"
+          unseen: "Görülmemiş"
         ignore_duration_title: "Kullanıcıyı yok say"
         ignore_duration_username: "Kullanıcı Adı"
         ignore_duration_when: "Süre:"
@@ -993,9 +1000,11 @@ tr_TR:
       no_bookmarks_title: "Henüz hiçbir şeye yer işareti koymadınız"
       no_bookmarks_body: >
         %{icon} düğmesiyle gönderileri işaretlemeye başlayın ve bunlar kolayca erişilebilecek şekilde burada listelensin. Ayrıca bir hatırlatıcı da ekleyebilirsiniz!
+      no_bookmarks_search: "Bu arama koşullarıyla bir yer işareti bulunamadı."
       no_notifications_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
+      no_notifications_page_title: "Henüz herhangi bir bildiriminiz yok"
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonu üzerinde göster"
       skip_new_user_tips:
@@ -1102,7 +1111,13 @@ tr_TR:
         latest: "En Son"
         sent: "Gönderilen"
         unread: "Okunmamış"
+        unread_with_count:
+          one: "Okunmamış (%{count})"
+          other: "Okunmamış (%{count})"
         new: "Yeni"
+        new_with_count:
+          one: "Yeni (%{count}) "
+          other: "Yeni (%{count}) "
         archive: " Arşiv"
         groups: "Gruplarım"
         move_to_inbox: "Gelen kutusuna taşı"
@@ -1726,21 +1741,27 @@ tr_TR:
       google_oauth2:
         name: "Google"
         title: "Google ile"
+        sr_title: "Google ile giriş yapın"
       twitter:
         name: "Twitter"
         title: "Twitter ile"
+        sr_title: "Twitter ile giriş yapın"
       instagram:
         name: "Instagram"
         title: "Instagram ile"
+        sr_title: "Instagram ile giriş yapın"
       facebook:
         name: "Facebook"
         title: "Facebook ile"
+        sr_title: "Facebook ile giriş yapın"
       github:
         name: "GitHub"
         title: "GitHub ile"
+        sr_title: "GitHub ile Giriş Yapın"
       discord:
         name: "Discord"
         title: "Discord ile"
+        sr_title: "Discord ile Giriş Yapın"
       second_factor_toggle:
         totp: "Bunun yerine bir doğrulama uygulaması kullanın"
         backup_code: "Bunun yerine bir yedekleme kodu kullanın"
@@ -1790,6 +1811,7 @@ tr_TR:
         one: "+ %{count} alt kategori"
         other: "+ %{count} alt kategori"
     select_kit:
+      delete_item: "Sil %{name}"
       filter_by: "Şuna göre filtrele: %{name}"
       select_to_filter: "Filtrelemek için bir değer seçin"
       default_header_text: Seç...
@@ -2219,6 +2241,7 @@ tr_TR:
           other: "İlerleme: <strong>%{count}</strong> konu"
       none:
         unread: "Okunmamış konun yok."
+        unseen: "Görülmemiş konunuz yok."
         new: "Yeni konun yok."
         read: "Henüz herhangi bir konu okumadın."
         posted: "Henüz herhangi bir konuda gönderi yapmadın"
@@ -2235,6 +2258,7 @@ tr_TR:
         read: "Daha fazla okunmuş konu yok."
         new: "Daha fazla yeni konu yok."
         unread: "Daha fazla okunmamış konu yok."
+        unseen: "Görülmemiş konu kalmadı."
         category: "Daha fazla %{category} konusu yok."
         tag: "%{tag} bu etikette daha fazla konu yok."
         top: "Daha fazla popüler konu yok."
@@ -3136,7 +3160,8 @@ tr_TR:
       one: "kullanıcı"
       other: "kullanıcılar"
     category_title: "Kategori"
-    history: "Geçmiş, son 100 revizyon"
+    history_capped_revisions: "Geçmiş, son 100 revizyon"
+    history: "Tarihçe"
     changed_by: "Yazan %{author}"
     raw_email:
       title: "Gelen e-posta"
@@ -3167,6 +3192,9 @@ tr_TR:
         lower_title_with_count:
           one: "%{count} okunmamış"
           other: "%{count} okunmamış"
+      unseen:
+        title: "Görülmemiş"
+        lower_title: "görülmemiş"
       new:
         lower_title_with_count:
           one: "%{count} yeni"
@@ -3627,7 +3655,6 @@ tr_TR:
               description: "Yöneticiler tüm grupları görebilir."
             members_visibility_levels:
               title: "Bu grubun üyelerini kim görebilir?"
-              description: "Yöneticiler tüm grupların üyelerini görebilir."
             publish_read_state: "Grup mesajlarında grup okuma durumunu yayınla"
           membership:
             automatic: Otomatik
@@ -4540,8 +4567,6 @@ tr_TR:
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         suspended_until: "(%{until} a kadar)"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
-        delete_all_posts: "Tüm gönderileri sil"
-        delete_posts_progress: "Gönderiler siliniyor..."
         delete_posts_failed: "Gönderiler silinirken bir sorun oluştu."
         post_edits: "Gönderi Düzenleme"
         view_edits: "Düzenlemeleri gör"
@@ -4608,8 +4633,12 @@ tr_TR:
         anonymize_failed: "Hesap anonimleştirilirken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
         delete_posts:
+          button: "Tüm gönderileri sil"
           progress:
             title: "Gönderilerin silinmesi ilerleme durumu"
+            description: "Gönderiler siliniyor..."
+          confirmation:
+            cancel: "İptal"
         merge:
           button: "Birleştir"
           prompt:
@@ -5018,7 +5047,5 @@ tr_TR:
           moderator: "Moderatör"
           regular: "Devamlı Kullanıcı"
       previews:
-        topic_title: "Tartışma konusu"
-        font_title: "%{font} İsimli Font"
         share_button: "Paylaş"
         reply_button: "Cevap"

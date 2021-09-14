@@ -11,8 +11,12 @@ export default DiscourseRoute.extend({
     return this.modelFor("user");
   },
 
-  setupController(controller, user) {
-    controller.set("model", user);
+  afterModel() {
+    return this.pmTopicTrackingState.startTracking();
+  },
+
+  setupController(controller, model) {
+    controller.set("model", model);
 
     if (this.currentUser) {
       const composerController = this.controllerFor("composer");

@@ -1,4 +1,4 @@
-import QUnit, { module } from "qunit";
+import QUnit, { module, skip, test } from "qunit";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -46,6 +46,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
+  cleanUpComposerUploadPreProcessor,
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
@@ -257,6 +258,7 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      resetMobile();
       let app = getApplication();
       if (options && options.afterEach) {
         options.afterEach.call(this);
@@ -287,6 +289,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
+      cleanUpComposerUploadPreProcessor();
       resetLastEditNotificationClick();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
@@ -467,4 +470,20 @@ export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .map((c) => c.func(...args));
+}
+
+export function conditionalTest(name, condition, testCase) {
+  if (condition) {
+    test(name, testCase);
+  } else {
+    skip(name, testCase);
+  }
+}
+
+export function chromeTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Chrome"), testCase);
+}
+
+export function firefoxTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }

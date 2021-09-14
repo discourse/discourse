@@ -750,12 +750,8 @@ acceptance("Composer", function (needs) {
       await click("button.compose-pm");
       await click(".modal .btn-default");
 
-      assert.equal(
-        queryAll("#private-message-users .selected-name:nth-of-type(1)")
-          .text()
-          .trim(),
-        "codinghorror"
-      );
+      const privateMessageUsers = selectKit("#private-message-users");
+      assert.equal(privateMessageUsers.header().value(), "codinghorror");
     } finally {
       toggleCheckDraftPopup(false);
     }

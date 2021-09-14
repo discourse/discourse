@@ -15,17 +15,17 @@
     "start": "ember serve",
     "test": "ember test"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.14.3",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
-    "@popperjs/core": "^2.4.4",
-    "@uppy/aws-s3": "^1.7.12",
-    "@uppy/aws-s3-multipart": "^1.8.18",
-    "@uppy/core": "^1.19.2",
-    "@uppy/drop-target": "^0.2.4",
-    "@uppy/xhr-upload": "^1.7.5",
+    "@popperjs/core": "2.9.3",
+    "@uppy/aws-s3": "^2.0.2",
+    "@uppy/aws-s3-multipart": "^2.0.2",
+    "@uppy/core": "^2.0.1",
+    "@uppy/drop-target": "^1.0.1",
+    "@uppy/xhr-upload": "^2.0.1",
     "admin": "^1.0.0",
     "bent": "^7.3.12",
     "broccoli-asset-rev": "^3.0.0",
@@ -52,8 +52,7 @@
     "js-yaml": "^4.0.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
-    "mousetrap": "^1.6.5",
-    "mousetrap-global-bind": "^1.1.0",
+    "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
     "qunit": "^2.14.0",
@@ -61,7 +60,8 @@
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
     "sinon": "^9.2.0",
-    "virtual-dom": "^2.1.1"
+    "virtual-dom": "^2.1.1",
+    "@discourse/itsatrap": "^2.0.10"
   },
   "engines": {
     "node": ">= 12.*",

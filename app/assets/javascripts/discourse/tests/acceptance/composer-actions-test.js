@@ -23,7 +23,6 @@ acceptance("Composer Actions", function (needs) {
   test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
     await visit("/");
     await click("button#create-topic");
-
     await fillIn("#reply-title", "this is the title");
     await fillIn(".d-editor-input", "this is the reply");
 
@@ -62,12 +61,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(
-      queryAll("#private-message-users .selected-name:nth-of-type(1)")
-        .text()
-        .trim(),
-      "codinghorror"
-    );
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.equal(privateMessageUsers.header().value(), "codinghorror");
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0
@@ -182,12 +177,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_group_message");
 
-    const items = [];
-    queryAll("#private-message-users .selected-name").each((_, item) =>
-      items.push(item.textContent.trim())
-    );
-
-    assert.deepEqual(items, ["foo", "foo_group"]);
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
   test("hide component if no content", async function (assert) {
@@ -422,12 +413,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(
-      queryAll("#private-message-users .selected-name:nth-of-type(1)")
-        .text()
-        .trim(),
-      "uwe_keim"
-    );
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.equal(privateMessageUsers.header().value(), "uwe_keim");
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0

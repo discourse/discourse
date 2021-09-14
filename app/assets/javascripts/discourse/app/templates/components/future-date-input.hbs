@@ -4,10 +4,8 @@
       {{#if displayLabelIcon}}{{d-icon displayLabelIcon}}{{/if}}{{displayLabel}}
     </label>
     {{future-date-input-selector
-      minimumResultsForSearch=-1
       statusType=statusType
       value=(readonly selection)
-      input=(readonly input)
       includeDateTime=includeDateTime
       includeWeekend=includeWeekend
       includeFarFuture=includeFarFuture
@@ -23,18 +21,25 @@
   </div>
 
   {{#if displayDateAndTimePicker}}
-    <div class="control-group">
+    <div class="control-group future-date-input-date-picker">
       {{d-icon "calendar-alt"}}
       {{date-picker-future
-        value=date
-        defaultDate=date
-        onSelect=(action (mut date))
+        value=_date
+        defaultDate=_date
+        onSelect=(action "onChangeDate")
       }}
     </div>
 
-    <div class="control-group">
+    <div class="control-group future-date-input-time-picker">
       {{d-icon "far-clock"}}
-      {{input placeholder="--:--" type="time" class="time-input" value=time disabled=timeInputDisabled}}
+      {{input
+        placeholder="--:--"
+        type="time"
+        class="time-input"
+        value=_time
+        disabled=timeInputDisabled
+        input=(action "onChangeTime" value="target.value")
+      }}
     </div>
   {{/if}}
 </div>

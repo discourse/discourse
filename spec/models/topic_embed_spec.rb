@@ -16,6 +16,8 @@ describe TopicEmbed do
     let(:url) { 'http://eviltrout.com/123' }
     let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -94,6 +96,32 @@ describe TopicEmbed do
         SiteSetting.embed_unlisted = false
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
         expect(imported_post.topic).to be_visible
+      end
+
+      it "creates the topic in the category passed as a parameter" do
+        Jobs.run_immediately!
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", category_id: category.id)
+        expect(imported_post.topic.category).not_to eq(embeddable_host.category)
+        expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "creates the topic with the tag passed as a parameter" do
+        Jobs.run_immediately!
+        SiteSetting.tagging_enabled = true
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", tags: [tag.name])
+        expect(imported_post.topic.tags).to include(tag)
+      end
+
+      it "respects overriding the cook_method when asked" do
+        Jobs.run_immediately!
+        SiteSetting.embed_support_markdown = false
+        stub_request(:get, "https://www.youtube.com/watch?v=K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+        stub_request(:get, "https://www.youtube.com/embed/K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "https://www.youtube.com/watch?v=K56soYl0U1w", cook_method: Post.cook_methods[:regular])
+        expect(imported_post.cooked).to match(/onebox|iframe/)
       end
     end
 

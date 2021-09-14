@@ -555,10 +555,24 @@ class PostsController < ApplicationController
   end
 
   def flagged_posts
-    deprecate('posts#flagged_posts is deprecated. Please use /review instead.', since: '2.8.0.beta4', drop_from: '2.9')
-    review_queue_url = path("/review?status=all&type=ReviewableFlaggedPost&username=#{params[:username]}")
+    Discourse.deprecate(
+      'PostsController#flagged_posts is deprecated. Please use /review instead.',
+      since: '2.8.0.beta4', drop_from: '2.9'
+    )
 
-    redirect_to review_queue_url, status: 301
+    params.permit(:offset, :limit)
+    guardian.ensure_can_see_flagged_posts!
+
+    user = fetch_user_from_params
+    offset = [params[:offset].to_i, 0].max
+    limit = [(params[:limit] || 60).to_i, 100].min
+
+    posts = user_posts(guardian, user.id, offset: offset, limit: limit)
+      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                                   .where(disagreed_at: nil)
+                                   .select(:post_id))
+
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   def deleted_posts

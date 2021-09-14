@@ -17,6 +17,7 @@ describe 'users' do
 
     post 'Creates a user' do
       tags 'Users'
+      operationId 'createUser'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -64,6 +65,7 @@ describe 'users' do
 
     get 'Get a single user by username' do
       tags 'Users'
+      operationId 'getUser'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -83,6 +85,7 @@ describe 'users' do
 
     get 'Get a user by external_id' do
       tags 'Users'
+      operationId 'getUserExternalId'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -110,6 +113,7 @@ describe 'users' do
 
     get 'Get a user by identity provider external ID' do
       tags 'Users'
+      operationId 'getUserIdentiyProviderExternalId'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -142,6 +146,7 @@ describe 'users' do
 
     put 'Update avatar' do
       tags 'Users'
+      operationId 'updateAvatar'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_update_avatar_request')
 
@@ -172,6 +177,7 @@ describe 'users' do
 
     put 'Update email' do
       tags 'Users'
+      operationId 'updateEmail'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_update_email_request')
 
@@ -200,6 +206,7 @@ describe 'users' do
 
     get 'Get a public list of users' do
       tags 'Users'
+      operationId 'listUsersPublic'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -257,6 +264,7 @@ describe 'users' do
 
     get 'Get a user by id' do
       tags 'Users', 'Admin'
+      operationId 'adminGetUser'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -279,6 +287,7 @@ describe 'users' do
 
     delete 'Delete a user' do
       tags 'Users', 'Admin'
+      operationId 'deleteUser'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_delete_request')
 
@@ -311,6 +320,7 @@ describe 'users' do
   path '/admin/users/{id}/suspend.json' do
     put 'Suspend a user' do
       tags 'Users', 'Admin'
+      operationId 'suspendUser'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_suspend_request')
 
@@ -340,6 +350,7 @@ describe 'users' do
   path '/admin/users/{id}/anonymize.json' do
     put 'Anonymize a user' do
       tags 'Users', 'Admin'
+      operationId 'anonymizeUser'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -365,6 +376,7 @@ describe 'users' do
 
     post 'Log a user out' do
       tags 'Users', 'Admin'
+      operationId 'logOutUser'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -401,6 +413,7 @@ describe 'users' do
 
     post 'Refresh gravatar' do
       tags 'Users', 'Admin'
+      operationId 'refreshGravatar'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -427,6 +440,7 @@ describe 'users' do
 
     get 'Get a list of users' do
       tags 'Users', 'Admin'
+      operationId 'adminListUsers'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -488,6 +502,7 @@ describe 'users' do
 
     get 'Get a list of user actions' do
       tags 'Users'
+      operationId 'listUserActions'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -516,6 +531,7 @@ describe 'users' do
   path '/session/forgot_password.json' do
     post 'Send password reset email' do
       tags 'Users'
+      operationId 'sendPasswordResetEmail'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_password_reset_request')
       parameter name: :params, in: :body, schema: expected_request_schema
@@ -539,6 +555,7 @@ describe 'users' do
   path '/users/password-reset/{token}.json' do
     put 'Change password' do
       tags 'Users'
+      operationId 'changePassword'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('user_password_change_request')
       parameter name: :token, in: :path, type: :string, required: true

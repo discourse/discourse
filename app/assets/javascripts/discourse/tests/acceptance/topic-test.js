@@ -1,5 +1,6 @@
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
   query,
@@ -69,27 +70,11 @@ acceptance("Topic", function (needs) {
       "it fills composer with the ring string"
     );
 
-    const targets = queryAll(
-      "#private-message-users .selected-name",
-      ".composer-fields"
-    );
-
+    const privateMessageUsers = selectKit("#private-message-users");
     assert.equal(
-      $(targets[0]).text().trim(),
-      "someguy",
-      "it fills up the composer with the right user to start the PM to"
-    );
-
-    assert.equal(
-      $(targets[1]).text().trim(),
-      "test",
-      "it fills up the composer with the right user to start the PM to"
-    );
-
-    assert.equal(
-      $(targets[2]).text().trim(),
-      "Group",
-      "it fills up the composer with the right group to start the PM to"
+      privateMessageUsers.header().value(),
+      "someguy,test,Group",
+      "it fills up the composer correctly"
     );
   });
 
@@ -416,18 +401,22 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with replyAsNewTopic keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
-    await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+  // Using J/K on Firefox clean the text selection, so this won't work there
+  chromeTest(
+    "Quoting a quote with replyAsNewTopic keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
   test("Quoting by selecting text can mark the quote as full", async function (assert) {
     await visit("/t/internationalization-localization/280");

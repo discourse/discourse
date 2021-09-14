@@ -306,6 +306,11 @@ sk:
       few: "Pozri si %{count} nových alebo upravených tém."
       many: "Pozri si %{count} nových alebo upravených tém."
       other: "Pozri si %{count} nových alebo upravených tém."
+    topic_count_unseen:
+      one: "Pozri si %{count} novú alebo upravenú tému."
+      few: "Pozri si %{count} nových alebo upravených tém."
+      many: "Pozri si %{count} nových alebo upravených tém."
+      other: "Pozri si %{count} nových alebo upravených tém."
     topic_count_unread:
       one: "Pozrieť %{count} neprečítanú tému."
       few: "Pozrieť %{count} neprečítaných tém."
@@ -786,7 +791,17 @@ sk:
         latest: "Najnovšie"
         sent: "Odoslané"
         unread: "Neprečítané"
+        unread_with_count:
+          one: "Neprečítaná (%{count})"
+          few: "Neprečítaná (%{count})"
+          many: "Neprečítaná (%{count})"
+          other: "Neprečítaná (%{count})"
         new: "Nové"
+        new_with_count:
+          one: "Nová (%{count})"
+          few: "Nová (%{count})"
+          many: "Nová (%{count})"
+          other: "Nová (%{count})"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Presuň do prijatej pošty"
@@ -1242,6 +1257,7 @@ sk:
     conditional_loading_section:
       loading: Prebieha načítavanie...
     select_kit:
+      delete_item: "Zmazaných %{name}"
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
     date_time_picker:
@@ -2796,7 +2812,6 @@ sk:
         suspended_by: "Práva odobraté"
         silence_reason: "Dôvod"
         silence_modal_title: "Tichý užívateľ"
-        delete_all_posts: "Zmazať všetky príspevky"
         moderator: "Moderátor?"
         admin: "Admin?"
         suspended: "Odobrate práva?"
@@ -2836,6 +2851,10 @@ sk:
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"
+        delete_posts:
+          button: "Zmazať všetky príspevky"
+          confirmation:
+            cancel: "Zrušiť"
         merge:
           prompt:
             cancel: "Zrušiť"
@@ -3124,6 +3143,5 @@ sk:
           moderator: "Moderátor"
           regular: "Bežný používateľ"
       previews:
-        topic_title: "Diskusná téma"
         share_button: "Zdieľať"
         reply_button: "Odpoveď"

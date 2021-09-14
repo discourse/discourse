@@ -47,6 +47,14 @@ class DiscourseSingleSignOn < SingleSignOn
     end
   end
 
+  def nonce_error
+    if Discourse.cache.read(used_nonce_key).present?
+      "Nonce has already been used"
+    else
+      "Nonce has expired"
+    end
+  end
+
   def return_path
     if SiteSetting.discourse_connect_csrf_protection
       @secure_session[nonce_key] || "/"
@@ -62,11 +70,17 @@ class DiscourseSingleSignOn < SingleSignOn
       else
         Discourse.cache.delete nonce_key
       end
+
+      Discourse.cache.write(used_nonce_key, return_path, expires_in: SingleSignOn.used_nonce_expiry_time)
     end
   end
 
   def nonce_key
     "SSO_NONCE_#{nonce}"
+  end
+
+  def used_nonce_key
+    "USED_SSO_NONCE_#{nonce}"
   end
 
   BANNED_EXTERNAL_IDS = %w{none nil blank null}

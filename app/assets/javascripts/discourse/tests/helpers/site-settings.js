@@ -62,7 +62,7 @@ const ORIGINAL_SETTINGS = {
   max_image_width: 690,
   max_image_height: 500,
   allow_profile_backgrounds: true,
-  allow_uploaded_avatars: true,
+  allow_uploaded_avatars: "0",
   tl1_requires_read_posts: 30,
   enable_long_polling: true,
   polling_interval: 3000,

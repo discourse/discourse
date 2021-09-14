@@ -82,6 +82,7 @@
                 <li>
                   {{d-button
                     ariaExpanded=collapsedInfoState.isExpanded
+                    ariaLabel=collapsedInfoState.ariaLabel
                     ariaControls="collapsed-info-panel"
                     class="btn-default"
                     label=(concat "user." collapsedInfoState.label)
@@ -159,7 +160,13 @@
                   {{#if uf.value}}
                     <div class="public-user-field {{uf.field.dasherized_name}}">
                       <span class="user-field-name">{{uf.field.name}}</span>:
-                      <span class="user-field-value">{{uf.value}}</span>
+                      <span class="user-field-value">
+                        {{#each uf.value as |v|}} {{! some values are arrays }}
+                          <span class="user-field-value-list-item">{{v}}</span>
+                        {{else }}
+                          {{uf.value}}
+                        {{/each}}
+                      </span>
                     </div>
                   {{/if}}
                 {{/each}}

@@ -36,6 +36,7 @@
         </div>
         <div class="topic-item-stats clearfix">
           {{#unless hideCategory}}
+            {{~raw-plugin-outlet name="topic-list-before-category"}}
             <div class='category'>
               {{category-link topic.category}}
             </div>

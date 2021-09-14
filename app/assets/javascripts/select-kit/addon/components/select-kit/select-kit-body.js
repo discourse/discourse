@@ -6,14 +6,13 @@ import layout from "select-kit/templates/components/select-kit/select-kit-body";
 export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
-  attributeBindings: ["role"],
   classNameBindings: ["emptyBody:empty-body"],
-  emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
-    return !this.selectKit.filter && this.selectKit.hasNoContent;
-  }),
-  rootEventType: "click",
 
-  role: "listbox",
+  emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
+    return false;
+  }),
+
+  rootEventType: "click",
 
   init() {
     this._super(...arguments);
@@ -23,6 +22,8 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+
+    this.element.style.position = "relative";
 
     document.addEventListener(
       this.rootEventType,
@@ -58,6 +59,8 @@ export default Component.extend({
       return;
     }
 
-    this.selectKit.close(event);
+    if (this.selectKit.mainElement()) {
+      this.selectKit.close(event);
+    }
   },
 });

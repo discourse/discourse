@@ -278,6 +278,8 @@ zh_TW:
         no_value: "繼續編輯"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
+    topic_count_unseen:
+      other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unread:
       other: "檢視 %{count} 則未讀的討論訊息"
     topic_count_new:
@@ -887,7 +889,11 @@ zh_TW:
         latest: "最新"
         sent: "送出"
         unread: "未讀"
+        unread_with_count:
+          other: "未讀 (%{count})"
         new: "新的"
+        new_with_count:
+          other: "近期 (%{count})"
         archive: "封存"
         groups: "我的群組"
         move_to_inbox: "移動到收件匣"
@@ -1378,6 +1384,7 @@ zh_TW:
       topic_count:
         other: "%{count}個話題在此分類"
     select_kit:
+      delete_item: "刪除 %{name} 個"
       default_header_text: 選擇...
       no_content: 找不到符合的項目
       filter_placeholder: 搜尋...
@@ -3489,8 +3496,6 @@ zh_TW:
         silence_message_placeholder: "(留白以傳送預設訊息)"
         suspended_until: "(直到%{until})"
         cant_suspend: "這位使用者無法被停權。"
-        delete_all_posts: "刪除所有貼文"
-        delete_posts_progress: "刪除貼文中⋯⋯"
         delete_posts_failed: "刪除貼文時發生了錯誤。"
         post_edits: "編輯貼文"
         penalty_post_actions: "請問您要如何處理相關貼文？"
@@ -3549,6 +3554,12 @@ zh_TW:
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
+        delete_posts:
+          button: "刪除所有貼文"
+          progress:
+            description: "刪除貼文中⋯⋯"
+          confirmation:
+            cancel: "取消"
         merge:
           prompt:
             cancel: "取消"
@@ -3876,6 +3887,5 @@ zh_TW:
           moderator: "版主"
           regular: "普通使用者"
       previews:
-        topic_title: "討論話題"
         share_button: "分享"
         reply_button: "回覆"

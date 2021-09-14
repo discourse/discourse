@@ -18,13 +18,14 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.1.3.2'
-  gem 'actionpack', '6.1.3.2'
-  gem 'actionview', '6.1.3.2'
-  gem 'activemodel', '6.1.3.2'
-  gem 'activerecord', '6.1.3.2'
-  gem 'activesupport', '6.1.3.2'
-  gem 'railties', '6.1.3.2'
+  rails_version = '6.1.4.1'
+  gem 'actionmailer', rails_version
+  gem 'actionpack', rails_version
+  gem 'actionview', rails_version
+  gem 'activemodel', rails_version
+  gem 'activerecord', rails_version
+  gem 'activesupport', rails_version
+  gem 'railties', rails_version
   gem 'sprockets-rails'
 end
 
@@ -104,7 +105,10 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# Pinning oj until https://github.com/ohler55/oj/issues/699 is resolved.
+# Segfaults and stuck processes after upgrading.
+gem 'oj', '3.13.2'
+
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false

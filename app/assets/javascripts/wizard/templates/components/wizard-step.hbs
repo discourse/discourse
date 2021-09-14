@@ -14,9 +14,32 @@
   </div>
 
   {{#wizard-step-form step=step}}
-    {{#each step.fields as |field|}}
-      {{wizard-field field=field step=step wizard=wizard}}
-    {{/each}}
+    {{#if includeSidebar}}
+      <div class="wizard-fields-sidebar">
+        {{#each step.fields as |field|}}
+          {{#if field.show_in_sidebar}}
+            {{wizard-field
+              field=field
+              step=step
+              wizard=wizard
+              stylingDropdownChanged=(action "stylingDropdownChanged")
+            }}
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+    <div class="wizard-fields-main">
+      {{#each step.fields as |field|}}
+        {{#unless field.show_in_sidebar}}
+          {{wizard-field
+            field=field
+            step=step
+            wizard=wizard
+            stylingDropdown=stylingDropdown
+          }}
+        {{/unless}}
+      {{/each}}
+    </div>
   {{/wizard-step-form}}
 </div>
 

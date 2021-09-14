@@ -37,6 +37,8 @@ class InvitesController < ApplicationController
           end
         end
 
+        create_topic_invite_notifications(invite, current_user)
+
         if topic = invite.topics.first
           new_guardian = Guardian.new(current_user)
           return redirect_to(topic.url) if new_guardian.can_see?(topic)
@@ -281,6 +283,7 @@ class InvitesController < ApplicationController
       log_on_user(user) if user.active?
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
+      create_topic_invite_notifications(invite, user)
 
       topic = invite.topics.first
       response = {}
@@ -415,6 +418,26 @@ class InvitesController < ApplicationController
       send_activation_email(user) unless user.active
     elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
+    end
+  end
+
+  def create_topic_invite_notifications(invite, user)
+    invite.topics.each do |topic|
+      if user.guardian.can_see?(topic)
+        last_notification = user.notifications
+          .where(notification_type: Notification.types[:invited_to_topic])
+          .where(topic_id: topic.id)
+          .where(post_number: 1)
+          .where('created_at > ?', 1.hour.ago)
+
+        if !last_notification.exists?
+          topic.create_invite_notification!(
+            user,
+            Notification.types[:invited_to_topic],
+            invite.invited_by.username
+          )
+        end
+      end
     end
   end
 

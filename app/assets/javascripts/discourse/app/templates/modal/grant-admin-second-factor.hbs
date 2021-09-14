@@ -1,0 +1,33 @@
+{{#d-modal-body title="admin.user.grant_admin"}}
+  {{#second-factor-form
+    secondFactorMethod=secondFactorMethod
+    secondFactorToken=secondFactorToken
+    class=secondFactorClass
+    backupEnabled=backupEnabled
+  }}
+    {{#if showSecurityKey}}
+      {{#security-key-form
+        allowedCredentialIds=securityKeyAllowedCredentialIds
+        challenge=securityKeyChallenge
+        showSecurityKey=showSecurityKey
+        showSecondFactor=showSecondFactor
+        secondFactorMethod=secondFactorMethod
+        otherMethodAllowed=otherMethodAllowed
+        action=(action "authenticateSecurityKey")}}
+      {{/security-key-form}}
+    {{else}}
+      {{second-factor-input value=secondFactorToken inputId="second-factor-confirmation" secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+    {{/if}}
+  {{/second-factor-form}}
+
+  {{#unless showSecurityKey}}
+    <div class="modal-footer">
+      {{d-button
+        action=(action "authenticate")
+        icon="shield-alt"
+        label="admin.user.grant_admin"
+        disabled=disabled
+        class="btn btn-primary"}}
+    </div>
+  {{/unless}}
+{{/d-modal-body}}

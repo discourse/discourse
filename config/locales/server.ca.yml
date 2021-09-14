@@ -1183,6 +1183,7 @@ ca:
     out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
     unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
   site_settings:
+    disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
     default_locale: "L'idioma per defecte d'aquesta instància de Discourse. Podeu substituir el text de les categories i els temes generats pel sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalitza / Text</a>."
@@ -3056,12 +3057,26 @@ ca:
           city_for_disputes:
             label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
-      colors:
-        title: "Colors"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previsualitza"
+          homepage_style:
+            choices:
+              latest:
+                label: "Temes més recents"
+              categories_only:
+                label: "Només categories"
+              categories_with_featured_topics:
+                label: "Categories amb temes destacats"
+              categories_and_latest_topics:
+                label: "Categories i temes més recents"
+              categories_and_top_topics:
+                label: "Categories i temes principals"
+              categories_boxes:
+                label: "Quadres de categories"
+              categories_boxes_with_topics:
+                label: "Quadres de categories amb temes"
       logos:
         title: "Logos"
         fields:
@@ -3080,26 +3095,6 @@ ca:
           large_icon:
             label: "Icona gran"
             description: "Icona utilitzada per a representar el vostre lloc web en dispositius moderns que tingui un bon aspecte en mides més grans. Idealment més gran que 512 × 512. Utilitzarem el logotip quadrat per defecte."
-      homepage:
-        description: "Us suggerim que mostreu els temes més recents en la vostra pàgina principal, però si us ho estimeu més, també podeu mostrar-hi categories (grups o temes)."
-        title: "Pàgina principal"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Temes més recents"
-              categories_only:
-                label: "Només categories"
-              categories_with_featured_topics:
-                label: "Categories amb temes destacats"
-              categories_and_latest_topics:
-                label: "Categories i temes més recents"
-              categories_and_top_topics:
-                label: "Categories i temes principals"
-              categories_boxes:
-                label: "Quadres de categories"
-              categories_boxes_with_topics:
-                label: "Quadres de categories amb temes"
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."

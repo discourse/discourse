@@ -64,8 +64,6 @@
     padding: 0;
     flex: 1 1 auto;
     .select-kit-header {
-      padding: 8px 10px;
-
       .caret-icon {
         color: var(--primary-medium);
       }
@@ -81,8 +79,6 @@
     margin-left: 8px;
 
     .select-kit-header {
-      height: 100%;
-
       .selected-name .name {
         display: none;
       }
@@ -242,7 +238,6 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        margin-left: -1em;
         li,
         > span {
           display: flex;
@@ -260,6 +255,10 @@
             }
           }
         }
+      }
+
+      > ul {
+        margin-left: -1em; // negates left button margin, for alignment
       }
 
       .user-profile-controls-outlet {

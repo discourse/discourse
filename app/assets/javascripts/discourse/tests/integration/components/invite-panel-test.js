@@ -1,5 +1,5 @@
 import { set } from "@ember/object";
-import { click, fillIn } from "@ember/test-helpers";
+import { click } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import componentTest, {
   setupRenderingTest,
@@ -40,7 +40,7 @@ discourseModule("Integration | Component | invite-panel", function (hooks) {
     async test(assert) {
       const input = selectKit(".invite-user-input");
       await input.expand();
-      await fillIn(".invite-user-input .filter-input", "eviltrout@example.com");
+      await input.fillInFilter("eviltrout@example.com");
       await input.selectRowByValue("eviltrout@example.com");
       assert.ok(!exists(".send-invite:disabled"));
       await click(".generate-invite-link");

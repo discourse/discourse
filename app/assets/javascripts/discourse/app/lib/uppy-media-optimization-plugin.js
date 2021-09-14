@@ -1,15 +1,12 @@
-import { Plugin } from "@uppy/core";
-import { warn } from "@ember/debug";
+import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
 import { Promise } from "rsvp";
 
-export default class UppyMediaOptimization extends Plugin {
+export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
+  static pluginId = "uppy-media-optimization";
+
   constructor(uppy, opts) {
     super(uppy, opts);
-    this.id = opts.id || "uppy-media-optimization";
-
-    this.type = "preprocessor";
     this.optimizeFn = opts.optimizeFn;
-    this.pluginClass = this.constructor.name;
 
     // mobile devices have limited processing power, so we only enable
     // running media optimization in parallel when we are sure the user
@@ -19,24 +16,27 @@ export default class UppyMediaOptimization extends Plugin {
   }
 
   _optimizeFile(fileId) {
-    let file = this.uppy.getFile(fileId);
+    let file = this._getFile(fileId);
 
-    this.uppy.emit("preprocess-progress", this.pluginClass, file);
+    this._emitProgress(file);
 
-    return this.optimizeFn(file)
+    return this.optimizeFn(file, { stopWorkerOnError: !this.runParallel })
       .then((optimizedFile) => {
         if (!optimizedFile) {
-          warn("Nothing happened, possible error or other restriction.", {
-            id: "discourse.uppy-media-optimization",
-          });
+          this._consoleWarn(
+            "Nothing happened, possible error or other restriction."
+          );
         } else {
-          this.uppy.setFileState(fileId, { data: optimizedFile });
+          this._setFileState(fileId, {
+            data: optimizedFile,
+            size: optimizedFile.size,
+          });
         }
-        this.uppy.emit("preprocess-complete", this.pluginClass, file);
+        this._emitComplete(file);
       })
       .catch((err) => {
-        warn(err, { id: "discourse.uppy-media-optimization" });
-        this.uppy.emit("preprocess-complete", this.pluginClass, file);
+        this._consoleWarn(err);
+        this._emitComplete(file);
       });
   }
 
@@ -56,17 +56,17 @@ export default class UppyMediaOptimization extends Plugin {
 
   install() {
     if (this.runParallel) {
-      this.uppy.addPreProcessor(this._optimizeParallel.bind(this));
+      this._install(this._optimizeParallel.bind(this));
     } else {
-      this.uppy.addPreProcessor(this._optimizeSerial.bind(this));
+      this._install(this._optimizeSerial.bind(this));
     }
   }
 
   uninstall() {
     if (this.runParallel) {
-      this.uppy.removePreProcessor(this._optimizeParallel.bind(this));
+      this._uninstall(this._optimizeParallel.bind(this));
     } else {
-      this.uppy.removePreProcessor(this._optimizeSerial.bind(this));
+      this._uninstall(this._optimizeSerial.bind(this));
     }
   }
 }

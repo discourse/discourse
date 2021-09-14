@@ -41,12 +41,64 @@ describe Wizard::Builder do
     expect(invites_step.disabled).to be_truthy
   end
 
-  context 'fonts step' do
-    let(:fonts_step) { wizard.steps.find { |s| s.id == 'fonts' } }
-    let(:field) { fonts_step.fields.first }
+  context 'styling step' do
+    let(:styling_step) { wizard.steps.find { |s| s.id == 'styling' } }
+    let(:font_field) { styling_step.fields[1] }
+    fab!(:theme) { Fabricate(:theme) }
+    let(:colors_field) { styling_step.fields.first }
 
-    it 'should set the right font' do
-      expect(field.choices.size).to eq(DiscourseFonts.fonts.size)
+    it 'has the full list of available fonts' do
+      expect(font_field.choices.size).to eq(DiscourseFonts.fonts.size)
+    end
+
+    context "colors" do
+      describe "when the default theme has not been override" do
+        before do
+          SiteSetting.find_by(name: "default_theme_id").destroy!
+        end
+
+        it 'should set the right default values' do
+          expect(colors_field.required).to eq(true)
+          expect(colors_field.value).to eq(ColorScheme::LIGHT_THEME_ID)
+        end
+      end
+
+      describe "when the default theme has been override and the color scheme doesn't have a base scheme" do
+        let(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: nil) }
+
+        before do
+          SiteSetting.default_theme_id = theme.id
+          theme.update(color_scheme: color_scheme)
+        end
+
+        it 'fallbacks to the color scheme name' do
+          expect(colors_field.required).to eq(false)
+          expect(colors_field.value).to eq(color_scheme.name)
+        end
+      end
+
+      describe "when the default theme has been overridden by a theme without a color scheme" do
+        before do
+          theme.set_default!
+        end
+
+        it 'should set the right default values' do
+          expect(colors_field.required).to eq(false)
+          expect(colors_field.value).to eq("Light")
+        end
+      end
+
+      describe "when the default theme has been overridden by a theme with a color scheme" do
+        before do
+          theme.update(color_scheme_id: ColorScheme.find_by_name("Dark").id)
+          theme.set_default!
+        end
+
+        it 'should set the right default values' do
+          expect(colors_field.required).to eq(false)
+          expect(colors_field.value).to eq("Dark")
+        end
+      end
     end
   end
 
@@ -155,57 +207,4 @@ describe Wizard::Builder do
     end
   end
 
-  context "colors step" do
-    fab!(:theme) { Fabricate(:theme) }
-    let(:colors_step) { wizard.steps.find { |s| s.id == 'colors' } }
-    let(:field) { colors_step.fields.first }
-
-    describe "when the default theme has not been override" do
-      before do
-        SiteSetting.find_by(name: "default_theme_id").destroy!
-      end
-
-      it 'should set the right default values' do
-        expect(field.required).to eq(true)
-        expect(field.value).to eq(ColorScheme::LIGHT_THEME_ID)
-      end
-    end
-
-    describe "when the default theme has been override and the color scheme doesn't have a base scheme" do
-      let(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: nil) }
-
-      before do
-        SiteSetting.default_theme_id = theme.id
-        theme.update(color_scheme: color_scheme)
-      end
-
-      it 'fallbacks to the color scheme name' do
-        expect(field.required).to eq(false)
-        expect(field.value).to eq(color_scheme.name)
-      end
-    end
-
-    describe "when the default theme has been overridden by a theme without a color scheme" do
-      before do
-        theme.set_default!
-      end
-
-      it 'should set the right default values' do
-        expect(field.required).to eq(false)
-        expect(field.value).to eq("Light")
-      end
-    end
-
-    describe "when the default theme has been overridden by a theme with a color scheme" do
-      before do
-        theme.update(color_scheme_id: ColorScheme.find_by_name("Dark").id)
-        theme.set_default!
-      end
-
-      it 'should set the right default values' do
-        expect(field.required).to eq(false)
-        expect(field.value).to eq("Dark")
-      end
-    end
-  end
 end

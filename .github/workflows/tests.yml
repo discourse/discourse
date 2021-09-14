@@ -4,7 +4,6 @@ on:
   pull_request:
   push:
     branches:
-      - master
       - main
 
 jobs:
@@ -29,7 +28,6 @@ jobs:
         build_type: [backend, frontend, annotations]
         target: [core, plugins]
         postgres: ["13"]
-        redis: ["6.x"]
         exclude:
           - build_type: annotations
             target: plugins
@@ -60,10 +58,9 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Setup redis
-        uses: shogo82148/actions-setup-redis@v1
-        with:
-          redis-version: ${{ matrix.redis }}
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
 
       - name: Bundler cache
         uses: actions/cache@v2

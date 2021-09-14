@@ -1,5 +1,5 @@
 {{#if category}}
-  <div class="category-status">
+  <div class="category-status" aria-hidden="true">
     {{#if hasParentCategory}}
       {{#unless hideParentCategory}}
         {{badgeForParentCategory}}
@@ -9,7 +9,7 @@
   </div>
 
   {{#if shouldDisplayDescription}}
-    <div class="category-desc">{{dir-span description}}</div>
+    <div class="category-desc" aria-hidden="true">{{dir-span description htmlSafe="true"}}</div>
   {{/if}}
 {{else}}
   {{html-safe label}}

@@ -557,8 +557,10 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_groups(name, groups: nil)
-    (groups || Group).where(
+  def self.search_groups(name, groups: nil, custom_scope: {})
+    groups ||= Group
+
+    groups.where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
     )
   end

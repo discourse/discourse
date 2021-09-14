@@ -1373,14 +1373,10 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
-      colors:
-        title: "Ngjyrat"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Parashikimi"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

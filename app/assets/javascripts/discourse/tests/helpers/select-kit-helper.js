@@ -128,7 +128,10 @@ function headerHelper(header) {
       return header.attr("data-name");
     },
     label() {
-      return header.text().trim();
+      return header
+        .text()
+        .trim()
+        .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "");
     },
     icon() {
       return header.find(".d-icon");
@@ -290,12 +293,8 @@ export default function selectKit(selector) {
       );
     },
 
-    async deselectItem(value) {
-      await click(
-        queryAll(selector)
-          .find(".select-kit-header")
-          .find(`[data-value="${value}"]`)[0]
-      );
+    async deselectItemByValue(value) {
+      await click(`${selector} .selected-content [data-value="${value}"]`);
     },
 
     exists() {

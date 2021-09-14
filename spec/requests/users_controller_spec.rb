@@ -1279,6 +1279,16 @@ describe UsersController do
             end
           end
 
+          it "should allow single values and not just arrays" do
+            expect do
+              put update_user_url, params: { user_fields: { field_id => 'Axe' } }
+            end.to change { user.reload.user_fields[field_id] }.from(nil).to('Axe')
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => %w[Axe Juice Sword] } }
+            end.to change { user.reload.user_fields[field_id] }.from('Axe').to(%w[Axe Sword])
+          end
+
           it "shouldn't allow unregistered field values" do
             expect do
               put update_user_url, params: { user_fields: { field_id => %w[Juice] } }
@@ -2483,7 +2493,7 @@ describe UsersController do
       end
 
       it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2491,8 +2501,50 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is admin" do
+        SiteSetting.allow_uploaded_avatars = 'admin'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(admin: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is staff" do
+        SiteSetting.allow_uploaded_avatars = 'staff'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(moderator: true)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is a trust level" do
+        SiteSetting.allow_uploaded_avatars = '3'
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(422)
+
+        user.update!(trust_level: 3)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "custom"
+        }
+        expect(response.status).to eq(200)
+      end
+
       it 'ignores the upload if picking a system avatar' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
@@ -2504,7 +2556,7 @@ describe UsersController do
       end
 
       it 'raises an error if the type is invalid' do
-        SiteSetting.allow_uploaded_avatars = false
+        SiteSetting.allow_uploaded_avatars = 'disabled'
         another_upload = Fabricate(:upload)
 
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
@@ -3938,6 +3990,13 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
+    context 'limit' do
+      it "returns an error if value is invalid" do
+        get "/u/search/users.json", params: { limit: '-1' }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when `enable_names` is true" do
       before do
         SiteSetting.enable_names = true
@@ -4022,6 +4081,25 @@ describe UsersController do
 
           expect(groups.map { |group| group['name'] })
             .to_not include(private_group.name)
+        end
+
+        it 'allows plugins to register custom groups filter' do
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups.count).to eq(6)
+
+          plugin = Plugin::Instance.new
+          plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |original_groups, user|
+            original_groups.where(name: "admins")
+          end
+          get "/u/search/users.json", params: { include_groups: "true", admins_filter: "true", term: "a" }
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+
+          DiscoursePluginRegistry.reset!
         end
 
         it "doesn't search for groups" do
@@ -5012,6 +5090,43 @@ describe UsersController do
       expect(response.parsed_body['no_results_help']).to eq(
         I18n.t('user_activity.no_bookmarks.search')
       )
+    end
+  end
+
+  describe "#private_message_topic_tracking_state" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    fab!(:private_message) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    before do
+      sign_in(user_2)
+    end
+
+    it 'does not allow an unauthorized user to access the state of another user' do
+      get "/u/#{user.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'returns the right response' do
+      get "/u/#{user_2.username}/private-message-topic-tracking-state.json"
+
+      expect(response.status).to eq(200)
+
+      topic_state = response.parsed_body.first
+
+      expect(topic_state["topic_id"]).to eq(private_message.id)
+      expect(topic_state["highest_post_number"]).to eq(1)
+      expect(topic_state["last_read_post_number"]).to eq(nil)
+      expect(topic_state["notification_level"]).to eq(NotificationLevels.all[:watching])
+      expect(topic_state["group_ids"]).to eq([])
     end
   end
 

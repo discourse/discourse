@@ -41,12 +41,17 @@ module FileStore
       File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
     end
 
-    def temporary_upload_path(file_name)
+    def temporary_upload_path(file_name, folder_prefix: "")
+      # We don't want to use the original file name as it can contain special
+      # characters, which can interfere with external providers operations and
+      # introduce other unexpected behaviour.
+      file_name_random = "#{SecureRandom.hex}#{File.extname(file_name)}"
       File.join(
-        upload_path,
         TEMPORARY_UPLOAD_PREFIX,
+        folder_prefix,
+        upload_path,
         SecureRandom.hex,
-        file_name
+        file_name_random
       )
     end
 

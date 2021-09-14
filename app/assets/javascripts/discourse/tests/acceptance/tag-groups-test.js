@@ -50,9 +50,9 @@ acceptance("Tag Groups", function (needs) {
     await tags.selectRowByValue("monkey");
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");
-    await tags.expand();
 
-    await click(".group-tags-list .tag-chooser .choice:nth-of-type(1)");
+    await tags.expand();
+    await tags.deselectItemByValue("monkey");
     assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
   });
 

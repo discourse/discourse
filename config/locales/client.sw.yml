@@ -240,6 +240,9 @@ sw:
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
+    topic_count_unseen:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_unread:
       one: "Angalia Topiki %{count} Zisizosomwa"
       other: "Angalia Topiki %{count} Zisizosomwa"
@@ -700,6 +703,9 @@ sw:
         latest: "Hivi Karibuni"
         sent: "Imetumwa"
         unread: "Haijasomwa"
+        unread_with_count:
+          one: "Haijasomwa (%{count})"
+          other: "Haijasomwa (%{count})"
         new: "Mpya"
         archive: "Hifadhi"
         groups: "Makundi yangu"
@@ -1152,6 +1158,7 @@ sw:
     conditional_loading_section:
       loading: Inaandaa....
     select_kit:
+      delete_item: "Futa %{name}"
       default_header_text: Chagua
       no_content: Hakuna uwiano uliopatikana
       filter_placeholder: Tafuta
@@ -2933,7 +2940,6 @@ sw:
         silence_message_placeholder: "(acha wazi kutuma ujumbe halisi au msingi)"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
-        delete_all_posts: "Futa machapisho yote"
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"
         penalty_post_delete: "Futa taarifa"
         penalty_post_edit: "Hariri Taarifa"
@@ -2985,6 +2991,10 @@ sw:
         anonymize_yes: "Ndio, fanya hii akaunti iwe ya mtu asiyejulikana"
         anonymize_failed: "Tatizo limetokea wakati wa kufanya akaunti iwe ya mtu asiyejulikana."
         delete: "Futa Mtumiaji"
+        delete_posts:
+          button: "Futa machapisho yote"
+          confirmation:
+            cancel: "Ghairi"
         merge:
           prompt:
             cancel: "Ghairi"
@@ -3281,6 +3291,5 @@ sw:
           moderator: "Msimamizi"
           regular: "Mtumiaji wa Kawaida"
       previews:
-        topic_title: "Mada inayojadiliwa"
         share_button: "Shirikisha"
         reply_button: "Jibu"

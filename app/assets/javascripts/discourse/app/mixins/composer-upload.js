@@ -129,6 +129,13 @@ export default Mixin.create({
 
     const $element = $(this.element);
 
+    this.setProperties({
+      uploadProgress: 0,
+      isUploading: false,
+      isProcessingUpload: false,
+      isCancellable: false,
+    });
+
     $.blueimp.fileupload.prototype.processActions = this.uploadProcessorActions;
 
     $element.fileupload({
@@ -320,30 +327,32 @@ export default Mixin.create({
         }
       });
     });
-
-    this._bindMobileUploadButton();
   },
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      this.uploadButton = document.getElementById("mobile-file-upload");
-      this.uploadButtonEventListener = this.uploadButton.addEventListener(
+      this.mobileUploadButton = document.getElementById("mobile-file-upload");
+      this.mobileUploadButtonEventListener = function mobileButtonEventListener() {
+        document.getElementById("file-uploader").click();
+      };
+      this.mobileUploadButton.addEventListener(
         "click",
-        () => document.getElementById("file-uploader").click(),
+        this.mobileUploadButtonEventListener,
         false
       );
     }
   },
 
+  _unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this.mobileUploadButtonEventListener
+    );
+  },
+
   @on("willDestroyElement")
   _unbindUploadTarget() {
-    this.uploadButton?.removeEventListener(
-      "click",
-      this.uploadButtonEventListener
-    );
-
     this._validUploads = 0;
-    this.messageBus.unsubscribe("/uploads/composer");
     const $uploadTarget = $(this.element);
     try {
       $uploadTarget.fileupload("destroy");

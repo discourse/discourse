@@ -155,16 +155,6 @@ export default class Widget {
 
     this.init(this.attrs);
 
-    // Helps debug widgets
-    if (!isProduction()) {
-      const ds = this.defaultState(attrs);
-      if (typeof ds !== "object") {
-        throw new Error(`defaultState must return an object`);
-      } else if (Object.keys(ds).length > 0 && !this.key) {
-        throw new Error(`you need a key when using state in ${this.name}`);
-      }
-    }
-
     if (this.name) {
       const custom = _customSettings[this.name];
       if (custom) {
@@ -195,7 +185,15 @@ export default class Widget {
     if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
+      // Helps debug widgets
       this.state = this.defaultState(this.attrs, this.state);
+      if (!isProduction()) {
+        if (typeof this.state !== "object") {
+          throw new Error(`defaultState must return an object`);
+        } else if (Object.keys(this.state).length > 0 && !this.key) {
+          throw new Error(`you need a key when using state in ${this.name}`);
+        }
+      }
     }
 
     // Sometimes we pass state down from the parent

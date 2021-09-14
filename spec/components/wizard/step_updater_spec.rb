@@ -167,105 +167,182 @@ describe Wizard::StepUpdater do
     end
   end
 
-  context "fonts step" do
+  context "styling step" do
     it "updates fonts" do
-      updater = wizard.create_updater('fonts', body_font: 'open_sans', heading_font: 'oswald')
+      updater = wizard.create_updater('styling',
+        body_font: 'open_sans',
+        heading_font: 'oswald',
+        homepage_style: 'latest'
+      )
       updater.update
       expect(updater.success?).to eq(true)
-      expect(wizard.completed_steps?('fonts')).to eq(true)
+      expect(wizard.completed_steps?('styling')).to eq(true)
       expect(SiteSetting.base_font).to eq('open_sans')
       expect(SiteSetting.heading_font).to eq('oswald')
     end
-  end
 
-  context "colors step" do
-    context "with an existing color scheme" do
-      fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
+    context "colors" do
+      context "with an existing color scheme" do
+        fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
-      it "updates the scheme" do
-        updater = wizard.create_updater('colors', theme_previews: 'Dark')
-        updater.update
-        expect(updater.success?).to eq(true)
-        expect(wizard.completed_steps?('colors')).to eq(true)
-        theme = Theme.find_by(id: SiteSetting.default_theme_id)
-        expect(theme.color_scheme.base_scheme_id).to eq('Dark')
-      end
-    end
-
-    context "with an existing default theme" do
-      fab!(:theme) { Fabricate(:theme) }
-
-      before do
-        theme.set_default!
-      end
-
-      it "should not update the default theme when no option has been selected" do
-        expect do
-          wizard.create_updater('colors', {}).update
-        end.to_not change { SiteSetting.default_theme_id }
-      end
-
-      it "should update the color scheme of the default theme" do
-        updater = wizard.create_updater('colors', theme_previews: 'Neutral')
-        expect { updater.update }.not_to change { Theme.count }
-        theme.reload
-        expect(theme.color_scheme.base_scheme_id).to eq('Neutral')
-      end
-    end
-
-    context "without an existing theme" do
-      before do
-        Theme.delete_all
-      end
-
-      context 'dark theme' do
-        it "creates the theme" do
-          updater = wizard.create_updater('colors', theme_previews: 'Dark')
-
-          expect { updater.update }.to change { Theme.count }.by(1)
-
-          theme = Theme.last
-
-          expect(theme.user_id).to eq(wizard.user.id)
+        it "updates the scheme" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Dark',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+          updater.update
+          expect(updater.success?).to eq(true)
+          expect(wizard.completed_steps?('styling')).to eq(true)
+          theme = Theme.find_by(id: SiteSetting.default_theme_id)
           expect(theme.color_scheme.base_scheme_id).to eq('Dark')
         end
       end
 
-      context 'light theme' do
-        it "creates the theme" do
-          updater = wizard.create_updater('colors',
-            theme_previews: ColorScheme::LIGHT_THEME_ID
+      context "with an existing default theme" do
+        fab!(:theme) { Fabricate(:theme) }
+
+        before do
+          theme.set_default!
+        end
+
+        it "should update the color scheme of the default theme" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Neutral',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
           )
-
-          expect { updater.update }.to change { Theme.count }.by(1)
-
-          theme = Theme.last
-
-          expect(theme.user_id).to eq(wizard.user.id)
-
-          expect(theme.color_scheme).to eq(ColorScheme.find_by(name:
-            ColorScheme::LIGHT_THEME_ID
-          ))
+          expect { updater.update }.not_to change { Theme.count }
+          theme.reload
+          expect(theme.color_scheme.base_scheme_id).to eq('Neutral')
         end
       end
+
+      context "without an existing theme" do
+        before do
+          Theme.delete_all
+        end
+
+        context 'dark theme' do
+          it "creates the theme" do
+            updater = wizard.create_updater('styling',
+              color_scheme: 'Dark',
+              body_font: 'arial',
+              heading_font: 'arial',
+              homepage_style: 'latest'
+            )
+
+            expect { updater.update }.to change { Theme.count }.by(1)
+
+            theme = Theme.last
+
+            expect(theme.user_id).to eq(wizard.user.id)
+            expect(theme.color_scheme.base_scheme_id).to eq('Dark')
+          end
+        end
+
+        context 'light theme' do
+          it "creates the theme" do
+            updater = wizard.create_updater('styling',
+              color_scheme: ColorScheme::LIGHT_THEME_ID,
+              body_font: 'arial',
+              heading_font: 'arial',
+              homepage_style: 'latest'
+            )
+
+            expect { updater.update }.to change { Theme.count }.by(1)
+
+            theme = Theme.last
+
+            expect(theme.user_id).to eq(wizard.user.id)
+
+            expect(theme.color_scheme).to eq(ColorScheme.find_by(name:
+              ColorScheme::LIGHT_THEME_ID
+            ))
+          end
+        end
+      end
+
+      context "without an existing scheme" do
+        it "creates the scheme" do
+          ColorScheme.destroy_all
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Dark',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+          updater.update
+          expect(updater.success?).to eq(true)
+          expect(wizard.completed_steps?('styling')).to eq(true)
+
+          color_scheme = ColorScheme.where(via_wizard: true).first
+          expect(color_scheme).to be_present
+          expect(color_scheme.colors).to be_present
+
+          theme = Theme.find_by(id: SiteSetting.default_theme_id)
+          expect(theme.color_scheme_id).to eq(color_scheme.id)
+        end
+      end
+
+      context "auto dark mode" do
+        before do
+          dark_scheme = ColorScheme.where(name: "Dark").first
+          SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+        end
+
+        it "does nothing when selected scheme is light" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Neutral',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+
+          expect { updater.update }.not_to change { SiteSetting.default_dark_mode_color_scheme_id }
+        end
+
+        it "unsets auto dark mode site setting when default selected scheme is also dark" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Latte',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+
+          expect { updater.update }.to change { SiteSetting.default_dark_mode_color_scheme_id }.to(-1)
+        end
+      end
+
     end
 
-    context "without an existing scheme" do
-      it "creates the scheme" do
-        ColorScheme.destroy_all
-        updater = wizard.create_updater('colors', theme_previews: 'Dark')
+    context "homepage style" do
+      it "updates the fields correctly" do
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "categories_and_top_topics"
+        )
         updater.update
-        expect(updater.success?).to eq(true)
-        expect(wizard.completed_steps?('colors')).to eq(true)
 
-        color_scheme = ColorScheme.where(via_wizard: true).first
-        expect(color_scheme).to be_present
-        expect(color_scheme.colors).to be_present
+        expect(updater).to be_success
+        expect(wizard.completed_steps?('styling')).to eq(true)
+        expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+        expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
-        theme = Theme.find_by(id: SiteSetting.default_theme_id)
-        expect(theme.color_scheme_id).to eq(color_scheme.id)
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "latest"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq('latest|new|unread|top|categories')
       end
     end
+
   end
 
   context "logos step" do
@@ -304,23 +381,6 @@ describe Wizard::StepUpdater do
       expect(wizard.completed_steps?('icons')).to eq(true)
       expect(SiteSetting.favicon).to eq(upload)
       expect(SiteSetting.large_icon).to eq(upload2)
-    end
-  end
-
-  context "homepage step" do
-    it "updates the fields correctly" do
-      updater = wizard.create_updater('homepage', homepage_style: "categories_and_top_topics")
-      updater.update
-
-      expect(updater).to be_success
-      expect(wizard.completed_steps?('homepage')).to eq(true)
-      expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
-      expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
-
-      updater = wizard.create_updater('homepage', homepage_style: "latest")
-      updater.update
-      expect(updater).to be_success
-      expect(SiteSetting.top_menu).to eq('latest|new|unread|top|categories')
     end
   end
 

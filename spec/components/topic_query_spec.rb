@@ -97,6 +97,63 @@ describe TopicQuery do
         page: 1)
       ).to eq(topics[per_page...num_topics])
     end
+
+    it "orders globally pinned topics by pinned_at rather than bumped_at" do
+      pinned1 = Fabricate(
+        :topic,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      pinned2 = Fabricate(
+        :topic,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
+
+    it "orders pinned topics within a category by pinned_at rather than bumped_at" do
+      cat = Fabricate(:category)
+      pinned1 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      pinned2 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0, category_id: cat.id)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
   end
 
   context 'bookmarks' do

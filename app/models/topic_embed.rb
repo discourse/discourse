@@ -27,10 +27,10 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   # Import an article from a source (RSS/Atom/Other)
-  def self.import(user, url, title, contents)
+  def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
     return unless url =~ /^https?\:\/\//
 
-    if SiteSetting.embed_truncate
+    if SiteSetting.embed_truncate && cook_method.nil?
       contents = first_paragraph_from(contents)
     end
     contents ||= ''
@@ -47,7 +47,7 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
-        cook_method = if SiteSetting.embed_support_markdown
+        cook_method ||= if SiteSetting.embed_support_markdown
           Post.cook_methods[:regular]
         else
           Post.cook_methods[:raw_html]
@@ -58,7 +58,8 @@ class TopicEmbed < ActiveRecord::Base
           raw: absolutize_urls(url, contents),
           skip_validations: true,
           cook_method: cook_method,
-          category: eh.try(:category_id)
+          category: category_id || eh.try(:category_id),
+          tags: SiteSetting.tagging_enabled ? tags : nil,
         }
         if SiteSetting.embed_unlisted?
           create_args[:visible] = false

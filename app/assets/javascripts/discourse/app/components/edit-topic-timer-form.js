@@ -21,7 +21,7 @@ import {
   thisWeekend,
 } from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Mousetrap from "mousetrap";
+import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),
@@ -43,12 +43,13 @@ export default Component.extend({
     "autoCloseAfterLastPost"
   ),
   duration: null,
+  _itsatrap: null,
 
   init() {
     this._super(...arguments);
 
     KeyboardShortcuts.pause();
-    this._mousetrap = new Mousetrap();
+    this.set("_itsatrap", new ItsATrap());
 
     this.set("duration", this.initialDuration);
   },
@@ -65,7 +66,9 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this._mousetrap.reset();
+
+    this._itsatrap.destroy();
+    this.set("_itsatrap", null);
     KeyboardShortcuts.unpause();
   },
 

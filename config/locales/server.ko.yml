@@ -456,14 +456,6 @@ ko:
       글을 드래그해서 선택한 다음에, 표시되는 '답글 인용하기'버튼을 눌러서 답글을 추가하는 식으로 쓰신 답글을 편집할 수 있습니다.
 
       다른 사람도 깨알같이 흩어진 답글을 읽는 것 보다는, 깊이 있게 작성된 몇개의 답글을 읽는 편이 토픽보기에 더 편하답니다.
-    get_a_room: |
-      ### 모든 사람이 대화에 참여하도록 장려
-
-      이 글에서 @%{reply_username}님은 %{count}번 댓글을 달았습니다!
-
-      훌륭한 토론에는 많은 목소리와 관점이 포함됩니다. 다른 사람들도 참여시킬 수 있습니까?
-
-      그리고 잊지 마세요. 이 특정 사용자와의 대화를 비공개로 계속하려면 [개인 메시지를 보내세요](%{base_path}/u/%{reply_username}).
     too_many_replies: |2
 
       ### 이 토픽 답글 제한량을 모두 채우셨습니다
@@ -1323,6 +1315,7 @@ ko:
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
+    disabled: "비활성"
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -1963,7 +1956,7 @@ ko:
     default_other_skip_new_user_tips: "신규 사용자 온 보딩 팁 및 배지를 건너 뜁니다."
     default_other_like_notification_frequency: "기본적으로 좋아요에 사용자에게 알림"
     default_topics_automatic_unpin: "사용자가 기본적으로 하단에 도달하면 주제를 자동으로 고정 해제합니다."
-    default_categories_watching: "기본적으로 감시되는 카테고리 목록."
+    default_categories_watching: "기본적으로 검열되는 카테고리 목록."
     default_categories_tracking: "기본적으로 추적되는 카테고리 목록."
     default_categories_muted: "기본적으로 음소거 된 카테고리 목록."
     default_categories_watching_first_post: "각 새 주제의 첫 번째 게시물이 기본적으로 감시되는 카테고리 목록입니다."
@@ -2594,6 +2587,14 @@ ko:
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
+      text_body_template: |
+        백업이 성공적으로 완료되었습니다.
+
+        [관리자 > 백업 섹션](%{base_url}/admin/backups)을 방문해 백업을 다운로드하세요.
+
+        로그는 다음과 같습니다:
+
+        %{logs}
     backup_failed:
       title: "백업 실패"
       subject_template: "백업에 실패했습니다."
@@ -3491,6 +3492,10 @@ ko:
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
     optimize_failure_message: "업로드된 이미지를 최적화하는 동안 오류가 발생했습니다."
     download_failure: "외부 공급자로부터 파일을 다운로드하지 못했습니다."
+    create_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 생성하지 못했습니다."
+    abort_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 중단하지 못했습니다."
+    complete_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 완료하지 못했습니다."
+    external_upload_not_found: "업로드를 외부 저장소에서 찾을 수 없습니다. %{additional_detail}"
     checksum_mismatch_failure: "업로드한 파일의 체크섬이 일치하지 않습니다. 업로드 시 파일 내용이 변경되었을 수 있습니다. 다시 시도해 주세요."
     cannot_promote_failure: "업로드를 완료할 수 없습니다. 이미 완료되었거나 이전에 실패했을 수 있습니다."
     attachments:
@@ -4130,17 +4135,34 @@ ko:
           city_for_disputes:
             label: "분쟁의 도시"
             placeholder: "샌프란시스코, 캘리포니아"
-      colors:
-        title: "색상"
-      fonts:
-        title: "글꼴"
+      styling:
+        title: "스타일링"
         fields:
+          color_scheme:
+            label: "색 구성표"
           body_font:
             label: "본문 글꼴"
           heading_font:
             label: "제목 글꼴"
-          font_preview:
-            label: "미리 보기"
+          styling_preview:
+            label: "미리보기"
+          homepage_style:
+            label: "홈페이지 스타일"
+            choices:
+              latest:
+                label: "최신 토픽"
+              categories_only:
+                label: "카테고리만"
+              categories_with_featured_topics:
+                label: "주요 글이 있는 카테고리"
+              categories_and_latest_topics:
+                label: "카테고리와 최신 글"
+              categories_and_top_topics:
+                label: "카테고리 및 주요 글"
+              categories_boxes:
+                label: "카테고리 상자"
+              categories_boxes_with_topics:
+                label: "주제가있는 카테고리 상자"
       logos:
         title: "로고"
         fields:
@@ -4159,26 +4181,6 @@ ko:
           large_icon:
             label: "큰 아이콘"
             description: "더 큰 크기로보기 좋은 최신 장치에서 사이트를 나타내는 데 사용되는 아이콘 이미지. 이상적으로 512 × 512보다 큽니다. 기본적으로 정사각형 로고를 사용합니다."
-      homepage:
-        description: "저희는 최근 토픽을 홈페이지에 노출하는 것을 추천합니다. 하지만, 원하신다면 홈페이지에 카테고리(토픽의 그룹)를 보이게 할 수도 있습니다."
-        title: "홈페이지"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "최신 토픽"
-              categories_only:
-                label: "카테고리 만"
-              categories_with_featured_topics:
-                label: "주요 토픽이 있는 카테고리"
-              categories_and_latest_topics:
-                label: "카테고리 및 최신 토픽"
-              categories_and_top_topics:
-                label: "카테고리 및 주요 주제"
-              categories_boxes:
-                label: "카테고리 상자"
-              categories_boxes_with_topics:
-                label: "주제가있는 카테고리 상자"
       invites:
         title: "운영진 초청하기"
         description: "거의 다 끝났습니다! 흥미로운 주제와 답변을 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>통해 토론</a> 을 시작하여 커뮤니티를 시작하는 데 도움을 줄 사람들을 초대합시다."
@@ -4238,7 +4240,7 @@ ko:
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
       auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
-      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>감시 단어 목록</a>을 참조하십시오."
+      watched_word: "이 게시물에는 검열중인 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>검열 단어 목록</a>을 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
       must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."

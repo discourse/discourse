@@ -28,12 +28,13 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
 
     // Live changes without reload
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("larger");
+    const textSize = selectKit(".text-size .combo-box");
+    await textSize.expand();
+    await textSize.selectRowByValue("larger");
     assert.ok(document.documentElement.classList.contains("text-size-larger"));
 
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("largest");
+    await textSize.expand();
+    await textSize.selectRowByValue("largest");
     assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
     assert.equal(cookie("text_size"), null, "cookie is not set");
@@ -43,16 +44,16 @@ acceptance("User Preferences - Interface", function (needs) {
 
     assert.equal(cookie("text_size"), null, "cookie is not set");
 
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("larger");
+    await textSize.expand();
+    await textSize.selectRowByValue("larger");
     await click(".text-size input[type=checkbox]");
 
     await savePreferences();
 
     assert.equal(cookie("text_size"), "larger|1", "cookie is set");
     await click(".text-size input[type=checkbox]");
-    await selectKit(".text-size .combobox").expand();
-    await selectKit(".text-size .combobox").selectRowByValue("largest");
+    await textSize.expand();
+    await textSize.selectRowByValue("largest");
 
     await savePreferences();
     assert.equal(cookie("text_size"), null, "cookie is removed");
@@ -187,6 +188,35 @@ acceptance(
         session.userColorSchemeId,
         "user's selected color scheme is selected value in light scheme dropdown"
       );
+    });
+
+    test("display 'Theme default' when default color scheme is not marked as selectable", async function (assert) {
+      let meta = document.createElement("meta");
+      meta.name = "discourse_theme_id";
+      meta.content = "1";
+      document.getElementsByTagName("head")[0].appendChild(meta);
+
+      let site = Site.current();
+      site.set("user_themes", [
+        { theme_id: 1, name: "A Theme", color_scheme_id: 2, default: true },
+      ]);
+
+      site.set("user_color_schemes", [{ id: 3, name: "A Color Scheme" }]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      const dropdownObject = selectKit(".light-color-scheme .select-kit");
+      assert.equal(dropdownObject.header().value(), null);
+      assert.equal(
+        dropdownObject.header().label(),
+        I18n.t("user.color_schemes.default_description")
+      );
+
+      await dropdownObject.expand();
+      assert.equal(dropdownObject.rows().length, 1);
+
+      document.querySelector("meta[name='discourse_theme_id']").remove();
     });
 
     test("light and dark color scheme pickers", async function (assert) {

@@ -79,7 +79,7 @@ export default Component.extend({
   _haveAcceptedTypes(files) {
     for (const file of files) {
       if (
-        !(this._hasAcceptedExtension(file) && this._hasAcceptedMimeType(file))
+        !(this._hasAcceptedExtension(file) || this._hasAcceptedMimeType(file))
       ) {
         return false;
       }

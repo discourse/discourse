@@ -920,6 +920,7 @@ describe Group do
 
   describe '.search_groups' do
     fab!(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
+    let(:messageable_group) { Fabricate(:group, name: "MessageableGroup", messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     it 'should return the right groups' do
       group

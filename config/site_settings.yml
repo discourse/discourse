@@ -283,6 +283,7 @@ basic:
   enable_upload_debug_mode:
     default: false
     hidden: true
+    client: true
   default_theme_id:
     default: -1
     hidden: true
@@ -365,9 +366,6 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
-  order_stylesheets:
-    default: false
-    hidden: true
 
 login:
   invite_only:
@@ -837,7 +835,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
+    default: "com|net|org|io|onion|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
   markdown_typographer_quotation_marks:
     client: true
@@ -1365,7 +1363,8 @@ files:
   automatically_download_gravatars: true
   allow_uploaded_avatars:
     client: true
-    default: true
+    default: "0"
+    enum: "TrustLevelAndStaffAndDisabledSetting"
   default_avatars:
     default: ""
     type: url_list
@@ -1606,7 +1605,7 @@ security:
     list_type: compact
   browser_update_user_agents:
     hidden: true
-    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9|Xbox|PlayStation"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -2197,6 +2196,9 @@ uncategorized:
 
   use_site_small_logo_as_system_avatar:
     default: true
+
+  enable_listing_suspended_users_on_search:
+    default: false
 
   disable_system_edit_notifications: true
 

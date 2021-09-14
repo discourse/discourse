@@ -1,11 +1,13 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
@@ -39,6 +41,60 @@ acceptance("Admin - User Index", function (needs) {
 
     server.put("/users/sam/preferences/username", () => {
       return helper.response({ id: 2, username: "new-sam" });
+    });
+
+    server.get("/admin/users/3.json", () => {
+      return helper.response({
+        id: 3,
+        username: "user1",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_grant_admin: true,
+        can_revoke_admin: false,
+        can_grant_moderation: true,
+        can_revoke_moderation: false,
+      });
+    });
+
+    server.put("/admin/users/3/grant_admin", () => {
+      return helper.response({
+        success: "OK",
+        email_confirmation_required: true,
+      });
+    });
+
+    server.get("/admin/users/4.json", () => {
+      return helper.response({
+        id: 4,
+        username: "user2",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_grant_admin: true,
+        can_revoke_admin: false,
+        can_grant_moderation: true,
+        can_revoke_moderation: false,
+      });
+    });
+
+    server.put("/admin/users/4/grant_admin", () => {
+      return helper.response({
+        failed: "FAILED",
+        ok: false,
+        error: "The selected two-factor method is invalid.",
+        reason: "invalid_second_factor_method",
+        backup_enabled: true,
+        security_key_enabled: true,
+        totp_enabled: true,
+        multiple_second_factor_methods: true,
+        allowed_credential_ids: ["allowed_credential_ids"],
+        challenge: "challenge",
+      });
     });
   });
 
@@ -123,5 +179,22 @@ acceptance("Admin - User Index", function (needs) {
       !exists('.group-chooser span[title="Macdonald"]'),
       "group should not be set"
     );
+  });
+
+  test("grant admin - shows the confirmation bootbox", async function (assert) {
+    await visit("/admin/users/3/user1");
+    await click(".grant-admin");
+    assert.ok(exists(".bootbox"));
+    assert.equal(
+      I18n.t("admin.user.grant_admin_confirm"),
+      query(".modal-body").textContent.trim()
+    );
+    await click(".bootbox .btn-primary");
+  });
+
+  test("grant admin - shows the second factor modal", async function (assert) {
+    await visit("/admin/users/4/user2");
+    await click(".grant-admin");
+    assert.ok(exists(".grant-admin-second-factor-modal"));
   });
 });

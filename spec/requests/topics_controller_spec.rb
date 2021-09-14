@@ -3252,6 +3252,53 @@ RSpec.describe TopicsController do
           DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
         }.by(4)
       end
+
+      context "when tracked=false" do
+        it "updates the user_stat new_since column and dismisses all the new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+          old_new_since = user.user_stat.new_since
+
+          put "/topics/reset-new.json?tracked=false"
+          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
+          expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+        end
+
+        it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
+          sign_in(user)
+          tracked_category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(user,
+                                                           NotificationLevels.all[:tracking],
+                                                           tracked_category.id)
+
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          topic_ids << Fabricate(:topic).id
+          topic_ids << Fabricate(:topic).id
+
+          dismiss_ids = topic_ids[0..1]
+          other_ids = topic_ids[2..-1].sort.reverse
+
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
+          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+
+          expect { put "/topics/reset-new.json?tracked=false" }.to change {
+            DismissedTopicUser.where(user_id: user.id).count
+          }.by(5)
+        end
+      end
     end
 
     context 'category' do
@@ -4336,6 +4383,7 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(group_message.id)
 
       expect(DismissedTopicUser.count).to eq(1)
 
@@ -4349,6 +4397,10 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(
+        private_message.id,
+        private_message_2.id
+      )
 
       expect(DismissedTopicUser.count).to eq(2)
 
@@ -4404,6 +4456,45 @@ RSpec.describe TopicsController do
 
       expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
         .to eq(true)
+    end
+  end
+
+  describe '#archive_message' do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+        g.add(user)
+      end
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'should be able to archive a private message' do
+      sign_in(user)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+
+        put "/t/#{group_message.id}/archive-message.json"
+
+        expect(response.status).to eq(200)
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      body = response.parsed_body
+
+      expect(body["group_name"]).to eq(group.name)
     end
   end
 end
