@@ -28,7 +28,7 @@ describe ::Jobs::DashboardStats do
     clear_recently_sent!
 
     expect { described_class.new.execute({}) }.not_to change { Topic.count }
-    expect(topic.reload.deleted_at).not_to be_nil
+    expect(topic.reload.deleted_at.present?).to eq(true)
   end
 
   it 'duplicates message if previous one has replies' do
