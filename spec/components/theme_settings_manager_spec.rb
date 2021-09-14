@@ -149,4 +149,24 @@ describe ThemeSettingsManager do
       expect(list_setting.list_type).to eq("compact")
     end
   end
+
+  context "Upload" do
+    let!(:upload) { Fabricate(:upload) }
+
+    it "saves the upload id" do
+      upload_setting = find_by_name(:upload_setting)
+      upload_setting.value = upload.url
+      theme.reload
+
+      expect(ThemeSetting.exists?(theme_id: theme.id, name: "upload_setting", value: upload.id.to_s)).to be_truthy
+    end
+
+    it "returns the CDN URL" do
+      upload_setting = find_by_name(:upload_setting)
+      upload_setting.value = upload.url
+      theme.reload
+
+      expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
+    end
+  end
 end
