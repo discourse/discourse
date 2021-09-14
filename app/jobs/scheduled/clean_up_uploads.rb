@@ -38,7 +38,6 @@ module Jobs
           encoded_sha = Base62.encode(upload.sha1.hex)
           next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
-          next if ThemeSetting.where(data_type: ThemeSetting.types[:upload]).where("value LIKE ?", "%#{upload.sha1}%").exists?
           if defined?(ChatMessage) &&
               ChatMessage.where("message LIKE ? OR message LIKE ?", "%#{upload.sha1}%", "%#{encoded_sha}%").exists?
             next
