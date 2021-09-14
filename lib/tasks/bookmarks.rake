@@ -31,7 +31,7 @@ task "bookmarks:sync_to_table" => :environment do |_t, args|
 
     post_action_bookmarks.each do |pab|
       now = Time.zone.now
-      bookmarks_to_create << "(#{pab.topic_id}, #{pab.post_id}, #{pab.user_id}, '#{now}', '#{now}')"
+      bookmarks_to_create << "(#{pab.post_id}, #{pab.user_id}, '#{now}', '#{now}')"
     end
 
     create_bookmarks(bookmarks_to_create)
@@ -54,7 +54,7 @@ def create_bookmarks(bookmarks_to_create)
   #
   DB.exec(
     <<~SQL
-      INSERT INTO bookmarks (topic_id, post_id, user_id, created_at, updated_at)
+      INSERT INTO bookmarks (post_id, user_id, created_at, updated_at)
       VALUES #{bookmarks_to_create.join(",\n")}
       ON CONFLICT DO NOTHING
     SQL
