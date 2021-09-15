@@ -208,7 +208,9 @@ gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
+# rss gem is bundled gem since Ruby 3
 gem 'ruby-readability', require: false
+gem 'rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
