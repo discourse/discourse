@@ -23,7 +23,7 @@ class BookmarkReminderNotificationHandler
 
   def self.clear_reminder(bookmark)
     Rails.logger.debug(
-      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder info: #{bookmark.reminder_at} | #{Bookmark.reminder_types[bookmark.reminder_type]}"
+      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}"
     )
 
     bookmark.clear_reminder!
