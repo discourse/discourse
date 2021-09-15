@@ -145,18 +145,25 @@ class TopicQuery
       elsif type == :all
         group_ids = group_with_messages_ids(user)
 
-        result = result.joins(<<~SQL)
-        LEFT JOIN topic_allowed_users tau
-          ON tau.topic_id = topics.id
-          AND tau.user_id = #{user.id.to_i}
-        LEFT JOIN topic_allowed_groups tag
-          ON tag.topic_id = topics.id
-          #{group_ids.present? ? "AND tag.group_id IN (#{group_ids.join(",")})" : ""}
-        SQL
-
-        result = result
-          .where("tag.topic_id IS NOT NULL OR tau.topic_id IS NOT NULL")
-          .distinct
+        result =
+        if group_ids.present?
+          result.where(<<~SQL)
+            topics.id IN (
+              SELECT topic_id
+              FROM topic_allowed_users
+              WHERE user_id = #{user.id.to_i}
+              UNION ALL
+              SELECT topic_id FROM topic_allowed_groups
+              WHERE group_id IN (#{group_ids.join(",")})
+            )
+          SQL
+        else
+          result.joins(<<~SQL)
+          INNER JOIN topic_allowed_users tau
+            ON tau.topic_id = topics.id
+            AND tau.user_id = #{user.id.to_i}
+          SQL
+        end
       end
 
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
@@ -238,23 +245,30 @@ class TopicQuery
       # query here as it can easily lead to an inefficient query.
       group_ids = group_with_messages_ids(user)
 
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm
-        ON gm.topic_id = topics.id
-        #{group_ids.present? ? "AND gm.group_id IN (#{group_ids.join(",")})" : ""}
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
-      SQL
+      if group_ids.present?
+        list = list.joins(<<~SQL)
+          LEFT JOIN group_archived_messages gm
+            ON gm.topic_id = topics.id
+            AND gm.group_id IN (#{group_ids.join(",")})
+          LEFT JOIN user_archived_messages um
+            ON um.user_id = #{user.id.to_i}
+            AND um.topic_id = topics.id
+        SQL
 
-      list =
         if archived
           list.where("um.user_id IS NOT NULL OR gm.topic_id IS NOT NULL")
         else
           list.where("um.user_id IS NULL AND gm.topic_id IS NULL")
         end
+      else
+        list = list.joins(<<~SQL)
+          LEFT JOIN user_archived_messages um
+          ON um.user_id = #{user.id.to_i}
+          AND um.topic_id = topics.id
+        SQL
 
-      list
+        list.where("um.user_id IS #{archived ? "NOT NULL" : "NULL"}")
+      end
     end
 
     def not_archived(list, user)
