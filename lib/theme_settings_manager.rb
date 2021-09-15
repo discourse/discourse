@@ -209,7 +209,10 @@ class ThemeSettingsManager
     end
 
     def default_upload_id
-      theme_field = theme.theme_fields.find_by(name: @default)
+      theme_field = theme.theme_fields.find_by(
+        name: @default,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
       return if theme_field.blank?
 
       theme_field.upload_id
