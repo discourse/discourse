@@ -973,7 +973,7 @@ class TopicsController < ApplicationController
 
     topic_ids = TopicsBulkAction.new(
       current_user,
-      topic_scope.distinct(false).pluck(:id),
+      topic_scope.pluck(:id),
       type: "dismiss_topics"
     ).perform!
 
@@ -1245,11 +1245,7 @@ class TopicsController < ApplicationController
     if inbox = params[:private_message_inbox]
       filter = private_message_filter(topic_query, inbox)
       topic_query.options[:limit] = false
-
-      topic_query
-        .filter_private_messages_unread(current_user, filter)
-        .distinct(false)
-        .pluck(:id)
+      topics = topic_query.filter_private_messages_unread(current_user, filter)
     else
       topics = TopicQuery.unread_filter(topic_query.joined_topic_user, staff: guardian.is_staff?).listable_topics
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
@@ -1268,9 +1264,9 @@ class TopicsController < ApplicationController
       if params[:tag_name].present?
         topics = topics.joins(:tags).where("tags.name": params[:tag_name])
       end
-
-      topics.pluck(:id)
     end
+
+    topics.pluck(:id)
   end
 
   def private_message_filter(topic_query, inbox)
