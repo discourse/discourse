@@ -103,7 +103,12 @@
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#if usingDefaultSearchType}}
-            {{search-result-entries posts=model.posts bulkSelectEnabled=bulkSelectEnabled selected=selected}}
+            {{search-result-entries
+              posts=model.posts
+              bulkSelectEnabled=bulkSelectEnabled
+              selected=selected
+              highlightQuery=highlightQuery
+            }}
 
             {{#conditional-loading-spinner condition=loading }}
               {{#unless hasResults}}

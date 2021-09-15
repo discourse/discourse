@@ -131,6 +131,8 @@ acceptance("Search - Full Page", function (needs) {
       1,
       "shows the right icon"
     );
+
+    assert.equal(count(".search-highlight"), 1, "search highlights work");
   });
 
   test("escape search term", async function (assert) {

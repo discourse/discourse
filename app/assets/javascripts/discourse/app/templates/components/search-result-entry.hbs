@@ -16,7 +16,7 @@
         {{#if post.useTopicTitleHeadline}}
           {{html-safe post.topicTitleHeadline}}
         {{else}}
-          {{#highlight-search highlight=q}}
+          {{#highlight-search highlight=highlightQuery}}
             {{html-safe post.topic.fancyTitle}}
           {{/highlight-search}}
         {{/if}}
