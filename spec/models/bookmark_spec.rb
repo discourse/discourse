@@ -5,8 +5,8 @@ require 'rails_helper'
 describe Bookmark do
   fab!(:post) { Fabricate(:post) }
 
-  context 'validations' do
-    it 'does not allow user to bookmark a post twice' do
+  context "validations" do
+    it "does not allow user to bookmark a post twice, enforces unique bookmark per post, user, and for_topic" do
       bookmark = Fabricate(:bookmark, post: post)
       user = bookmark.user
 
@@ -16,6 +16,40 @@ describe Bookmark do
       )
 
       expect(bookmark_2.valid?).to eq(false)
+    end
+
+    it "allows a user to bookmark a post twice if it is the first post and for_topic is different" do
+      post.update!(post_number: 1)
+      bookmark = Fabricate(:bookmark, post: post, for_topic: false)
+      user = bookmark.user
+
+      bookmark_2 = Fabricate(:bookmark,
+        post: post,
+        user: user,
+        for_topic: true
+      )
+
+      expect(bookmark_2.valid?).to eq(true)
+
+      bookmark_3 = Fabricate.build(:bookmark,
+        post: post,
+        user: user,
+        for_topic: true
+      )
+
+      expect(bookmark_3.valid?).to eq(false)
+    end
+  end
+
+  describe "#find_for_topic_by_user" do
+    it "gets the for_topic bookmark for a user for a specific topic" do
+      user = Fabricate(:user)
+      post.update!(post_number: 1)
+      bookmark = Fabricate(:bookmark, user: user)
+      bookmark_2 = Fabricate(:bookmark, user: user, post: post, for_topic: true)
+      expect(Bookmark.find_for_topic_by_user(post.topic_id, user.id)).to eq(bookmark_2)
+      bookmark_2.update!(for_topic: false)
+      expect(Bookmark.find_for_topic_by_user(post.topic_id, user.id)).to eq(nil)
     end
   end
 
