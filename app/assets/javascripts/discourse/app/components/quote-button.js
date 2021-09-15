@@ -31,6 +31,10 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
+function regexSafeStr(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
@@ -133,19 +137,20 @@ export default Component.extend({
       // by fast edit, so ignore it
       // if the selection is present multiple times, we also consider it too complex
       // and ignore it, note this specific case could probably be handled in the future
-      const regexp = new RegExp(quoteState.buffer, "gi");
+      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+      const matches = postBody.match(regexp);
       if (
         quoteState.buffer.length < 1 ||
         quoteState.buffer.match(/\n/g) ||
-        postBody.match(regexp).length > 1
+        matches?.length > 1
       ) {
         this.set("_isFastEditable", false);
         this.set("_fastEditInitalSelection", null);
         this.set("_fastEditNewSelection", null);
-      } else {
+      } else if (matches?.length === 1) {
         this.set("_isFastEditable", true);
-        this.set("_fastEditInitalSelection", quoteState.buffer.toString());
-        this.set("_fastEditNewSelection", quoteState.buffer.toString());
+        this.set("_fastEditInitalSelection", quoteState.buffer);
+        this.set("_fastEditNewSelection", quoteState.buffer);
       }
     }
 
