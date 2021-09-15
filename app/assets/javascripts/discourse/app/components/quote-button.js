@@ -44,6 +44,7 @@ export default Component.extend({
   classNameBindings: ["visible"],
   visible: false,
   privateCategory: alias("topic.category.read_restricted"),
+  editPost: null,
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -350,7 +351,7 @@ export default Component.extend({
     } else {
       const postId = this.quoteState.postId;
       const postModel = this.topic.postStream.findLoadedPost(postId);
-      this.editPost(postModel);
+      this?.editPost(postModel);
     }
   },
 
