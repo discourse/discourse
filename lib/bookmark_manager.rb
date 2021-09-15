@@ -7,9 +7,9 @@ class BookmarkManager
     @user = user
   end
 
-  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
+  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
+  def create(post_id:, name: nil, reminder_at: nil, reminder_type: nil, options: {})
     post = Post.find_by(id: post_id)
-    reminder_type = parse_reminder_type(reminder_type)
 
     # no bookmarking deleted posts or topics
     raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
@@ -23,7 +23,6 @@ class BookmarkManager
         user_id: @user.id,
         post: post,
         name: name,
-        reminder_type: reminder_type,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
       }.merge(options)
@@ -67,16 +66,14 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
+  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
+  def update(bookmark_id:, name:, reminder_at:, reminder_type: nil, options: {})
     bookmark = find_bookmark_and_check_access(bookmark_id)
-
-    reminder_type = parse_reminder_type(reminder_type)
 
     success = bookmark.update(
       {
         name: name,
         reminder_at: reminder_at,
-        reminder_type: reminder_type,
         reminder_set_at: Time.zone.now
       }.merge(options)
     )
@@ -117,10 +114,5 @@ class BookmarkManager
 
     TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
     bookmarks_remaining_in_topic
-  end
-
-  def parse_reminder_type(reminder_type)
-    return if reminder_type.blank?
-    reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
   end
 end

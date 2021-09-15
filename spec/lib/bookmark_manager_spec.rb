@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe BookmarkManager do
   let(:user) { Fabricate(:user) }
 
-  let(:reminder_type) { 'tomorrow' }
   let(:reminder_at) { 1.day.from_now }
   fab!(:post) { Fabricate(:post) }
   let(:name) { 'Check this out!' }
@@ -32,7 +31,7 @@ RSpec.describe BookmarkManager do
     end
 
     it "updates the topic user bookmarked column to true if any post is bookmarked" do
-      subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+      subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
       tu = TopicUser.find_by(user: user)
       expect(tu.bookmarked).to eq(true)
       tu.update(bookmarked: false)
@@ -41,14 +40,13 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
-    context "when a reminder time + type is provided" do
+    context "when a reminder time is provided" do
       it "saves the values correctly" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
         expect(bookmark.reminder_at).to eq_time(reminder_at)
         expect(bookmark.reminder_set_at).not_to eq(nil)
-        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:tomorrow])
       end
     end
 
@@ -81,21 +79,11 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the reminder time is not provided when it needs to be" do
-      let(:reminder_at) { nil }
-      it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
-        expect(subject.errors.full_messages).to include(
-          "Reminder at " + I18n.t("bookmarks.errors.time_must_be_provided")
-        )
-      end
-    end
-
     context "when the reminder time is in the past" do
       let(:reminder_at) { 10.days.ago }
 
       it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_past_reminder"))
       end
     end
@@ -104,7 +92,7 @@ RSpec.describe BookmarkManager do
       let(:reminder_at) { 11.years.from_now }
 
       it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
       end
     end
@@ -169,25 +157,22 @@ RSpec.describe BookmarkManager do
     let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: user, post: post, name: "Old name") }
     let(:new_name) { "Some new name" }
     let(:new_reminder_at) { 10.days.from_now }
-    let(:new_reminder_type) { Bookmark.reminder_types[:custom] }
     let(:options) { {} }
 
     def update_bookmark
       subject.update(
         bookmark_id: bookmark.id,
         name: new_name,
-        reminder_type: new_reminder_type,
         reminder_at: new_reminder_at,
         options: options
       )
     end
 
-    it "saves the time and new reminder type and new name successfully" do
+    it "saves the time and new name successfully" do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
-      expect(bookmark.reminder_type).to eq(new_reminder_type)
     end
 
     context "when options are provided" do
@@ -197,15 +182,6 @@ RSpec.describe BookmarkManager do
         update_bookmark
         bookmark.reload
         expect(bookmark.auto_delete_preference).to eq(1)
-      end
-    end
-
-    context "if the new reminder type is a string" do
-      let(:new_reminder_type) { "custom" }
-      it "is parsed" do
-        update_bookmark
-        bookmark.reload
-        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:custom])
       end
     end
 

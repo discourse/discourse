@@ -2,7 +2,8 @@
 
 class Bookmark < ActiveRecord::Base
   self.ignored_columns = [
-    "topic_id" # TODO (martin) (2021-12-01): remove
+    "topic_id", # TODO (martin) (2021-12-01): remove
+    "reminder_type" # TODO (martin) (2021-12-01): remove
   ]
 
   belongs_to :user
@@ -11,6 +12,15 @@ class Bookmark < ActiveRecord::Base
 
   delegate :topic_id, to: :post
 
+  def self.auto_delete_preferences
+    @auto_delete_preferences ||= Enum.new(
+      never: 0,
+      when_reminder_sent: 1,
+      on_owner_reply: 2
+    )
+  end
+
+  # TODO (martin) (2021-12-01) Remove this once plugins are not using it.
   def self.reminder_types
     @reminder_types ||= Enum.new(
       later_today: 1,
@@ -23,19 +33,6 @@ class Bookmark < ActiveRecord::Base
       later_this_week: 8
     )
   end
-
-  def self.auto_delete_preferences
-    @auto_delete_preferences ||= Enum.new(
-      never: 0,
-      when_reminder_sent: 1,
-      on_owner_reply: 2
-    )
-  end
-
-  validates :reminder_at, presence: {
-    message: I18n.t("bookmarks.errors.time_must_be_provided"),
-    if: -> { reminder_type.present? }
-  }
 
   validate :unique_per_post_for_user,
     on: [:create, :update],
@@ -83,7 +80,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def no_reminder?
-    self.reminder_at.blank? && self.reminder_type.blank?
+    self.reminder_at.blank?
   end
 
   def auto_delete_when_reminder_sent?
@@ -101,7 +98,6 @@ class Bookmark < ActiveRecord::Base
   def clear_reminder!
     update!(
       reminder_at: nil,
-      reminder_type: nil,
       reminder_last_sent_at: Time.zone.now,
       reminder_set_at: nil
     )
@@ -173,7 +169,6 @@ end
 #  user_id                :bigint           not null
 #  post_id                :bigint           not null
 #  name                   :string(100)
-#  reminder_type          :integer
 #  reminder_at            :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -188,7 +183,6 @@ end
 #  index_bookmarks_on_post_id                            (post_id)
 #  index_bookmarks_on_reminder_at                        (reminder_at)
 #  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
-#  index_bookmarks_on_reminder_type                      (reminder_type)
 #  index_bookmarks_on_topic_id                           (topic_id)
 #  index_bookmarks_on_user_id                            (user_id)
 #  index_bookmarks_on_user_id_and_post_id_and_for_topic  (user_id,post_id,for_topic) UNIQUE

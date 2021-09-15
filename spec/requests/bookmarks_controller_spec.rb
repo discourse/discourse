@@ -19,7 +19,6 @@ describe BookmarksController do
 
       post "/bookmarks.json", params: {
         post_id: bookmark_post.id,
-        reminder_type: "tomorrow",
         reminder_at: (Time.zone.now + 1.day).iso8601
       }
 
@@ -39,7 +38,6 @@ describe BookmarksController do
       it "returns failed JSON with a 400 error" do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
-          reminder_type: "tomorrow",
           reminder_at: (Time.zone.now + 1.day).iso8601
         }
         post "/bookmarks.json", params: {
@@ -62,27 +60,12 @@ describe BookmarksController do
       it "returns failed JSON with a 400 error" do
         post "/bookmarks.json", params: {
           post_id: bookmark_post.id,
-          reminder_type: "tomorrow",
           reminder_at: (Time.zone.now + 1.day).iso8601
         }
 
         expect(response.status).to eq(400)
         expect(response.parsed_body['errors']).to include(
           I18n.t("bookmarks.errors.already_bookmarked_post")
-        )
-      end
-    end
-
-    context "if the user provides a reminder type that needs a reminder_at that is missing" do
-      it "returns failed JSON with a 400 error" do
-        post "/bookmarks.json", params: {
-          post_id: bookmark_post.id,
-          reminder_type: "tomorrow"
-        }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body['errors'].first).to include(
-          I18n.t("bookmarks.errors.time_must_be_provided")
         )
       end
     end
