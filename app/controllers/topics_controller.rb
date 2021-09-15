@@ -952,7 +952,7 @@ class TopicsController < ApplicationController
   end
 
   def private_message_reset_new
-    topic_query = TopicQuery.new(current_user)
+    topic_query = TopicQuery.new(current_user, limit: false)
 
     if params[:topic_ids].present?
       unless Array === params[:topic_ids]
@@ -968,13 +968,12 @@ class TopicsController < ApplicationController
       params.require(:inbox)
       inbox = params[:inbox].to_s
       filter = private_message_filter(topic_query, inbox)
-      topic_query.options[:limit] = false
       topic_scope = topic_query.filter_private_message_new(current_user, filter)
     end
 
     topic_ids = TopicsBulkAction.new(
       current_user,
-      topic_scope.pluck(:id),
+      topic_scope.distinct(false).pluck(:id),
       type: "dismiss_topics"
     ).perform!
 
@@ -1246,7 +1245,11 @@ class TopicsController < ApplicationController
     if inbox = params[:private_message_inbox]
       filter = private_message_filter(topic_query, inbox)
       topic_query.options[:limit] = false
-      topics = topic_query.filter_private_messages_unread(current_user, filter)
+
+      topic_query
+        .filter_private_messages_unread(current_user, filter)
+        .distinct(false)
+        .pluck(:id)
     else
       topics = TopicQuery.unread_filter(topic_query.joined_topic_user, staff: guardian.is_staff?).listable_topics
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
@@ -1265,9 +1268,9 @@ class TopicsController < ApplicationController
       if params[:tag_name].present?
         topics = topics.joins(:tags).where("tags.name": params[:tag_name])
       end
-    end
 
-    topics.pluck(:id)
+      topics.pluck(:id)
+    end
   end
 
   def private_message_filter(topic_query, inbox)
