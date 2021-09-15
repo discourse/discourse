@@ -46,7 +46,14 @@ class Bookmark < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
 
   def unique_per_post_for_user
-    if Bookmark.exists?(user_id: user_id, post_id: post_id)
+    is_first_post = Post.where(id: post_id).pluck_first(:post_number) == 1
+    exists = if is_first_post
+      Bookmark.exists?(user_id: user_id, post_id: post_id, for_topic: for_topic)
+    else
+      Bookmark.exists?(user_id: user_id, post_id: post_id)
+    end
+
+    if exists
       self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
     end
   end
@@ -116,6 +123,10 @@ class Bookmark < ActiveRecord::Base
     joins(:post).where(user_id: user_id, posts: { topic_id: topic_id })
   }
 
+  def self.find_for_topic_by_user(topic_id, user_id)
+    for_user_in_topic(user_id, topic_id).where(for_topic: true).first
+  end
+
   def self.count_per_day(opts = nil)
     opts ||= {}
     result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
@@ -170,14 +181,15 @@ end
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
+#  for_topic              :boolean          default(FALSE), not null
 #
 # Indexes
 #
-#  index_bookmarks_on_post_id              (post_id)
-#  index_bookmarks_on_reminder_at          (reminder_at)
-#  index_bookmarks_on_reminder_set_at      (reminder_set_at)
-#  index_bookmarks_on_reminder_type        (reminder_type)
-#  index_bookmarks_on_topic_id             (topic_id)
-#  index_bookmarks_on_user_id              (user_id)
-#  index_bookmarks_on_user_id_and_post_id  (user_id,post_id) UNIQUE
+#  index_bookmarks_on_post_id                            (post_id)
+#  index_bookmarks_on_reminder_at                        (reminder_at)
+#  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
+#  index_bookmarks_on_reminder_type                      (reminder_type)
+#  index_bookmarks_on_topic_id                           (topic_id)
+#  index_bookmarks_on_user_id                            (user_id)
+#  index_bookmarks_on_user_id_and_post_id_and_for_topic  (user_id,post_id,for_topic) UNIQUE
 #
