@@ -16,7 +16,12 @@ acceptance("Search - Full Page", function (needs) {
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
     server.get("/tags/filter/search", () => {
-      return helper.response({ results: [{ text: "monkey", count: 1 }] });
+      return helper.response({
+        results: [
+          { text: "monkey", count: 1 },
+          { text: "gazelle", count: 2 },
+        ],
+      });
     });
 
     server.get("/u/search/users", () => {
@@ -474,6 +479,20 @@ acceptance("Search - Full Page", function (needs) {
     );
   });
 
+  test("all tags checkbox only visible for two or more tags", async function (assert) {
+    await visit("/search?expanded=true");
+
+    const tagSelector = selectKit("#search-with-tags");
+
+    await tagSelector.expand();
+    await tagSelector.selectRowByValue("monkey");
+
+    assert.ok(!visible("input.all-tags"), "all tags checkbox not visible");
+
+    await tagSelector.selectRowByValue("gazelle");
+    assert.ok(visible("input.all-tags"), "all tags checkbox is visible");
+  });
+
   test("search for users", async function (assert) {
     await visit("/search");
 
@@ -514,7 +533,7 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert.ok(!exists(".search-filters"), "has no filters");
-    assert.equal(count(".fps-tag-item"), 1, "has one tag result");
+    assert.equal(count(".fps-tag-item"), 2, "has two tag results");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue("0");

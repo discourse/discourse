@@ -32,9 +32,8 @@ const SearchTypes = [
   {
     name: I18n.t("search.type.categories_and_tags"),
     id: 1,
-    term: "in:categories",
   },
-  { name: I18n.t("search.type.users"), id: 2, term: "in:users" },
+  { name: I18n.t("search.type.users"), id: 2 },
 ];
 const PAGE_LIMIT = 10;
 
@@ -221,12 +220,14 @@ export default Controller.extend({
     if (!this.model.posts) {
       return 0;
     }
-    const totalCount =
+
+    this.set(
+      "resultCount",
       this.model.posts.length +
-      this.model.categories.length +
-      this.model.tags.length +
-      this.model.users.length;
-    this.set("resultCount", totalCount);
+        this.model.categories.length +
+        this.model.tags.length +
+        this.model.users.length
+    );
   },
 
   @discourseComputed("hasResults")
@@ -317,7 +318,6 @@ export default Controller.extend({
               loading: false,
             });
           });
-
         break;
       case 2:
         userSearch({ term: searchTerm, limit: 20 })
@@ -331,7 +331,6 @@ export default Controller.extend({
               loading: false,
             });
           });
-
         break;
       default:
         ajax("/search", { data: args })
