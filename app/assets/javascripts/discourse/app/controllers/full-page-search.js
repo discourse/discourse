@@ -27,13 +27,17 @@ const SortOrders = [
   { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
 ];
 
+export const SEARCH_TYPE_DEFAULT = "topics_posts";
+export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
+export const SEARCH_TYPE_USERS = "users";
+
 const SearchTypes = [
-  { name: I18n.t("search.type.default"), id: 0 },
+  { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
   {
     name: I18n.t("search.type.categories_and_tags"),
-    id: 1,
+    id: SEARCH_TYPE_CATS_TAGS,
   },
-  { name: I18n.t("search.type.users"), id: 2 },
+  { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
 ];
 const PAGE_LIMIT = 10;
 
@@ -52,9 +56,8 @@ export default Controller.extend({
     "search_type",
   ],
   q: undefined,
-  selected: [],
   context_id: null,
-  search_type: 0,
+  search_type: SEARCH_TYPE_DEFAULT,
   context: null,
   searching: false,
   sortOrder: 0,
@@ -63,6 +66,12 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
   searchTypes: SearchTypes,
+
+  init() {
+    this._super(...arguments);
+
+    this.selected = [];
+  },
 
   @discourseComputed("resultCount")
   hasResults(resultCount) {
@@ -247,7 +256,7 @@ export default Controller.extend({
 
   @discourseComputed("search_type")
   usingDefaultSearchType(searchType) {
-    return searchType === 0;
+    return searchType === SEARCH_TYPE_DEFAULT;
   },
 
   @discourseComputed("bulkSelectEnabled")
@@ -299,8 +308,8 @@ export default Controller.extend({
 
     const searchKey = getSearchKey(args);
 
-    switch (parseInt(this.search_type, 10)) {
-      case 1:
+    switch (this.search_type) {
+      case SEARCH_TYPE_CATS_TAGS:
         const categoryTagSearch = searchCategoryTag(
           searchTerm,
           this.siteSettings
@@ -319,7 +328,7 @@ export default Controller.extend({
             });
           });
         break;
-      case 2:
+      case SEARCH_TYPE_USERS:
         userSearch({ term: searchTerm, limit: 20 })
           .then(async (results) => {
             const model = (await translateResults({ users: results })) || {};

@@ -9,6 +9,11 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
+import {
+  SEARCH_TYPE_CATS_TAGS,
+  SEARCH_TYPE_DEFAULT,
+  SEARCH_TYPE_USERS,
+} from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Search - Full Page", function (needs) {
@@ -504,7 +509,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.ok(!exists(".fps-user-item"), "has no user results");
 
     await typeSelector.expand();
-    await typeSelector.selectRowByValue("2");
+    await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
 
     assert.ok(!exists(".search-filters"), "has no filters");
 
@@ -513,7 +518,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.equal(count(".fps-user-item"), 1, "has one user result");
 
     await typeSelector.expand();
-    await typeSelector.selectRowByValue("0");
+    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
 
     assert.ok(
       exists(".search-filters"),
@@ -531,14 +536,14 @@ acceptance("Search - Full Page", function (needs) {
     assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
 
     await typeSelector.expand();
-    await typeSelector.selectRowByIndex(1);
+    await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
     await click(".search-cta");
 
     assert.ok(!exists(".search-filters"), "has no filters");
     assert.equal(count(".fps-tag-item"), 2, "has two tag results");
 
     await typeSelector.expand();
-    await typeSelector.selectRowByValue("0");
+    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
 
     assert.ok(
       exists(".search-filters"),
