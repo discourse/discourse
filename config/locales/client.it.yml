@@ -184,6 +184,7 @@ it:
         cn_northwest_1: "Cina"
         eu_central_1: "Europa (Francoforte)"
         eu_north_1: "Europa (Stoccolma)"
+        eu_south_1: "Europa (Milano)"
         eu_west_1: "Europa (Irlanda)"
         eu_west_2: "Europa (Londra)"
         eu_west_3: "Europa (Parigi)"
