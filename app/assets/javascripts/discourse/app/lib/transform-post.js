@@ -40,6 +40,7 @@ export function transformBasicPost(post) {
     bookmarkReminderAt: post.bookmark_reminder_at,
     bookmarkName: post.bookmark_name,
     bookmarkReminderType: post.bookmark_reminder_type,
+    bookmarkForTopic: post.bookmark_for_topic,
     yours: post.yours,
     shareUrl: post.get("shareUrl"),
     staff: post.staff,

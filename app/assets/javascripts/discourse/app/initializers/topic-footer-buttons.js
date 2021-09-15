@@ -107,6 +107,7 @@ export default {
           return I18n.t("bookmarked.help.unbookmark");
         }
       },
+      // action: () => { this.toggleBookmark(nil, { forTopic: true }) },
       action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;

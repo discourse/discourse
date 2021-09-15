@@ -196,6 +196,7 @@ export default Component.extend({
         this._executeAfterSave(response, reminderAtISO);
       });
     } else {
+      data.for_topic = this.model.forTopic;
       return ajax("/bookmarks", { type: "POST", data }).then((response) => {
         this._executeAfterSave(response, reminderAtISO);
       });
@@ -220,7 +221,7 @@ export default Component.extend({
       type: "DELETE",
     }).then((response) => {
       if (this.afterDelete) {
-        this.afterDelete(response.topic_bookmarked);
+        this.afterDelete(response.topic_bookmarked, this.model.id);
       }
     });
   },

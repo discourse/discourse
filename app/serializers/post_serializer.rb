@@ -56,6 +56,7 @@ class PostSerializer < BasicPostSerializer
              :bookmark_reminder_type,
              :bookmark_name,
              :bookmark_auto_delete_preference,
+             :bookmark_for_topic,
              :raw,
              :actions_summary,
              :moderator?,
@@ -364,9 +365,9 @@ class PostSerializer < BasicPostSerializer
 
   def post_bookmark
     if @topic_view.present?
-      @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
+      @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id && !bookmark.for_topic }
     else
-      @post_bookmark ||= object.bookmarks.find_by(user: scope.user)
+      @post_bookmark ||= object.bookmarks.find_by(user: scope.user, for_topic: false)
     end
   end
 
@@ -385,6 +386,10 @@ class PostSerializer < BasicPostSerializer
 
   def bookmark_auto_delete_preference
     post_bookmark&.auto_delete_preference
+  end
+
+  def bookmark_for_topic
+    post_bookmark&.for_topic
   end
 
   def bookmark_id
