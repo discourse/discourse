@@ -45,7 +45,7 @@ RSpec.describe BookmarkQuery do
       before do
         @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
         @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
-        @bookmark4 = Fabricate(:bookmark, user: user, post: @post, topic: @post.topic)
+        @bookmark4 = Fabricate(:bookmark, user: user, post: @post)
       end
 
       it "can search by bookmark name" do
@@ -90,7 +90,7 @@ RSpec.describe BookmarkQuery do
     context "for a private message topic bookmark" do
       let(:pm_topic) { Fabricate(:private_message_topic) }
       before do
-        bookmark1.update(topic: pm_topic, post: Fabricate(:post, topic: pm_topic))
+        bookmark1.update(post: Fabricate(:post, topic: pm_topic))
         TopicUser.change(user.id, pm_topic.id, total_msecs_viewed: 1)
       end
 
@@ -160,7 +160,7 @@ RSpec.describe BookmarkQuery do
         Topic.expects(:preload_custom_fields)
         expect(
           bookmark_query.list_all.find do |b|
-            b.topic_id = bookmark1.topic_id
+            b.topic.id = bookmark1.topic.id
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
       end

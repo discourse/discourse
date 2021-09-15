@@ -3108,9 +3108,9 @@ RSpec.describe TopicsController do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
-        Fabricate(:bookmark, post: post, topic: post.topic, user: user)
+        Fabricate(:bookmark, post: post, user: user)
         put "/t/#{post.topic_id}/remove_bookmarks.json"
-        expect(Bookmark.where(user: user, topic: topic).count).to eq(0)
+        expect(Bookmark.for_user_in_topic(user.id, post.topic_id).count).to eq(0)
       end
     end
   end
@@ -3130,7 +3130,7 @@ RSpec.describe TopicsController do
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      Bookmark.create(post: post, user: user, topic: post.topic)
+      Bookmark.create(post: post, user: user)
 
       put "/t/#{post.topic_id}/bookmark.json"
       expect(response.status).to eq(400)
@@ -3143,14 +3143,14 @@ RSpec.describe TopicsController do
         put "/t/#{post.topic_id}/bookmark.json"
         expect(response.status).to eq(200)
 
-        bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
+        bookmarks_for_topic = Bookmark.for_user_in_topic(user.id, post.topic_id)
         expect(bookmarks_for_topic.count).to eq(1)
         expect(bookmarks_for_topic.first.post_id).to eq(post.id)
       end
 
       it "errors if the topic is already bookmarked for the user" do
         post = create_post
-        Bookmark.create(post: post, topic: post.topic, user: user)
+        Bookmark.create(post: post, user: user)
 
         put "/t/#{post.topic_id}/bookmark.json"
         expect(response.status).to eq(400)

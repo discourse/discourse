@@ -19,6 +19,8 @@ en:
       long: "%B %-d, %Y, %l:%M%P"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:

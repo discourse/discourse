@@ -5061,6 +5061,39 @@ describe UsersController do
       expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
     end
 
+    it "returns an .ics file of bookmark reminders for the user in date order" do
+      bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+      bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark1.reminder_at_ics}
+        DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark1.topic.title}
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark2.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark2.reminder_at_ics}
+        DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:Some bookmark note
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        END:VEVENT
+        END:VCALENDAR
+      ICS
+    end
+
     it "does not show another user's bookmarks" do
       sign_in(user)
       get "/u/#{bookmark3.user.username}/bookmarks.json"

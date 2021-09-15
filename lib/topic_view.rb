@@ -392,6 +392,7 @@ class TopicView
 
   def has_bookmarks?
     return false if @user.blank?
+    return false if @topic.trashed?
     @topic.bookmarks.exists?(user_id: @user.id)
   end
 

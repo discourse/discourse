@@ -18,7 +18,7 @@ RSpec.describe BookmarkManager do
       bookmark = Bookmark.find_by(user: user)
 
       expect(bookmark.post_id).to eq(post.id)
-      expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.topic.id).to eq(post.topic_id)
     end
 
     it "when topic is deleted it raises invalid access from guardian check" do
@@ -65,7 +65,7 @@ RSpec.describe BookmarkManager do
 
     context "when the bookmark already exists for the user & post" do
       before do
-        Bookmark.create(post: post, user: user, topic: post.topic)
+        Bookmark.create(post: post, user: user)
       end
 
       it "adds an error to the manager" do
@@ -228,19 +228,19 @@ RSpec.describe BookmarkManager do
 
   describe ".destroy_for_topic" do
     let!(:topic) { Fabricate(:topic) }
-    let!(:bookmark1) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
-    let!(:bookmark2) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
+    let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+    let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
 
     it "destroys all bookmarks for the topic for the specified user" do
       subject.destroy_for_topic(topic)
-      expect(Bookmark.where(user: user, topic: topic).length).to eq(0)
+      expect(Bookmark.for_user_in_topic(user.id, topic.id).length).to eq(0)
     end
 
     it "does not destroy any other user's topic bookmarks" do
       user2 = Fabricate(:user)
-      Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user2)
+      Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user2)
       subject.destroy_for_topic(topic)
-      expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
+      expect(Bookmark.for_user_in_topic(user2.id, topic.id).length).to eq(1)
     end
 
     it "updates the topic user bookmarked column to false" do
