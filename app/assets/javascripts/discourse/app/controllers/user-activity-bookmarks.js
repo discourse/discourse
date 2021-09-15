@@ -66,24 +66,22 @@ export default Controller.extend({
 
     this.set("loadingMore", true);
 
-    return this._loadMoreBookmarks({ q: this.q })
+    return this._loadMoreBookmarks(this.q)
       .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
 
-  _loadMoreBookmarks(additionalParams) {
+  _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
       return Promise.resolve();
     }
 
     let moreUrl = this.model.loadMoreUrl;
-    if (additionalParams) {
-      if (moreUrl.includes("?")) {
-        moreUrl += "&" + $.param(additionalParams);
-      } else {
-        moreUrl += "?" + $.param(additionalParams);
-      }
+    if (searchQuery) {
+      const delimiter = moreUrl.includes("?") ? "&" : "?";
+      const q = encodeURIComponent(searchQuery);
+      moreUrl += `${delimiter}q=${q}`;
     }
 
     return ajax({ url: moreUrl });
