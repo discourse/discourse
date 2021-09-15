@@ -348,7 +348,7 @@ export default Component.extend({
         document.querySelector("#fast-edit-input")?.focus();
       });
     } else {
-      const postId = this.quoteState?.postId;
+      const postId = this.quoteState.postId;
       const postModel = this.topic.postStream.findLoadedPost(postId);
       this.editPost(postModel);
     }
