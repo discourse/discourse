@@ -31,6 +31,10 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
+function fixQuotes(str) {
+  return str.replace(/‘|’|„|“|«|»|”/g, '"');
+}
+
 function regexSafeStr(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -360,8 +364,8 @@ export default Component.extend({
     return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
       .then((result) => {
         const newRaw = result.raw.replace(
-          this._fastEditInitalSelection,
-          this._fastEditNewSelection
+          fixQuotes(this._fastEditInitalSelection),
+          fixQuotes(this._fastEditNewSelection)
         );
 
         postModel
