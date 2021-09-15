@@ -2348,6 +2348,8 @@ en:
       search_google_button: "Google"
       search_button: "Search"
       search_term_label: "enter search keyword"
+      categories: "Categories"
+      tags: "Tags"
 
       type:
         default: "Topics/posts"

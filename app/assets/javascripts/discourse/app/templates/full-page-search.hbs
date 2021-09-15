@@ -153,7 +153,7 @@
               {{#if hasResults}}
                 {{#if model.categories.length}}
                   <h4 class="category-heading">
-                    Categories
+                    {{i18n "search.categories"}}
                   </h4>
                   <div class="category-items">
                     {{#each model.categories as |category|}}
@@ -164,7 +164,7 @@
 
                 {{#if model.tags.length}}
                   <h4 class="tag-heading">
-                    Tags
+                    {{i18n "search.tags"}}
                   </h4>
                   <div class="tag-items">
                     {{#each model.tags as |tag|}}
