@@ -42,6 +42,7 @@ export default Component.extend({
   _fastEditInitalSelection: null,
   _fastEditNewSelection: null,
   _isSavingFastEdit: false,
+  _canEditPost: false,
 
   _isMouseDown: false,
   _reselected: false,
@@ -123,12 +124,16 @@ export default Component.extend({
     this.set("visible", quoteState.buffer.length > 0);
 
     if (this.siteSettings.enable_fast_edit) {
-      const regexp = new RegExp(quoteState.buffer, "gi");
+      this.set(
+        "_canEditPost",
+        this.topic.postStream.findLoadedPost(postId)?.can_edit
+      );
 
       // if we have a linebreak, the selection is probably too complex to be handled
       // by fast edit, so ignore it
       // if the selection is present multiple times, we also consider it too complex
       // and ignore it, note this specific case could probably be handled in the future
+      const regexp = new RegExp(quoteState.buffer, "gi");
       if (
         quoteState.buffer.length < 1 ||
         quoteState.buffer.match(/\n/g) ||
