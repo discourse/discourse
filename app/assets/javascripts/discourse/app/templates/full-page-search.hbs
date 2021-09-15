@@ -21,6 +21,7 @@
         aria-controls="search-result-count"
       }}
       {{combo-box
+        id="search-type"
         value=search_type
         content=searchTypes
         castInteger=true
@@ -156,7 +157,7 @@
                   </h4>
                   <div class="category-items">
                     {{#each model.categories as |category|}}
-                      {{category-link category}}
+                      {{category-link category extraClasses="fps-category-item"}}
                     {{/each}}
                   </div>
                 {{/if}}
@@ -167,16 +168,18 @@
                   </h4>
                   <div class="tag-items">
                     {{#each model.tags as |tag|}}
-                      <a href={{tag.url}}>
-                        {{tag.id}}
-                      </a>
+                      <div class="fps-tag-item">
+                        <a href={{tag.url}}>
+                          {{tag.id}}
+                        </a>
+                      </div>
                     {{/each}}
                   </div>
                 {{/if}}
 
                 {{#if model.users}}
                   {{#each model.users as |user|}}
-                    {{#user-link user=user class="user-item"}}
+                    {{#user-link user=user class="fps-user-item"}}
                       {{avatar user imageSize="large"}}
                       <div class="user-titles">
                         {{#if user.name}}

@@ -473,4 +473,86 @@ acceptance("Search - Full Page", function (needs) {
       "does not populate the likes checkbox"
     );
   });
+
+  test("search for users", async function (assert) {
+    await visit("/search");
+
+    const typeSelector = selectKit(".search-bar .select-kit#search-type");
+
+    await fillIn(".search-query", "admin");
+    assert.ok(!exists(".fps-user-item"), "has no user results");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue("2");
+
+    assert.ok(!exists(".search-filters"), "has no filters");
+
+    await click(".search-cta");
+
+    assert.equal(count(".fps-user-item"), 1, "has one user result");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue("0");
+
+    assert.ok(
+      exists(".search-filters"),
+      "returning to topic/posts shows filters"
+    );
+    assert.ok(!exists(".fps-user-item"), "has no user results");
+  });
+
+  test("search for categories/tags", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "monk");
+    const typeSelector = selectKit(".search-bar .select-kit#search-type");
+
+    assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByIndex(1);
+    await click(".search-cta");
+
+    assert.ok(!exists(".search-filters"), "has no filters");
+    assert.equal(count(".fps-tag-item"), 1, "has one tag result");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue("0");
+
+    assert.ok(
+      exists(".search-filters"),
+      "returning to topic/posts shows filters"
+    );
+    assert.ok(!exists(".user-item"), "has no user results");
+  });
+
+  test("filters expand/collapse as expected", async function (assert) {
+    await visit("/search?expanded=true");
+
+    assert.ok(
+      visible(".search-advanced-options"),
+      "advanced filters are expanded when url query param is included"
+    );
+
+    await fillIn(".search-query", "none");
+    await click(".search-cta");
+
+    assert.ok(
+      !visible(".search-advanced-options"),
+      "launching a search collapses advanced filters"
+    );
+
+    await visit("/search");
+
+    assert.ok(
+      !visible(".search-advanced-options"),
+      "filters are collapsed when query param is not present"
+    );
+
+    await click(".advanced-filters > summary");
+    assert.ok(
+      visible(".search-advanced-options"),
+      "clicking on element expands filters"
+    );
+  });
 });
