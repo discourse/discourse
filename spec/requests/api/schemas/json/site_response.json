@@ -382,7 +382,7 @@
             },
             "color_scheme_id": {
               "type": [
-                "string",
+                "integer",
                 "null"
               ]
             }
