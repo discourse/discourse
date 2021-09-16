@@ -73,8 +73,8 @@ module DiscourseDev
       self.new.populate!
     end
 
-    def self.random(model)
-      model.joins(:_custom_fields).where("#{:type}_custom_fields.name = '#{AUTO_POPULATED}'") if model.new.respond_to?(:custom_fields)
+    def self.random(model, use_existing_records: true)
+      model.joins(:_custom_fields).where("#{:type}_custom_fields.name = '#{AUTO_POPULATED}'") if !use_existing_records && model.new.respond_to?(:custom_fields)
       count = model.count
       raise "#{:type} records are not yet populated" if count == 0
 
