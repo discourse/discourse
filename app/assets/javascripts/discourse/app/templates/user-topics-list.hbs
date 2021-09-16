@@ -1,8 +1,8 @@
-{{#if showEmptyStatePlaceholder}}
+{{#if noContent}}
   <div class="empty-state">
-    <span class="empty-state-title">{{emptyState.title}}</span>
+    <span class="empty-state-title">{{model.emptyState.title}}</span>
     <div class="empty-state-body">
-      <p>{{emptyState.body}}</p>
+      <p>{{model.emptyState.body}}</p>
     </div>
   </div>
 {{else}}

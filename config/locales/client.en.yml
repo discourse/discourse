@@ -208,6 +208,7 @@ en:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -1820,6 +1821,8 @@ en:
       description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
+      short_label: "Summarize"
+      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -3856,6 +3859,25 @@ en:
 
     pick_files_button:
       unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
+
+    user_activity:
+      no_activity_title: "No activity yet"
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_others: "No activity."
+      no_replies_title: "You have not replied to any topics yet"
+      no_replies_others: "No replies."
+      no_drafts_title: "You haven’t started any drafts"
+      no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
+      no_likes_title: "You haven’t liked any topics yet"
+      no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
+      no_likes_others: "No liked posts."
+      no_topics_title: "You have not started any topics yet"
+      no_read_topics_title: "You haven’t read any topics yet"
+      no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
+
+    no_group_messages_title: "No group messages found"
+
+
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
