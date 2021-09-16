@@ -404,5 +404,12 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
+  {{quote-button
+    quoteState=quoteState
+    selectText=(action "selectText")
+    editPost=(action "editPost")
+    topic=model
+    composerVisible=composer.visible
+
+  }}
 {{/discourse-topic}}

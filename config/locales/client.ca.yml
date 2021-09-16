@@ -115,6 +115,7 @@ ca:
       previous_month: "Mes anterior"
       next_month: "Mes següent"
       placeholder: data
+      to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber}"

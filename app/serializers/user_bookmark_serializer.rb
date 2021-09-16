@@ -30,12 +30,16 @@ class UserBookmarkSerializer < ApplicationSerializer
              :post_user_avatar_template,
              :post_user_name
 
+  def topic_id
+    post.topic_id
+  end
+
   def topic
-    @topic ||= object.topic || Topic.unscoped.find(object.topic_id)
+    @topic ||= object.topic
   end
 
   def post
-    @post ||= object.post || Post.unscoped.find(object.post_id)
+    @post ||= object.post
   end
 
   def closed

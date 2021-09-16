@@ -703,10 +703,10 @@ RSpec.describe ListController do
       end
     end
 
-    it "returns 403 error when the user can't see private message" do
+    it "returns 404 when the user can't see private message" do
       sign_in(Fabricate(:user))
       get "/topics/private-messages-unread/#{pm_user.username}.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "succeeds when the user can see private messages" do

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 'discourse_ip_info'
+require 'rotp'
 
 RSpec.describe Admin::UsersController do
   fab!(:admin) { Fabricate(:admin) }
@@ -361,6 +362,27 @@ RSpec.describe Admin::UsersController do
       put "/admin/users/#{another_user.id}/grant_admin.json"
       expect(response.status).to eq(200)
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(true)
+    end
+
+    it 'asks user for second factor if it is enabled' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(another_user.reload.admin).to eq(false)
+    end
+
+    it 'grants admin if second factor is correct' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json", params: {
+        second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+        second_factor_method: UserSecondFactor.methods[:totp]
+      }
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(another_user.reload.admin).to eq(true)
     end
   end
 

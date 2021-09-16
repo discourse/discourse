@@ -1,3 +1,6 @@
+import { propertyEqual } from "discourse/lib/computed";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
@@ -28,11 +31,27 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
+function fixQuotes(str) {
+  return str.replace(/‘|’|„|“|«|»|”/g, '"');
+}
+
+function regexSafeStr(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
   privateCategory: alias("topic.category.read_restricted"),
+  editPost: null,
+
+  _isFastEditable: false,
+  _displayFastEditInput: false,
+  _fastEditInitalSelection: null,
+  _fastEditNewSelection: null,
+  _isSavingFastEdit: false,
+  _canEditPost: false,
 
   _isMouseDown: false,
   _reselected: false,
@@ -40,9 +59,18 @@ export default Component.extend({
   _hideButton() {
     this.quoteState.clear();
     this.set("visible", false);
+
+    this.set("_isFastEditable", false);
+    this.set("_displayFastEditInput", false);
+    this.set("_fastEditInitalSelection", null);
+    this.set("_fastEditNewSelection", null);
   },
 
   _selectionChanged() {
+    if (this._displayFastEditInput) {
+      return;
+    }
+
     const quoteState = this.quoteState;
 
     const selection = window.getSelection();
@@ -103,6 +131,33 @@ export default Component.extend({
 
     quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
+
+    if (this.siteSettings.enable_fast_edit) {
+      this.set(
+        "_canEditPost",
+        this.topic.postStream.findLoadedPost(postId)?.can_edit
+      );
+
+      // if we have a linebreak, the selection is probably too complex to be handled
+      // by fast edit, so ignore it
+      // if the selection is present multiple times, we also consider it too complex
+      // and ignore it, note this specific case could probably be handled in the future
+      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+      const matches = postBody.match(regexp);
+      if (
+        quoteState.buffer.length < 1 ||
+        quoteState.buffer.match(/\n/g) ||
+        matches?.length > 1
+      ) {
+        this.set("_isFastEditable", false);
+        this.set("_fastEditInitalSelection", null);
+        this.set("_fastEditNewSelection", null);
+      } else if (matches?.length === 1) {
+        this.set("_isFastEditable", true);
+        this.set("_fastEditInitalSelection", quoteState.buffer);
+        this.set("_fastEditNewSelection", quoteState.buffer);
+      }
+    }
 
     // avoid hard loops in quote selection unconditionally
     // this can happen if you triple click text in firefox
@@ -192,6 +247,12 @@ export default Component.extend({
         this._prevSelection = null;
         this._isMouseDown = true;
         this._reselected = false;
+
+        // prevents fast-edit input event to trigger mousedown
+        if (e.target.classList.contains("fast-edit-input")) {
+          return;
+        }
+
         if (
           $(e.target).closest(".quote-button, .create, .share, .reply-new")
             .length === 0
@@ -199,7 +260,12 @@ export default Component.extend({
           this._hideButton();
         }
       })
-      .on("mouseup.quote-button", () => {
+      .on("mouseup.quote-button", (e) => {
+        // prevents fast-edit input event to trigger mouseup
+        if (e.target.classList.contains("fast-edit-input")) {
+          return;
+        }
+
         this._prevSelection = null;
         this._isMouseDown = false;
         onSelectionChanged();
@@ -264,9 +330,54 @@ export default Component.extend({
     );
   },
 
+  _saveFastEditDisabled: propertyEqual(
+    "_fastEditInitalSelection",
+    "_fastEditNewSelection"
+  ),
+
   @action
   insertQuote() {
     this.attrs.selectText().then(() => this._hideButton());
+  },
+
+  @action
+  _toggleFastEditForm() {
+    if (this._isFastEditable) {
+      this.toggleProperty("_displayFastEditInput");
+
+      schedule("afterRender", () => {
+        document.querySelector("#fast-edit-input")?.focus();
+      });
+    } else {
+      const postId = this.quoteState.postId;
+      const postModel = this.topic.postStream.findLoadedPost(postId);
+      this?.editPost(postModel);
+    }
+  },
+
+  @action
+  _saveFastEdit() {
+    const postId = this.quoteState?.postId;
+    const postModel = this.topic.postStream.findLoadedPost(postId);
+
+    this.set("_isSavingFastEdit", true);
+
+    return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
+      .then((result) => {
+        const newRaw = result.raw.replace(
+          fixQuotes(this._fastEditInitalSelection),
+          fixQuotes(this._fastEditNewSelection)
+        );
+
+        postModel
+          .save({ raw: newRaw })
+          .catch(popupAjaxError)
+          .finally(() => {
+            this.set("_isSavingFastEdit", false);
+            this._hideButton();
+          });
+      })
+      .catch(popupAjaxError);
   },
 
   @action

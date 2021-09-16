@@ -67,8 +67,11 @@ export default Controller.extend(BulkTopicSelection, {
       opts.groupName = this.group.name;
     }
 
-    Topic.pmResetNew(opts).then(() => {
-      this.send("refresh");
+    Topic.pmResetNew(opts).then((result) => {
+      if (result && result.topic_ids.length > 0) {
+        this.pmTopicTrackingState.removeTopics(result.topic_ids);
+        this.send("refresh");
+      }
     });
   },
 

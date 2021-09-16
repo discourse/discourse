@@ -378,9 +378,37 @@ aside.quote {
   z-index: z("dropdown");
   opacity: 0.9;
   background-color: var(--secondary-high);
+  flex-direction: column;
 
   &.visible {
-    display: inline-flex;
+    display: flex;
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .extra {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .fast-edit-container {
+    display: flex;
+    padding: 0.25em;
+    flex-direction: column;
+    align-items: flex-start;
+
+    #fast-edit-input {
+      margin: 0;
+      width: 300px;
+      height: 90px;
+    }
+
+    .save-fast-edit {
+      margin-top: 0.25em;
+    }
   }
 
   .btn,

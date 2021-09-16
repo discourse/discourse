@@ -45,7 +45,7 @@ RSpec.describe BookmarkQuery do
       before do
         @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
         @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
-        @bookmark4 = Fabricate(:bookmark, user: user, post: @post, topic: @post.topic)
+        @bookmark4 = Fabricate(:bookmark, user: user, post: @post)
       end
 
       it "can search by bookmark name" do
@@ -90,7 +90,7 @@ RSpec.describe BookmarkQuery do
     context "for a private message topic bookmark" do
       let(:pm_topic) { Fabricate(:private_message_topic) }
       before do
-        bookmark1.update(topic: pm_topic, post: Fabricate(:post, topic: pm_topic))
+        bookmark1.update(post: Fabricate(:post, topic: pm_topic))
         TopicUser.change(user.id, pm_topic.id, total_msecs_viewed: 1)
       end
 
@@ -160,7 +160,7 @@ RSpec.describe BookmarkQuery do
         Topic.expects(:preload_custom_fields)
         expect(
           bookmark_query.list_all.find do |b|
-            b.topic_id = bookmark1.topic_id
+            b.topic.id = bookmark1.topic.id
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
       end
@@ -168,11 +168,11 @@ RSpec.describe BookmarkQuery do
   end
 
   describe "#list_all ordering" do
-    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago, reminder_type: nil, reminder_at: nil) }
-    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago, reminder_type: nil, reminder_at: nil) }
-    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago, reminder_type: nil, reminder_at: nil) }
-    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago, reminder_type: nil, reminder_at: nil) }
-    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago, reminder_at: nil) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago, reminder_at: nil) }
+    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago, reminder_at: nil) }
+    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago, reminder_at: nil) }
+    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago, reminder_at: nil) }
 
     it "order defaults to updated_at DESC" do
       expect(bookmark_query.list_all.map(&:id)).to eq([
@@ -185,9 +185,7 @@ RSpec.describe BookmarkQuery do
     end
 
     it "orders by reminder_at, then updated_at" do
-      bookmark4.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
       bookmark4.update_column(:reminder_at, 1.day.from_now)
-      bookmark5.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
       bookmark5.update_column(:reminder_at, 26.hours.from_now)
 
       expect(bookmark_query.list_all.map(&:id)).to eq([
@@ -202,17 +200,14 @@ RSpec.describe BookmarkQuery do
 
     it "shows pinned bookmarks first ordered by reminder_at ASC then updated_at DESC" do
       bookmark3.update_column(:pinned, true)
-      bookmark3.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
       bookmark3.update_column(:reminder_at, 1.day.from_now)
 
       bookmark4.update_column(:pinned, true)
-      bookmark4.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
       bookmark4.update_column(:reminder_at, 28.hours.from_now)
 
       bookmark1.update_column(:pinned, true)
       bookmark2.update_column(:pinned, true)
 
-      bookmark5.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
       bookmark5.update_column(:reminder_at, 1.day.from_now)
 
       expect(bookmark_query.list_all.map(&:id)).to eq([

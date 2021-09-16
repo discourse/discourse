@@ -116,6 +116,7 @@ es:
       previous_month: "Mes anterior"
       next_month: "El próximo mes"
       placeholder: fecha
+      to_placeholder: "hasta hoy"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación núm. %{postNumber}"

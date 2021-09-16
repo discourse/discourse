@@ -94,6 +94,9 @@
         },
         "chat_mention": {
           "type": "integer"
+        },
+        "chat_message": {
+          "type": "integer"
         }
       },
       "required": [
@@ -379,7 +382,7 @@
             },
             "color_scheme_id": {
               "type": [
-                "string",
+                "integer",
                 "null"
               ]
             }

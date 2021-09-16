@@ -231,10 +231,10 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
       SiteIconManager.ensure_optimized!
     end
+  end
 
-    if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-      system("RAILS_DB=discourse_test_multisite rake db:migrate")
-    end
+  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
+    system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end
 
@@ -543,5 +543,17 @@ task 'db:rebuild_indexes' => 'environment' do
     raise
   ensure
     Discourse.disable_readonly_mode
+  end
+end
+
+desc 'Check that the DB can be accessed'
+task 'db:status:json' do
+  begin
+    Rake::Task['environment'].invoke
+    DB.query('SELECT 1')
+  rescue
+    puts({ status: 'error' }.to_json)
+  else
+    puts({ status: 'ok' }.to_json)
   end
 end

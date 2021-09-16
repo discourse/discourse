@@ -3,7 +3,7 @@
   cursor: pointer;
   flex-direction: column;
   min-width: 140px;
-  flex: 1 0 100%;
+  flex: 1 0 auto;
 
   .date-picker {
     cursor: pointer;
@@ -30,8 +30,14 @@
     &:focus {
       @include default-focus;
     }
-  }
 
+    // iOS doesn't display the placeholder attribute for date inputs
+    .ios-device &:after {
+      font-size: var(--font-0);
+      color: var(--primary-medium);
+      content: attr(placeholder);
+    }
+  }
   .pika-single {
     margin-left: -1px;
     margin-top: 1px;

@@ -115,6 +115,7 @@ hy:
       previous_month: "Նախորդ Ամիս"
       next_month: "Հաջորդ Ամիս"
       placeholder: ամսաթիվ
+      to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber}"

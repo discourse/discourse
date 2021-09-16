@@ -73,7 +73,7 @@ fi:
         almost_x_years:
           one: "%{count} v"
           other: "%{count} v"
-        date_month: "D. MMM[ta]"
+        date_month: "D. MMM"
         date_year: "MMM YY"
       medium:
         x_minutes:
@@ -115,6 +115,7 @@ fi:
       previous_month: "Edellinen kuukausi"
       next_month: "Seuraava kuukausi"
       placeholder: päivämäärä
+      to_placeholder: "päivämäärään"
     share:
       topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. viesti"

@@ -2,11 +2,6 @@ define("message-bus-client", ["exports"], function (__exports__) {
   __exports__.default = window.MessageBus;
 });
 
-define("mousetrap-global-bind", ["exports"], function (__exports__) {
-  // In the Rails app it's applied from the vendored file
-  __exports__.default = {};
-});
-
 define("ember-buffered-proxy/proxy", ["exports"], function (__exports__) {
   __exports__.default = window.BufferedProxy;
 });
@@ -19,8 +14,8 @@ define("xss", ["exports"], function (__exports__) {
   __exports__.default = window.filterXSS;
 });
 
-define("mousetrap", ["exports"], function (__exports__) {
-  __exports__.default = window.Mousetrap;
+define("@discourse/itsatrap", ["exports"], function (__exports__) {
+  __exports__.default = window.ItsATrap;
 });
 
 define("@popperjs/core", ["exports"], function (__exports__) {

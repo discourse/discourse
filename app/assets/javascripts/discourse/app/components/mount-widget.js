@@ -83,6 +83,7 @@ export default Component.extend({
   afterPatch() {},
 
   eventDispatched(eventName, key, refreshArg) {
+    key = typeof key === "function" ? key(refreshArg) : key;
     const onRefresh = camelize(eventName.replace(/:/, "-"));
     this.dirtyKeys.keyDirty(key, { onRefresh, refreshArg });
     this.queueRerender();

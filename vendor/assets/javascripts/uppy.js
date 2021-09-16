@@ -1266,18 +1266,9 @@ function _uploadLocalFile2(file, current, total) {
     const data = opts.formData ? createFormDataUpload(file, opts) : createBareUpload(file, opts);
     const xhr = new XMLHttpRequest();
     this.uploaderEvents[file.id] = new EventTracker(this.uppy);
-    const queuedRequest = this.requests.run(() => {
-      xhr.send(data);
-      return () => {
-        // eslint-disable-next-line no-use-before-define
-        timer.done();
-        xhr.abort();
-      };
-    }, {
-      priority: 1
-    });
     const timer = new ProgressTimeout(opts.timeout, () => {
-      xhr.abort();
+      xhr.abort(); // eslint-disable-next-line no-use-before-define
+
       queuedRequest.done();
       const error = new Error(this.i18n('timedOut', {
         seconds: Math.ceil(opts.timeout / 1000)
@@ -1305,7 +1296,8 @@ function _uploadLocalFile2(file, current, total) {
     });
     xhr.addEventListener('load', ev => {
       this.uppy.log(`[AwsS3/XHRUpload] ${id} finished`);
-      timer.done();
+      timer.done(); // eslint-disable-next-line no-use-before-define
+
       queuedRequest.done();
 
       if (this.uploaderEvents[file.id]) {
@@ -1341,7 +1333,8 @@ function _uploadLocalFile2(file, current, total) {
     });
     xhr.addEventListener('error', () => {
       this.uppy.log(`[AwsS3/XHRUpload] ${id} errored`);
-      timer.done();
+      timer.done(); // eslint-disable-next-line no-use-before-define
+
       queuedRequest.done();
 
       if (this.uploaderEvents[file.id]) {
@@ -1364,6 +1357,16 @@ function _uploadLocalFile2(file, current, total) {
 
     Object.keys(opts.headers).forEach(header => {
       xhr.setRequestHeader(header, opts.headers[header]);
+    });
+    const queuedRequest = this.requests.run(() => {
+      xhr.send(data);
+      return () => {
+        // eslint-disable-next-line no-use-before-define
+        timer.done();
+        xhr.abort();
+      };
+    }, {
+      priority: 1
     });
 
     _classPrivateFieldLooseBase(this, _addEventHandlerForFile)[_addEventHandlerForFile]('file-removed', file.id, () => {
@@ -1697,7 +1700,9 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
     };
     this.opts = { ...defaultOptions,
       ...opts
-    };
+    }; // TODO: remove i18n once we can depend on XHRUpload instead of MiniXHRUpload
+
+    this.i18nInit();
     _classPrivateFieldLooseBase(this, _client)[_client] = new RequestClient(uppy, opts);
     _classPrivateFieldLooseBase(this, _requests)[_requests] = new RateLimitedQueue(this.opts.limit);
   }
@@ -1779,7 +1784,7 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
       responseType: 'text',
       getResponseData: this.opts.getResponseData || defaultGetResponseData,
       getResponseError: defaultGetResponseError
-    }; // Only for MiniXHRUpload, remove once we can depend on XHRUpload directly again
+    }; // TODO: remove i18n once we can depend on XHRUpload instead of MiniXHRUpload
 
     xhrOptions.i18n = this.i18n; // Revert to `uppy.use(XHRUpload)` once the big comment block at the top of
     // this file is solved
@@ -1791,7 +1796,7 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
     this.uppy.removeUploader(_classPrivateFieldLooseBase(this, _handleUpload)[_handleUpload]);
   }
 
-}), _class.VERSION = "2.0.1", _temp);
+}), _class.VERSION = "2.0.2", _temp);
 },{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core":17,"@uppy/utils/lib/RateLimitedQueue":26,"@uppy/utils/lib/settle":46}],6:[function(require,module,exports){
 "use strict";
 

@@ -12,7 +12,7 @@
       addLinkLookup=(action "addLinkLookup")
     }}
     {{#if model.viewOpenOrFullscreen}}
-      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags"}}">
+      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags" "without-tags"}}">
         <div class="composer-fields">
           {{plugin-outlet name="composer-open" args=(hash model=model)}}
           <div class="reply-to">

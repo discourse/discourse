@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe UserBookmarkSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }
-  let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, post: post, topic: post.topic) }
+  let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, post: post) }
   let(:bookmark_list) { BookmarkQuery.new(user: bookmark.user).list_all.to_ary }
 
   it "serializes all properties correctly" do

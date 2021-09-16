@@ -259,33 +259,35 @@ class TopicUser < ActiveRecord::Base
 
     # Update the last read and the last seen post count, but only if it doesn't exist.
     # This would be a lot easier if psql supported some kind of upsert
-    UPDATE_TOPIC_USER_SQL = "UPDATE topic_users
-                                    SET
-                                      last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
-                                      total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
-                                      notification_level =
-                                         case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
-                                            coalesce(uo.auto_track_topics_after_msecs,:threshold) and
-                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
-                                            and t.archetype = 'regular' then
-                                              :tracking
-                                         else
-                                            tu.notification_level
-                                         end
-                                  FROM topic_users tu
-                                  join topics t on t.id = tu.topic_id
-                                  join users u on u.id = :user_id
-                                  join user_options uo on uo.user_id = :user_id
-                                  WHERE
-                                       tu.topic_id = topic_users.topic_id AND
-                                       tu.user_id = topic_users.user_id AND
-                                       tu.topic_id = :topic_id AND
-                                       tu.user_id = :user_id
-                                  RETURNING
-                                    topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
-                                "
-
-    UPDATE_TOPIC_USER_SQL_STAFF = UPDATE_TOPIC_USER_SQL.gsub("highest_post_number", "highest_staff_post_number")
+    UPDATE_TOPIC_USER_SQL = <<~SQL
+      UPDATE topic_users
+      SET
+        last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
+        total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
+        notification_level =
+           case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
+              coalesce(uo.auto_track_topics_after_msecs,:threshold) and
+              coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0
+              and t.archetype = 'regular' then
+                :tracking
+           else
+              tu.notification_level
+           end
+    FROM topic_users tu
+    join topics t on t.id = tu.topic_id
+    join users u on u.id = :user_id
+    join user_options uo on uo.user_id = :user_id
+    WHERE
+         tu.topic_id = topic_users.topic_id AND
+         tu.user_id = topic_users.user_id AND
+         tu.topic_id = :topic_id AND
+         tu.user_id = :user_id
+    RETURNING
+      topic_users.notification_level,
+      tu.notification_level old_level,
+      tu.last_read_post_number,
+      t.archetype
+    SQL
 
     INSERT_TOPIC_USER_SQL = "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, last_visited_at, first_visited_at, notification_level)
                   SELECT :user_id, :topic_id, :post_number, :now, :now, :new_status
@@ -295,8 +297,6 @@ class TopicUser < ActiveRecord::Base
                     AND NOT EXISTS(SELECT 1
                                    FROM topic_users AS ftu
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
-
-    INSERT_TOPIC_USER_SQL_STAFF = INSERT_TOPIC_USER_SQL.gsub("highest_post_number", "highest_staff_post_number")
 
     def update_last_read(user, topic_id, post_number, new_posts_read, msecs, opts = {})
       return if post_number.blank?
@@ -312,22 +312,23 @@ class TopicUser < ActiveRecord::Base
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs
       }
 
-      # 86400000 = 1 day
-      rows =
-        if user.staff?
-          DB.query(UPDATE_TOPIC_USER_SQL_STAFF, args)
-        else
-          DB.query(UPDATE_TOPIC_USER_SQL, args)
-        end
+      rows = DB.query(UPDATE_TOPIC_USER_SQL, args)
 
       if rows.length == 1
         before = rows[0].old_level.to_i
         after = rows[0].notification_level.to_i
         before_last_read = rows[0].last_read_post_number.to_i
+        archetype = rows[0].archetype
 
         if before_last_read < post_number
           # The user read at least one new post
-          TopicTrackingState.publish_read(topic_id, post_number, user.id, after)
+          publish_read(
+            topic_id: topic_id,
+            post_number: post_number,
+            user: user,
+            notification_level: after,
+            private_message: archetype == Archetype.private_message
+          )
         end
 
         if new_posts_read > 0
@@ -345,16 +346,22 @@ class TopicUser < ActiveRecord::Base
         if (user.user_option.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) == 0
           args[:new_status] = notification_levels[:tracking]
         end
-        TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
+
+        publish_read(
+          topic_id: topic_id,
+          post_number: post_number,
+          user: user,
+          notification_level: args[:new_status],
+          private_message: Topic.exists?(
+            archetype: Archetype.private_message,
+            id: topic_id
+          )
+        )
 
         user.update_posts_read!(new_posts_read, mobile: opts[:mobile])
 
         begin
-          if user.staff?
-            DB.exec(INSERT_TOPIC_USER_SQL_STAFF, args)
-          else
-            DB.exec(INSERT_TOPIC_USER_SQL, args)
-          end
+          DB.exec(INSERT_TOPIC_USER_SQL, args)
         rescue PG::UniqueViolation
           # if record is inserted between two statements this can happen
           # we retry once to avoid failing the req
@@ -368,6 +375,24 @@ class TopicUser < ActiveRecord::Base
 
         notification_level_change(user.id, topic_id, args[:new_status], nil)
       end
+    end
+
+    private
+
+    def publish_read(topic_id:, post_number:, user:, notification_level: nil, private_message:)
+      klass =
+        if private_message
+          PrivateMessageTopicTrackingState
+        else
+          TopicTrackingState
+        end
+
+      klass.publish_read(
+        topic_id,
+        post_number,
+        user,
+        notification_level
+      )
     end
 
   end

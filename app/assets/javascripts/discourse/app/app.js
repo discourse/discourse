@@ -1,5 +1,4 @@
 import Application from "@ember/application";
-import Mousetrap from "mousetrap";
 import { buildResolver } from "discourse-common/resolver";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -11,11 +10,6 @@ const Discourse = Application.extend({
 
   customEvents: {
     paste: "paste",
-  },
-
-  reset() {
-    this._super(...arguments);
-    Mousetrap.reset();
   },
 
   Resolver: buildResolver("discourse"),

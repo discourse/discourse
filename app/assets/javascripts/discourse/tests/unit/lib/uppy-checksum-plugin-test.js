@@ -40,10 +40,9 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = {};
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
-    assert.equal(plugin.id, "test-uppy");
+    assert.equal(plugin.id, "uppy-checksum");
     assert.equal(plugin.capabilities, capabilities);
   });
 
@@ -51,7 +50,6 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = {};
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
     plugin.install();
@@ -75,7 +73,6 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = {};
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
     plugin.install();
@@ -99,7 +96,6 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = { isIE11: true };
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
     plugin.install();
@@ -121,7 +117,6 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = {};
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
     plugin.install();
@@ -155,7 +150,6 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const capabilities = {};
     const fakeUppy = new FakeUppy();
     const plugin = new UppyChecksum(fakeUppy, {
-      id: "test-uppy",
       capabilities,
     });
     plugin.install();

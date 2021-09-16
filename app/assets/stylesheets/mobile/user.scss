@@ -64,10 +64,6 @@
     padding: 0;
     flex: 1 1 auto;
     .select-kit-header {
-      .select-kit-header-wrapper {
-        padding: 8px 10px;
-      }
-
       .caret-icon {
         color: var(--primary-medium);
       }
@@ -83,8 +79,6 @@
     margin-left: 8px;
 
     .select-kit-header {
-      height: 100%;
-
       .selected-name .name {
         display: none;
       }
