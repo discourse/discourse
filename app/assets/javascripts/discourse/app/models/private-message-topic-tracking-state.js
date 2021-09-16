@@ -152,12 +152,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
       case "read":
         this._modifyState(message.topic_id, message.payload);
 
-        if (
-          this.filter === UNREAD_FILTER &&
-          this._shouldDisplayMessageForInbox(message)
-        ) {
-          this._notifyIncoming(message.topic_id);
-        }
+        break;
       case "unread":
         this._modifyState(message.topic_id, message.payload);
 
@@ -178,6 +173,8 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         ) {
           this._notifyIncoming(message.topic_id);
         }
+
+        break;
     }
   },
 
