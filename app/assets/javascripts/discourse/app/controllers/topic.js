@@ -226,9 +226,7 @@ export default Controller.extend(bufferedProperty("model"), {
           this._removeBookmarkFromCache(bookmarkId);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.find(
-      (bookmark) => bookmark.for_topic
-    );
+    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
     if (
       forTopicBookmark?.auto_delete_preference ===
       AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
@@ -1305,9 +1303,7 @@ export default Controller.extend(bufferedProperty("model"), {
     const bookmarkCount = this.model.bookmarks
       ? this.model.bookmarks.length
       : 0;
-    const forTopicBookmark = this.model.bookmarks.find(
-      (bookmark) => bookmark.for_topic
-    );
+    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
 
     // if there is > 1 bookmarks, confirm whether the user wants to clear
     // all bookmarks, and do so if they confirm

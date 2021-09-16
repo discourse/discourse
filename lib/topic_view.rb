@@ -397,7 +397,9 @@ class TopicView
   end
 
   def bookmarks
-    @bookmarks ||= @topic.bookmarks.where(user: @user).select(:id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference)
+    @bookmarks ||= @topic.bookmarks.where(user: @user).select(
+      :id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference
+    )
   end
 
   MAX_PARTICIPANTS = 24
