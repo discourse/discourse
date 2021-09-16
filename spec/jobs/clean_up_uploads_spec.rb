@@ -288,7 +288,7 @@ describe Jobs::CleanUpUploads do
   it "does not delete theme setting uploads" do
     theme = Fabricate(:theme)
     theme_upload = fabricate_upload
-    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: theme_upload.url, name: "my_setting_name")
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: theme_upload.id.to_s, name: "my_setting_name")
 
     Jobs::CleanUpUploads.new.execute(nil)
 
