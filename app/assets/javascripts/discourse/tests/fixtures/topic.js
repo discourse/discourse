@@ -136,6 +136,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     message_archived: false,
     topic_timer: null,
     message_bus_last_id: 5,
@@ -3005,6 +3006,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     suggested_topics: [
       {
         id: 27331,
@@ -3862,6 +3864,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: null,
+    bookmarks: [],
     tags: null,
   },
   "/t/9/1.json": {
@@ -4463,6 +4466,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     message_archived: false,
     featured_link: null,
   },
@@ -4755,6 +4759,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
   },
   "/t/301/1.json": {
     post_stream: {
@@ -5045,6 +5050,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
   },
   "/t/34/1.json": {
     post_stream: {
@@ -5296,6 +5302,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     message_archived: false,
     topic_timer: null,
     message_bus_last_id: 7,
@@ -5579,6 +5586,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     topic_timer: null,
     message_bus_last_id: 4,
     participant_count: 2,

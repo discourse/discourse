@@ -57,11 +57,6 @@ async function testTopicLevelBookmarkButtonIcon(assert, postNumber) {
 
 acceptance("Bookmarking", function (needs) {
   needs.user();
-  let steps = [];
-
-  needs.hooks.beforeEach(function () {
-    steps = [];
-  });
 
   const topicResponse = topicFixtures["/t/280/1.json"];
   topicResponse.post_stream.posts[0].cooked += `<span data-date="2036-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
@@ -130,13 +125,6 @@ acceptance("Bookmarking", function (needs) {
     assert.ok(exists(".tap-tile-date-input"), "it shows the custom date input");
     assert.ok(exists(".tap-tile-time-input"), "it shows the custom time input");
     await click("#save-bookmark");
-
-    assert.deepEqual(steps, [
-      "tomorrow",
-      "start_of_next_business_week",
-      "next_month",
-      "custom",
-    ]);
   });
 
   test("Saving a bookmark with a reminder", async function (assert) {
@@ -155,7 +143,6 @@ acceptance("Bookmarking", function (needs) {
       ),
       "it shows the bookmark clock icon because of the reminder"
     );
-    assert.deepEqual(steps, ["tomorrow"]);
   });
 
   test("Opening the options panel and remembering the option", async function (assert) {
@@ -176,7 +163,6 @@ acceptance("Bookmarking", function (needs) {
       "it should reopen the options panel"
     );
     assert.equal(selectKit(".bookmark-option-selector").header().value(), 1);
-    assert.deepEqual(steps, ["none"]);
   });
 
   test("Saving a bookmark with no reminder or name", async function (assert) {
@@ -194,15 +180,12 @@ acceptance("Bookmarking", function (needs) {
       ),
       "it shows the regular bookmark active icon"
     );
-    assert.deepEqual(steps, ["none"]);
   });
 
   test("Deleting a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#tap_tile_tomorrow");
-
-    assert.deepEqual(steps, ["tomorrow"]);
 
     await openEditBookmarkModal();
 
@@ -263,7 +246,6 @@ acceptance("Bookmarking", function (needs) {
       "08:00",
       "it should prefill the bookmark time"
     );
-    assert.deepEqual(steps, ["tomorrow"]);
   });
 
   test("Using a post date for the reminder date", async function (assert) {
