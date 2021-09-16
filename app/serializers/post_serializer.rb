@@ -55,7 +55,6 @@ class PostSerializer < BasicPostSerializer
              :bookmark_id,
              :bookmark_name,
              :bookmark_auto_delete_preference,
-             :bookmark_for_topic,
              :raw,
              :actions_summary,
              :moderator?,
@@ -376,10 +375,6 @@ class PostSerializer < BasicPostSerializer
 
   def bookmark_auto_delete_preference
     post_bookmark&.auto_delete_preference
-  end
-
-  def bookmark_for_topic
-    post_bookmark&.for_topic
   end
 
   def bookmark_id
