@@ -351,10 +351,15 @@ createWidget("timeline-footer-controls", {
     const controls = [];
     const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
-    if (!fullScreen && topic.has_summary && !topic.postStream.summary) {
+    if (
+      this.siteSettings.summary_timeline_button &&
+      !fullScreen &&
+      topic.has_summary &&
+      !topic.postStream.summary
+    ) {
       controls.push(
         this.attach("button", {
-          className: "show-summary",
+          className: "show-summary btn-small",
           label: "summary.short_label",
           title: "summary.short_title",
           action: "showSummary",
