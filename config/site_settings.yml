@@ -1010,6 +1010,9 @@ posting:
   enable_diffhtml_preview:
     default: false
     client: true
+  enable_fast_edit:
+    default: false
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500

@@ -7,6 +7,7 @@ class BookmarkManager
     @user = user
   end
 
+<<<<<<< HEAD
   ##
   # Creates a bookmark for a post where both the post and the topic are
   # not deleted. Only allows creation of bookmarks for posts the user
@@ -25,7 +26,6 @@ class BookmarkManager
   #                      Note this is not the exact time a reminder will be sent, as
   #                      we send reminders on a rolling schedule.
   #                      See Jobs::BookmarkReminderNotifications
-  # @param reminder_type Not needed, will remove at a later date.
   # @param for_topic     Whether we are creating a topic-level bookmark which
   #                      has different behaviour in the UI. Only bookmarks for
   #                      posts with post_number 1 can be marked as for_topic.
@@ -34,6 +34,7 @@ class BookmarkManager
   #                        See Bookmark.auto_delete_preferences,
   #                        this is used to determine when to delete a bookmark
   #                        automatically.
+  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
   def create(
     post_id:,
     name: nil,
@@ -43,7 +44,6 @@ class BookmarkManager
     options: {}
   )
     post = Post.find_by(id: post_id)
-    reminder_type = parse_reminder_type(reminder_type)
 
     # no bookmarking deleted posts or topics
     raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
@@ -57,7 +57,6 @@ class BookmarkManager
         user_id: @user.id,
         post: post,
         name: name,
-        reminder_type: reminder_type,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now,
         for_topic: for_topic
@@ -102,16 +101,14 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
+  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
+  def update(bookmark_id:, name:, reminder_at:, reminder_type: nil, options: {})
     bookmark = find_bookmark_and_check_access(bookmark_id)
-
-    reminder_type = parse_reminder_type(reminder_type)
 
     success = bookmark.update(
       {
         name: name,
         reminder_at: reminder_at,
-        reminder_type: reminder_type,
         reminder_set_at: Time.zone.now
       }.merge(options)
     )
@@ -152,10 +149,5 @@ class BookmarkManager
 
     TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
     bookmarks_remaining_in_topic
-  end
-
-  def parse_reminder_type(reminder_type)
-    return if reminder_type.blank?
-    reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
   end
 end

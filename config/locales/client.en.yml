@@ -2973,6 +2973,7 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_edit: "Edit"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
