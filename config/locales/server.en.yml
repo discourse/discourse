@@ -3629,6 +3629,30 @@ en:
 
         %{respond_instructions}
 
+    user_group_mentioned_pm:
+      title: "User Group Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_group_mentioned_pm_group:
+      title: "User Group Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
     user_posted:
       title: "User Posted"
       subject_template: "[%{email_prefix}] %{topic_title}"
