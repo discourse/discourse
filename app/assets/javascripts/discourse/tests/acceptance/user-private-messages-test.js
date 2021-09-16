@@ -280,16 +280,6 @@ acceptance(
       );
     };
 
-    test("incoming read message on unread filter", async function (assert) {
-      await visit("/u/charlie/messages/unread");
-
-      publishReadToMessageBus({ topicId: 1 });
-
-      await visit("/u/charlie/messages/unread"); // wait for re-render
-
-      assert.ok(exists(".show-mores"), `displays the topic incoming info`);
-    });
-
     test("incoming group archive message acted by current user", async function (assert) {
       await visit("/u/charlie/messages");
 
