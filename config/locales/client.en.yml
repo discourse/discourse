@@ -1820,7 +1820,7 @@ en:
       enable: "Summarize This Topic"
       disable: "Show All Posts"
       short_label: "Summarize"
-      short_title: "Show a summary of this topic as determined by the community"
+      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
