@@ -141,6 +141,7 @@ module SvgSprite
     "info-circle",
     "italic",
     "key",
+    "layer-group",
     "link",
     "list",
     "list-ol",
