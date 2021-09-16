@@ -38,6 +38,7 @@ export default createWidget("toggle-topic-summary", {
       this.attach("toggle-summary-description", attrs),
       this.attach("button", {
         className: "btn btn-primary",
+        icon: "layer-group",
         label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
         action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
       }),

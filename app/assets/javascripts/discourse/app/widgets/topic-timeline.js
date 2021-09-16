@@ -360,6 +360,7 @@ createWidget("timeline-footer-controls", {
       controls.push(
         this.attach("button", {
           className: "show-summary btn-small",
+          icon: "layer-group",
           label: "summary.short_label",
           title: "summary.short_title",
           action: "showSummary",
