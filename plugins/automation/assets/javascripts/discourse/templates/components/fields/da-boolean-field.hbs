@@ -1,13 +1,13 @@
 <section class="field boolean-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{input
         type="checkbox"
         checked=field.metadata.value
         input=(action (mut field.metadata.value) value="target.checked")
-        disabled=isDisabled
+        disabled=field.isDisabled
       }}
 
       {{fields/da-field-description description=description}}

@@ -10,13 +10,13 @@ describe DiscourseAutomation::Scriptable do
       placeholder :foo
       placeholder :bar
 
-      field :cat, component: :string
-      field :dog, component: :integer, accepts_placeholders: true
-      field :bird, component: :integer, triggerable: 'recurring'
+      field :cat, component: :text
+      field :dog, component: :text, accepts_placeholders: true
+      field :bird, component: :text, triggerable: 'recurring'
     end
 
     DiscourseAutomation::Triggerable.add('dog') do
-      field :kind, component: :string
+      field :kind, component: :text
     end
 
     DiscourseAutomation::Scriptable.add('only_dogs') do
@@ -36,9 +36,9 @@ describe DiscourseAutomation::Scriptable do
     it 'returns the fields' do
       expect(automation.scriptable.fields).to match_array(
         [
-          { extra: {}, name: :cat, component: :string, accepts_placeholders: false, triggerable: nil },
-          { extra: {}, name: :dog, component: :integer, accepts_placeholders: true, triggerable: nil },
-          { extra: {}, name: :bird, component: :integer, accepts_placeholders: false, triggerable: 'recurring' },
+          { extra: {}, name: :cat, component: :text, accepts_placeholders: false, triggerable: nil, required: false },
+          { extra: {}, name: :dog, component: :text, accepts_placeholders: true, triggerable: nil, required: false },
+          { extra: {}, name: :bird, component: :text, accepts_placeholders: false, triggerable: 'recurring', required: false },
         ]
       )
     end

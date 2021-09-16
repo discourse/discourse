@@ -3,7 +3,7 @@
 DiscourseAutomation::Triggerable::POINT_IN_TIME = 'point_in_time'
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::POINT_IN_TIME) do
-  field :execute_at, component: :date_time
+  field :execute_at, component: :date_time, required: true
 
   on_update do |automation, metadata|
     # prevents creating a new pending automation on save when date is expired

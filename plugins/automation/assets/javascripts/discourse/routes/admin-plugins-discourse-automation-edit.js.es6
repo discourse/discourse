@@ -1,12 +1,15 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { isPresent } from "@ember/utils";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
+import { hash } from "rsvp";
 
 export default DiscourseRoute.extend({
   controllerName: "admin-plugins-discourse-automation-edit",
 
   model(params) {
-    return Ember.RSVP.hash({
+    return hash({
       scriptables: this.store
         .findAll("discourse-automation-scriptable")
         .then(result => result.content),
@@ -17,15 +20,38 @@ export default DiscourseRoute.extend({
     });
   },
 
+  _fieldsForTarget(automation, target) {
+    return (automation[target].templates || []).map(template => {
+      const field = automation[target].fields.find(
+        f => f.name === template.name && f.component === template.component
+      );
+
+      return EmberObject.create({
+        acceptsPlaceholders: template.accepts_placeholders,
+        target,
+        name: template.name,
+        component: template.component,
+        metadata: {
+          value: template.value || field?.metadata?.value
+        },
+        isDisabled: isPresent(template.value),
+        isRequired: template.is_required
+      });
+    });
+  },
+
   setupController(controller, model) {
+    const automation = model.automation;
     controller.setProperties({
       model,
       automationForm: {
-        name: model.automation.name,
-        enabled: model.automation.enabled,
-        trigger: model.automation?.trigger?.id,
-        script: model.automation?.script?.id,
-        fields: model.automation?.fields || []
+        name: automation.name,
+        enabled: automation.enabled,
+        trigger: automation.trigger?.id,
+        script: automation.script?.id,
+        fields: this._fieldsForTarget(automation, "script").concat(
+          this._fieldsForTarget(automation, "trigger")
+        )
       }
     });
   },

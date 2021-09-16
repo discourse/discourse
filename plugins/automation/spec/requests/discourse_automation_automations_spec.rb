@@ -49,6 +49,27 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
     end
 
+    context 'required field' do
+      before do
+        DiscourseAutomation::Scriptable.add('test_required') do
+          field :foo, component: :text, required: true
+        end
+
+        automation.update!(script: 'test_required')
+      end
+
+      it 'errors' do
+        put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
+          automation: {
+            script: automation.script,
+            trigger: automation.trigger,
+            fields: [{ name: 'foo', component: 'text', target: 'script', metadata: { value: nil } }]
+          }
+        }
+        expect(response.status).to eq(422)
+      end
+    end
+
     context 'invalid field’s metadata' do
       it 'errors' do
         put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {

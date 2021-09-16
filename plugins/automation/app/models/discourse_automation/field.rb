@@ -22,9 +22,27 @@ module DiscourseAutomation
       )
     end
 
+    validate :required_field
+    def required_field
+      if template && template[:required] && metadata && metadata['value'].blank?
+        raise_required_field(name, target, targetable)
+      end
+    end
+
+    def targetable
+      target == 'trigger' ? automation.triggerable : automation.scriptable
+    end
+
+    def template
+      targetable&.fields&.find do |tf|
+        targetable.id == target &&
+        tf[:name].to_s == name &&
+        tf[:component].to_s == component
+      end
+    end
+
     validate :metadata_schema
     def metadata_schema
-      targetable = (target == 'trigger' ? automation.triggerable : automation.scriptable)
       if !(targetable.components.include?(component.to_sym))
         errors.add(
           :base,
@@ -67,7 +85,7 @@ module DiscourseAutomation
       },
       'text' => {
         'value' => {
-          'type' => ['string', 'integer']
+          'type' => ['string', 'integer', 'null']
         }
       },
       'boolean' => {
@@ -106,5 +124,19 @@ module DiscourseAutomation
         ]
       }
     }
+
+    private
+
+    def raise_required_field(name, target, targetable)
+      errors.add(
+        :base,
+        I18n.t(
+          'discourse_automation.models.fields.required_field',
+          name: name,
+          target: target,
+          target_name: targetable.name
+        )
+      )
+    end
   end
 end

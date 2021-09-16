@@ -76,8 +76,8 @@ def setup_pending_automation(automation, fields)
 end
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::RECURRING) do
-  field :recurrence, component: :choices, extra: { content: RECURRENCE_CHOICES }
-  field :start_date, component: :date_time
+  field :recurrence, component: :choices, extra: { content: RECURRENCE_CHOICES }, required: true
+  field :start_date, component: :date_time, required: true
 
   on_update { |automation, fields| setup_pending_automation(automation, fields) }
   on_call { |automation, fields| setup_pending_automation(automation, fields) }

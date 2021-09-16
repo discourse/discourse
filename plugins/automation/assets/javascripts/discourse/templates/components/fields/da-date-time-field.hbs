@@ -1,6 +1,6 @@
 <section class="field date-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       <div class="controls-row">
@@ -8,14 +8,14 @@
           type="datetime-local"
           value=(readonly localTime)
           input=(action "convertToUniversalTime" value="target.value")
-          disabled=isDisabled
+          disabled=field.isDisabled
         }}
 
         {{#if field.metadata.value}}
           {{d-button
             icon="trash-alt"
             action=(action (mut field.metadata.value) value=null)
-            disabled=isDisabled
+            disabled=field.isDisabled
           }}
         {{/if}}
       </div>

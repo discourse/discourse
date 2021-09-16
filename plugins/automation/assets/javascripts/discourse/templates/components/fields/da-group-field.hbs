@@ -1,6 +1,6 @@
 <section class="field group-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{group-chooser
@@ -8,7 +8,7 @@
         value=field.metadata.value
         labelProperty="name"
         onChange=(action "setGroupField")
-        options=(hash maximum=1 disabled=isDisabled)
+        options=(hash maximum=1 disabled=field.isDisabled)
       }}
 
       {{fields/da-field-description description=description}}

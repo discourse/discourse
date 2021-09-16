@@ -9,8 +9,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SEND_PMS) d
   placeholder :receiver_username
 
   field :sender, component: :user
-  field :receiver, component: :user, triggerable: :recurring
-  field :sendable_pms, component: :pms, accepts_placeholders: true
+  field :receiver, component: :user, triggerable: :recurring, required: true
+  field :sendable_pms, component: :pms, accepts_placeholders: true, required: true
 
   triggerables %i[user_added_to_group stalled_wiki recurring user_promoted]
 

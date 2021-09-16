@@ -14,7 +14,7 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::USER_PROM
   field :restricted_group, component: :group
   field :trust_level_transition, component: :choices, extra: {
     content: DiscourseAutomation::Triggerable::USER_PROMOTED_TRUST_LEVEL_CHOICES
-  }
+  }, required: true
 
   placeholder :trust_level_transition
 end

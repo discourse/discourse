@@ -7,8 +7,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
   placeholder :giftee_username
   placeholder :gifter_username
 
-  field :giftee_assignment_messages, component: :pms, accepts_placeholders: true
-  field :gift_exchangers_group, component: :group
+  field :giftee_assignment_messages, component: :pms, accepts_placeholders: true, required: true
+  field :gift_exchangers_group, component: :group, required: true
 
   version 16
 

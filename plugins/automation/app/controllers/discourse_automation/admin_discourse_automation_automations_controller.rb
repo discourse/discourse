@@ -31,28 +31,31 @@ module DiscourseAutomation
     def update
       automation = DiscourseAutomation::Automation.find(params[:id])
 
-      enforce_trigger!(request.parameters[:automation])
+      enforce_trigger!(params[:automation])
+
+      attributes = request
+        .parameters[:automation]
+        .slice(:name, :id, :script, :trigger, :enabled)
+        .merge(last_updated_by_id: current_user.id)
 
       if automation.trigger != params[:automation][:trigger]
-        request.parameters[:automation][:fields] = []
+        params[:automation][:fields] = []
+        automation.enabled = false
+        automation.fields.destroy_all
       end
 
       if automation.script != params[:automation][:script]
-        request.parameters[:automation][:trigger] = nil
-        request.parameters[:automation][:fields] = []
-      end
+        params[:automation][:trigger] = nil
+        params[:automation][:fields] = []
+        automation.enabled = false
+        automation.fields.destroy_all
+        automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
+      else
+        Array(params[:automation][:fields]).reject(&:empty?).each do |field|
+          automation.upsert_field!(field[:name], field[:component], field[:metadata], target: field[:target])
+        end
 
-      automation.fields.destroy_all
-
-      automation.update!(
-        request
-          .parameters[:automation]
-          .slice(:name, :id, :script, :trigger, :enabled)
-          .merge(last_updated_by_id: current_user.id)
-      )
-
-      Array(request.parameters[:automation][:fields]).each do |field|
-        automation.upsert_field!(field[:name], field[:component], field[:metadata], target: field[:target])
+        automation.tap { |r| r.assign_attributes(attributes) }.save!
       end
 
       render_serialized_automation(automation)

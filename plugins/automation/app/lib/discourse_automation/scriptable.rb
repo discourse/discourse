@@ -17,6 +17,18 @@ module DiscourseAutomation
       eval! if @name
     end
 
+    def id
+      'script'
+    end
+
+    def scriptable?
+      true
+    end
+
+    def triggerable?
+      false
+    end
+
     def eval!
       begin
         public_send("__scriptable_#{name.underscore}")
@@ -67,14 +79,15 @@ module DiscourseAutomation
       end
     end
 
-    def field(name, component:, extra: {}, accepts_placeholders: false, triggerable: nil)
+    def field(name, component:, **options)
       @fields << {
         name: name,
         component: component,
-        triggerable: triggerable,
-        accepts_placeholders: accepts_placeholders,
-        extra: extra
-      }
+        extra: {},
+        accepts_placeholders: false,
+        triggerable: nil,
+        required: false
+      }.merge(options || {})
     end
 
     def components
@@ -126,12 +139,12 @@ module DiscourseAutomation
     end
 
     def self.add(identifier, &block)
-      @@all_scriptables = nil
+      @all_scriptables = nil
       define_method("__scriptable_#{identifier}", &block)
     end
 
     def self.all
-      @@all_scriptables ||= DiscourseAutomation::Scriptable
+      @all_scriptables ||= DiscourseAutomation::Scriptable
         .instance_methods(false)
         .grep(/^__scriptable_/)
     end

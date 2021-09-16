@@ -27,14 +27,14 @@ describe 'UserPromoted' do
     before do
       automation.upsert_field!("restricted_group", "group", { "value" => group.id }, target: "trigger")
     end
-    
+
     it "does not run if the user is not part of the group" do
       output = capture_stdout do
         user.change_trust_level!(TrustLevel[1])
       end
       expect(output).not_to include('"kind":"user_promoted"')
     end
-    
+
     it "does run if the user is part of the group" do
       Fabricate(:group_user, group: group, user: user)
       output = capture_stdout do
@@ -75,4 +75,3 @@ describe 'UserPromoted' do
     end
   end
 end
-

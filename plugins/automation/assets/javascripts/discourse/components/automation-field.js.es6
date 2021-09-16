@@ -1,8 +1,8 @@
-import { isPresent } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import { reads, alias } from "@ember/object/computed";
 import I18n from "I18n";
 
 // http://github.com/feross/clipboard-copy
@@ -67,30 +67,12 @@ export default Component.extend({
     return triggerId && (!triggerable || triggerable === triggerId);
   },
 
-  fieldName: computed("field.name", function() {
-    return this.field.name;
-  }),
-
-  fieldValue: computed("field.metadata.value", function() {
-    return this.field.metadata.value;
-  }),
-
   @discourseComputed(
-    "fieldName",
-    "fieldValue",
-    "field.target",
-    "automation.script.forced_triggerable"
+    "automation.placeholders.length",
+    "field.acceptsPlaceholders"
   )
-  forcedValue(fieldName, fieldValue, fieldTarget, forcedTriggerable) {
-    if (
-      forcedTriggerable &&
-      this.field.target === "trigger" &&
-      isPresent(forcedTriggerable.state[fieldName])
-    ) {
-      return isPresent(fieldValue)
-        ? fieldValue
-        : forcedTriggerable.state[fieldName];
-    }
+  displayPlaceholders(hasPlaceholders, acceptsPlaceholders) {
+    return hasPlaceholders && acceptsPlaceholders;
   },
 
   placeholdersString: computed("field.placeholders", function() {
@@ -103,7 +85,7 @@ export default Component.extend({
       : `.triggerables.${this.automation.trigger.id.replace(/-/g, "_")}.`;
   }),
 
-  description: computed("field.target", function() {
+  description: computed("target", function() {
     return I18n.lookup(
       `discourse_automation${this.target}fields.${this.field.name}.description`,
       { locale: I18n.locale }

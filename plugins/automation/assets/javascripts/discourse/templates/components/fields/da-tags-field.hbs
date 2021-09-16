@@ -1,6 +1,6 @@
 <section class="field tags-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{tag-chooser
@@ -8,7 +8,7 @@
         onChange=(action (mut field.metadata.value))
         options=(hash
           allowAny=false
-          disabled=isDisabled
+          disabled=field.isDisabled
         )
       }}
 

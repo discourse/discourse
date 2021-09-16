@@ -2,36 +2,14 @@
 
 module DiscourseAutomation
   class FieldSerializer < ApplicationSerializer
-    attributes :id, :component, :name, :metadata, :placeholders, :target, :extra, :triggerable
+    attributes :id, :component, :name, :metadata, :is_required
 
     def metadata
       object.metadata || {}
     end
 
-    def triggerable
-      targetable_field[:triggerable]
-    end
-
-    def target
-      object.target || scope[:target_name]
-    end
-
-    def extra
-      targetable_field[:extra]
-    end
-
-    def placeholders
-      if !targetable_field || targetable_field[:accepts_placeholders].blank?
-        nil
-      else
-        scope[:placeholders].map { |placeholder| "%%#{placeholder.upcase}%%" }
-      end
-    end
-
-    def targetable_field
-      @targetable_field ||= scope[:target].fields.detect do |s|
-        s[:name].to_s == object.name && s[:component].to_s == object.component
-      end
+    def is_required
+      object.template[:required]
     end
   end
 end

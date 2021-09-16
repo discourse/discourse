@@ -3,7 +3,7 @@
 DiscourseAutomation::Scriptable::PIN_TOPIC = 'pin_topic'
 
 DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::PIN_TOPIC) do
-  field :pinnable_topic, component: :text
+  field :pinnable_topic, component: :text, required: true
   field :pinned_until, component: :date_time
   field :pinned_globally, component: :boolean
 

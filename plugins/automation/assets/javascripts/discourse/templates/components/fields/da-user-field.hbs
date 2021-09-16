@@ -1,6 +1,6 @@
 <section class="field user-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{user-chooser
@@ -9,7 +9,7 @@
         options=(hash
           maximum=1
           excludeCurrentUser=false
-          disabled=isDisabled
+          disabled=field.isDisabled
         )
       }}
     </div>

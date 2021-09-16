@@ -1,7 +1,7 @@
 <section class="field pms-field">
   {{#if field.metadata.value.length}}
     <section class="actions header">
-      {{fields/da-field-label label=label}}
+      {{fields/da-field-label label=label field=field}}
       {{d-button
         icon="plus"
         action=(action "insertPM")
@@ -16,19 +16,19 @@
         <summary>{{if pm.title pm.title (i18n "discourse_automation.fields.pms.placeholder_title")}}</summary>
 
         <div class="control-group">
-          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label")}}
+          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label") field=field}}
           <div class="controls">
             {{input
               value=pm.title
               class="pm-input pm-title"
               input=(action (mut pm.title) value="target.value")
-              disabled=isDisabled
+              disabled=field.isDisabled
             }}
           </div>
         </div>
 
         <div class="control-group">
-          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label")}}
+          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label") field=field}}
           <div class="controls">
             {{d-editor value=pm.raw}}
           </div>
@@ -44,7 +44,7 @@
               value=pm.delay
               class="input-large pm-input"
               input=(action (mut pm.delay) value="target.value")
-              disabled=isDisabled
+              disabled=field.isDisabled
             }}
           </div>
         </div>
@@ -59,7 +59,7 @@
               type="checkbox"
               checked=pm.encrypt
               click=(action (mut pm.encrypt) value="target.checked")
-              disabled=isDisabled
+              disabled=field.isDisabled
             }}
           </div>
         </div>
@@ -68,7 +68,7 @@
             icon="trash-alt"
             action=(action "removePM" pm)
             class="btn-danger"
-            disabled=isDisabled
+            disabled=field.isDisabled
           }}
         </section>
       </details>
@@ -81,7 +81,7 @@
         label="discourse_automation.fields.pms.add_pm"
         action=(action "insertPM")
         class="btn-primary insert-pm"
-        disabled=isDisabled
+        disabled=field.isDisabled
       }}
     </div>
   {{/each}}

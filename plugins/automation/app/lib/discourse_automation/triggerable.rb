@@ -15,6 +15,18 @@ module DiscourseAutomation
       eval! if @name
     end
 
+    def id
+      'trigger'
+    end
+
+    def scriptable?
+      false
+    end
+
+    def triggerable?
+      true
+    end
+
     def placeholders
       @placeholders.uniq.compact
     end
@@ -23,13 +35,14 @@ module DiscourseAutomation
       @placeholders << placeholder
     end
 
-    def field(name, component:, extra: {}, accepts_placeholders: false)
+    def field(name, component:, **options)
       @fields << {
         name: name,
         component: component,
-        accepts_placeholders: accepts_placeholders,
-        extra: extra
-      }
+        extra: {},
+        accepts_placeholders: false,
+        required: false
+      }.merge(options || {})
     end
 
     def components
@@ -63,12 +76,12 @@ module DiscourseAutomation
     end
 
     def self.add(identifier, &block)
-      @@all_triggers = nil
+      @all_triggers = nil
       define_method("__triggerable_#{identifier}", &block)
     end
 
     def self.all
-      @@all_triggers ||= DiscourseAutomation::Triggerable
+      @all_triggers ||= DiscourseAutomation::Triggerable
         .instance_methods(false)
         .grep(/^__triggerable_/)
     end

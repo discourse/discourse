@@ -1,6 +1,6 @@
 <section class="field text-list-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{multi-select
@@ -9,7 +9,7 @@
         onChange=(action (mut field.metadata.value))
         nameProperty=null
         valueProperty=null
-        options=(hash allowAny=true disabled=isDisabled)
+        options=(hash allowAny=true disabled=field.isDisabled)
       }}
 
       {{fields/da-field-description description=description}}

@@ -1,9 +1,9 @@
 {{#if displayField}}
-  {{#if field.placeholders}}
+  {{#if displayPlaceholders}}
     <div class="placeholders-list">
       <p class="placeholder-description">
         <span>{{i18n "discourse_automation.placeholders.description"}}</span>
-        {{#each field.placeholders as |placeholder|}}
+        {{#each automation.placeholders as |placeholder|}}
           <a href class="placeholder-item" {{on "click" (action "copyPlaceholder" placeholder)}}>
             {{placeholder}}
           </a>
@@ -14,7 +14,6 @@
 
   {{component (concat "fields/da-" field.component "-field")
     field=field
-    forcedValue=forcedValue
     onChangeField=onChangeField
     label=(i18n (concat "discourse_automation" target "fields." field.name ".label"))
     description=description

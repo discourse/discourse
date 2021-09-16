@@ -4,7 +4,8 @@ en:
   discourse_automation:
     models:
       fields:
-        invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`
+        required_field: Field `%{name}` must be filled on `%{target}:%{target_name}`.
+        invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}.`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
       recurring:

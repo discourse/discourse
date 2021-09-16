@@ -1,12 +1,12 @@
 <section class="field text-field">
   <div class="control-group">
-    {{fields/da-field-label label=label}}
+    {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
       {{input
         value=field.metadata.value
         input=(action (mut field.metadata.value) value="target.value")
-        disabled=isDisabled
+        disabled=field.isDisabled
       }}
 
       {{fields/da-field-description description=description}}

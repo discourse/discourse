@@ -15,7 +15,7 @@ DURATION_CHOICES = [
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::STALLED_WIKI) do
   field :restricted_category, component: :category
-  field :stalled_after, component: :choices, extra: { content: DURATION_CHOICES }
+  field :stalled_after, component: :choices, extra: { content: DURATION_CHOICES }, required: true
   field :retriggered_after, component: :choices, extra: { content: DURATION_CHOICES }
 
   placeholder :wiki_url

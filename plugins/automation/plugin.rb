@@ -78,6 +78,7 @@ after_initialize do
     '../app/controllers/discourse_automation/admin_discourse_automation_scriptables_controller',
     '../app/controllers/discourse_automation/admin_discourse_automation_triggerables_controller',
     '../app/serializers/discourse_automation/automation_serializer',
+    '../app/serializers/discourse_automation/template_serializer',
     '../app/serializers/discourse_automation/automation_field_serializer',
     '../app/serializers/discourse_automation/trigger_serializer',
     '../app/models/discourse_automation/automation',
@@ -120,7 +121,6 @@ after_initialize do
       scope format: :json do
         get '/scriptables' => 'admin_discourse_automation_scriptables#index'
         get '/triggerables' => 'admin_discourse_automation_triggerables#index'
-
         get '/automations' => 'admin_discourse_automation_automations#index'
         get '/automations/:id' => 'admin_discourse_automation_automations#show'
         delete '/automations/:id' => 'admin_discourse_automation_automations#destroy'
