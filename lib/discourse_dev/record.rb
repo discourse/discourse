@@ -7,6 +7,7 @@ require 'faker'
 module DiscourseDev
   class Record
     DEFAULT_COUNT = 30.freeze
+    AUTO_POPULATED = "auto_populated"
 
     attr_reader :model, :type
 
@@ -24,6 +25,7 @@ module DiscourseDev
 
     def create!
       record = model.create!(data)
+      record.custom_fields[AUTO_POPULATED] = true if record.respond_to?(:custom_fields)
       yield(record) if block_given?
       DiscourseEvent.trigger(:after_create_dev_record, record, type)
       record
@@ -72,7 +74,11 @@ module DiscourseDev
     end
 
     def self.random(model)
-      offset = Faker::Number.between(from: 0, to: model.count - 1)
+      model.joins(:_custom_fields).where("#{:type}_custom_fields.name = '#{AUTO_POPULATED}'") if model.new.respond_to?(:custom_fields)
+      count = model.count
+      raise "#{:type} records are not yet populated" if count == 0
+
+      offset = Faker::Number.between(from: 0, to: count - 1)
       model.offset(offset).first
     end
   end
