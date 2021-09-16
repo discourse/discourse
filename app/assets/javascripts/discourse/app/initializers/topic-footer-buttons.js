@@ -67,8 +67,10 @@ export default {
       dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (bookmarkedPosts && bookmarkedPosts.find((x) => x.reminder_at)) {
+        if (
+          this.topic.bookmarks &&
+          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
+        ) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
@@ -81,14 +83,12 @@ export default {
       },
       label() {
         if (!this.topic.isPrivateMessage || this.site.mobileView) {
-          const bookmarkedPosts = this.topic.bookmarked_posts;
-          const bookmarkedPostsCount = bookmarkedPosts
-            ? bookmarkedPosts.length
-            : 0;
+          const bookmarks = this.topic.bookmarks;
+          const bookmarksCount = bookmarks ? bookmarks.length : 0;
 
-          if (bookmarkedPostsCount === 0) {
+          if (bookmarksCount === 0) {
             return "bookmarked.title";
-          } else if (bookmarkedPostsCount === 1) {
+          } else if (bookmarksCount === 1) {
             return "bookmarked.edit_bookmark";
           } else {
             return "bookmarked.clear_bookmarks";
@@ -96,18 +96,21 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (!bookmarkedPosts || bookmarkedPosts.length === 0) {
+        const bookmarks = this.topic.bookmarks;
+        if (!bookmarks || bookmarks.length === 0) {
           return I18n.t("bookmarked.help.bookmark");
-        } else if (bookmarkedPosts.length === 1) {
-          return I18n.t("bookmarked.help.edit_bookmark");
-        } else if (bookmarkedPosts.find((x) => x.reminder_at)) {
+        } else if (bookmarks.length === 1) {
+          if (bookmarks.filter((bookmark) => bookmark.for_topic).length) {
+            return I18n.t("bookmarked.help.edit_bookmark_for_topic");
+          } else {
+            return I18n.t("bookmarked.help.edit_bookmark");
+          }
+        } else if (bookmarks.some((bookmark) => bookmark.reminder_at)) {
           return I18n.t("bookmarked.help.unbookmark_with_reminder");
         } else {
           return I18n.t("bookmarked.help.unbookmark");
         }
       },
-      // action: () => { this.toggleBookmark(nil, { forTopic: true }) },
       action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;

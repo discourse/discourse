@@ -7,7 +7,6 @@ class BookmarkManager
     @user = user
   end
 
-<<<<<<< HEAD
   ##
   # Creates a bookmark for a post where both the post and the topic are
   # not deleted. Only allows creation of bookmarks for posts the user

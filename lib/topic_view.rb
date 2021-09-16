@@ -393,18 +393,11 @@ class TopicView
   def has_bookmarks?
     return false if @user.blank?
     return false if @topic.trashed?
-    @topic.bookmarks.exists?(user_id: @user.id)
+    bookmarks.any?
   end
 
-  def bookmarked_posts
-    return nil unless has_bookmarks?
-    @topic.bookmarks.where(user: @user).pluck(:id, :post_id, :reminder_at).map do |id, post_id, reminder_at|
-      {
-        bookmark_id: id,
-        post_id: post_id,
-        reminder_at: reminder_at
-      }
-    end
+  def bookmarks
+    @bookmarks ||= @topic.bookmarks.where(user: @user).select(:id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference)
   end
 
   MAX_PARTICIPANTS = 24

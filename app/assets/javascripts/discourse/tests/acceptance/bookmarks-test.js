@@ -85,7 +85,6 @@ acceptance("Bookmarking", function (needs) {
   needs.pretender((server, helper) => {
     function handleRequest(request) {
       const data = helper.parsePostData(request.requestBody);
-      steps.push(data.reminder_type || "none");
 
       if (data.post_id === "398") {
         return helper.response({ id: 1, success: "OK" });

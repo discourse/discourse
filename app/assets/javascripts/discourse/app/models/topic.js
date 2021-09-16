@@ -379,14 +379,14 @@ const Topic = RestModel.extend({
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 
-    const postIds = this.bookmarked_posts.mapBy("post_id");
+    const postIds = this.bookmarks.mapBy("post_id");
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {
         loadedPost.clearBookmark();
       }
     });
-    this.set("bookmarked_posts", []);
+    this.set("bookmarks", []);
 
     return postIds;
   },
