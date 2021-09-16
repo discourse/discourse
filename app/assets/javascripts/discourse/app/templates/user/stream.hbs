@@ -1,4 +1,4 @@
-{{#if model.noContent}}
+{{#if model.stream.noContent}}
   {{#if model.isAnotherUsersPage}}
     <div class="alert alert-info">{{model.emptyStateOthers}}</div>
   {{else}}
@@ -10,4 +10,4 @@
     </div>
   {{/if}}
 {{/if}}
-{{user-stream stream=model}}
+{{user-stream stream=model.stream}}

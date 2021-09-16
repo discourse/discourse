@@ -12,17 +12,18 @@ export default DiscourseRoute.extend(ViewingActionType, {
 
   model() {
     const user = this.modelFor("user");
-    const streamModel = user.get("stream");
+    const stream = user.get("stream");
 
-    streamModel.set("isAnotherUsersPage", this.isAnotherUsersPage(user));
-    streamModel.set("emptyState", this.emptyState());
-    streamModel.set("emptyStateOthers", this.emptyStateOthers);
-
-    return streamModel;
+    return {
+      stream,
+      isAnotherUsersPage: this.isAnotherUsersPage(user),
+      emptyState: this.emptyState(),
+      emptyStateOthers: this.emptyStateOthers,
+    };
   },
 
   afterModel(model, transition) {
-    return model.filterBy({
+    return model.stream.filterBy({
       filter: this.userActionType,
       actingUsername: transition.to.queryParams.acting_username,
     });

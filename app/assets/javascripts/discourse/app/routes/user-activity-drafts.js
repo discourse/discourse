@@ -4,12 +4,15 @@ import I18n from "I18n";
 export default DiscourseRoute.extend({
   model() {
     const user = this.modelFor("user");
-    const userDraftsStream = user.get("userDraftsStream");
+    const draftsStream = user.get("userDraftsStream");
 
-    userDraftsStream.set("isAnotherUsersPage", this.isAnotherUsersPage(user));
-    userDraftsStream.set("emptyState", this.emptyState());
-
-    return userDraftsStream.load(this.site).then(() => userDraftsStream);
+    return draftsStream.load(this.site).then(() => {
+      return {
+        stream: draftsStream,
+        isAnotherUsersPage: this.isAnotherUsersPage(user),
+        emptyState: this.emptyState(),
+      };
+    });
   },
 
   renderTemplate() {
