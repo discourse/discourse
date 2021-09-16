@@ -91,7 +91,7 @@ class PostAction < ActiveRecord::Base
     end
 
     # archive message for moderators
-    GroupArchivedMessage.archive!(Group[:moderators].id, related_post.topic)
+    GroupPrivateMessageArchiver.archive!(Group[:moderators].id, related_post.topic)
   end
 
   def staff_already_replied?(topic)

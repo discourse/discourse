@@ -22,8 +22,6 @@ class Group < ActiveRecord::Base
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
 
-  has_many :group_archived_messages, dependent: :destroy
-
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
   has_many :requesters, through: :group_requests, source: :user

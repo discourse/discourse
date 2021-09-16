@@ -340,8 +340,6 @@ class UserMerger
 
     Upload.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    update_user_id(:user_archived_messages, conditions: "x.topic_id = y.topic_id")
-
     update_user_id(:user_actions,
                    user_id_column_name: "user_id",
                    conditions: ["x.action_type = y.action_type",

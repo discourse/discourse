@@ -1284,7 +1284,9 @@ describe Topic do
         group.add(@user)
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
 
-        expect { topic.update_status(status, true, @user) }.to change(topic.group_archived_messages, :count).by(1)
+        expect do
+          topic.update_status(status, true, @user)
+        end.to change(topic.topic_allowed_groups.archived, :count).by(1)
       end
 
       it 'should create a staff action log entry' do
@@ -2415,7 +2417,8 @@ describe Topic do
 
     TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
     TopicAllowedGroup.create!(topic_id: topic.id, group_id: group2.id)
-    GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
+
+    GroupPrivateMessageArchiver.archive!(group.id, topic)
 
     expect(topic.message_archived?(user)).to eq(true)
 

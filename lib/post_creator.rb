@@ -475,12 +475,26 @@ class PostCreator
   def unarchive_message
     return unless @topic.private_message? && @topic.id
 
-    UserArchivedMessage.where(topic_id: @topic.id).pluck(:user_id).each do |user_id|
-      UserArchivedMessage.move_to_inbox!(user_id, @topic)
+    TopicAllowedUser
+      .where("archived_at IS NOT NULL")
+      .where(topic_id: @topic.id)
+      .pluck(:user_id)
+      .each do |user_id|
+
+      UserPrivateMessageArchiver.move_to_inbox!(user_id, @topic)
     end
 
-    GroupArchivedMessage.where(topic_id: @topic.id).pluck(:group_id).each do |group_id|
-      GroupArchivedMessage.move_to_inbox!(group_id, @topic, acting_user_id: @user.id)
+    TopicAllowedGroup
+      .where("archived_at IS NOT NULL")
+      .where(topic_id: @topic.id)
+      .pluck(:group_id)
+      .each do |group_id|
+
+      GroupPrivateMessageArchiver.move_to_inbox!(
+        group_id,
+        @topic,
+        acting_user_id: @user.id
+      )
     end
   end
 

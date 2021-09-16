@@ -551,7 +551,7 @@ class TopicsController < ApplicationController
 
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(
+          GroupPrivateMessageArchiver.archive!(
             id,
             topic,
             acting_user_id: current_user.id
@@ -559,7 +559,7 @@ class TopicsController < ApplicationController
 
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(
+          GroupPrivateMessageArchiver.move_to_inbox!(
             id,
             topic,
             acting_user_id: current_user.id
@@ -570,9 +570,9 @@ class TopicsController < ApplicationController
 
     if topic.allowed_users.include?(current_user)
       if archive
-        UserArchivedMessage.archive!(current_user.id, topic)
+        UserPrivateMessageArchiver.archive!(current_user.id, topic)
       else
-        UserArchivedMessage.move_to_inbox!(current_user.id, topic)
+        UserPrivateMessageArchiver.move_to_inbox!(current_user.id, topic)
       end
     end
 

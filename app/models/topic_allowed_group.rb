@@ -5,15 +5,20 @@ class TopicAllowedGroup < ActiveRecord::Base
   belongs_to :group
 
   validates_uniqueness_of :topic_id, scope: :group_id
+
+  scope :archived, -> {
+    where("archived_at IS NOT NULL")
+  }
 end
 
 # == Schema Information
 #
 # Table name: topic_allowed_groups
 #
-#  id       :integer          not null, primary key
-#  group_id :integer          not null
-#  topic_id :integer          not null
+#  id          :integer          not null, primary key
+#  group_id    :integer          not null
+#  topic_id    :integer          not null
+#  archived_at :datetime
 #
 # Indexes
 #

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe GroupArchivedMessage do
+describe GroupPrivateMessageArchiver do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
 
@@ -30,9 +30,9 @@ describe GroupArchivedMessage do
 
       expect(messages.present?).to eq(true)
 
-      expect(GroupArchivedMessage.exists?(
+      expect(TopicAllowedGroup.archived.exists?(
         topic: group_message,
-        group: group
+        group: group,
       )).to eq(false)
     end
   end
@@ -43,7 +43,7 @@ describe GroupArchivedMessage do
         described_class.archive!(group.id, group_message)
       end
 
-      expect(GroupArchivedMessage.exists?(
+      expect(TopicAllowedGroup.archived.exists?(
         topic: group_message,
         group: group
       )).to eq(true)

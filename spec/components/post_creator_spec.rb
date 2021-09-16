@@ -956,7 +956,7 @@ describe PostCreator do
       expect(user.last_posted_at).to eq_time(1.year.ago)
 
       # archive this message and ensure archive is cleared for all users on reply
-      UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
+      UserPrivateMessageArchiver.archive!(target_user2.id, post.topic)
 
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
@@ -968,7 +968,9 @@ describe PostCreator do
       post.topic.reload
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
 
-      expect(UserArchivedMessage.where(user_id: target_user2.id, topic_id: post.topic_id).count).to eq(0)
+      expect(post.topic.topic_allowed_users.archived.exists?(
+        user_id: target_user2.id, topic_id: post.topic_id
+      )).to eq(false)
 
       # if another admin replies and is already member of the group, don't add them to topic_allowed_users
       group = Fabricate(:group)
@@ -1135,7 +1137,7 @@ describe PostCreator do
       expect(target_user1.notifications.count).to eq(1)
       expect(target_user2.notifications.count).to eq(1)
 
-      GroupArchivedMessage.create!(group: group, topic: post.topic)
+      GroupPrivateMessageArchiver.archive!(group.id, post.topic)
 
       message = MessageBus.track_publish(
         PrivateMessageTopicTrackingState.group_channel(group.id)
@@ -1152,7 +1154,7 @@ describe PostCreator do
 
       expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
 
-      expect(GroupArchivedMessage.exists?(group: group, topic: post.topic))
+      expect(TopicAllowedGroup.archived.exists?(group: group, topic: post.topic))
         .to eq(false)
     end
   end

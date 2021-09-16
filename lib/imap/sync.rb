@@ -291,15 +291,15 @@ module Imap
     def update_topic_archived_state(email, incoming_email, opts = {})
       topic = incoming_email.topic
 
-      topic_is_archived = topic.group_archived_messages.size > 0
+      topic_is_archived = topic.topic_allowed_groups.archived.count > 0
       email_is_archived = !email['LABELS'].include?('\\Inbox') && !email['LABELS'].include?('INBOX')
 
       if topic_is_archived && !email_is_archived
         ImapSyncLog.debug("Unarchiving topic ID #{topic.id}, email was unarchived", @group)
-        GroupArchivedMessage.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
+        GroupPrivateMessageArchiver.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
       elsif !topic_is_archived && email_is_archived
         ImapSyncLog.debug("Archiving topic ID #{topic.id}, email was archived", @group)
-        GroupArchivedMessage.archive!(@group.id, topic, skip_imap_sync: true)
+        GroupPrivateMessageArchiver.archive!(@group.id, topic, skip_imap_sync: true)
       end
     end
 
@@ -373,7 +373,7 @@ module Imap
 
       # the topic is archived, and the archive should be reflected in the IMAP
       # server
-      topic_archived = topic.group_archived_messages.any?
+      topic_archived = topic.topic_allowed_groups.archived.any?
       if !topic_archived
         # TODO: This is needed right now so the store below does not take it
         # away again...ideally we should unarchive and store the tag-labels

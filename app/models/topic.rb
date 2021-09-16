@@ -209,9 +209,6 @@ class Topic < ActiveRecord::Base
   has_many :topic_allowed_groups
   has_many :incoming_email
 
-  has_many :group_archived_messages, dependent: :destroy
-  has_many :user_archived_messages, dependent: :destroy
-
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_users, through: :topic_allowed_users, source: :user
@@ -654,7 +651,7 @@ class Topic < ActiveRecord::Base
         allowed_group_ids = self.allowed_groups
           .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
         allowed_group_ids.each do |id|
-          GroupArchivedMessage.archive!(id, self)
+          GroupPrivateMessageArchiver.archive!(id, self)
         end
       end
     end
@@ -1436,15 +1433,15 @@ class Topic < ActiveRecord::Base
       SELECT 1
       WHERE
         (
-        SELECT count(*) FROM topic_allowed_groups tg
-        JOIN group_archived_messages gm
-              ON gm.topic_id = tg.topic_id AND
-                 gm.group_id = tg.group_id
-          WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
-            AND tg.topic_id = :topic_id
+        SELECT count(*)
+        FROM topic_allowed_groups tg
+        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+          AND tg.topic_id = :topic_id
+          AND tg.archived_at IS NOT NULL
         ) =
         (
-          SELECT case when count(*) = 0 then -1 else count(*) end FROM topic_allowed_groups tg
+          SELECT case when count(*) = 0 then -1 else count(*) end
+          FROM topic_allowed_groups tg
           WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
             AND tg.topic_id = :topic_id
         )
@@ -1452,8 +1449,9 @@ class Topic < ActiveRecord::Base
         UNION ALL
 
         SELECT 1 FROM topic_allowed_users tu
-        JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
-        WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+        WHERE tu.user_id = :user_id
+          AND tu.topic_id = :topic_id
+          AND tu.archived_at IS NOT NULL
     SQL
 
     DB.exec(sql, user_id: user.id, topic_id: id) > 0

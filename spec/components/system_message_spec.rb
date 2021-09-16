@@ -27,10 +27,10 @@ describe SystemMessage do
         user.id, admin.id
       )
 
-      expect(UserArchivedMessage.where(
+      expect(TopicAllowedUser.archived.exists?(
         user_id: admin.id,
         topic_id: topic.id
-      ).count).to eq(1)
+      )).to eq(true)
     end
 
     it 'can create a post from system user in user selected locale' do
@@ -49,10 +49,10 @@ describe SystemMessage do
         user_de.id, system_user.id
       )
 
-      expect(UserArchivedMessage.where(
+      expect(TopicAllowedUser.archived.exists?(
         user_id: system_user.id,
         topic_id: topic.id
-      ).count).to eq(0)
+      )).to eq(false)
     end
 
     it 'allows message_title and message_raw ops to override content' do

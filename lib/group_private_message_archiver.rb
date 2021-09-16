@@ -1,32 +1,34 @@
 # frozen_string_literal: true
 
-class GroupArchivedMessage < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :topic
-
+class GroupPrivateMessageArchiver
   def self.move_to_inbox!(group_id, topic, opts = {})
     topic_id = topic.id
-    destroyed = GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
-    trigger(:move_to_inbox, group_id, topic_id)
+
+    TopicAllowedGroup
+      .find_by(group_id: group_id, topic_id: topic_id)
+      .update!(archived_at: nil)
+
+    trigger(:move_to_inbox, group_id, topic)
     MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, group_ids: [group_id])
     publish_topic_tracking_state(topic, group_id, opts[:acting_user_id])
-    set_imap_sync(topic_id) if !opts[:skip_imap_sync] && destroyed.present?
+    set_imap_sync(topic_id) if !opts[:skip_imap_sync]
   end
 
   def self.archive!(group_id, topic, opts = {})
     topic_id = topic.id
-    destroyed = GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
-    GroupArchivedMessage.create!(group_id: group_id, topic_id: topic_id)
-    trigger(:archive_message, group_id, topic_id)
+
+    TopicAllowedGroup
+      .find_by(group_id: group_id, topic_id: topic_id)
+      .update!(archived_at: Time.zone.now)
+
+    trigger(:archive_message, group_id, topic)
     MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, group_ids: [group_id])
     publish_topic_tracking_state(topic, group_id, opts[:acting_user_id])
-    set_imap_sync(topic_id) if !opts[:skip_imap_sync] && destroyed.blank?
+    set_imap_sync(topic_id) if !opts[:skip_imap_sync]
   end
 
-  def self.trigger(event, group_id, topic_id)
-    group = Group.find_by(id: group_id)
-    topic = Topic.find_by(id: topic_id)
-    if group && topic
+  def self.trigger(event, group_id, topic)
+    if group = Group.find_by(id: group_id)
       DiscourseEvent.trigger(event, group: group, topic: topic)
     end
   end
@@ -48,18 +50,3 @@ class GroupArchivedMessage < ActiveRecord::Base
   end
   private_class_method :publish_topic_tracking_state
 end
-
-# == Schema Information
-#
-# Table name: group_archived_messages
-#
-#  id         :integer          not null, primary key
-#  group_id   :integer          not null
-#  topic_id   :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_group_archived_messages_on_group_id_and_topic_id  (group_id,topic_id) UNIQUE
-#

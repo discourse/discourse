@@ -382,11 +382,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_everything_else
-    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention].each do |k|
+    [PostTiming, UnsubscribeKey, GroupMention].each do |k|
       copy_model(k, skip_processing: true)
     end
 
-    [UserHistory, UserWarning, GroupArchivedMessage].each do |k|
+    [UserHistory, UserWarning].each do |k|
       copy_model(k)
     end
 

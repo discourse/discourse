@@ -36,14 +36,14 @@ describe TopicQuery::PrivateMessageLists do
     end
 
     it 'does not include user or group archived messages' do
-      UserArchivedMessage.archive!(user.id, group_message)
-      UserArchivedMessage.archive!(user.id, private_message)
+      UserPrivateMessageArchiver.archive!(user.id, group_message)
+      UserPrivateMessageArchiver.archive!(user.id, private_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all(user).topics
 
       expect(topics).to eq([])
 
-      GroupArchivedMessage.archive!(group.id, group_message)
+      GroupPrivateMessageArchiver.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all(user_2).topics
 
@@ -74,8 +74,8 @@ describe TopicQuery::PrivateMessageLists do
       create_post(user: user_2, topic: private_message)
       create_post(user: user_2, topic: group_message)
 
-      UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(group.id, group_message)
+      UserPrivateMessageArchiver.archive!(user_2.id, private_message)
+      GroupPrivateMessageArchiver.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
 
@@ -85,8 +85,8 @@ describe TopicQuery::PrivateMessageLists do
 
   describe '#list_private_messages_all_archive' do
     it 'returns a list of all private messages that has been archived' do
-      UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(group.id, group_message)
+      UserPrivateMessageArchiver.archive!(user_2.id, private_message)
+      GroupPrivateMessageArchiver.archive!(group.id, group_message)
 
       topics = TopicQuery.new(nil).list_private_messages_all_archive(user_2).topics
 
@@ -120,6 +120,8 @@ describe TopicQuery::PrivateMessageLists do
     end
 
     it 'returns a list of unread private messages' do
+      GroupPrivateMessageArchiver.archive!(group.id, group_message)
+
       topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
 
       expect(topics).to contain_exactly(group_message)

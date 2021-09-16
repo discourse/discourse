@@ -52,7 +52,9 @@ class SystemMessage
     end
 
     unless from_system
-      UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
+      TopicAllowedUser
+        .find_by(user: Discourse.site_contact_user, topic: post.topic)
+        .update!(archived_at: Time.zone.now)
     end
 
     post

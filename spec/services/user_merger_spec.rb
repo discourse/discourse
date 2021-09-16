@@ -761,16 +761,16 @@ describe UserMerger do
       Fabricate.build(:topic_allowed_user, user: source_user)
     ])
 
-    UserArchivedMessage.archive!(source_user.id, pm_topic1)
-    UserArchivedMessage.archive!(target_user.id, pm_topic1)
-    UserArchivedMessage.archive!(source_user.id, pm_topic2)
-    UserArchivedMessage.archive!(walter.id, pm_topic2)
+    UserPrivateMessageArchiver.archive!(source_user.id, pm_topic1)
+    UserPrivateMessageArchiver.archive!(target_user.id, pm_topic1)
+    UserPrivateMessageArchiver.archive!(source_user.id, pm_topic2)
+    UserPrivateMessageArchiver.archive!(walter.id, pm_topic2)
 
     merge_users!
 
-    topic_ids = UserArchivedMessage.where(user_id: target_user.id).pluck(:topic_id)
+    topic_ids = TopicAllowedUser.archived.where(user_id: target_user.id).pluck(:topic_id)
     expect(topic_ids).to contain_exactly(pm_topic1.id, pm_topic2.id)
-    expect(UserArchivedMessage.where(user_id: source_user.id).count).to eq(0)
+    expect(TopicAllowedUser.archived.exists?(user_id: source_user.id)).to eq(false)
   end
 
   context "badges" do

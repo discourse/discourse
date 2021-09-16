@@ -5,17 +5,22 @@ class TopicAllowedUser < ActiveRecord::Base
   belongs_to :user
 
   validates_uniqueness_of :topic_id, scope: :user_id
+
+  scope :archived, -> {
+    where("archived_at IS NOT NULL")
+  }
 end
 
 # == Schema Information
 #
 # Table name: topic_allowed_users
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  topic_id   :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  user_id     :integer          not null
+#  topic_id    :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  archived_at :datetime
 #
 # Indexes
 #

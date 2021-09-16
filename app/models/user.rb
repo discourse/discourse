@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
   has_many :topic_allowed_users, dependent: :destroy
-  has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy

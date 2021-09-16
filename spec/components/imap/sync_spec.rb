@@ -213,7 +213,7 @@ describe Imap::Sync do
 
       topic = Topic.last
       expect(topic.title).to eq(subject)
-      expect(GroupArchivedMessage.where(topic_id: topic.id).exists?).to eq(false)
+      expect(topic.topic_allowed_groups.archived.exists?).to eq(false)
 
       post = Post.where(post_type: Post.types[:regular]).last
       expect(post.user.email).to eq(first_from)
@@ -285,9 +285,8 @@ describe Imap::Sync do
 
       topic = Topic.last
       expect(topic.title).to eq(subject)
-      expect(GroupArchivedMessage.where(topic_id: topic.id).exists?).to eq(true)
-
-      expect(Topic.last.posts.where(post_type: Post.types[:regular]).count).to eq(2)
+      expect(topic.topic_allowed_groups.archived.exists?).to eq(true)
+      expect(topic.posts.where(post_type: Post.types[:regular]).count).to eq(2)
     end
 
     describe "detecting deleted emails and deleting the topic in discourse" do
@@ -507,7 +506,7 @@ describe Imap::Sync do
       end
 
       it "archives an email on the IMAP server when archived in discourse" do
-        GroupArchivedMessage.archive!(group.id, @topic, skip_imap_sync: false)
+        GroupPrivateMessageArchiver.archive!(group.id, @topic, skip_imap_sync: false)
         @incoming_email.update(imap_sync: true)
 
         provider.stubs(:store).with(100, 'FLAGS', anything, anything)
