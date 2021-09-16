@@ -908,6 +908,20 @@ describe UserNotifications do
     end
   end
 
+  describe "group mentioned email" do
+    include_examples "notification email building" do
+      let(:notification_type) { :group_mentioned }
+      let(:post) { Fabricate(:private_message_post) }
+      let(:user) { post.user }
+      let(:mail_type) { "group_mentioned" }
+      let(:mail_template) { "user_notifications.user_#{notification_type}_pm" }
+
+      include_examples "respect for private_email"
+      include_examples "supports reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
