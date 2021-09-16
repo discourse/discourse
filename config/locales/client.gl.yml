@@ -115,6 +115,7 @@ gl:
       previous_month: "Mes anterior"
       next_month: "Mes seguinte"
       placeholder: data
+      to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación #%{postNumber}"

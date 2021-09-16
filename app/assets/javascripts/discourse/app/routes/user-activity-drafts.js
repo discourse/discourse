@@ -5,8 +5,9 @@ export default DiscourseRoute.extend({
   model() {
     const user = this.modelFor("user");
     const draftsStream = user.get("userDraftsStream");
+    draftsStream.reset();
 
-    return draftsStream.load(this.site).then(() => {
+    return draftsStream.findItems(this.site).then(() => {
       return {
         stream: draftsStream,
         isAnotherUsersPage: this.isAnotherUsersPage(user),

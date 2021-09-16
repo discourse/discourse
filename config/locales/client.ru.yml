@@ -160,6 +160,8 @@ ru:
       previous_month: "Предыдущий месяц"
       next_month: "Следующий месяц"
       placeholder: дата
+      from_placeholder: "с даты"
+      to_placeholder: "по дату"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "сообщение #%{postNumber}"
@@ -424,6 +426,7 @@ ru:
         placeholder: "Введите заголовок сообщения, url или id"
     review:
       order_by: "Сортировать по"
+      date_filter: "Создано между"
       in_reply_to: "Посмотреть обсуждение"
       explain:
         why: "Объяснить, почему этот элемент оказался в очереди"
@@ -1073,7 +1076,9 @@ ru:
       use_current_timezone: "Использовать автоопределение часового пояса."
       profile_hidden: "Публичный профиль пользователя скрыт"
       expand_profile: "Развернуть"
+      sr_expand_profile: "Показать подробную информацию"
       collapse_profile: "Свернуть"
+      sr_collapse_profile: "Скрыть подробную информацию"
       bookmarks: "Закладки"
       bio: "Обо мне"
       timezone: "Часовой пояс"

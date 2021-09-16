@@ -375,9 +375,19 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_group_param(param, self)
   end
 
-  # Add a custom scopes for search to Group, respecting if the plugin is enabled
-  def register_group_scope_for_search(scope_name)
-    DiscoursePluginRegistry.register_group_scope_for_search(scope_name, self)
+  # Add a custom callback for search to Group
+  # Callback is called in UsersController#search_users
+  # Block takes groups and optional current_user
+  # For example:
+  # plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |groups, user|
+  #   groups.where(name: "admins")
+  # end
+  def register_groups_callback_for_users_search_controller_action(callback, &block)
+    if DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.key?(callback)
+      raise "groups_callback_for_users_search_controller_action callback already registered"
+    end
+
+    DiscoursePluginRegistry.groups_callback_for_users_search_controller_action[callback] = block
   end
 
   # Add validation method but check that the plugin is enabled

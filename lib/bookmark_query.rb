@@ -69,9 +69,8 @@ class BookmarkQuery
 
   def user_bookmarks
     Bookmark.where(user: @user)
-      .includes(topic: :tags)
       .includes(post: :user)
-      .references(:topic)
+      .includes(post: { topic: :tags })
       .references(:post)
   end
 end

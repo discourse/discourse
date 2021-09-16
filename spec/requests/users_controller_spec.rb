@@ -4083,6 +4083,25 @@ describe UsersController do
             .to_not include(private_group.name)
         end
 
+        it 'allows plugins to register custom groups filter' do
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups.count).to eq(6)
+
+          plugin = Plugin::Instance.new
+          plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |original_groups, user|
+            original_groups.where(name: "admins")
+          end
+          get "/u/search/users.json", params: { include_groups: "true", admins_filter: "true", term: "a" }
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+
+          DiscoursePluginRegistry.reset!
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
@@ -5040,6 +5059,39 @@ describe UsersController do
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+    end
+
+    it "returns an .ics file of bookmark reminders for the user in date order" do
+      bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+      bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark1.reminder_at_ics}
+        DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark1.topic.title}
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark2.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark2.reminder_at_ics}
+        DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:Some bookmark note
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        END:VEVENT
+        END:VCALENDAR
+      ICS
     end
 
     it "does not show another user's bookmarks" do

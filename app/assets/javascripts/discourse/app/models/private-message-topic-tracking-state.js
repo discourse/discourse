@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { on } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
@@ -80,6 +81,15 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     }
   },
 
+  removeTopics(topicIds) {
+    if (!this.isTracking) {
+      return;
+    }
+
+    topicIds.forEach((topicId) => this.states.delete(topicId));
+    this.incrementProperty("statesModificationCounter");
+  },
+
   _userChannel() {
     return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   },
@@ -139,6 +149,10 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         }
 
         break;
+      case "read":
+        this._modifyState(message.topic_id, message.payload);
+
+        break;
       case "unread":
         this._modifyState(message.topic_id, message.payload);
 
@@ -150,21 +164,17 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         }
 
         break;
-      case "archive":
-        if (
-          [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
-          ["user", "all"].includes(this.inbox)
-        ) {
-          this._notifyIncoming(message.topic_id);
-        }
-        break;
       case "group_archive":
         if (
           [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
+          (!message.payload.acting_user_id ||
+            message.payload.acting_user_id !== this.currentUser.id) &&
           (this.inbox === "all" || this._displayMessageForGroupInbox(message))
         ) {
           this._notifyIncoming(message.topic_id);
         }
+
+        break;
     }
   },
 
@@ -206,7 +216,14 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _modifyState(topicId, data, opts = {}) {
-    this.states.set(topicId, data);
+    const oldState = this.states.get(topicId);
+    let newState = data;
+
+    if (oldState && !deepEqual(oldState, newState)) {
+      newState = deepMerge(oldState, newState);
+    }
+
+    this.states.set(topicId, newState);
 
     if (!opts.skipIncrement) {
       this.incrementProperty("statesModificationCounter");

@@ -4,9 +4,12 @@ class BookmarkReminderNotificationHandler
   def self.send_notification(bookmark)
     return if bookmark.blank?
     Bookmark.transaction do
-      if bookmark.post.blank? || bookmark.post.deleted_at.present?
+      # we don't send reminders for deleted posts or topics,
+      # just as we don't allow creation of bookmarks for deleted
+      # posts or topics
+      if bookmark.post.blank? || bookmark.topic.blank?
         clear_reminder(bookmark)
-      elsif bookmark.topic
+      else
         create_notification(bookmark)
 
         if bookmark.auto_delete_when_reminder_sent?
@@ -20,7 +23,7 @@ class BookmarkReminderNotificationHandler
 
   def self.clear_reminder(bookmark)
     Rails.logger.debug(
-      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder info: #{bookmark.reminder_at} | #{Bookmark.reminder_types[bookmark.reminder_type]}"
+      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}"
     )
 
     bookmark.clear_reminder!

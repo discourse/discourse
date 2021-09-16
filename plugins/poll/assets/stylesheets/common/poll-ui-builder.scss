@@ -20,14 +20,7 @@
     .multi-select,
     .select-kit-header,
     .date-picker-wrapper {
-      height: 34px;
-      margin: 0;
       width: 100%;
-    }
-
-    button {
-      height: 34px;
-      margin-left: 5px;
     }
 
     .date-picker-wrapper {
@@ -91,22 +84,6 @@
     .tip {
       display: inline-block;
       vertical-align: bottom;
-    }
-  }
-
-  .d-date-time-input {
-    border: 1px solid var(--primary-medium);
-    justify-content: space-between;
-    width: 100%;
-
-    .d-date-input {
-      flex: auto;
-    }
-
-    .d-time-input {
-      .select-kit-header {
-        min-width: 120px;
-      }
     }
   }
 

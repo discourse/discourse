@@ -12,7 +12,7 @@ ru:
         tomorrow: Завтра %{time}
         yesterday: Вчера %{time}
         countdown:
-          passed: дата прошла
+          passed: прошедшая дата
       title: Дата / Время
       create:
         form:

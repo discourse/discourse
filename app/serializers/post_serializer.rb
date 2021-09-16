@@ -53,7 +53,6 @@ class PostSerializer < BasicPostSerializer
              :bookmarked,
              :bookmark_reminder_at,
              :bookmark_id,
-             :bookmark_reminder_type,
              :bookmark_name,
              :bookmark_auto_delete_preference,
              :raw,
@@ -346,10 +345,6 @@ class PostSerializer < BasicPostSerializer
     bookmarked
   end
 
-  def include_bookmark_reminder_type?
-    bookmarked
-  end
-
   def include_bookmark_name?
     bookmarked
   end
@@ -372,11 +367,6 @@ class PostSerializer < BasicPostSerializer
 
   def bookmark_reminder_at
     post_bookmark&.reminder_at
-  end
-
-  def bookmark_reminder_type
-    return if post_bookmark.blank?
-    Bookmark.reminder_types[post_bookmark.reminder_type].to_s
   end
 
   def bookmark_name

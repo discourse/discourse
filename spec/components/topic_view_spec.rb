@@ -424,16 +424,25 @@ describe TopicView do
       end
 
       context "when the topic is deleted" do
-        it "gets the first post bookmark reminder at for the user" do
+        it "returns nil" do
           topic_view = TopicView.new(topic, user)
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
 
-          first, second = topic_view.bookmarked_posts
+          expect(topic_view.bookmarked_posts).to eq(nil)
+        end
+      end
+
+      context "when one of the posts is deleted" do
+        it "does not return that post's bookmark" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.posts.second).destroy
+          topic.reload
+
+          expect(topic_view.bookmarked_posts.length).to eq(1)
+          first = topic_view.bookmarked_posts.first
           expect(first[:post_id]).to eq(bookmark1.post_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
-          expect(second[:post_id]).to eq(bookmark2.post_id)
-          expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
         end
       end
     end

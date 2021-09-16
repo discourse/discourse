@@ -60,7 +60,6 @@ textarea {
 select,
 textarea {
   display: inline-block;
-  padding: 4px;
   margin-bottom: 9px;
   font-size: $font-0;
   line-height: $line-height-large;
@@ -129,9 +128,7 @@ input {
 
   input,
   textarea,
-  select,
-  .input-prepend,
-  .input-append {
+  select {
     display: inline-block;
     margin-bottom: 0;
   }

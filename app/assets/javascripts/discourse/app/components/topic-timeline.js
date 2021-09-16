@@ -105,7 +105,10 @@ export default MountWidget.extend(Docking, {
       });
     }
 
-    this.dispatch("topic:current-post-scrolled", "timeline-scrollarea");
+    this.dispatch(
+      "topic:current-post-scrolled",
+      () => `timeline-scrollarea-${this.topic.id}`
+    );
     this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
     if (!this.site.mobileView) {
       this.appEvents.on("composer:opened", this, this.queueRerender);

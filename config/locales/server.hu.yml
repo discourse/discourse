@@ -609,8 +609,8 @@ hu:
   unsubscribed:
     title: "Az e-mail beállítások frissítve!"
     description: "a (z) <b>%{email}</b> e-mail beállításai frissültek. Az e-mail beállítások módosításához <a href='%{url}'>keresse fel a felhasználói beállításokat</a>."
-    topic_description: "A %{link}újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
-    private_topic_description: "A újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
+    topic_description: "A(z) %{link} témára történő újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
+    private_topic_description: "Az újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
   unsubscribe:
     title: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
@@ -888,6 +888,7 @@ hu:
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
     suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    external_emoji_url: "Az emodzsi képek külső szolgáltatásának URL-je. A letiltáshoz hagyja üresen."
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
@@ -1789,7 +1790,7 @@ hu:
     first_quote:
       name: Első idézet
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor első alkalommal idézel egy bejegyzést a válaszodban. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolódásában. Az idézés legegyszerűbb módja, ha kiemeled a bejegyzés egy részét, majd megnyomod bármelyik válasz gombot. Idézz nagylelkűen!
+        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemeleia bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
     read_guidelines:
       name: Irányelvek elolvasva
       long_description: |

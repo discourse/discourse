@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -31,7 +32,7 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 // and the most important _bindUploadTarget which handles all the main upload
 // functionality and event binding.
 //
-export default Mixin.create({
+export default Mixin.create(ExtendableUploader, {
   @observes("composerModel.uploadCancelled")
   _cancelUpload() {
     if (!this.get("composerModel.uploadCancelled")) {
@@ -154,13 +155,11 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("upload", (data) => {
+      this._addNeedProcessing(data.fileIDs.length);
+
       const files = data.fileIDs.map((fileId) =>
         this._uppyInstance.getFile(fileId)
       );
-
-      this._eachPreProcessor((pluginName, status) => {
-        status.needProcessing = files.length;
-      });
 
       this.setProperties({
         isProcessingUpload: true,
@@ -179,6 +178,7 @@ export default Mixin.create({
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
+      this._inProgressUploads--;
       let upload = response.body;
       const markdown = this.uploadMarkdownResolvers.reduce(
         (md, resolver) => resolver(upload) || md,
@@ -229,13 +229,6 @@ export default Mixin.create({
 
     this._setupPreProcessors();
     this._setupUIPlugins();
-
-    // TODO (martin) Need a more automatic way to do this for preprocessor
-    // plugins like UppyChecksum and UppyMediaOptimization so people don't
-    // have to remember to do this, also want to wrap this.uppy.emit in those
-    // classes so people don't have to remember to pass through the plugin class
-    // name for the preprocess-X events.
-    this._trackPreProcessorStatus(UppyChecksum);
   },
 
   _handleUploadError(file, error, response) {
@@ -255,31 +248,34 @@ export default Mixin.create({
   },
 
   _setupPreProcessors() {
-    this.uploadPreProcessors.forEach(({ pluginClass, optionsResolverFn }) => {
-      this._uppyInstance.use(
-        pluginClass,
-        optionsResolverFn({
-          composerModel: this.composerModel,
-          composerElement: this.composerElement,
-          capabilities: this.capabilities,
-          isMobileDevice: this.site.isMobileDevice,
-        })
-      );
-      this._trackPreProcessorStatus(pluginClass);
-    });
+    const checksumPreProcessor = {
+      pluginClass: UppyChecksum,
+      optionsResolverFn: ({ capabilities }) => {
+        return {
+          capabilities,
+        };
+      },
+    };
 
     // It is important that the UppyChecksum preprocessor is the last one to
     // be added; the preprocessors are run in order and since other preprocessors
     // may modify the file (e.g. the UppyMediaOptimization one), we need to
     // checksum once we are sure the file data has "settled".
-    this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
+    [this.uploadPreProcessors, checksumPreProcessor]
+      .flat()
+      .forEach(({ pluginClass, optionsResolverFn }) => {
+        this._useUploadPlugin(
+          pluginClass,
+          optionsResolverFn({
+            composerModel: this.composerModel,
+            composerElement: this.composerElement,
+            capabilities: this.capabilities,
+            isMobileDevice: this.site.isMobileDevice,
+          })
+        );
+      });
 
-    this._uppyInstance.on("preprocess-progress", (pluginClass, file) => {
-      this._debugLog(
-        `[${pluginClass}] processing file ${file.name} (${file.id})`
-      );
-
-      this._preProcessorStatus[pluginClass].activeProcessing++;
+    this._onPreProcessProgress((file) => {
       let placeholderData = this.placeholders[file.id];
       placeholderData.processingPlaceholder = `[${I18n.t(
         "processing_filename",
@@ -295,39 +291,25 @@ export default Mixin.create({
       );
     });
 
-    this._uppyInstance.on("preprocess-complete", (pluginClass, file) => {
-      this._debugLog(
-        `[${pluginClass}] completed processing file ${file.name} (${file.id})`
-      );
-
-      let placeholderData = this.placeholders[file.id];
-      this.appEvents.trigger(
-        `${this.eventPrefix}:replace-text`,
-        placeholderData.processingPlaceholder,
-        placeholderData.uploadPlaceholder
-      );
-      const preProcessorStatus = this._preProcessorStatus[pluginClass];
-      preProcessorStatus.activeProcessing--;
-      preProcessorStatus.completeProcessing++;
-
-      if (
-        preProcessorStatus.completeProcessing ===
-        preProcessorStatus.needProcessing
-      ) {
-        preProcessorStatus.allComplete = true;
-
-        if (this._allPreprocessorsComplete()) {
-          this.setProperties({
-            isProcessingUpload: false,
-            isCancellable: true,
-          });
-          this._debugLog("All upload preprocessors complete.");
-          this.appEvents.trigger(
-            `${this.eventPrefix}:uploads-preprocessing-complete`
-          );
-        }
+    this._onPreProcessComplete(
+      (file) => {
+        let placeholderData = this.placeholders[file.id];
+        this.appEvents.trigger(
+          `${this.eventPrefix}:replace-text`,
+          placeholderData.processingPlaceholder,
+          placeholderData.uploadPlaceholder
+        );
+      },
+      () => {
+        this.setProperties({
+          isProcessingUpload: false,
+          isCancellable: true,
+        });
+        this.appEvents.trigger(
+          `${this.eventPrefix}:uploads-preprocessing-complete`
+        );
       }
-    });
+    );
   },
 
   _setupUIPlugins() {
@@ -505,14 +487,7 @@ export default Mixin.create({
       isProcessingUpload: false,
       isCancellable: false,
     });
-    this._eachPreProcessor((pluginClass) => {
-      this._preProcessorStatus[pluginClass] = {
-        needProcessing: 0,
-        activeProcessing: 0,
-        completeProcessing: 0,
-        allComplete: false,
-      };
-    });
+    this._resetPreProcessors();
     this.fileInputEl.value = "";
   },
 
@@ -576,31 +551,6 @@ export default Mixin.create({
         id: "discourse.upload.uppy-add-files-error",
       });
     }
-  },
-
-  _trackPreProcessorStatus(pluginClass) {
-    this._preProcessorStatus[pluginClass.name] = {
-      needProcessing: 0,
-      activeProcessing: 0,
-      completeProcessing: 0,
-      allComplete: false,
-    };
-  },
-
-  _eachPreProcessor(cb) {
-    for (const [pluginClass, status] of Object.entries(
-      this._preProcessorStatus
-    )) {
-      cb(pluginClass, status);
-    }
-  },
-
-  _allPreprocessorsComplete() {
-    let completed = [];
-    this._eachPreProcessor((pluginClass, status) => {
-      completed.push(status.allComplete);
-    });
-    return completed.every(Boolean);
   },
 
   showUploadSelector(toolbarEvent) {

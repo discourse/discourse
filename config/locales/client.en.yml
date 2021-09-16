@@ -132,6 +132,8 @@ en:
       previous_month: "Previous Month"
       next_month: "Next Month"
       placeholder: date
+      from_placeholder: "from date"
+      to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -411,6 +413,7 @@ en:
 
     review:
       order_by: "Order by"
+      date_filter: "Posted between"
       in_reply_to: "in reply to"
       explain:
         why: "explain why this item ended up in the queue"
@@ -2970,6 +2973,7 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_edit: "Edit"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -4969,6 +4973,7 @@ en:
         logged_out: "User was logged out on all devices"
         revoke_admin: "Revoke Admin"
         grant_admin: "Grant Admin"
+        grant_admin_success: "New administrator was confirmed."
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: "Revoke Moderation"
         grant_moderation: "Grant Moderation"

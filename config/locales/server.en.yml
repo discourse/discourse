@@ -19,6 +19,8 @@ en:
       long: "%B %-d, %Y, %l:%M%P"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:
@@ -2201,6 +2203,7 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
+    enable_fast_edit: "Experimental feature which enables small selection of a post text to be edited inline."
 
     old_post_notice_days: "Days before post notice becomes old"
     new_user_notice_tl: "Minimum trust level required to see new user post notices."

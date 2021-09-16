@@ -8,7 +8,7 @@ acceptance("Composer - Edit conflict", function (needs) {
 
   let lastBody;
   needs.pretender((server, helper) => {
-    server.post("/draft.json", (request) => {
+    server.post("/drafts.json", (request) => {
       lastBody = request.requestBody;
       return helper.response({ success: true });
     });

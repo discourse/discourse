@@ -191,8 +191,25 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    AdminConfirmation.new(@user, current_user).create_confirmation
-    render json: success_json
+    guardian.ensure_can_grant_admin!(@user)
+    if current_user.has_any_second_factor_methods_enabled?
+      second_factor_authentication_result = current_user.authenticate_second_factor(params, secure_session)
+      if second_factor_authentication_result.ok
+        @user.grant_admin!
+        StaffActionLogger.new(current_user).log_grant_admin(@user)
+        render json: success_json
+      else
+        failure_payload = second_factor_authentication_result.to_h
+        if current_user.security_keys_enabled?
+          Webauthn.stage_challenge(current_user, secure_session)
+          failure_payload.merge!(Webauthn.allowed_credentials(current_user, secure_session))
+        end
+        render json: failed_json.merge(failure_payload)
+      end
+    else
+      AdminConfirmation.new(@user, current_user).create_confirmation
+      render json: success_json.merge(email_confirmation_required: true)
+    end
   end
 
   def revoke_moderation

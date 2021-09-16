@@ -115,6 +115,7 @@ fr:
       previous_month: "Mois précédent"
       next_month: "Mois suivant"
       placeholder: date
+      to_placeholder: "à la date"
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"

@@ -2,7 +2,6 @@ import ComponentConnector from "discourse/widgets/component-connector";
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import { deepMerge } from "discourse-common/lib/object";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { later } from "@ember/runloop";
@@ -76,7 +75,7 @@ function timelineDate(date) {
 
 createWidget("timeline-scroller", {
   tagName: "div.timeline-scroller",
-  buildKey: () => `timeline-scroller`,
+  buildKey: (attrs) => `timeline-scroller-${attrs.topicId}`,
 
   defaultState() {
     return { dragging: false };
@@ -144,7 +143,7 @@ createWidget("timeline-padding", {
 
 createWidget("timeline-scrollarea", {
   tagName: "div.timeline-scrollarea",
-  buildKey: () => `timeline-scrollarea`,
+  buildKey: (attrs) => `timeline-scrollarea-${attrs.topic.id}`,
 
   buildAttributes() {
     return { style: `height: ${scrollareaHeight()}px` };
@@ -239,15 +238,15 @@ createWidget("timeline-scrollarea", {
         before + SCROLLER_HEIGHT - 5 < lastReadTop || before > lastReadTop + 25;
     }
 
+    let scrollerAttrs = position;
+    scrollerAttrs.showDockedButton =
+      !attrs.mobileView && hasBackPosition && !showButton;
+    scrollerAttrs.fullScreen = attrs.fullScreen;
+    scrollerAttrs.topicId = attrs.topic.id;
+
     const result = [
       this.attach("timeline-padding", { height: before }),
-      this.attach(
-        "timeline-scroller",
-        deepMerge(position, {
-          showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
-          fullScreen: attrs.fullScreen,
-        })
-      ),
+      this.attach("timeline-scroller", scrollerAttrs),
       this.attach("timeline-padding", { height: after }),
     ];
 
@@ -410,8 +409,7 @@ createWidget("timeline-footer-controls", {
 
 export default createWidget("topic-timeline", {
   tagName: "div.topic-timeline",
-
-  buildKey: () => "topic-timeline-area",
+  buildKey: (attrs) => `topic-timeline-area-${attrs.topic.id}`,
 
   defaultState() {
     return { position: null, excerpt: null };

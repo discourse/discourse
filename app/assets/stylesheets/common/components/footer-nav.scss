@@ -2,10 +2,7 @@
 // Footer nav bar (displayed in DiscourseHub app and PWAs)
 // --------------------------------------------------
 
-:root {
-  --footer-nav-height: 49px;
-}
-$footer-nav-height: var(--footer-nav-height);
+$footer-nav-height: 49px;
 
 body.footer-nav-visible {
   #main-outlet {

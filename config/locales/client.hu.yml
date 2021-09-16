@@ -115,6 +115,7 @@ hu:
       previous_month: "Előző hónap"
       next_month: "Következő hónap"
       placeholder: dátum
+      to_placeholder: "Mostanáig"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "bejegyzés #%{postNumber}"
@@ -1512,6 +1513,7 @@ hu:
         name: "Discord"
     invites:
       accept_title: "Meghívás"
+      emoji: "boríték emodzsi"
       welcome_to: "Üdvözöllek a%{site_name}"
       invited_by: "Meglettél hívva:"
       social_login_available: "Bármely közösségi bejelentkezéssel is be tudsz jelentkezni ennek az e-mailen címnek a használatával."
@@ -1569,8 +1571,15 @@ hu:
       to: To
     emoji_picker:
       filter_placeholder: Emodzsi keresése
+      smileys_&_emotion: Mosolyok és érzelmek
+      people_&_body: Emberek és test
+      animals_&_nature: Állatok és természet
+      food_&_drink: Étel és ital
+      travel_&_places: Utazás és helyek
+      activities: Tevékenységek
       objects: Tárgyak
-      flags: Jelölések
+      symbols: Szimbólumok
+      flags: Zászlók
       recent: Nemrég használt
       default_tone: Nincs bőrszín
       light_tone: Világos bőrszín
@@ -2998,6 +3007,7 @@ hu:
           revert_confirm: "Biztosan vissza akarod vonni a változtatásaidat?"
         theme:
           theme: "Téma"
+          themes_intro_emoji: "női művész emodzsi"
           customize_desc: "Személyre szabás:"
           title: "Témák"
           create: "Létrehoz"
@@ -3485,6 +3495,10 @@ hu:
         reset: "alaphelyzet"
         none: "egy sem"
       site_settings:
+        emoji_list:
+          invalid_input: "Az emodzsik listája csak érvényes emodzsineveket tartalmazhat, például ölelés"
+          add_emoji_button:
+            label: "Emodzsi hozzáadása"
         title: "Beállítások"
         no_results: "Nincs találat."
         more_than_30_results: "A keresés több, mint 30 találatot adott. Kérlek, pontosítsd a keresést vagy válassz egy kategóriát!"
@@ -3575,6 +3589,7 @@ hu:
             with: <span class="username">%{username}</span>
         badge_intro:
           title: "A kezdéshez válassz ki egy meglévő jelvényt, vagy hozz létre egy újat"
+          emoji: "női diák emodzsi"
           what_are_badges_title: "Mik azok a jelvények?"
           badge_query_examples_title: "Jelvény lekérdezési példák"
       emoji:
@@ -3585,6 +3600,7 @@ hu:
         name: "Név"
         group: "Csoport"
         image: "Kép"
+        alt: "egyéni emodzsi előnézete"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
       embedding:
         get_started: "Ha szeretnéd a Discourse-t egy másik weboldalba ágyazni, kezdd a hoszt megadásával."

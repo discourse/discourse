@@ -47,7 +47,7 @@ export default {
         draft_username: "eviltrout",
         avatar_template: "/user_avatar/localhost/eviltrout/{size}/2_1.png",
         data:
-          '{"reply":"here goes a reply to a PM.","action":"reply","categoryId":null,"postId":212,"archetypeId":"regular","whisper":false,"metaData":null,"composerTime":455711,"typingTime":5400}',
+          '{"reply":"here goes a reply to a PM :slight_smile:","action":"reply","categoryId":3,"postId":212,"archetypeId":"regular","whisper":false,"metaData":null,"composerTime":455711,"typingTime":5400}',
         topic_id: 93,
         username: "eviltrout",
         name: null,
@@ -57,5 +57,20 @@ export default {
         archetype: "private_message"
       }
     ]
+  },
+  "/drafts/topic_280.json": {
+    draft:
+      '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
+    draft_sequence: 42
+  },
+  "/drafts/topic_281.json": {
+    draft:
+      '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+    draft_sequence: 0
+  },
+  "/drafts/topic_9.json": {
+    draft:
+      '{"reply":"This is a draft of the first post","action":"reply","categoryId":1,"archetypeId":"regular","metaData":null,"composerTime":2863,"typingTime":200}',
+    draft_sequence: 42
   }
 };

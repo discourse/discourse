@@ -94,6 +94,7 @@ ja:
       previous_month: "前月"
       next_month: "翌月"
       placeholder: 日付
+      to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "投稿 #%{postNumber}"

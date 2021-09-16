@@ -137,6 +137,7 @@ bs_BA:
       previous_month: "Prošli mjesec"
       next_month: "Sljedeći mjesec"
       placeholder: datum
+      to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "dijeli post #%{postNumber}"

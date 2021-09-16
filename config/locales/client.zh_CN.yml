@@ -94,6 +94,8 @@ zh_CN:
       previous_month: "上个月"
       next_month: "下个月"
       placeholder: 日期
+      from_placeholder: "起始日期"
+      to_placeholder: "截至日期"
     share:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "帖子 #%{postNumber}"
@@ -135,6 +137,7 @@ zh_CN:
         disabled: "%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
+    skip_to_main_content: "跳转到主要内容"
     wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     software_update_prompt:
@@ -333,6 +336,7 @@ zh_CN:
         placeholder: "在此处输入消息标题、URL 或 ID"
     review:
       order_by: "排序依据"
+      date_filter: "发布时间介于"
       in_reply_to: "回复给"
       explain:
         why: "解释为什么此条目最终进入队列"
@@ -922,7 +926,9 @@ zh_CN:
       use_current_timezone: "使用当前时区"
       profile_hidden: "此用户的公开个人资料已被隐藏。"
       expand_profile: "展开"
+      sr_expand_profile: "展开个人资料详情"
       collapse_profile: "收起"
+      sr_collapse_profile: "收起个人资料详情"
       bookmarks: "书签"
       bio: "自我介绍"
       timezone: "时区"
@@ -1678,6 +1684,7 @@ zh_CN:
       google_oauth2:
         name: "Google"
         title: "通过 Google"
+        sr_title: "使用谷歌登录"
       twitter:
         name: "Twitter"
         title: "通过 Twitter"

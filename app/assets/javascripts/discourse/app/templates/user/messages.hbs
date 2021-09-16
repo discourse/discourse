@@ -31,16 +31,20 @@
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
-      <li>
-        {{#link-to "userPrivateMessages.new" model class="new"}}
-          {{newLinkText}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to "userPrivateMessages.unread" model class="unread"}}
-          {{unreadLinkText}}
-        {{/link-to}}
-      </li>
+
+      {{#if viewingSelf}}
+        <li>
+          {{#link-to "userPrivateMessages.new" model class="new"}}
+            {{newLinkText}}
+          {{/link-to}}
+        </li>
+        <li>
+          {{#link-to "userPrivateMessages.unread" model class="unread"}}
+            {{unreadLinkText}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+
       <li>
         {{#link-to "userPrivateMessages.archive" model}}
           {{i18n "user.messages.archive"}}
@@ -54,16 +58,20 @@
           {{i18n "user.messages.latest"}}
         {{/link-to}}
       </li>
-      <li>
-        {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
-          {{newLinkText}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to "userPrivateMessages.groupUnread" group.name class="unread"}}
-          {{unreadLinkText}}
-        {{/link-to}}
-      </li>
+
+      {{#if viewingSelf}}
+        <li>
+          {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
+            {{newLinkText}}
+          {{/link-to}}
+        </li>
+        <li>
+          {{#link-to "userPrivateMessages.groupUnread" group.name class="unread"}}
+            {{unreadLinkText}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+
       <li>
         {{#link-to "userPrivateMessages.groupArchive" group.name}}
           {{i18n "user.messages.archive"}}
@@ -82,16 +90,20 @@
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
-      <li>
-        {{#link-to "userPrivateMessages.personalNew" model class="new"}}
-          {{newLinkText}}
-        {{/link-to}}
-      </li>
-      <li>
-        {{#link-to "userPrivateMessages.personalUnread" model class="unread"}}
-          {{unreadLinkText}}
-        {{/link-to}}
-      </li>
+
+      {{#if viewingSelf}}
+        <li>
+          {{#link-to "userPrivateMessages.personalNew" model class="new"}}
+            {{newLinkText}}
+          {{/link-to}}
+        </li>
+        <li>
+          {{#link-to "userPrivateMessages.personalUnread" model class="unread"}}
+            {{unreadLinkText}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+
       <li>
         {{#link-to "userPrivateMessages.personalArchive" model}}
           {{i18n "user.messages.archive"}}

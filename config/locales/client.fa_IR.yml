@@ -116,6 +116,8 @@ fa_IR:
       previous_month: "ماه قبل"
       next_month: "ماه بعد"
       placeholder: تاریخ
+      from_placeholder: "از تاریخ"
+      to_placeholder: "تا تاریخ"
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "ارسال #%{postNumber}"
@@ -621,6 +623,7 @@ fa_IR:
         title: "مدیریت"
         name: "نام"
         full_name: "نام کامل"
+        add_members: "افزودن کاربران"
         invite_members: "دعوت"
         delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
         profile:
@@ -631,7 +634,12 @@ fa_IR:
           notification: اعلان‌ها
         email:
           title: "ایمیل"
+          enable_smtp: "فعال کردن SMTP"
+          enable_imap: "فعال کردن IMAP"
+          save_settings: "ذخیره تنظیمات"
           last_updated_by: "توسط"
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
           prefill:
             gmail: "جی‌میل"
           credentials:
@@ -858,6 +866,7 @@ fa_IR:
           all: "همه"
           read: "خواندن"
           unread: "خوانده‌ نشده‌"
+          unseen: "دیده نشده"
         ignore_duration_username: "نام‌کاربری"
         ignore_duration_when: "مدت زمان:"
         ignore_duration_save: "چشم پوشی"
@@ -922,6 +931,8 @@ fa_IR:
       no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
+      skip_new_user_tips:
+        read_later: "بعدا می‌خوانم"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_schemes:
         undo: "بازنشانی"
@@ -1006,6 +1017,7 @@ fa_IR:
         rejected_posts: "پست های رد شده"
       messages:
         inbox: "صندوق دریافت"
+        personal: "شخصی"
         latest: "آخرین"
         sent: "ارسال شد"
         unread: "خوانده‌ نشده‌"
@@ -4005,7 +4017,7 @@ fa_IR:
         delete_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
         revoke: ابطال
         reason: دلیل
-        expand: گستردن hellip&;
+        expand: گستردن &hellip;
         revoke_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
         edit_badges: ویرایش نشان
         grant_badge: اعطای نشان

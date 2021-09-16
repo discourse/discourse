@@ -11,20 +11,7 @@
     overflow-x: auto;
   }
 
-  .open-edit-columns-btn {
-    vertical-align: top;
-    padding: 0.45em 0.8em;
-  }
-
   &.users-directory {
-    .period-chooser {
-      .selected-name {
-        margin: 0;
-      }
-      .period-chooser-header .caret-icon {
-        margin: 0;
-      }
-    }
     .directory-group-selector {
       vertical-align: top;
     }
@@ -43,9 +30,7 @@
     justify-content: space-between;
     .total-rows {
       color: var(--primary-medium);
-    }
-    .filter-name {
-      height: 1em;
+      font-weight: normal;
     }
   }
 
