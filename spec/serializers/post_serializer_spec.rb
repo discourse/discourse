@@ -255,7 +255,6 @@ describe PostSerializer do
       context "bookmarks with reminders" do
         it "returns false, because we do not want to mark the post as bookmarked, because the bookmark is for the topic" do
           expect(serialized.as_json[:bookmarked]).to eq(false)
-          expect(serialized.as_json[:bookmark_for_topic]).to eq(false)
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(nil)
         end
       end
