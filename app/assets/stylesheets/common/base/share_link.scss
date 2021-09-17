@@ -3,6 +3,7 @@
 .link-share-container {
   display: flex;
   button {
+    margin-left: 0.5em;
     transition-property: background-color, color; // don't transition outline
   }
   input {
