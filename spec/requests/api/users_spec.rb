@@ -19,42 +19,28 @@ describe 'users' do
       tags 'Users'
       operationId 'createUser'
       consumes 'application/json'
+      # This endpoint requires an api key or the active param is ignored
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
-      parameter name: :user_body, in: :body, schema: {
-        type: :object,
-        properties: {
-          "name": { type: :string },
-          "email": { type: :string },
-          "password": { type: :string },
-          "username": { type: :string },
-          "active": { type: :boolean },
-          "approved": { type: :boolean },
-          "user_fields[1]": { type: :string },
-        },
-        required: ['name', 'email', 'password', 'username']
-      }
+      expected_request_schema = load_spec_schema('user_create_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'user created' do
-        schema type: :object, properties: {
-          success: { type: :boolean },
-          active: { type: :boolean },
-          message: { type: :string },
-          user_id: { type: :integer },
-        }
+        expected_response_schema = load_spec_schema('user_create_response')
+        schema expected_response_schema
 
-        let(:user_body) { {
-          name: 'user',
-          username: 'user1',
-          email: 'user1@example.com',
-          password: '13498428e9597cab689b468ebc0a5d33',
-          active: true
+        let(:params) { {
+          'name' => 'user',
+          'username' => 'user1',
+          'email' => 'user1@example.com',
+          'password' => '13498428e9597cab689b468ebc0a5d33',
+          'active' => true,
         } }
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['success']).to eq(true)
-          expect(data['active']).to eq(true)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end
@@ -70,13 +56,18 @@ describe 'users' do
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter name: :username, in: :path, type: :string, required: true
+      expected_request_schema = nil
 
       produces 'application/json'
       response '200', 'user response' do
-        schema '$ref' => '#/components/schemas/user_response'
+        expected_response_schema = load_spec_schema('user_get_response')
+        schema expected_response_schema
 
         let(:username) { 'system' }
-        run_test!
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end
@@ -90,10 +81,12 @@ describe 'users' do
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter name: :external_id, in: :path, type: :string, required: true
+      expected_request_schema = nil
 
       produces 'application/json'
       response '200', 'user response' do
-        schema '$ref' => '#/components/schemas/user_response'
+        expected_response_schema = load_spec_schema('user_get_response')
+        schema expected_response_schema
 
         let(:user) { Fabricate(:user) }
         let(:external_id) { '1' }
@@ -104,7 +97,10 @@ describe 'users' do
           user.create_single_sign_on_record(external_id: '1', last_payload: '')
         end
 
-        run_test!
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end
@@ -123,10 +119,12 @@ describe 'users' do
                 required: true,
                 description: "Authentication provider name. Can be found in the provider callback URL: `/auth/{provider}/callback`"
       parameter name: :external_id, in: :path, type: :string, required: true
+      expected_request_schema = nil
 
       produces 'application/json'
       response '200', 'user response' do
-        schema '$ref' => '#/components/schemas/user_response'
+        expected_response_schema = load_spec_schema('user_get_response')
+        schema expected_response_schema
 
         let(:user) { Fabricate(:user) }
         let(:provider) { 'google_oauth2' }
@@ -137,7 +135,10 @@ describe 'users' do
           UserAssociatedAccount.create!(user: user, provider_uid: 'myuid', provider_name: 'google_oauth2')
         end
 
-        run_test!
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end
