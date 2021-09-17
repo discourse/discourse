@@ -376,6 +376,20 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
   },
 
+  bookmarkCount: alias("bookmarks.length"),
+
+  removeBookmark(id) {
+    if (!this.bookmarks) {
+      this.set("bookmarks", []);
+    }
+    this.set(
+      "bookmarks",
+      this.bookmarks.filter((bookmark) => bookmark.id !== id)
+    );
+    this.set("bookmarked", this.bookmarks.length);
+    this.incrementProperty("bookmarksWereChanged");
+  },
+
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 

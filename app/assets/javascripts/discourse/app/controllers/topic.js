@@ -221,9 +221,8 @@ export default Controller.extend(bufferedProperty("model"), {
               AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
         )
         .forEach((post) => {
-          const bookmarkId = post.bookmark_id;
           post.clearBookmark();
-          this._removeBookmarkFromCache(bookmarkId);
+          this.model.removeBookmark(post.bookmark_id);
         });
     }
     const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
@@ -231,7 +230,7 @@ export default Controller.extend(bufferedProperty("model"), {
       forTopicBookmark?.auto_delete_preference ===
       AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
     ) {
-      this._removeBookmarkFromCache(forTopicBookmark.id);
+      this.model.removeBookmark(forTopicBookmark.id);
     }
   },
 
@@ -735,8 +734,9 @@ export default Controller.extend(bufferedProperty("model"), {
         const bookmarkForPost = this.model.bookmarks.find(
           (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
         );
-        return this._modifyBookmarkWithPost(
-          bookmarkForPost || { post_id: post.id, for_topic: false }
+        return this._modifyPostBookmark(
+          bookmarkForPost || { post_id: post.id, for_topic: false },
+          post
         );
       } else {
         return this._toggleTopicLevelBookmark().then((changedIds) => {
@@ -1203,12 +1203,46 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  async _modifyBookmarkWithPost(bookmark) {
-    const post = await this.model.postById(bookmark.post_id);
-    return this._modifyBookmark(bookmark, post);
+  _modifyTopicBookmark(bookmark) {
+    const title = bookmark.id
+      ? "post.bookmarks.edit_for_topic"
+      : "post.bookmarks.create_for_topic";
+    return this._openBookmarkModal(bookmark, title, {
+      onAfterSave: () => {
+        this.model.set("bookmarked", true);
+        this.model.incrementProperty("bookmarksWereChanged");
+      },
+    });
   },
 
-  async _modifyBookmark(bookmark, post) {
+  _modifyPostBookmark(bookmark, post) {
+    const title = bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create";
+    return this._openBookmarkModal(bookmark, title, {
+      onCloseWithoutSaving: () => {
+        post.appEvents.trigger("post-stream:refresh", {
+          id: bookmark.post_id,
+        });
+      },
+      onAfterSave: (savedData) => {
+        post.createBookmark(savedData);
+        this.model.afterPostBookmarked(post, savedData);
+        return [post.id];
+      },
+      onAfterDelete: (topicBookmarked) => {
+        post.deleteBookmark(topicBookmarked);
+      },
+    });
+  },
+
+  _openBookmarkModal(
+    bookmark,
+    title,
+    callbacks = {
+      onCloseWithoutSaving: null,
+      onAfterSave: null,
+      onAfterDelete: null,
+    }
+  ) {
     return new Promise((resolve) => {
       let modalController = showModal("bookmark", {
         model: {
@@ -1219,59 +1253,34 @@ export default Controller.extend(bufferedProperty("model"), {
           name: bookmark.name,
           forTopic: bookmark.for_topic,
         },
-        title: (() => {
-          if (bookmark.id) {
-            return bookmark.for_topic
-              ? "post.bookmarks.edit_for_topic"
-              : "post.bookmarks.edit";
-          } else {
-            return bookmark.for_topic
-              ? "post.bookmarks.create_for_topic"
-              : "post.bookmarks.create";
-          }
-        })(),
+        title,
         modalClass: "bookmark-with-reminder",
       });
       modalController.setProperties({
         onCloseWithoutSaving: () => {
+          if (callbacks.onCloseWithoutSaving) {
+            callbacks.onCloseWithoutSaving();
+          }
           resolve();
-          post?.appEvents.trigger("post-stream:refresh", {
-            id: bookmark.post_id,
-          });
         },
         afterSave: (savedData) => {
           this._syncBookmarks(savedData);
           this.model.set("bookmarking", false);
-          if (bookmark.for_topic) {
-            this.model.set("bookmarked", true);
-            this.model.incrementProperty("bookmarksWereChanged");
-            resolve();
-          } else {
-            post.createBookmark(savedData);
-            this.model.afterPostBookmarked(post, savedData);
-            resolve([post.id]);
+          let resolveData;
+          if (callbacks.onAfterSave) {
+            resolveData = callbacks.onAfterSave(savedData);
           }
+          resolve(resolveData);
         },
         afterDelete: (topicBookmarked, bookmarkId) => {
-          this._removeBookmarkFromCache(bookmarkId);
-          if (!bookmark.for_topic) {
-            post.deleteBookmark(topicBookmarked);
+          this.model.removeBookmark(bookmarkId);
+          if (callbacks.onAfterDelete) {
+            callbacks.onAfterDelete(topicBookmarked);
           }
+          resolve();
         },
       });
     });
-  },
-
-  _removeBookmarkFromCache(bookmarkId) {
-    if (!this.model.bookmarks) {
-      this.model.set("bookmarks", []);
-    }
-    this.model.set(
-      "bookmarks",
-      this.model.bookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
-    );
-    this.model.set("bookmarked", this.model.bookmarks.length);
-    this.model.incrementProperty("bookmarksWereChanged");
   },
 
   _syncBookmarks(data) {
@@ -1279,7 +1288,7 @@ export default Controller.extend(bufferedProperty("model"), {
       this.model.set("bookmarks", []);
     }
 
-    let bookmark = this.model.bookmarks.findBy("id", data.id);
+    const bookmark = this.model.bookmarks.findBy("id", data.id);
     if (!bookmark) {
       this.model.bookmarks.pushObject(data);
     } else {
@@ -1289,42 +1298,32 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  /**
-   * Used by toggleBookmark() when called without a post from the
-   * topic-footer-buttons bookmark button. Has different behaviour
-   * based on the number of bookmarks in the topic and also whether
-   * there is a topic-level bookmark for the OP.
-   */
   async _toggleTopicLevelBookmark() {
     if (this.model.bookmarking) {
       return Promise.resolve();
     }
 
-    const bookmarkCount = this.model.bookmarks
-      ? this.model.bookmarks.length
-      : 0;
-    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
-
-    // if there is > 1 bookmarks, confirm whether the user wants to clear
-    // all bookmarks, and do so if they confirm
-    if (bookmarkCount > 1) {
+    if (this.model.bookmarkCount > 1) {
       return this._maybeClearAllBookmarks();
     }
 
-    // if there is 1 bookmark, open either the for topic bookmark or
-    // the only bookmark for editing
-    if (bookmarkCount === 1) {
+    if (this.model.bookmarkCount === 1) {
+      const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
       if (forTopicBookmark) {
-        return this._modifyBookmark(forTopicBookmark);
+        return this._modifyTopicBookmark(forTopicBookmark);
       } else {
-        return this._modifyBookmarkWithPost(this.model.bookmarks[0]);
+        const bookmark = this.model.bookmarks[0];
+        const post = await this.model.postById(bookmark.post_id);
+        return this._modifyPostBookmark(bookmark, post);
       }
     }
 
-    // if there are 0 bookmarks, then bookmark the first post as a for_topic bookmark
-    if (bookmarkCount === 0) {
+    if (this.model.bookmarkCount === 0) {
       const firstPost = await this.model.firstPost();
-      return this._modifyBookmark({ post_id: firstPost.id, for_topic: true });
+      return this._modifyTopicBookmark({
+        post_id: firstPost.id,
+        for_topic: true,
+      });
     }
   },
 

@@ -83,12 +83,9 @@ export default {
       },
       label() {
         if (!this.topic.isPrivateMessage || this.site.mobileView) {
-          const bookmarks = this.topic.bookmarks;
-          const bookmarksCount = bookmarks ? bookmarks.length : 0;
-
-          if (bookmarksCount === 0) {
+          if (this.topic.bookmarkCount === 0) {
             return "bookmarked.title";
-          } else if (bookmarksCount === 1) {
+          } else if (this.topic.bookmarkCount === 1) {
             return "bookmarked.edit_bookmark";
           } else {
             return "bookmarked.clear_bookmarks";
@@ -97,9 +94,9 @@ export default {
       },
       translatedTitle() {
         const bookmarks = this.topic.bookmarks;
-        if (!bookmarks || bookmarks.length === 0) {
+        if (!bookmarks || this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
-        } else if (bookmarks.length === 1) {
+        } else if (this.topic.bookmarkCount === 1) {
           if (bookmarks.filter((bookmark) => bookmark.for_topic).length) {
             return I18n.t("bookmarked.help.edit_bookmark_for_topic");
           } else {
