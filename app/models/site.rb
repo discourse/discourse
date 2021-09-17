@@ -124,7 +124,9 @@ class Site
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
+    Group
+      .visible_groups(@guardian.user, "name ASC", include_everyone: true)
+      .includes(:flair_upload)
   end
 
   def archetypes
