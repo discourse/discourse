@@ -224,4 +224,18 @@ describe GroupUser do
       expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
     end
   end
+
+  describe '#destroy!' do
+    it 'removes `primary_group_id`, `flair_group_id` and `title` for user' do
+      group = Fabricate(:group, title: 'Groupie', flair_icon: 'icon')
+      user = Fabricate(:user, primary_group: group, flair_group: group, title: group.title)
+      group_user = Fabricate(:group_user, group: group, user: user)
+      group_user.destroy!
+
+      user.reload
+      expect(user.primary_group_id).to be_nil
+      expect(user.flair_group_id).to be_nil
+      expect(user.title).to be_nil
+    end
+  end
 end
