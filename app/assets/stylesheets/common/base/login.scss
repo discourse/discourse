@@ -334,7 +334,8 @@
       line-height: $line-height-medium;
     }
     .tip {
-      padding-left: 5px;
+      font-size: var(--font-down-1);
+      margin-bottom: 0.25em;
     }
   }
 }
