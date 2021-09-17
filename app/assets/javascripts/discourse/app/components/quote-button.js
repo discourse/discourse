@@ -1,3 +1,4 @@
+import afterTransition from "discourse/lib/after-transition";
 import { propertyEqual } from "discourse/lib/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -5,6 +6,7 @@ import {
   postUrl,
   selectedElement,
   selectedText,
+  setCaretPosition,
 } from "discourse/lib/utilities";
 import Component from "@ember/component";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -138,16 +140,14 @@ export default Component.extend({
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
 
-      // if we have a linebreak, the selection is probably too complex to be handled
-      // by fast edit, so ignore it
-      // if the selection is present multiple times, we also consider it too complex
-      // and ignore it, note this specific case could probably be handled in the future
       const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
       const matches = postBody.match(regexp);
+
       if (
         quoteState.buffer.length < 1 ||
-        quoteState.buffer.match(/\n/g) ||
-        matches?.length > 1
+        quoteState.buffer.includes("|") || // tables are too complex
+        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+        matches?.length > 1 // duplicates are too complex
       ) {
         this.set("_isFastEditable", false);
         this.set("_fastEditInitalSelection", null);
@@ -351,7 +351,49 @@ export default Component.extend({
     } else {
       const postId = this.quoteState.postId;
       const postModel = this.topic.postStream.findLoadedPost(postId);
-      this?.editPost(postModel);
+      return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false }).then(
+        (result) => {
+          let bestIndex;
+          const rows = result.raw.split("\n");
+
+          // selecting even a part of the text of a list item will include
+          // "* " at the beginning of the buffer, we remove it to be able
+          // to find it in row
+          const buffer = this.quoteState.buffer
+            .split("\n")[0]
+            .replace(/^\* /, "");
+
+          rows.some((row, index) => {
+            if (row.includes(buffer)) {
+              bestIndex = index;
+              return true;
+            }
+          });
+
+          this?.editPost(postModel);
+
+          if (bestIndex) {
+            afterTransition(document.querySelector("#reply-control"), () => {
+              const textarea = document.querySelector(".d-editor-input");
+              if (!textarea || this.isDestroyed || this.isDestroying) {
+                return;
+              }
+
+              // best index brings us to one row before as slice start from 1
+              // we add 1 to be at the beginning of next line
+              setCaretPosition(
+                textarea,
+                rows.slice(0, bestIndex).join("\n").length + 1
+              );
+
+              // ensures we correctly scroll to caret and reloads composer
+              // if we do another selection/edit
+              textarea.blur();
+              textarea.focus();
+            });
+          }
+        }
+      );
     }
   },
 
