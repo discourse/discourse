@@ -90,6 +90,8 @@ export function cleanUpComposerUploadMarkdownResolver() {
 export default Component.extend(ComposerUpload, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
+  fileUploadElementId: "file-uploader",
+  mobileFileUploaderId: "mobile-file-upload",
   shouldBuildScrollMap: true,
   scrollMap: null,
   processPreview: true,
