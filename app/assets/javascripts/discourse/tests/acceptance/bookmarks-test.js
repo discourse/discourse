@@ -82,7 +82,11 @@ acceptance("Bookmarking", function (needs) {
       const data = helper.parsePostData(request.requestBody);
 
       if (data.post_id === "398") {
-        return helper.response({ id: 1, success: "OK" });
+        if (data.for_topic === "true") {
+          return helper.response({ id: 3, success: "OK" });
+        } else {
+          return helper.response({ id: 1, success: "OK" });
+        }
       } else if (data.post_id === "419") {
         return helper.response({ id: 2, success: "OK" });
       } else {
@@ -92,6 +96,7 @@ acceptance("Bookmarking", function (needs) {
     server.post("/bookmarks", handleRequest);
     server.put("/bookmarks/1", handleRequest);
     server.put("/bookmarks/2", handleRequest);
+    server.put("/bookmarks/3", handleRequest);
     server.delete("/bookmarks/1", () =>
       helper.response({ success: "OK", topic_bookmarked: false })
     );
@@ -348,6 +353,78 @@ acceptance("Bookmarking", function (needs) {
     assert.ok(
       exists("div.modal.bookmark-with-reminder"),
       "The edit modal is opened"
+    );
+  });
+
+  test("Creating and editing a topic level bookmark", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-bookmark");
+
+    assert.equal(
+      query("#discourse-modal-title").innerText,
+      I18n.t("post.bookmarks.create_for_topic"),
+      "The create modal says creating a topic bookmark"
+    );
+
+    await click("#save-bookmark");
+
+    assert.notOk(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first post is not marked as being bookmarked"
+    );
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.equal(
+      query("#discourse-modal-title").innerText,
+      I18n.t("post.bookmarks.edit_for_topic"),
+      "The edit modal says editing a topic bookmark"
+    );
+
+    await fillIn("input#bookmark-name", "Test name");
+    await click("#tap_tile_tomorrow");
+
+    await click("#topic-footer-button-bookmark");
+
+    assert.equal(
+      query("input#bookmark-name").value,
+      "Test name",
+      "The topic level bookmark editing preserves the values entered"
+    );
+
+    await click(".d-modal-cancel");
+
+    await openBookmarkModal(1);
+    await click("#save-bookmark");
+
+    assert.ok(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first post is bookmarked independently of the topic level bookmark"
+    );
+
+    // deleting all bookmarks in the topic
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.clear_bookmarks"),
+      "the footer button says Clear Bookmarks because there is more than one"
+    );
+    await click("#topic-footer-button-bookmark");
+    await click("a.btn-primary");
+
+    assert.ok(
+      !exists(".topic-post:first-child button.bookmark.bookmarked"),
+      "the first post bookmark is deleted"
+    );
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.title"),
+      "the topic level bookmark is deleted"
     );
   });
 

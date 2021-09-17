@@ -173,6 +173,7 @@ export default Component.extend({
       post_id: this.model.postId,
       id: this.model.id,
       auto_delete_preference: this.autoDeletePreference,
+      for_topic: this.model.forTopic,
     };
 
     if (this.editingExistingBookmark) {
@@ -183,7 +184,6 @@ export default Component.extend({
         this._executeAfterSave(response, reminderAtISO);
       });
     } else {
-      data.for_topic = this.model.forTopic;
       return ajax("/bookmarks", { type: "POST", data }).then((response) => {
         this._executeAfterSave(response, reminderAtISO);
       });
