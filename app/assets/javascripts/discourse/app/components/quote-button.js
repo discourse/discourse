@@ -34,7 +34,7 @@ function getQuoteTitle(element) {
 }
 
 function fixQuotes(str) {
-  return str.replace(/‘|’|„|“|«|»|”/g, '"');
+  return str.replace(/„|“|«|»|”/g, '"').replace(/‘|’/g, "'");
 }
 
 function regexSafeStr(str) {
@@ -353,18 +353,18 @@ export default Component.extend({
       const postModel = this.topic.postStream.findLoadedPost(postId);
       return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false }).then(
         (result) => {
-          let bestIndex;
+          let bestIndex = 0;
           const rows = result.raw.split("\n");
 
           // selecting even a part of the text of a list item will include
           // "* " at the beginning of the buffer, we remove it to be able
           // to find it in row
-          const buffer = this.quoteState.buffer
-            .split("\n")[0]
-            .replace(/^\* /, "");
+          const buffer = fixQuotes(
+            this.quoteState.buffer.split("\n")[0].replace(/^\* /, "")
+          );
 
           rows.some((row, index) => {
-            if (row.includes(buffer)) {
+            if (row.length && row.includes(buffer)) {
               bestIndex = index;
               return true;
             }
@@ -372,26 +372,25 @@ export default Component.extend({
 
           this?.editPost(postModel);
 
-          if (bestIndex) {
-            afterTransition(document.querySelector("#reply-control"), () => {
-              const textarea = document.querySelector(".d-editor-input");
-              if (!textarea || this.isDestroyed || this.isDestroying) {
-                return;
-              }
+          afterTransition(document.querySelector("#reply-control"), () => {
+            const textarea = document.querySelector(".d-editor-input");
+            if (!textarea || this.isDestroyed || this.isDestroying) {
+              return;
+            }
 
-              // best index brings us to one row before as slice start from 1
-              // we add 1 to be at the beginning of next line
-              setCaretPosition(
-                textarea,
-                rows.slice(0, bestIndex).join("\n").length + 1
-              );
+            // best index brings us to one row before as slice start from 1
+            // we add 1 to be at the beginning of next line, unless we start from top
+            setCaretPosition(
+              textarea,
+              rows.slice(0, bestIndex).join("\n").length +
+                (bestIndex > 0 ? 1 : 0)
+            );
 
-              // ensures we correctly scroll to caret and reloads composer
-              // if we do another selection/edit
-              textarea.blur();
-              textarea.focus();
-            });
-          }
+            // ensures we correctly scroll to caret and reloads composer
+            // if we do another selection/edit
+            textarea.blur();
+            textarea.focus();
+          });
         }
       );
     }

@@ -58,7 +58,9 @@
   }
   &[disabled],
   &.disabled {
-    opacity: 0.4;
+    &:not(.is-loading) {
+      opacity: 0.4;
+    }
     &:hover {
       color: $text-color;
       background: $bg-color;
