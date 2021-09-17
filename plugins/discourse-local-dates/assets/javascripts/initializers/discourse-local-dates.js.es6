@@ -40,7 +40,7 @@ function buildOptionsFromElement(element, siteSettings) {
   const opts = {};
   const dataset = element.dataset;
 
-  if (element.parentElement.children.length > 1) {
+  if (_rangeElements(element).length === 2) {
     opts.duration = _calculateDuration(element);
   }
 
@@ -60,6 +60,12 @@ function buildOptionsFromElement(element, siteSettings) {
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
   return opts;
+}
+
+function _rangeElements(element) {
+  return Array.from(element.parentElement.children).filter(
+    (span) => span.dataset.date
+  );
 }
 
 function initializeDiscourseLocalDates(api) {
@@ -133,10 +139,13 @@ function buildHtmlPreview(element, siteSettings) {
 }
 
 function _calculateDuration(element) {
-  const startDataset = element.parentElement.children[0].dataset;
-  const endDataset = element.parentElement.children[1].dataset;
-  const startDateTime = moment(`${startDataset.date} ${startDataset.time}`);
-  const endDateTime = moment(`${endDataset.date} ${endDataset.time}`);
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  const startDateTime = moment(
+    `${startDataset.date} ${startDataset.time || ""}`
+  );
+  const endDateTime = moment(`${endDataset.date} ${endDataset.time || ""}`);
   const duration = endDateTime.diff(startDateTime, "minutes");
 
   // negative duration is used when we calculate difference for end date from range
