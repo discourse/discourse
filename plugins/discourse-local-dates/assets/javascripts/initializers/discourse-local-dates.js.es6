@@ -39,6 +39,11 @@ export function applyLocalDates(dates, siteSettings) {
 function buildOptionsFromElement(element, siteSettings) {
   const opts = {};
   const dataset = element.dataset;
+
+  if (_rangeElements(element).length === 2) {
+    opts.duration = _calculateDuration(element);
+  }
+
   opts.time = dataset.time;
   opts.date = dataset.date;
   opts.recurring = dataset.recurring;
@@ -55,6 +60,12 @@ function buildOptionsFromElement(element, siteSettings) {
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
   return opts;
+}
+
+function _rangeElements(element) {
+  return Array.from(element.parentElement.children).filter(
+    (span) => span.dataset.date
+  );
 }
 
 function initializeDiscourseLocalDates(api) {
@@ -114,7 +125,7 @@ function buildHtmlPreview(element, siteSettings) {
 
     const dateTimeNode = document.createElement("span");
     dateTimeNode.classList.add("date-time");
-    dateTimeNode.innerText = preview.formated;
+    dateTimeNode.innerHTML = preview.formated;
     previewNode.appendChild(dateTimeNode);
 
     return previewNode;
@@ -125,6 +136,20 @@ function buildHtmlPreview(element, siteSettings) {
   htmlPreviews.forEach((htmlPreview) => previewsNode.appendChild(htmlPreview));
 
   return previewsNode.outerHTML;
+}
+
+function _calculateDuration(element) {
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  const startDateTime = moment(
+    `${startDataset.date} ${startDataset.time || ""}`
+  );
+  const endDateTime = moment(`${endDataset.date} ${endDataset.time || ""}`);
+  const duration = endDateTime.diff(startDateTime, "minutes");
+
+  // negative duration is used when we calculate difference for end date from range
+  return element.dataset === startDataset ? duration : -duration;
 }
 
 export default {
@@ -138,9 +163,13 @@ export default {
 
     const siteSettings = owner.lookup("site-settings:main");
     if (event?.target?.classList?.contains("discourse-local-date")) {
-      showPopover(event, {
-        htmlContent: buildHtmlPreview(event.target, siteSettings),
-      });
+      if ($(document.getElementById("d-popover"))[0]) {
+        hidePopover(event);
+      } else {
+        showPopover(event, {
+          htmlContent: buildHtmlPreview(event.target, siteSettings),
+        });
+      }
     }
   },
 
@@ -155,7 +184,6 @@ export default {
     router.on("routeWillChange", hidePopover);
 
     window.addEventListener("click", this.showDatePopover);
-    window.addEventListener("mouseover", this.showDatePopover);
     window.addEventListener("mouseout", this.hideDatePopover);
 
     const siteSettings = container.lookup("site-settings:main");
@@ -174,7 +202,6 @@ export default {
 
   teardown() {
     window.removeEventListener("click", this.showDatePopover);
-    window.removeEventListener("mouseover", this.showDatePopover);
     window.removeEventListener("mouseout", this.hideDatePopover);
   },
 };
