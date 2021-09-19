@@ -72,13 +72,20 @@ echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
+# `readlink -f` doesn't work on macOS
+READLINK="readlink -f"
+{
+    $READLINK ${DATA_DIR}
+} || {
+    READLINK=/tmp/readlink.py
+    echo -e "#!/usr/bin/env python\nimport os,sys;print(os.path.realpath(sys.argv[1]))" > $READLINK
+    chmod +x $READLINK
+    $READLINK ${DATA_DIR}
+}
+
 mount_plugin_symlinks=""
 for symlink in $(find $PLUGINS_DIR -maxdepth 1 -type l); do
-    # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
-    # > brew install coreutils
-    # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
-    # reference: https://meta.discourse.org/t/beginners-guide-to-install-discourse-for-development-using-docker/102009/124?u=aleber
-    symlink_value=$(readlink -f $symlink)
+    symlink_value=$($READLINK $symlink)
     plugin_name=$(basename $symlink)
     mount_plugin_symlinks+=" -v ${symlink_value}:/src/plugins/${plugin_name}:delegated"
 done
