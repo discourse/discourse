@@ -93,16 +93,19 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarks = this.topic.bookmarks;
-        if (!bookmarks || this.topic.bookmarkCount === 0) {
+        if (this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
         } else if (this.topic.bookmarkCount === 1) {
-          if (bookmarks.filter((bookmark) => bookmark.for_topic).length) {
+          if (
+            this.topic.bookmarks.filter((bookmark) => bookmark.for_topic).length
+          ) {
             return I18n.t("bookmarked.help.edit_bookmark_for_topic");
           } else {
             return I18n.t("bookmarked.help.edit_bookmark");
           }
-        } else if (bookmarks.some((bookmark) => bookmark.reminder_at)) {
+        } else if (
+          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
+        ) {
           return I18n.t("bookmarked.help.unbookmark_with_reminder");
         } else {
           return I18n.t("bookmarked.help.unbookmark");
