@@ -444,13 +444,19 @@ class StaffActionLogger
     ))
   end
 
-  def log_category_settings_change(category, category_params, old_permissions = nil)
+  def log_category_settings_change(category, category_params, old_permissions: nil, old_custom_fields: nil)
     validate_category(category)
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
     if !old_permissions.empty? && (old_permissions != category_params[:permissions])
       changed_attributes.merge!(permissions: [old_permissions.to_json, category_params[:permissions].to_json])
+    end
+
+    if old_custom_fields && category_params[:custom_fields]
+      category_params[:custom_fields].each do |key, value|
+        changed_attributes["custom_fields[#{key}]"] = [old_custom_fields[key], value]
+      end
     end
 
     changed_attributes.each do |key, value|

@@ -38,9 +38,9 @@ describe HtmlToMarkdown do
     HTML
 
     markdown = <<~MD
-       Let me see if it happens by answering your message through Thunderbird.
+      Let me see if it happens by answering your message through Thunderbird.
 
-       Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+      Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
@@ -70,13 +70,15 @@ describe HtmlToMarkdown do
     html = <<~HTML
       <aside class="quote no-group">
       <blockquote>
-      <p>hello.</p>
+      <p>Hello,<br>is it me you're looking for?</p>
       </blockquote>
+      <br>
       </aside>
     HTML
 
     markdown = <<~MD
-      > hello.
+      > Hello,
+      > is it me you're looking for?
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)

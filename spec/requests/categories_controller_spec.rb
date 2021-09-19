@@ -454,7 +454,8 @@ describe CategoriesController do
           category.update!(
             allowed_tags: ["hello", "world"],
             allowed_tag_groups: [tag_group_1.name],
-            required_tag_group_name: tag_group_2.name
+            required_tag_group_name: tag_group_2.name,
+            custom_fields: { field_1: 'hello', field_2: 'hello' }
           )
 
           put "/categories/#{category.id}.json"
@@ -463,20 +464,23 @@ describe CategoriesController do
           expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
           expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [] }
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
           expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil }
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil, custom_fields: { field_1: 'hi', field_2: nil } }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups).to be_blank
           expect(category.required_tag_group).to eq(nil)
+          expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
         end
       end
     end

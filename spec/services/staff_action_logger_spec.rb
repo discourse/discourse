@@ -352,8 +352,10 @@ describe StaffActionLogger do
 
       category.update!(attributes)
 
-      logger.log_category_settings_change(category, attributes,
-        category_group.group_name => category_group.permission_type
+      logger.log_category_settings_change(
+        category,
+        attributes,
+        old_permissions: { category_group.group_name => category_group.permission_type }
       )
 
       expect(UserHistory.count).to eq(2)
@@ -376,7 +378,11 @@ describe StaffActionLogger do
       old_permission = category.permissions_params
       category.update!(attributes)
 
-      logger.log_category_settings_change(category, attributes.merge(permissions: { "everyone" => 1 }), old_permission)
+      logger.log_category_settings_change(
+        category,
+        attributes.merge(permissions: { "everyone" => 1 }),
+        old_permissions: old_permission
+      )
 
       expect(UserHistory.count).to eq(1)
       expect(UserHistory.find_by_subject('name').category).to eq(category)

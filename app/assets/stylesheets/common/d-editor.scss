@@ -49,60 +49,6 @@
   flex-direction: column;
 }
 
-.d-editor-button-bar {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid var(--primary-low);
-  padding: 2px;
-
-  .btn:focus {
-    border-radius: 0;
-    @include default-focus;
-  }
-
-  .btn,
-  .btn-default {
-    background-color: transparent;
-    display: inline-block;
-    color: var(--primary-medium);
-    height: 34px;
-    box-sizing: border-box;
-
-    .d-icon {
-      color: currentColor;
-    }
-    &:hover {
-      color: var(--primary-low);
-    }
-
-    svg {
-      -webkit-transform: translate3d(
-        0,
-        0,
-        0
-      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
-    }
-  }
-
-  .d-editor-spacer {
-    height: 1em;
-    display: inline-block;
-    border-left: 1px solid var(--primary-low-mid);
-  }
-
-  .btn:not(.no-text) {
-    font-size: $font-up-1;
-  }
-
-  .btn.bold {
-    font-weight: bolder;
-  }
-
-  .btn.italic {
-    font-style: italic;
-  }
-}
-
 .d-editor-preview-wrapper {
   overflow: auto;
   cursor: default;
@@ -269,90 +215,55 @@
   opacity: 1;
 }
 
-// d-editor bar button sizing for all editors - this is kept separate to keep
-// everything in one place
+// d-editor bar button sizing
 .d-editor-button-bar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--primary-low);
+  width: 100%;
   box-sizing: border-box;
-
-  // shared styles for all font sizes
-  .btn,
-  .btn-default {
-    padding: 0.5em;
-    margin: 0;
-  }
+  padding-left: 2px;
+  padding-right: 2px;
 
   .d-editor-spacer {
+    height: 1em;
+    display: inline-block;
+    border-left: 1px solid var(--primary-low-mid);
     margin: 0 0.25em;
   }
 
-  // small text size
-  .text-size-smaller & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.4em;
-      }
+  .btn:focus {
+    @include default-focus;
+  }
+
+  .btn {
+    margin: 0;
+    background-color: transparent;
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: currentColor;
     }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-      .d-editor-spacer {
-        margin: 0 0.25em;
-      }
+    &:hover {
+      color: var(--primary-low);
     }
   }
 
-  // normal text size
-  .text-size-normal & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.35em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.25em;
-      }
-    }
-  }
-
-  // larger text size
-  .text-size-larger & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.2em;
-      }
-    }
-  }
-
-  // largest text size
-  .text-size-largest & {
-    .btn,
-    .btn-default {
-      font-size: $font-down-1;
+  // ensures items grow/shrink on mobile to fit available space
+  @include breakpoint(mobile-large) {
+    .btn {
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: auto;
+      padding-left: 0.25em;
+      padding-right: 0.25em;
     }
 
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.2em;
+    .select-kit.toolbar-popup-menu-options {
+      flex-grow: 1;
+      flex-basis: auto;
+      .select-kit-header .select-kit-header-wrapper {
+        justify-content: center;
       }
     }
   }
