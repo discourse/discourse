@@ -499,6 +499,26 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
+      test("adds incoming in the categories latest topics list", function (assert) {
+        trackingState.trackIncoming("categories");
+        const unreadCategoriesLatestTopicsPayload = {
+          ...unreadTopicPayload,
+          message_type: "latest",
+        };
+
+        publishToMessageBus(`/latest`, unreadCategoriesLatestTopicsPayload);
+        assert.deepEqual(
+          trackingState.newIncoming,
+          [111],
+          "unread topic is incoming"
+        );
+        assert.equal(
+          trackingState.incomingCount,
+          1,
+          "incoming count is increased"
+        );
+      });
+
       test("dismisses new topic", function (assert) {
         trackingState.loadStates([
           {

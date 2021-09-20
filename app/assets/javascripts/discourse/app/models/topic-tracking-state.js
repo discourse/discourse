@@ -236,7 +236,10 @@ const TopicTrackingState = EmberObject.extend({
 
     // always add incoming if looking at the latest list and a latest channel
     // message comes through
-    if (filter === "latest" && data.message_type === "latest") {
+    if (
+      (filter === "latest" || filter === "categories") &&
+      data.message_type === "latest"
+    ) {
       this._addIncoming(data.topic_id);
     }
 
