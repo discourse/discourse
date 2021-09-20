@@ -10,10 +10,17 @@ class FakeUppy {
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764": {
         meta: {},
         data: createFile("test1.png"),
+        size: 1024,
       },
       "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764": {
         meta: {},
         data: createFile("test2.png"),
+        size: 2048,
+      },
+      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764": {
+        meta: {},
+        data: createFile("test2.png"),
+        size: 209715200,
       },
     };
   }
@@ -62,8 +69,8 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
       assert.equal(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
       );
       done();
     });
@@ -85,8 +92,8 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
       assert.equal(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
       );
       done();
     });
@@ -106,9 +113,28 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
       assert.equal(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
       );
+      done();
+    });
+  });
+
+  test("it does nothing if the file is > 100MB", function (assert) {
+    const capabilities = {};
+    const fakeUppy = new FakeUppy();
+    const plugin = new UppyChecksum(fakeUppy, {
+      capabilities,
+    });
+    plugin.install();
+    const done = assert.async();
+
+    const fileId =
+      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764";
+    plugin.uppy.preprocessors[0]([fileId]).then(() => {
+      assert.equal(plugin.uppy.emitted[0].event, "preprocess-progress");
+      assert.equal(plugin.uppy.emitted[1].event, "preprocess-complete");
+      assert.equal(plugin.uppy.getFile(fileId).meta.sha1_checksum, null);
       done();
     });
   });

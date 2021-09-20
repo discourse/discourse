@@ -22,17 +22,19 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
 
     return this.optimizeFn(file, { stopWorkerOnError: !this.runParallel })
       .then((optimizedFile) => {
+        let skipped = false;
         if (!optimizedFile) {
           this._consoleWarn(
-            "Nothing happened, possible error or other restriction."
+            "Nothing happened, possible error or other restriction, or the file format is not a valid one for compression."
           );
+          skipped = true;
         } else {
           this._setFileState(fileId, {
             data: optimizedFile,
             size: optimizedFile.size,
           });
         }
-        this._emitComplete(file);
+        this._emitComplete(file, skipped);
       })
       .catch((err) => {
         this._consoleWarn(err);

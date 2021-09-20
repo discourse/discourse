@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { debug } from "@ember/debug";
 
 /**
  * Use this mixin with any component that needs to upload files or images
@@ -80,8 +81,10 @@ export default Mixin.create({
   //
   // See: https://uppy.io/docs/writing-plugins/#Progress-events
   _onPreProcessProgress(callback) {
-    this._uppyInstance.on("preprocess-progress", (pluginId, file) => {
-      this._debugLog(`[${pluginId}] processing file ${file.name} (${file.id})`);
+    this._uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
+      this._consoleDebug(
+        `[${pluginId}] processing file ${file.name} (${file.id})`
+      );
 
       this._preProcessorStatus[pluginId].activeProcessing++;
 
@@ -90,16 +93,18 @@ export default Mixin.create({
   },
 
   _onPreProcessComplete(callback, allCompleteCallback) {
-    this._uppyInstance.on("preprocess-complete", (pluginId, file) => {
-      this._debugLog(
-        `[${pluginId}] completed processing file ${file.name} (${file.id})`
+    this._uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
+      this._consoleDebug(
+        `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
+          file.name
+        } (${file.id})`
       );
 
       callback(file);
 
       this._completePreProcessing(pluginId, (allComplete) => {
         if (allComplete) {
-          this._debugLog("All upload preprocessors complete.");
+          this._consoleDebug("[uppy] All upload preprocessors complete!");
           allCompleteCallback();
         }
       });
@@ -166,6 +171,12 @@ export default Mixin.create({
       } else {
         callback(false);
       }
+    }
+  },
+
+  _consoleDebug(msg) {
+    if (this.siteSettings.enable_upload_debug_mode) {
+      debug(msg, { id: "discourse.extendable-uploader" });
     }
   },
 });
