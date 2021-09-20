@@ -15,7 +15,6 @@ const START_EVENTS = "touchstart mousedown";
 const DRAG_EVENTS = "touchmove mousemove";
 const END_EVENTS = "touchend mouseup";
 
-const MIN_COMPOSER_SIZE = 240;
 const THROTTLE_RATE = 20;
 
 function mouseYPos(e) {
@@ -121,7 +120,6 @@ export default Component.extend(KeyEnterEscape, {
 
       const winHeight = $(window).height();
       size = Math.min(size, winHeight - headerHeight());
-      size = Math.max(size, MIN_COMPOSER_SIZE);
       this.movePanels(size);
       $composer.height(size);
     };

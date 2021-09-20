@@ -515,6 +515,12 @@ body.ios-safari-composer-hacks {
 
 body:not(.ios-safari-composer-hacks) {
   #reply-control.open {
+    --min-height: 255px;
+    min-height: var(--min-height);
+    &.composer-action-reply {
+      // we can let the reply composer get a little shorter
+      min-height: calc(var(--min-height) - 4em);
+    }
     padding-bottom: var(--composer-ipad-padding);
   }
 }
