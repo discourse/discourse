@@ -639,6 +639,7 @@ module Email
         comparison_headers.each do |comparison_header|
           if mail_object[comparison_header].to_s != "#{from_display_name} <#{from_address}>"
             comparison_failed = true
+            break
           end
         end
 
