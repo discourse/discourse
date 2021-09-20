@@ -382,8 +382,6 @@ export default Mixin.create(ExtendableUploader, {
       limit: 10,
 
       createMultipartUpload(file) {
-        self._uppyInstance.emit("create-multipart", file.id);
-
         const data = {
           file_name: file.name,
           file_size: file.size,
@@ -404,8 +402,6 @@ export default Mixin.create(ExtendableUploader, {
           data,
           // uppy is inconsistent, an error here fires the upload-error event
         }).then((responseData) => {
-          self._uppyInstance.emit("create-multipart-success", file.id);
-
           file.meta.unique_identifier = responseData.unique_identifier;
           return {
             uploadId: responseData.external_upload_identifier,
@@ -434,7 +430,6 @@ export default Mixin.create(ExtendableUploader, {
       },
 
       completeMultipartUpload(file, data) {
-        self._uppyInstance.emit("complete-multipart", file.id);
         const parts = data.parts.map((part) => {
           return { part_number: part.PartNumber, etag: part.ETag };
         });
@@ -447,7 +442,6 @@ export default Mixin.create(ExtendableUploader, {
           }),
           // uppy is inconsistent, an error here fires the upload-error event
         }).then((responseData) => {
-          self._uppyInstance.emit("complete-multipart-success", file.id);
           return responseData;
         });
       },
@@ -561,5 +555,12 @@ export default Mixin.create(ExtendableUploader, {
 
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
+  },
+
+  _debugLog(message) {
+    if (this.siteSettings.enable_upload_debug_mode) {
+      // eslint-disable-next-line no-console
+      console.log(message);
+    }
   },
 });
