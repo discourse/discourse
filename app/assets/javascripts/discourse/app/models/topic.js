@@ -623,6 +623,7 @@ Topic.reopenClass({
   munge(json) {
     // ensure we are not overriding category computed property
     delete json.category;
+    json.bookmarks = json.bookmarks || [];
     return json;
   },
 
