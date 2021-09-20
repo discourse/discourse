@@ -1,48 +1,6 @@
 .search-container {
-  flex-direction: column;
-  margin: 0;
-
-  .search-advanced {
-    order: 1;
-    width: 100%;
-
-    .search-info {
-      flex-direction: column;
-      align-items: left;
-      justify-content: center;
-
-      .sort-by {
-        display: flex;
-        align-items: center;
-        margin-top: 0.5em;
-        margin-left: 0;
-        width: 100%;
-
-        .select-kit {
-          flex: 1 1 auto;
-        }
-      }
-    }
-  }
-
-  .search-notice {
-    margin-top: 1em;
-  }
-
-  .search-advanced-sidebar {
-    order: 0;
-    width: 100%;
-    margin: 0;
-
-    .tag-chooser,
-    .user-chooser {
-      width: 100%;
-    }
-  }
-}
-
-.fps-result {
-  input[type="checkbox"] {
-    vertical-align: baseline;
+  .search-advanced .search-info {
+    padding-left: 0;
+    padding-right: 0;
   }
 }

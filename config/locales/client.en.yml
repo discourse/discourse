@@ -2338,7 +2338,7 @@ en:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
       title: "search topics, posts, users, or categories"
-      full_page_title: "search topics or posts"
+      full_page_title: "Search"
       no_results: "No results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
@@ -2350,6 +2350,14 @@ en:
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
       search_button: "Search"
+      search_term_label: "enter search keyword"
+      categories: "Categories"
+      tags: "Tags"
+
+      type:
+        default: "Topics/posts"
+        users: "Users"
+        categories_and_tags: "Categories/tags"
 
       context:
         user: "Search posts by @%{username}"
@@ -2359,7 +2367,7 @@ en:
         private_messages: "Search messages"
 
       advanced:
-        title: Advanced Search
+        title: Advanced filters
         posted_by:
           label: Posted by
         in_category:
@@ -2412,6 +2420,8 @@ en:
           placeholder: minimum
         max_views:
           placeholder: maximum
+        additional_options:
+          label: "Filter by post count and topic views"
 
     hamburger_menu: "go to another topic list or category"
     new_item: "new"
