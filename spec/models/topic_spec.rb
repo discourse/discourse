@@ -7,7 +7,7 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -899,7 +899,7 @@ describe Topic do
         end
 
         describe 'when user can invite via email' do
-          before { user.update!(trust_level: TrustLevel[2]) }
+          before { user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
           it 'should create an invite' do
             Jobs.run_immediately!

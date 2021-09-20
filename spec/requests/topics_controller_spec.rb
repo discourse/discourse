@@ -3868,7 +3868,7 @@ RSpec.describe TopicsController do
         fab!(:topic) { Fabricate(:topic, user: user) }
 
         it 'should return the right response' do
-          user.update!(trust_level: TrustLevel[2])
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
 
           expect do
             post "/t/#{topic.id}/invite.json", params: {
@@ -3890,6 +3890,10 @@ RSpec.describe TopicsController do
         end
 
         let!(:recipient) { 'jake@adventuretime.ooo' }
+
+        before do
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        end
 
         it "should attach group to the invite" do
           post "/t/#{group_private_topic.id}/invite.json", params: {
