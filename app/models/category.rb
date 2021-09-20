@@ -25,7 +25,7 @@ class Category < ActiveRecord::Base
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
   register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
-  belongs_to :topic, dependent: :destroy
+  belongs_to :topic
   belongs_to :topic_only_relative_url,
               -> { select "id, title, slug" },
               class_name: "Topic",
@@ -67,6 +67,7 @@ class Category < ActiveRecord::Base
   validates :slug, exclusion: { in: RESERVED_SLUGS }
 
   after_create :create_category_definition
+  after_destroy :trash_category_definition
 
   before_save :apply_permissions
   before_save :downcase_email
@@ -294,6 +295,10 @@ class Category < ActiveRecord::Base
 
       t
     end
+  end
+
+  def trash_category_definition
+    self.topic&.trash!
   end
 
   def topic_url
