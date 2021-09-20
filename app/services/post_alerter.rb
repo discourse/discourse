@@ -13,6 +13,48 @@ class PostAlerter
     post
   end
 
+  def self.create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+    if post_url = post.url
+      payload = {
+       notification_type: notification_type,
+       post_number: post.post_number,
+       topic_title: post.topic.title,
+       topic_id: post.topic.id,
+       excerpt: excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+       username: username || post.username,
+       post_url: post_url
+      }
+
+      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
+      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      push_notification(user, payload)
+      DiscourseEvent.trigger(:post_notification_alert, user, payload)
+    end
+  end
+
+  def self.push_notification(user, payload)
+    return if user.do_not_disturb?
+
+    if user.push_subscriptions.exists?
+      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
+    end
+
+    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
+      clients = user.user_api_keys
+        .joins(:scopes)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
+        .where("push_url IS NOT NULL AND push_url <> ''")
+        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
+        .where("revoked_at IS NULL")
+        .order(client_id: :asc)
+        .pluck(:client_id, :push_url)
+
+      if clients.length > 0
+        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
+      end
+    end
+  end
+
   def initialize(default_opts = {})
     @default_opts = default_opts
   end
@@ -115,6 +157,8 @@ class PostAlerter
         notify_first_post_watchers(post, watchers)
       end
     end
+
+    DiscourseEvent.trigger(:post_alerter_after_save_post, post, new_record, notified)
   end
 
   def group_watchers(topic)
@@ -466,45 +510,17 @@ class PostAlerter
   end
 
   def create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
-    if post_url = post.url
-      payload = {
-       notification_type: notification_type,
-       post_number: post.post_number,
-       topic_title: post.topic.title,
-       topic_id: post.topic.id,
-       excerpt: excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
-       username: username || post.username,
-       post_url: post_url
-      }
-
-      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
-      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
-      push_notification(user, payload)
-      DiscourseEvent.trigger(:post_notification_alert, user, payload)
-    end
+    self.class.create_notification_alert(
+      user: user,
+      post: post,
+      notification_type: notification_type,
+      excerpt: excerpt,
+      username: username
+    )
   end
 
   def push_notification(user, payload)
-    return if user.do_not_disturb?
-
-    if user.push_subscriptions.exists?
-      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
-    end
-
-    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
-      clients = user.user_api_keys
-        .joins(:scopes)
-        .where("user_api_key_scopes.name IN ('push', 'notifications')")
-        .where("push_url IS NOT NULL AND push_url <> ''")
-        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
-        .where("revoked_at IS NULL")
-        .order(client_id: :asc)
-        .pluck(:client_id, :push_url)
-
-      if clients.length > 0
-        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
-      end
-    end
+    self.class.push_notification(user, payload)
   end
 
   def expand_group_mentions(groups, post)
