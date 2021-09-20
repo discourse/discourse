@@ -870,7 +870,7 @@ describe Email::Receiver do
     end
 
     describe "reply-to header" do
-      it "handles emails where there is a reply-to address, using that instead of the from address" do
+      it "handles emails where there is a Reply-To address, using that instead of the from address, if X-Original-From is present" do
         SiteSetting.block_auto_generated_emails = false
         expect { process(:reply_to_different_to_from) }.to change(Topic, :count)
         user = User.last
@@ -878,6 +878,16 @@ describe Email::Receiver do
         topic = incoming.topic
         expect(incoming.from_address).to eq("arthurmorgan@reddeadtest.com")
         expect(user.email).to eq("arthurmorgan@reddeadtest.com")
+      end
+
+      it "allows for quotes around the display name of the Reply-To address" do
+        SiteSetting.block_auto_generated_emails = false
+        expect { process(:reply_to_different_to_from_quoted_display_name) }.to change(Topic, :count)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("johnmarston@reddeadtest.com")
+        expect(user.email).to eq("johnmarston@reddeadtest.com")
       end
 
       it "does not use the reply-to address if an X-Original-From header is not present" do
