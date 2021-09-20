@@ -45,6 +45,7 @@ acceptance("Topic Timeline", function (needs) {
               read: true,
               user_title: null,
               bookmarked: false,
+              bookmarks: [],
               actions_summary: [
                 {
                   id: 3,
@@ -120,6 +121,7 @@ acceptance("Topic Timeline", function (needs) {
               read: true,
               user_title: null,
               bookmarked: false,
+              bookmarks: [],
               actions_summary: [
                 {
                   id: 3,
@@ -267,7 +269,7 @@ acceptance("Topic Timeline", function (needs) {
         ],
         chunk_size: 20,
         bookmarked: false,
-        bookmarked_posts: null,
+        bookmarks: [],
         topic_timer: null,
         message_bus_last_id: 5,
         participant_count: 1,

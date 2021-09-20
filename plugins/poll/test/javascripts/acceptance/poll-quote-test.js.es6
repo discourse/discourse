@@ -46,6 +46,7 @@ acceptance("Poll quote", function (needs) {
         user_title: "Tester",
         title_is_group: false,
         bookmarked: false,
+        bookmarks: [],
         raw:
           "[poll name=poll1 type=regular results=always chartType=bar]\n* Alpha\n* Beta\n[/poll]\n\n[poll name=poll2 type=regular results=always chartType=bar]\n* First\n* Second\n[/poll]",
         actions_summary: [
@@ -175,6 +176,7 @@ acceptance("Poll quote", function (needs) {
               user_title: "Tester",
               title_is_group: false,
               bookmarked: false,
+              bookmarks: [],
               actions_summary: [
                 {
                   id: 3,
@@ -238,6 +240,7 @@ acceptance("Poll quote", function (needs) {
             archived: false,
             notification_level: 1,
             bookmarked: false,
+            bookmarks: [],
             liked: false,
             tags: [],
             like_count: 0,
@@ -282,6 +285,7 @@ acceptance("Poll quote", function (needs) {
             archived: false,
             notification_level: 3,
             bookmarked: false,
+            bookmarks: [],
             liked: false,
             tags: [],
             like_count: 0,
@@ -362,6 +366,7 @@ acceptance("Poll quote", function (needs) {
         ],
         chunk_size: 20,
         bookmarked: false,
+        bookmarks: [],
         topic_timer: null,
         message_bus_last_id: 2,
         participant_count: 1,
