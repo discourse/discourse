@@ -332,14 +332,14 @@ export default createWidget("search-menu", {
     const up = e.which === 38;
     const down = e.which === 40;
     if (up || down) {
-      let focused = $("header .panel-body *:focus")[0];
+      let focused = $(".search-menu *:focus")[0];
 
       if (!focused) {
         return;
       }
 
-      let links = $("header .panel-body .results a");
-      let results = $("header .panel-body .results .search-link");
+      let links = $(".search-menu .results a");
+      let results = $(".search-menu .results .search-link");
 
       let prevResult;
       let result;
@@ -361,9 +361,9 @@ export default createWidget("search-menu", {
       }
 
       if (index === -1 && down) {
-        $("header .panel-body .search-link:first").focus();
+        $(".search-menu .search-link:first").focus();
       } else if (index === 0 && up) {
-        $("header .panel-body input:first").focus();
+        $(".search-menu input:first").focus();
       } else if (index > -1) {
         index += down ? 1 : -1;
         if (index >= 0 && index < results.length) {
