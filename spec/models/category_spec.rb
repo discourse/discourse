@@ -538,8 +538,7 @@ describe Category do
     it 'is deleted correctly' do
       @category.destroy
       expect(Category.exists?(id: @category_id)).to be false
-      expect(Topic.exists?(id: @topic_id)).to be false
-      expect(Topic.with_deleted.exists?(id: @topic_id)).to be true
+      expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: @topic_id)).to be true
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
