@@ -188,7 +188,7 @@ class PostAlerter
 
     # Don't notify the OP
     user_ids -= [post.user_id]
-    users = User.where(id: user_ids)
+    users = User.where(id: user_ids).includes(:do_not_disturb_timings)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     each_user_in_batches(users) do |user|
@@ -543,7 +543,7 @@ class PostAlerter
     groups = nil if groups.empty?
 
     if mentions.present?
-      users = User.where(username_lower: mentions).where.not(id: post.user_id)
+      users = User.where(username_lower: mentions).includes(:do_not_disturb_timings).where.not(id: post.user_id)
       users = nil if users.empty?
     end
 
@@ -792,7 +792,7 @@ class PostAlerter
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches
     users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
-      User.where(id: user_ids_batch).each { |user| yield(user) }
+      User.where(id: user_ids_batch).includes(:do_not_disturb_timings).each { |user| yield(user) }
     end
   end
 end
