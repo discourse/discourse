@@ -63,6 +63,9 @@ function buildOptionsFromElement(element, siteSettings) {
 }
 
 function _rangeElements(element) {
+  if (!element.parentElement) {
+    return [];
+  }
   return Array.from(element.parentElement.children).filter(
     (span) => span.dataset.date
   );
