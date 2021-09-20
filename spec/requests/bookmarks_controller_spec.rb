@@ -30,6 +30,31 @@ describe BookmarksController do
       expect(response.status).to eq(429)
     end
 
+    it "creates a for_topic bookmark" do
+      post "/bookmarks.json", params: {
+        post_id: bookmark_post.id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601,
+        for_topic: true
+      }
+      expect(response.status).to eq(200)
+      bookmark = Bookmark.find(response.parsed_body["id"])
+      expect(bookmark.for_topic).to eq(true)
+    end
+
+    it "errors when trying to create a for_topic bookmark for post_number > 1" do
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post, topic: bookmark_post.topic).id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601,
+        for_topic: true
+      }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body['errors']).to include(
+        I18n.t("bookmarks.errors.for_topic_must_use_first_post")
+      )
+    end
+
     context "if the user reached the max bookmark limit" do
       before do
         SiteSetting.max_bookmarks_per_user = 1

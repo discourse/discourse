@@ -46,6 +46,7 @@ export default {
           archived: false,
           notification_level: 3,
           bookmarked: false,
+          bookmarks: [],
           liked: false,
           views: 5,
           like_count: 0,

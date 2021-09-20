@@ -17,7 +17,28 @@ RSpec.describe BookmarkManager do
       bookmark = Bookmark.find_by(user: user)
 
       expect(bookmark.post_id).to eq(post.id)
-      expect(bookmark.topic.id).to eq(post.topic_id)
+      expect(bookmark.topic_id).to eq(post.topic_id)
+    end
+
+    it "allows creating a bookmark for the topic and for the first post" do
+      subject.create(post_id: post.id, name: name, for_topic: true)
+      bookmark = Bookmark.find_by(user: user, post_id: post.id, for_topic: true)
+
+      expect(bookmark.post_id).to eq(post.id)
+      expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.for_topic).to eq(true)
+
+      subject.create(post_id: post.id, name: name)
+      bookmark = Bookmark.find_by(user: user, post_id: post.id, for_topic: false)
+
+      expect(bookmark.post_id).to eq(post.id)
+      expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.for_topic).to eq(false)
+    end
+
+    it "errors when creating a for_topic bookmark for a post that is not the first one" do
+      subject.create(post_id: Fabricate(:post, topic: post.topic).id, name: name, for_topic: true)
+      expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
     end
 
     it "when topic is deleted it raises invalid access from guardian check" do

@@ -15,6 +15,7 @@ class BookmarksController < ApplicationController
       post_id: params[:post_id],
       name: params[:name],
       reminder_at: params[:reminder_at],
+      for_topic: params[:for_topic] == "true",
       options: {
         auto_delete_preference: params[:auto_delete_preference] || 0
       }

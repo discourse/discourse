@@ -38,13 +38,16 @@ class Bookmark < ActiveRecord::Base
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_user_id? }
 
+  validate :for_topic_must_use_first_post,
+    on: [:create, :update],
+    if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
+
   validate :ensure_sane_reminder_at_time
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
   def unique_per_post_for_user
-    is_first_post = Post.where(id: post_id).pluck_first(:post_number) == 1
-    exists = if is_first_post
+    exists = if is_for_first_post?
       Bookmark.exists?(user_id: user_id, post_id: post_id, for_topic: for_topic)
     else
       Bookmark.exists?(user_id: user_id, post_id: post_id)
@@ -52,6 +55,12 @@ class Bookmark < ActiveRecord::Base
 
     if exists
       self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
+    end
+  end
+
+  def for_topic_must_use_first_post
+    if !is_for_first_post? && self.for_topic
+      self.errors.add(:base, I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
     end
   end
 
@@ -77,6 +86,10 @@ class Bookmark < ActiveRecord::Base
         limit: SiteSetting.max_bookmarks_per_user
       )
     )
+  end
+
+  def is_for_first_post?
+    @is_for_first_post ||= new_record? ? Post.exists?(id: post_id, post_number: 1) : post.post_number == 1
   end
 
   def no_reminder?

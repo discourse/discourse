@@ -28,7 +28,8 @@ class UserBookmarkSerializer < ApplicationSerializer
              :slug,
              :post_user_username,
              :post_user_avatar_template,
-             :post_user_name
+             :post_user_name,
+             :for_topic
 
   def topic_id
     post.topic_id
