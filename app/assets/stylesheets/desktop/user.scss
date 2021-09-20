@@ -213,6 +213,10 @@ table.user-invite-list {
       float: right;
       max-width: 13.5em;
 
+      li {
+        margin-bottom: 0.5em;
+      }
+
       li > .select-kit-header, // select-kit
       .btn {
         min-width: 9.5em;
