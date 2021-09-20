@@ -122,14 +122,9 @@ input {
 }
 
 .form-horizontal {
-  .hide {
-    display: none;
-  }
-
-  input,
-  textarea,
-  select {
-    display: inline-block;
+  input[type="text"],
+  input[type="password"],
+  textarea {
     margin-bottom: 0;
   }
 

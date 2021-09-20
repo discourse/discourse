@@ -351,7 +351,9 @@
       }
     }
     .setting-label {
-      width: 25%;
+      @include breakpoint(tablet, min-width) {
+        width: 25%;
+      }
       word-wrap: break-word;
       h3 {
         margin-top: 0;
