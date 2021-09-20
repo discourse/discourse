@@ -298,7 +298,7 @@ class Category < ActiveRecord::Base
   end
 
   def trash_category_definition
-    self.topic.trash!
+    self.topic&.trash!
   end
 
   def topic_url
