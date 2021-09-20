@@ -4155,6 +4155,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     destination_category_id: 3,
   },
   "/t/12/1.json": {

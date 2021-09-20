@@ -67,10 +67,7 @@ export default {
       dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        if (
-          this.topic.bookmarks &&
-          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
-        ) {
+        if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
