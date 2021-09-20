@@ -16,7 +16,7 @@ import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 
-export const HUGE_FILE_THRESHOLD_BYTES = 100 * 1024 * 1024;
+export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
 export default Mixin.create({
   uploading: false,
