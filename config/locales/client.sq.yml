@@ -1117,18 +1117,22 @@ sq:
       clear_all: "Pastro kriteret"
       too_short: "Fraza e kërkuar është shumë e shkurtër. "
       title: "kërko në faqe"
+      full_page_title: "Kërko"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
       post_format: "#%{post_number} nga %{username}"
       search_google_button: "Google"
       search_button: "Kërko"
+      categories: "Kategoritë"
+      tags: "Etiketat"
+      type:
+        users: "Anëtarët"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
         topic: "Kërko tek kjo temë"
         private_messages: "Kërko mesazhet"
       advanced:
-        title: Kërkim i avancuar
         posted_by:
           label: Postuar nga
         in_group:
@@ -1439,6 +1443,7 @@ sq:
           one: Keni përzgjedhur <b>%{count}</b> postim.
           other: "Keni përzgjedhur <b>%{count}</b> postime."
     post:
+      quote_edit: "Redakto"
       quote_share: "Shpërndaje"
       edit_reason: "Arsyeja:"
       post_number: "postimi %{number}"

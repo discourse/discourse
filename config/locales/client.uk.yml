@@ -2217,7 +2217,7 @@ uk:
         many: "<span>%{count} %{plus} результат для </span><span class='term'>%{term}</span>"
         other: "<span>%{count} %{plus} результатів для </span><span class='term'>%{term}</span>"
       title: "Пошук по темам, повідомленням, псевдонімам та розділам"
-      full_page_title: "пошук тем або повідомлень"
+      full_page_title: "Пошук"
       no_results: "Нічого не знайдено."
       no_more_results: "Більше нічого не знайдено."
       post_format: "#%{post_number} від %{username}"
@@ -2229,6 +2229,10 @@ uk:
       search_google: "Спробуйте пошукати в Google:"
       search_google_button: "Google"
       search_button: "Пошук"
+      categories: "Категорії"
+      tags: "Теги"
+      type:
+        users: "Користувачі"
       context:
         user: "Шукати повідомлення від @%{username}"
         category: "Шукати в розділі #%{category}"
@@ -2236,7 +2240,6 @@ uk:
         topic: "Пошук в цій темі"
         private_messages: "Шукати приватні повідомлення"
       advanced:
-        title: Розширений пошук
         posted_by:
           label: Опубліковано
         in_category:
@@ -2836,6 +2839,7 @@ uk:
           other: "Ви обрали дописів: <b>%{count}</b>."
     post:
       quote_reply: "Цитата"
+      quote_edit: "Редагувати"
       quote_share: "Поширити"
       edit_reason: "Причина: "
       post_number: "допис %{number}"
@@ -3718,6 +3722,10 @@ uk:
         member: "учасник"
         regular: "активний"
         leader: "провідник"
+    user_activity:
+      no_activity_others: "Немає активностей."
+      no_replies_others: "Немає відповідей"
+      no_likes_others: "Вподобаних повідомлень немає."
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:

@@ -1615,7 +1615,7 @@ zh_TW:
       result_count:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
       title: "搜尋話題、貼文、使用者或分類"
-      full_page_title: "搜尋話題或貼文"
+      full_page_title: "搜索"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
       post_format: "#%{post_number} %{username}"
@@ -1627,13 +1627,16 @@ zh_TW:
       search_google: "嘗試利用 Google 搜尋:"
       search_google_button: "Google"
       search_button: "搜索"
+      categories: "分類"
+      tags: "標籤"
+      type:
+        users: "使用者"
       context:
         user: "搜尋 @%{username} 的貼文"
         category: "搜索 #%{category} 分類"
         topic: "搜尋此話題"
         private_messages: "搜尋訊息"
       advanced:
-        title: 進階搜尋
         posted_by:
           label: 發文者
         in_category:
@@ -2057,6 +2060,7 @@ zh_TW:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
     post:
       quote_reply: "引用"
+      quote_edit: "編輯"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -2661,6 +2665,10 @@ zh_TW:
         member: "成員"
         regular: "活躍使用者"
         leader: "資深"
+    user_activity:
+      no_activity_others: "無活動紀錄。"
+      no_replies_others: "沒有回覆。"
+      no_likes_others: "沒有被讚的貼文。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:

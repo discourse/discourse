@@ -16,6 +16,7 @@ sv:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -395,6 +396,7 @@ sv:
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste anges för alla påminnelser"
+      for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -865,19 +867,10 @@ sv:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
   user_activity:
-    no_default:
-      self: "Du har ingen aktivitet ännu."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
       search: "Det hittades inga bokmärken med den angivna sökfrågan."
       others: "Inga bokmärken."
-    no_likes_given:
-      self: "Du har inte gillat några inlägg."
-      others: "Inga gillade inlägg."
-    no_replies:
-      self: "Du har inte svarat på några inlägg."
-      others: "Inga svar."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
   email_settings:
@@ -1442,6 +1435,7 @@ sv:
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
+    summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
@@ -1970,6 +1964,7 @@ sv:
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
+    enable_fast_edit: "Experimentell funktion som gör det möjligt att redigera små delar av ett inläggs text på plats."
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -3112,6 +3107,28 @@ sv:
     user_group_mentioned:
       title: "Användargrupp nämnde"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

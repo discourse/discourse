@@ -16,6 +16,7 @@ zh_CN:
       date_only: "%Y 年%-m 月 %-d 日"
       long: "%Y 年%-m 月 %-d 日 %H:%M"
       no_day: "%Y 年 %-m 月"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -458,6 +459,7 @@ zh_CN:
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     dominating_topic: 您在这里发布了超过 %{percent}% 的回复，想听听其他人的发言吗？
+    get_a_room: 您已回复@%{reply_username} %{count} 次，您知道您可以向他们发送私信吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
 
@@ -833,19 +835,10 @@ zh_CN:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
   user_activity:
-    no_default:
-      self: "您还没有活动。"
-      others: "无活动。"
     no_bookmarks:
       self: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       search: "使用提供的搜索查询未找到书签。"
       others: "无书签。"
-    no_likes_given:
-      self: "您还没有点赞任何帖子。"
-      others: "没有赞过的帖子。"
-    no_replies:
-      self: "您还没有回复任何帖子。"
-      others: "无回复。"
     no_drafts:
       self: "您没有草稿；开始在任何话题中撰写回复，它将自动保存为新草稿。"
   email_settings:
@@ -1403,11 +1396,13 @@ zh_CN:
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "强制用户启用双重身份验证。选择“所有”可以强制所有用户。选择“管理人员”仅强制管理人员。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
+    same_site_cookies: "使用相同的站点 cookie，它们消除了支持的浏览器（宽松或严格）上的所有跨站点请求伪造载体。警告：严格仅适用于强制登录并使用外部身份验证方法的站点。"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
     summary_likes_required: "启用“总结此话题”之前话题中的最少赞数。对此设置的更改将在一周内追溯应用。"
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
+    summary_timeline_button: "在时间线中显示“总结”按钮"
     enable_personal_messages: "允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_long_polling: "用于通知的消息总线可以使用长轮询"
@@ -1623,6 +1618,7 @@ zh_CN:
     external_emoji_url: "表情符号图片的外部服务的 URL。留空将禁用。"
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
+    enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
     selectable_avatars_enabled: "强制用户从列表中选择一个头像。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
@@ -1935,6 +1931,7 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     watched_words_regular_expressions: "关注词是正则表达式。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
+    enable_fast_edit: "实验性功能：可以对要内联编辑的帖子文本进行少量选择。"
     old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
@@ -3194,6 +3191,28 @@ zh_CN:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "私信提及的用户群组"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "私信提及的用户群组"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "用户发帖"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3504,6 +3523,11 @@ zh_CN:
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
     download_failure: "从外部下载文件失败。"
+    size_mismatch_failure: "上传至S3的文件大小与外部上传存根的预期大小不一致。%{additional_detail}"
+    create_mutlipart_failure: "无法在外部存储中创建分段上传。"
+    abort_mutlipart_failure: "无法中止外部存储中的分段上传。"
+    complete_mutlipart_failure: "无法在外部存储中完成分段上传。"
+    external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
     attachments:
@@ -4312,7 +4336,10 @@ zh_CN:
             label: "争议之城"
             placeholder: "加利福尼亚州旧金山"
       styling:
+        title: "样式"
         fields:
+          color_scheme:
+            label: "配色方案"
           body_font:
             label: "正文字体"
           heading_font:
@@ -4320,6 +4347,7 @@ zh_CN:
           styling_preview:
             label: "预览"
           homepage_style:
+            label: "首页样式"
             choices:
               latest:
                 label: "最新话题"

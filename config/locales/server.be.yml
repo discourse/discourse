@@ -507,18 +507,9 @@ be:
       description: "Упадабаць гэты пост"
       short_description: "Упадабаць гэты пост"
   user_activity:
-    no_default:
-      self: "У вас яшчэ няма актыўнасці."
-      others: "Няма актыўнасці."
     no_bookmarks:
       self: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       others: "Няма закладак."
-    no_likes_given:
-      self: "Вы не спадабаліся ні паведамленне."
-      others: "Не спадабалася паведамленні."
-    no_replies:
-      self: "Вы не адказалі на любыя пасады."
-      others: "Няма адказаў."
     no_drafts:
       self: "У вас няма скразнякоў; пачаць складанне адказу на любую тэму, і ён будзе аўтаматычна захаваны як новы праект."
   topic_flag_types:
@@ -1840,6 +1831,26 @@ be:
     user_group_mentioned:
       title: "Карыстальнік Група Згадваецца"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

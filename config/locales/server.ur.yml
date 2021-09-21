@@ -708,18 +708,9 @@ ur:
       description: " اِس پوسٹ کو لائیک کریں"
       short_description: " اِس پوسٹ کو لائیک کریں"
   user_activity:
-    no_default:
-      self: "ابھی تک آپ کی کوئی سرگرمی نہیں ہے."
-      others: "کوئی سرگرمی نہیں۔"
     no_bookmarks:
       self: "آپ کے پاس کوئی بُک مارک کی ہوئی پوسٹس نہیں ہیں؛ بُک مارکس آپ کو مخصوص پوسٹس کے فوری حوالہ فراہم کرتے ہیں۔"
       others: "کوئی بُک مارکس نہیں"
-    no_likes_given:
-      self: "آپ نے کوئی پوسٹس لائیک نہیں کیں۔"
-      others: "کوئی لائیک کردہ پوسٹس نہیں۔"
-    no_replies:
-      self: "آپ نے کسی بھی پوسٹ پر جواب نہیں دیا ہے۔"
-      others: "کوئی جوابات نہیں۔"
     no_drafts:
       self: "آپ کے پاس کوئی ڈرافٹس نہیں ہیں؛ کسی بھی ٹاپک میں جواب لکھنا شروع کریں اور یہ ایک نئے ڈرافٹ کے طور پر خود کار طریقے سے محفوظ کر لیا جائے گا۔"
   topic_flag_types:
@@ -2595,6 +2586,26 @@ ur:
     user_group_mentioned:
       title: "صارف گروپ ذکر کیا گیا"
       subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [ذاتی پیغام] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [ذاتی پیغام] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

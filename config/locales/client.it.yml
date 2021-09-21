@@ -159,6 +159,7 @@ it:
         disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
+    skip_to_main_content: "Passa al contenuto principale"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     software_update_prompt:
@@ -184,7 +185,7 @@ it:
         cn_northwest_1: "Cina"
         eu_central_1: "Europa (Francoforte)"
         eu_north_1: "Europa (Stoccolma)"
-        eu_south_1: "Europa (Milano)"
+        eu_south_1: "UE (Milano)"
         eu_west_1: "Europa (Irlanda)"
         eu_west_2: "Europa (Londra)"
         eu_west_3: "Europa (Parigi)"
@@ -274,6 +275,7 @@ it:
       help:
         bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
         edit_bookmark: "Clicca per modificare il segnalibro a questo argomento"
+        edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
@@ -305,6 +307,7 @@ it:
       copied: "copiato!"
     drafts:
       label: "Bozze"
+      label_with_count: "Bozze (%{count})"
       resume: "Riprendi"
       remove: "Rimuovi"
       remove_confirmation: "Vuoi davvero eliminare questa bozza?"
@@ -795,6 +798,7 @@ it:
         owner: "Proprietario"
         primary: "Primario"
         forbidden: "Non puoi visualizzare i membri."
+        no_filter_matches: "Nessun membro corrisponde a questa ricerca."
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
@@ -930,6 +934,7 @@ it:
           all: "Tutti"
           read: "Letti"
           unread: "Non letti"
+          unseen: "Non viste"
         ignore_duration_title: "Ignora utente"
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
@@ -1007,6 +1012,8 @@ it:
       no_notifications_body: >
         Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie ed etichette essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       no_notifications_page_title: "Non hai ancora notifiche"
+      no_notifications_page_body: >
+        Riceverai una notifica sulle attività rilevanti per te, fra cui le risposte ai tuoi argomenti e messaggi, quando qualcuno ti <b>@menziona</b> o ti cita, e le risposte agli argomenti che osservi. Le notifiche ti saranno inviate anche per e-mail quando è un po' che non ti colleghi al forum. <br><br> Cerca l'%{icon} per decidere per quali specifici argomenti, categorie ed etichette vuoi ricevere le notifiche. Per maggiori opzioni, vai alle tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1109,7 +1116,9 @@ it:
         warnings_received: "avvisi"
         rejected_posts: "messaggi rifiutati"
       messages:
+        all: "tutti i messaggi in arrivo"
         inbox: "In arrivo"
+        personal: "Personali"
         latest: "Più recenti"
         sent: "Inviati"
         unread: "Non letti"
@@ -1288,6 +1297,7 @@ it:
         not_connected: "(non connesso)"
         confirm_modal_title: "Collega un account %{provider} "
         confirm_description:
+          disconnect: "Il tuo attuale account %{provider} '%{account_description}' sarà disconnesso."
           account_specific: "Il tuo account %{provider} '%{account_description}' verrà utilizzato per l'autenticazione."
           generic: "Il tuo account %{provider} verrà utilizzato per l'autenticazione."
       name:
@@ -1641,6 +1651,8 @@ it:
       description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
+      short_label: "Riassumi"
+      short_title: "Mostra un riassunto di questo argomento: i messaggi più interessanti secondo gli utenti"
     deleted_filter:
       enabled_description: "Questo argomento contiene messaggi eliminati, che sono quindi nascosti."
       disabled_description: "I messaggi eliminati di questo argomento sono ora visibili."
@@ -2111,7 +2123,7 @@ it:
         one: "<span>%{count} risultato per</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
-      full_page_title: "Cerca negli Argomenti o nei Messaggi"
+      full_page_title: "Cerca"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
       post_format: "n°%{post_number} da %{username}"
@@ -2123,6 +2135,10 @@ it:
       search_google: "Prova a cercare con Google:"
       search_google_button: "Google"
       search_button: "Cerca"
+      categories: "Categorie"
+      tags: "Etichette"
+      type:
+        users: "Utenti"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -2130,7 +2146,6 @@ it:
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
       advanced:
-        title: Ricerca Avanzata
         posted_by:
           label: Pubblicato da
         in_category:
@@ -2688,6 +2703,7 @@ it:
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
+      quote_edit: "Modifica"
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -2865,7 +2881,9 @@ it:
             button: "HTML"
       bookmarks:
         create: "Crea un segnalibro"
+        create_for_topic: "Crea un segnalibro per quest'argomento"
         edit: "Modifica Segnalibro"
+        edit_for_topic: "Modifica il segnalibro per quest'argomento"
         created: "Creazione"
         updated: "Aggiornato"
         name: "Nome"
@@ -3505,6 +3523,12 @@ it:
       detailed_name: "%{level} - %{name}"
     pick_files_button:
       unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
+    user_activity:
+      no_activity_title: "Ancora nessuna attività"
+      no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a qui e non hai ancora contribuito alle discussioni. Per cominciare, visita <a href='%{topUrl}'>Top</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. Se non lo hai già fatto, fatti conoscere aggiungendo una foto e una biografia nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>."
+      no_activity_others: "Nessuna attività."
+      no_replies_others: "Nessuna risposta."
+      no_likes_others: "Nessun messaggio con \"Mi piace\"."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

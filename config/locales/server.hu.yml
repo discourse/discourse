@@ -571,18 +571,9 @@ hu:
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
   user_activity:
-    no_default:
-      self: "Még nincsenek tevékenységek."
-      others: "Nincsenek tevékenységek."
     no_bookmarks:
       self: "Nincsenek könyvjelzővel ellátott bejegyzéseid; a könyvjelzők segítségével gyorsan hivatkozhatsz bizonyos bejegyzésekre."
       others: "Nincsenek könyvjelzők."
-    no_likes_given:
-      self: "Egyetlen bejegyzést sem kedvelt."
-      others: "Nincsenek kedvelt bejegyzések."
-    no_replies:
-      self: "Nem válaszoltál még egyetlen bejegyzésre sem."
-      others: "Nincsenek válaszok."
     no_drafts:
       self: "Nincsenek még piszkozataid. Kezdj választ írni bármelyik témához, és ha nem küldöd el, automatikusan elmentjük piszkozatként."
   topic_flag_types:
@@ -1390,6 +1381,28 @@ hu:
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PÜ] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PÜ] %{topic_title}"
       text_body_template: |2
 
         %{header_instructions}

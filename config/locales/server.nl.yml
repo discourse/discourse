@@ -808,19 +808,10 @@ nl:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
   user_activity:
-    no_default:
-      self: "U hebt nog geen activiteit."
-      others: "Geen activiteit."
     no_bookmarks:
       self: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
       search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       others: "Geen bladwijzers."
-    no_likes_given:
-      self: "U hebt geen berichten geliket."
-      others: "Geen gelikete berichten."
-    no_replies:
-      self: "U hebt op geen enkel bericht geantwoord."
-      others: "Geen antwoorden."
     no_drafts:
       self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
   webauthn:
@@ -2445,6 +2436,26 @@ nl:
     user_group_mentioned:
       title: "Gebruikersgroep genoemd"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

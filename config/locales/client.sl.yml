@@ -2036,7 +2036,7 @@ sl:
         few: "<span>%{count}%{plus} zadetki za</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} zadetkov za</span><span class='term'>%{term}</span>"
       title: "išči po temah, prispevkih, uporabnikih ali kategorijah"
-      full_page_title: "išči teme ali prispevke"
+      full_page_title: "Išči"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
       post_format: "#%{post_number} od %{username}"
@@ -2048,13 +2048,16 @@ sl:
       search_google: "Poskusite iskati z Googlom:"
       search_google_button: "Google"
       search_button: "Išči"
+      categories: "Kategorije"
+      tags: "Oznake"
+      type:
+        users: "Uporabniki"
       context:
         user: "Išči prispevke od @%{username}"
         category: "Išči po #%{category} kategoriji"
         topic: "Išči po tej temi"
         private_messages: "Išči po zasebnih sporočilih"
       advanced:
-        title: Napredno iskanje
         posted_by:
           label: Avtor
         in_category:
@@ -2588,6 +2591,7 @@ sl:
           other: "Izbrali ste <b>%{count}</b> prispevkov."
     post:
       quote_reply: "Citiraj"
+      quote_edit: "Uredi"
       quote_share: "Deli"
       edit_reason: "Razlog: "
       post_number: "prispevek %{number}"

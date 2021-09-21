@@ -1954,7 +1954,7 @@ vi:
       result_count:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
       title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
-      full_page_title: "tìm kiếm chủ đề hoặc bài đăng"
+      full_page_title: "Tìm kiếm"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
       post_format: "#%{post_number} bởi %{username}"
@@ -1966,6 +1966,10 @@ vi:
       search_google: "Hãy thử tìm kiếm bằng Google để thay thế:"
       search_google_button: "G"
       search_button: "Tìm kiếm"
+      categories: "Chuyên mục"
+      tags: "Thẻ"
+      type:
+        users: "Người dùng"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"
@@ -1973,7 +1977,6 @@ vi:
         topic: "Tìm trong chủ đề này"
         private_messages: "Tìm tin nhắn"
       advanced:
-        title: Tìm kiếm nâng cao
         posted_by:
           label: Gửi bởi
         in_category:
@@ -2471,6 +2474,7 @@ vi:
           other: "Bạn đã chọn <b>%{count}</b> bài viết."
     post:
       quote_reply: "Trích dẫn"
+      quote_edit: "Sửa"
       quote_share: "Chia sẻ"
       edit_reason: "Lý do: "
       post_number: "bài viết %{number}"

@@ -2065,7 +2065,7 @@ nb_NO:
         one: "<span>%{count} resultat for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
       title: "søk etter emner, innlegg, brukere eller kategorier"
-      full_page_title: "søk etter emner eller innlegg"
+      full_page_title: "Søk"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
       post_format: "#%{post_number} av %{username}"
@@ -2077,6 +2077,10 @@ nb_NO:
       search_google: "Prøv å søke på Google istedenfor:"
       search_google_button: "Google"
       search_button: "Søk"
+      categories: "Kategorier"
+      tags: "Stikkord"
+      type:
+        users: "Brukere"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -2084,7 +2088,6 @@ nb_NO:
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
       advanced:
-        title: Avansert søk
         posted_by:
           label: Skrevet av
         in_category:
@@ -2627,6 +2630,7 @@ nb_NO:
       deleted_by_author_simple: "(emne slettet av forfatter)"
     post:
       quote_reply: "Sitat"
+      quote_edit: "Rediger"
       quote_share: "Del"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
@@ -3445,6 +3449,10 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
+    user_activity:
+      no_activity_others: "Ingen aktivitet."
+      no_replies_others: "Ingen svar."
+      no_likes_others: "Ingen likte innlegg. "
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

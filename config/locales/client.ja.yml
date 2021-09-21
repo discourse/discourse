@@ -2018,7 +2018,7 @@ ja:
       result_count:
         other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
       title: "トピック、投稿、ユーザー、カテゴリを検索"
-      full_page_title: "トピックまたは投稿の検索"
+      full_page_title: "検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       post_format: "%{username} の #%{post_number}"
@@ -2030,6 +2030,10 @@ ja:
       search_google: "Google で検索してみてください:"
       search_google_button: "Google"
       search_button: "検索"
+      categories: "カテゴリ"
+      tags: "タグ"
+      type:
+        users: "ユーザー"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
@@ -2037,7 +2041,6 @@ ja:
         topic: "このトピックを検索"
         private_messages: "メッセージを検索"
       advanced:
-        title: 高度な検索
         posted_by:
           label: 投稿者
         in_category:
@@ -2569,6 +2572,7 @@ ja:
       deleted_by_author_simple: "(作成者が削除したトピック)"
     post:
       quote_reply: "引用"
+      quote_edit: "編集"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
@@ -3344,6 +3348,10 @@ ja:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "サポートされていないファイルを選択しました。サポートされているファイルタイプ – %{types}。"
+    user_activity:
+      no_activity_others: "アクティビティがありません。"
+      no_replies_others: "返信はありません。"
+      no_likes_others: "「いいね！」した投稿はありません。"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:

@@ -1707,6 +1707,7 @@ ro:
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
       title: "Caută subiecte, postări, utilizatori sau categorii"
+      full_page_title: "Caută"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
       post_format: "#%{post_number} de %{username}"
@@ -1715,13 +1716,16 @@ ro:
       or_search_google: "Sau încearcă să cauți cu Google:"
       search_google_button: "Google"
       search_button: "Caută"
+      categories: "Categorii"
+      tags: "Etichete"
+      type:
+        users: "Utilizatori"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
         topic: "Caută în acest subiect"
         private_messages: "Caută mesaje"
       advanced:
-        title: Căutare avansată
         posted_by:
           label: Postat de
         in_category:
@@ -2137,6 +2141,7 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post:
       quote_reply: "Citează"
+      quote_edit: "Editează"
       quote_share: "Distribuie"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
@@ -2761,6 +2766,8 @@ ro:
         member: "membru"
         regular: "utilizator frecvent"
         leader: "lider"
+    user_activity:
+      no_likes_others: "Nu există postări apreciate."
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

@@ -2065,7 +2065,7 @@ pt:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "pesquisar por tópicos, publicações, utilizadores, ou categorias"
-      full_page_title: "pesquisar tópicos e publicações"
+      full_page_title: "Pesquisar"
       no_results: "Não foram encontrados resultados."
       no_more_results: "Não foram encontrados mais resultados."
       post_format: "#%{post_number} por %{username}"
@@ -2077,6 +2077,10 @@ pt:
       search_google: "Experimente pesquisar com o Google:"
       search_google_button: "Google"
       search_button: "Pesquisar"
+      categories: "Categorias"
+      tags: "Etiquetas"
+      type:
+        users: "Utilizadores"
       context:
         user: "Procurar publicações por @%{username}"
         category: "Pesquise na categoria #%{category}"
@@ -2084,7 +2088,6 @@ pt:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
-        title: Pesquisa Avançada
         posted_by:
           label: Publicado por
         in_category:
@@ -2631,6 +2634,7 @@ pt:
       deleted_by_author_simple: "(tópico excluído pelo autor)"
     post:
       quote_reply: "Citar"
+      quote_edit: "Editar"
       quote_share: "Partilhar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
@@ -3390,6 +3394,8 @@ pt:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
+    user_activity:
+      no_likes_others: "Sem publicações gostadas."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

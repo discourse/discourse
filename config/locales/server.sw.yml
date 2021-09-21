@@ -481,17 +481,8 @@ sw:
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
   user_activity:
-    no_default:
-      self: "Bado hauna shughuli."
-      others: "Hakuna shughuli."
     no_bookmarks:
       others: "Hakuna mialamisho."
-    no_likes_given:
-      self: "Haujapenda machapisho yoyote."
-      others: "Hakuna machapisho yaliyopendwa."
-    no_replies:
-      self: "Haujajibu machapisho yoyote."
-      others: "Hakuna majibu."
   topic_flag_types:
     spam:
       title: "Barua Taka"
@@ -1563,6 +1554,26 @@ sw:
     user_group_mentioned:
       title: "Kikundi cha Watumiaji Kimetajwa"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

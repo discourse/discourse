@@ -2034,7 +2034,7 @@ ko:
       result_count:
         other: "<span><span class='term'>%{term}</span>에 대한 %{count}%{plus}개의 검색 결과</span>"
       title: "글, 사용자 또는 카테고리 검색"
-      full_page_title: "글 또는 댓글 검색"
+      full_page_title: "검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
       post_format: "%{username}님의 글 #%{post_number}"
@@ -2046,6 +2046,10 @@ ko:
       search_google: "대신 구글에서 검색해보세요."
       search_google_button: "구글"
       search_button: "검색"
+      categories: "카테고리"
+      tags: "태그"
+      type:
+        users: "사용자"
       context:
         user: "@%{username}님의 글 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -2053,7 +2057,6 @@ ko:
         topic: "이 글에서 검색"
         private_messages: "메시지 검색"
       advanced:
-        title: 상세 검색
         posted_by:
           label: '글쓴이:'
         in_category:
@@ -2588,6 +2591,7 @@ ko:
       deleted_by_author_simple: "(작성자가 삭제한 글)"
     post:
       quote_reply: "인용하기"
+      quote_edit: "편집"
       quote_share: "공유"
       edit_reason: "사유: "
       post_number: "%{number}번째 글"
@@ -3363,6 +3367,10 @@ ko:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "지원되지 않는 파일을 선택했습니다. 지원되는 파일 형식 – %{types}."
+    user_activity:
+      no_activity_others: "활동 없음."
+      no_replies_others: "답글이 없습니다."
+      no_likes_others: "좋아요를 받은 게시글이 없습니다"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:

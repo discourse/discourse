@@ -1337,7 +1337,7 @@ bg:
       clear_all: "Изчисти Всички"
       too_short: "Думата за търсене е твърде кратка."
       title: "търсете по тема, пост, потребител или категория"
-      full_page_title: "търсене на теми или публикации"
+      full_page_title: "Търсене"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
       post_format: "#%{post_number} от %{username} "
@@ -1347,13 +1347,16 @@ bg:
       search_google: "Опитайте вместо това търсене с Гугъл:"
       search_google_button: "Google"
       search_button: "Търсене"
+      categories: "Категории"
+      tags: "Етикети"
+      type:
+        users: "Потребители"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
         topic: "Търсете тази тема"
         private_messages: "Търси съобщения"
       advanced:
-        title: Разширено търсене
         posted_by:
           label: Публикувано от
         in_group:
@@ -1688,6 +1691,7 @@ bg:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
     post:
+      quote_edit: "Редактирай"
       quote_share: "Споделяне"
       edit_reason: "Причина: "
       post_number: "публикация %{number} "
