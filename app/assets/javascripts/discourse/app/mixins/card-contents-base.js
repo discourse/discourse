@@ -54,7 +54,7 @@ export default Mixin.create({
       return false;
     }
 
-    this.set("lastEvent", event);
+    this.appEvents.trigger("card:show", username, target, event);
 
     const currentUsername = this.username;
     if (username === currentUsername || this.loading === username) {
@@ -304,7 +304,6 @@ export default Mixin.create({
       visible: false,
       username: null,
       loading: null,
-      lastEvent: null,
       cardTarget: null,
       post: null,
       isFixed: false,
@@ -317,6 +316,7 @@ export default Mixin.create({
     }
 
     this._hide();
+    this.appEvents.trigger("card:hide");
   },
 
   willDestroyElement() {
