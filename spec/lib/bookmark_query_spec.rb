@@ -41,6 +41,16 @@ RSpec.describe BookmarkQuery do
       expect(preloaded_bookmarks.any?).to eq(true)
     end
 
+    it "does not query topic_users for the bookmark topic that are not the current user" do
+      topic_user1 = Fabricate(:topic_user, topic: bookmark1.topic, user: user)
+      topic_user2 = Fabricate(:topic_user, topic: bookmark1.topic)
+      bookmark = bookmark_query.list_all.find do |b|
+        b.topic_id == bookmark1.topic_id
+      end
+
+      expect(bookmark.topic.topic_users.map(&:user_id)).to contain_exactly(user.id)
+    end
+
     context "when q param is provided" do
       before do
         @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
