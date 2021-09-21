@@ -32,6 +32,11 @@ function freezeTime({ date, timezone }, cb) {
 }
 
 QUnit.assert.buildsCorrectDate = function (options, expected, message) {
+  // TODO: Ideally tests don't depend on particular translation strings
+  I18n.translations.en.js.discourse_local_dates = {
+    relative_dates: { today: "Today %{time}" },
+  };
+
   const localTimezone = options.localTimezone || PARIS;
   delete options.localTimezone;
 

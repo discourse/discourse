@@ -7,6 +7,7 @@ import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Details Button", function (needs) {
   needs.user();
@@ -20,9 +21,10 @@ acceptance("Details Button", function (needs) {
 
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
+    const textarea = query(".d-editor-input");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      textarea.value,
       `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
         "composer.details_text"
       )}\n[/details]\n`,
@@ -31,31 +33,28 @@ acceptance("Details Button", function (needs) {
 
     await fillIn(".d-editor-input", "This is my title");
 
-    const textarea = query(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
+
+    function currentSelection() {
+      return textarea.value.substring(
+        textarea.selectionStart,
+        textarea.selectionEnd
+      );
+    }
 
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      textarea.value,
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nThis is my title\n[/details]\n`,
       "it should contain the right selected output"
     );
 
-    assert.equal(
-      textarea.selectionStart,
-      21,
-      "it should start highlighting at the right position"
-    );
-    assert.equal(
-      textarea.selectionEnd,
-      37,
-      "it should end highlighting at the right position"
-    );
+    assert.equal(currentSelection(), "This is my title");
 
     await fillIn(".d-editor-input", "Before some text in between After");
 
@@ -66,23 +65,14 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      textarea.value,
       `Before \n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n After`,
       "it should contain the right output"
     );
 
-    assert.equal(
-      textarea.selectionStart,
-      28,
-      "it should start highlighting at the right position"
-    );
-    assert.equal(
-      textarea.selectionEnd,
-      48,
-      "it should end highlighting at the right position"
-    );
+    assert.equal(currentSelection(), "some text in between");
 
     await fillIn(".d-editor-input", "Before \nsome text in between\n After");
 
@@ -93,23 +83,13 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      textarea.value,
       `Before \n\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n\n After`,
       "it should contain the right output"
     );
-
-    assert.equal(
-      textarea.selectionStart,
-      29,
-      "it should start highlighting at the right position"
-    );
-    assert.equal(
-      textarea.selectionEnd,
-      49,
-      "it should end highlighting at the right position"
-    );
+    assert.equal(currentSelection(), "some text in between");
   });
 
   test("details button surrounds all selected text in a single details block", async function (assert) {
