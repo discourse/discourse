@@ -153,6 +153,15 @@ module TopicGuardian
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
+  def can_permanently_delete_topic?(topic)
+    return false if !topic
+    return false if topic.posts_count > 1
+    return false if !is_admin? || !can_see_topic?(topic)
+    return false if !topic.deleted_at
+
+    topic.deleted_by_id != @user.id || topic.deleted_at < 3.minute.ago
+  end
+
   def can_toggle_topic_visibility?(topic)
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end

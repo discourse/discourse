@@ -597,7 +597,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     deletePost(post, opts) {
       if (post.get("post_number") === 1) {
-        return this.deleteTopic();
+        return this.deleteTopic(opts);
       } else if (!post.can_delete) {
         return false;
       }
@@ -1509,13 +1509,13 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
-  deleteTopic() {
+  deleteTopic(opts) {
     if (
       this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {
       this.deleteTopicModal();
     } else {
-      this.model.destroy(this.currentUser);
+      this.model.destroy(this.currentUser, opts);
     }
   },
 
