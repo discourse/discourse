@@ -256,38 +256,61 @@ function setupTestsCommon(application, container, config) {
     server = null;
   });
 
-  // Load ES6 tests
-  function getUrlParameter(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    let results = regex.exec(location.search);
-    return results === null
-      ? ""
-      : decodeURIComponent(results[1].replace(/\+/g, " "));
-  }
-
-  let skipCore = getUrlParameter("qunit_skip_core") === "1";
-  let pluginPath = getUrlParameter("qunit_single_plugin")
-    ? "/" + getUrlParameter("qunit_single_plugin") + "/"
-    : "/plugins/";
-
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
     QUnit.config.autostart = false;
   }
 
-  Object.keys(requirejs.entries).forEach(function (entry) {
-    let isTest = /\-test/.test(entry);
-    let regex = new RegExp(pluginPath);
-    let isPlugin = regex.test(entry);
+  let skipCore =
+    getUrlParameter("qunit_single_plugin") ||
+    getUrlParameter("qunit_skip_core") === "1";
 
-    if (!isTest) {
-      return;
+  let singlePlugin = getUrlParameter("qunit_single_plugin");
+  let skipPlugins = !singlePlugin && getUrlParameter("qunit_skip_plugins");
+
+  if (skipCore && !getUrlParameter("qunit_skip_core")) {
+    replaceUrlParameter("qunit_skip_core", "1");
+  }
+
+  if (!skipPlugins && getUrlParameter("qunit_skip_plugins")) {
+    replaceUrlParameter("qunit_skip_plugins", null);
+  }
+
+  const shouldLoadModule = (name) => {
+    if (!/\-test/.test(name)) {
+      return false;
     }
 
-    if (!skipCore || isPlugin) {
-      require(entry, null, null, true);
+    const isPlugin = name.match(/\/plugins\//);
+    const isCore = !isPlugin;
+    const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
+
+    if (skipCore && isCore) {
+      return false;
+    } else if (skipPlugins && isPlugin) {
+      return false;
+    } else if (singlePlugin && singlePlugin !== pluginName) {
+      return false;
     }
-  });
+    return true;
+  };
+
+  try {
+    // Ember CLI
+    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
+    emberCliTestLoader.addModuleExcludeMatcher(
+      (name) => !shouldLoadModule(name)
+    );
+  } catch (e) {
+    if (!String(e).indexOf("Could not find module")) {
+      throw e;
+    }
+    // Legacy
+    Object.keys(requirejs.entries).forEach(function (entry) {
+      if (shouldLoadModule(entry)) {
+        require(entry, null, null, true);
+      }
+    });
+  }
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
@@ -310,4 +333,19 @@ export default function setupTests(config) {
   let settings = resetSettings();
   app = createApplication(config, settings);
   setupTestsCommon(app, app.__container__, config);
+}
+
+function getUrlParameter(name) {
+  const queryParams = new URLSearchParams(window.location.search);
+  return queryParams.get(name);
+}
+
+function replaceUrlParameter(name, value) {
+  const queryParams = new URLSearchParams(window.location.search);
+  if (value === null) {
+    queryParams.delete(name);
+  } else {
+    queryParams.set(name, value);
+  }
+  window.location = "?" + queryParams.toString();
 }
