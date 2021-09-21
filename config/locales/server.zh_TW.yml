@@ -650,18 +650,9 @@ zh_TW:
       description: "給此貼文按讚"
       short_description: "喜歡這篇貼文"
   user_activity:
-    no_default:
-      self: "您尚未有任何活動紀錄。"
-      others: "無活動紀錄。"
     no_bookmarks:
       self: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
       others: "沒有書籤。"
-    no_likes_given:
-      self: "你沒有對任何貼文按讚。"
-      others: "沒有被讚的貼文。"
-    no_replies:
-      self: "您尚未回覆任何貼文。"
-      others: "沒有回覆。"
     no_drafts:
       self: "您沒有任何草稿，開始撰寫任何話題的回應，即會被自動儲存為新的草稿。"
   topic_flag_types:
@@ -2396,6 +2387,26 @@ zh_TW:
     user_group_mentioned:
       title: "使用者群組提及"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

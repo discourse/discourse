@@ -359,8 +359,6 @@ bs_BA:
   user_activity:
     no_bookmarks:
       self: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
-    no_replies:
-      others: "Nema odgovora."
   topic_flag_types:
     spam:
       title: "Spam"

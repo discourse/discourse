@@ -16,6 +16,7 @@ he:
       date_only: " %-d ב%B,‏ %Y"
       long: " %-d ב%B,‏ %Y,‏ %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -698,6 +699,7 @@ he:
     slow_down: "ביצעת את הפעולה הזאת יותר מדי פעמים, נא לנסות שוב מאוחר יותר."
     too_many_requests: "ביצעת את הפעולה הזאת יותר מדי פעמים. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
     by_type:
+      first_day_replies_per_day: "אנו מעריכים את ההתלהבות שלך, להמשיך ככה! עם זאת, למען בטיחות הקהילה שלנו, הגעת למספר התגובות המרבי שמשתמש חדש יכול לכתוב ביום הראשון שלו. עליך להמתין %{time_left} כדי לכתוב תגובות חדשות נוספות."
       first_day_topics_per_day: "אנו מעריכים את ההתלהבות שלך! עם זאת, למען בטיחות הקהילה שלנו, הגעת למספר הנושאים המרבי שמשתמש חדש יכול ליצור ביום הראשון שלו. עליך להמתין %{time_left} כדי ליצור נושאים חדשים נוספים."
       create_topic: "קצב יצירת הפוסטים שלך מעט מהיר מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
       create_post: "קצב כתיבת התגובות שלך מעט מהיר מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
@@ -965,19 +967,10 @@ he:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
-    no_default:
-      self: "עדיין אין לך פעילות."
-      others: "אין פעילות."
     no_bookmarks:
       self: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
       others: "אין סימניות."
-    no_likes_given:
-      self: "לא עשיתם לייק לאף פוסט."
-      others: "אין פוסטים שנעשה להם לייק."
-    no_replies:
-      self: "לא הגבתם לאף פוסט."
-      others: "אין תגובות."
     no_drafts:
       self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
   email_settings:
@@ -1541,6 +1534,7 @@ he:
     summary_likes_required: "כמות לייקים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את % הפוסטים הראשונים"
     summary_max_results: "מספר הפוסטים המרבי שיוחזר על ידי ‚סיכום הנושא הזה’"
+    summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
     enable_personal_messages: "לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך דרגת אמון מזערית לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
     enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
@@ -2068,6 +2062,7 @@ he:
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
+    enable_fast_edit: "יכולת ניסיונית שמאפשרת בחירה מצומצמת של טקסט מהפוסט לעריכה בתוך השורה."
     old_post_notice_days: "ימים לפני שהתראת נושא מתיישנת"
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -3377,6 +3372,26 @@ he:
     user_group_mentioned:
       title: "קבוצת משתמש הוזכרה"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

@@ -1847,7 +1847,7 @@ lv:
       clear_all: "Noņemt visus"
       too_short: "Jūsu meklēšanas frāze ir pārāk īsa."
       title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
-      full_page_title: "meklēt tēmas vai ziņas"
+      full_page_title: "Meklēt"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
       post_format: "#%{post_number} - %{username}"
@@ -1859,6 +1859,10 @@ lv:
       search_google: "Vai arī mēģiniet meklēt, izmantojot Google:"
       search_google_button: "Google"
       search_button: "Meklēt"
+      categories: "Sadaļas"
+      tags: "Tagi"
+      type:
+        users: "Lietotāji"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"
@@ -1866,7 +1870,6 @@ lv:
         topic: "Meklēt šai tēmā"
         private_messages: "Meklēt ziņās"
       advanced:
-        title: Izvērstā meklēšana
         posted_by:
           label: Ierakstīja
         in_category:
@@ -2280,6 +2283,7 @@ lv:
           other: "Jūs esat izvēlējies <b>%{count}</b> ierakstus."
     post:
       quote_reply: "Citāts"
+      quote_edit: "Labot"
       quote_share: "Dalīties"
       edit_reason: "Iemesls:"
       post_number: "ieraksts %{number}"

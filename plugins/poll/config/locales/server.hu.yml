@@ -6,14 +6,14 @@
 
 hu:
   site_settings:
-    poll_enabled: "Engedélyezve vannak a szavazások?"
-    poll_maximum_options: "Maximum megszavazható tétel a szavazásokban."
-    poll_edit_window_mins: "Percek száma miután még lehet szerkeszteni a bejegyzést."
-    poll_minimum_trust_level_to_create: "Legkisebb szükséges bizalmi szint meghatározása szavazások létrehozásához."
+    poll_enabled: "Engedélyezi a szavazásokat?"
+    poll_maximum_options: "Szavazási lehetőségek legnagyobb száma a szavazásoknál."
+    poll_edit_window_mins: "A bejegyzés létrehozása után hány percig lehet szerkeszteni a bejegyzést."
+    poll_minimum_trust_level_to_create: "Adja meg a szavazások létrehozásához szükséges legkisebb bizalmi szintet."
   poll:
     default_poll_must_have_less_options:
-      one: "Szavazásnak kevesebb, mint %{count} lehetőséget kell tartalmaznia."
-      other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
+      one: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
+      other: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
     named_poll_must_have_less_options:
       one: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
       other: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
@@ -26,4 +26,4 @@ hu:
     only_staff_or_op_can_toggle_status: "Csak egy staff tag vagy az eredeti posztoló tudja bekapcsolni a szavazás státuszát."
     insufficient_rights_to_create: "Nem tudsz szavazást létrehozni."
     email:
-      link_to_poll: "Kattints a szavazás megtekintéséhez."
+      link_to_poll: "Kattintson ide a szavazás megtekintéséhez."

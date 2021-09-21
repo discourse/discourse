@@ -886,16 +886,19 @@ be:
       latest_post: "апошняе паведамленне"
       select_all: "выбраць усе"
       title: "пошук тэмаў, пастоў, юзераў альбо катэгорыяў"
-      full_page_title: "пошук тэмаў альбо пастоў"
+      full_page_title: "Пошук"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
       search_button: "Пошук"
+      categories: "Катэгорыі"
+      tags: "Цэтлікі"
+      type:
+        users: "Карыстальнікі"
       context:
         topic: "Пошук у гэтай тэме"
         private_messages: "Пошук паведамленняў"
       advanced:
-        title: пашыраны пошук
         posted_by:
           label: апублікавана
         in_group:
@@ -1083,6 +1086,7 @@ be:
         title: "Змяніць метку часу"
         action: "змяніць метку часу"
     post:
+      quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
@@ -1347,6 +1351,10 @@ be:
         member: "член"
         regular: "рэгулярны"
         leader: "лідэр"
+    user_activity:
+      no_activity_others: "Няма актыўнасці."
+      no_replies_others: "Няма адказаў."
+      no_likes_others: "Не спадабалася паведамленні."
   admin_js:
     admin:
       moderator: "Мадэратар"

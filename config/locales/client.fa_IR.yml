@@ -1896,7 +1896,7 @@ fa_IR:
       clear_all: "پاک کردن همه"
       too_short: "کلمه جستجو شده بسیار کوتاه است"
       title: "جستجوی موضوعات، نوشته‌ها، کاربران یا دسته‌‌بندی‌ها"
-      full_page_title: "جستجوی مبحث یا نوشته"
+      full_page_title: "جستجو"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
       post_format: "#%{post_number} توسط %{username}"
@@ -1908,13 +1908,16 @@ fa_IR:
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
       search_button: "جسنجو"
+      categories: "دسته‌بندی‌ها"
+      tags: "برچسب‌ها"
+      type:
+        users: "کاربران"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
         topic: "جستجوی این موضوع"
         private_messages: "جستجوی پیام‌ها"
       advanced:
-        title: جستجوی پیشرفته
         posted_by:
           label: فرستنده
         in_category:
@@ -2384,6 +2387,7 @@ fa_IR:
           other: "شما <b>%{count}</b> نوشته انتخاب کرده اید"
     post:
       quote_reply: "نقل‌قول"
+      quote_edit: "ویرایش"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3024,6 +3028,9 @@ fa_IR:
         member: "عضو"
         regular: "عادی"
         leader: "راهبر"
+    user_activity:
+      no_replies_others: "بدون پاسخ"
+      no_likes_others: "فرسته‌ی موردپسندیدی نیست."
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

@@ -2091,7 +2091,7 @@ da:
         one: "<span>%{count} resultat for</span> <span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span> <span class='term'>%{term}</span>"
       title: "søg efter emner, indlæg, brugere eller kategorier"
-      full_page_title: "søg efter emner eller indlæg"
+      full_page_title: "Søg"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
       post_format: "#%{post_number} af %{username}"
@@ -2103,6 +2103,10 @@ da:
       search_google: "Prøv at søge med Google i stedet:"
       search_google_button: "Google"
       search_button: "Søg"
+      categories: "Kategorier"
+      tags: "Mærker"
+      type:
+        users: "Brugere"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
@@ -2110,7 +2114,6 @@ da:
         topic: "Søg i dette emne"
         private_messages: "Søg i meddelelser"
       advanced:
-        title: Avanceret Søgning
         posted_by:
           label: Skrevet af
         in_category:
@@ -2650,6 +2653,7 @@ da:
       deleted_by_author_simple: "(emne slettet af forfatteren)"
     post:
       quote_reply: "Citér"
+      quote_edit: "Rediger"
       quote_share: "Del"
       edit_reason: "Grund: "
       post_number: "indlæg %{number}"
@@ -3462,6 +3466,10 @@ da:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har valgt en fil, der ikke understøttes. Understøttede filtyper - %{types}."
+    user_activity:
+      no_activity_others: "Ingen aktivitet."
+      no_replies_others: "Ingen svar."
+      no_likes_others: "Ingen 'synes om'-beskeder."
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

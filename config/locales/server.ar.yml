@@ -1087,19 +1087,10 @@ ar:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
   user_activity:
-    no_default:
-      self: "ليس لديك نشاط حتى الآن."
-      others: "لا يوجد نشاط."
     no_bookmarks:
       self: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
       search: "لم يتم العثور على إشارات مرجعية تطابق استعلام البحث المقدَّم."
       others: "لا توجد إشارات مرجعية."
-    no_likes_given:
-      self: "لم تسجِّل إعجابك بأي منشور."
-      others: "لا توجد منشورات سجَّلت إعجابك بها."
-    no_replies:
-      self: "لم ترد على أي منشور."
-      others: "لا توجد ردود."
     no_drafts:
       self: "ليس لديك أي مسودات. ابدأ في كتابة رد في أي موضوع وسيتم حفظه تلقائيًا كمسودة جديدة."
   email_settings:
@@ -3516,6 +3507,26 @@ ar:
     user_group_mentioned:
       title: "أشار مستخدم إلى مجموعتك"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

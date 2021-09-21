@@ -1505,7 +1505,7 @@ th:
       clear_all: "ล้างทั้งหมด"
       too_short: "คำค้นหาสั้นเกินไป"
       title: "ค้นหากระทู้ โพสต์ ผู้ใช้ หรือหมวดหมู่"
-      full_page_title: "ค้นหากระทู้หรือโพสต์"
+      full_page_title: "ค้นหา"
       no_results: "ไม่มีผลการค้นหา"
       no_more_results: "ไม่มีผลการค้นหาเพิ่มเติมแล้ว"
       post_format: "#%{post_number} โดย %{username}"
@@ -1515,6 +1515,10 @@ th:
       search_google: "ลองค้นหาด้วยกูเกิล:"
       search_google_button: "กูเกิล"
       search_button: "ค้นหา"
+      categories: "หมวดหมู่"
+      tags: "แท็ก"
+      type:
+        users: "ผู้ใช้"
       context:
         user: "ค้นหาโพสต์โดย @%{username}"
         category: "ค้นหาหมวด #%{category}"
@@ -1522,7 +1526,6 @@ th:
         topic: "ค้นหากระทู้นี้"
         private_messages: "ค้นหาข้อความ"
       advanced:
-        title: ค้นหาขั้นสูงสุด
         posted_by:
           label: โพสต์โดย
         in_category:
@@ -1919,6 +1922,7 @@ th:
           other: "คุณได้เลือก <b>%{count}</b> โพสต์"
     post:
       quote_reply: "อ้างอิง"
+      quote_edit: "แก้ไข"
       quote_share: "แบ่งปัน"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ %{number}"

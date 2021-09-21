@@ -883,19 +883,10 @@ pt_BR:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
   user_activity:
-    no_default:
-      self: "Você ainda não tem nenhuma atividade."
-      others: "Nenhuma atividade."
     no_bookmarks:
       self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
       others: "Nenhum favorito."
-    no_likes_given:
-      self: "Você não curtiu nenhuma postagem."
-      others: "Nenhuma postagem curtida."
-    no_replies:
-      self: "Você não respondeu a nenhuma postagem."
-      others: "Sem respostas."
     no_drafts:
       self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
   email_settings:
@@ -3235,6 +3226,26 @@ pt_BR:
     user_group_mentioned:
       title: "Grupo de usuários(as) mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

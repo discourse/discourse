@@ -946,19 +946,10 @@ uk:
     pm_title: "Резервні чернетки з поточних тем"
     pm_body: "Тема, що містить резервні чернетки"
   user_activity:
-    no_default:
-      self: "Поки немає активностей."
-      others: "Немає активностей."
     no_bookmarks:
       self: "У вас немає публікацій у закладках. Закладки дозволяють швидко переходити до обраних дискусій."
       search: "Немає закладок за таким пошуковим запитом."
       others: "Закладок немає."
-    no_likes_given:
-      self: "Вам не сподобалися ніякі повідомлення."
-      others: "Вподобаних повідомлень немає."
-    no_replies:
-      self: "Ви не відповіли на жоден допис."
-      others: "Немає відповідей"
     no_drafts:
       self: "У вас немає чернеток; почніть складати відповідь в будь-якій темі, і вона буде автоматично збережена як нова чернетка."
   webauthn:
@@ -2608,6 +2599,26 @@ uk:
     user_group_mentioned:
       title: "Згадана група користувачів"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

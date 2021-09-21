@@ -16,6 +16,7 @@ it:
       date_only: "%B %-d, %Y"
       long: "%-d %B %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%d%m%YT%H%M%SZ"
   date:
     month_names:
     - null
@@ -394,6 +395,7 @@ it:
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
+      for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -882,19 +884,10 @@ it:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
   user_activity:
-    no_default:
-      self: "Non hai ancora nessuna attività."
-      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto messaggi nei segnalibri. I segnalibri ti consentono di accedere velocemente a specifici messaggi."
       search: "Nessun segnalibro trovato con la query di ricerca fornita."
       others: "Nessun segnalibro."
-    no_likes_given:
-      self: "Non hai messo \"Mi piace\" ad alcun messaggio."
-      others: "Nessun messaggio con \"Mi piace\"."
-    no_replies:
-      self: "Non hai risposto a nessun messaggio."
-      others: "Nessuna risposta."
     no_drafts:
       self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
   email_settings:
@@ -1985,6 +1978,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
+    enable_fast_edit: "Funzionalità sperimentale che consente di modificare online una piccola selezione del testo di un post."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -3132,6 +3126,26 @@ it:
     user_group_mentioned:
       title: "Gruppo Utente Menzionato"
       subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
       text_body_template: |
         %{header_instructions}
 

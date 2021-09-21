@@ -1483,18 +1483,22 @@ et:
       clear_all: "Puhasta kõik"
       too_short: "Otsitav tekst on liiga lühike."
       title: "otsi teemasid, postitusi, kasutajaid, või foorumeid"
+      full_page_title: "Otsi"
       no_results: "Ei leidnud midagi."
       no_more_results: "Rohkem vasteid pole."
       post_format: "postituse nr%{post_number} tegi %{username}"
       search_google_button: "Google"
       search_button: "Otsi"
+      categories: "Kategooriad"
+      tags: "Sildid"
+      type:
+        users: "Kasutajaid"
       context:
         user: "Otsi kasutaja @%{username} postitusi"
         category: "Otsi #%{category} foorumist"
         topic: "Otsi sellest teemast"
         private_messages: "Otsi sõnumeid"
       advanced:
-        title: Täpsem otsing
         posted_by:
           label: Postitaja
         in_category:
@@ -1947,6 +1951,7 @@ et:
           other: "Oled valinud <b>%{count}</b> postitust."
     post:
       quote_reply: "Tsitaat"
+      quote_edit: "Muuda"
       quote_share: "Jaga"
       edit_reason: "Põhjus:"
       post_number: "postitus %{number}"
@@ -2543,6 +2548,10 @@ et:
         member: "liige"
         regular: "tavaline"
         leader: "juht"
+    user_activity:
+      no_activity_others: "Tegevusi pole."
+      no_replies_others: "Vastuseid pole."
+      no_likes_others: "Meeldimisega postitusi veel pole."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

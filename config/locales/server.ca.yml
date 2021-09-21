@@ -734,18 +734,9 @@ ca:
     pm_title: "Esborranys de còpia de seguretat de temes en curs"
     pm_body: "Tema que conté esborranys de còpia de seguretat"
   user_activity:
-    no_default:
-      self: "Encara no teniu activitat."
-      others: "No hi ha activitat."
     no_bookmarks:
       self: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
       others: "Sense preferits."
-    no_likes_given:
-      self: "Encara no us ha agradat cap publicació."
-      others: "Publicacions sense 'm'agrada'."
-    no_replies:
-      self: "No heu respost a cap publicació."
-      others: "No hi ha respostes."
     no_drafts:
       self: "No teniu cap esborrany. Comenceu a redactar una resposta en qualsevol tema i es desarà com a esborrany nou."
   webauthn:
@@ -2461,6 +2452,26 @@ ca:
     user_group_mentioned:
       title: "Grup d'usuaris mencionat"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

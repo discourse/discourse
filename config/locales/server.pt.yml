@@ -672,9 +672,6 @@ pt:
     no_bookmarks:
       self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       others: "Sem marcadores."
-    no_likes_given:
-      self: "Ainda não gostou de nenhuma publicação."
-      others: "Sem publicações gostadas."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1747,6 +1744,26 @@ pt:
 
         %{respond_instructions}
     user_group_mentioned:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
       text_body_template: |2
 
         %{header_instructions}

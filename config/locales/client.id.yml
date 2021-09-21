@@ -1374,9 +1374,13 @@ id:
       most_liked: "Paling Disukai"
       select_all: "Pilih Semua"
       title: "mencari topik, artikel, pengguna, atau kategori"
-      full_page_title: "cari topik atau artikel"
+      full_page_title: "Cari"
       search_google_button: "Google"
       search_button: "Cari"
+      categories: "Kategori"
+      tags: "Label"
+      type:
+        users: "Pengguna"
       advanced:
         posted_by:
           label: Dibuat oleh
@@ -1488,6 +1492,7 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
     post:
+      quote_edit: "Ubah"
       edit_reason: "Alasan:"
       collapse: "persempit"
       expand_collapse: "perluas/tutup"

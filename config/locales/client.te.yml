@@ -781,10 +781,15 @@ te:
       default_image_alt_text: బొమ్మ
     search:
       title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
+      full_page_title: "వెతుకు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
       search_button: "వెతుకు"
+      categories: "వర్గాలు"
+      tags: "ట్యాగులు"
+      type:
+        users: "వాడుకరులు"
       context:
         user: "@%{username} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
@@ -1006,6 +1011,7 @@ te:
           one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
           other: "మీరు <b>%{count}</b> టపాలు ఎంచుకున్నారు"
     post:
+      quote_edit: "సవరించు"
       quote_share: "పంచు"
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"

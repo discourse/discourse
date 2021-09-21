@@ -2096,7 +2096,7 @@ fr:
         one: "<span>%{count} résultat pour</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
-      full_page_title: "rechercher des sujets ou messages"
+      full_page_title: "Recherche"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       post_format: "#%{post_number} par %{username}"
@@ -2108,6 +2108,10 @@ fr:
       search_google: "Essayez plutôt de rechercher avec Google :"
       search_google_button: "Google"
       search_button: "Recherche"
+      categories: "Catégories"
+      tags: "Étiquettes"
+      type:
+        users: "Utilisateurs"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"
@@ -2115,7 +2119,6 @@ fr:
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher dans les messages directs"
       advanced:
-        title: Recherche avancée
         posted_by:
           label: Auteur
         in_category:
@@ -2672,6 +2675,7 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
     post:
       quote_reply: "Citer"
+      quote_edit: "Modifier"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -3487,6 +3491,10 @@ fr:
         regular: "habitué"
         leader: "meneur"
       detailed_name: "%{level} : %{name}"
+    user_activity:
+      no_activity_others: "Aucune activité."
+      no_replies_others: "Aucune réponse."
+      no_likes_others: "Aucun message aimé."
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:

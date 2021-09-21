@@ -882,19 +882,10 @@ fr:
     pm_title: "Brouillons relatifs à des sujets en cours de discussion."
     pm_body: "Sujet contenant des brouillons enregistrés"
   user_activity:
-    no_default:
-      self: "Vous n'avez aucune activité pour le moment."
-      others: "Aucune activité."
     no_bookmarks:
       self: "Vous n'avez pas de sujet dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
       search: "Aucun signet trouvé avec la requête de recherche fournie."
       others: "Aucun signet."
-    no_likes_given:
-      self: "Vous n'avez aimé aucun message."
-      others: "Aucun message aimé."
-    no_replies:
-      self: "Vous n'avez répondu à aucun message."
-      others: "Aucune réponse."
     no_drafts:
       self: "Vous n'avez pas de brouillons. Lorsque vous commencerez à répondre à un sujet, cette réponse sera automatiquement enregistrée sous forme de nouveau brouillon."
   email_settings:
@@ -3202,6 +3193,26 @@ fr:
     user_group_mentioned:
       title: "Mention de groupe utilisateur"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

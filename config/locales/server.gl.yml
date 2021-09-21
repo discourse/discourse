@@ -849,19 +849,10 @@ gl:
     pm_title: "Borradores de seguranza procedentes de temas en curso"
     pm_body: "O tema contén borradores de seguranza"
   user_activity:
-    no_default:
-      self: "Aínda non ten actividade."
-      others: "Sen actividade."
     no_bookmarks:
       self: "Non ten publicacións engadidas aos marcadores; os marcadores permítenlle volver rapidamente a publicacións específicas."
       search: "Non se atoparon marcadores coa busca fornecida."
       others: "Sen marcadores."
-    no_likes_given:
-      self: "Non premeu en Gústame en ningunha publicación."
-      others: "Ningún Gústame en publicacións."
-    no_replies:
-      self: "Non respondeu a ningunha publicación."
-      others: "Sen respostas."
     no_drafts:
       self: "Non ten borradores; comece a responder en calquera tema e gardarase automaticamente como un novo borrador."
   webauthn:
@@ -3128,6 +3119,26 @@ gl:
     user_group_mentioned:
       title: "Grupo de usuarios mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

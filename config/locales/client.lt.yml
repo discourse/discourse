@@ -1459,7 +1459,7 @@ lt:
         many: "<span>%{count}%{plus} rezultatai iš</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} rezultatai iš </span><span class='term'>%{term}</span>"
       title: "temų, įrašų, vartotojų ar kategorijų paieška"
-      full_page_title: "ieškoti temų arba įrašų"
+      full_page_title: "Paieška"
       no_results: "Nerasta jokių rezultatų."
       no_more_results: "Nerasta jokių rezultatų."
       post_format: "#%{post_number} nuo %{username}"
@@ -1467,13 +1467,16 @@ lt:
       start_new_topic: "Galbūt pradėkite naują temą?"
       search_google_button: "Google"
       search_button: "Paieška"
+      categories: "Kategorijos"
+      tags: "Etiketės"
+      type:
+        users: "Nariai"
       context:
         user: "Ieškoti įrašų nuo @%{username}"
         category: "Ieškoti #%{category}kategorijoje"
         topic: "Ieškoti šioje temoje"
         private_messages: "Ieškoti žinučių"
       advanced:
-        title: Išplėstinė paieška
         posted_by:
           label: Paskelbė
         in_category:
@@ -1860,6 +1863,7 @@ lt:
           other: "Jūs pasirinkote <b>%{count}</b> įrašus."
     post:
       quote_reply: "Citata"
+      quote_edit: "Redaguoti"
       quote_share: "Pasidalinti"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"
@@ -2417,6 +2421,9 @@ lt:
         member: "narys"
         regular: "reguliarus"
         leader: "lyderis"
+    user_activity:
+      no_activity_others: "Jokios veiklos."
+      no_replies_others: "Jokių atsakymų."
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

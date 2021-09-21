@@ -2057,7 +2057,7 @@ nl:
         one: "<span>%{count} resultaat voor</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultaten voor</span><span class='term'>%{term}</span>"
       title: "zoeken naar topics, berichten, gebruikers of categorieën"
-      full_page_title: "zoeken naar topics of berichten"
+      full_page_title: "Zoeken"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
       post_format: "#%{post_number} door %{username}"
@@ -2069,6 +2069,10 @@ nl:
       search_google: "Probeer in plaats hiervan te zoeken met Google:"
       search_google_button: "Google"
       search_button: "Zoeken"
+      categories: "Categorieën"
+      tags: "Tags"
+      type:
+        users: "Gebruikers"
       context:
         user: "Berichten van @%{username} doorzoeken"
         category: "De categorie #%{category} doorzoeken"
@@ -2076,7 +2080,6 @@ nl:
         topic: "Dit topic doorzoeken"
         private_messages: "Berichten doorzoeken"
       advanced:
-        title: Geavanceerd zoeken
         posted_by:
           label: Geplaatst door
         in_category:
@@ -2615,6 +2618,7 @@ nl:
           other: "U hebt <b>%{count}</b> berichten geselecteerd."
     post:
       quote_reply: "Citeren"
+      quote_edit: "Bewerken"
       quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
@@ -3413,6 +3417,10 @@ nl:
         member: "lid"
         regular: "vaste gebruiker"
         leader: "leider"
+    user_activity:
+      no_activity_others: "Geen activiteit."
+      no_replies_others: "Geen antwoorden."
+      no_likes_others: "Geen gelikete berichten."
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

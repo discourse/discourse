@@ -850,19 +850,10 @@ da:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
   user_activity:
-    no_default:
-      self: "Du har endnu ingen aktivitet."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har ingen bogmærkede indlæg; bogmærker giver dig mulighed for hurtigt at henvise til bestemte indlæg."
       search: "Ingen bogmærker fundet med den angivne søgeforespørgsel."
       others: "Ingen bogmærker"
-    no_likes_given:
-      self: "Du har ikke liket nogen indlæg."
-      others: "Ingen 'synes om'-beskeder."
-    no_replies:
-      self: "Du har ikke svaret på nogen indlæg."
-      others: "Ingen svar."
     no_drafts:
       self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
   email_settings:
@@ -2667,6 +2658,26 @@ da:
     user_group_mentioned:
       title: "Brugergruppe Nævnte"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
