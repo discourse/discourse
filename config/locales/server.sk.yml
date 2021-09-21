@@ -521,9 +521,6 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-  user_activity:
-    no_default:
-      others: "Žiadna aktivita"
   topic_flag_types:
     spam:
       title: "Spam"

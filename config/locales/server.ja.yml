@@ -831,19 +831,10 @@ ja:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
   user_activity:
-    no_default:
-      self: "まだアクティビティがありません。"
-      others: "アクティビティがありません。"
     no_bookmarks:
       self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
       search: "指定された検索クエリでブックマークは見つかりませんでした。"
       others: "ブックマークはありません。"
-    no_likes_given:
-      self: "「いいね！」した投稿はありません。"
-      others: "「いいね！」した投稿はありません。"
-    no_replies:
-      self: "まだ投稿に返信していません。"
-      others: "返信はありません。"
     no_drafts:
       self: "下書きはありません。トピックで返信の作成を始めると、新しい下書きとして自動保存されます。"
   email_settings:
@@ -3126,6 +3117,26 @@ ja:
     user_group_mentioned:
       title: "ユーザーグループがメンションしました"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

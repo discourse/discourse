@@ -162,6 +162,7 @@ zh_CN:
         cn_northwest_1: "中国（宁夏）"
         eu_central_1: "欧洲（法兰克福）"
         eu_north_1: "欧洲（斯德哥尔摩）"
+        eu_south_1: "欧盟(米兰)"
         eu_west_1: "欧洲（爱尔兰）"
         eu_west_2: "欧洲（伦敦）"
         eu_west_3: "欧洲（巴黎）"
@@ -960,6 +961,8 @@ zh_CN:
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
       no_notifications_page_title: "您还没有任何通知"
+      no_notifications_page_body: >
+        您将收到有关与您直接相关的活动的通知，其中包括对您的主题和帖子的回复、有人 <b>@提及</b> 您、引用您的帖子时，或者对您正在浏览的主题发出回复。当您有一段时间没有登录时，通知也会发送到您的邮箱。 <br><br> 寻找 %{icon} 来决定您希望通知哪些特定主题、类别和标签。有关更多信息，请参阅您的 <a href='%{preferencesUrl}'>通知选项</a>。
       first_notification: "您的第一个通知！选中它以开始。"
       dynamic_favicon: "在浏览器图标上显示数量"
       skip_new_user_tips:
@@ -1080,6 +1083,8 @@ zh_CN:
         failed_to_move: "无法移动所选消息（可能您的网络已掉线）"
         tags: "标签"
         warnings: "官方警告"
+        read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
+        read_more: "想阅读更多？ 浏览其他消息 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>。"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -1579,6 +1584,8 @@ zh_CN:
       description_time_MF: "有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。"
       enable: "总结此话题"
       disable: "显示所有帖子"
+      short_label: "总结"
+      short_title: "显示此主题的摘要：社区确定的最有趣的帖子"
     deleted_filter:
       enabled_description: "此话题包含已删除的帖子，它们已被隐藏。"
       disabled_description: "已显示话题中已删除的帖子。"
@@ -1688,18 +1695,23 @@ zh_CN:
       twitter:
         name: "Twitter"
         title: "通过 Twitter"
+        sr_title: "使用推特登录"
       instagram:
         name: "Instagram"
         title: "通过 Instagram"
+        sr_title: "使用 Instagram 登录"
       facebook:
         name: "Facebook"
         title: "通过 Facebook"
+        sr_title: "用脸书登入"
       github:
         name: "GitHub"
         title: "通过 GitHub"
+        sr_title: "使用 GitHub 登录"
       discord:
         name: "Discord"
         title: "通过 Discord"
+        sr_title: "使用 Discord 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
@@ -2033,7 +2045,7 @@ zh_CN:
       result_count:
         other: "<span>%{count}%{plus} 条与 </span>“<span class='term'>%{term}</span>”有关的结果"
       title: "搜索话题、帖子、用户或类别"
-      full_page_title: "搜索话题或帖子"
+      full_page_title: "搜索"
       no_results: "找不到结果。"
       no_more_results: "没有找到更多结果。"
       post_format: "#%{post_number}，来自 %{username}"
@@ -2045,6 +2057,10 @@ zh_CN:
       search_google: "尝试使用 Google 进行搜索："
       search_google_button: "Google"
       search_button: "搜索"
+      categories: "类别"
+      tags: "标签"
+      type:
+        users: "用户"
       context:
         user: "搜索 @%{username} 的帖子"
         category: "搜索 #%{category} 类别"
@@ -2052,7 +2068,6 @@ zh_CN:
         topic: "搜索此话题"
         private_messages: "搜索消息"
       advanced:
-        title: 高级搜索
         posted_by:
           label: 发帖人
         in_category:
@@ -2590,6 +2605,7 @@ zh_CN:
       deleted_by_author_simple: "（话题已被作者删除）"
     post:
       quote_reply: "引用"
+      quote_edit: "编辑"
       quote_share: "分享"
       edit_reason: "原因："
       post_number: "帖子 %{number}"
@@ -3376,6 +3392,21 @@ zh_CN:
       detailed_name: "%{level}：%{name}"
     pick_files_button:
       unsupported_file_picked: "您选择了不受支持的文件。支持的文件类型 – %{types}。"
+    user_activity:
+      no_activity_title: "尚无活动"
+      no_activity_body: "欢迎来到我们的社区！您是新来的，还没有参与讨论。作为第一步，请访问 <a href='%{topUrl}'>置顶内容</a> 或 <a href='%{categoriesUrl}'>类别</a> 并开始阅读！在您喜欢或想了解更多信息的帖子上选择 %{heartIcon} <a href='%{preferencesUrl}'>用户选项</a>添加图片和个人简介，以帮助其他人了解您。"
+      no_activity_others: "无活动。"
+      no_replies_title: "您还没有回复任何话题"
+      no_replies_others: "无回复。"
+      no_drafts_title: "您还没有写过任何草稿"
+      no_drafts_body: "还没准备好发布？每当您开始撰写主题、回复或个人消息时，我们都会自动保存新草稿并在此处列出。选择取消按钮放弃或保存您的草稿以供稍后继续。"
+      no_likes_title: "您还没有赞任何话题"
+      no_likes_body: "加入并开始贡献的一个好方法是阅读已有的对话，并在您喜欢的帖子上点击 %{heartIcon}"
+      no_likes_others: "没有赞过的帖子。"
+      no_topics_title: "您还没有开始任何话题"
+      no_read_topics_title: "您还没有阅读任何话题。"
+      no_read_topics_body: "开始阅读讨论后，您将在此处看到一个列表。要开始阅读，请在 <a href='%{topUrl}'>置顶</a> 或 <a href='%{categoriesUrl}'>类别</a> 或按关键字搜索 %{searchIcon}"
+    no_group_messages_title: "未找到群组消息"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4446,6 +4477,7 @@ zh_CN:
         logged_out: "用户已在所有设备上退出"
         revoke_admin: "撤消管理员权限"
         grant_admin: "授予管理员权限"
+        grant_admin_success: "新管理员已确认。"
         grant_admin_confirm: "我们已向您发送电子邮件以验证新管理员。请打开它并按照说明进行操作。"
         revoke_moderation: "撤消审核权限"
         grant_moderation: "授予审核权限"
@@ -4487,6 +4519,15 @@ zh_CN:
             title: "删除帖子的进度"
             description: "正在删除帖子…"
           confirmation:
+            title: "删除由 @%{username} 发出的所有帖子"
+            description: |
+              <p>您确定要删除由 @%{username} 撰写的 <b>%{post_count}</b> ？
+
+              <p><b>这是无法撤销的！</b></p>
+
+              <p>请输入： <code>%{text}</code></p>
+            text: "删除由 @%{username} 发出的帖子"
+            delete: "删除由 @%{username} 发出的帖子"
             cancel: "取消"
         merge:
           button: "合并"
@@ -4890,5 +4931,8 @@ zh_CN:
           moderator: "版主"
           regular: "普通用户"
       previews:
+        topic_title: "讨论话题标题"
         share_button: "分享"
         reply_button: "回复"
+        topic_preview: "话题预览"
+        homepage_preview: "首页预览"

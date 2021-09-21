@@ -185,6 +185,7 @@ sv:
         cn_northwest_1: "Kina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milano)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -274,6 +275,7 @@ sv:
       help:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet"
         edit_bookmark: "Klicka för att redigera bokmärket för detta ämne"
+        edit_bookmark_for_topic: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
@@ -1651,6 +1653,8 @@ sv:
       description_time_MF: "Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>."
       enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
+      short_label: "Sammanfatta"
+      short_title: "Visa en sammanfattning av detta ämne: de mest intressanta inläggen enligt forumet"
     deleted_filter:
       enabled_description: "Det här ämnet innehåller borttagna inlägg som har dolts."
       disabled_description: "Raderade inlägg i ämnet visas."
@@ -2131,7 +2135,7 @@ sv:
         one: "<span>%{count} resultat för</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
       title: "sök efter ämnen, inlägg, användare eller kategorier"
-      full_page_title: "sök ämnen eller inlägg"
+      full_page_title: "Sök"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
       post_format: "Nr %{post_number} av %{username}"
@@ -2143,6 +2147,13 @@ sv:
       search_google: "Försök söka med Google istället:"
       search_google_button: "Google"
       search_button: "Sök"
+      search_term_label: "ange sökord"
+      categories: "Kategorier"
+      tags: "Taggar"
+      type:
+        default: "Ämnen/inlägg"
+        users: "Användare"
+        categories_and_tags: "Kategorier/taggar"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -2150,7 +2161,7 @@ sv:
         topic: "Sök i det här ämnet"
         private_messages: "Sök meddelanden"
       advanced:
-        title: Avancerad sökning
+        title: Avancerade filter
         posted_by:
           label: Publicerat av
         in_category:
@@ -2203,6 +2214,8 @@ sv:
           placeholder: minst
         max_views:
           placeholder: maximalt
+        additional_options:
+          label: "Filtrera efter inläggsantal och ämnesvisningar"
     hamburger_menu: "gå till en annan ämneslista eller kategori"
     new_item: "ny"
     go_back: "gå tillbaka"
@@ -2714,6 +2727,7 @@ sv:
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
+      quote_edit: "Redigera"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -2895,7 +2909,9 @@ sv:
             button: "HTML"
       bookmarks:
         create: "Skapa bokmärke"
+        create_for_topic: "Skapa bokmärke för ämne"
         edit: "Redigera bokmärke"
+        edit_for_topic: "Redigera bokmärke för ämne"
         created: "Skapade"
         updated: "Uppdaterade"
         name: "Namn"
@@ -3542,6 +3558,21 @@ sv:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
+    user_activity:
+      no_activity_title: "Ingen aktivitet än"
+      no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit till diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. Om du inte redan har gjort det kan du underlätta för andra att lära känna dig genom att lägga till en bild och en biografi i dina <a href='%{preferencesUrl}'>användarinställningar</a>."
+      no_activity_others: "Ingen aktivitet."
+      no_replies_title: "Du har inte svarat på några ämnen än"
+      no_replies_others: "Inga svar."
+      no_drafts_title: "Du har inte startat några utkast"
+      no_drafts_body: "Inte riktigt redo att göra ett inlägg? Vi sparar automatiskt ett nytt utkast och visar det i listan här när du börjar skriva ett ämne, svar eller personligt meddelande. Välj avbryt-knappen för att ta bort eller spara ditt utkast för att fortsätta senare."
+      no_likes_title: "Du har inte gillat några ämnen än"
+      no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
+      no_likes_others: "Inga gillade inlägg."
+      no_topics_title: "Du har inte startat några ämnen än"
+      no_read_topics_title: "Du har inte läst några ämnen än"
+      no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
+    no_group_messages_title: "Inga gruppmeddelanden hittades"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

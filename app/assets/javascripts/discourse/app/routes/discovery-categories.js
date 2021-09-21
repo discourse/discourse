@@ -11,6 +11,8 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import getURL from "discourse-common/lib/get-url";
+import Session from "discourse/models/session";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
@@ -56,11 +58,42 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           Site.currentProp("top_tags", topicsList.topic_list.top_tags);
         }
 
+        let store = this.store;
+
         return EmberObject.create({
           categories: CategoryList.categoriesFrom(
             this.store,
             wrappedCategoriesList
           ),
+          loadBefore: function (topic_ids, storeInSession) {
+            // refresh dupes
+            this.topics.removeObjects(
+              this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
+            );
+
+            const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(
+              ","
+            )}`;
+
+            return ajax({ url, data: this.params }).then((result) => {
+              const topicIds = [];
+
+              this.topics.forEach((topic) => (topicIds[topic.id] = true));
+
+              let i = 0;
+              TopicList.topicsFrom(store, result).forEach((topic) => {
+                if (!topicIds[topic.id]) {
+                  topic.set("highlight", true);
+                  this.topics.insertAt(i, topic);
+                  i++;
+                }
+              });
+
+              if (storeInSession) {
+                Session.currentProp("topicList", this);
+              }
+            });
+          },
           topics: TopicList.topicsFrom(this.store, topicsList),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,

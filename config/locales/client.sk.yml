@@ -1364,19 +1364,23 @@ sk:
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
       title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
+      full_page_title: "Hľadať"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
       post_format: "#%{post_number} podľa %{username}"
       cant_find: "Nemôžete nájsť to čo hľadáte?"
       search_google_button: "Google"
       search_button: "Hľadať"
+      categories: "Kategórie"
+      tags: "Štítky"
+      type:
+        users: "Používatelia"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
         topic: "Hľadaj v tejto téme"
         private_messages: "Hľadaj správy"
       advanced:
-        title: Rozširené vyhľadávanie
         posted_by:
           label: Autor príspevku
         in_category:
@@ -1748,6 +1752,7 @@ sk:
           other: "Označili ste <b>%{count}</b> príspevkov"
     post:
       quote_reply: "Citácia"
+      quote_edit: "Upraviť"
       quote_share: "Zdieľaj"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
@@ -2276,6 +2281,8 @@ sk:
         member: "člen"
         regular: "bežný"
         leader: "vodca"
+    user_activity:
+      no_activity_others: "Žiadna aktivita"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

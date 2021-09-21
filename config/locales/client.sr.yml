@@ -1136,16 +1136,19 @@ sr:
       select_all: "Izaberi sve"
       too_short: "Vaš termin za pretragu je previše kratak."
       title: "pretražite teme, poruke, korisnike ili kategorije"
+      full_page_title: "Pretraži"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
       post_format: "#%{post_number} od %{username}"
       search_google_button: "Google"
       search_button: "Pretraži"
+      categories: "Kategorije"
+      type:
+        users: "Korisnici"
       context:
         user: "Pretražite poruke od @%{username}"
         topic: "Pretražite ovu temu"
       advanced:
-        title: Napredna pretraga
         posted_by:
           label: Postavio
         post:
@@ -1397,6 +1400,7 @@ sr:
           few: "Odabrali ste <b>%{count}</b> poruka."
           other: "Odabrali ste <b>%{count}</b> poruka."
     post:
+      quote_edit: "Izmeni"
       quote_share: "Podeli"
       edit_reason: "Razlog:"
       post_number: "poruka %{number}"

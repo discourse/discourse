@@ -614,18 +614,9 @@ el:
       description: "Μου αρέσει η ανάρτηση"
       short_description: "Μου αρέσει η ανάρτηση"
   user_activity:
-    no_default:
-      self: "Δεν έχετε ακόμη καμία δραστηριότητα."
-      others: "Χωρίς δραστηριότητα."
     no_bookmarks:
       self: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
       others: "Κανένας σελιδοδείκτης."
-    no_likes_given:
-      self: "Δεν σου αρέσει καμία ανάρτηση."
-      others: "Καμία αρεστή ανάρτηση."
-    no_replies:
-      self: "Δεν έχεις απαντήσει σε καμία ανάρτηση."
-      others: "Χωρίς απαντήσεις."
   topic_flag_types:
     spam:
       title: "Ανεπιθύμητα"
@@ -1973,6 +1964,28 @@ el:
     user_group_mentioned:
       title: "Αναφέρθηκε Ομάδα Χρηστών"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |2
 
         %{header_instructions}

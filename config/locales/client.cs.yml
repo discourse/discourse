@@ -1717,7 +1717,7 @@ cs:
         many: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
-      full_page_title: "vyhledávat témata nebo příspěvky"
+      full_page_title: "Vyhledat"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
       post_format: "#%{post_number} od %{username}"
@@ -1729,13 +1729,16 @@ cs:
       search_google: "Zkuste vyhledávat pomocí Google:"
       search_google_button: "Google"
       search_button: "Vyhledat"
+      categories: "Kategorie"
+      tags: "Štítky"
+      type:
+        users: "Uživatelé"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
       advanced:
-        title: Pokročilé hledání
         posted_by:
           label: Od uživatele
         in_category:
@@ -2174,6 +2177,7 @@ cs:
           other: "Máte označeno <b>%{count}</b> příspěvků."
     post:
       quote_reply: "Cituj"
+      quote_edit: "Upravit"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
@@ -2829,6 +2833,8 @@ cs:
         member: "člen"
         regular: "pravidelný uživatel"
         leader: "vůdce"
+    user_activity:
+      no_replies_others: "Žádné odpovědi."
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:

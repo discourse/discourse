@@ -639,18 +639,9 @@ hy:
       description: "Հավանել այս գրառումը"
       short_description: "Հավանել այս գրառումը"
   user_activity:
-    no_default:
-      self: "Դուք դեռևս ակտիվություն չունեք:"
-      others: "Ակտիվություն չկա:"
     no_bookmarks:
       self: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
       others: "Էջանշումներ չկան:"
-    no_likes_given:
-      self: "Դուք չեք հավանել որևէ գրառում:"
-      others: "Հավանած գրառումներ չկան:"
-    no_replies:
-      self: "Դուք չեք պատասխանել ոչ մի գրառման:"
-      others: "Պատասխան չկա:"
     no_drafts:
       self: "Դուք սևագրեր չունեք; սկսեք կզամել պատասխան ցանկացած թեմայում, և այն ավտոմատ կերպով կպահպանվի որպես նոր սևագիր:"
   topic_flag_types:
@@ -2348,6 +2339,26 @@ hy:
     user_group_mentioned:
       title: "Օգտատերերի Խումբը Նշել է "
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [Անձնական Նամակ] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [Անձնական Նամակ] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

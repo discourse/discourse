@@ -433,13 +433,8 @@ lt:
       description: "Mėgti šį įrašą"
       short_description: "Mėgti šį įrašą"
   user_activity:
-    no_default:
-      self: "Jūsų dar neturite jokios veklos"
-      others: "Jokios veiklos."
     no_bookmarks:
       others: "Nieko neišsaugota"
-    no_replies:
-      others: "Jokių atsakymų."
   topic_flag_types:
     spam:
       title: "Šlamštas"
@@ -821,6 +816,24 @@ lt:
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
       text_body_template: |
         %{header_instructions}
 

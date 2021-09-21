@@ -231,6 +231,7 @@ he:
         cn_northwest_1: "סין (נינגשיה)"
         eu_central_1: "האיחוד האירופי (פרנקפורט)"
         eu_north_1: "אירופה (שטוקהולם)"
+        eu_south_1: "אירופה (מילאנו)"
         eu_west_1: "אירופה (אירלנד)"
         eu_west_2: "אירופה (לונדון)"
         eu_west_3: "אירופה (פריז)"
@@ -1771,6 +1772,8 @@ he:
       description_time_MF: "יש {replyCount, plural, one {תגובה <b>אחת</b>} other {<b>#</b> תגובות}} עם זמן קריאה משוערך של <b>{readingTime, plural, one {דקה} other {# דקות}}</b>."
       enable: "סכם נושא זה"
       disable: "הצג את כל הפוסטים"
+      short_label: "סיכום"
+      short_title: "הצגת סיכום לנושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה"
     deleted_filter:
       enabled_description: "נושא זה מכיל פוסטים שנמחקו ולכן אינם מוצגים."
       disabled_description: "פוסטים שנמחקו בנושא זה מוצגים כעת."
@@ -2293,7 +2296,7 @@ he:
         many: "<span>%{count}%{plus} תוצאות עבור</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} תוצאות עבור </span><span class='term'>%{term}</span>"
       title: "חיפוש נושאים, פוסטים, משתמשים או קטגוריות"
-      full_page_title: "חפש נושאים או פוסטים"
+      full_page_title: "חיפוש"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
       post_format: "#%{post_number} מאת %{username}"
@@ -2305,6 +2308,13 @@ he:
       search_google: "נסה לחפש באמצעות גוגל במקום:"
       search_google_button: "גוגל"
       search_button: "חיפוש"
+      search_term_label: "נא למלא מילת מפתח לחיפוש"
+      categories: "קטגוריות"
+      tags: "תגיות"
+      type:
+        default: "נושאים/פוסטים"
+        users: "משתמשים"
+        categories_and_tags: "קטגוריה/תגיות"
       context:
         user: "חיפוש פוסטים לפי @%{username}"
         category: "חפשו את הקטגוריה #%{category}"
@@ -2312,7 +2322,7 @@ he:
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
       advanced:
-        title: חיפוש מתקדם
+        title: מסננים מתקדמים
         posted_by:
           label: פורסם על ידי
         in_category:
@@ -2365,6 +2375,8 @@ he:
           placeholder: מזערי
         max_views:
           placeholder: מרבי
+        additional_options:
+          label: "סינון לפי כמות פוסטים וצפיות בנושאים"
     hamburger_menu: "עיברו לרשימת נושאים אחרת או קטגוריה"
     new_item: "חדש"
     go_back: "חזור אחורה"
@@ -2912,6 +2924,7 @@ he:
       deleted_by_author_simple: "(הנושא נמחק על ידי הכותב)"
     post:
       quote_reply: "ציטוט"
+      quote_edit: "עריכה"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -3821,6 +3834,17 @@ he:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "בחרת קובץ שאינו נתמך. סוגי קבצים נתמכים - %{types}."
+    user_activity:
+      no_activity_title: "אין פעילות עדיין"
+      no_activity_others: "אין פעילות."
+      no_replies_title: "עדיין לא הגבת לאף נושא"
+      no_replies_others: "אין תגובות."
+      no_drafts_title: "לא התחלת טיוטות"
+      no_likes_title: "עדיין לא סימנת אף נושא בלייק"
+      no_likes_others: "אין פוסטים שנעשה להם לייק."
+      no_topics_title: "עדיין לא פתחת אף נושא"
+      no_read_topics_title: "טרם קראת נושאים"
+    no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4908,6 +4932,7 @@ he:
         logged_out: "המשתמש יצא מהחשבון בכל המכשירים"
         revoke_admin: "שלול ניהול ראשי"
         grant_admin: "הענקת ניהול"
+        grant_admin_success: "אושר מנהל חדש."
         grant_admin_confirm: "שלחנו אליך הודעה בדוא״ל כדי לאמת את חשבון הניהול החדש. נא לפתוח אותה ולעקוב אחר ההוראות."
         revoke_moderation: "שלילת פיקוח"
         grant_moderation: "הענקת פיקוח"

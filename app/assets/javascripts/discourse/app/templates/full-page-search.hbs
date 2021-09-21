@@ -1,7 +1,7 @@
 {{#d-section pageClass="search" class="search-container"}}
   {{scroll-tracker name="full-page-search" tag=searchTerm class="hidden"}}
 
-  <div class="search-header">
+  <div class="search-header" role="search">
     <h1 class="search-page-heading">
       {{#if hasResults}}
         <div class="result-count" id="search-result-count" aria-live="polite">
@@ -16,7 +16,7 @@
         value=searchTerm
         class="full-page-search search no-blur search-query"
         aria-label=(i18n "search.search_term_label")
-        enter=(action "search" true)
+        enter=(action "search" (hash collapseFilters=true))
         hasAutofocus=hasAutofocus
         aria-controls="search-result-count"
       }}
@@ -28,7 +28,7 @@
         onChange=(action (mut search_type))
       }}
       {{d-button
-        action=(action "search" true)
+        action=(action "search" (hash collapseFilters=true))
         icon="search"
         label="search.search_button"
         class="btn-primary search-cta"
@@ -50,6 +50,8 @@
         {{search-advanced-options
           searchTerm=(readonly searchTerm)
           onChangeSearchTerm=(action (mut searchTerm))
+          search=(action "search" (hash collapseFilters=true))
+          searchButtonDisabled=searchButtonDisabled
           expandFilters=expandFilters
         }}
       </div>
@@ -68,7 +70,7 @@
   <div class="search-advanced">
     {{#if hasResults}}
       {{#if usingDefaultSearchType}}
-        <div class={{searchInfoClassNames}}>
+        <div class={{searchInfoClassNames}} role="region" ariaLabel={{i18n "search.sort_or_bulk_actions"}}>
           {{#if canBulkSelect}}
             {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
             {{bulk-select-button selected=selected category=category action=(action "search")}}
@@ -89,6 +91,7 @@
               castInteger=true
               onChange=(action (mut sortOrder))
               id="search-sort-by"
+              ariaLabel="Some label"
             }}
           </div>
         </div>
@@ -100,7 +103,7 @@
     {{#if searching}}
       {{loading-spinner size="medium"}}
     {{else}}
-      <div class="search-results">
+      <div class="search-results" role="region">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
           {{#if usingDefaultSearchType}}
             {{search-result-entries

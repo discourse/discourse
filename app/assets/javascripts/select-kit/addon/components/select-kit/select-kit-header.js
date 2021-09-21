@@ -18,7 +18,7 @@ export default Component.extend(UtilsMixin, {
 
   selectKit: null,
 
-  role: "application",
+  role: "listbox",
 
   ariaLevel: 1,
 

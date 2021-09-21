@@ -835,19 +835,10 @@ ko:
     pm_title: "진행중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함 된 주제"
   user_activity:
-    no_default:
-      self: "아직 활동이 없습니다."
-      others: "활동 없음."
     no_bookmarks:
       self: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
       search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
       others: "북마크가 없습니다"
-    no_likes_given:
-      self: "좋아요한 게시글이 없습니다"
-      others: "좋아요를 받은 게시글이 없습니다"
-    no_replies:
-      self: "댓글을 작성한 게시물이 없습니다."
-      others: "답글이 없습니다."
     no_drafts:
       self: "임시 저장 글이 없습니다. 글에 대한 댓글 작성을 시작하면 새 초안으로 자동 저장됩니다."
   email_settings:
@@ -3170,6 +3161,28 @@ ko:
     user_group_mentioned:
       title: "언급 된 사용자 그룹"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |2
 
         %{header_instructions}

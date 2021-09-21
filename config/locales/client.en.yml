@@ -350,6 +350,10 @@ en:
         yes_value: "Discard"
         no_value: "Resume editing"
 
+    topic_count_categories:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
+
     topic_count_latest:
       one: "See %{count} new or updated topic"
       other: "See %{count} new or updated topics"
@@ -2335,6 +2339,7 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
@@ -2371,6 +2376,7 @@ en:
         title: Advanced filters
         posted_by:
           label: Posted by
+          aria_label: Filter by post author
         in_category:
           label: Categorized
         in_group:
@@ -2379,6 +2385,7 @@ en:
           label: With Badge
         with_tags:
           label: Tagged
+          aria_label: Filter using tags
         filters:
           label: Only return topics/posts...
           title: Matching in title only
@@ -2413,6 +2420,7 @@ en:
             placeholder: maximum
           time:
             label: Posted
+            aria_label: Filter by posted date
             before: before
             after: after
         views:
@@ -3044,6 +3052,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files:
           one: "Sorry, you can only upload %{count} file at a time."

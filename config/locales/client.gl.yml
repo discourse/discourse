@@ -2030,7 +2030,7 @@ gl:
         one: "<span>%{count} resultado de</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados de</span><span class='term'>%{term}</span>"
       title: "buscar temas, publicacións, usuarios ou categorías"
-      full_page_title: "buscar temas ou publicacións"
+      full_page_title: "Buscar"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
       post_format: "#%{post_number} de %{username}"
@@ -2042,6 +2042,10 @@ gl:
       search_google: "Probe a buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
+      categories: "Categorías"
+      tags: "Etiquetas"
+      type:
+        users: "Usuarios"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -2049,7 +2053,6 @@ gl:
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
       advanced:
-        title: Busca avanzada
         posted_by:
           label: Publicado por
         in_category:
@@ -2577,6 +2580,7 @@ gl:
           other: "Seleccionou <b>%{count}</b> publicacións."
     post:
       quote_reply: "Cita"
+      quote_edit: "Editar"
       quote_share: "Compartir"
       edit_reason: "Razón: "
       post_number: "publicación %{number}"
@@ -3371,6 +3375,10 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
+    user_activity:
+      no_activity_others: "Sen actividade."
+      no_replies_others: "Sen respostas."
+      no_likes_others: "Ningún Gústame en publicacións."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

@@ -555,14 +555,8 @@ sl:
     bookmark:
       title: "Zaznamek"
   user_activity:
-    no_default:
-      self: "Nimate nobene aktivnosti."
     no_bookmarks:
       self: "Nimate zaznamkov na prispevkih; dodajte zaznamek na prispevek, da jih lahko hitreje najdete."
-    no_likes_given:
-      self: "Niste všečkali noben prispevek."
-    no_replies:
-      self: "Nisi odgovoril na noben prispevek."
     no_drafts:
       self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
   topic_flag_types:
@@ -1487,6 +1481,26 @@ sl:
     user_group_mentioned:
       title: "Uporabnik je omenil skupino"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

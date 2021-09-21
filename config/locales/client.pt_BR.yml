@@ -2104,7 +2104,7 @@ pt_BR:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "pesquisar tópicos, postagens, usuários ou categorias"
-      full_page_title: "pesquisar tópicos ou postagens"
+      full_page_title: "Pesquisar"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
       post_format: "#%{post_number} por %{username}"
@@ -2116,6 +2116,10 @@ pt_BR:
       search_google: "Tente pesquisar com o Google:"
       search_google_button: "Google"
       search_button: "Pesquisar"
+      categories: "Categorias"
+      tags: "Etiquetas"
+      type:
+        users: "Usuários"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
@@ -2123,7 +2127,6 @@ pt_BR:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
-        title: Pesquisa avançada
         posted_by:
           label: Postado por
         in_category:
@@ -2683,6 +2686,7 @@ pt_BR:
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
     post:
       quote_reply: "Citação"
+      quote_edit: "Editar"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -3502,6 +3506,10 @@ pt_BR:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
+    user_activity:
+      no_activity_others: "Nenhuma atividade."
+      no_replies_others: "Sem respostas."
+      no_likes_others: "Nenhuma postagem curtida."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

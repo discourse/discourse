@@ -2,7 +2,7 @@ import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   _consoleDebug(msg) {
-    if (this.siteSettings?.enable_upload_debug_mode) {
+    if (this.siteSettings.enable_upload_debug_mode) {
       // eslint-disable-next-line no-console
       console.log(msg);
     }

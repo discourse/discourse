@@ -988,19 +988,10 @@ pl_PL:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
-    no_default:
-      self: "Nie masz jeszcze żadnej aktywności."
-      others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz żadnych wpisów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych wpisów."
       search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       others: "Brak zakładek."
-    no_likes_given:
-      self: "Nie masz polubionych wpisów."
-      others: "Brak polubionych wpisów."
-    no_replies:
-      self: "Nie odpowiedziałeś na żadne wpisy."
-      others: "Brak odpowiedzi."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
   email_settings:
@@ -3425,6 +3416,26 @@ pl_PL:
     user_group_mentioned:
       title: "Grupa Użytkowników Wspomniana"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

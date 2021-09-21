@@ -1873,7 +1873,7 @@ bs_BA:
         few: "<span>%{count}%{plus} resultata za</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "pretražite teme, objave, korisnike ili kategorije"
-      full_page_title: "pretraži teme ili objave"
+      full_page_title: "Pretraži"
       no_results: "Nema rezultata."
       no_more_results: "Nema rezultata pretrage."
       post_format: "#%{post_number} od %{username}"
@@ -1885,13 +1885,16 @@ bs_BA:
       search_google: "Probaj umjesto toga pretražiti pomoću Google-a:"
       search_google_button: "Google"
       search_button: "Pretraži"
+      categories: "Kategorije"
+      tags: "Tagovi"
+      type:
+        users: "Korisnici"
       context:
         user: "Traži postove od @%{username}"
         category: "Traži #%{category} kategoriju"
         topic: "Pretraži ovu temu"
         private_messages: "Pretraži poruke"
       advanced:
-        title: Napredno pretraživanje
         posted_by:
           label: Objavljeno od
         in_category:
@@ -2349,6 +2352,7 @@ bs_BA:
           other: "Označili ste <b>%{count}</b> objava."
     post:
       quote_reply: "Citiraj"
+      quote_edit: "Izmijeni"
       quote_share: "Dijeli"
       edit_reason: "Razlog: "
       post_number: "post %{number}"
@@ -3079,6 +3083,8 @@ bs_BA:
         member: "član"
         regular: "pokretač"
         leader: "vođa"
+    user_activity:
+      no_replies_others: "Nema odgovora."
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

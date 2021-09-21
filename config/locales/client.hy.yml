@@ -1715,7 +1715,7 @@ hy:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
       title: "որոնել թեմաներ, հաղորդագրություններ, օգտատերեր կամ կատեգորիաներ"
-      full_page_title: "որոնել թեմաներ կամ հաղորդագրություններ"
+      full_page_title: "Որոնում"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       post_format: "#%{post_number} %{username}-ի կողմից"
@@ -1727,6 +1727,10 @@ hy:
       search_google: "Փորձեք որոնել Google-ում:"
       search_google_button: "Google"
       search_button: "Որոնում"
+      categories: "Կատեգորիաներ"
+      tags: "Թեգեր"
+      type:
+        users: "Օգտատերեր"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"
@@ -1734,7 +1738,6 @@ hy:
         topic: "Որոնել այս թեմայում"
         private_messages: "Որոնել հաղորդագրություններում"
       advanced:
-        title: Ընդլայնված Որոնում
         posted_by:
           label: Հրապարակել է՝
         in_category:
@@ -2192,6 +2195,7 @@ hy:
           other: "Դուք ընտրել եք <b>%{count}</b> գրառում:"
     post:
       quote_reply: "Մեջբերել"
+      quote_edit: "Խմբագրել"
       quote_share: "Կիսվել"
       edit_reason: "Պատճառը՝ "
       post_number: "գրառում %{number}"
@@ -2885,6 +2889,10 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
+    user_activity:
+      no_activity_others: "Ակտիվություն չկա:"
+      no_replies_others: "Պատասխան չկա:"
+      no_likes_others: "Հավանած գրառումներ չկան:"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
