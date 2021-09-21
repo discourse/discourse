@@ -27,6 +27,9 @@
             everyTag=true
             unlimitedTagCount=true
             onChange=(action "onChangeSearchTermForTags")
+            options=(hash
+              headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
+            )
           }}
           {{#if showAllTagsCheckbox}}
             <section class="field">
@@ -124,6 +127,7 @@
           onChange=(action "onChangeSearchTermForStatus")
           options=(hash
             none="user.locale.any"
+            headerAriaLabel=(i18n "search.advanced.statuses.label")
             clearable=true
           )
         }}
@@ -136,13 +140,14 @@
       </label>
       <div class="controls">
         {{user-chooser
-        id="search-posted-by"
-        value=searchedTerms.username
-        onChange=(action "onChangeSearchTermForUsername")
-        options=(hash
-        maximum=1
-        excludeCurrentUser=false
-        )
+          id="search-posted-by"
+          value=searchedTerms.username
+          onChange=(action "onChangeSearchTermForUsername")
+          options=(hash
+            headerAriaLabel=(i18n "search.advanced.posted_by.aria_label")
+            maximum=1
+            excludeCurrentUser=false
+          )
         }}
       </div>
     </div>
@@ -156,6 +161,9 @@
           content=postTimeOptions
           value=searchedTerms.time.when
           onChange=(action "onChangeWhenTime")
+          options=(hash
+            headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
+          )
         }}
         {{date-input
           date=searchedTerms.time.days

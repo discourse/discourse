@@ -6,10 +6,12 @@ import { reads } from "@ember/object/computed";
 export default SelectKitHeaderComponent.extend({
   tagName: "summary",
   classNames: ["multi-select-header"],
+  attributeBindings: ["ariaLabel:aria-label"],
   layout,
 
   caretUpIcon: reads("selectKit.options.caretUpIcon"),
   caretDownIcon: reads("selectKit.options.caretDownIcon"),
+  ariaLabel: reads("selectKit.options.headerAriaLabel"),
   caretIcon: computed(
     "selectKit.isExpanded",
     "caretUpIcon",
