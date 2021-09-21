@@ -310,7 +310,13 @@ class PostsController < ApplicationController
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
-    destroyer = PostDestroyer.new(current_user, post, context: params[:context])
+    force_destroy = false
+    if params[:force_destroy].present?
+      guardian.ensure_can_permanently_delete!(post)
+      force_destroy = true
+    end
+
+    destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
     destroyer.destroy
 
     render body: nil

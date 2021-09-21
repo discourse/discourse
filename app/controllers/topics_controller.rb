@@ -602,8 +602,14 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_delete!(topic)
 
+    force_destroy = false
+    if params[:force_destroy].present?
+      guardian.ensure_can_permanently_delete!(topic)
+      force_destroy = true
+    end
+
     first_post = topic.ordered_posts.first
-    PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
+    PostDestroyer.new(current_user, first_post, context: params[:context], force_destroy: force_destroy).destroy
 
     render body: nil
   rescue Discourse::InvalidAccess

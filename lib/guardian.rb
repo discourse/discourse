@@ -172,6 +172,10 @@ class Guardian
     can_do?(:delete, obj)
   end
 
+  def can_permanently_delete?(obj)
+    can_do?(:permanently_delete, obj)
+  end
+
   def can_moderate?(obj)
     obj && authenticated? && !is_silenced? && (
       is_staff? ||

@@ -595,7 +595,7 @@ export default Controller.extend(bufferedProperty("model"), {
       post.get("post_number") === 1 ? this.recoverTopic() : post.recover();
     },
 
-    deletePost(post) {
+    deletePost(post, opts) {
       if (post.get("post_number") === 1) {
         return this.deleteTopic();
       } else if (!post.can_delete) {
@@ -611,7 +611,7 @@ export default Controller.extend(bufferedProperty("model"), {
         ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
           if (replies.length === 0) {
             return post
-              .destroy(user)
+              .destroy(user, opts)
               .then(refresh)
               .catch((error) => {
                 popupAjaxError(error);
@@ -630,7 +630,7 @@ export default Controller.extend(bufferedProperty("model"), {
             label: I18n.t("post.controls.delete_replies.just_the_post"),
             callback() {
               post
-                .destroy(user)
+                .destroy(user, opts)
                 .then(refresh)
                 .catch((error) => {
                   popupAjaxError(error);
@@ -685,13 +685,26 @@ export default Controller.extend(bufferedProperty("model"), {
         });
       } else {
         return post
-          .destroy(user)
+          .destroy(user, opts)
           .then(refresh)
           .catch((error) => {
             popupAjaxError(error);
             post.undoDeleteState();
           });
       }
+    },
+
+    permanentlyDeletePost(post) {
+      return bootbox.confirm(
+        I18n.t("post.controls.permanently_delete_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (result) => {
+          if (result) {
+            this.send("deletePost", post, { force_destroy: true });
+          }
+        }
+      );
     },
 
     editPost(post) {
