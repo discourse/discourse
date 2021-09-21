@@ -6,10 +6,9 @@ RSpec.describe UserBookmarkSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }
   let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, post: post) }
-  let(:bookmark_list) { BookmarkQuery.new(user: bookmark.user).list_all.to_ary }
 
   it "serializes all properties correctly" do
-    s = UserBookmarkSerializer.new(bookmark_list.last)
+    s = UserBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
 
     expect(s.id).to eq(bookmark.id)
     expect(s.created_at).to eq_time(bookmark.created_at)
@@ -33,24 +32,17 @@ RSpec.describe UserBookmarkSerializer do
     expect(s.post_user_avatar_template).not_to eq(nil)
   end
 
-  context "when the topic is deleted" do
-    before do
-      bookmark.topic.trash!
-      bookmark.reload
-    end
-    it "it has nothing to serialize" do
-      expect(bookmark_list).to eq([])
-    end
-  end
+  it "uses the correct highest_post_number column based on whether the user is staff" do
+    Fabricate(:post, topic: bookmark.topic)
+    Fabricate(:post, topic: bookmark.topic)
+    Fabricate(:whisper, topic: bookmark.topic)
+    bookmark.reload
+    serializer = UserBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
 
-  context "when the post is deleted" do
-    before do
-      bookmark.post.trash!
-      bookmark.reload
-    end
-    it "it has nothing to serialize" do
-      expect(bookmark_list).to eq([])
-    end
-  end
+    expect(serializer.highest_post_number).to eq(3)
 
+    user.update!(admin: true)
+
+    expect(serializer.highest_post_number).to eq(4)
+  end
 end

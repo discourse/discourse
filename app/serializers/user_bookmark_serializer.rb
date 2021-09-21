@@ -24,6 +24,7 @@ class UserBookmarkSerializer < ApplicationSerializer
              :archived,
              :archetype,
              :highest_post_number,
+             :last_read_post_number,
              :bumped_at,
              :slug,
              :post_user_username,
@@ -88,7 +89,15 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def highest_post_number
-    topic.highest_post_number
+    scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
+  end
+
+  def last_read_post_number
+    topic_user&.last_read_post_number
+  end
+
+  def topic_user
+    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
   end
 
   def bumped_at
