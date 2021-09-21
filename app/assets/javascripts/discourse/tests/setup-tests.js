@@ -81,13 +81,49 @@ function createApplication(config, settings) {
   return app;
 }
 
+function setupToolbar() {
+  // Most default toolbar items aren't useful for Discourse
+  QUnit.config.urlConfig = QUnit.config.urlConfig.reject((c) =>
+    [
+      "noglobals",
+      "notrycatch",
+      "nolint",
+      "devmode",
+      "dockcontainer",
+      "nocontainer",
+    ].includes(c.id)
+  );
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_skip_core",
+    label: "Skip Core",
+    value: "1",
+  });
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_skip_plugins",
+    label: "Skip Plugins",
+    value: "1",
+  });
+
+  const pluginNames = new Set();
+
+  Object.keys(requirejs.entries).forEach((moduleName) => {
+    const found = moduleName.match(/\/plugins\/([\w-]+)\//);
+    if (found && moduleName.match(/\-test/)) {
+      pluginNames.add(found[1]);
+    }
+  });
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_single_plugin",
+    label: "Plugin",
+    value: Array.from(pluginNames),
+  });
+}
+
 function setupTestsCommon(application, container, config) {
   QUnit.config.hidepassed = true;
-
-  // Let's customize QUnit options a bit
-  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
-    (c) => ["dockcontainer", "nocontainer"].indexOf(c.id) === -1
-  );
 
   application.rootElement = "#ember-testing";
   application.setupForTesting();
@@ -315,6 +351,7 @@ function setupTestsCommon(application, container, config) {
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
 
+  setupToolbar();
   setApplication(application);
   setDefaultOwner(application.__container__);
   resetSite();
@@ -347,5 +384,17 @@ function replaceUrlParameter(name, value) {
   } else {
     queryParams.set(name, value);
   }
-  window.location = "?" + queryParams.toString();
+  history.replaceState(null, null, "?" + queryParams.toString());
+
+  QUnit.begin(() => {
+    QUnit.config[name] = value;
+    const formElement = document.querySelector(
+      `#qunit-testrunner-toolbar [name=${name}]`
+    );
+    if (formElement?.type === "checkbox") {
+      formElement.checked = !!value;
+    } else if (formElement) {
+      formElement.value = value;
+    }
+  });
 }
