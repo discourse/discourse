@@ -44,9 +44,11 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   itemHtml(bookmark) {
     // for topic level bookmarks we want to jump to the last unread post
     // instead of the OP
-    let postNumber = bookmark.linked_post_number;
+    let postNumber;
     if (bookmark.for_topic) {
       postNumber = bookmark.last_read_post_number + 1;
+    } else {
+      postNumber = bookmark.linked_post_number;
     }
 
     return this.attach("quick-access-item", {
