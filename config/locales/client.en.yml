@@ -350,6 +350,10 @@ en:
         yes_value: "Discard"
         no_value: "Resume editing"
 
+    topic_count_categories:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
+
     topic_count_latest:
       one: "See %{count} new or updated topic"
       other: "See %{count} new or updated topics"
