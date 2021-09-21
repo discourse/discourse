@@ -17,6 +17,7 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import showModal from "discourse/lib/show-modal";
 import userSearch from "discourse/lib/user-search";
 
 const SortOrders = [
@@ -409,6 +410,17 @@ export default Controller.extend({
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
       this.selected.clear();
+    },
+
+    showBulkActions() {
+      const modalController = showModal("topic-bulk-actions", {
+        model: {
+          topics: this.selected,
+        },
+        title: "topics.bulk.actions",
+      });
+
+      modalController.set("refreshClosure", () => this._search());
     },
 
     search(options = {}) {
