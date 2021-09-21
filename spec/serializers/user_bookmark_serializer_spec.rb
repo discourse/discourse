@@ -30,6 +30,7 @@ RSpec.describe UserBookmarkSerializer do
     expect(s.post_user_username).to eq(bookmark.post.user.username)
     expect(s.post_user_name).to eq(bookmark.post.user.name)
     expect(s.post_user_avatar_template).not_to eq(nil)
+    expect(s.excerpt).to eq(PrettyText.excerpt(post.cooked, 300, keep_emoji_images: true))
   end
 
   it "uses the correct highest_post_number column based on whether the user is staff" do
@@ -44,5 +45,15 @@ RSpec.describe UserBookmarkSerializer do
     user.update!(admin: true)
 
     expect(serializer.highest_post_number).to eq(4)
+  end
+
+  it "uses the last_read_post_number + 1 for the for_topic bookmarks excerpt" do
+    bookmark.update(for_topic: true)
+    next_unread_post = Fabricate(:post_with_long_raw_content, topic: bookmark.topic)
+    Fabricate(:post_with_external_links, topic: bookmark.topic)
+    bookmark.reload
+    TopicUser.change(user.id, bookmark.topic.id, { last_read_post_number: post.post_number })
+    serializer = UserBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
+    expect(serializer.excerpt).to eq(PrettyText.excerpt(next_unread_post.cooked, 300, keep_emoji_images: true))
   end
 end

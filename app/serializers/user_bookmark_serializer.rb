@@ -109,7 +109,13 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def cooked
-    post.cooked
+    @cooked ||= \
+      if object.for_topic && last_read_post_number.present?
+        post_number = [last_read_post_number + 1, highest_post_number].min
+        Post.where(post_number: post_number, topic: topic).pluck_first(:cooked)
+      else
+        post.cooked
+      end
   end
 
   def slug
