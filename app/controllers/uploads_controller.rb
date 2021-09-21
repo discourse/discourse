@@ -219,7 +219,7 @@ class UploadsController < ApplicationController
 
     if file_size_too_big?(file_name, file_size)
       return render_json_error(
-        I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb),
+        I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
         status: 422
       )
     end
@@ -296,7 +296,7 @@ class UploadsController < ApplicationController
 
     if file_size_too_big?(file_name, file_size)
       return render_json_error(
-        I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb),
+        I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
         status: 422
       )
     end

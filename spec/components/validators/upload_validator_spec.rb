@@ -31,6 +31,21 @@ describe UploadValidator do
       expect(UploadCreator.new(csv_file, "#{filename}.zip", for_export: true).create_for(user.id)).to be_valid
     end
 
+    describe "size validation" do
+      it "does not allow images that are too large" do
+        SiteSetting.max_image_size_kb = 1536
+        upload = Fabricate.build(:upload,
+          user: Fabricate(:admin),
+          original_filename: "test.png",
+          filesize: 2097152
+        )
+        subject.validate(upload)
+        expect(upload.errors.full_messages.first).to eq(
+          "Filesize #{I18n.t("upload.images.too_large_humanized", max_size: "1.5 MB")}"
+        )
+      end
+    end
+
     describe 'when allow_staff_to_upload_any_file_in_pm is true' do
       it 'should allow uploads for pm' do
         upload = Fabricate.build(:upload,
