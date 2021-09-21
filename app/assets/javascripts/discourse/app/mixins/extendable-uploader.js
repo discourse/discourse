@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import UploadDebugging from "discourse/mixins/upload-debugging";
 
 /**
  * Use this mixin with any component that needs to upload files or images
@@ -39,7 +40,7 @@ import Mixin from "@ember/object/mixin";
  *
  * See ComposerUploadUppy for an example of a component using this mixin.
  */
-export default Mixin.create({
+export default Mixin.create(UploadDebugging, {
   _useUploadPlugin(pluginClass, opts = {}) {
     if (!this._uppyInstance) {
       return;
@@ -170,13 +171,6 @@ export default Mixin.create({
       } else {
         callback(false);
       }
-    }
-  },
-
-  _consoleDebug(msg) {
-    if (this.siteSettings.enable_upload_debug_mode) {
-      // eslint-disable-next-line no-console
-      console.log(msg);
     }
   },
 });

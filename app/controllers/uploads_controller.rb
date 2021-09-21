@@ -264,21 +264,30 @@ class UploadsController < ApplicationController
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
       rescue ExternalUploadManager::SizeMismatchError => err
-        debug_upload_error(err, "upload.size_mismatch_failure", additional_detail: err.message)
-        render_json_error(I18n.t("upload.failed"), status: 422)
+        render_json_error(
+          debug_upload_error(err, "upload.size_mismatch_failure", additional_detail: err.message),
+          status: 422
+        )
       rescue ExternalUploadManager::ChecksumMismatchError => err
-        debug_upload_error(err, "upload.checksum_mismatch_failure")
-        render_json_error(I18n.t("upload.failed"), status: 422)
+        render_json_error(
+          debug_upload_error(err, "upload.checksum_mismatch_failure", additional_detail: err.message),
+          status: 422
+        )
       rescue ExternalUploadManager::CannotPromoteError => err
-        debug_upload_error(err, "upload.cannot_promote_failure")
-        render_json_error(I18n.t("upload.failed"), status: 422)
+        render_json_error(
+          debug_upload_error(err, "upload.cannot_promote_failure", additional_detail: err.message),
+          status: 422
+        )
       rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
-        debug_upload_error(err, "upload.download_failure")
-        render_json_error(I18n.t("upload.failed"), status: 422)
+        render_json_error(
+          debug_upload_error(err, "upload.download_failure", additional_detail: err.message),
+          status: 422
+        )
       rescue => err
         Discourse.warn_exception(
           err, message: "Complete external upload failed unexpectedly for user #{current_user.id}"
         )
+
         render_json_error(I18n.t("upload.failed"), status: 422)
       end
     end
@@ -308,8 +317,10 @@ class UploadsController < ApplicationController
         file_name, content_type, metadata: metadata
       )
     rescue Aws::S3::Errors::ServiceError => err
-      debug_upload_error(err, "upload.create_mutlipart_failure")
-      return render_json_error(I18n.t("upload.failed"), status: 422)
+      return render_json_error(
+        debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
+        status: 422
+      )
     end
 
     upload_stub = ExternalUploadStub.create!(
@@ -403,8 +414,10 @@ class UploadsController < ApplicationController
         key: external_upload_stub.key
       )
     rescue Aws::S3::Errors::ServiceError => err
-      debug_upload_error(err, "upload.abort_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}")
-      return render_json_error(I18n.t("upload.failed"), status: 422)
+      return render_json_error(
+        debug_upload_error(err, "upload.abort_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
+        status: 422
+      )
     end
 
     external_upload_stub.destroy!
@@ -452,8 +465,10 @@ class UploadsController < ApplicationController
         parts: parts
       )
     rescue Aws::S3::Errors::ServiceError => err
-      debug_upload_error(err, "upload.complete_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}")
-      return render_json_error(I18n.t("upload.failed"), status: 422)
+      return render_json_error(
+        debug_upload_error(err, "upload.complete_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
+        status: 422
+      )
     end
 
     complete_external_upload_via_manager(external_upload_stub)
@@ -567,7 +582,9 @@ class UploadsController < ApplicationController
 
   def debug_upload_error(err, translation_key, translation_params = {})
     return if !SiteSetting.enable_upload_debug_mode
-    Discourse.warn_exception(err, message: I18n.t(translation_key, translation_params))
+    message = I18n.t(translation_key, translation_params)
+    Discourse.warn_exception(err, message: message)
+    Rails.env.development? ? message : I18n.t("upload.failed")
   end
 
   # don't want people posting arbitrary S3 metadata so we just take the
