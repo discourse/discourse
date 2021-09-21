@@ -228,4 +228,17 @@
       </div>
     </div>
   </details>
+
+  {{#if site.mobileView}}
+    <div class="second-search-button">
+      {{d-button
+        action=search
+        icon="search"
+        label="search.search_button"
+        class="btn-primary search-cta"
+        ariaLabel="search.search_button"
+        disabled=searchButtonDisabled
+      }}
+    </div>
+  {{/if}}
 </div>

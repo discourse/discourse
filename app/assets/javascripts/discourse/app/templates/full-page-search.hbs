@@ -16,7 +16,7 @@
         value=searchTerm
         class="full-page-search search no-blur search-query"
         aria-label=(i18n "search.search_term_label")
-        enter=(action "search" true)
+        enter=(action "search" (hash collapseFilters=true))
         hasAutofocus=hasAutofocus
         aria-controls="search-result-count"
       }}
@@ -28,7 +28,7 @@
         onChange=(action (mut search_type))
       }}
       {{d-button
-        action=(action "search" true)
+        action=(action "search" (hash collapseFilters=true))
         icon="search"
         label="search.search_button"
         class="btn-primary search-cta"
@@ -50,6 +50,8 @@
         {{search-advanced-options
           searchTerm=(readonly searchTerm)
           onChangeSearchTerm=(action (mut searchTerm))
+          search=(action "search" (hash collapseFilters=true))
+          searchButtonDisabled=searchButtonDisabled
           expandFilters=expandFilters
         }}
       </div>
