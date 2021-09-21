@@ -2335,6 +2335,7 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
@@ -2371,6 +2372,7 @@ en:
         title: Advanced filters
         posted_by:
           label: Posted by
+          aria_label: Filter by post author
         in_category:
           label: Categorized
         in_group:
@@ -2379,6 +2381,7 @@ en:
           label: With Badge
         with_tags:
           label: Tagged
+          aria_label: Filter using tags
         filters:
           label: Only return topics/posts...
           title: Matching in title only
@@ -2413,6 +2416,7 @@ en:
             placeholder: maximum
           time:
             label: Posted
+            aria_label: Filter by posted date
             before: before
             after: after
         views:
