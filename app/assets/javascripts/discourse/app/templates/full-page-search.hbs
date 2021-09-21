@@ -50,6 +50,8 @@
         {{search-advanced-options
           searchTerm=(readonly searchTerm)
           onChangeSearchTerm=(action (mut searchTerm))
+          search=(action "search" true)
+          searchButtonDisabled=searchButtonDisabled
           expandFilters=expandFilters
         }}
       </div>
