@@ -1,4 +1,4 @@
-name: (experimental) Ember CLI tests with official plugins
+name: (experimental) Ember CLI tests (plugins)
 
 on:
   schedule:
@@ -43,7 +43,7 @@ jobs:
           bundle clean
           bundle exec rake plugin:install_all_official
 
-      - name: Core QUnit
+      - name: QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H rake qunit:test LOAD_PLUGINS=1
+        run: QUNIT_EMBER_CLI=1 sudo -E -u discourse -H rake plugin:qunit
         timeout-minutes: 60
