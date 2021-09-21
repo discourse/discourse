@@ -8,7 +8,7 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
   tagName: "summary",
   layout,
   classNames: ["single-select-header"],
-  attributeBindings: ["name"],
+  attributeBindings: ["name", "name:aria-label"],
 
   focusIn(event) {
     event.stopImmediatePropagation();
