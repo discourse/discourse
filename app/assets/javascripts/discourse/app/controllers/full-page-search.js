@@ -411,8 +411,8 @@ export default Controller.extend({
       this.selected.clear();
     },
 
-    search(collapseFilters = false) {
-      if (collapseFilters) {
+    search(options = {}) {
+      if (options.collapseFilters) {
         document
           .querySelector("details.advanced-filters")
           ?.removeAttribute("open");
