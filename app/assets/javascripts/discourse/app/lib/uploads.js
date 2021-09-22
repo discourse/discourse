@@ -330,7 +330,7 @@ function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
       const max_size_kb = siteSettings[`max_${type}_size_kb`];
       bootbox.alert(
         I18n.t("post.errors.file_too_large_humanized", {
-          max_size: formatBytes(max_size_kb * 1024),
+          max_size: I18n.toHumanSize(max_size_kb * 1024),
         })
       );
       return true;
@@ -357,19 +357,4 @@ export function bindFileInputChangeListener(element, fileCallbackFn) {
   }
   element.addEventListener("change", changeListener);
   return changeListener;
-}
-
-export function formatBytes(bytes, decimals) {
-  if (bytes === 0) {
-    return "0 Bytes";
-  }
-  const kilobyte = 1024,
-    dm = decimals || 2,
-    sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-    incr = Math.floor(Math.log(bytes) / Math.log(kilobyte));
-  return (
-    parseFloat((bytes / Math.pow(kilobyte, incr)).toFixed(dm)) +
-    " " +
-    sizes[incr]
-  );
 }
