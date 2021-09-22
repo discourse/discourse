@@ -18,4 +18,10 @@ export default DiscourseRoute.extend({
       this.transitionTo("group.members", group);
     }
   },
+
+  actions: {
+    refresh() {
+      this.refresh();
+    },
+  },
 });
