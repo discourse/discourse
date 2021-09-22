@@ -1,4 +1,4 @@
-import { alias, reads } from "@ember/object/computed";
+import { alias, and, reads } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
@@ -13,6 +13,7 @@ export default Component.extend(LoadMore, {
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  canDoBulkActions: and("currentUser.staff", "selected.length"),
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
@@ -39,11 +40,6 @@ export default Component.extend(LoadMore, {
   @discourseComputed("order")
   showLikes(order) {
     return order === "likes";
-  },
-
-  @discourseComputed("selected")
-  canDoBulkActions(selected) {
-    return this.currentUser?.staff && selected;
   },
 
   @discourseComputed("order")
