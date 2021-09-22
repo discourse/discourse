@@ -1011,7 +1011,7 @@ posting:
     default: false
     client: true
   enable_fast_edit:
-    default: false
+    default: true
     client: true
   old_post_notice_days:
     default: 14
