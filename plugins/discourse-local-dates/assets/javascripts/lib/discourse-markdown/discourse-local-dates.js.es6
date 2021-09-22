@@ -140,7 +140,20 @@ function closeBuffer(buffer, state, text) {
 }
 
 export function setup(helper) {
-  helper.allowList(["span.discourse-local-date", "span[aria-label]"]);
+  helper.allowList([
+    "span.discourse-local-date",
+    "span[aria-label]",
+    "span[data-date]",
+    "span[data-time]",
+    "span[data-format]",
+    "span[data-countdown]",
+    "span[data-calendar]",
+    "span[data-displayed-timezone]",
+    "span[data-timezone]",
+    "span[data-timezones]",
+    "span[data-recurring]",
+    "span[data-email-preview]",
+  ]);
 
   helper.registerOptions((opts, siteSettings) => {
     opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
