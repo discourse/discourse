@@ -212,7 +212,7 @@ module PostGuardian
     return false if !is_admin? || !can_see_post?(post)
     return false if !post.deleted_at
 
-    post.deleted_by_id != @user.id || post.deleted_at < 3.minute.ago
+    post.deleted_by_id != @user.id || post.deleted_at < 5.minute.ago
   end
 
   def can_recover_post?(post)

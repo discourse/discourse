@@ -160,7 +160,7 @@ module TopicGuardian
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
 
-    topic.deleted_by_id != @user.id || topic.deleted_at < 3.minute.ago
+    topic.deleted_by_id != @user.id || topic.deleted_at < 5.minute.ago
   end
 
   def can_toggle_topic_visibility?(topic)
