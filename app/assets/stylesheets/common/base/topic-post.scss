@@ -384,6 +384,10 @@ aside.quote {
     display: flex;
   }
 
+  &.fast-editing {
+    opacity: 1;
+  }
+
   .buttons {
     display: flex;
   }
@@ -396,7 +400,8 @@ aside.quote {
 
   .fast-edit-container {
     display: flex;
-    padding: 0.25em;
+    padding: 0.5em;
+    padding-top: 0;
     flex-direction: column;
     align-items: flex-start;
 
@@ -407,7 +412,7 @@ aside.quote {
     }
 
     .save-fast-edit {
-      margin-top: 0.25em;
+      margin-top: 0.5em;
     }
   }
 

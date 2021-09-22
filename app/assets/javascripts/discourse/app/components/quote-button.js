@@ -43,7 +43,7 @@ function regexSafeStr(str) {
 
 export default Component.extend({
   classNames: ["quote-button"],
-  classNameBindings: ["visible"],
+  classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
   visible: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
@@ -215,15 +215,11 @@ export default Component.extend({
 
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
-
       if (showAtEnd) {
-        const nearRightEdgeOfScreen =
-          $(window).width() - $quoteButton.outerWidth() < left + 10;
-
-        top = nearRightEdgeOfScreen ? top + 50 : top + 20;
+        top = top + 25;
         left = Math.min(
           left + 10,
-          $(window).width() - $quoteButton.outerWidth() - 10
+          window.innerWidth - this.element.clientWidth - 10
         );
       } else {
         top = top - $quoteButton.outerHeight() - 5;
@@ -346,6 +342,11 @@ export default Component.extend({
       this.toggleProperty("_displayFastEditInput");
 
       schedule("afterRender", () => {
+        if (this.site.mobileView) {
+          this.element.style.left = `${
+            (window.innerWidth - this.element.clientWidth) / 2
+          }px`;
+        }
         document.querySelector("#fast-edit-input")?.focus();
       });
     } else {
