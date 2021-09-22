@@ -303,17 +303,18 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    guardian.ensure_can_delete!(post)
-
-    unless guardian.can_moderate_topic?(post.topic)
-      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
-      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
-    end
 
     force_destroy = false
     if params[:force_destroy].present?
       guardian.ensure_can_permanently_delete!(post)
       force_destroy = true
+    else
+      guardian.ensure_can_delete!(post)
+    end
+
+    unless guardian.can_moderate_topic?(post.topic)
+      RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
+      RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
     destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
