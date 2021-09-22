@@ -1,4 +1,7 @@
 (function () {
+  if (window.unsupportedBrowser) {
+    throw "Unsupported browser detected";
+  }
   // TODO: These are needed to load plugins because @ember has its own loader.
   // We should find a nicer way to do this.
   const EMBER_MODULES = {
