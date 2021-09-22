@@ -20,15 +20,6 @@ acceptance("Search - Full Page", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
-    server.get("/tags/filter/search", () => {
-      return helper.response({
-        results: [
-          { text: "monkey", count: 1 },
-          { text: "gazelle", count: 2 },
-        ],
-      });
-    });
-
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -530,7 +521,7 @@ acceptance("Search - Full Page", function (needs) {
   test("search for categories/tags", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "monk");
+    await fillIn(".search-query", "none");
     const typeSelector = selectKit(".search-bar .select-kit#search-type");
 
     assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
@@ -549,7 +540,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-filters"),
       "returning to topic/posts shows filters"
     );
-    assert.ok(!exists(".user-item"), "has no user results");
+    assert.ok(!exists(".fps-tag-item"), "has no tag results");
   });
 
   test("filters expand/collapse as expected", async function (assert) {

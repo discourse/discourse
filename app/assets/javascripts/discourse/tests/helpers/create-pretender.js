@@ -134,7 +134,12 @@ export function applyDefaultHandlers(pretender) {
   pretender.delete("/bookmarks/:id", () => response({}));
 
   pretender.get("/tags/filter/search", () => {
-    return response({ results: [{ text: "monkey", count: 1 }] });
+    return response({
+      results: [
+        { text: "monkey", count: 1 },
+        { text: "gazelle", count: 2 },
+      ],
+    });
   });
 
   pretender.get(`/u/:username/emails.json`, (request) => {

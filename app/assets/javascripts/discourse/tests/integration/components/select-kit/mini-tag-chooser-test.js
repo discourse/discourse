@@ -42,9 +42,15 @@ discourseModule(
 
         await this.subject.expand();
         await this.subject.fillInFilter("mon");
-        assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
+        assert.equal(
+          queryAll(".select-kit-row").text().trim(),
+          "monkey x1\ngazelle x2"
+        );
         await this.subject.fillInFilter("key");
-        assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
+        assert.equal(
+          queryAll(".select-kit-row").text().trim(),
+          "monkey x1\ngazelle x2"
+        );
         await this.subject.selectRowByValue("monkey");
 
         assert.equal(this.subject.header().value(), "foo,bar,monkey");
