@@ -10,7 +10,7 @@ class GroupUserSerializer < BasicUserSerializer
              :added_at,
              :timezone
 
-  def include_added_at
+  def include_added_at?
     object.respond_to? :added_at
   end
 
