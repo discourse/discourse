@@ -206,6 +206,7 @@ module PostGuardian
   end
 
   def can_permanently_delete_post?(post)
+    return false if !SiteSetting.can_permanently_delete
     return false if !post
     return false if post.is_first_post?
     return false if !is_admin? || !can_see_post?(post)

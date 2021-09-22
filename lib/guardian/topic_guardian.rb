@@ -154,6 +154,7 @@ module TopicGuardian
   end
 
   def can_permanently_delete_topic?(topic)
+    return false if !SiteSetting.can_permanently_delete
     return false if !topic
     return false if topic.posts_count > 1
     return false if !is_admin? || !can_see_topic?(topic)
