@@ -2206,7 +2206,7 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
-    enable_fast_edit: "Experimental feature which enables small selection of a post text to be edited inline."
+    enable_fast_edit: "Enables small selection of a post text to be edited inline."
 
     old_post_notice_days: "Days before post notice becomes old"
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
