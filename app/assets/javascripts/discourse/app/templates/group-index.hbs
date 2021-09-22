@@ -32,7 +32,7 @@
 
   {{#if hasMembers}}
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
-      <table class="group-members">
+      <table class={{if isBulk "group-members sticky-header" "group-members"}}>
         <thead>
           <tr>
             <th class="bulk-select">
@@ -41,7 +41,7 @@
               {{/if}}
             </th>
             {{#if isBulk}}
-              <th class="bulk-select-buttons">
+              <th class="bulk-select-buttons" >
                 <span class="bulk-select-buttons-wrap">
                   {{#if bulkSelection}}
                     {{group-member-dropdown

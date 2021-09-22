@@ -10,6 +10,7 @@ import showModal from "discourse/lib/show-modal";
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
+  classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
 

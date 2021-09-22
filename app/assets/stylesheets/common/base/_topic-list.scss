@@ -169,16 +169,17 @@
   }
 }
 
+.sticky-header thead {
+  @include sticky;
+  // TODO: Use calculated header height
+  top: 60px;
+  background: var(--secondary);
+  z-index: 2;
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
-
-  thead {
-    @include sticky;
-    top: 60px;
-    background: var(--secondary);
-    z-index: 2;
-  }
 
   > tbody > tr {
     &.has-excerpt .star {
