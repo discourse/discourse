@@ -87,14 +87,9 @@ function initializeDiscourseLocalDates(api) {
       pluginId: "discourse-local-dates",
       actions: {
         insertDiscourseLocalDate() {
-          const chatComposer = this;
+          const insertDate = this.addText.bind(this);
           showModal("discourse-local-dates-create-modal").setProperties({
-            insertDate: (text) => {
-              const selected = chatComposer._getSelected(null, {
-                lineVal: true,
-              });
-              chatComposer._addText(selected, text);
-            },
+            insertDate,
           });
         },
       },
