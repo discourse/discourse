@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import { ajax } from "discourse/lib/ajax";
+import { queryParams } from "discourse/lib/url";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -224,8 +225,8 @@ export default Mixin.create({
     return (
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
-      (this.messageBus && this.messageBus.clientId) +
-      this.uploadUrlParams
+      this.messageBus?.clientId +
+      this._additionalQueryParams()
     );
   },
 
@@ -247,6 +248,14 @@ export default Mixin.create({
         }
       }
     );
+  },
+
+  _additionalQueryParams() {
+    if (!this.queryParams) {
+      return "";
+    }
+
+    return queryParams(this.queryParams);
   },
 
   _completeExternalUpload(file) {
