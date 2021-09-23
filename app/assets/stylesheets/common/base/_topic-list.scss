@@ -171,8 +171,7 @@
 
 .sticky-header thead {
   @include sticky;
-  // TODO: Use calculated header height
-  top: 60px;
+  top: var(--header-offset, 60px);
   background: var(--secondary);
   z-index: 2;
 }
