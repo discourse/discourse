@@ -32,6 +32,14 @@ describe WatchedWord do
       }.to_not change { Post.count }
     end
 
+    it "escapes the blocked word in error message" do
+      block_word = Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "<a>")
+      manager = NewPostManager.new(tl2_user, raw: "Want some #{block_word.word} for cheap?", topic_id: topic.id)
+      result = manager.perform
+      expect(result).to_not be_success
+      expect(result.errors[:base]&.first).to eq(I18n.t('contains_blocked_word', word: "&lt;a&gt;"))
+    end
+
     it "should prevent the post from being created" do
       manager = NewPostManager.new(tl2_user, raw: "Want some #{block_word.word} for cheap?", topic_id: topic.id)
       should_block_post(manager)
