@@ -2416,8 +2416,10 @@ en:
             label: Posts
           min:
             placeholder: minimum
+            aria_label: filter by minimum number of posts
           max:
             placeholder: maximum
+            aria_label: filter by maximum number of posts
           time:
             label: Posted
             aria_label: Filter by posted date
@@ -2427,8 +2429,10 @@ en:
           label: Views
         min_views:
           placeholder: minimum
+          aria_label: filter by minimum views
         max_views:
           placeholder: maximum
+          aria_label: filter by maximum views
         additional_options:
           label: "Filter by post count and topic views"
 
@@ -3324,6 +3328,7 @@ en:
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
+        title: "change notification level for this category"
         watching:
           title: "Watching"
           description: "You will automatically watch all topics in this category. You will be notified of every new post in every topic, and a count of new replies will be shown."
