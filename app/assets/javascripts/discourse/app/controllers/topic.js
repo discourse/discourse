@@ -211,6 +211,14 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {
+    // the user has already navigated away from the topic. the PostCreator
+    // in rails already handles deleting the bookmarks that need to be
+    // based on auto_delete_preference; this is mainly used to clean up
+    // the in-memory post stream and topic model
+    if (!this.model) {
+      return;
+    }
+
     const posts = this.get("model.postStream.posts");
     if (posts) {
       posts
