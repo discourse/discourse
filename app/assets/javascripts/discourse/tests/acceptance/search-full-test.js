@@ -395,7 +395,7 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search");
 
     await fillIn(".search-query", "none");
-    await selectDate("#search-post-date .date-picker", "2016-10-05");
+    await selectDate(".date-picker#search-post-date", "2016-10-05");
 
     const postTimeSelector = selectKit(
       ".search-advanced-options .select-kit#postTime"
