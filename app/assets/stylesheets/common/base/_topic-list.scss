@@ -169,6 +169,14 @@
   }
 }
 
+.sticky-header thead {
+  @include sticky;
+  // TODO: Use calculated header height
+  top: 60px;
+  background: var(--secondary);
+  z-index: 2;
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
@@ -213,10 +221,8 @@
     text-align: left;
     vertical-align: middle;
   }
-  th {
-    button .d-icon {
-      color: var(--primary-medium);
-    }
+  th .btn-flat .d-icon {
+    color: currentColor;
   }
   td {
     color: var(--primary-medium);

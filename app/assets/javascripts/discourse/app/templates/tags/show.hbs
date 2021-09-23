@@ -58,11 +58,6 @@
                   {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
                 </div>
               {{/if}}
-              {{bulk-select-button
-                selected=selected
-                action=(action "refresh")
-                category=category
-              }}
 
               {{#if list.topics}}
                 {{topic-list
@@ -70,8 +65,10 @@
                   canBulkSelect=canBulkSelect
                   toggleBulkSelect=(action "toggleBulkSelect")
                   bulkSelectEnabled=bulkSelectEnabled
+                  bulkSelectAction=(action "refresh")
                   updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
                   selected=selected
+                  category=category
                   showPosters=true
                   order=order
                   ascending=ascending

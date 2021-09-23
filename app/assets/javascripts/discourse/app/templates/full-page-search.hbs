@@ -73,7 +73,9 @@
         <div class={{searchInfoClassNames}} role="region" ariaLabel={{i18n "search.sort_or_bulk_actions"}}>
           {{#if canBulkSelect}}
             {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-            {{bulk-select-button selected=selected category=category action=(action "search")}}
+            {{#if selected}}
+              {{d-button class="btn-default bulk-select-btn" selected=selected action=(action "showBulkActions") icon="wrench"}}
+            {{/if}}
           {{/if}}
 
           {{#if bulkSelectEnabled}}
