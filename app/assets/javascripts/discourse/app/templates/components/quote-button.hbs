@@ -7,6 +7,17 @@
       label="post.quote_reply"}}
   {{/if}}
 
+  {{#if siteSettings.enable_fast_edit}}
+    {{#if _canEditPost}}
+      {{d-button
+        icon="pencil-alt"
+        action=(action "_toggleFastEditForm")
+        label="post.quote_edit"
+        class="btn-flat quote-edit-label"
+      }}
+    {{/if}}
+  {{/if}}
+
   {{#if quoteSharingEnabled}}
     <span class="quote-sharing">
       {{#if quoteSharingShowLabel}}
@@ -26,19 +37,7 @@
         {{/each}}
         {{plugin-outlet name="quote-share-buttons-after" tagName=""}}
       </span>
-
     </span>
-  {{/if}}
-
-  {{#if siteSettings.enable_fast_edit}}
-    {{#if _canEditPost}}
-      {{d-button
-        icon="pencil-alt"
-        action=(action "_toggleFastEditForm")
-        label="post.quote_edit"
-        class="btn-flat quote-edit-label"
-      }}
-    {{/if}}
   {{/if}}
 </div>
 
