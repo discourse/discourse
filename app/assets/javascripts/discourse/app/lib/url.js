@@ -530,14 +530,4 @@ export function getEditCategoryUrl(category, subcategories, tab) {
   return getURL(url);
 }
 
-export function queryParams(source) {
-  const array = [];
-
-  for (const [key, value] of Object.entries(source)) {
-    array.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-  }
-
-  return array.join("&");
-}
-
 export default _urlInstance;

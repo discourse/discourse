@@ -1,6 +1,5 @@
 import Mixin from "@ember/object/mixin";
 import { ajax } from "discourse/lib/ajax";
-import { queryParams } from "discourse/lib/url";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -80,7 +79,11 @@ export default Mixin.create({
 
       // need to use upload_type because uppy overrides type with the
       // actual file type
-      meta: deepMerge({ upload_type: this.type }, this.data || {}),
+      meta: deepMerge(
+        { upload_type: this.type },
+        this.additionalParams || {},
+        this.data || {}
+      ),
 
       onBeforeFileAdded: (currentFile) => {
         const validationOpts = deepMerge(
@@ -221,8 +224,7 @@ export default Mixin.create({
     return (
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
-      this.messageBus?.clientId +
-      this._additionalQueryParams()
+      this.messageBus?.clientId
     );
   },
 
@@ -246,20 +248,12 @@ export default Mixin.create({
     );
   },
 
-  _additionalQueryParams() {
-    if (!this.queryParams) {
-      return "";
-    }
-
-    return queryParams(this.queryParams);
-  },
-
   _completeExternalUpload(file) {
     return ajax(getUrl("/uploads/complete-external-upload"), {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },
-        this.queryParams || {}
+        this.additionalParams || {}
       ),
     });
   },
