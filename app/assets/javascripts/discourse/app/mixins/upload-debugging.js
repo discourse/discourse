@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { warn } from "@ember/debug";
 
 export default Mixin.create({
   _consoleDebug(msg) {
@@ -17,7 +18,27 @@ export default Mixin.create({
     );
   },
 
+  _performanceApiSupport() {
+    performance.mark("testing support 1");
+    performance.mark("testing support 2");
+    const perfMeasure = performance.measure(
+      "performance api support",
+      "testing support 1",
+      "testing support 2"
+    );
+    return perfMeasure;
+  },
+
   _instrumentUploadTimings() {
+    if (!this._performanceApiSupport()) {
+      // TODO (martin) (2021-01-23) Check if FireFox fixed this yet.
+      warn(
+        "Some browsers do not return a PerformanceMeasure when calling performance.mark, disabling instrumentation. See https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure#return_value and https://bugzilla.mozilla.org/show_bug.cgi?id=1724645",
+        { id: "discourse.upload-debugging" }
+      );
+      return;
+    }
+
     this._uppyInstance.on("upload", (data) => {
       data.fileIDs.forEach((fileId) =>
         performance.mark(`upload-${fileId}-start`)
