@@ -448,6 +448,8 @@ export default Mixin.create(ExtendableUploader, {
           data: JSON.stringify({
             parts,
             unique_identifier: file.meta.unique_identifier,
+            pasted: file.meta.pasted,
+            for_private_message: file.meta.for_private_message,
           }),
           // uppy is inconsistent, an error here fires the upload-error event
         }).then((responseData) => {
@@ -536,14 +538,14 @@ export default Mixin.create(ExtendableUploader, {
       }
 
       if (event && event.clipboardData && event.clipboardData.files) {
-        this._addFiles([...event.clipboardData.files]);
+        this._addFiles([...event.clipboardData.files], { pasted: true });
       }
     }.bind(this);
 
     this.element.addEventListener("paste", this.pasteEventListener);
   },
 
-  _addFiles(files) {
+  _addFiles(files, opts) {
     files = Array.isArray(files) ? files : [files];
     try {
       this._uppyInstance.addFiles(
@@ -553,6 +555,7 @@ export default Mixin.create(ExtendableUploader, {
             name: file.name,
             type: file.type,
             data: file,
+            meta: { pasted: opts.pasted },
           };
         })
       );

@@ -253,7 +253,13 @@ class UploadsController < ApplicationController
   end
 
   def complete_external_upload_via_manager(external_upload_stub)
-    external_upload_manager = ExternalUploadManager.new(external_upload_stub)
+    opts = {
+      for_private_message: params[:for_private_message]&.to_s == "true",
+      for_site_setting: params[:for_site_setting]&.to_s == "true",
+      pasted: params[:pasted]&.to_s == "true",
+    }
+
+    external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)
     hijack do
       begin
         upload = external_upload_manager.promote_to_upload!

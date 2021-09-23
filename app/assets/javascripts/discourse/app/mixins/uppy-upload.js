@@ -26,10 +26,6 @@ export default Mixin.create({
   autoStartUploads: true,
   id: null,
 
-  // TODO (martin): this is only used in one place, consider just using
-  // form data/meta instead uploadUrlParams: "&for_site_setting=true",
-  uploadUrlParams: "",
-
   // TODO (martin): currently used for backups to turn on auto upload and PUT/XML requests
   // and for emojis to do sequential uploads, when we get to replacing those
   // with uppy make sure this is used when initializing uppy
@@ -261,9 +257,10 @@ export default Mixin.create({
   _completeExternalUpload(file) {
     return ajax(getUrl("/uploads/complete-external-upload"), {
       type: "POST",
-      data: {
-        unique_identifier: file.meta.uniqueUploadIdentifier,
-      },
+      data: deepMerge(
+        { unique_identifier: file.meta.uniqueUploadIdentifier },
+        this.queryParams || {}
+      ),
     });
   },
 
