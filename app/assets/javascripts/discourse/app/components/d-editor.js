@@ -289,6 +289,8 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
+    this._previewMutationObserver = this._disablePreviewTabIndex();
+
     // disable clicking on links in the preview
     $(this.element.querySelector(".d-editor-preview")).on(
       "click.preview",
@@ -339,6 +341,8 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap = null;
 
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
+
+    this._previewMutationObserver?.disconnect();
 
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
@@ -427,11 +431,6 @@ export default Component.extend(TextareaTextManipulation, {
           if (!preview) {
             return;
           }
-
-          // prevents any tab focus in preview
-          preview.querySelectorAll("a").forEach((anchor) => {
-            anchor.setAttribute("tabindex", "-1");
-          });
 
           if (this.previewUpdated) {
             this.previewUpdated($(preview));
@@ -909,5 +908,21 @@ export default Component.extend(TextareaTextManipulation, {
     focusOut() {
       this.set("isEditorFocused", false);
     },
+  },
+
+  _disablePreviewTabIndex() {
+    const observer = new MutationObserver(function () {
+      document.querySelectorAll(".d-editor-preview a").forEach((anchor) => {
+        anchor.setAttribute("tabindex", "-1");
+      });
+    });
+
+    observer.observe(document.querySelector(".d-editor-preview"), {
+      childList: true,
+      subtree: false,
+      attributes: false,
+    });
+
+    return observer;
   },
 });
