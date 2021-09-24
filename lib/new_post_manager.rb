@@ -201,10 +201,10 @@ class NewPostManager
       result = NewPostResult.new(:created_post, false)
       if matches.size == 1
         key = 'contains_blocked_word'
-        translation_args = { word: matches[0] }
+        translation_args = { word: CGI.escapeHTML(matches[0]) }
       else
         key = 'contains_blocked_words'
-        translation_args = { words: matches.join(', ') }
+        translation_args = { words: CGI.escapeHTML(matches.join(', ')) }
       end
       result.errors.add(:base, I18n.t(key, translation_args))
       return result

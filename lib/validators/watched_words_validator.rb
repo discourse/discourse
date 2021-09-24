@@ -5,10 +5,10 @@ class WatchedWordsValidator < ActiveModel::EachValidator
     if matches = WordWatcher.new(value).should_block?.presence
       if matches.size == 1
         key = 'contains_blocked_word'
-        translation_args = { word: matches[0] }
+        translation_args = { word: CGI.escapeHTML(matches[0]) }
       else
         key = 'contains_blocked_words'
-        translation_args = { words: matches.join(', ') }
+        translation_args = { words: CGI.escapeHTML(matches.join(', ')) }
       end
       record.errors.add(:base, I18n.t(key, translation_args))
     end
