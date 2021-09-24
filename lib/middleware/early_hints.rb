@@ -4,11 +4,13 @@ module Middleware
   class EarlyHints
     def initialize(app)
       @app = app
-      @request = Rack::Request.new(@env)
     end
 
     def call(env)
-      send_early_hints("Link" => links) if hints_useful?
+      @request = ActionDispatch::Request.new(env)
+      if hints_useful?
+        @request.send_early_hints("Link" => links)
+      end
       @app.call(env)
     end
 
@@ -20,8 +22,7 @@ module Middleware
       !@request.xhr? &&
       !@request.path.ends_with?('robots.txt') &&
       !@request.path.ends_with?('srv/status') &&
-      @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-      @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
+      @request[Auth::DefaultCurrentUserProvider::API_KEY].nil?
     end
 
     def links
@@ -49,13 +50,14 @@ module Middleware
 
       js_hints.map do |asset|
         hint_builder(
-          UrlHelper.absolute("/assets/#{manifest_asset(asset)}")
+          UrlHelper.absolute("/assets/#{manifest_asset(asset)}"),
+          'script'
         )
-      end.join('\n')
+      end.join(',')
     end
 
     def hint_builder(url, type)
-      "</#{url}>; rel=preload; as=#{type}"
+      "<#{url}>; rel=\"preload\"; as=\"#{type}\""
     end
 
     def manifest_asset(asset)
