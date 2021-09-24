@@ -171,7 +171,7 @@ export default Mixin.create({
 
         if (count > 0) {
           const controller = showModal("site-setting-default-categories", {
-            model: { count, key: key.replace(/_/g, " ") },
+            model: { count, key: key.replaceAll("_", " ") },
             admin: true,
           });
 
