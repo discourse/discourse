@@ -159,8 +159,18 @@ module TopicGuardian
     return false if topic.posts_count > 1
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
+    return false if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    true
+  end
 
-    topic.deleted_by_id != @user.id || topic.deleted_at < 5.minute.ago
+  def cannot_permanently_delete_topic_reason(topic)
+    return nil if !SiteSetting.can_permanently_delete
+    return nil if !topic
+    return I18n.t('post.cannot_permanently_delete.many_posts') if topic.posts_count > 1
+    return nil if !is_admin? || !can_see_topic?(topic)
+    return nil if !topic.deleted_at
+    return I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + topic.deleted_at.to_i)) if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    true
   end
 
   def can_toggle_topic_visibility?(topic)

@@ -112,7 +112,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def include_can_permanently_delete?
-    scope.can_permanently_delete?(object.topic)
+    SiteSetting.can_permanently_delete && object.topic.deleted_at
   end
 
   def include_can_recover?

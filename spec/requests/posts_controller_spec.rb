@@ -228,6 +228,10 @@ describe PostsController do
       context "permanently destroy" do
         let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
 
+        before do
+          SiteSetting.can_permanently_delete = true
+        end
+
         it "does not work for a post that was not deleted yet" do
           sign_in(admin)
 

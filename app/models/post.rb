@@ -25,6 +25,9 @@ class Post < ActiveRecord::Base
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
 
+  # Time between the delete and permanent delete of a post
+  PERMANENT_DELETE_TIMER = 5.minutes
+
   rate_limit
   rate_limit :limit_posts_per_day
 

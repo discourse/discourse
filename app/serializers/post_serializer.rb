@@ -172,7 +172,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_can_permanently_delete?
-    scope.can_permanently_delete?(object)
+    SiteSetting.can_permanently_delete && object.deleted_at
   end
 
   def can_recover
