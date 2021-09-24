@@ -237,7 +237,7 @@ export default Mixin.create({
       event.key === "Enter" &&
       event.target.classList.contains("input-setting-string")
     ) {
-      this.send("save");
+      this.save();
     }
   },
 
