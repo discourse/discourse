@@ -177,14 +177,14 @@ export default Mixin.create({
 
           controller.set("onClose", () => {
             this.updateExistingUsers = controller.updateExistingUsers;
-            this.send("save");
+            this.save();
           });
         } else {
-          this.send("save");
+          this.save();
         }
       });
     } else {
-      this.send("save");
+      this.save();
     }
   },
 
