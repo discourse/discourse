@@ -3,7 +3,10 @@
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
 
+  {{plugin-outlet name="discovery-list-controls-above"}}
+
   <div class="list-controls">
+    {{plugin-outlet name="discovery-navigation-bar-above" tagName=""}}
     <div class="container">
       <section class="navigation-container tag-navigation">
         {{d-navigation
@@ -39,6 +42,8 @@
 
   {{topic-dismiss-buttons position="top" selectedTopics=selected
     model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
+
+  {{plugin-outlet name="discovery-above"}}
 
   <div class="container list-container">
     <div class="row">
