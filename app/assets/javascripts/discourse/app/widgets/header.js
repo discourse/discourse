@@ -213,10 +213,6 @@ createWidget(
 createWidget("header-icons", {
   tagName: "ul.icons.d-header-icons",
 
-  buildAttributes() {
-    return { role: "navigation" };
-  },
-
   html(attrs) {
     if (this.siteSettings.login_required && !this.currentUser) {
       return [];
