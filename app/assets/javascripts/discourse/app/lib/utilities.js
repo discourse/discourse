@@ -7,6 +7,14 @@ import toMarkdown from "discourse/lib/to-markdown";
 
 let _defaultHomepage;
 
+export function splitString(str, separator = ",") {
+  if (typeof str === "string") {
+    return str.split(separator).filter(Boolean);
+  } else {
+    return [];
+  }
+}
+
 export function translateSize(size) {
   switch (size) {
     case "tiny":
