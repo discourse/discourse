@@ -119,7 +119,7 @@ export default Mixin.create({
   @discourseComputed("defaultValues", "bufferedValues")
   defaultIsAvailable(defaultValues, bufferedValues) {
     return (
-      defaultValues?.length > 0 &&
+      defaultValues.length > 0 &&
       !defaultValues.every((value) => bufferedValues.includes(value))
     );
   },
