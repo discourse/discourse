@@ -980,7 +980,7 @@ zh_TW:
         title: "電子郵件"
         primary: "主要電子郵件"
         secondary: "次要電子郵件"
-        primary_label: "一級"
+        primary_label: "主要"
         update_email: "修改電子郵件地址"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
