@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency "mobile_detection"
+
 module Middleware
   class EarlyHints
     def initialize(app)
@@ -7,11 +9,12 @@ module Middleware
     end
 
     def call(env)
-      @request = ActionDispatch::Request.new(env)
+      @env = env
+      @request = ActionDispatch::Request.new(@env)
       if hints_useful?
         @request.send_early_hints("Link" => links)
       end
-      @app.call(env)
+      @app.call(@env)
     end
 
     private
@@ -35,7 +38,7 @@ module Middleware
     end
 
     def hints_cache_key
-      "discourse-early-hints-cache"
+      "discourse-early-hints-cache-#{is_mobile? ? 'mobile' : 'desktop'}"
     end
 
     def hints_cache_duration
@@ -53,7 +56,11 @@ module Middleware
           UrlHelper.absolute("/assets/#{manifest_asset(asset)}"),
           'script'
         )
-      end.join(',')
+      end.append(
+        hint_builder(
+          main_css_file, "style"
+        )
+      ).join(',')
     end
 
     def hint_builder(url, type)
@@ -62,6 +69,25 @@ module Middleware
 
     def manifest_asset(asset)
       Rails.application.assets_manifest.files.detect { |k, v| v['logical_path'] == asset }.first
+    end
+
+    def is_mobile?
+      @is_mobile ||=
+        begin
+          session = @env["rack.session"]
+          # don't initialize params until later
+          # otherwise you get a broken params on the request
+          params = {}
+
+          MobileDetection.resolve_mobile_view!(@env[USER_AGENT], params, session) ? :true : :false
+        end
+
+      @is_mobile == :true
+    end
+
+    def main_css_file
+      target = is_mobile? ? :mobile : :desktop
+      Stylesheet::Manager.new.stylesheet_details(target).first[:new_href]
     end
   end
 end
