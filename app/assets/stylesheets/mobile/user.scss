@@ -41,15 +41,6 @@
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 
-    &.user-messages-inboxes {
-      // when there are multiple inboxes
-      .messages-nav {
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 1;
-      }
-    }
-
     + .user-additional-controls {
       grid-row-start: 2;
       grid-column-start: 1;
@@ -58,16 +49,6 @@
 
   .inboxes-controls {
     display: flex;
-  }
-
-  .user-messages-inboxes-drop {
-    padding: 0;
-    flex: 1 1 auto;
-    .select-kit-header {
-      .caret-icon {
-        color: var(--primary-medium);
-      }
-    }
   }
 
   .new-private-message {

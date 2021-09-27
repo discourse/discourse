@@ -2,40 +2,6 @@
 
 class TopicQuery
   module PrivateMessageLists
-    def list_private_messages_all(user)
-      list = private_messages_for(user, :all)
-      list = filter_archived(list, user, archived: false)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_sent(user)
-      list = private_messages_for(user, :all)
-
-      list = list.where(<<~SQL, user.id)
-      EXISTS (
-        SELECT 1 FROM posts
-        WHERE posts.topic_id = topics.id AND posts.user_id = ?
-      )
-      SQL
-
-      list = filter_archived(list, user, archived: false)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_archive(user)
-      list = private_messages_for(user, :all)
-      list = filter_archived(list, user, archived: true)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_new(user)
-      list_private_messages_new(user, :all)
-    end
-
-    def list_private_messages_all_unread(user)
-      list_private_messages_unread(user, :all)
-    end
-
     def list_private_messages(user)
       list = private_messages_for(user, :user)
       list = not_archived(list, user)

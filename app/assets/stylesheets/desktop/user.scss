@@ -60,17 +60,6 @@
 
   &.user-messages {
     --left-padding: 0.8em;
-    .user-messages-inboxes-drop {
-      padding: 0 1em 0 0;
-
-      .select-kit-header {
-        padding-left: var(--left-padding);
-      }
-
-      .select-kit-selected-name {
-        overflow: hidden;
-      }
-    }
 
     .nav-stacked {
       a {

@@ -449,8 +449,6 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/messages/personal" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/messages/personal/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
@@ -777,11 +775,6 @@ Discourse::Application.routes.draw do
 
     scope "/topics", username: RouteFormat.username do
       get "created-by/:username" => "list#topics_by", as: "topics_by", defaults: { format: :json }
-      get "private-messages-all/:username" => "list#private_messages_all", as: "topics_private_messages_all", defaults: { format: :json }
-      get "private-messages-all-sent/:username" => "list#private_messages_all_sent", as: "topics_private_messages_all_sent", defaults: { format: :json }
-      get "private-messages-all-new/:username" => "list#private_messages_all_new", as: "topics_private_messages_all_new", defaults: { format: :json }
-      get "private-messages-all-unread/:username" => "list#private_messages_all_unread", as: "topics_private_messages_all_unread", defaults: { format: :json }
-      get "private-messages-all-archive/:username" => "list#private_messages_all_archive", as: "topics_private_messages_all_archive", defaults: { format: :json }
       get "private-messages/:username" => "list#private_messages", as: "topics_private_messages", defaults: { format: :json }
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
