@@ -3369,7 +3369,7 @@ RSpec.describe TopicsController do
 
         TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [topic2.id, topic3.id]).at_least_once
 
-        put "/topics/reset-new.json", { params: { topic_ids: [topic2.id, topic3.id] } }
+        put "/topics/reset-new.json", **{ params: { topic_ids: [topic2.id, topic3.id] } }
         expect(response.status).to eq(200)
         user.reload
         expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
@@ -3391,7 +3391,7 @@ RSpec.describe TopicsController do
           old_date = 2.years.ago
           user.user_stat.update_column(:new_since, old_date)
 
-          put "/topics/reset-new.json?tracked=true", { params: { topic_ids: [topic2.id, topic3.id] } }
+          put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [topic2.id, topic3.id] } }
           expect(response.status).to eq(200)
           user.reload
           expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
@@ -3412,7 +3412,7 @@ RSpec.describe TopicsController do
 
           create_post # This is a new post, but is not tracked so a record will not be created for it
           expect do
-            put "/topics/reset-new.json?tracked=true", { params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
+            put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
           end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(2)
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([tracked_topic.id, topic2.id])
         end
