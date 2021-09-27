@@ -50,6 +50,7 @@ import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-feature
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
+import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -1241,6 +1242,18 @@ class PluginApi {
     addGlobalNotice(id, text, options);
   }
 
+  /**
+   * Used for modifying the document title count. The core count is unread notifications, and
+   * the returned value from calling the passed in function will be added to this number.
+   *
+   * For example, to add a count
+   * api.addDocumentTitleCounter(() => {
+   *   return currentUser.somePluginValue;
+   * })
+   **/
+  addDocumentTitleCounter(counterFunction) {
+    addPluginDocumentTitleCounter(counterFunction);
+  }
   /**
    * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
    *
