@@ -742,7 +742,7 @@ describe UploadsController do
       end
 
       it "includes accepted metadata in the presigned url when provided" do
-        post "/uploads/generate-presigned-put.json", {
+        post "/uploads/generate-presigned-put.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -806,7 +806,7 @@ describe UploadsController do
 
       it "returns 422 when the create request errors" do
         FileStore::S3Store.any_instance.stubs(:create_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -818,7 +818,7 @@ describe UploadsController do
 
       it "returns 422 when the file is an attachment and it's too big" do
         SiteSetting.max_attachment_size_kb = 1024
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.zip",
             file_size: 9999999,
@@ -846,7 +846,7 @@ describe UploadsController do
 
       it "creates a multipart upload and creates an external upload stub that is marked as multipart" do
         stub_create_multipart_request
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -879,7 +879,7 @@ describe UploadsController do
           "test.png", "image/png", metadata: { "sha1-checksum" => "testing" }
         ).returns({ key: "test" })
 
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
