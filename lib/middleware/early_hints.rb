@@ -79,7 +79,7 @@ module Middleware
           # otherwise you get a broken params on the request
           params = {}
 
-          MobileDetection.resolve_mobile_view!(@env[USER_AGENT], params, session) ? :true : :false
+          MobileDetection.resolve_mobile_view!(@env["HTTP_USER_AGENT"], params, session) ? :true : :false
         end
 
       @is_mobile == :true
