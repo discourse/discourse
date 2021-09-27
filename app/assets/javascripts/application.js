@@ -31,6 +31,7 @@
 //= require ./discourse/app/lib/text-direction
 //= require ./discourse/app/lib/eyeline
 //= require ./discourse/app/lib/show-modal
+//= require ./discourse/app/lib/download-calendar
 //= require ./discourse/app/mixins/scrolling
 //= require ./discourse/app/lib/ajax-error
 //= require ./discourse/app/models/result-set

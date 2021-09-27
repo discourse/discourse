@@ -4,6 +4,8 @@ import { hidePopover, showPopover } from "discourse/lib/d-popover";
 import LocalDateBuilder from "../lib/local-date-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
+import { downloadCalendar } from "discourse/lib/download-calendar";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
 export function applyLocalDates(dates, siteSettings) {
   if (!siteSettings.discourse_local_dates_enabled) {
@@ -162,7 +164,52 @@ function buildHtmlPreview(element, siteSettings) {
   previewsNode.classList.add("locale-dates-previews");
   htmlPreviews.forEach((htmlPreview) => previewsNode.appendChild(htmlPreview));
 
+  previewsNode.appendChild(_downloadCalendarNode(element));
+
   return previewsNode.outerHTML;
+}
+
+function _downloadCalendarNode(element) {
+  const node = document.createElement("div");
+  node.classList.add("download-calendar");
+  node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
+    "download_calendar.add_to_calendar"
+  )}`;
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  node.setAttribute(
+    "data-starts-at",
+    moment
+      .tz(
+        `${startDataset.date} ${startDataset.time || ""}`,
+        startDataset.timezone
+      )
+      .toISOString()
+  );
+  if (endDataset) {
+    node.setAttribute(
+      "data-ends-at",
+      moment
+        .tz(`${endDataset.date} ${endDataset.time || ""}`, endDataset.timezone)
+        .toISOString()
+    );
+  }
+  if (!startDataset.time && !endDataset) {
+    node.setAttribute(
+      "data-ends-at",
+      moment
+        .tz(`${startDataset.date}`, startDataset.timezone)
+        .add(24, "hours")
+        .toISOString()
+    );
+  }
+  node.setAttribute(
+    "data-title",
+    document.querySelector("#topic-title a").innerText
+  );
+  node.setAttribute("data-post-id", element.closest("article").dataset.postId);
+  return node;
 }
 
 function _calculateDuration(element) {
@@ -199,6 +246,17 @@ export default {
           htmlContent: buildHtmlPreview(event.target, siteSettings),
         });
       }
+    } else if (event?.target?.classList?.contains("download-calendar")) {
+      const dataset = event.target.dataset;
+      hidePopover(event);
+      downloadCalendar(dataset.postId, dataset.title, [
+        {
+          startsAt: dataset.startsAt,
+          endsAt: dataset.endsAt,
+        },
+      ]);
+    } else {
+      hidePopover(event);
     }
   },
 
@@ -213,7 +271,6 @@ export default {
     router.on("routeWillChange", hidePopover);
 
     window.addEventListener("click", this.showDatePopover);
-    window.addEventListener("mouseout", this.hideDatePopover);
 
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
@@ -231,6 +288,5 @@ export default {
 
   teardown() {
     window.removeEventListener("click", this.showDatePopover);
-    window.removeEventListener("mouseout", this.hideDatePopover);
   },
 };

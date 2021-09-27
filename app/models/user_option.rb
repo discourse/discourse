@@ -11,6 +11,8 @@ class UserOption < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
+  enum default_calendar: { none_selected: 0, ics: 1, google: 2 }
+
   def self.ensure_consistency!
     sql = <<~SQL
       SELECT u.id FROM users u

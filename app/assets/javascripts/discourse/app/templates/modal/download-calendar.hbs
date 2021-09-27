@@ -1,0 +1,45 @@
+<div>
+  {{#d-modal-body title="download_calendar.title"}}
+    <div class="control-group">
+      <div>
+        <label class="radio" for="ics">
+          {{radio-button
+            name="select-calendar"
+            id="ics"
+            value="ics"
+            selection=selectedCalendar
+            onChange=(action (mut selectedCalendar))
+          }}
+          {{i18n "download_calendar.ics"}}
+        </label>
+      </div>
+      <div>
+        <label class="radio" for="google">
+          {{radio-button
+            name="select-calendar"
+            id="google"
+            value="google"
+            selection=selectedCalendar
+            onChange=(action (mut selectedCalendar))
+          }}
+          {{i18n "download_calendar.google"}}
+        </label>
+      </div>
+    </div>
+
+    <div class="control-group remember">
+      <label>
+        {{input type="checkbox" checked=remember}} <span>{{i18n "download_calendar.remember"}}</span>
+      </label>
+      {{i18n "download_calendar.remember_explanation"}}
+    </div>
+  {{/d-modal-body}}
+  <div class="modal-footer">
+    {{d-button
+      class="btn-primary"
+      action=(action "perform")
+      label="download_calendar.download"
+    }}
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  </div>
+</div>

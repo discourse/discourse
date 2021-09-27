@@ -3723,6 +3723,16 @@ en:
       favorite_max_not_reached: "Mark this badge as favorite"
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
+    download_calendar:
+      title: "Download calendar"
+      ics: "Download .ics file"
+      google: "Add to Google calendar"
+      remember: "Don’t ask me again"
+      remember_explanation: "(you can change this preference in your user prefs)"
+      download: "Download"
+      default_calendar: "Default calendar"
+      add_to_calendar: "Add to calendar"
+
     tagging:
       all_tags: "All Tags"
       other_tags: "Other Tags"

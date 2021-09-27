@@ -650,6 +650,8 @@ Discourse::Application.routes.draw do
       end
     end
 
+    get "/calendars" => "calendars#download", constraints: { format: :ics }
+
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
     end
