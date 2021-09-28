@@ -100,27 +100,41 @@ describe UserActionsController do
     end
 
     context "other users' activity" do
-      let(:another_user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
 
       UserAction.private_types.each do |action_type|
         action_name = UserAction.types.key(action_type)
-        it "users cannot list other users' actions of type: #{action_name}" do
+        it "anonymous users cannot list other users' actions of type: #{action_name}" do
           list_and_check(action_type, 404)
         end
       end
 
       UserAction.private_types.each do |action_type|
+        fab!(:user) { Fabricate(:user) }
         action_name = UserAction.types.key(action_type)
+
+        it "logged in users cannot list other users' actions of type: #{action_name}" do
+          sign_in(user)
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:moderator) { Fabricate(:moderator) }
+        action_name = UserAction.types.key(action_type)
+
         it "moderators cannot list other users' actions of type: #{action_name}" do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
           list_and_check(action_type, 404)
         end
       end
 
       UserAction.private_types.each do |action_type|
+        fab!(:admin) { Fabricate(:admin) }
         action_name = UserAction.types.key(action_type)
+
         it "admins can list other users' actions of type: #{action_name}" do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
           list_and_check(action_type, 200)
         end
       end
