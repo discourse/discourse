@@ -221,7 +221,7 @@ acceptance(
     test("It does not render filter", async function (assert) {
       await visit("/u/eviltrout/notifications");
 
-      assert.notOk(exists("div.user-notifications-filter-select-kit"));
+      assert.notOk(exists("div.user-notifications-filter"));
     });
   }
 );
