@@ -27,12 +27,6 @@ RSpec.describe PostJobsEnqueuer do
       end
     end
 
-    it "enqueues the :post_update_topic_tracking_state job" do
-      expect_enqueued_with(job: :post_update_topic_tracking_state, args: { post_id: post.id }) do
-        subject.enqueue_jobs
-      end
-    end
-
     it "enqueues the :feature_topic_users job" do
       expect_enqueued_with(job: :feature_topic_users, args: { topic_id: topic.id }) do
         subject.enqueue_jobs
@@ -55,12 +49,6 @@ RSpec.describe PostJobsEnqueuer do
 
     it "does not enqueue the :notify_mailing_list_subscribers job" do
       expect_not_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post.id }) do
-        subject.enqueue_jobs
-      end
-    end
-
-    it "enqueues the :post_update_topic_tracking_state job" do
-      expect_enqueued_with(job: :post_update_topic_tracking_state, args: { post_id: post.id }) do
         subject.enqueue_jobs
       end
     end

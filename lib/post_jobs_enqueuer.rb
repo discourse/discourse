@@ -53,9 +53,30 @@ class PostJobsEnqueuer
   end
 
   def after_post_create
-    Jobs.enqueue(:post_update_topic_tracking_state, post_id: @post.id)
+    if @topic.private_message?
+      Scheduler::Defer.later("publish PM topic tracking state") do
+        if @post.post_number > 1
+          PrivateMessageTopicTrackingState.publish_unread(@post)
+        end
 
-    if !@topic.private_message?
+        TopicGroup.new_message_update(
+          @topic.last_poster,
+          @topic.id,
+          @post.post_number
+        )
+      end
+    else
+      Scheduler::Defer.later("publish topic tracking state") do
+        TopicTrackingState.publish_unmuted(@post.topic)
+
+        if @post.post_number > 1
+          TopicTrackingState.publish_muted(@post.topic)
+          TopicTrackingState.publish_unread(@post)
+        end
+
+        TopicTrackingState.publish_latest(@post.topic, @post.whisper?)
+      end
+
       Jobs.enqueue_in(
         SiteSetting.email_time_window_mins.minutes,
         :notify_mailing_list_subscribers,
