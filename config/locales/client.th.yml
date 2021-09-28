@@ -252,6 +252,8 @@ th:
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
       topic_reply: "ตอบแบบร่าง"
+    topic_count_categories:
+      other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_unseen:
@@ -1565,7 +1567,6 @@ th:
             after: หลังจาก
         views:
           label: ดู
-    hamburger_menu: "ไปยังรายการกระทู้หรือหมวดหมู่อื่น"
     new_item: "ใหม่"
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"

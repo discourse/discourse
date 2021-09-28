@@ -327,6 +327,10 @@ sr:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
+    topic_count_categories:
+      one: "Pregledajte %{count} novu ili ažuriranu temu"
+      few: "Pregledajte %{count} nove ili ažurirane teme"
+      other: "Pregledajte %{count} novih ili ažuriranih tema"
     topic_count_latest:
       one: "Pregledajte %{count} novu ili ažuriranu temu"
       few: "Pregledajte %{count} nove ili ažurirane teme"
@@ -1159,7 +1163,6 @@ sr:
             before: pre
         views:
           label: Pregledi
-    hamburger_menu: "idi na drugi popis tema ili kategoriju"
     new_item: "novo"
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"

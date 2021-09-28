@@ -283,6 +283,9 @@ hy:
       topic_reply: "Պատասխանի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
+    topic_count_categories:
+      one: "Տեսնել %{count} նոր կամ թարմացված թեման"
+      other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
     topic_count_latest:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
@@ -1782,7 +1785,6 @@ hy:
             after: հետո
         views:
           label: Դիտումների
-    hamburger_menu: "գնալ այլ թեմաների ցանկ կամ կատեգորիա"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"

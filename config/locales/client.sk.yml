@@ -301,6 +301,11 @@ sk:
       new_topic: "Nová téma"
       abandon:
         yes_value: "Zahodiť"
+    topic_count_categories:
+      one: "Pozri si %{count} novú alebo upravenú tému."
+      few: "Pozri si %{count} nových alebo upravených tém."
+      many: "Pozri si %{count} nových alebo upravených tém."
+      other: "Pozri si %{count} nových alebo upravených tém."
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -1409,7 +1414,6 @@ sk:
             after: po
         views:
           label: Zobrazenia
-    hamburger_menu: "prejsť na iné témy, alebo kategórie"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"

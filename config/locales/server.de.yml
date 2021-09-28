@@ -1984,7 +1984,7 @@ de:
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
-    enable_fast_edit: "Experimentelle Funktion, die es ermöglicht, eine kleine Auswahl eines Beitragstextes inline zu bearbeiten."
+    enable_fast_edit: "Ermöglicht die Inline-Bearbeitung einer kleinen Auswahl eines Beitragstexts."
     old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
@@ -3615,12 +3615,15 @@ de:
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
+      too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
+      too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
       larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
+      too_large_humanized: "(Bild größer als %{max_size})"
   avatar:
     missing: "Entschuldige, wir können keinen Avatar finden, der mit dieser E-Mail-Adresse verbunden ist. Kannst du versuchen, ihn erneut hochzuladen?"
   flag_reason:

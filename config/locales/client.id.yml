@@ -264,6 +264,8 @@ id:
       abandon:
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
+    topic_count_categories:
+      other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unseen:

@@ -237,6 +237,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    topic_count_categories:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
@@ -1422,7 +1425,6 @@ sw:
             after: baada
         views:
           label: Imeonwa
-    hamburger_menu: "nenda kwenye orodha ya mada au kategoria nyingine"
     new_item: "mpya"
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"

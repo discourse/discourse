@@ -295,6 +295,8 @@ he:
       two: "%{count} תווים"
       many: "%{count} תווים"
       other: "%{count} תווים"
+    period_chooser:
+      aria_label: "סינון לפי תקופה"
     related_messages:
       title: "הודעות קשורות"
       see_all: 'להציג את <a href="%{path}">כל ההודעות</a> מאת ‎@%{username}‎…'
@@ -327,6 +329,7 @@ he:
       help:
         bookmark: "יש ללחוץ כדי ליצור סימנייה לפוסט הראשון בנושא זה"
         edit_bookmark: "יש ללחוץ כדי לערוך את הסימניה בנושא זה"
+        edit_bookmark_for_topic: "יש ללחוץ כדי לערוך את הסימניה לנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
@@ -369,6 +372,11 @@ he:
         confirm: "יש טיוטה שהתחלת לערוך לנושא הזה. מה לעשות אתה?"
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
+    topic_count_categories:
+      one: "הצגת נושא %{count} חדש או עדכני"
+      two: "הצגת %{count} נושאים חדשים או עדכניים"
+      many: "הצגת %{count} נושאים חדשים או עדכניים"
+      other: "הצגת %{count} נושאים חדשים או עדכניים"
     topic_count_latest:
       one: "הצגת נושא %{count} חדש או עדכני"
       two: "הצגת %{count} נושאים חדשים או עדכניים"
@@ -1235,7 +1243,6 @@ he:
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
-        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages/personal'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -2290,6 +2297,7 @@ he:
       select_all: "בחירה של הכל"
       clear_all: "נקוי של הכל"
       too_short: "ביטוי החיפוש שלך קצר מידי."
+      sort_or_bulk_actions: "מיון או בחירת תוצאות במרוכז"
       result_count:
         one: "<span>תוצאה אחת עבור</span><span class='term'> %{term}</span>"
         two: "<span>%{count}%{plus} תוצאות עבור</span><span class='term'> %{term}</span>"
@@ -2325,6 +2333,7 @@ he:
         title: מסננים מתקדמים
         posted_by:
           label: פורסם על ידי
+          aria_label: סינון לפי מחבר ההודעה
         in_category:
           label: \
         in_group:
@@ -2333,6 +2342,7 @@ he:
           label: עם עיטור
         with_tags:
           label: מתוייג
+          aria_label: סינון באמצעות תגיות
         filters:
           label: החזר רק נושאים/פוסטים...
           title: מתאימים רק בכותרת
@@ -2363,21 +2373,25 @@ he:
             label: פוסטים
           min:
             placeholder: מזערי
+            aria_label: סינון לפי מספר הפוסטים המזערי
           max:
             placeholder: מרבי
+            aria_label: סינון לפי מספר הפוסטים המרבי
           time:
             label: פורסמו
+            aria_label: סינון לפי מועד הפרסום
             before: לפני
             after: אחרי
         views:
           label: צפיות
         min_views:
           placeholder: מזערי
+          aria_label: סינון לפי כמות הצפיות המזערית
         max_views:
           placeholder: מרבי
+          aria_label: סינון לפי כמות הצפיות המרבית
         additional_options:
           label: "סינון לפי כמות פוסטים וצפיות בנושאים"
-    hamburger_menu: "עיברו לרשימת נושאים אחרת או קטגוריה"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
@@ -2985,6 +2999,7 @@ he:
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
+        file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         too_many_dragged_and_dropped_files:
           one: "אפשר להעלות עד קובץ %{count} בכל פעם, עמך הסליחה."
@@ -3138,7 +3153,9 @@ he:
             button: "HTML"
       bookmarks:
         create: "יצירת סימנייה"
+        create_for_topic: "יצירת סימנייה לנושא"
         edit: "עריכת סימנייה"
+        edit_for_topic: "עריכת סימנייה לנושא"
         created: "נוצר"
         updated: "עודכן"
         name: "שם"
@@ -3261,6 +3278,7 @@ he:
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
       notifications:
+        title: "שינוי רמת ההתראות לקטגוריה הזו"
         watching:
           title: "עוקב"
           description: "כל הנושאים שבקטגוריה הזאת יצטרפו למעקב הצמוד שלך. תישלח אליך התראה על כל פוסט חדש בכל נושא ויופיע מספור של התגובות החדשות."

@@ -1144,7 +1144,6 @@ sq:
             label: Postime
         views:
           label: Shikimet
-    hamburger_menu: "shko tek një kategori ose një listë e re temash"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"

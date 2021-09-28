@@ -311,6 +311,9 @@ fi:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
+    topic_count_categories:
+      one: "Katso %{count} uusi tai päivitetty ketju"
+      other: "Katso %{count} uutta tai päivitettyä ketjua"
     topic_count_latest:
       one: "Katso %{count} uusi tai päivitetty ketju"
       other: "Katso %{count} uutta tai päivitettyä ketjua"
@@ -2174,7 +2177,6 @@ fi:
           placeholder: vähintään
         max_views:
           placeholder: enintään
-    hamburger_menu: "vaihda ketjulistausta tai siirry toiselle alueelle"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"

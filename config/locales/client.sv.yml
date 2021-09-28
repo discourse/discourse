@@ -243,6 +243,8 @@ sv:
     character_count:
       one: "%{count} tecken"
       other: "%{count} tecken"
+    period_chooser:
+      aria_label: "Filtrera efter period"
     related_messages:
       title: "Relaterade meddelanden"
       see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}...'
@@ -318,6 +320,9 @@ sv:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
+    topic_count_categories:
+      one: "Visa %{count} nytt eller uppdaterat ämne"
+      other: "Visa %{count} nya eller uppdaterade ämnen"
     topic_count_latest:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
@@ -1136,9 +1141,9 @@ sv:
         tags: "Taggar"
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
-        read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages/personal'>personliga meddelanden</a>."
+        read_more: "Vill du läsa mer? Bläddra genom andra meddelanden i <a href='%{basePath}/u/%{username}/message'>personliga meddelanden</a>."
         read_more_group_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra meddelanden i {groupLink}"
-        read_more_personal_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/personal/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/personal/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages/personal'>personliga meddelanden</a>"
+        read_more_personal_pm_MF: "Där { UNREAD, plural, =0 {} one { är <a href='{basePath}/u/{username}/messages/unread'># oläst</a> } other { är <a href='{basePath}/u/{username}/messages/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nya</a> meddelanden} } kvar, eller bläddra genom andra <a href='{basePath}/u/{username}/message'>personliga meddelanden</a>"
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -2131,6 +2136,7 @@ sv:
       select_all: "Markera alla"
       clear_all: "Rensa allt"
       too_short: "Din sökterm är för kort."
+      sort_or_bulk_actions: "Sortera eller massmarkera resultat"
       result_count:
         one: "<span>%{count} resultat för</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
@@ -2164,6 +2170,7 @@ sv:
         title: Avancerade filter
         posted_by:
           label: Publicerat av
+          aria_label: Filtrera efter inläggsförfattare
         in_category:
           label: Kategoriserad
         in_group:
@@ -2172,6 +2179,7 @@ sv:
           label: Med utmärkelse
         with_tags:
           label: Taggad
+          aria_label: Filtrera efter taggar
         filters:
           label: Returnera enbart ämnen/inlägg....
           title: Matcha enbart i titeln
@@ -2202,21 +2210,26 @@ sv:
             label: Inlägg
           min:
             placeholder: minst
+            aria_label: filtrera efter minsta antal inlägg
           max:
             placeholder: maximalt
+            aria_label: filtrera efter största antal inlägg
           time:
             label: Publicerad
+            aria_label: Filtrera efter publiceringsdatum
             before: innan
             after: efter
         views:
           label: Visningar
         min_views:
           placeholder: minst
+          aria_label: filtrera efter minsta antal visningar
         max_views:
           placeholder: maximalt
+          aria_label: filtrera efter största antal visningar
         additional_options:
           label: "Filtrera efter inläggsantal och ämnesvisningar"
-    hamburger_menu: "gå till en annan ämneslista eller kategori"
+    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -2776,6 +2789,7 @@ sv:
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
         upload: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Vi ber dig försöka igen."
         file_too_large: "Tyvärr är den filen för stor (maximal filstorlek är %{max_size_kb}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sedan dela länken?"
+        file_too_large_humanized: "Tyvärr är den filen för stor (maximal storlek är %{max_size}). Varför inte ladda upp din stora fil till en molndelningstjänst och sedan klistra in länken här?"
         too_many_uploads: "Tyvärr kan du bara ladda upp en bild i taget."
         too_many_dragged_and_dropped_files:
           one: "Tyvärr kan du bara ladda upp %{count} fil åt gången."
@@ -3034,6 +3048,7 @@ sv:
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
       notifications:
+        title: "ändra aviseringsnivå för denna kategori"
         watching:
           title: "Bevakar"
           description: "Du kommer automatiskt att bevaka alla ämnen i den här kategorin. Du aviseras om varje nytt inlägg i alla ämnen, och det visas en räknare över antalet nya svar."

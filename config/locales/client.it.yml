@@ -243,6 +243,8 @@ it:
     character_count:
       one: "%{count} carattere"
       other: "%{count} caratteri"
+    period_chooser:
+      aria_label: "Filtra per periodo"
     related_messages:
       title: "Messaggi correlati"
       see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
@@ -318,6 +320,9 @@ it:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
+    topic_count_categories:
+      one: "Visualizza %{count} argomento nuovo o aggiornato"
+      other: "Visualizza %{count} argomenti nuovi o aggiornati."
     topic_count_latest:
       one: "Visualizza %{count} argomento nuovo o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
@@ -1137,7 +1142,7 @@ it:
         tags: "Etichette"
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
-        read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages/personal'>messaggi personali</a>."
+        read_more: "Vuoi saperne di più? Sfoglia altri messaggi nei <a href='%{basePath}/u/%{username}/message'>messaggi personali</a>."
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -2186,8 +2191,10 @@ it:
             label: Messaggi
           min:
             placeholder: minimo
+            aria_label: filtra per numero minimo di messaggi
           max:
             placeholder: massimo
+            aria_label: filtra per numero massimo di messaggi
           time:
             label: Pubblicato
             before: prima del
@@ -2196,9 +2203,11 @@ it:
           label: Visualizzazioni
         min_views:
           placeholder: minimo
+          aria_label: filtra per visualizzazioni minime
         max_views:
           placeholder: massimo
-    hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
+          aria_label: filtra per visualizzazioni massime
+    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -2752,6 +2761,7 @@ it:
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
+        file_too_large_humanized: "Purtroppo questo file è troppo grande (la dimensione massima consentita è %{max_size}). Perché non carichi il file su un servizio di condivisione in cloud e poi incolli qui il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files:
           one: "Spiacenti, puoi caricare solo %{count} file alla volta."
@@ -3005,6 +3015,7 @@ it:
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
+        title: "cambia il livello di notifica per questa categoria"
         watching:
           title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in questa categoria. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."

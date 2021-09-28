@@ -313,6 +313,9 @@ da:
         confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med den?"
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
+    topic_count_categories:
+      one: "Se %{count} nyt eller opdateret emne"
+      other: "Se %{count} nye eller opdaterede emner"
     topic_count_latest:
       one: "Se %{count} nyt eller opdateret emne"
       other: "Se %{count} nye eller opdaterede emner"
@@ -2166,7 +2169,6 @@ da:
           placeholder: minimum
         max_views:
           placeholder: maksimum
-    hamburger_menu: "gå til en anden emneliste eller kategori"
     new_item: "ny"
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"

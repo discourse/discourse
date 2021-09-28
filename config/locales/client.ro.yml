@@ -328,6 +328,10 @@ ro:
         confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
+    topic_count_categories:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -1774,7 +1778,6 @@ ro:
           placeholder: minim
         max_views:
           placeholder: maxim
-    hamburger_menu: "Du-te la o altă categorie saulistă de subiecte"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"

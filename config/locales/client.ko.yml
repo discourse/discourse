@@ -162,6 +162,7 @@ ko:
         cn_northwest_1: "중국 (닝샤)"
         eu_central_1: "EU (프랑크푸르트)"
         eu_north_1: "EU (스톡홀름)"
+        eu_south_1: "EU (밀라노)"
         eu_west_1: "EU (아일랜드)"
         eu_west_2: "EU (런던)"
         eu_west_3: "EU (파리)"
@@ -216,6 +217,8 @@ ko:
     max_of_count: "최대 %{count}"
     character_count:
       other: "%{count} 글자"
+    period_chooser:
+      aria_label: "기간별 필터링"
     related_messages:
       title: "관련 메시지"
       see_all: '@%{username}의 모든 메시지 <a href="%{path}">보기</a>...'
@@ -248,6 +251,7 @@ ko:
       help:
         bookmark: "이 글의 첫 번째 게시물을 북마크하려면 클릭하세요."
         edit_bookmark: "이 글에 대한 북마크를 편집하려면 클릭하십시오."
+        edit_bookmark_for_topic: "이 글에 대한 북마크를 편집하려면 클릭하십시오."
         unbookmark: "이 항목의 모든 북마크를 제거하려면 클릭하십시오."
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오."
     bookmarks:
@@ -290,6 +294,8 @@ ko:
         confirm: "이 항목에 대한 초안이 진행중입니다. 무엇을 하고 싶습니까?"
         yes_value: "버리기"
         no_value: "편집 재개"
+    topic_count_categories:
+      other: "%{count}개의 새글 또는 업데이트 된 글 보기"
     topic_count_latest:
       other: "%{count}개의 새글 또는 업데이트 된 글 보기"
     topic_count_unseen:
@@ -1575,6 +1581,7 @@ ko:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
       enable: "이 글 요약"
       disable: "모든 글 표시"
+      short_label: "요약하기"
     deleted_filter:
       enabled_description: "이 글에는 숨겨진 삭제 된 게시물이 있습니다."
       disabled_description: "글에 삭제 된 게시물이 표시됩니다."
@@ -2031,6 +2038,7 @@ ko:
       select_all: "모두 선택"
       clear_all: "모두 지우기"
       too_short: "검색어가 너무 짧습니다."
+      sort_or_bulk_actions: "결과 정렬 또는 일괄 선택"
       result_count:
         other: "<span><span class='term'>%{term}</span>에 대한 %{count}%{plus}개의 검색 결과</span>"
       title: "글, 사용자 또는 카테고리 검색"
@@ -2046,10 +2054,13 @@ ko:
       search_google: "대신 구글에서 검색해보세요."
       search_google_button: "구글"
       search_button: "검색"
+      search_term_label: "검색 키워드 입력"
       categories: "카테고리"
       tags: "태그"
       type:
+        default: "글/댓글"
         users: "사용자"
+        categories_and_tags: "카테고리/태그"
       context:
         user: "@%{username}님의 글 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -2057,8 +2068,10 @@ ko:
         topic: "이 글에서 검색"
         private_messages: "메시지 검색"
       advanced:
+        title: 상세검색
         posted_by:
           label: '글쓴이:'
+          aria_label: 게시물 작성자로 필터링
         in_category:
           label: 분류됨
         in_group:
@@ -2067,6 +2080,7 @@ ko:
           label: 배지 포함
         with_tags:
           label: 태그 됨
+          aria_label: 태그로 필터링
         filters:
           label: 항목/게시물 만 반환...
           title: 제목에서만 일치
@@ -2097,19 +2111,26 @@ ko:
             label: 글
           min:
             placeholder: 최소
+            aria_label: 최소 게시물 수로 필터링
           max:
             placeholder: 최대
+            aria_label: 최대 게시물 수로 필터링
           time:
             label: 게시 됨
+            aria_label: 게시 날짜로 필터링
             before: 이전
             after: 이후
         views:
           label: 조회
         min_views:
           placeholder: 최소
+          aria_label: 최소 조회수로 필터링
         max_views:
           placeholder: 최대
-    hamburger_menu: "다른 글 목록 또는 카테고리로 이동"
+          aria_label: 최대 조회수로 필터링
+        additional_options:
+          label: "게시물 수 및 글 조회수로 필터링"
+    hamburger_menu: "메뉴"
     new_item: "새 항목"
     go_back: "돌아가기"
     not_logged_in_user: "현재 활동 및 기본 설정에 대한 요약이 포함된 사용자 페이지"
@@ -2757,7 +2778,9 @@ ko:
             button: "HTML"
       bookmarks:
         create: "북마크 만들기"
+        create_for_topic: "글에 대한 북마크 만들기"
         edit: "북마크 수정"
+        edit_for_topic: "글에 대한 북마크 수정"
         created: "생성일자"
         updated: "업데이트됨"
         name: "이름"
@@ -3368,9 +3391,16 @@ ko:
     pick_files_button:
       unsupported_file_picked: "지원되지 않는 파일을 선택했습니다. 지원되는 파일 형식 – %{types}."
     user_activity:
+      no_activity_title: "아직 활동 없음"
       no_activity_others: "활동 없음."
+      no_replies_title: "아직 어떤 글에도 댓글을 달지 않았습니다."
       no_replies_others: "답글이 없습니다."
+      no_drafts_title: "초안을 시작하지 않았습니다."
+      no_likes_title: "아직 어떤 글에도 좋아요를 클릭하지 않으셨습니다."
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
+      no_topics_title: "아직 작성한 글이 없습니다."
+      no_read_topics_title: "아직 읽은 글이 없습니다."
+    no_group_messages_title: "그룹 메시지가 없습니다."
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:

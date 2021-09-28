@@ -1964,7 +1964,7 @@ sv:
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
-    enable_fast_edit: "Experimentell funktion som gör det möjligt att redigera små delar av ett inläggs text på plats."
+    enable_fast_edit: "Gör det möjligt att redigera ett litet urval av en inläggstext på plats."
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -3410,12 +3410,15 @@ sv:
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
+      too_large_humanized: "Tyvärr är filen som du försöker ladda upp för stor (maximal storlek är %{max_size})."
     images:
       too_large: "Tyvärr är bilden som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB). Ändra storleken och försök igen."
+      too_large_humanized: "Tyvärr är bilden som du försöker ladda upp för stor (maximal storlek är %{max_size}). Ändra storlek på den och försök igen."
       larger_than_x_megapixels: "Tyvärr är bilden som du försöker ladda upp för stor (maximal dimension är %{max_image_megapixels} megapixlar). Ändra storleken och försök igen."
       size_not_found: "Tyvärr kunde vi inte avgöra bildens storlek. Kanske är din bildfil skadad?"
     placeholders:
       too_large: "(bild större än %{max_size_kb} kB)"
+      too_large_humanized: "(bild större än %{max_size})"
   avatar:
     missing: "Tyvärr kunde vi inte hitta någon avatar kopplad till den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:

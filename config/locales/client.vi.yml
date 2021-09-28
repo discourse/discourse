@@ -287,6 +287,8 @@ vi:
         confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_categories:
+      other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unseen:
@@ -2029,7 +2031,6 @@ vi:
           placeholder: tối thiểu
         max_views:
           placeholder: tối đa
-    hamburger_menu: "đi đến danh sách chủ đề hoặc danh mục khác"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"

@@ -1922,7 +1922,6 @@ lv:
           placeholder: minimums
         max_views:
           placeholder: maksimums
-    hamburger_menu: "iet uz citu tēmu sarakstu vai sadaļu"
     new_item: "jauns"
     go_back: "atgriezties"
     not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"

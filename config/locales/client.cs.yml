@@ -348,6 +348,11 @@ cs:
       topic_reply: "Koncept odpovědi"
       abandon:
         yes_value: "Zahodit"
+    topic_count_categories:
+      one: "Zobrazit %{count} nové nebo upravené téma"
+      few: "Zobrazit %{count} nová nebo upravená témata"
+      many: "Zobrazit %{count} nových nebo upravených témat"
+      other: "Zobrazit %{count} nových nebo upravených témat"
     topic_count_latest:
       one: "Zobrazit %{count} nové nebo upravené téma"
       few: "Zobrazit %{count} nová nebo upravená témata"
@@ -1781,7 +1786,6 @@ cs:
             after: po
         views:
           label: Zobrazení
-    hamburger_menu: "jít na jiný seznam témat nebo kategorii"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"

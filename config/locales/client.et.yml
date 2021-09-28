@@ -281,6 +281,9 @@ et:
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
       topic_reply: "Mustandi vastus"
+    topic_count_categories:
+      one: "Vaata %{count} uut või uuendatud teemat"
+      other: "Vaata %{count} uut või uuendatud teemat"
     topic_count_latest:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -1546,7 +1549,6 @@ et:
           placeholder: miinimum
         max_views:
           placeholder: maksimum
-    hamburger_menu: "mine teise teemaloetelu või foorumi juurde"
     new_item: "uus"
     go_back: "tagasi"
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
