@@ -31,6 +31,7 @@ import { flushMap } from "discourse/models/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
+import { run } from "@ember/runloop";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -63,6 +64,10 @@ let app;
 let started = false;
 
 function createApplication(config, settings) {
+  if (app) {
+    run(app, "destroy");
+  }
+
   app = Application.create(config);
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
