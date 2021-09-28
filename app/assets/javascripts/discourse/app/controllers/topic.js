@@ -158,8 +158,6 @@ export default Controller.extend(bufferedProperty("model"), {
 
     if (name) {
       url = `${url}/group/${name}`;
-    } else {
-      url = `${url}/personal`;
     }
 
     DiscourseURL.routeTo(url);
