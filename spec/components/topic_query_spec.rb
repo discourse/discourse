@@ -233,6 +233,34 @@ describe TopicQuery do
     end
   end
 
+  context 'before and after filter' do
+    before do
+      Fabricate(:topic, title: '10 day old topic', created_at: 10.days.ago)
+      Fabricate(:topic, title: '15 day old topic', created_at: 15.days.ago)
+      Fabricate(:topic, title: '30 day old topic', created_at: 30.days.ago)
+    end
+
+    it "filters before date topics correctly" do
+      expect(TopicQuery.new(user).list_latest.topics.size).to eq(3)
+      expect(TopicQuery.new(user, before: '20').list_latest.topics.size).to eq(1)
+      expect(TopicQuery.new(user, before: '20').list_latest.topics.first.title).to eq('30 day old topic')
+      expect(TopicQuery.new(user, before: '60').list_latest.topics.size).to eq(0)
+      expect(TopicQuery.new(user, before: '12').list_latest.topics.size).to eq(2)
+      expect(TopicQuery.new(user, before: '9').list_latest.topics.size).to eq(3)
+    end
+
+    it "filters after date topics correctly" do
+      expect(TopicQuery.new(user, after: '20').list_latest.topics.size).to eq(2)
+      expect(TopicQuery.new(user, after: '12').list_latest.topics.size).to eq(1)
+      expect(TopicQuery.new(user, after: '12').list_latest.topics.first.title).to eq('10 day old topic')
+    end
+
+    it "filters before and after date topics correctly" do
+      expect(TopicQuery.new(user, after: '16', before: '14').list_latest.topics.size).to eq(1)
+      expect(TopicQuery.new(user, after: '16', before: '14').list_latest.topics.first.title).to eq('15 day old topic')
+    end
+  end
+
   describe 'include_pms option' do
     it "includes users own pms in regular topic lists" do
       topic = Fabricate(:topic)

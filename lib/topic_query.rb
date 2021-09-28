@@ -42,6 +42,7 @@ class TopicQuery
   def self.public_valid_options
     @public_valid_options ||=
       %i(page
+         after
          before
          bumped_before
          topic_ids
@@ -742,6 +743,12 @@ class TopicQuery
     if before = options[:before]
       if (before = before.to_i) > 0
         result = result.where('topics.created_at < ?', before.to_i.days.ago)
+      end
+    end
+
+    if after = options[:after]
+      if (after = after.to_i) > 0
+        result = result.where('topics.created_at > ?', after.to_i.days.ago)
       end
     end
 
