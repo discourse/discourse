@@ -143,7 +143,8 @@ export function mapRoutes() {
 }
 export function teardownRouter(container) {
   const router = container.lookup("router:main");
-  Object.getPrototypeOf(router).constructor.dslCallbacks[0] = null;
+  const constructor = Object.getPrototypeOf(router).constructor;
+  constructor.dslCallbacks.splice(0, constructor.dslCallbacks.length);
 }
 
 export function registerRouter(registry) {
