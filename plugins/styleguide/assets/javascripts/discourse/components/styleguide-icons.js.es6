@@ -19,18 +19,7 @@ export default Ember.Component.extend({
       this.set("iconIds", ids.sort());
     } else {
       // Let's try again a short time later if there are no svgs loaded yet
-      later(
-        this,
-        () => {
-          this.set(
-            "iconIds",
-            Array.from(document.querySelectorAll("#svg-sprites symbol"))
-              .mapBy("id")
-              .sort()
-          );
-        },
-        1500
-      );
+      later(this, this.setIconIds, 1500);
     }
   },
 });
