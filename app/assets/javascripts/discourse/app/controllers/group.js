@@ -87,9 +87,13 @@ export default Controller.extend({
     return defaultTabs;
   },
 
-  @discourseComputed("model.is_group_user")
-  showMessages(isGroupUser) {
+  @discourseComputed("model.has_messages", "model.is_group_user")
+  showMessages(hasMessages, isGroupUser) {
     if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
+
+    if (!hasMessages) {
       return false;
     }
 
