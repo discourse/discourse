@@ -1,3 +1,27 @@
+const TapReporter = require("testem/lib/reporters/tap_reporter");
+
+class Reporter {
+  constructor() {
+    this._tapReporter = new TapReporter(...arguments);
+  }
+
+  reportMetadata(tag, metadata) {
+    if (tag === "summary-line") {
+      process.stdout.write(`\n${metadata.message}\n`);
+    } else {
+      this._tapReporter.reportMetadata(...arguments);
+    }
+  }
+
+  report(prefix, data) {
+    this._tapReporter.report(prefix, data);
+  }
+
+  finish() {
+    this._tapReporter.finish();
+  }
+}
+
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
@@ -15,6 +39,7 @@ module.exports = {
       "--mute-audio",
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
+      "--enable-precise-memory-info",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
     "Headless Firefox": ["--width=1440", "--height=900"],
@@ -22,4 +47,5 @@ module.exports = {
   browser_paths: {
     "Headless Firefox": "/opt/firefox-evergreen/firefox",
   },
+  reporter: Reporter,
 };
