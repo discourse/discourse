@@ -287,6 +287,8 @@ ja:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+    topic_count_categories:
+      other: "%{count} 件の新規/更新トピックを見る"
     topic_count_latest:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_unseen:
@@ -2093,7 +2095,6 @@ ja:
           placeholder: 最小
         max_views:
           placeholder: 最大
-    hamburger_menu: "他のトピックリストやカテゴリに移動"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"

@@ -2062,7 +2062,7 @@ he:
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
-    enable_fast_edit: "יכולת ניסיונית שמאפשרת בחירה מצומצמת של טקסט מהפוסט לעריכה בתוך השורה."
+    enable_fast_edit: "מאפשר עריכה בתוך השורה של חלק קטן מהטקסט של הפוסט."
     old_post_notice_days: "ימים לפני שהתראת נושא מתיישנת"
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -3714,6 +3714,7 @@ he:
     png_to_jpg_conversion_failure_message: "אירעה שגיאה בעת המרה מ־PNG ל־JPG."
     optimize_failure_message: "אירעה שגיאה בעת מיטוב התמונה שהועלתה."
     download_failure: "הורדת הקובץ מהספק החיצוני נכשלה."
+    size_mismatch_failure: "גודל הקובץ שנשלח ל־S3 לא תואם לגודל המשלוח המוצהר. %{additional_detail}"
     create_mutlipart_failure: "יצירת העלאה מרובת חלקים באחסון החיצוני נכשלה."
     abort_mutlipart_failure: "ביטול העלאה מרובת חלקים באחסון החיצוני נכשל."
     complete_mutlipart_failure: "השלמת העלאה מרובת חלקים באחסון החיצוני נכשלה."
@@ -3722,12 +3723,15 @@ he:
     cannot_promote_failure: "לא ניתן להשלים את ההעלאה, יתכן שהיא כבר הושלמה או נכשלה בעבר."
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
+      too_large_humanized: "הקובץ המועמד לשליחה גדול מדי (הגודל המרבי המותר הוא %{max_size}), עמך הסליחה."
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
+      too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
       larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"
+      too_large_humanized: "(גודל התמונה חורג מ־%{max_size})"
   avatar:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
   flag_reason:

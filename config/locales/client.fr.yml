@@ -311,6 +311,9 @@ fr:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+    topic_count_categories:
+      one: "Voir %{count} sujet récent ou mis à jour"
+      other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_latest:
       one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
@@ -2171,7 +2174,6 @@ fr:
           placeholder: minimum
         max_views:
           placeholder: maximum
-    hamburger_menu: "accéder à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"

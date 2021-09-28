@@ -351,6 +351,11 @@ sl:
       topic_reply: "Osnutek odgovora"
       abandon:
         yes_value: "Zavrzi"
+    topic_count_categories:
+      one: "Poglej %{count} novo ali posodobljeno temo"
+      two: "Poglej %{count} novi ali posodobljeni temi"
+      few: "Poglej %{count} nove ali posodobljene teme"
+      other: "Poglej %{count} novih ali posodobljenih tem"
     topic_count_latest:
       one: "Poglej %{count} novo ali posodobljeno temo"
       two: "Poglej %{count} novi ali posodobljeni temi"
@@ -2109,7 +2114,6 @@ sl:
           placeholder: najmanj
         max_views:
           placeholder: največ
-    hamburger_menu: "pojdi na drug seznam tem ali kategorijo"
     new_item: "nov"
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"

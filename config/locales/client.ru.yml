@@ -295,6 +295,8 @@ ru:
       few: "%{count} буквы"
       many: "%{count} букв"
       other: "%{count} букв"
+    period_chooser:
+      aria_label: "Фильтр по периоду"
     related_messages:
       title: "Связанные сообщения"
       see_all: 'Показать <a href="%{path}">все сообщения</a> от @%{username}...'
@@ -325,7 +327,7 @@ ru:
       edit_bookmark: "Изменить закладку"
       clear_bookmarks: "Очистить закладки"
       help:
-        bookmark: "Добавить в закладки первое сообщение этой темы"
+        bookmark: "Добавить тему в закладки"
         edit_bookmark: "Изменить закладку в этой теме"
         edit_bookmark_for_topic: "Изменить закладку для этой темы"
         unbookmark: "Удалить все закладки в этой теме"
@@ -370,6 +372,11 @@ ru:
         confirm: "По этой теме есть сохранённый черновик. Что бы вы хотели с ним сделать?"
         yes_value: "Удалить"
         no_value: "Возобновить редактирование"
+    topic_count_categories:
+      one: "Есть %{count} новая или обновлённая тема"
+      few: "Есть %{count} новых или обновлённых темы"
+      many: "Есть %{count} новых или обновлённых тем"
+      other: "Есть %{count} новых или обновлённых тем"
     topic_count_latest:
       one: "Есть %{count} новая или обновлённая тема"
       few: "Есть %{count} новых или обновлённых темы"
@@ -1241,9 +1248,9 @@ ru:
         tags: "Теги"
         warnings: "Официальные предупреждения"
         read_more_in_group: "Хотите узнать больше? Просмотрите другие сообщения в группе %{groupLink}."
-        read_more: "Хотите узнать больше? Просмотрите другие сообщения в разделе <a href='%{basePath}/u/%{username}/messages/personal'>'Личные сообщения'</a>."
+        read_more: "Хотите узнать больше? Просмотрите другие сообщения в разделе <a href='%{basePath}/u/%{username}/messages'>'Личные сообщения'</a>."
         read_more_group_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений} }, вы также можете посмотреть другие сообщения в группе {groupLink}"
-        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/personal/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новое</a> личное сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новых</a> личных сообщения} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># новых</a> личных сообщений} }, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages/personal'>личные сообщения</a>"
+        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новое</a> личное сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новых</a> личных сообщения} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новых</a> личных сообщений} }, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>"
       preferences_nav:
         account: "Учётная запись"
         security: "Безопасность"
@@ -2303,6 +2310,7 @@ ru:
       select_all: "Выбрать всё"
       clear_all: "Сбросить всё"
       too_short: "Слишком короткое слово для поиска."
+      sort_or_bulk_actions: "Сортировка или массовый выбор результатов"
       result_count:
         one: "<span>%{count} результат для </span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} результата для </span><span class='term'>%{term}</span>"
@@ -2325,9 +2333,9 @@ ru:
       categories: "Разделы"
       tags: "Теги"
       type:
-        default: "Темы/сообщения"
-        users: "Пользователи"
-        categories_and_tags: "Разделы/теги"
+        default: "По темам и сообщениям"
+        users: "По пользователям"
+        categories_and_tags: "По разделам и тегам"
       context:
         user: "Искать сообщения от @%{username}"
         category: "Искать в разделе #%{category}"
@@ -2335,9 +2343,10 @@ ru:
         topic: "Искать в этой теме"
         private_messages: "Искать в личных сообщениях"
       advanced:
-        title: Расширенные фильтры
+        title: Расширенный поиск
         posted_by:
           label: Автор
+          aria_label: Фильтр по автору сообщения
         in_category:
           label: Разделы
         in_group:
@@ -2346,6 +2355,7 @@ ru:
           label: С наградами
         with_tags:
           label: Теги
+          aria_label: Фильтр по тегам
         filters:
           label: Ограничить поиск по темам/сообщениям...
           title: С совпадениями в заголовке
@@ -2376,21 +2386,26 @@ ru:
             label: Сообщений
           min:
             placeholder: минимум
+            aria_label: Фильтр по минимальному количеству сообщений
           max:
             placeholder: максимум
+            aria_label: Фильтр по максимальному количеству сообщений
           time:
             label: Дата
+            aria_label: Фильтр по дате публикации
             before: До (включая)
             after: Начиная с
         views:
           label: Просмотров
         min_views:
           placeholder: минимум
+          aria_label: Фильтр по минимальному количеству просмотров
         max_views:
           placeholder: максимум
+          aria_label: Фильтр по максимальному количеству просмотров
         additional_options:
           label: "Фильтр по количеству сообщений и просмотрам тем"
-    hamburger_menu: "Перейти к другому списку тем или другому разделу"
+    hamburger_menu: "системное меню"
     new_item: "новый"
     go_back: "вернуться"
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
@@ -3014,6 +3029,7 @@ ru:
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте ещё раз."
         upload: "К сожалению, не удалось загрузить файл. Попробуйте ещё раз."
         file_too_large: "К сожалению, этот файл слишком большой (максимально допустимый размер %{max_size_kb} КБ). Почему бы не загрузить этот файл в облако, а затем поделиться ссылкой?"
+        file_too_large_humanized: "К сожалению, этот файл слишком большой (максимально допустимый размер - %{max_size}). Почему бы не загрузить этот файл в облако, а затем поделиться ссылкой?"
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
         too_many_dragged_and_dropped_files:
           one: "Извините, но вы можете загрузить одномоментно не более %{count} файла."
@@ -3292,6 +3308,7 @@ ru:
       num_auto_bump_daily: "Число открытых тем для автоматического ежедневного поднятия:"
       navigate_to_first_post_after_read: "Перейти к первому сообщению после прочтения тем"
       notifications:
+        title: "Изменить уровень уведомлений для этого раздела"
         watching:
           title: "Наблюдать"
           description: "Наблюдать за всеми темами этого раздела. Уведомлять о каждом новом сообщении в любой из тем и показывать счётчик новых ответов."

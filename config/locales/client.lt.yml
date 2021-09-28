@@ -1513,7 +1513,6 @@ lt:
             after: po to
         views:
           label: Peržiūros
-    hamburger_menu: "Eiti į kitą temų sąrašą ar kategoriją"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"

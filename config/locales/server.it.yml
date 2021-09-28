@@ -1978,7 +1978,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
-    enable_fast_edit: "Funzionalità sperimentale che consente di modificare online una piccola selezione del testo di un post."
+    enable_fast_edit: "Abilita la modifica in linea della breve selezione del testo di un messaggio."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -3428,12 +3428,15 @@ it:
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
+      too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
+      too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"
+      too_large_humanized: "(immagine più grandi di %{max_size})"
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:

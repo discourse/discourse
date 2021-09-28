@@ -1558,6 +1558,7 @@ pl_PL:
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
+    summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "Zezwalaj użytkownikom o poziomie zaufania 1 (możliwe do zmiany przez min trust level to send messages) na tworzenie wiadomości i odpowiadanie na nie. Zwróć uwagę, że administracja zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -3761,10 +3762,12 @@ pl_PL:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
+      too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
       larger_than_x_megapixels: "Przepraszamy, obraz który próbujesz dodać jest zbyt duży (maksymalny wymiar to %{max_image_megapixels}-megapikseli), proszę zmienić rozmiar i spróbować ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
+      too_large_humanized: "(obraz większy niż %{max_size})"
   avatar:
     missing: "Przepraszamy, nie możemy odnaleźć żadnego avatara przypisanego do tego konta email. Spróbuj załadować go ponownie"
   flag_reason:

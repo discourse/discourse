@@ -313,6 +313,9 @@ pt_BR:
         confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_categories:
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -2179,7 +2182,6 @@ pt_BR:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"

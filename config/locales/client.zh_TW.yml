@@ -277,6 +277,8 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
+    topic_count_categories:
+      other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unseen:
@@ -901,6 +903,7 @@ zh_TW:
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標籤"
+        read_more: "想看更多？在<a href='%{basePath}/u/%{username}/message'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
         security: "安全性"
@@ -959,6 +962,7 @@ zh_TW:
         taken: "抱歉，此使用者名稱已經有人使用。"
         invalid: "此使用者名稱無效，只能使用數字與英文字母。"
       add_email:
+        title: "新增電子郵件"
         add: "添加"
       change_email:
         title: "修改電子郵件地址"
@@ -980,8 +984,9 @@ zh_TW:
         title: "電子郵件"
         primary: "主要電子郵件"
         secondary: "次要電子郵件"
-        primary_label: "一級"
+        primary_label: "主要"
         update_email: "修改電子郵件地址"
+        add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
@@ -1679,7 +1684,6 @@ zh_TW:
             after: 之後
         views:
           label: 瀏覽
-    hamburger_menu: "轉到另一個話題列表或分類"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"

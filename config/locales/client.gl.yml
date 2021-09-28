@@ -304,6 +304,9 @@ gl:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_categories:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -2105,7 +2108,6 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir a outra lista de temas ou categoría"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"

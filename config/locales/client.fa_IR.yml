@@ -312,6 +312,9 @@ fa_IR:
         confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
         yes_value: "حذف"
         no_value: "ادامه"
+    topic_count_categories:
+      one: "%{count} موضوع تازه یا به‌ روز شده."
+      other: "%{count} موضوع تازه یا به‌ روز شده."
     topic_count_latest:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -1969,7 +1972,6 @@ fa_IR:
           placeholder: حداقل
         max_views:
           placeholder: حداکثر
-    hamburger_menu: "به فهرست مبحث یا دسته بندی دیگر بروید"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"

@@ -375,6 +375,7 @@ zh_CN:
       cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
       cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
+      for_topic_must_use_first_post: "只能使用最早发布的内容来为主题创建书签"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -1931,7 +1932,6 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     watched_words_regular_expressions: "关注词是正则表达式。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
-    enable_fast_edit: "实验性功能：可以对要内联编辑的帖子文本进行少量选择。"
     old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"

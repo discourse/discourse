@@ -309,6 +309,9 @@ nl:
         confirm: "U hebt een concept in uitvoering voor dit topic. Wat wilt u er mee doen?"
         yes_value: "Negeren"
         no_value: "Bewerken hervatten"
+    topic_count_categories:
+      one: "%{count} nieuw of bijgewerkt topic bekijken"
+      other: "%{count} nieuwe of bijgewerkte topics bekijken"
     topic_count_latest:
       one: "%{count} nieuw of bijgewerkt topic bekijken"
       other: "%{count} nieuwe of bijgewerkte topics bekijken"
@@ -2132,7 +2135,6 @@ nl:
           placeholder: minimaal
         max_views:
           placeholder: maximaal
-    hamburger_menu: "naar een andere topiclijst of categorie"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"

@@ -299,6 +299,9 @@ ca:
       topic_reply: "Esborrany de resposta"
       abandon:
         yes_value: "Descarta"
+    topic_count_categories:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -1816,7 +1819,6 @@ ca:
             after: després de
         views:
           label: Vistes
-    hamburger_menu: "vés a una altra llista de temes o categories"
     new_item: "nous"
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "

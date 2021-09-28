@@ -243,6 +243,8 @@ de:
     character_count:
       one: "%{count} Zeichen"
       other: "%{count} Zeichen"
+    period_chooser:
+      aria_label: "Filtern nach Zeitraum"
     related_messages:
       title: "Verwandte Nachrichten"
       see_all: 'Siehe <a href="%{path}">alle Nachrichten</a> von @%{username} …'
@@ -318,6 +320,9 @@ de:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
+    topic_count_categories:
+      one: "Zeige %{count} neues oder aktualisiertes Thema"
+      other: "Zeige %{count} neue oder aktualisierte Themen"
     topic_count_latest:
       one: "Zeige %{count} neues oder aktualisiertes Thema"
       other: "Zeige %{count} neue oder aktualisierte Themen"
@@ -1137,9 +1142,7 @@ de:
         tags: "Schlagwörter"
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
-        read_more: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in <a href='%{basePath}/u/%{username}/messages/personal'>persönliche Nachrichten</a>."
         read_more_group_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten} } verbleibend, oder durchsuche andere Nachrichten in {groupLink}"
-        read_more_personal_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/personal/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/personal/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># neue</a> Nachrichten} } verbleibend oder durchsuche andere <a href='{basePath}/u/{username}/messages/personal'>persönliche Nachrichten</a>"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -2131,6 +2134,7 @@ de:
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
+      sort_or_bulk_actions: "Ergebnisse sortieren oder massenweise auswählen"
       result_count:
         one: "<span>%{count} Ergebnis für </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
@@ -2164,6 +2168,7 @@ de:
         title: Erweiterte Filter
         posted_by:
           label: Beiträge von
+          aria_label: Filtern nach Beitragsautor
         in_category:
           label: In der Kategorie
         in_group:
@@ -2172,6 +2177,7 @@ de:
           label: Mit dem Abzeichen
         with_tags:
           label: Mit dem Schlagwort
+          aria_label: Nach Schlagwörtern filtern
         filters:
           label: 'Themen/Beiträge einschränken:'
           title: Mit Treffer im Titel
@@ -2202,21 +2208,26 @@ de:
             label: Beiträge
           min:
             placeholder: Minimum
+            aria_label: nach Mindestanzahl von Beiträgen filtern
           max:
             placeholder: Maximum
+            aria_label: nach maximaler Anzahl von Beiträgen filtern
           time:
             label: 'Zeitraum einschränken:'
+            aria_label: Nach Veröffentlichungsdatum filtern
             before: Beiträge vor dem
             after: Beiträge nach dem
         views:
           label: Aufrufe
         min_views:
           placeholder: Minimum
+          aria_label: nach minimaler Anzahl von Ansichten filtern
         max_views:
           placeholder: Maximum
+          aria_label: nach maximaler Anzahl von Ansichten filtern
         additional_options:
           label: "Nach Beitragsanzahl und Themenaufrufen filtern"
-    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
+    hamburger_menu: "Menü"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -2776,6 +2787,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
+        file_too_large_humanized: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size}). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
@@ -3034,6 +3046,7 @@ de:
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
+        title: "ändere Benachrichtigungsstufe für diese Kategorie"
         watching:
           title: "Beobachten"
           description: "Du wirst automatisch alle Themen in dieser Kategorie beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."

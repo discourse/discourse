@@ -160,6 +160,7 @@ pl_PL:
       previous_month: "Poprzedni miesiąc"
       next_month: "Następny miesiąc"
       placeholder: data
+      from_placeholder: "od daty"
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
@@ -202,6 +203,7 @@ pl_PL:
         disabled: "Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony."
       forwarded: "przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
+    skip_to_main_content: "Przejdź do głównej zawartości"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     software_update_prompt:
@@ -292,6 +294,8 @@ pl_PL:
       few: "%{count} znaki"
       many: "%{count} znaków"
       other: "%{count} znaków"
+    period_chooser:
+      aria_label: "Filtruj według okresu"
     related_messages:
       title: "Wiadomości powiązane"
       see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username} ...'
@@ -366,6 +370,11 @@ pl_PL:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+    topic_count_categories:
+      one: "Zobacz %{count} nowy albo zaktualizowany temat"
+      few: "Zobacz %{count} nowe albo zaktualizowane tematy"
+      many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+      other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
     topic_count_latest:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -424,6 +433,7 @@ pl_PL:
         placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
       order_by: "Segreguj według:"
+      date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       explain:
         why: "wyjaśnij, dlaczego ten element znalazł się w kolejce"
@@ -1073,7 +1083,9 @@ pl_PL:
       use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
       expand_profile: "Rozwiń"
+      sr_expand_profile: "Rozwiń szczegóły profilu"
       collapse_profile: "Zwiń"
+      sr_collapse_profile: "Zwiń szczegóły profilu"
       bookmarks: "Zakładki"
       bio: "O mnie"
       timezone: "Strefa czasowa"
@@ -1232,6 +1244,7 @@ pl_PL:
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
         tags: "Tagi"
         warnings: "Oficjalne ostrzeżenia"
+        read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -1773,6 +1786,8 @@ pl_PL:
       description_time_MF: "Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>."
       enable: "Podsumuj ten temat"
       disable: "Pokaż wszystkie posty"
+      short_label: "Podsumuj"
+      short_title: "Pokaż podsumowanie tego tematu: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -1878,21 +1893,27 @@ pl_PL:
       google_oauth2:
         name: "Google"
         title: "przez Google"
+        sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
         title: "przez Twitter"
+        sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
         title: "z Instagramem"
+        sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
         title: "przez Facebook"
+        sr_title: "Zaloguj się przez facebook"
       github:
         name: "GitHub"
         title: "przez GitHub"
+        sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
         title: "z Discordem"
+        sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
@@ -2283,6 +2304,7 @@ pl_PL:
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
+      sort_or_bulk_actions: "Sortuj lub zbiorczo wybierz wyniki"
       result_count:
         one: "<span>%{count} wynik dla</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} wyniki dla</span><span class='term'>%{term}</span>"
@@ -2301,10 +2323,13 @@ pl_PL:
       search_google: "Spróbuj wyszukać w Google:"
       search_google_button: "Google"
       search_button: "Szukaj"
+      search_term_label: "wpisz słowo kluczowe wyszukiwania"
       categories: "Kategorie"
       tags: "Tagi"
       type:
+        default: "Tematy/posty"
         users: "Użytkownicy"
+        categories_and_tags: "Kategorie/tagi"
       context:
         user: "Szukaj postów @%{username}"
         category: "Szukaj w kategorii #%{category}"
@@ -2312,8 +2337,10 @@ pl_PL:
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
       advanced:
+        title: Zaawansowane filtry
         posted_by:
           label: Wysłane przez
+          aria_label: Filtruj według autora posta
         in_category:
           label: Skategoryzowane
         in_group:
@@ -2322,6 +2349,7 @@ pl_PL:
           label: Z odnaką
         with_tags:
           label: Otagowane
+          aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy / wpisy...
           title: Dopasowanie tylko w tytule
@@ -2364,7 +2392,7 @@ pl_PL:
           placeholder: minimum
         max_views:
           placeholder: maksimum
-    hamburger_menu: "przejdź do innej listy lub kategorii"
+    hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -3841,9 +3869,12 @@ pl_PL:
     pick_files_button:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
     user_activity:
+      no_activity_title: "Brak aktywności"
       no_activity_others: "Brak aktywności"
       no_replies_others: "Brak odpowiedzi."
       no_likes_others: "Brak polubionych wpisów."
+      no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4934,6 +4965,7 @@ pl_PL:
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
         revoke_admin: "Odbierz status administratora"
         grant_admin: "Przyznaj status administratora"
+        grant_admin_success: "Nowy administrator został potwierdzony."
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"

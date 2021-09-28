@@ -16,6 +16,7 @@ tr_TR:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%d%m%YT%H%M%SZ"
   date:
     month_names:
     - null
@@ -394,6 +395,7 @@ tr_TR:
       cannot_set_past_reminder: "Geçmişte bir yer imi anımsatıcısı ayarlayamazsınız."
       cannot_set_reminder_in_distant_future: "10 yıldan uzun bir gelecek için bir yer imi hatırlatıcısı ayarlayamazsınız."
       time_must_be_provided: "tüm hatırlatıcılar için zaman belirtilmelidir"
+      for_topic_must_use_first_post: "Konuyu işaretlemek için yalnızca ilk gönderiyi kullanabilirsiniz."
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -1584,6 +1586,7 @@ tr_TR:
     max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla imleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
+    max_personal_messages_per_day: "Bir kullanıcının günlük oluşturabileceği maksimum yeni kişisel mesaj konusu sayısı."
     max_invites_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla davet sayısı."
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
@@ -1903,7 +1906,7 @@ tr_TR:
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı."
     watched_words_regular_expressions: "İzlenen kelimeler düzenli ifadelerdir."
     enable_diffhtml_preview: "Tam yeniden oluşturma yerine önizlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
-    enable_fast_edit: "Bir yazı metninin seçilmiş küçük bir bölümünün satır içi düzenlenmesini sağlayan deneysel özellik."
+    enable_fast_edit: "Satır içi düzenlemek için bir yazı metninin küçük bir kısmının seçilebilmesini etkinleştirir."
     old_post_notice_days: "Yayın bildiriminin eski hale gelmesinden önceki günler"
     new_user_notice_tl: "Yeni kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
@@ -2528,12 +2531,30 @@ tr_TR:
     backup_failed:
       title: "Yedekleme Başarısız"
       subject_template: "Yedekleme başarısız"
+      text_body_template: |
+        Yedekleme başarısız oldu.
+
+        Log kayıtları:
+
+        %{logs}
     restore_succeeded:
       title: "Geri Alma Başarılı"
       subject_template: "Geri alma başarıyla tamamlandı"
+      text_body_template: |
+        Geri yükleme başarılı oldu.
+
+        Log kayıtları:
+
+        %{logs}
     restore_failed:
       title: "Geri Alma Başarısız Oldu"
       subject_template: "Geri alma başarısız"
+      text_body_template: |
+        Geri yükleme başarısız oldu.
+
+        Log kayıtları:
+
+        %{logs}
     bulk_invite_succeeded:
       title: "Toplu Davet Başarılı"
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"
@@ -3160,6 +3181,10 @@ tr_TR:
     account_suspended_forever:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
+      text_body_template: |
+        Forumda bir süreliğine askıya alındınız.
+
+        Sebep - %{reason}
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
@@ -3170,6 +3195,10 @@ tr_TR:
     account_silenced_forever:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
+      text_body_template: |
+        Forumda bir süreliğine susturuldunuz.
+
+        Sebep - %{reason}
     account_exists:
       title: "Bu Hesap Zaten Mevcut"
       subject_template: "[%{email_prefix}] Hesap zaten mevcut"
@@ -3355,17 +3384,25 @@ tr_TR:
     store_failure: "#%{user_id} kullanıcısı için yükleme #%{upload_id} kaydedilemedi."
     file_missing: "Affedersiniz, yükleme için bir dosya sağlamalısınız."
     empty: "Üzgünüz, sağladığınız dosya boş."
+    failed: "Üzgünüz, ancak yüklemeniz başarısız oldu. Lütfen tekrar deneyin."
     png_to_jpg_conversion_failure_message: "PNG'den JPG'ye dönüştürülürken bir hata oluştu."
     optimize_failure_message: "Yüklenen imaj optimize edilirken bir hata oluştu."
     download_failure: "Dosyayı harici sağlayıcıdan indirme işlemi başarısız oldu."
+    create_mutlipart_failure: "Harici depoda çok parçalı yükleme oluşturulamadı."
+    abort_mutlipart_failure: "Harici depoda çok parçalı yükleme iptal edilmedi."
+    complete_mutlipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
+    cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
+      too_large_humanized: "Maalesef yüklemeye çalıştığınız dosya çok büyük (maksimum boyut %{max_size})."
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (en fazla %{max_size_kb}KB olabilir), lütfen küçültüp tekrar deneyin."
+      too_large_humanized: "Maalesef yüklemeye çalıştığınız resim çok büyük (maksimum boyut %{max_size}), lütfen yeniden boyutlandırın ve tekrar deneyin."
       larger_than_x_megapixels: "Özür dileriz, yüklemeye çalıştığınız fotoğrafın ölçüsü çok büyük (maksimum ölçü %{max_image_megapixels} - megapiksel). Lütfen boyutu yeniden ayarlayın ve tekrar deneyin."
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
     placeholders:
       too_large: "(%{max_size_kb}KB'den daha büyük resim)"
+      too_large_humanized: "(en yüksek boyuttan -%{max_size}- büyük imaj)"
   avatar:
     missing: "Üzgünüz, bu e-posta adresiyle ilişkilendirilmiş bir avatar bulamadık. Tekrar yüklemeyi deneyebilir misiniz?"
   flag_reason:
