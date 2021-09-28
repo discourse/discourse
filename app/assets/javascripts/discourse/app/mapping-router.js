@@ -134,12 +134,21 @@ export function mapRoutes() {
     }
   });
 
-  return BareRouter.extend({
+  const extendedRouter = BareRouter.extend({
     rootURL: getURL("/"),
   }).map(function () {
     tree.mapRoutes(this);
     this.route("unknown", { path: "*path" });
   });
+
+  _extendedRouter = extendedRouter;
+  return extendedRouter;
+}
+
+let _extendedRouter;
+export function unRegisterRouter() {
+  _extendedRouter.dslCallbacks[0] = null;
+  _extendedRouter = null;
 }
 
 export function registerRouter(registry) {
