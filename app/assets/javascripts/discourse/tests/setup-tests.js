@@ -29,9 +29,9 @@ import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
-import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
 import { run } from "@ember/runloop";
+import { isLegacyEmber } from "discourse-common/config/environment";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -286,7 +286,7 @@ function setupTestsCommon(application, container, config) {
     $(".modal-backdrop").remove();
     flushMap();
 
-    if (!setupApplicationTest) {
+    if (isLegacyEmber()) {
       // ensures any event not removed is not leaking between tests
       // most likely in initializers, other places (controller, component...)
       // should be fixed in code
@@ -335,22 +335,18 @@ function setupTestsCommon(application, container, config) {
     return true;
   };
 
-  try {
-    // Ember CLI
-    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
-    emberCliTestLoader.addModuleExcludeMatcher(
-      (name) => !shouldLoadModule(name)
-    );
-  } catch (e) {
-    if (!String(e).indexOf("Could not find module")) {
-      throw e;
-    }
-    // Legacy
+  if (isLegacyEmber()) {
     Object.keys(requirejs.entries).forEach(function (entry) {
       if (shouldLoadModule(entry)) {
         require(entry, null, null, true);
       }
     });
+  } else {
+    // Ember CLI
+    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
+    emberCliTestLoader.addModuleExcludeMatcher(
+      (name) => !shouldLoadModule(name)
+    );
   }
 
   // forces 0 as duration for all jquery animations
