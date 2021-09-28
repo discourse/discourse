@@ -21,7 +21,7 @@
   {{#if nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}
-    {{user-notifications-large notifications=model filter=filter}}
+    {{user-notifications-large notifications=model}}
     {{conditional-loading-spinner condition=loading}}
   {{/if}}
 {{/if}}
