@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -109,6 +110,7 @@ acceptance("Poll results", function (needs) {
               ],
             },
             chart_type: "bar",
+            groups: null,
             title: null,
           },
         ],
@@ -214,6 +216,7 @@ acceptance("Poll results", function (needs) {
                     ],
                   },
                   chart_type: "bar",
+                  groups: null,
                   title: null,
                 },
               ],
@@ -616,6 +619,7 @@ acceptance("Poll results", function (needs) {
             ],
           },
           chart_type: "bar",
+          groups: null,
           title: null,
         },
       ],
@@ -642,5 +646,18 @@ acceptance("Poll results", function (needs) {
       find(".poll-container .results li:nth-child(2) .poll-voters li").length,
       0
     );
+  });
+
+  test("can unvote", async function (assert) {
+    await visit("/t/-/load-more-poll-voters");
+    await click(".toggle-results");
+
+    assert.equal(count(".poll-container .d-icon-circle"), 1);
+    assert.equal(count(".poll-container .d-icon-far-circle"), 1);
+
+    await click(".remove-vote");
+
+    assert.equal(count(".poll-container .d-icon-circle"), 0);
+    assert.equal(count(".poll-container .d-icon-far-circle"), 2);
   });
 });

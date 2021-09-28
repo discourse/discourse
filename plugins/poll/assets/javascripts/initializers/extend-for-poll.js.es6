@@ -109,6 +109,7 @@ function initializePolls(api) {
           post: pollPost,
           poll,
           vote,
+          hasSavedVote: vote.length > 0,
           titleHTML: titleElement && titleElement.outerHTML,
           groupableUserFields: (
             api.container.lookup("site-settings:main")

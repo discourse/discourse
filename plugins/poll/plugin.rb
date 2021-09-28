@@ -85,8 +85,6 @@ after_initialize do
           available_options = poll.poll_options.map { |o| o.digest }.to_set
           options.select! { |o| available_options.include?(o) }
 
-          raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
-
           new_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
             obj << option.id if options.include?(option.digest)
           end
@@ -388,7 +386,7 @@ after_initialize do
     def vote
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
-      options   = params.require(:options)
+      options   = params[:options].is_a?(Array) ? params[:options] : []
 
       begin
         poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, current_user)
