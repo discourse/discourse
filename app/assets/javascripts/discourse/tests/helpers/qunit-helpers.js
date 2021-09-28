@@ -296,6 +296,11 @@ export function acceptance(name, optionsOrCallback) {
           initializer.teardown(this.container);
         }
       });
+      app._runInitializer("initializers", (initName, initializer) => {
+        if (initializer && initializer.teardown) {
+          initializer.teardown(this.container);
+        }
+      });
 
       if (LEGACY_ENV) {
         app.__registeredObjects__ = false;
