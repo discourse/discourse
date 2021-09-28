@@ -90,6 +90,16 @@ describe ::DiscoursePoll::PollsController do
       expect(message.group_ids).to contain_exactly(group.id)
     end
 
+    it "requires at least 1 valid option" do
+      put :vote, params: {
+        post_id: poll.id, poll_name: "poll", options: ["A", "B"]
+      }, format: :json
+
+      expect(response.status).not_to eq(200)
+      json = response.parsed_body
+      expect(json["errors"][0]).to eq(I18n.t("poll.requires_at_least_1_valid_option"))
+    end
+
     it "supports vote changes" do
       put :vote, params: {
         post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
@@ -115,7 +125,7 @@ describe ::DiscoursePoll::PollsController do
 
       expect(response.status).to eq(200)
 
-      put :vote, params: {
+      delete :remove_vote, params: {
         post_id: poll.id, poll_name: "poll"
       }, format: :json
 

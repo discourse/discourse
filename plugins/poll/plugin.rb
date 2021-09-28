@@ -48,7 +48,7 @@ after_initialize do
   class DiscoursePoll::Poll
     class << self
 
-      def vote(post_id, poll_name, options, user)
+      def vote(post_id, poll_name, options, user, remove: false)
         Poll.transaction do
           post = Post.find_by(id: post_id)
 
@@ -84,6 +84,8 @@ after_initialize do
           # remove options that aren't available in the poll
           available_options = poll.poll_options.map { |o| o.digest }.to_set
           options.select! { |o| available_options.include?(o) }
+
+          raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty? && !remove
 
           new_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
             obj << option.id if options.include?(option.digest)
@@ -386,10 +388,22 @@ after_initialize do
     def vote
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
-      options   = params[:options].is_a?(Array) ? params[:options] : []
+      options   = params.require(:options)
 
       begin
         poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, current_user)
+        render json: { poll: poll, vote: options }
+      rescue StandardError => e
+        render_json_error e.message
+      end
+    end
+
+    def remove_vote
+      post_id   = params.require(:post_id)
+      poll_name = params.require(:poll_name)
+
+      begin
+        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, [], current_user, remove: true)
         render json: { poll: poll, vote: options }
       rescue StandardError => e
         render_json_error e.message
@@ -458,6 +472,7 @@ after_initialize do
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
+    delete "/vote" => "polls#remove_vote"
     put "/toggle_status" => "polls#toggle_status"
     get "/voters" => 'polls#voters'
     get "/grouped_poll_results" => 'polls#grouped_poll_results'

@@ -655,7 +655,10 @@ createWidget("discourse-poll-buttons", {
         });
       }
 
-      contents.push(showResultsButton);
+      if (showResultsButton) {
+        contents.push(showResultsButton);
+      }
+
       if (attrs.hasSavedVote) {
         contents.push(
           this.attach("button", {
@@ -667,7 +670,10 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
-      contents.push(infoText);
+
+      if (infoText) {
+        contents.push(infoText);
+      }
     }
 
     if (attrs.groupableUserFields.length && poll.voters > 0) {
@@ -912,7 +918,7 @@ export default createWidget("discourse-poll", {
     const { attrs, state } = this;
     state.loading = true;
     return ajax("/polls/vote", {
-      type: "PUT",
+      type: "DELETE",
       data: {
         post_id: attrs.post.id,
         poll_name: attrs.poll.name,
