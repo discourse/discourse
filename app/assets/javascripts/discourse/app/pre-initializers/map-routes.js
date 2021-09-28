@@ -1,6 +1,6 @@
 import Application from "@ember/application";
 import { isLegacyEmber } from "discourse-common/config/environment";
-import { registerRouter, unRegisterRouter } from "discourse/mapping-router";
+import { registerRouter, teardownRouter } from "discourse/mapping-router";
 
 let originalBuildInstance;
 
@@ -25,6 +25,6 @@ export default {
   },
 
   teardown(container) {
-    unRegisterRouter(container);
+    teardownRouter(container);
   },
 };

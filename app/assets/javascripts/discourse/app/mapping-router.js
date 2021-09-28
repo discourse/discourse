@@ -141,7 +141,7 @@ export function mapRoutes() {
     this.route("unknown", { path: "*path" });
   });
 }
-export function unRegisterRouter(container) {
+export function teardownRouter(container) {
   const router = container.lookup("router:main");
   Object.getPrototypeOf(router).constructor.dslCallbacks[0] = null;
 }
