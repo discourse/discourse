@@ -22,26 +22,9 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    import_groups
     import_users
-  end
-
-  def import_groups
-    puts "Importing groups..."
-
-    groups = @db.execute(<<~SQL, last_row_id: @last_imported_group_id)
-      SELECT *
-      FROM groups
-      WHERE ROWID > :last_row_id #{}
-      ORDER BY ROWID
-    SQL
-
-    create_groups(groups) do |row|
-      {
-        imported_id: row["id"],
-        name: normalize_text("name")
-      }
-    end
+    import_user_emails
+    import_topics
   end
 
   def import_users
@@ -58,14 +41,49 @@ class BulkImport::Generic < BulkImport::Base
       {
         imported_id: row["id"],
         username: row["username"],
-        created_at: to_datetime(row["created_at"]),
-        name: row["name"],
         email: row["email"],
-        last_seen_at: to_datetime(row[:"last_seen_at"]),
-        bio_raw: row["bio"],
-        location: row["location"],
-        admin: to_boolean(row["admin"]),
-        moderator: to_boolean(row["moderator"])
+        created_at: to_datetime(row["created_at"])
+      }
+    end
+  end
+
+  def import_user_emails
+    puts '', 'Importing user emails...'
+
+    users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
+      SELECT ROWID, *
+      FROM users
+      WHERE ROWID > :last_row_id
+      ORDER BY ROWID
+    SQL
+
+    create_user_emails(users) do |row|
+      {
+        imported_id: row["id"],
+        imported_user_id: row["id"],
+        email: row["email"],
+        created_at: to_datetime(row["created_at"])
+      }
+    end
+  end
+
+  def import_topics
+    puts "Importing topics..."
+
+    topics = @db.execute(<<~SQL, last_row_id: @last_imported_topic_id)
+      SELECT ROWID, *
+      FROM topics
+      WHERE ROWID > :last_row_id
+      ORDER BY ROWID
+    SQL
+
+    create_topics(topics) do |row|
+      {
+        imported_id: row["id"],
+        title: normalize_text(row["title"]),
+        user_id: user_id_from_imported_id(row["user_id"]),
+        created_at: to_datetime(row["created_at"]),
+        category_id: 1
       }
     end
   end
