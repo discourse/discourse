@@ -507,6 +507,8 @@ login:
     default: "mailinator.com"
     type: list
     list_type: simple
+  blocked_email_pattern:
+    default: ""
   allowed_email_domains:
     default: ""
     type: list

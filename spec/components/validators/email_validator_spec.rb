@@ -30,6 +30,14 @@ describe EmailValidator do
       expect(blocks?('sam@googlemail.com')).to eq(false)
     end
 
+    it "blocks based on blocked_email_pattern" do
+      SiteSetting.blocked_email_pattern = ".*\\+.*@gmail\\.com"
+      expect(blocks?('sam@email.com')).to eq(false)
+      expect(blocks?('sam+test@email.com')).to eq(false)
+      expect(blocks?('sam@gmail.com')).to eq(false)
+      expect(blocks?('sam+test@gmail.com')).to eq(true)
+    end
+
     it "blocks based on allowed_email_domains" do
       SiteSetting.allowed_email_domains = "googlemail.com|email.com"
       expect(blocks?('sam@email.com')).to eq(false)

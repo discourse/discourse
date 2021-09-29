@@ -25,8 +25,10 @@ class EmailValidator < ActiveModel::EachValidator
   def self.allowed?(email)
     if (setting = SiteSetting.allowed_email_domains).present?
       return email_in_restriction_setting?(setting, email) || is_developer?(email)
-    elsif (setting = SiteSetting.blocked_email_domains).present?
-      return !(email_in_restriction_setting?(setting, email) && !is_developer?(email))
+    elsif SiteSetting.blocked_email_domains.present? || SiteSetting.blocked_email_pattern.present?
+      return !(email_in_restriction_setting?(SiteSetting.blocked_email_domains, email) ||
+               email_in_restriction_pattern_setting?(SiteSetting.blocked_email_pattern, email)) ||
+             is_developer?(email)
     end
 
     true
@@ -41,8 +43,17 @@ class EmailValidator < ActiveModel::EachValidator
   end
 
   def self.email_in_restriction_setting?(setting, value)
+    return false if setting.blank?
+
     domains = setting.gsub('.', '\.')
     regexp = Regexp.new("@(.+\\.)?(#{domains})$", true)
+    value =~ regexp
+  end
+
+  def self.email_in_restriction_pattern_setting?(setting, value)
+    return false if setting.blank?
+
+    regexp = Regexp.new(setting, true)
     value =~ regexp
   end
 
