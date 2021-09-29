@@ -1461,7 +1461,8 @@ class PluginApi {
     this.modifyClass(
       `component:${mountedComponent}`,
       {
-        pluginId: `#{mountedComponent}/#{widgetKey}/#{appEvent}`,
+        pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
+
         didInsertElement() {
           this._super();
           this.dispatch(appEvent, widgetKey);
