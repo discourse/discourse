@@ -1111,3 +1111,10 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 }
+
+export function resetPretender() {
+  instance.handlers = [];
+  instance.handledRequests = [];
+  instance.unhandledRequests = [];
+  instance.passthroughRequests = [];
+}
