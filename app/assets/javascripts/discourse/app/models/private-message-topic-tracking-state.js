@@ -169,7 +169,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
           [INBOX_FILTER, ARCHIVE_FILTER].includes(this.filter) &&
           (!message.payload.acting_user_id ||
             message.payload.acting_user_id !== this.currentUser.id) &&
-          (this.inbox === "all" || this._displayMessageForGroupInbox(message))
+          this._displayMessageForGroupInbox(message)
         ) {
           this._notifyIncoming(message.topic_id);
         }
@@ -187,7 +187,6 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   _shouldDisplayMessageForInbox(message) {
     return (
-      this.inbox === "all" ||
       this._displayMessageForGroupInbox(message) ||
       (this.inbox === "user" &&
         (message.payload.group_ids.length === 0 ||
