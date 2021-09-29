@@ -566,6 +566,7 @@ describe Guardian do
       end
 
       it 'returns true for a group owner' do
+        group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
 
@@ -595,6 +596,7 @@ describe Guardian do
         end
 
         it 'should return true for a group owner' do
+          group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 

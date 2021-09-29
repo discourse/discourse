@@ -357,33 +357,19 @@ class Guardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    return false if !authenticated?
-
-    invites_available = SiteSetting.max_invites_per_day.to_i.positive?
-    trust_level_requirement_met = @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
-
-    if !is_staff?
-      return false if !invites_available
-      return false if !trust_level_requirement_met
-    end
-
-    if groups.present?
-      return is_admin? || groups.all? { |g| can_edit_group?(g) }
-    end
-
-    true
+    authenticated? &&
+    (is_staff? || !SiteSetting.must_approve_users?) &&
+    (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
+    (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
+    (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
   end
 
   def can_invite_to?(object, groups = nil)
-    return false unless authenticated?
-    is_topic = object.is_a?(Topic)
-    return true if is_admin? && !is_topic
-    return false if SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?
-    return false if SiteSetting.must_approve_users? && !is_staff?
-    return false unless can_see?(object)
+    return false if !can_invite_to_forum?(groups)
+    return false if !object.is_a?(Topic) || !can_see?(object)
     return false if groups.present?
 
-    if is_topic
+    if object.is_a?(Topic)
       if object.private_message?
         return true if is_admin?
         return false unless SiteSetting.enable_personal_messages?
@@ -391,19 +377,16 @@ class Guardian
       end
 
       if (category = object.category) && category.read_restricted
-        if (groups = category.groups&.where(automatic: false))&.any?
-          return groups.any? { |g| can_edit_group?(g) } ? true : false
-        else
-          return false
-        end
+        return category.groups&.where(automatic: false).any? { |g| can_edit_group?(g) }
       end
     end
 
-    user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+    true
   end
 
   def can_invite_via_email?(object)
-    return false unless can_invite_to?(object)
+    return false if !can_invite_to?(object)
+
     (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
       (!SiteSetting.must_approve_users? || is_staff?)
   end
