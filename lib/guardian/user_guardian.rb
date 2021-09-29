@@ -130,8 +130,7 @@ module UserGuardian
   end
 
   def can_see_user_actions?(user, action_types)
-    return false if @user.anonymous?
-    return true if @user.id == user.id || is_admin?
+    return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
     (action_types & UserAction.private_types).empty?
   end
 
