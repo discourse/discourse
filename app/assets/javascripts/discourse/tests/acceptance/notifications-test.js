@@ -50,7 +50,6 @@ acceptance("User Notifications", function (needs) {
           id: 42,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: false,
           high_priority: true,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -99,7 +98,6 @@ acceptance("User Notifications", function (needs) {
           id: 43,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: true,
           high_priority: false,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -150,7 +148,6 @@ acceptance("User Notifications", function (needs) {
           id: 44,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: true,
           high_priority: false,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -221,7 +218,7 @@ acceptance(
     test("It does not render filter", async function (assert) {
       await visit("/u/eviltrout/notifications");
 
-      assert.notOk(exists("div.user-notifications-filter-select-kit"));
+      assert.notOk(exists("div.user-notifications-filter"));
     });
   }
 );
