@@ -128,7 +128,7 @@ function setupNotifications(appEvents) {
   appEvents.on("page:changed", resetIdle);
 }
 
-function resetIdle() {
+export function resetIdle() {
   lastAction = Date.now();
 }
 function isIdle() {
