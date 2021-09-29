@@ -29,6 +29,7 @@ module.exports = {
   launch_in_dev: ["Chrome"],
   tap_failed_tests_only: true,
   parallel: 1, // disable parallel tests for stability
+  browser_start_timeout: 120,
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
