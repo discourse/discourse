@@ -3,9 +3,10 @@ import {
   exists,
   resetSite,
 } from "discourse/tests/helpers/qunit-helpers";
-import createPretender, {
+import pretender, {
   applyDefaultHandlers,
   pretenderHelpers,
+  resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import {
   currentSettings,
@@ -244,8 +245,7 @@ function setupTestsCommon(application, container, config) {
       setupS3CDN(null, null);
     }
 
-    server = createPretender;
-    server.handlers = [];
+    server = pretender;
     applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
@@ -307,6 +307,7 @@ function setupTestsCommon(application, container, config) {
 
   QUnit.testDone(function () {
     sinon.restore();
+    resetPretender();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
