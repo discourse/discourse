@@ -55,6 +55,16 @@ class UserAction < ActiveRecord::Base
       assigned: 16)
   end
 
+  def self.private_types
+    @private_types ||= [
+      WAS_LIKED,
+      RESPONSE,
+      MENTION,
+      QUOTE,
+      EDIT
+    ]
+  end
+
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,

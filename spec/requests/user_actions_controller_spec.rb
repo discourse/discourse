@@ -99,5 +99,54 @@ describe UserActionsController do
       end
     end
 
+    context "other users' activity" do
+      fab!(:another_user) { Fabricate(:user) }
+
+      UserAction.private_types.each do |action_type|
+        action_name = UserAction.types.key(action_type)
+        it "anonymous users cannot list other users' actions of type: #{action_name}" do
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:user) { Fabricate(:user) }
+        action_name = UserAction.types.key(action_type)
+
+        it "logged in users cannot list other users' actions of type: #{action_name}" do
+          sign_in(user)
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:moderator) { Fabricate(:moderator) }
+        action_name = UserAction.types.key(action_type)
+
+        it "moderators cannot list other users' actions of type: #{action_name}" do
+          sign_in(moderator)
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:admin) { Fabricate(:admin) }
+        action_name = UserAction.types.key(action_type)
+
+        it "admins can list other users' actions of type: #{action_name}" do
+          sign_in(admin)
+          list_and_check(action_type, 200)
+        end
+      end
+
+      def list_and_check(action_type, expected_response)
+        get "/user_actions.json", params: {
+          filter: action_type,
+          username: another_user.username
+        }
+
+        expect(response.status).to eq(expected_response)
+      end
+    end
   end
 end
