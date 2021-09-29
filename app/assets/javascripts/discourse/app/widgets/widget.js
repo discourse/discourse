@@ -24,7 +24,7 @@ import { get } from "@ember/object";
 import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
 
-const _registry = {};
+let _registry = {};
 
 export function queryRegistry(name) {
   return _registry[name];
@@ -64,6 +64,10 @@ export function applyDecorators(widget, type, attrs, state) {
 
 export function resetDecorators() {
   Object.keys(_decorators).forEach((key) => delete _decorators[key]);
+}
+
+export function resetRegistry() {
+  _registry = {};
 }
 
 const _customSettings = {};
