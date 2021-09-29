@@ -384,7 +384,13 @@ const Topic = RestModel.extend({
     }
     this.set(
       "bookmarks",
-      this.bookmarks.filter((bookmark) => bookmark.id !== id)
+      this.bookmarks.filter((bookmark) => {
+        if (bookmark.id === id && bookmark.for_topic) {
+          this.appEvents.trigger("topic:bookmark-toggled");
+        }
+
+        return bookmark.id !== id;
+      })
     );
     this.set("bookmarked", this.bookmarks.length);
     this.incrementProperty("bookmarksWereChanged");

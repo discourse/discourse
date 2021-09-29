@@ -1217,6 +1217,7 @@ export default Controller.extend(bufferedProperty("model"), {
       onAfterSave: () => {
         this.model.set("bookmarked", true);
         this.model.incrementProperty("bookmarksWereChanged");
+        this.appEvents.trigger("topic:bookmark-toggled");
       },
     });
   },
