@@ -13,7 +13,6 @@ describe ::DiscoursePoll::PollsController do
   let(:public_poll_on_close) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_close]\n- A\n- B\n[/poll]") }
 
   describe "#vote" do
-
     it "works" do
       channel = "/polls/#{poll.topic_id}"
 
@@ -236,7 +235,6 @@ describe ::DiscoursePoll::PollsController do
   end
 
   describe "#toggle_status" do
-
     it "works for OP" do
       channel = "/polls/#{poll.topic_id}"
 
@@ -282,11 +280,9 @@ describe ::DiscoursePoll::PollsController do
       json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
-
   end
 
   describe "#voters" do
-
     let(:first) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:second) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -351,7 +347,7 @@ describe ::DiscoursePoll::PollsController do
         poll_name: "poll", post_id: public_poll_on_vote.id
       }, format: :json
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
 
       put :vote, params: {
         post_id: public_poll_on_vote.id, poll_name: "poll", options: [second]
@@ -382,7 +378,7 @@ describe ::DiscoursePoll::PollsController do
         poll_name: "poll", post_id: public_poll_on_close.id
       }, format: :json
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
 
       put :toggle_status, params: {
         post_id: public_poll_on_close.id, poll_name: "poll", status: "closed"
@@ -399,52 +395,6 @@ describe ::DiscoursePoll::PollsController do
       json = response.parsed_body
 
       expect(json["voters"][first].size).to eq(1)
-    end
-
-  end
-
-  describe '#current_user_voted' do
-    let(:logged_user) { Fabricate(:user) }
-    let(:post_with_poll) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
-
-    before { log_in_user(logged_user) }
-
-    it 'returns true if the logged user already voted' do
-      poll = post_with_poll.polls.last
-      PollVote.create!(poll: poll, user: logged_user)
-
-      get :current_user_voted, params: { id: poll.id }, format: :json
-      parsed_body = JSON.parse(response.body)
-
-      expect(response.status).to eq(200)
-      expect(parsed_body['voted']).to eq(true)
-    end
-
-    it 'returns a 404 if there is no poll' do
-      unknown_poll_id = 999999
-
-      get :current_user_voted, params: { id: unknown_poll_id }, format: :json
-
-      expect(response.status).to eq(404)
-    end
-
-    it "returns a 404 if the user doesn't have access to the poll" do
-      pm_with_poll = Fabricate(:private_message_post, raw: "[poll]\n- A\n- B\n[/poll]")
-      poll = pm_with_poll.polls.last
-
-      get :current_user_voted, params: { id: poll.id }, format: :json
-
-      expect(response.status).to eq(404)
-    end
-
-    it "returns false if the user didn't vote yet" do
-      poll = post_with_poll.polls.last
-
-      get :current_user_voted, params: { id: poll.id }, format: :json
-      parsed_body = JSON.parse(response.body)
-
-      expect(response.status).to eq(200)
-      expect(parsed_body['voted']).to eq(false)
     end
   end
 end

@@ -72,7 +72,7 @@ describe "DiscoursePoll endpoints" do
           post_id: -1,
           poll_name: DiscoursePoll::DEFAULT_POLL_NAME
         }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
         expect(response.body).to include('post_id')
       end
     end
@@ -87,7 +87,7 @@ describe "DiscoursePoll endpoints" do
     describe 'when poll_name is not valid' do
       it 'should raise the right error' do
         get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
         expect(response.body).to include('poll_name')
       end
     end
@@ -182,7 +182,7 @@ describe "DiscoursePoll endpoints" do
         user_field_name: "something"
       }
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
       expect(response.body).to include('user_field_name')
     end
   end
