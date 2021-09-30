@@ -11,10 +11,10 @@ describe "DiscoursePoll endpoints" do
 
     it "should return the right response" do
       DiscoursePoll::Poll.vote(
+        user,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a],
-        user
+        [option_a]
       )
 
       get "/polls/voters.json", params: {
@@ -34,10 +34,10 @@ describe "DiscoursePoll endpoints" do
 
     it 'should return the right response for a single option' do
       DiscoursePoll::Poll.vote(
+        user,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b],
-        user
+        [option_a, option_b]
       )
 
       get "/polls/voters.json", params: {
@@ -99,10 +99,10 @@ describe "DiscoursePoll endpoints" do
         post
 
         DiscoursePoll::Poll.vote(
+          user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          ["4d8a15e3cc35750f016ce15a43937620"],
-          user
+          ["4d8a15e3cc35750f016ce15a43937620"]
         )
 
         get "/polls/voters.json", params: {
@@ -137,20 +137,20 @@ describe "DiscoursePoll endpoints" do
       }
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
+          user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          [user_votes["user_#{index}".to_sym]],
-          user
+          [user_votes["user_#{index}".to_sym]]
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
 
       # Add another user to one of the fields to prove it groups users properly
       DiscoursePoll::Poll.vote(
+        user4,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b],
-        user4
+        [option_a, option_b]
       )
       UserCustomField.create(user_id: user4.id, name: "something", value: "value1")
     end

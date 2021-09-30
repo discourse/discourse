@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Poll
-  def self.vote(post_id, poll_name, options, user)
-    serialized_poll = DiscoursePoll::Poll.change_vote(post_id, poll_name, user) do |poll|
+  def self.vote(user, post_id, poll_name, options)
+    serialized_poll = DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
       # remove options that aren't available in the poll
       available_options = poll.poll_options.map { |o| o.digest }.to_set
       options.select! { |o| available_options.include?(o) }
@@ -34,13 +34,13 @@ class DiscoursePoll::Poll
     [serialized_poll, options]
   end
 
-  def self.remove_vote(post_id, poll_name, user)
-    DiscoursePoll::Poll.change_vote(post_id, poll_name, user) do |poll|
+  def self.remove_vote(user, post_id, poll_name)
+    DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
       PollVote.where(poll: poll, user: user).delete_all
     end
   end
 
-  def self.toggle_status(post_id, poll_name, status, user, raise_errors = true)
+  def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)
     Poll.transaction do
       post = Post.find_by(id: post_id)
       guardian = Guardian.new(user)
@@ -157,7 +157,7 @@ class DiscoursePoll::Poll
     existing_field ? "user_field_#{existing_field.id}" : custom_user_field
   end
 
-  def self.grouped_poll_results(post_id, poll_name, user_field_name, user)
+  def self.grouped_poll_results(user, post_id, poll_name, user_field_name)
     post = Post.find_by(id: post_id)
     raise Discourse::InvalidParameters.new(:post_id) unless post
 
@@ -291,7 +291,7 @@ class DiscoursePoll::Poll
 
   private
 
-  def self.change_vote(post_id, poll_name, user)
+  def self.change_vote(user, post_id, poll_name)
     Poll.transaction do
       post = Post.find_by(id: post_id)
 

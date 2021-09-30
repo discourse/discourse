@@ -78,8 +78,8 @@ describe DiscoursePoll::PollsUpdater do
       let(:post) { Fabricate(:post, raw: raw) }
 
       it "works if poll is closed and unmodified" do
-        DiscoursePoll::Poll.vote(post.id, "poll", ["e55de753c08b93d04d677ce05e942d3c"], post.user)
-        DiscoursePoll::Poll.toggle_status(post.id, "poll", "closed", post.user)
+        DiscoursePoll::Poll.vote(post.user, post.id, "poll", ["e55de753c08b93d04d677ce05e942d3c"])
+        DiscoursePoll::Poll.toggle_status(post.user, post.id, "poll", "closed")
 
         freeze_time (SiteSetting.poll_edit_window_mins + 1).minutes.from_now
         update(post, DiscoursePoll::PollsValidator.new(post).validate_polls)
@@ -159,7 +159,7 @@ describe DiscoursePoll::PollsUpdater do
 
         before do
           expect {
-            DiscoursePoll::Poll.vote(post.id, "poll", [polls["poll"]["options"][0]["id"]], user)
+            DiscoursePoll::Poll.vote(user, post.id, "poll", [polls["poll"]["options"][0]["id"]])
           }.to change { PollVote.count }.by(1)
         end
 

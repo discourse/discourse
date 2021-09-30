@@ -11,7 +11,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
     options = params.require(:options)
 
     begin
-      poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, current_user)
+      poll, options = DiscoursePoll::Poll.vote(current_user, post_id, poll_name, options)
       render json: { poll: poll, vote: options }
     rescue DiscoursePoll::Error => e
       render_json_error e.message
@@ -23,7 +23,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
 
     begin
-      poll = DiscoursePoll::Poll.remove_vote(post_id, poll_name, current_user)
+      poll = DiscoursePoll::Poll.remove_vote(current_user, post_id, poll_name)
       render json: { poll: poll }
     rescue DiscoursePoll::Error => e
       render_json_error e.message
@@ -36,7 +36,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
     status = params.require(:status)
 
     begin
-      poll = DiscoursePoll::Poll.toggle_status(post_id, poll_name, status, current_user)
+      poll = DiscoursePoll::Poll.toggle_status(current_user, post_id, poll_name, status)
       render json: { poll: poll }
     rescue DiscoursePoll::Error => e
       render_json_error e.message
@@ -64,7 +64,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
 
     begin
       render json: {
-        grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, user_field_name, current_user)
+        grouped_results: DiscoursePoll::Poll.grouped_poll_results(current_user, post_id, poll_name, user_field_name)
       }
     rescue DiscoursePoll::Error => e
       render_json_error e.message
