@@ -28,7 +28,7 @@ import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
-import { resetDecorators } from "discourse/widgets/widget";
+import { resetDecorators, resetRegistry } from "discourse/widgets/widget";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
@@ -272,6 +272,7 @@ export function acceptance(name, optionsOrCallback) {
       clearRewrites();
       initSearchData();
       resetDecorators();
+      resetRegistry();
       resetPostCookedDecorators();
       resetPluginOutletDecorators();
       resetTopicTitleDecorators();
