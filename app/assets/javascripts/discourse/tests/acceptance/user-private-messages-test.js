@@ -73,6 +73,10 @@ acceptance(
     });
 
     needs.pretender((server, helper) => {
+      server.get("/tags/personal_messages/:username.json", () => {
+        return helper.response({ tags: [] });
+      });
+
       server.get("/t/13.json", () => {
         const response = { ...fixturesByUrl["/t/12/1.json"] };
         response.suggested_group_name = "awesome_group";
@@ -267,6 +271,16 @@ acceptance(
         }
       );
     };
+
+    test("viewing messages filtered by tags", async function (assert) {
+      await visit("/u/charlie/messages/tags");
+
+      assert.equal(
+        count(".action-list li"),
+        3,
+        "it does not expand personal or group inbox"
+      );
+    });
 
     test("incoming group archive message acted by current user", async function (assert) {
       await visit("/u/charlie/messages");
