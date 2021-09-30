@@ -67,8 +67,6 @@ Fabricator(:newuser, from: :trust_level_0) do
   name 'Newbie Newperson'
   username 'newbie'
   email 'newbie@new.com'
-  trust_level TrustLevel[0]
-  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_0]]
 end
 
 Fabricator(:active_user, from: :trust_level_1) do
@@ -76,8 +74,6 @@ Fabricator(:active_user, from: :trust_level_1) do
   username { sequence(:username) { |i| "luke#{i}" } }
   email { sequence(:email) { |i| "luke#{i}@skywalker.com" } }
   password 'myawesomepassword'
-  trust_level TrustLevel[1]
-  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_1]]
 
   after_create do |user|
     user.user_profile.bio_raw = "Don't ask me about my dad!"
