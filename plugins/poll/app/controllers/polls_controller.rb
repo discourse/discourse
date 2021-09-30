@@ -48,8 +48,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     opts = params.permit(:limit, :page, :option_id)
 
-    post = Post.find_by(id: post_id)
-    raise Discourse::InvalidParameters.new(:post_id) if !post
+    raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
 
     poll = Poll.find_by(post_id: post_id, name: poll_name)
     raise Discourse::InvalidParameters.new(:poll_name) if !poll&.can_see_voters?(current_user)

@@ -158,8 +158,7 @@ class DiscoursePoll::Poll
   end
 
   def self.grouped_poll_results(user, post_id, poll_name, user_field_name)
-    post = Post.find_by(id: post_id)
-    raise Discourse::InvalidParameters.new(:post_id) unless post
+    raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
 
     poll = Poll.includes(:poll_options).includes(:poll_votes).find_by(post_id: post_id, name: poll_name)
     raise Discourse::InvalidParameters.new(:poll_name) unless poll
