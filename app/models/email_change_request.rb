@@ -15,7 +15,7 @@ class EmailChangeRequest < ActiveRecord::Base
   def self.find_by_new_token(token)
     EmailChangeRequest
       .joins("INNER JOIN email_tokens ON email_tokens.id = email_change_requests.new_email_token_id")
-      .where("email_tokens.token = ?", token)
+      .where("email_tokens.token_hash = ?", EmailToken.hash_token(token))
       .last
   end
 

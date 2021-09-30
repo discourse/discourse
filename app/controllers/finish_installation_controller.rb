@@ -51,7 +51,7 @@ class FinishInstallationController < ApplicationController
 
   def send_signup_email
     email_token = @user.email_tokens.unconfirmed.active.first
-
+    # TODO(token)
     if email_token.present?
       Jobs.enqueue(:critical_user_email,
                    type: :signup,

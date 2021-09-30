@@ -1,20 +1,25 @@
 # frozen_string_literal: true
 
 class EmailToken < ActiveRecord::Base
+  class TokenAccessError < StandardError; end
+
   belongs_to :user
 
-  validates :user_id, :email, :token, presence: true
+  validates :user_id, :email, :token_hash, presence: true
 
   scope :unconfirmed, -> { where(confirmed: false) }
   scope :active, -> { where(expired: false).where('created_at >= ?', SiteSetting.email_token_valid_hours.hours.ago) }
 
   after_initialize do
-    self.token ||= SecureRandom.hex
+    if self.token_hash.blank?
+      @token ||= SecureRandom.hex
+      self.token = @token
+      self.token_hash = self.class.hash_token(@token)
+    end
   end
 
   before_validation do
     self.email = self.email.downcase if self.email
-    self.token_hash = self.class.hash_token(self.token)
   end
 
   after_create do
@@ -22,6 +27,12 @@ class EmailToken < ActiveRecord::Base
       .where(user_id: self.user_id)
       .where.not(id: self.id)
       .update_all(expired: true)
+  end
+
+  def token
+    puts "EmailToken#token called:\n  #{caller[0..5].join("\n  ")}"
+
+    self[:token]
   end
 
   def self.confirm(token, skip_reviewable: false)

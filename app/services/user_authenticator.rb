@@ -50,6 +50,7 @@ class UserAuthenticator
 
   def confirm_email
     if authenticated?
+      # TODO(token)
       EmailToken.confirm(@user.email_tokens.first.token)
       @user.set_automatic_groups
     end

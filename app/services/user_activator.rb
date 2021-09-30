@@ -55,7 +55,9 @@ end
 class EmailActivator < UserActivator
   def activate
     email_token = user.email_tokens.unconfirmed.active.first
-    email_token = user.email_tokens.create(email: user.email) if email_token.nil?
+    email_token ||= user.email_tokens.create(email: user.email)
+
+    # TODO(token)
 
     Jobs.enqueue(:critical_user_email,
       type: :signup,
