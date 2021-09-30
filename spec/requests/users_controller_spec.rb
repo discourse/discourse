@@ -498,14 +498,10 @@ describe UsersController do
     end
 
     context 'submit change' do
-      let(:token) { EmailToken.generate_token }
-
-      before do
-        EmailToken.expects(:confirm).with(token).returns(user)
-      end
+      let(:email_token) { Fabricate(:email_token, user: user) }
 
       it "fails when the password is blank" do
-        put "/u/password-reset/#{token}.json", params: { password: '' }
+        put "/u/password-reset/#{email_token.token}.json", params: { password: '' }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to be_present
@@ -513,7 +509,7 @@ describe UsersController do
       end
 
       it "fails when the password is too long" do
-        put "/u/password-reset/#{token}.json", params: { password: ('x' * (User.max_password_length + 1)) }
+        put "/u/password-reset/#{email_token.token}.json", params: { password: ('x' * (User.max_password_length + 1)) }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to be_present
@@ -521,7 +517,7 @@ describe UsersController do
       end
 
       it "logs in the user" do
-        put "/u/password-reset/#{token}.json", params: { password: 'ksjafh928r' }
+        put "/u/password-reset/#{email_token.token}.json", params: { password: 'ksjafh928r' }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to be_blank
@@ -530,8 +526,9 @@ describe UsersController do
 
       it "doesn't log in the user when not approved" do
         SiteSetting.must_approve_users = true
+        user.update!(approved: false)
 
-        put "/u/password-reset/#{token}.json", params: { password: 'ksjafh928r' }
+        put "/u/password-reset/#{email_token.token}.json", params: { password: 'ksjafh928r' }
         expect(response.parsed_body["errors"]).to be_blank
         expect(session[:current_user_id]).to be_blank
       end
@@ -836,7 +833,7 @@ describe UsersController do
           json = response.parsed_body
 
           new_user = User.find(json["user_id"])
-          email_token = new_user.email_tokens.active.where(email: new_user.email).first
+          email_token = new_user.email_tokens.where(email: new_user.email).first
 
           expect(json['active']).to be_truthy
 

@@ -1044,6 +1044,7 @@ class User < ActiveRecord::Base
     if email_token = self.email_tokens.active.where(email: self.email).first
       EmailToken.confirm(email_token.token, skip_reviewable: true)
     end
+
     self.update!(active: true)
     create_reviewable
   end

@@ -773,7 +773,6 @@ class UsersController < ApplicationController
     # no point doing anything else if we can't even find
     # a user from the token
     if @user
-
       if !secure_session["second-factor-#{token}"]
         second_factor_authentication_result = @user.authenticate_second_factor(params, secure_session)
         if !second_factor_authentication_result.ok
@@ -1051,11 +1050,10 @@ class UsersController < ApplicationController
     if params[:username].present?
       @user = User.find_by_username_or_email(params[:username].to_s)
     end
+
     raise Discourse::NotFound unless @user
 
-    if !current_user&.staff? &&
-        @user.id != session[SessionController::ACTIVATE_USER_KEY]
-
+    if !current_user&.staff? && @user.id != session[SessionController::ACTIVATE_USER_KEY]
       raise Discourse::InvalidAccess.new
     end
 
@@ -1625,8 +1623,8 @@ class UsersController < ApplicationController
   end
 
   def password_reset_find_user(token, committing_change:)
-    if EmailToken.valid_token_format?(token)
-      @user = committing_change ? EmailToken.confirm(token) : EmailToken.confirmable(token)&.user
+    if email_token = EmailToken.confirmable(token)
+      @user = committing_change ? EmailToken.confirm(token) : email_token.user
       if @user
         secure_session["password-#{token}"] = @user.id
       else
