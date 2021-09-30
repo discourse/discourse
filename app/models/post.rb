@@ -732,12 +732,11 @@ class Post < ActiveRecord::Base
   before_save do
     self.last_editor_id ||= user_id
 
-    if !new_record? && will_save_change_to_raw?
-      self.cooked = cook(raw, topic_id: topic_id)
+    if will_save_change_to_raw?
+      self.cooked = cook(raw, topic_id: topic_id) if !new_record?
+      self.baked_at = Time.zone.now
+      self.baked_version = BAKED_VERSION
     end
-
-    self.baked_at = Time.zone.now
-    self.baked_version = BAKED_VERSION
   end
 
   def advance_draft_sequence
