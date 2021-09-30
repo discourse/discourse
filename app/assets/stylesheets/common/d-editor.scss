@@ -212,6 +212,7 @@
 
     .alt-text-readonly-container {
       display: flex;
+      background: var(--secondary);
 
       span {
         margin-right: 0.5em;
