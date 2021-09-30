@@ -11,6 +11,7 @@ Fabricator(:user, class_name: :user) do
   trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+  group_ids [Group::AUTO_GROUPS[:everyone]]
 end
 
 Fabricator(:user_with_secondary_email, from: :user) do
@@ -51,6 +52,7 @@ Fabricator(:moderator, from: :user) do
   username { sequence(:username) { |i| "moderator#{i}" } }
   email { sequence(:email) { |i| "moderator#{i}@discourse.org" } }
   moderator true
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:moderators]]
 end
 
 Fabricator(:admin, from: :user) do
@@ -58,21 +60,24 @@ Fabricator(:admin, from: :user) do
   username { sequence(:username) { |i| "anne#{i}" } }
   email { sequence(:email) { |i| "anne#{i}@discourse.org" } }
   admin true
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:admins]]
 end
 
-Fabricator(:newuser, from: :user) do
+Fabricator(:newuser, from: :trust_level_0) do
   name 'Newbie Newperson'
   username 'newbie'
   email 'newbie@new.com'
   trust_level TrustLevel[0]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_0]]
 end
 
-Fabricator(:active_user, from: :user) do
+Fabricator(:active_user, from: :trust_level_1) do
   name 'Luke Skywalker'
   username { sequence(:username) { |i| "luke#{i}" } }
   email { sequence(:email) { |i| "luke#{i}@skywalker.com" } }
   password 'myawesomepassword'
   trust_level TrustLevel[1]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_1]]
 
   after_create do |user|
     user.user_profile.bio_raw = "Don't ask me about my dad!"
@@ -85,14 +90,17 @@ Fabricator(:leader, from: :user) do
   username { sequence(:username) { |i| "leader#{i}" } }
   email { sequence(:email) { |i| "leader#{i}@leaderfun.com" } }
   trust_level TrustLevel[3]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_3]]
 end
 
 Fabricator(:trust_level_0, from: :user) do
   trust_level TrustLevel[0]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_0]]
 end
 
 Fabricator(:trust_level_1, from: :user) do
   trust_level TrustLevel[1]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_1]]
 end
 
 Fabricator(:trust_level_4, from: :user) do
@@ -100,6 +108,7 @@ Fabricator(:trust_level_4, from: :user) do
   username { sequence(:username) { |i| "tl4#{i}" } }
   email { sequence(:email) { |i| "tl4#{i}@elderfun.com" } }
   trust_level TrustLevel[4]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_4]]
 end
 
 Fabricator(:anonymous, from: :user) do
@@ -108,6 +117,7 @@ Fabricator(:anonymous, from: :user) do
   email { sequence(:email) { |i| "anonymous#{i}@anonymous.com" } }
   trust_level TrustLevel[1]
   manual_locked_trust_level TrustLevel[1]
+  group_ids [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:trust_level_1]]
 
   after_create do
     # this is not "the perfect" fabricator in that user id -1 is system
