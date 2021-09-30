@@ -170,9 +170,11 @@ function _calculateDuration(element) {
     (dateElement) => dateElement.dataset
   );
   const startDateTime = moment(
-    `${startDataset.date} ${startDataset.time || ""}`
+    `${startDataset.date} ${startDataset.time || ""}`.trim()
   );
-  const endDateTime = moment(`${endDataset.date} ${endDataset.time || ""}`);
+  const endDateTime = moment(
+    `${endDataset.date} ${endDataset.time || ""}`.trim()
+  );
   const duration = endDateTime.diff(startDateTime, "minutes");
 
   // negative duration is used when we calculate difference for end date from range
