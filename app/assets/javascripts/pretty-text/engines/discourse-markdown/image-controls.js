@@ -65,8 +65,48 @@ function buildScaleButton(selectedScale, scale) {
   );
 }
 
+function buildImageAltTextButton(altText) {
+  return `
+<span class="alt-text-readonly-container">
+  <span class="alt-text" aria-label="alt text">${altText}</span>
+  <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use xlink:href="#pencil-alt"></use></svg></span>
+</span>
+<input class="alt-text-input" hidden="true" type="text" value="${altText}" />
+`;
+}
+
 // We need this to load after `upload-protocol` which is priority 0
 export const priority = 1;
+
+function ruleWithImageControls(oldRule) {
+  return function (tokens, idx, options, env, slf) {
+    const token = tokens[idx];
+    const scaleIndex = token.attrIndex("scale");
+    const imageIndex = token.attrIndex("index-image");
+
+    if (scaleIndex !== -1) {
+      let selectedScale = token.attrs[scaleIndex][1];
+      let index = token.attrs[imageIndex][1];
+
+      let result = `<span class="image-wrapper">`;
+
+      result += oldRule(tokens, idx, options, env, slf);
+
+      result += `<span class="button-wrapper" data-image-index="${index}">`;
+      result += SCALES.map((scale) =>
+        buildScaleButton(selectedScale, scale)
+      ).join("");
+
+      result += buildImageAltTextButton(token.attrs[token.attrIndex("alt")][1]);
+
+      result += "</span></span>";
+
+      return result;
+    } else {
+      return oldRule(tokens, idx, options, env, slf);
+    }
+  };
+}
 
 export function setup(helper) {
   const opts = helper.getOptions();
@@ -79,37 +119,21 @@ export function setup(helper) {
       "span.separator",
       "span.scale-btn[data-scale]",
       "span.button-wrapper[data-image-index]",
+      "span[aria-label]",
+      "span.alt-text-readonly-container",
+      "span.alt-text-readonly-container.alt-text",
+      "span.alt-text-readonly-container.alt-text-edit-btn",
+      "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
+      "use[xlink:href=#pencil-alt]",
+      "input[type=text]",
+      "input[hidden=true]",
+      "input[class=alt-text-input]",
     ]);
 
     helper.registerPlugin((md) => {
       const oldRule = md.renderer.rules.image;
 
-      md.renderer.rules.image = function (tokens, idx, options, env, slf) {
-        const token = tokens[idx];
-        const scaleIndex = token.attrIndex("scale");
-        const imageIndex = token.attrIndex("index-image");
-
-        if (scaleIndex !== -1) {
-          let selectedScale = token.attrs[scaleIndex][1];
-          let index = token.attrs[imageIndex][1];
-
-          let result = "<span class='image-wrapper'>";
-          result += oldRule(tokens, idx, options, env, slf);
-
-          result +=
-            "<span class='button-wrapper' data-image-index='" + index + "'>";
-
-          result += SCALES.map((scale) =>
-            buildScaleButton(selectedScale, scale)
-          ).join("");
-
-          result += "</span></span>";
-
-          return result;
-        } else {
-          return oldRule(tokens, idx, options, env, slf);
-        }
-      };
+      md.renderer.rules.image = ruleWithImageControls(oldRule);
 
       md.core.ruler.after("upload-protocol", "resize-controls", rule);
     });

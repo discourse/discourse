@@ -209,6 +209,27 @@
         cursor: pointer;
       }
     }
+
+    .alt-text-readonly-container {
+      display: flex;
+
+      span {
+        margin-right: 0.5em;
+        overflow: hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        max-width:10em;
+      }
+    }
+
+    .alt-text-input {
+      &[hidden=true] {
+        display: none;
+      }
+
+      padding: 0;
+      margin-bottom: 0;
+    }
   }
 }
 

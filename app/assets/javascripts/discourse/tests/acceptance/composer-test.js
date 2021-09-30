@@ -8,7 +8,13 @@ import {
   updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  visit,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
@@ -955,6 +961,99 @@ acceptance("Composer", function (needs) {
     assert.ok(
       !exists("script"),
       "it does not unescape script tags in code blocks"
+    );
+  });
+  function wait(timeout = 2000) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  }
+  test("Image alt text modification", async function (assert) {
+    // single image test case
+
+    const altText = ".image-wrapper .button-wrapper .alt-text";
+    const editAltTextButton =
+      ".image-wrapper .button-wrapper .alt-text-edit-btn";
+    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
+
+    await visit("/");
+
+    await click("#create-topic");
+    await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
+
+    // placement of elements
+
+    assert.ok(
+      exists(altText),
+      "shows alt text in the image wrapper's button wrapper"
+    );
+
+    assert.ok(
+      exists(editAltTextButton + " .d-icon-pencil"),
+      "alt text edit button with icon is in the image wrapper's button wrapper"
+    );
+
+    assert.ok(
+      exists(altTextInput),
+      "alt text input is in the image wrapper's button wrapper"
+    );
+
+    // logical
+
+    assert.equal(query(altText).innerText, "zorro", "correct alt text");
+    assert.ok(visible(altText), "alt text is visible");
+    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
+    assert.ok(invisible(altTextInput), "alt text input is not visible");
+
+    await click(editAltTextButton);
+
+    assert.ok(invisible(altText), "readonly alt text is not visible");
+    assert.ok(
+      invisible(editAltTextButton),
+      "alt text edit button is not visible"
+    );
+    assert.ok(visible(altTextInput), "alt text input is visible");
+    assert.equal(
+      queryAll(altTextInput).val(),
+      "zorro",
+      "correct alt text in input"
+    );
+
+    await triggerKeyEvent(altTextInput, "keypress", "[".charCodeAt(0));
+    await triggerKeyEvent(altTextInput, "keypress", "]".charCodeAt(0));
+    assert.equal(
+      queryAll(altTextInput).val(),
+      "zorro",
+      "does not input [ ] keys"
+    );
+
+    await fillIn(altTextInput, "steak");
+    await triggerKeyEvent(altTextInput, "keypress", 13);
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      "![steak|200x200](upload://zorro.png)",
+      "alt text updated"
+    );
+    assert.equal(query(altText).innerText, "steak", "shows the alt text");
+    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
+    assert.ok(invisible(altTextInput), "alt text input is not visible");
+
+    // multiple image test case
+
+    await fillIn(
+      ".d-editor-input",
+      `![zorro|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`
+    );
+    await click(editAltTextButton);
+
+    await fillIn(altTextInput, "tomtom");
+    await triggerKeyEvent(altTextInput, "keypress", 13);
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
+      "the correct image's alt text updated"
     );
   });
 
