@@ -12,7 +12,8 @@ export default Controller.extend({
 
   pmView: false,
   viewingSelf: alias("user.viewingSelf"),
-  isGroup: equal("pmView", "groups"),
+  isGroup: equal("pmView", "group"),
+  isPersonal: equal("pmView", "user"),
   group: null,
   groupFilter: alias("group.name"),
   currentPath: alias("router._router.currentPath"),

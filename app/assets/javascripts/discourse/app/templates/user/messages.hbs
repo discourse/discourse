@@ -6,7 +6,7 @@
       {{/link-to}}
     </li>
 
-    {{#unless group}}
+    {{#if isPersonal}}
       <li class="archive">
         {{#link-to "userPrivateMessages.sent" model}}
           {{i18n "user.messages.sent"}}
@@ -32,7 +32,7 @@
           {{i18n "user.messages.archive"}}
         {{/link-to}}
       </li>
-    {{/unless}}
+    {{/if}}
 
     {{#each model.groups as |group|}}
       {{#if group.has_messages}}
@@ -43,7 +43,7 @@
           {{/link-to}}
         </li>
 
-        {{#if (eq groupFilter group.name)}}
+        {{#if (and isGroup (eq groupFilter group.name))}}
           {{#if viewingSelf}}
             <li class="archive">
               {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
