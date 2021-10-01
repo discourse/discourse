@@ -830,18 +830,13 @@ describe UsersController do
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
 
           expect(response.status).to eq(200)
-          json = response.parsed_body
-
-          new_user = User.find(json["user_id"])
-          email_token = new_user.email_tokens.where(email: new_user.email).first
-
-          expect(json['active']).to be_truthy
-
+          expect(response.parsed_body['active']).to be_truthy
+          new_user = User.find(response.parsed_body["user_id"])
           expect(new_user.active).to eq(true)
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
-          expect(email_token.confirmed?).to eq(true)
+          expect(new_user.email_tokens.where(confirmed: true, email: new_user.email)).to exist
         end
 
         it "will create a reviewable when a user is created as active but not approved" do
@@ -4286,10 +4281,9 @@ describe UsersController do
       expect(response.parsed_body['user_found']).to eq(true)
 
       job_args = Jobs::CriticalUserEmail.jobs.last["args"].first
-
       expect(job_args["user_id"]).to eq(user.id)
       expect(job_args["type"]).to eq("email_login")
-      expect(job_args["email_token"]).to eq(user.email_tokens.last.token)
+      expect(EmailToken.hash_token(job_args["email_token"])).to eq(user.email_tokens.last.token_hash)
     end
 
     describe 'when enable_local_logins_via_email is disabled' do

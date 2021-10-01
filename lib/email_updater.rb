@@ -4,6 +4,7 @@ class EmailUpdater
   include HasErrors
 
   attr_reader :user
+  attr_reader :change_req
 
   def self.human_attribute_name(name, options = {})
     User.human_attribute_name(name, options)
@@ -48,16 +49,16 @@ class EmailUpdater
       UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
-    change_req = EmailChangeRequest.find_or_initialize_by(user_id: @user.id, new_email: email)
+    @change_req = EmailChangeRequest.find_or_initialize_by(user_id: @user.id, new_email: email)
 
-    if change_req.new_record?
-      change_req.requested_by = @guardian.user
-      change_req.old_email = old_email
-      change_req.new_email = email
+    if @change_req.new_record?
+      @change_req.requested_by = @guardian.user
+      @change_req.old_email = old_email
+      @change_req.new_email = email
     end
 
-    if change_req.change_state.blank? || change_req.change_state == EmailChangeRequest.states[:complete]
-      change_req.change_state = if @user.staff?
+    if @change_req.change_state.blank? || @change_req.change_state == EmailChangeRequest.states[:complete]
+      @change_req.change_state = if @user.staff?
         # Staff users must confirm their old email address first.
         EmailChangeRequest.states[:authorizing_old]
       else
@@ -65,15 +66,16 @@ class EmailUpdater
       end
     end
 
-    if change_req.change_state == EmailChangeRequest.states[:authorizing_old]
-      change_req.old_email_token = @user.email_tokens.create!(email: @user.email)
-      send_email(add ? :confirm_old_email_add : :confirm_old_email, change_req.old_email_token)
-    elsif change_req.change_state == EmailChangeRequest.states[:authorizing_new]
-      change_req.new_email_token = @user.email_tokens.create!(email: email)
-      send_email(:confirm_new_email, change_req.new_email_token)
+    if @change_req.change_state == EmailChangeRequest.states[:authorizing_old]
+      @change_req.old_email_token = @user.email_tokens.create!(email: @user.email)
+      send_email(add ? :confirm_old_email_add : :confirm_old_email, @change_req.old_email_token)
+    elsif @change_req.change_state == EmailChangeRequest.states[:authorizing_new]
+      @change_req.new_email_token = @user.email_tokens.create!(email: email)
+      send_email(:confirm_new_email, @change_req.new_email_token)
     end
 
-    change_req.save!
+    @change_req.save!
+    @change_req
   end
 
   def confirm(token)
@@ -85,26 +87,26 @@ class EmailUpdater
         token = result[:email_token]
         @user = token.user
 
-        change_req = @user.email_change_requests
+        @change_req = @user.email_change_requests
           .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: token.id)
           .first
 
-        case change_req.try(:change_state)
+        case @change_req.try(:change_state)
         when EmailChangeRequest.states[:authorizing_old]
-          change_req.update!(
+          @change_req.update!(
             change_state: EmailChangeRequest.states[:authorizing_new],
-            new_email_token: @user.email_tokens.create(email: change_req.new_email)
+            new_email_token: @user.email_tokens.create(email: @change_req.new_email)
           )
-          send_email(:confirm_new_email, change_req.new_email_token)
+          send_email(:confirm_new_email, @change_req.new_email_token)
           confirm_result = :authorizing_new
         when EmailChangeRequest.states[:authorizing_new]
-          change_req.update!(change_state: EmailChangeRequest.states[:complete])
+          @change_req.update!(change_state: EmailChangeRequest.states[:complete])
           if !@user.staff?
             # Send an email notification only to users who did not confirm old
             # email.
-            send_email_notification(change_req.old_email, change_req.new_email)
+            send_email_notification(@change_req.old_email, @change_req.new_email)
           end
-          update_user_email(change_req.old_email, change_req.new_email)
+          update_user_email(@change_req.old_email, @change_req.new_email)
           confirm_result = :complete
         end
       else

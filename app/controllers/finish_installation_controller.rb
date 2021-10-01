@@ -33,7 +33,6 @@ class FinishInstallationController < ApplicationController
         send_signup_email
         redirect_confirm(@user.email)
       end
-
     end
   end
 
@@ -50,14 +49,13 @@ class FinishInstallationController < ApplicationController
   protected
 
   def send_signup_email
-    email_token = @user.email_tokens.unconfirmed.active.first
-    # TODO(token)
-    if email_token.present?
-      Jobs.enqueue(:critical_user_email,
-                   type: :signup,
-                   user_id: @user.id,
-                   email_token: email_token.token)
-    end
+    return if @user.active && @user.email_confirmed?
+
+    email_token = @user.email_tokens.create!(email: @user.email)
+    Jobs.enqueue(:critical_user_email,
+                  type: :signup,
+                  user_id: @user.id,
+                  email_token: email_token.token)
   end
 
   def redirect_confirm(email)

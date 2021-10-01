@@ -30,8 +30,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def token
-    puts "EmailToken#token called:\n  #{caller[0..5].join("\n  ")}"
-
+    raise TokenAccessError.new if @token.blank?
     self[:token]
   end
 

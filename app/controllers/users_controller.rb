@@ -1030,8 +1030,8 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.email_tokens.create!(email: @user.email)
-        enqueue_activation_email
+        @email_token = @user.email_tokens.create!(email: @user.email)
+        enqueue_activation_email(@email_token)
         render json: success_json
       else
         render_json_error(primary_email)
@@ -1062,16 +1062,20 @@ class UsersController < ApplicationController
     if @user.active && @user.email_confirmed?
       render_json_error(I18n.t('activation.activated'), status: 409)
     else
-      @email_token = @user.email_tokens.unconfirmed.active.first
-      enqueue_activation_email
+      @email_token = @user.email_tokens.create!(email: @user.email)
+      enqueue_activation_email(@email_token)
       render body: nil
     end
   end
 
-  def enqueue_activation_email
-    @email_token ||= @user.email_tokens.create!(email: @user.email)
-    # TODO(token)
-    Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token, to_address: @user.email)
+  def enqueue_activation_email(email_token)
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :signup,
+      user_id: @user.id,
+      email_token: email_token.token,
+      to_address: @user.email
+    )
   end
 
   def search_users
@@ -1624,14 +1628,12 @@ class UsersController < ApplicationController
   end
 
   def password_reset_find_user(token, committing_change:)
-    if email_token = EmailToken.confirmable(token)
-      @user = committing_change ? EmailToken.confirm(token) : email_token.user
-      if @user
-        secure_session["password-#{token}"] = @user.id
-      else
-        user_id = secure_session["password-#{token}"].to_i
-        @user = User.find(user_id) if user_id > 0
-      end
+    @user = committing_change ? EmailToken.confirm(token) : EmailToken.confirmable(token)&.user
+    if @user
+      secure_session["password-#{token}"] = @user.id
+    else
+      user_id = secure_session["password-#{token}"].to_i
+      @user = User.find(user_id) if user_id > 0
     end
 
     @error = I18n.t('password_reset.no_token') if !@user

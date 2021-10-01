@@ -44,9 +44,8 @@ describe EmailToken do
   end
 
   context '#confirm' do
-
     fab!(:user) { Fabricate(:user, active: false) }
-    let(:email_token) { user.email_tokens.first }
+    let!(:email_token) { Fabricate(:email_token, user: user) }
 
     it 'returns nil with a nil token' do
       expect(EmailToken.confirm(nil)).to be_blank
@@ -116,7 +115,7 @@ describe EmailToken do
 
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
-      let(:user_email_token) { invited_user.email_tokens.first }
+      let!(:user_email_token) { Fabricate(:email_token, user: invited_user) }
       let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
 
       it "returns the correct user" do
