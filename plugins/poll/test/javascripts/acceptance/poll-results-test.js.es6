@@ -559,6 +559,8 @@ acceptance("Poll results", function (needs) {
         });
       }
     });
+
+    server.delete("/polls/vote", () => helper.response({ success: "OK" }));
   });
 
   test("can load more voters", async function (assert) {
