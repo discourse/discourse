@@ -1252,6 +1252,8 @@ export default RestModel.extend({
       suggested_group_name: result.suggested_group_name,
     });
 
-    this.pmTopicTrackingState.startTracking();
+    if (this.topic.isPrivateMessage) {
+      this.pmTopicTrackingState.startTracking();
+    }
   },
 });
