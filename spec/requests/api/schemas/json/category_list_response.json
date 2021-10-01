@@ -141,6 +141,12 @@
 
                   ]
                 },
+                "subcategory_list": {
+                  "type": "array",
+                  "items": [
+
+                  ]
+                },
                 "uploaded_logo": {
                   "type": [
                     "string",

@@ -108,19 +108,28 @@ class CategoryList
       category.notification_level = notification_levels[category.id] || default_notification_level
       category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
       category.has_children = category.subcategories.present?
+      category.subcategory_list = []
     end
 
     if @options[:parent_category_id].blank?
-      subcategories = {}
+      subcategory_ids = {}
+      subcategory_list = {}
       to_delete = Set.new
       @categories.each do |c|
         if c.parent_category_id.present?
-          subcategories[c.parent_category_id] ||= []
-          subcategories[c.parent_category_id] << c.id
+          subcategory_ids[c.parent_category_id] ||= []
+          subcategory_ids[c.parent_category_id] << c.id
+          subcategory_list[c.parent_category_id] ||= []
+          subcategory_list[c.parent_category_id] << c
           to_delete << c
         end
       end
-      @categories.each { |c| c.subcategory_ids = subcategories[c.id] || [] }
+      @categories.each do |c|
+        c.subcategory_ids = subcategory_ids[c.id] || []
+        if @options[:include_subcategories] == true
+          c.subcategory_list = subcategory_list[c.id] || []
+        end
+      end
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 

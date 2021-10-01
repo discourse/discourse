@@ -10,7 +10,8 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :topics_year,
              :topics_all_time,
              :is_uncategorized,
-             :subcategory_ids
+             :subcategory_ids,
+             :subcategory_list
 
   has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
 

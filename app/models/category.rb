@@ -139,7 +139,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :subcategory_list, :notification_level, :has_children
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
