@@ -113,7 +113,8 @@ class TopicEmbed < ActiveRecord::Base
     fd = FinalDestination.new(
       url,
       validate_uri: true,
-      max_redirects: 5
+      max_redirects: 5,
+      follow_canonical: true,
     )
 
     url = fd.resolve
