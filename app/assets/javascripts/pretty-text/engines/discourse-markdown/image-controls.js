@@ -70,8 +70,8 @@ function buildImageAltTextButton(altText) {
 <span class="alt-text-readonly-container">
   <span class="alt-text" aria-label="alt text">${altText}</span>
   <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use xlink:href="#pencil-alt"></use></svg></span>
+  <input class="alt-text-input" hidden="true" type="text" value="${altText}" />
 </span>
-<input class="alt-text-input" hidden="true" type="text" value="${altText}" />
 `;
 }
 
@@ -93,9 +93,12 @@ function ruleWithImageControls(oldRule) {
       result += oldRule(tokens, idx, options, env, slf);
 
       result += `<span class="button-wrapper" data-image-index="${index}">`;
+
+      result += `<span class="scale-btn-container">`;
       result += SCALES.map((scale) =>
         buildScaleButton(selectedScale, scale)
       ).join("");
+      result += `</span>`;
 
       result += buildImageAltTextButton(token.attrs[token.attrIndex("alt")][1]);
 
@@ -114,6 +117,7 @@ export function setup(helper) {
     helper.allowList([
       "span.image-wrapper",
       "span.button-wrapper",
+      "span[class=scale-btn-container]",
       "span[class=scale-btn]",
       "span[class=scale-btn active]",
       "span.separator",

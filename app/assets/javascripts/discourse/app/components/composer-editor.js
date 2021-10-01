@@ -602,7 +602,10 @@ export default Component.extend(ComposerUpload, {
 
   _registerImageScaleButtonClick($preview) {
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
-      const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
+      const index = parseInt(
+        $(e.target).closest(".button-wrapper").attr("data-image-index"),
+        10
+      );
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
@@ -639,11 +642,12 @@ export default Component.extend(ComposerUpload, {
         const parentContainer = $(e.target).closest(
           ".alt-text-readonly-container"
         );
-        const altText = parentContainer.find(".alt-text").text();
-        const correspondingInput = parentContainer.next(".alt-text-input");
+        const altText = parentContainer.find(".alt-text");
+        const correspondingInput = parentContainer.find(".alt-text-input");
 
-        parentContainer.hide();
-        correspondingInput.val(altText);
+        $(e.target).hide();
+        altText.hide();
+        correspondingInput.val(altText.text());
         correspondingInput.show();
         e.preventDefault();
       });
@@ -657,7 +661,7 @@ export default Component.extend(ComposerUpload, {
 
         if (e.key === "Enter") {
           const index = parseInt(
-            $(e.target).parent().attr("data-image-index"),
+            $(e.target).closest(".button-wrapper").attr("data-image-index"),
             10
           );
           const matchingPlaceholder = this.get("composer.reply").match(
@@ -671,8 +675,14 @@ export default Component.extend(ComposerUpload, {
 
           this.appEvents.trigger("composer:replace-text", match, replacement);
 
-          $preview.find(".alt-text-readonly-container").show();
-          $preview.find(".alt-text-input").hide();
+          const parentContainer = $(e.target).closest(
+            ".alt-text-readonly-container"
+          );
+          const altText = parentContainer.find(".alt-text");
+          const altTextButton = parentContainer.find(".alt-text-edit-btn");
+          altText.show();
+          altTextButton.show();
+          $(e.target).hide();
         }
       });
   },
