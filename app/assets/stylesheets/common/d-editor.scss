@@ -217,14 +217,14 @@
       span {
         margin-right: 0.5em;
         overflow: hidden;
-        white-space:nowrap;
-        text-overflow:ellipsis;
-        max-width:10em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 10em;
       }
     }
 
     .alt-text-input {
-      &[hidden=true] {
+      &[hidden="true"] {
         display: none;
       }
 
