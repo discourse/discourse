@@ -963,11 +963,7 @@ acceptance("Composer", function (needs) {
       "it does not unescape script tags in code blocks"
     );
   });
-  function wait(timeout = 2000) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-    });
-  }
+
   test("Image alt text modification", async function (assert) {
     // single image test case
 
