@@ -964,9 +964,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Image alt text modification", async function (assert) {
-    // single image test case
-
+  test("Editing alt text for single image in preview edits alt text in composer", async function (assert) {
     const altText = ".image-wrapper .button-wrapper .alt-text";
     const editAltTextButton =
       ".image-wrapper .button-wrapper .alt-text-edit-btn";
@@ -1034,8 +1032,15 @@ acceptance("Composer", function (needs) {
     assert.equal(query(altText).innerText, "steak", "shows the alt text");
     assert.ok(visible(editAltTextButton), "alt text edit button is visible");
     assert.ok(invisible(altTextInput), "alt text input is not visible");
+  });
 
-    // multiple image test case
+  test("Editing alt text for one of two images in preview updates correct alt text in composer", async function (assert) {
+    const editAltTextButton =
+      ".image-wrapper .button-wrapper .alt-text-edit-btn";
+    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
+
+    await visit("/");
+    await click("#create-topic");
 
     await fillIn(
       ".d-editor-input",
@@ -1050,6 +1055,41 @@ acceptance("Composer", function (needs) {
       queryAll(".d-editor-input").val(),
       `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
       "the correct image's alt text updated"
+    );
+  });
+
+  test("Deleting alt text for image empties alt text in composer and allows further modification", async function (assert) {
+    const altText = ".image-wrapper .button-wrapper .alt-text";
+    const editAltTextButton =
+      ".image-wrapper .button-wrapper .alt-text-edit-btn";
+    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
+
+    await visit("/");
+
+    await click("#create-topic");
+    await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
+
+    await click(editAltTextButton);
+
+    await fillIn(altTextInput, "");
+    await triggerKeyEvent(altTextInput, "keypress", 13);
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      "![|200x200](upload://zorro.png)",
+      "alt text updated"
+    );
+    assert.equal(query(altText).innerText, "", "shows the alt text");
+
+    await click(editAltTextButton);
+
+    await fillIn(altTextInput, "tomtom");
+    await triggerKeyEvent(altTextInput, "keypress", 13);
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      "![tomtom|200x200](upload://zorro.png)",
+      "alt text updated"
     );
   });
 
