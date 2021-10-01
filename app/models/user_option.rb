@@ -168,6 +168,7 @@ class UserOption < ActiveRecord::Base
     when 4 then "new"
     when 5 then "top"
     when 6 then "bookmarks"
+    when 7 then "unseen"
     else SiteSetting.homepage
     end
   end

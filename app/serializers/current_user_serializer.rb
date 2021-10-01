@@ -69,8 +69,8 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
-    object.visible_groups.pluck(:id, :name).map do |id, name|
-      group = { id: id, name: name }
+    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
+      group = { id: id, name: name, has_messages: has_messages }
       group[:owner] = true if owned_group_ids.include?(id)
       group
     end

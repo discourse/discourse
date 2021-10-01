@@ -3,7 +3,7 @@ import createPMRoute, {
 } from "discourse/routes/build-private-messages-route";
 
 export default createPMRoute(
-  "all",
-  "private-messages-all-archive",
+  "user",
+  "private-messages-archive",
   ARCHIVE_FILTER
 );

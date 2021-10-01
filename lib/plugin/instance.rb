@@ -369,6 +369,27 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_param to Group, respecting if the plugin is enabled
+  # Used in GroupsController#update and Admin::GroupsController#create
+  def register_group_param(param)
+    DiscoursePluginRegistry.register_group_param(param, self)
+  end
+
+  # Add a custom callback for search to Group
+  # Callback is called in UsersController#search_users
+  # Block takes groups and optional current_user
+  # For example:
+  # plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |groups, user|
+  #   groups.where(name: "admins")
+  # end
+  def register_groups_callback_for_users_search_controller_action(callback, &block)
+    if DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.key?(callback)
+      raise "groups_callback_for_users_search_controller_action callback already registered"
+    end
+
+    DiscoursePluginRegistry.groups_callback_for_users_search_controller_action[callback] = block
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
@@ -921,6 +942,12 @@ class Plugin::Instance
       type: type,
       param: param
       }, self)
+  end
+
+  # Register a new PresenceChannel prefix. See {PresenceChannel.register_prefix}
+  # for usage instructions
+  def register_presence_channel_prefix(prefix, &block)
+    DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
   protected

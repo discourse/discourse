@@ -60,7 +60,7 @@ export default Component.extend({
     }
 
     if (this.selectKit.mainElement()) {
-      this.selectKit.mainElement().open = false;
+      this.selectKit.close(event);
     }
   },
 });

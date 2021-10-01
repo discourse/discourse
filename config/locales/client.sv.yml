@@ -116,6 +116,8 @@ sv:
       previous_month: "Föregående månad"
       next_month: "Nästkommande månad"
       placeholder: datum
+      from_placeholder: "från-datum"
+      to_placeholder: "till-datum"
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber}"
@@ -157,6 +159,7 @@ sv:
         disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
       forwarded: "vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
+    skip_to_main_content: "Hoppa till huvudinnehållet"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     software_update_prompt:
@@ -182,6 +185,7 @@ sv:
         cn_northwest_1: "Kina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milano)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -239,6 +243,8 @@ sv:
     character_count:
       one: "%{count} tecken"
       other: "%{count} tecken"
+    period_chooser:
+      aria_label: "Filtrera efter period"
     related_messages:
       title: "Relaterade meddelanden"
       see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}...'
@@ -271,6 +277,7 @@ sv:
       help:
         bookmark: "Klicka för att bokmärka första inlägget i ämnet"
         edit_bookmark: "Klicka för att redigera bokmärket för detta ämne"
+        edit_bookmark_for_topic: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
@@ -313,6 +320,9 @@ sv:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
+    topic_count_categories:
+      one: "Visa %{count} nytt eller uppdaterat ämne"
+      other: "Visa %{count} nya eller uppdaterade ämnen"
     topic_count_latest:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
@@ -363,6 +373,7 @@ sv:
         placeholder: "skriv meddelandets titel, url eller id här"
     review:
       order_by: "Sortera efter"
+      date_filter: "Publicerat mellan"
       in_reply_to: "som svar till"
       explain:
         why: "förklara varför detta föremål hamnade i kön"
@@ -972,7 +983,9 @@ sv:
       use_current_timezone: "Använd nuvarande tidszon"
       profile_hidden: "Den här användarens offentliga profil är dold."
       expand_profile: "Utvidga"
+      sr_expand_profile: "Expandera profilinformation"
       collapse_profile: "Förminska"
+      sr_collapse_profile: "Dölj profilinformation"
       bookmarks: "Bokmärken"
       bio: "Om mig"
       timezone: "Tidszon"
@@ -1003,6 +1016,9 @@ sv:
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
         Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      no_notifications_page_title: "Du har inga aviseringar än"
+      no_notifications_page_body: >
+        Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -1110,7 +1126,13 @@ sv:
         latest: "Senaste"
         sent: "Skickat"
         unread: "Olästa"
+        unread_with_count:
+          one: "Oläst (%{count})"
+          other: "Oläst (%{count})"
         new: "Nya"
+        new_with_count:
+          one: "Ny (%{count})"
+          other: "Ny (%{count})"
         archive: "Arkiv"
         groups: "Mina grupper"
         move_to_inbox: "Flytta till inkorg"
@@ -1118,6 +1140,10 @@ sv:
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         tags: "Taggar"
         warnings: "Officiella varningar"
+        read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
+        read_more: "Vill du läsa mer? Bläddra genom andra meddelanden i <a href='%{basePath}/u/%{username}/message'>personliga meddelanden</a>."
+        read_more_group_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra meddelanden i {groupLink}"
+        read_more_personal_pm_MF: "Där { UNREAD, plural, =0 {} one { är <a href='{basePath}/u/{username}/messages/unread'># oläst</a> } other { är <a href='{basePath}/u/{username}/messages/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nya</a> meddelanden} } kvar, eller bläddra genom andra <a href='{basePath}/u/{username}/message'>personliga meddelanden</a>"
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -1632,6 +1658,8 @@ sv:
       description_time_MF: "Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>."
       enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
+      short_label: "Sammanfatta"
+      short_title: "Visa en sammanfattning av detta ämne: de mest intressanta inläggen enligt forumet"
     deleted_filter:
       enabled_description: "Det här ämnet innehåller borttagna inlägg som har dolts."
       disabled_description: "Raderade inlägg i ämnet visas."
@@ -1737,21 +1765,27 @@ sv:
       google_oauth2:
         name: "Google"
         title: "med Google"
+        sr_title: "Logga in med Google"
       twitter:
         name: "Twitter"
         title: "med Twitter"
+        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "med Instagram"
+        sr_title: "Logga in med Instagram"
       facebook:
         name: "Facebook"
         title: "med Facebook"
+        sr_title: "Logga in med Facebook"
       github:
         name: "GitHub"
         title: "med GitHub"
+        sr_title: "Logga in med GitHub"
       discord:
         name: "Discord"
         title: "med Discord"
+        sr_title: "Logga in med Discord"
       second_factor_toggle:
         totp: "Använd en autentiseringsapp istället"
         backup_code: "Använd en reservkod istället"
@@ -2102,11 +2136,12 @@ sv:
       select_all: "Markera alla"
       clear_all: "Rensa allt"
       too_short: "Din sökterm är för kort."
+      sort_or_bulk_actions: "Sortera eller massmarkera resultat"
       result_count:
         one: "<span>%{count} resultat för</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
       title: "sök efter ämnen, inlägg, användare eller kategorier"
-      full_page_title: "sök ämnen eller inlägg"
+      full_page_title: "Sök"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
       post_format: "Nr %{post_number} av %{username}"
@@ -2118,6 +2153,13 @@ sv:
       search_google: "Försök söka med Google istället:"
       search_google_button: "Google"
       search_button: "Sök"
+      search_term_label: "ange sökord"
+      categories: "Kategorier"
+      tags: "Taggar"
+      type:
+        default: "Ämnen/inlägg"
+        users: "Användare"
+        categories_and_tags: "Kategorier/taggar"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -2125,9 +2167,10 @@ sv:
         topic: "Sök i det här ämnet"
         private_messages: "Sök meddelanden"
       advanced:
-        title: Avancerad sökning
+        title: Avancerade filter
         posted_by:
           label: Publicerat av
+          aria_label: Filtrera efter inläggsförfattare
         in_category:
           label: Kategoriserad
         in_group:
@@ -2136,6 +2179,7 @@ sv:
           label: Med utmärkelse
         with_tags:
           label: Taggad
+          aria_label: Filtrera efter taggar
         filters:
           label: Returnera enbart ämnen/inlägg....
           title: Matcha enbart i titeln
@@ -2166,19 +2210,26 @@ sv:
             label: Inlägg
           min:
             placeholder: minst
+            aria_label: filtrera efter minsta antal inlägg
           max:
             placeholder: maximalt
+            aria_label: filtrera efter största antal inlägg
           time:
             label: Publicerad
+            aria_label: Filtrera efter publiceringsdatum
             before: innan
             after: efter
         views:
           label: Visningar
         min_views:
           placeholder: minst
+          aria_label: filtrera efter minsta antal visningar
         max_views:
           placeholder: maximalt
-    hamburger_menu: "gå till en annan ämneslista eller kategori"
+          aria_label: filtrera efter största antal visningar
+        additional_options:
+          label: "Filtrera efter inläggsantal och ämnesvisningar"
+    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -2689,6 +2740,7 @@ sv:
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
+      quote_edit: "Redigera"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -2737,6 +2789,7 @@ sv:
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
         upload: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Vi ber dig försöka igen."
         file_too_large: "Tyvärr är den filen för stor (maximal filstorlek är %{max_size_kb}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sedan dela länken?"
+        file_too_large_humanized: "Tyvärr är den filen för stor (maximal storlek är %{max_size}). Varför inte ladda upp din stora fil till en molndelningstjänst och sedan klistra in länken här?"
         too_many_uploads: "Tyvärr kan du bara ladda upp en bild i taget."
         too_many_dragged_and_dropped_files:
           one: "Tyvärr kan du bara ladda upp %{count} fil åt gången."
@@ -2870,7 +2923,9 @@ sv:
             button: "HTML"
       bookmarks:
         create: "Skapa bokmärke"
+        create_for_topic: "Skapa bokmärke för ämne"
         edit: "Redigera bokmärke"
+        edit_for_topic: "Redigera bokmärke för ämne"
         created: "Skapade"
         updated: "Uppdaterade"
         name: "Namn"
@@ -2993,6 +3048,7 @@ sv:
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
       notifications:
+        title: "ändra aviseringsnivå för denna kategori"
         watching:
           title: "Bevakar"
           description: "Du kommer automatiskt att bevaka alla ämnen i den här kategorin. Du aviseras om varje nytt inlägg i alla ämnen, och det visas en räknare över antalet nya svar."
@@ -3517,6 +3573,21 @@ sv:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
+    user_activity:
+      no_activity_title: "Ingen aktivitet än"
+      no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit till diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. Om du inte redan har gjort det kan du underlätta för andra att lära känna dig genom att lägga till en bild och en biografi i dina <a href='%{preferencesUrl}'>användarinställningar</a>."
+      no_activity_others: "Ingen aktivitet."
+      no_replies_title: "Du har inte svarat på några ämnen än"
+      no_replies_others: "Inga svar."
+      no_drafts_title: "Du har inte startat några utkast"
+      no_drafts_body: "Inte riktigt redo att göra ett inlägg? Vi sparar automatiskt ett nytt utkast och visar det i listan här när du börjar skriva ett ämne, svar eller personligt meddelande. Välj avbryt-knappen för att ta bort eller spara ditt utkast för att fortsätta senare."
+      no_likes_title: "Du har inte gillat några ämnen än"
+      no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
+      no_likes_others: "Inga gillade inlägg."
+      no_topics_title: "Du har inte startat några ämnen än"
+      no_read_topics_title: "Du har inte läst några ämnen än"
+      no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
+    no_group_messages_title: "Inga gruppmeddelanden hittades"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4564,8 +4635,6 @@ sv:
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"
         suspended_until: "(till %{until})"
         cant_suspend: "Denna användare kan inte uteslutas."
-        delete_all_posts: "Radera alla inlägg"
-        delete_posts_progress: "Raderar inlägg..."
         delete_posts_failed: "Det uppstod ett problem vid radering av inläggen."
         post_edits: "Publicera redigeringar"
         view_edits: "Visa redigeringar"
@@ -4596,6 +4665,7 @@ sv:
         logged_out: "Användaren loggades ut från alla enheter."
         revoke_admin: "Återkalla Administratör"
         grant_admin: "Bevilja Administratör"
+        grant_admin_success: "Ny administratör bekräftades."
         grant_admin_confirm: "Vi har skickat e-post till dig för att bekräfta den nya administratören. Vi ber dig öppna meddelandet och följ instruktionerna."
         revoke_moderation: "Återkalla Moderering"
         grant_moderation: "Bevilja Moderering"
@@ -4632,8 +4702,21 @@ sv:
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
         delete_posts:
+          button: "Radera alla inlägg"
           progress:
             title: "Förlopp för radering av inlägg"
+            description: "Raderar inlägg..."
+          confirmation:
+            title: "Radera alla inlägg av @%{username}"
+            description: |
+              <p>Är du säker på att du vill radera <b>%{post_count}</b> inlägg av @%{username}?
+
+              <p><b>Detta kan inte ångras!</b></p>
+
+              <p>Om du vill fortsätta skriver du: <code>%{text}</code></p>
+            text: "radera inlägg av @%{username}"
+            delete: "Radera inlägg av @%{username}"
+            cancel: "Avbryt"
         merge:
           button: "Slå ihop"
           prompt:
@@ -5042,7 +5125,8 @@ sv:
           moderator: "Moderator"
           regular: "Regelbunden användare"
       previews:
-        topic_title: "Diskussionsämne"
-        font_title: "Typsnittet %{font}"
+        topic_title: "En diskussionsämnesrubrik"
         share_button: "Dela"
         reply_button: "Svara"
+        topic_preview: "Ämnesförhandsgranskning"
+        homepage_preview: "Förhandsgranskning av hemsida"

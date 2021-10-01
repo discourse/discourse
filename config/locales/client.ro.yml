@@ -328,6 +328,10 @@ ro:
         confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
+    topic_count_categories:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -1005,7 +1009,15 @@ ro:
         latest: "Cele mai recente"
         sent: "Trimise"
         unread: "Necitite"
+        unread_with_count:
+          one: "Necitit (%{count})"
+          few: "Necitit (%{count})"
+          other: "Necitit (%{count})"
         new: "Noi"
+        new_with_count:
+          one: "Nou (%{count})"
+          few: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arhivă"
         groups: "Grupurile mele"
         move_to_inbox: "Mută în „Primite”"
@@ -1699,6 +1711,7 @@ ro:
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
       title: "Caută subiecte, postări, utilizatori sau categorii"
+      full_page_title: "Caută"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
       post_format: "#%{post_number} de %{username}"
@@ -1707,13 +1720,16 @@ ro:
       or_search_google: "Sau încearcă să cauți cu Google:"
       search_google_button: "Google"
       search_button: "Caută"
+      categories: "Categorii"
+      tags: "Etichete"
+      type:
+        users: "Utilizatori"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
         topic: "Caută în acest subiect"
         private_messages: "Caută mesaje"
       advanced:
-        title: Căutare avansată
         posted_by:
           label: Postat de
         in_category:
@@ -1762,7 +1778,6 @@ ro:
           placeholder: minim
         max_views:
           placeholder: maxim
-    hamburger_menu: "Du-te la o altă categorie saulistă de subiecte"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
@@ -2129,6 +2144,7 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post:
       quote_reply: "Citează"
+      quote_edit: "Editează"
       quote_share: "Distribuie"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
@@ -2753,6 +2769,8 @@ ro:
         member: "membru"
         regular: "utilizator frecvent"
         leader: "lider"
+    user_activity:
+      no_likes_others: "Nu există postări apreciate."
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -3392,7 +3410,6 @@ ro:
         silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
-        delete_all_posts: "Șterge toate postările"
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"
         penalty_post_delete: "Șterge postarea"
         penalty_post_edit: "Modifică postarea"
@@ -3437,6 +3454,10 @@ ro:
         anonymize_yes: "Da, transformă acest cont în cont anonim"
         anonymize_failed: "A apărut o problemă în timpul transformării contului în cont anonim."
         delete: "Ștergere utilizator"
+        delete_posts:
+          button: "Șterge toate postările"
+          confirmation:
+            cancel: "Anulează"
         merge:
           prompt:
             target_username_placeholder: "Numele de utilizator al noului proprietar"
@@ -3748,6 +3769,5 @@ ro:
           moderator: "Moderator"
           regular: "Utilizator frecvent"
       previews:
-        topic_title: "Subiectul discuției"
         share_button: "Distribuie"
         reply_button: "Răspunde"

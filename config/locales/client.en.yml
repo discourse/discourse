@@ -132,6 +132,8 @@ en:
       previous_month: "Previous Month"
       next_month: "Next Month"
       placeholder: date
+      from_placeholder: "from date"
+      to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -175,6 +177,7 @@ en:
       forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
+    skip_to_main_content: "Skip to main content"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -205,6 +208,7 @@ en:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -263,6 +267,8 @@ en:
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
+    period_chooser:
+      aria_label: "Filter by period"
 
     related_messages:
       title: "Related Messages"
@@ -299,6 +305,7 @@ en:
       help:
         bookmark: "Click to bookmark the first post on this topic"
         edit_bookmark: "Click to edit the bookmark on this topic"
+        edit_bookmark_for_topic: "Click to edit the bookmark for this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."
 
@@ -344,6 +351,10 @@ en:
         confirm: "You have a draft in progress for this topic. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+
+    topic_count_categories:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
 
     topic_count_latest:
       one: "See %{count} new or updated topic"
@@ -410,6 +421,7 @@ en:
 
     review:
       order_by: "Order by"
+      date_filter: "Posted between"
       in_reply_to: "in reply to"
       explain:
         why: "explain why this item ended up in the queue"
@@ -1039,7 +1051,9 @@ en:
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
+      sr_expand_profile: "Expand profile details"
       collapse_profile: "Collapse"
+      sr_collapse_profile: "Collapse profile details"
       bookmarks: "Bookmarks"
       bio: "About me"
       timezone: "Timezone"
@@ -1203,6 +1217,38 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         tags: "Tags"
         warnings: "Official Warnings"
+        read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/message'>personal messages</a>."
+
+        read_more_group_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages}
+          } remaining, or browse other messages in {groupLink}"
+
+        read_more_personal_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
+          } remaining, or browse other <a href='{basePath}/u/{username}/message'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
@@ -1781,6 +1827,8 @@ en:
       description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
+      short_label: "Summarize"
+      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -1896,21 +1944,27 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
+        sr_title: "Login with Google"
       twitter:
         name: "Twitter"
         title: "with Twitter"
+        sr_title: "Login with Twitter"
       instagram:
         name: "Instagram"
         title: "with Instagram"
+        sr_title: "Login with Instagram"
       facebook:
         name: "Facebook"
         title: "with Facebook"
+        sr_title: "Login with Facebook"
       github:
         name: "GitHub"
         title: "with GitHub"
+        sr_title: "Login with GitHub"
       discord:
         name: "Discord"
         title: "with Discord"
+        sr_title: "Login with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -2287,11 +2341,12 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
       title: "search topics, posts, users, or categories"
-      full_page_title: "search topics or posts"
+      full_page_title: "Search"
       no_results: "No results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
@@ -2303,6 +2358,14 @@ en:
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
       search_button: "Search"
+      search_term_label: "enter search keyword"
+      categories: "Categories"
+      tags: "Tags"
+
+      type:
+        default: "Topics/posts"
+        users: "Users"
+        categories_and_tags: "Categories/tags"
 
       context:
         user: "Search posts by @%{username}"
@@ -2312,9 +2375,10 @@ en:
         private_messages: "Search messages"
 
       advanced:
-        title: Advanced Search
+        title: Advanced filters
         posted_by:
           label: Posted by
+          aria_label: Filter by post author
         in_category:
           label: Categorized
         in_group:
@@ -2323,6 +2387,7 @@ en:
           label: With Badge
         with_tags:
           label: Tagged
+          aria_label: Filter using tags
         filters:
           label: Only return topics/posts...
           title: Matching in title only
@@ -2353,20 +2418,27 @@ en:
             label: Posts
           min:
             placeholder: minimum
+            aria_label: filter by minimum number of posts
           max:
             placeholder: maximum
+            aria_label: filter by maximum number of posts
           time:
             label: Posted
+            aria_label: Filter by posted date
             before: before
             after: after
         views:
           label: Views
         min_views:
           placeholder: minimum
+          aria_label: filter by minimum views
         max_views:
           placeholder: maximum
+          aria_label: filter by maximum views
+        additional_options:
+          label: "Filter by post count and topic views"
 
-    hamburger_menu: "go to another topic list or category"
+    hamburger_menu: "menu"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -2929,6 +3001,7 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_edit: "Edit"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -2985,6 +3058,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files:
           one: "Sorry, you can only upload %{count} file at a time."
@@ -3129,7 +3203,9 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
+        edit_for_topic: "Edit bookmark for topic"
         created: "Created"
         updated: "Updated"
         name: "Name"
@@ -3254,6 +3330,7 @@ en:
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
+        title: "change notification level for this category"
         watching:
           title: "Watching"
           description: "You will automatically watch all topics in this category. You will be notified of every new post in every topic, and a count of new replies will be shown."
@@ -3808,6 +3885,25 @@ en:
 
     pick_files_button:
       unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
+
+    user_activity:
+      no_activity_title: "No activity yet"
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_others: "No activity."
+      no_replies_title: "You have not replied to any topics yet"
+      no_replies_others: "No replies."
+      no_drafts_title: "You haven’t started any drafts"
+      no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
+      no_likes_title: "You haven’t liked any topics yet"
+      no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
+      no_likes_others: "No liked posts."
+      no_topics_title: "You have not started any topics yet"
+      no_read_topics_title: "You haven’t read any topics yet"
+      no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
+
+    no_group_messages_title: "No group messages found"
+
+
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4916,6 +5012,7 @@ en:
         logged_out: "User was logged out on all devices"
         revoke_admin: "Revoke Admin"
         grant_admin: "Grant Admin"
+        grant_admin_success: "New administrator was confirmed."
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: "Revoke Moderation"
         grant_moderation: "Grant Moderation"

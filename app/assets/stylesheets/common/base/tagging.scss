@@ -215,7 +215,7 @@ header .discourse-tag {
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto;
   grid-template-areas: "header header" "sidebar content" "fullwidth fullwidth";
-  padding-bottom: 3em;
+  padding-bottom: 5em;
 
   > h2 {
     grid-area: header;
@@ -236,6 +236,7 @@ header .discourse-tag {
   .tag-groups-sidebar + .tag-group-content {
     grid-area: content;
   }
+
   .tag-group-content {
     grid-area: fullwidth;
 
@@ -255,14 +256,32 @@ header .discourse-tag {
       margin-right: 5px;
       &.radio {
         padding-left: 0px;
+        margin-right: 0px;
+      }
+    }
+
+    .group-visibility-option {
+      grid-gap: 0.5rem;
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      grid-template-areas:
+        "input label"
+        "empty dropdown";
+      input {
+        grid-area: input;
+        margin-top: 4px;
+      }
+      label {
+        grid-area: label;
       }
     }
     .btn {
       margin-right: 10px;
     }
     .group-access-control {
-      margin-left: 26px;
       margin-bottom: 1em;
+      grid-area: dropdown;
+      grid-row: 2;
     }
     input[type="radio"] ~ .group-access-control {
       display: none;
@@ -271,13 +290,26 @@ header .discourse-tag {
       display: block;
     }
   }
+  @include breakpoint(tablet) {
+    .select-kit.multi-select {
+      width: 100%;
+    }
+
+    .tag-groups-sidebar {
+      max-width: 90px;
+      ul li a {
+        word-break: break-word;
+        max-width: 90px;
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
   .tag-group-controls {
     display: flex;
     justify-content: space-between;
   }
-  .group-tags-list .tag-chooser {
-    width: calc(100% - 1em);
-  }
+
   .saving {
     margin-left: 20px;
   }

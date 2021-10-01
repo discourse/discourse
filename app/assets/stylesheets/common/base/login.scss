@@ -60,7 +60,10 @@
     min-height: 35px;
   }
   #modal-alert:empty {
-    display: none;
+    min-height: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: inline;
   }
   .login-welcome-header {
     z-index: z("modal", "content");
@@ -93,9 +96,6 @@
     }
   }
   .modal-footer {
-    .btn-primary {
-      margin-right: 1.5em;
-    }
     .inline-spinner {
       display: inline-flex;
     }
@@ -251,7 +251,6 @@
 #login-link,
 #new-account-link {
   cursor: pointer;
-  padding-left: 0;
   text-align: left;
   // the second button can wrap in some locales, and this helps alignment
 }
@@ -262,10 +261,11 @@
     margin-top: 0.5em;
   }
 
-  .create-account-body {
-    max-width: 40em;
+  @media screen and (min-width: 701px) {
+    .create-account-body {
+      max-width: 40em;
+    }
   }
-
   .user-field {
     input[type="text"] {
       margin-bottom: 0;
@@ -334,7 +334,8 @@
       line-height: $line-height-medium;
     }
     .tip {
-      padding-left: 5px;
+      font-size: var(--font-down-1);
+      margin-bottom: 0.25em;
     }
   }
 }

@@ -3,6 +3,7 @@ import {
   authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
 } from "discourse/lib/uploads";
+import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import {
   caretPosition,
@@ -61,6 +62,23 @@ export function cleanUpComposerUploadProcessor() {
   uploadProcessorActions = {};
 }
 
+let uploadPreProcessors = [];
+export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
+  if (!(pluginClass.prototype instanceof BasePlugin)) {
+    throw new Error(
+      "Composer upload preprocessors must inherit from the Uppy BasePlugin class."
+    );
+  }
+
+  uploadPreProcessors.push({
+    pluginClass,
+    optionsResolverFn,
+  });
+}
+export function cleanUpComposerUploadPreProcessor() {
+  uploadPreProcessors = [];
+}
+
 let uploadMarkdownResolvers = [];
 export function addComposerUploadMarkdownResolver(resolver) {
   uploadMarkdownResolvers.push(resolver);
@@ -72,6 +90,8 @@ export function cleanUpComposerUploadMarkdownResolver() {
 export default Component.extend(ComposerUpload, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
+  fileUploadElementId: "file-uploader",
+  mobileFileUploaderId: "mobile-file-upload",
   shouldBuildScrollMap: true,
   scrollMap: null,
   processPreview: true,
@@ -79,6 +99,7 @@ export default Component.extend(ComposerUpload, {
   uploadMarkdownResolvers,
   uploadProcessorActions,
   uploadProcessorQueue,
+  uploadPreProcessors,
   uploadHandlers,
 
   @discourseComputed("composer.requiredCategoryMissing")
@@ -218,7 +239,11 @@ export default Component.extend(ComposerUpload, {
       putCursorAtEnd(this.element.querySelector(".d-editor-input"));
     }
 
-    this._bindUploadTarget();
+    if (this.allowUpload) {
+      this._bindUploadTarget();
+      this._bindMobileUploadButton();
+    }
+
     this.appEvents.trigger("composer:will-open");
   },
 
@@ -607,6 +632,7 @@ export default Component.extend(ComposerUpload, {
 
   @on("willDestroyElement")
   _composerClosed() {
+    this._unbindMobileUploadButton();
     this.appEvents.trigger("composer:will-close");
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer

@@ -154,6 +154,7 @@ cs:
       previous_month: "Předchozí měsíc"
       next_month: "Další měsíc"
       placeholder: datum
+      to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek #%{postNumber}"
@@ -347,6 +348,11 @@ cs:
       topic_reply: "Koncept odpovědi"
       abandon:
         yes_value: "Zahodit"
+    topic_count_categories:
+      one: "Zobrazit %{count} nové nebo upravené téma"
+      few: "Zobrazit %{count} nová nebo upravená témata"
+      many: "Zobrazit %{count} nových nebo upravených témat"
+      other: "Zobrazit %{count} nových nebo upravených témat"
     topic_count_latest:
       one: "Zobrazit %{count} nové nebo upravené téma"
       few: "Zobrazit %{count} nová nebo upravená témata"
@@ -938,6 +944,11 @@ cs:
         latest: "Aktuální"
         sent: "Odeslané"
         unread: "Nepřečtená"
+        unread_with_count:
+          one: "Nepřečtená (%{count})"
+          few: "Nepřečtená (%{count})"
+          many: "Nepřečtená (%{count})"
+          other: "Nepřečtená (%{count})"
         new: "Nová"
         archive: "Archív"
         groups: "Moje skupiny"
@@ -1711,7 +1722,7 @@ cs:
         many: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
-      full_page_title: "vyhledávat témata nebo příspěvky"
+      full_page_title: "Vyhledat"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
       post_format: "#%{post_number} od %{username}"
@@ -1723,13 +1734,16 @@ cs:
       search_google: "Zkuste vyhledávat pomocí Google:"
       search_google_button: "Google"
       search_button: "Vyhledat"
+      categories: "Kategorie"
+      tags: "Štítky"
+      type:
+        users: "Uživatelé"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
       advanced:
-        title: Pokročilé hledání
         posted_by:
           label: Od uživatele
         in_category:
@@ -1772,7 +1786,6 @@ cs:
             after: po
         views:
           label: Zobrazení
-    hamburger_menu: "jít na jiný seznam témat nebo kategorii"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -2168,6 +2181,7 @@ cs:
           other: "Máte označeno <b>%{count}</b> příspěvků."
     post:
       quote_reply: "Cituj"
+      quote_edit: "Upravit"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
@@ -2823,6 +2837,8 @@ cs:
         member: "člen"
         regular: "pravidelný uživatel"
         leader: "vůdce"
+    user_activity:
+      no_replies_others: "Žádné odpovědi."
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -3519,7 +3535,6 @@ cs:
         silence_message_placeholder: "()"
         suspended_until: "(až %{until})"
         cant_suspend: "Tento uživatel nemůže být suspendován"
-        delete_all_posts: "Smazat všechny příspěvky"
         penalty_post_actions: "Co chceš dělat s připojeným příspěvkem? "
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
@@ -3571,6 +3586,10 @@ cs:
         anonymize_yes: "Ano, udělejte tento účet anonymním"
         anonymize_failed: "Nastal problém při anonymizování účtu."
         delete: "Smazat uživatele"
+        delete_posts:
+          button: "Smazat všechny příspěvky"
+          confirmation:
+            cancel: "Zrušit"
         merge:
           prompt:
             cancel: "Zrušit"
@@ -3893,6 +3912,5 @@ cs:
           moderator: "Moderátor"
           regular: "pravidelný uživatel"
       previews:
-        topic_title: "Diskuzní téma"
         share_button: "Sdílet"
         reply_button: "Odpovědět"

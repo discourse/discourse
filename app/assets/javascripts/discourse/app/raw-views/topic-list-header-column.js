@@ -55,7 +55,7 @@ export default EmberObject.extend({
     if (this.isSorting) {
       return this.parent.ascending ? "ascending" : "descending";
     } else {
-      return "none";
+      return false;
     }
   },
 });

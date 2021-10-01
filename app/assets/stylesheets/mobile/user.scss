@@ -41,15 +41,6 @@
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 
-    &.user-messages-inboxes {
-      // when there are multiple inboxes
-      .messages-nav {
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 1;
-      }
-    }
-
     + .user-additional-controls {
       grid-row-start: 2;
       grid-column-start: 1;
@@ -58,20 +49,6 @@
 
   .inboxes-controls {
     display: flex;
-  }
-
-  .user-messages-inboxes-drop {
-    padding: 0;
-    flex: 1 1 auto;
-    .select-kit-header {
-      .select-kit-header-wrapper {
-        padding: 8px 10px;
-      }
-
-      .caret-icon {
-        color: var(--primary-medium);
-      }
-    }
   }
 
   .new-private-message {
@@ -83,8 +60,6 @@
     margin-left: 8px;
 
     .select-kit-header {
-      height: 100%;
-
       .selected-name .name {
         display: none;
       }
@@ -244,7 +219,6 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        margin-left: -1em;
         li,
         > span {
           display: flex;
@@ -262,6 +236,10 @@
             }
           }
         }
+      }
+
+      > ul {
+        margin-left: -1em; // negates left button margin, for alignment
       }
 
       .user-profile-controls-outlet {
@@ -309,10 +287,6 @@
   .user-profile-names {
     text-align: left;
   }
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
 }
 
 .paginated-topics-list {

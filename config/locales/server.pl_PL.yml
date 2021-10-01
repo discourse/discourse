@@ -534,6 +534,7 @@ pl_PL:
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
+    get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
 
@@ -987,19 +988,10 @@ pl_PL:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
-    no_default:
-      self: "Nie masz jeszcze żadnej aktywności."
-      others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz żadnych wpisów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych wpisów."
       search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       others: "Brak zakładek."
-    no_likes_given:
-      self: "Nie masz polubionych wpisów."
-      others: "Brak polubionych wpisów."
-    no_replies:
-      self: "Nie odpowiedziałeś na żadne wpisy."
-      others: "Brak odpowiedzi."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
   email_settings:
@@ -1566,6 +1558,7 @@ pl_PL:
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
+    summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "Zezwalaj użytkownikom o poziomie zaufania 1 (możliwe do zmiany przez min trust level to send messages) na tworzenie wiadomości i odpowiadanie na nie. Zwróć uwagę, że administracja zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -3432,6 +3425,26 @@ pl_PL:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Użytkownik Opublikował"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3749,10 +3762,12 @@ pl_PL:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
+      too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
       larger_than_x_megapixels: "Przepraszamy, obraz który próbujesz dodać jest zbyt duży (maksymalny wymiar to %{max_image_megapixels}-megapikseli), proszę zmienić rozmiar i spróbować ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
+      too_large_humanized: "(obraz większy niż %{max_size})"
   avatar:
     missing: "Przepraszamy, nie możemy odnaleźć żadnego avatara przypisanego do tego konta email. Spróbuj załadować go ponownie"
   flag_reason:
@@ -4558,17 +4573,34 @@ pl_PL:
           city_for_disputes:
             label: "Miasto dyskusji"
             placeholder: "Kalifornia, San Francisco"
-      colors:
-        title: "Kolory"
-      fonts:
-        title: "Czcionki"
+      styling:
+        title: "Stylizacja"
         fields:
+          color_scheme:
+            label: "Schemat kolorów"
           body_font:
             label: "Czcionka"
           heading_font:
             label: "Czcionka nagłówków"
-          font_preview:
+          styling_preview:
             label: "Podgląd"
+          homepage_style:
+            label: "Styl strony głównej"
+            choices:
+              latest:
+                label: "Ostatnie Tematy"
+              categories_only:
+                label: "Tylko kategorie"
+              categories_with_featured_topics:
+                label: "Kategorie z wybranymi tematami"
+              categories_and_latest_topics:
+                label: "Kategorie i ostatnie tematy"
+              categories_and_top_topics:
+                label: "Kategorie i najlepsze tematy"
+              categories_boxes:
+                label: "Bloki kategorii"
+              categories_boxes_with_topics:
+                label: "Bloki kategorii z tematami"
       logos:
         title: "Loga"
         fields:
@@ -4587,26 +4619,6 @@ pl_PL:
           large_icon:
             label: "Duża ikona"
             description: "Obraz ikony używany do reprezentowania Twojej witryny na nowoczesnych urządzeniach, który dobrze wygląda w większych rozmiarach. Idealnie większy niż 512 × 512. Domyślnie użyjemy kwadratowego logo."
-      homepage:
-        description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
-        title: "Strona Główna"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ostatnie Tematy"
-              categories_only:
-                label: "Tylko kategorie"
-              categories_with_featured_topics:
-                label: "Kategorie z wybranymi tematami"
-              categories_and_latest_topics:
-                label: "Kategorie i ostatnie tematy"
-              categories_and_top_topics:
-                label: "Kategorie i najlepsze tematy"
-              categories_boxes:
-                label: "Bloki kategorii"
-              categories_boxes_with_topics:
-                label: "Bloki kategorii z tematami"
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

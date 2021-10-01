@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -25,6 +26,7 @@ export function initSearchData() {
   searchData.invalidTerm = false;
   searchData.topicId = null;
   searchData.afterAutocomplete = false;
+  searchData.suggestionResults = [];
 }
 
 initSearchData();
@@ -51,8 +53,9 @@ const SearchHelper = {
 
     if (matchSuggestions) {
       searchData.noResults = true;
-      searchData.results = [];
+      searchData.results = {};
       searchData.loading = false;
+      searchData.suggestionResults = [];
 
       if (matchSuggestions.type === "category") {
         const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
@@ -65,8 +68,10 @@ const SearchHelper = {
           widget.siteSettings
         );
         Promise.resolve(categoryTagSearch).then((results) => {
-          searchData.suggestionResults = results;
-          searchData.suggestionKeyword = "#";
+          if (results !== CANCELLED_STATUS) {
+            searchData.suggestionResults = results;
+            searchData.suggestionKeyword = "#";
+          }
           widget.scheduleRerender();
         });
       } else if (matchSuggestions.type === "username") {
@@ -327,14 +332,14 @@ export default createWidget("search-menu", {
     const up = e.which === 38;
     const down = e.which === 40;
     if (up || down) {
-      let focused = $("header .panel-body *:focus")[0];
+      let focused = $(".search-menu *:focus")[0];
 
       if (!focused) {
         return;
       }
 
-      let links = $("header .panel-body .results a");
-      let results = $("header .panel-body .results .search-link");
+      let links = $(".search-menu .results a");
+      let results = $(".search-menu .results .search-link");
 
       let prevResult;
       let result;
@@ -356,9 +361,9 @@ export default createWidget("search-menu", {
       }
 
       if (index === -1 && down) {
-        $("header .panel-body .search-link:first").focus();
+        $(".search-menu .search-link:first").focus();
       } else if (index === 0 && up) {
-        $("header .panel-body input:first").focus();
+        $(".search-menu input:first").focus();
       } else if (index > -1) {
         index += down ? 1 : -1;
         if (index >= 0 && index < results.length) {

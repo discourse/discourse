@@ -137,6 +137,7 @@ bs_BA:
       previous_month: "Prošli mjesec"
       next_month: "Sljedeći mjesec"
       placeholder: datum
+      to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "dijeli post #%{postNumber}"
@@ -317,6 +318,10 @@ bs_BA:
       topic_reply: "skica odgovora"
       abandon:
         yes_value: "Odbaci"
+    topic_count_categories:
+      one: "Pogledajte %{count} novu ili ažuriranu temu"
+      few: "Pogledajte %{count} nove ili ažurirane teme"
+      other: "Pogledajte %{count} novih ili ažuriranih tema"
     topic_count_latest:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -1017,7 +1022,15 @@ bs_BA:
         latest: "Zadnje"
         sent: "Poslano"
         unread: "Nepročitano"
+        unread_with_count:
+          one: "Nepročitano (%{count})"
+          few: "Nepročitano (%{count})"
+          other: "Nepročitano (%{count})"
         new: "Novo"
+        new_with_count:
+          one: "Novo (%{count})"
+          few: "Novo (%{count})"
+          other: "Novo (%{count})"
         archive: "Arhiva"
         groups: "Moje grupe"
         move_to_inbox: "Idi u inbox"
@@ -1864,7 +1877,7 @@ bs_BA:
         few: "<span>%{count}%{plus} resultata za</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "pretražite teme, objave, korisnike ili kategorije"
-      full_page_title: "pretraži teme ili objave"
+      full_page_title: "Pretraži"
       no_results: "Nema rezultata."
       no_more_results: "Nema rezultata pretrage."
       post_format: "#%{post_number} od %{username}"
@@ -1876,13 +1889,16 @@ bs_BA:
       search_google: "Probaj umjesto toga pretražiti pomoću Google-a:"
       search_google_button: "Google"
       search_button: "Pretraži"
+      categories: "Kategorije"
+      tags: "Tagovi"
+      type:
+        users: "Korisnici"
       context:
         user: "Traži postove od @%{username}"
         category: "Traži #%{category} kategoriju"
         topic: "Pretraži ovu temu"
         private_messages: "Pretraži poruke"
       advanced:
-        title: Napredno pretraživanje
         posted_by:
           label: Objavljeno od
         in_category:
@@ -1927,7 +1943,6 @@ bs_BA:
             after: poslije
         views:
           label: Pogledano
-    hamburger_menu: "idi ka drugoj temi, listi ili kategoriji"
     new_item: "novo"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -2340,6 +2355,7 @@ bs_BA:
           other: "Označili ste <b>%{count}</b> objava."
     post:
       quote_reply: "Citiraj"
+      quote_edit: "Izmijeni"
       quote_share: "Dijeli"
       edit_reason: "Razlog: "
       post_number: "post %{number}"
@@ -3070,6 +3086,8 @@ bs_BA:
         member: "član"
         regular: "pokretač"
         leader: "vođa"
+    user_activity:
+      no_replies_others: "Nema odgovora."
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3962,8 +3980,6 @@ bs_BA:
         silence_message_placeholder: "(ostavite prazno za slanje zadane poruke)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
-        delete_all_posts: "Delete all posts"
-        delete_posts_progress: "Brisanje postova ..."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
         penalty_post_actions: "Šta želite da uradite sa povezanim postom?"
         penalty_post_delete: "Obrišite poruku"
@@ -4021,6 +4037,12 @@ bs_BA:
         anonymize_yes: "Da, anonimiziraj ovaj račun"
         anonymize_failed: "Došlo je do problema sa anonimizacijom računa."
         delete: "Delete User"
+        delete_posts:
+          button: "Delete all posts"
+          progress:
+            description: "Brisanje postova ..."
+          confirmation:
+            cancel: "Odustani"
         merge:
           prompt:
             cancel: "Odustani"
@@ -4342,6 +4364,5 @@ bs_BA:
           moderator: "Moderator"
           regular: "Regularan korisnik"
       previews:
-        topic_title: "Tema diskusije"
         share_button: "Podijeli"
         reply_button: "Odgovori"

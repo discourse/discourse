@@ -849,19 +849,10 @@ gl:
     pm_title: "Borradores de seguranza procedentes de temas en curso"
     pm_body: "O tema contén borradores de seguranza"
   user_activity:
-    no_default:
-      self: "Aínda non ten actividade."
-      others: "Sen actividade."
     no_bookmarks:
       self: "Non ten publicacións engadidas aos marcadores; os marcadores permítenlle volver rapidamente a publicacións específicas."
       search: "Non se atoparon marcadores coa busca fornecida."
       others: "Sen marcadores."
-    no_likes_given:
-      self: "Non premeu en Gústame en ningunha publicación."
-      others: "Ningún Gústame en publicacións."
-    no_replies:
-      self: "Non respondeu a ningunha publicación."
-      others: "Sen respostas."
     no_drafts:
       self: "Non ten borradores; comece a responder en calquera tema e gardarase automaticamente como un novo borrador."
   webauthn:
@@ -3136,6 +3127,26 @@ gl:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Usuario publicado"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4146,17 +4157,30 @@ gl:
           city_for_disputes:
             label: "Cidade para disputas"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Cores"
-      fonts:
-        title: "Tipos de letra"
+      styling:
         fields:
           body_font:
             label: "Tipo de letra do corpo"
           heading_font:
             label: "Tipo de letra de título"
-          font_preview:
-            label: "Visualizar"
+          styling_preview:
+            label: "Previsualizar"
+          homepage_style:
+            choices:
+              latest:
+                label: "Últimos temas"
+              categories_only:
+                label: "Só categorías"
+              categories_with_featured_topics:
+                label: "Categorías con temas de actualidade"
+              categories_and_latest_topics:
+                label: "Categorías e últimos temas"
+              categories_and_top_topics:
+                label: "Categorías e temas destacados"
+              categories_boxes:
+                label: "Caixas de categorías"
+              categories_boxes_with_topics:
+                label: "Caixas de categorías con temas"
       logos:
         title: "Logotipos"
         fields:
@@ -4175,26 +4199,6 @@ gl:
           large_icon:
             label: "Icona grande"
             description: "Imaxe de icona utilizada para representar o seu sitio en dispositivos modernos que se ve ben en tamaños máis grandes. Idealmente debe ser maior que 512 × 512. Utilizaremos o logo cadrado por defecto."
-      homepage:
-        description: "Recomendamos mostrar os últimos temas na súa páxina principal, mais, se o prefire, tamén pode mostrar categorías (grupos de temas)."
-        title: "Páxina de inicio"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Últimos temas"
-              categories_only:
-                label: "Só categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas salientados"
-              categories_and_latest_topics:
-                label: "Categorías e últimos temas"
-              categories_and_top_topics:
-                label: "Categorías e temas destacados"
-              categories_boxes:
-                label: "Caixas de categorías"
-              categories_boxes_with_topics:
-                label: "Caixas de categorías con temas"
       invites:
         title: "Convidar o equipo"
         description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."

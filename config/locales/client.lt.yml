@@ -840,7 +840,17 @@ lt:
         latest: "Paskutinės"
         sent: "Išsiųsti"
         unread: "Neperskaitytos"
+        unread_with_count:
+          one: "Neperskaitytas (%{count})"
+          few: "Neperskaitytas (%{count})"
+          many: "Neperskaitytas (%{count})"
+          other: "Neperskaitytas (%{count})"
         new: "Naujos"
+        new_with_count:
+          one: "Naujas (%{count})"
+          few: "Naujas (%{count})"
+          many: "Naujas (%{count})"
+          other: "Naujas (%{count})"
         archive: "Archyvuoti"
         groups: "Grupės"
         move_to_inbox: "Perkelti į Pranešimų dėžutę"
@@ -1449,7 +1459,7 @@ lt:
         many: "<span>%{count}%{plus} rezultatai iš</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} rezultatai iš </span><span class='term'>%{term}</span>"
       title: "temų, įrašų, vartotojų ar kategorijų paieška"
-      full_page_title: "ieškoti temų arba įrašų"
+      full_page_title: "Paieška"
       no_results: "Nerasta jokių rezultatų."
       no_more_results: "Nerasta jokių rezultatų."
       post_format: "#%{post_number} nuo %{username}"
@@ -1457,13 +1467,16 @@ lt:
       start_new_topic: "Galbūt pradėkite naują temą?"
       search_google_button: "Google"
       search_button: "Paieška"
+      categories: "Kategorijos"
+      tags: "Etiketės"
+      type:
+        users: "Nariai"
       context:
         user: "Ieškoti įrašų nuo @%{username}"
         category: "Ieškoti #%{category}kategorijoje"
         topic: "Ieškoti šioje temoje"
         private_messages: "Ieškoti žinučių"
       advanced:
-        title: Išplėstinė paieška
         posted_by:
           label: Paskelbė
         in_category:
@@ -1500,7 +1513,6 @@ lt:
             after: po to
         views:
           label: Peržiūros
-    hamburger_menu: "Eiti į kitą temų sąrašą ar kategoriją"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -1850,6 +1862,7 @@ lt:
           other: "Jūs pasirinkote <b>%{count}</b> įrašus."
     post:
       quote_reply: "Citata"
+      quote_edit: "Redaguoti"
       quote_share: "Pasidalinti"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"
@@ -2407,6 +2420,9 @@ lt:
         member: "narys"
         regular: "reguliarus"
         leader: "lyderis"
+    user_activity:
+      no_activity_others: "Jokios veiklos."
+      no_replies_others: "Jokių atsakymų."
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -2967,7 +2983,6 @@ lt:
         silence_reason: "Priežastis"
         silence_modal_title: "Nutildyti narį"
         silence_message: "E-pašto žinutė"
-        delete_all_posts: "Ištrinti visus pranešimus"
         penalty_post_delete: "Pašalinti įrašą"
         penalty_post_edit: "Redaguoti įrašą"
         silence: "Nutildyti"
@@ -3015,6 +3030,10 @@ lt:
         anonymize_yes: "Taip, Anonimizuoti šįą paskyrą"
         anonymize_failed: "Įvyko klaida anonimizuojant šią paskyrą"
         delete: "Ištrinti vartotoją"
+        delete_posts:
+          button: "Ištrinti visus pranešimus"
+          confirmation:
+            cancel: "Atšaukti"
         merge:
           prompt:
             cancel: "Atšaukti"
@@ -3310,6 +3329,5 @@ lt:
           moderator: "Moderatorius"
           regular: "Regulerus narys"
       previews:
-        topic_title: "Diskusijos tema"
         share_button: "Dalintis"
         reply_button: "Atsakyti"

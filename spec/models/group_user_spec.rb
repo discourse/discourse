@@ -224,4 +224,19 @@ describe GroupUser do
       expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
     end
   end
+
+  describe '#destroy!' do
+    fab!(:group) { Fabricate(:group) }
+
+    it "removes `primary_group_id` and exec `match_primary_group_changes` method on user model" do
+      user = Fabricate(:user, primary_group: group)
+      group_user = Fabricate(:group_user, group: group, user: user)
+
+      user.expects(:match_primary_group_changes).once
+      group_user.destroy!
+
+      user.reload
+      expect(user.primary_group_id).to be_nil
+    end
+  end
 end

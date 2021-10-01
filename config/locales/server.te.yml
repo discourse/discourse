@@ -735,9 +735,7 @@ te:
             placeholder: "name@example.com"
       corporate:
         title: "సంస్థ"
-      colors:
-        title: "రంగులు"
-      homepage:
+      styling:
         fields:
           homepage_style:
             choices:

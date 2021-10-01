@@ -16,6 +16,7 @@ it:
       date_only: "%B %-d, %Y"
       long: "%-d %B %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%d%m%YT%H%M%SZ"
   date:
     month_names:
     - null
@@ -394,6 +395,7 @@ it:
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
+      for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -882,19 +884,10 @@ it:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
   user_activity:
-    no_default:
-      self: "Non hai ancora nessuna attività."
-      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto messaggi nei segnalibri. I segnalibri ti consentono di accedere velocemente a specifici messaggi."
       search: "Nessun segnalibro trovato con la query di ricerca fornita."
       others: "Nessun segnalibro."
-    no_likes_given:
-      self: "Non hai messo \"Mi piace\" ad alcun messaggio."
-      others: "Nessun messaggio con \"Mi piace\"."
-    no_replies:
-      self: "Non hai risposto a nessun messaggio."
-      others: "Nessuna risposta."
     no_drafts:
       self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
   email_settings:
@@ -1985,6 +1978,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
+    enable_fast_edit: "Abilita la modifica in linea della breve selezione del testo di un messaggio."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -3140,6 +3134,26 @@ it:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Messaggio utente"
       subject_template: "[%{email_prefix}]%{topic_title}"
@@ -3414,12 +3428,15 @@ it:
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
+      too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
+      too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"
+      too_large_humanized: "(immagine più grandi di %{max_size})"
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
@@ -3953,17 +3970,30 @@ it:
           city_for_disputes:
             label: "Sede per eventuali controversie"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Colori"
-      fonts:
-        title: "Caratteri"
+      styling:
         fields:
           body_font:
             label: "Carattere Corpo"
           heading_font:
             label: "Carattere Intestazione"
-          font_preview:
+          styling_preview:
             label: "Anteprima"
+          homepage_style:
+            choices:
+              latest:
+                label: "Ultimi Argomenti"
+              categories_only:
+                label: "Solo Categorie"
+              categories_with_featured_topics:
+                label: "Categorie con argomenti in evidenza"
+              categories_and_latest_topics:
+                label: "Categorie e Argomenti Recenti"
+              categories_and_top_topics:
+                label: "Categorie e Argomenti Popolari"
+              categories_boxes:
+                label: "Riquadri Categorie"
+              categories_boxes_with_topics:
+                label: "Riquadri Categorie con Argomenti"
       logos:
         title: "Loghi"
         fields:
@@ -3982,26 +4012,6 @@ it:
           large_icon:
             label: "Icona Grande"
             description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita useremo il logo quadrato."
-      homepage:
-        description: "Ti consigliamo di mostrare gli ultimi argomenti sulla tua homepage, ma se preferisci puoi anche mostrare le categorie (gruppi di argomenti)."
-        title: "Homepage"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ultimi Argomenti"
-              categories_only:
-                label: "Solo Categorie"
-              categories_with_featured_topics:
-                label: "Categorie con Argomenti in Evidenza"
-              categories_and_latest_topics:
-                label: "Categorie e Argomenti Recenti"
-              categories_and_top_topics:
-                label: "Categorie e Argomenti Popolari"
-              categories_boxes:
-                label: "Riquadri Categorie"
-              categories_boxes_with_topics:
-                label: "Riquadri Categorie con Argomenti"
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."

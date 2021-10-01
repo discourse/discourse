@@ -1,6 +1,7 @@
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
+  addComposerUploadPreProcessor,
   addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
@@ -49,6 +50,7 @@ import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-feature
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
+import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -82,9 +84,29 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.2";
+const PLUGIN_API_VERSION = "0.12.3";
+
+// This helper prevents us from applying the same `modifyClass` over and over in test mode.
+function canModify(klass, type, resolverName, changes) {
+  if (!changes.pluginId) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "To prevent errors, add a `pluginId` key to your changes when calling `modifyClass`"
+    );
+    return true;
+  }
+
+  let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
+  if (klass.class[key]) {
+    return false;
+  } else {
+    klass.class[key] = 1;
+    return true;
+  }
+}
 
 class PluginApi {
   constructor(version, container) {
@@ -138,10 +160,14 @@ class PluginApi {
   /**
    * Allows you to overwrite or extend methods in a class.
    *
+   * You should add a `pluginId` property to identify your plugin
+   * to help Discourse reload classes properly.
+   *
    * For example:
    *
    * ```
    * api.modifyClass('controller:composer', {
+   *   pluginId: 'my-plugin',
    *   actions: {
    *     newActionHere() { }
    *   }
@@ -150,9 +176,15 @@ class PluginApi {
    **/
   modifyClass(resolverName, changes, opts) {
     const klass = this._resolveClass(resolverName, opts);
-    if (klass) {
+    if (!klass) {
+      return;
+    }
+
+    if (canModify(klass, "member", resolverName, changes)) {
+      delete changes.pluginId;
       klass.class.reopen(changes);
     }
+
     return klass;
   }
 
@@ -169,9 +201,15 @@ class PluginApi {
    **/
   modifyClassStatic(resolverName, changes, opts) {
     const klass = this._resolveClass(resolverName, opts);
-    if (klass) {
+    if (!klass) {
+      return;
+    }
+
+    if (canModify(klass, "static", resolverName, changes)) {
+      delete changes.pluginId;
       klass.class.reopenClass(changes);
     }
+
     return klass;
   }
 
@@ -993,6 +1031,39 @@ class PluginApi {
   }
 
   /**
+   * Registers a pre-processor for file uploads in the form
+   * of an Uppy preprocessor plugin.
+   *
+   * See https://uppy.io/docs/writing-plugins/ for the Uppy
+   * documentation, but other examples of preprocessors in core
+   * can be found in UppyMediaOptimization and UppyChecksum.
+   *
+   * Useful for transforming to-be uploaded files client-side.
+   *
+   * Example:
+   *
+   * api.addComposerUploadPreProcessor(UppyMediaOptimization, ({ composerModel, composerElement, capabilities, isMobileDevice }) => {
+   *   return {
+   *     composerModel,
+   *     composerElement,
+   *     capabilities,
+   *     isMobileDevice,
+   *     someOption: true,
+   *     someFn: () => {},
+   *   };
+   * });
+   *
+   * @param {BasePlugin} pluginClass The uppy plugin class to use for the preprocessor.
+   * @param {Function} optionsResolverFn This function should return an object which is passed into the constructor
+   *                                     of the uppy plugin as the options argument. The object passed to the function
+   *                                     contains references to the composer model, element, the capabilities of the
+   *                                     browser, and isMobileDevice.
+   */
+  addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
+    addComposerUploadPreProcessor(pluginClass, optionsResolverFn);
+  }
+
+  /**
    * Registers a function to generate Markdown after a file has been uploaded.
    *
    * Example:
@@ -1172,6 +1243,18 @@ class PluginApi {
   }
 
   /**
+   * Used for modifying the document title count. The core count is unread notifications, and
+   * the returned value from calling the passed in function will be added to this number.
+   *
+   * For example, to add a count
+   * api.addDocumentTitleCounter(() => {
+   *   return currentUser.somePluginValue;
+   * })
+   **/
+  addDocumentTitleCounter(counterFunction) {
+    addPluginDocumentTitleCounter(counterFunction);
+  }
+  /**
    * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
    *
    * `callback` will be called when it is time to decorate it.
@@ -1339,6 +1422,29 @@ class PluginApi {
   }
 
   /**
+   * Add custom user search options.
+   * It is heavily correlated with `register_groups_callback_for_users_search_controller_action` which allows defining custom filter.
+   * Example usage:
+   * ```
+   * api.addUserSearchOption("adminsOnly");
+
+   * register_groups_callback_for_users_search_controller_action(:admins_only) do |groups, user|
+   *   groups.where(name: "admins")
+   * end
+   *
+   * {{email-group-user-chooser
+   *   options=(hash
+   *     includeGroups=true
+   *     adminsOnly=true
+   *   )
+   * }}
+   * ```
+   */
+  addUserSearchOption(value) {
+    CUSTOM_USER_SEARCH_OPTIONS.push(value);
+  }
+
+  /**
    * Calls a method on a mounted widget whenever an app event happens.
    *
    * For example, if you have a widget with a `key` of `cool-widget` that lives inside the
@@ -1352,12 +1458,18 @@ class PluginApi {
    * is converted to camelCase and used as the method name for you.
    */
   dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
-    this.modifyClass(`component:${mountedComponent}`, {
-      didInsertElement() {
-        this._super();
-        this.dispatch(appEvent, widgetKey);
+    this.modifyClass(
+      `component:${mountedComponent}`,
+      {
+        pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
+
+        didInsertElement() {
+          this._super();
+          this.dispatch(appEvent, widgetKey);
+        },
       },
-    });
+      { ignoreMissing: true }
+    );
   }
 }
 

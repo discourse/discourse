@@ -557,8 +557,10 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_groups(name, groups: nil)
-    (groups || Group).where(
+  def self.search_groups(name, groups: nil, custom_scope: {})
+    groups ||= Group
+
+    groups.where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
     )
   end
@@ -690,7 +692,6 @@ class Group < ActiveRecord::Base
     has_webhooks = WebHook.active_web_hooks(:group_user)
     payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
     group_user.destroy
-    user.update_attribute(:primary_group_id, nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
     WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
       id: group_user.id,

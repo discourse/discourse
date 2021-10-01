@@ -17,6 +17,7 @@ describe TopicEmbed do
     let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
     fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -99,10 +100,28 @@ describe TopicEmbed do
 
       it "creates the topic in the category passed as a parameter" do
         Jobs.run_immediately!
-        SiteSetting.embed_unlisted = false
         imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", category_id: category.id)
         expect(imported_post.topic.category).not_to eq(embeddable_host.category)
         expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "creates the topic with the tag passed as a parameter" do
+        Jobs.run_immediately!
+        SiteSetting.tagging_enabled = true
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content", tags: [tag.name])
+        expect(imported_post.topic.tags).to include(tag)
+      end
+
+      it "respects overriding the cook_method when asked" do
+        Jobs.run_immediately!
+        SiteSetting.embed_support_markdown = false
+        stub_request(:get, "https://www.youtube.com/watch?v=K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+        stub_request(:get, "https://www.youtube.com/embed/K56soYl0U1w")
+          .to_return(status: 200, body: "", headers: {})
+
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "https://www.youtube.com/watch?v=K56soYl0U1w", cook_method: Post.cook_methods[:regular])
+        expect(imported_post.cooked).to match(/onebox|iframe/)
       end
     end
 
@@ -171,18 +190,20 @@ describe TopicEmbed do
   end
 
   describe '.find_remote' do
+    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    let(:file) { StringIO.new }
+
+    before do
+      TopicEmbed.stubs(:open).returns file
+    end
 
     context ".title_scrub" do
-
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "<title>Through the Looking Glass - Classic Books</title><body>some content here</body>" }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
 
       before do
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
-        stub_request(:head, url)
+        stub_request(:get, url)
       end
 
       it "doesn't scrub the title by default" do
@@ -195,44 +216,38 @@ describe TopicEmbed do
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Through the Looking Glass")
       end
-
     end
 
     context 'post with allowed classes "foo" and "emoji"' do
       fab!(:user) { Fabricate(:user) }
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
-
-      response = nil
 
       before do
         SiteSetting.allowed_embed_classnames = 'emoji, foo'
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
-        stub_request(:head, url)
-        response = TopicEmbed.find_remote(url)
+        stub_request(:get, url)
+        @response = TopicEmbed.find_remote(url)
       end
 
       it "has no author tag" do
-        expect(response.author).to be_blank
+        expect(@response.author).to be_blank
       end
 
       it 'img node has emoji class' do
-        expect(response.body).to have_tag('img', with: { class: 'emoji' })
+        expect(@response.body).to have_tag('img', with: { class: 'emoji' })
       end
 
       it 'img node has foo class' do
-        expect(response.body).to have_tag('img', with: { class: 'foo' })
+        expect(@response.body).to have_tag('img', with: { class: 'foo' })
       end
 
       it 'p node has foo class' do
-        expect(response.body).to have_tag('p', with: { class: 'foo' })
+        expect(@response.body).to have_tag('p', with: { class: 'foo' })
       end
 
       it 'nodes removes classes other than emoji' do
-        expect(response.body).to have_tag('img', without: { class: 'other' })
+        expect(@response.body).to have_tag('img', without: { class: 'other' })
       end
     end
 
@@ -240,67 +255,56 @@ describe TopicEmbed do
       fab!(:user) { Fabricate(:user, username: 'eviltrout') }
       let(:url) { 'http://eviltrout.com/321' }
       let(:contents) { '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>' }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
-
-      response = nil
 
       before(:each) do
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
-        stub_request(:head, url)
-        response = TopicEmbed.find_remote(url)
+        stub_request(:get, url)
       end
 
       it "has no author tag" do
+        response = TopicEmbed.find_remote(url)
+
         expect(response.author).to eq(user)
       end
     end
 
     context 'post with no allowed classes' do
-
       fab!(:user) { Fabricate(:user) }
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
-
-      response = nil
 
       before(:each) do
         SiteSetting.allowed_embed_classnames = ''
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
-        stub_request(:head, url)
-        response = TopicEmbed.find_remote(url)
+        stub_request(:get, url)
+        @response = TopicEmbed.find_remote(url)
       end
 
       it 'img node doesn\'t have emoji class' do
-        expect(response.body).to have_tag('img', without: { class: 'emoji' })
+        expect(@response.body).to have_tag('img', without: { class: 'emoji' })
       end
 
       it 'img node doesn\'t have foo class' do
-        expect(response.body).to have_tag('img', without: { class: 'foo' })
+        expect(@response.body).to have_tag('img', without: { class: 'foo' })
       end
 
       it 'p node doesn\'t foo class' do
-        expect(response.body).to have_tag('p', without: { class: 'foo' })
+        expect(@response.body).to have_tag('p', without: { class: 'foo' })
       end
 
       it 'img node doesn\'t have other class' do
-        expect(response.body).to have_tag('img', without: { class: 'other' })
+        expect(@response.body).to have_tag('img', without: { class: 'other' })
       end
     end
 
     context "non-ascii URL" do
       let(:url) { 'http://eviltrout.com/test/ماهی' }
       let(:contents) { "<title>سلام</title><body>این یک پاراگراف آزمون است.</body>" }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
 
       before do
-        stub_request(:head, url)
-        stub_request(:get, url).to_return(body: contents).then.to_raise
+        stub_request(:get, url)
+        file.stubs(:read).returns contents
       end
 
       it "doesn't throw an error" do
@@ -312,12 +316,10 @@ describe TopicEmbed do
     context "encoded URL" do
       let(:url) { 'http://example.com/hello%20world' }
       let(:contents) { "<title>Hello World!</title><body></body>" }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
 
       before do
-        stub_request(:head, url)
-        stub_request(:get, url).to_return(body: contents).then.to_raise
+        stub_request(:get, url)
+        file.stubs(:read).returns contents
       end
 
       it "doesn't throw an error" do
@@ -337,17 +339,15 @@ describe TopicEmbed do
     context "emails" do
       let(:url) { 'http://example.com/foo' }
       let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-      let!(:file) { StringIO.new }
 
       before do
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
+        stub_request(:get, url)
       end
 
       it "handles mailto links" do
-        stub_request(:head, url)
         response = TopicEmbed.find_remote(url)
+
         expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
       end
@@ -356,17 +356,35 @@ describe TopicEmbed do
     context "malformed href" do
       let(:url) { 'http://example.com/foo' }
       let(:contents) { '<p><a href="(http://foo.bar)">Baz</a></p>' }
-      let!(:file) { StringIO.new }
 
       before do
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
+        stub_request(:get, url)
       end
 
       it "doesn’t raise an exception" do
-        stub_request(:head, url)
         expect { TopicEmbed.find_remote(url) }.not_to raise_error
       end
+    end
+
+    context 'canonical links' do
+      let(:url) { 'http://eviltrout.com/123?asd' }
+      let(:canonical_url) { 'http://eviltrout.com/123' }
+      let(:content) { "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head>" }
+      let(:canonical_content) {  "<title>Canonical</title><body></body>" }
+
+      before do
+        file.stubs(:read).returns canonical_content
+        stub_request(:get, url)
+        stub_request(:head, canonical_url)
+      end
+
+      it 'a' do
+        response = TopicEmbed.find_remote(url)
+
+        expect(response.title).to eq("Canonical")
+      end
+
     end
   end
 

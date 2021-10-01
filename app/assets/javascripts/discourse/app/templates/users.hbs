@@ -13,12 +13,12 @@
               </div>
             {{/if}}
           </div>
-          <div>
-            <span class="total-rows">
+          <div class="inline-form">
+            <label class="total-rows">
               {{#if model.totalRows}}
                 {{i18n "directory.total_rows" count=model.totalRows}}
               {{/if}}
-            </span>
+            </label>
             {{input
               value=(readonly nameInput)
               input=(action "onUsernameFilterChanged" value="target.value")

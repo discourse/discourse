@@ -15,10 +15,12 @@
 # done on the client side based on the in-memory state in order to derive the
 # count of new and unread topics efficiently.
 class PrivateMessageTopicTrackingState
+  include TopicTrackingStatePublishable
+
   CHANNEL_PREFIX = "/private-message-topic-tracking-state"
   NEW_MESSAGE_TYPE = "new_topic"
   UNREAD_MESSAGE_TYPE = "unread"
-  ARCHIVE_MESSAGE_TYPE = "archive"
+  READ_MESSAGE_TYPE = "read"
   GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
 
   def self.report(user)
@@ -46,7 +48,22 @@ class PrivateMessageTopicTrackingState
       if skip_unread
         "1=0"
       else
-        TopicTrackingState.unread_filter_sql(staff: user.staff?)
+        first_unread_pm_at = DB.query_single(<<~SQL, user_id: user.id).first
+        SELECT
+          LEAST(
+            MIN(user_stats.first_unread_pm_at),
+            MIN(group_users.first_unread_pm_at)
+          )
+        FROM group_users
+        JOIN groups ON groups.id = group_users.group_id
+        JOIN user_stats ON user_stats.user_id = :user_id
+        WHERE group_users.user_id = :user_id;
+        SQL
+
+        <<~SQL
+        #{TopicTrackingState.unread_filter_sql(staff: user.staff?)}
+        #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
+        SQL
       end
 
     new =
@@ -74,7 +91,6 @@ class PrivateMessageTopicTrackingState
       LEFT JOIN topic_allowed_users tau ON tau.topic_id = topics.id AND tau.user_id = u.id
       #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id.to_i}"}
       WHERE (tau.topic_id IS NOT NULL OR tag.topic_id IS NOT NULL) AND
-        #{skip_unread ? "" : "topics.updated_at >= LEAST(us.first_unread_pm_at, gu.first_unread_pm_at) AND"}
         topics.archetype = 'private_message' AND
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
@@ -82,13 +98,14 @@ class PrivateMessageTopicTrackingState
   end
 
   def self.publish_unread(post)
-    return unless post.topic.private_message?
+    topic = post.topic
+    return unless topic.private_message?
 
     scope = TopicUser
       .tracking(post.topic_id)
-      .includes(user: :user_stat)
+      .includes(user: [:user_stat, :user_option])
 
-    allowed_group_ids = post.topic.allowed_groups.pluck(:id)
+    allowed_group_ids = topic.allowed_groups.pluck(:id)
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -106,6 +123,12 @@ class PrivateMessageTopicTrackingState
     scope
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
+
+      if tu.last_read_post_number.nil? &&
+          topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
+
+        next
+      end
 
       message = {
         topic_id: post.topic_id,
@@ -146,29 +169,34 @@ class PrivateMessageTopicTrackingState
     end
   end
 
-  def self.publish_group_archived(topic, group_id)
+  def self.publish_group_archived(topic:, group_id:, acting_user_id: nil)
     return unless topic.private_message?
 
     message = {
       message_type: GROUP_ARCHIVE_MESSAGE_TYPE,
       topic_id: topic.id,
       payload: {
-        group_ids: [group_id]
+        group_ids: [group_id],
+        acting_user_id: acting_user_id
       }
     }.as_json
 
-    MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
+    MessageBus.publish(
+      self.group_channel(group_id),
+      message,
+      group_ids: [group_id]
+    )
   end
 
-  def self.publish_user_archived(topic, user_id)
-    return unless topic.private_message?
-
-    message = {
-      message_type: ARCHIVE_MESSAGE_TYPE,
-      topic_id: topic.id,
-    }.as_json
-
-    MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
+  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+    self.publish_read_message(
+      message_type: READ_MESSAGE_TYPE,
+      channel_name: self.user_channel(user.id),
+      topic_id: topic_id,
+      user: user,
+      last_read_post_number: last_read_post_number,
+      notification_level: notification_level
+    )
   end
 
   def self.user_channel(user_id)

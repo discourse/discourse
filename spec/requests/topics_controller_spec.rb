@@ -3108,9 +3108,9 @@ RSpec.describe TopicsController do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
-        Fabricate(:bookmark, post: post, topic: post.topic, user: user)
+        Fabricate(:bookmark, post: post, user: user)
         put "/t/#{post.topic_id}/remove_bookmarks.json"
-        expect(Bookmark.where(user: user, topic: topic).count).to eq(0)
+        expect(Bookmark.for_user_in_topic(user.id, post.topic_id).count).to eq(0)
       end
     end
   end
@@ -3130,7 +3130,7 @@ RSpec.describe TopicsController do
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      Bookmark.create(post: post, user: user, topic: post.topic)
+      Bookmark.create(post: post, user: user)
 
       put "/t/#{post.topic_id}/bookmark.json"
       expect(response.status).to eq(400)
@@ -3143,14 +3143,14 @@ RSpec.describe TopicsController do
         put "/t/#{post.topic_id}/bookmark.json"
         expect(response.status).to eq(200)
 
-        bookmarks_for_topic = Bookmark.where(topic: post.topic, user: user)
+        bookmarks_for_topic = Bookmark.for_user_in_topic(user.id, post.topic_id)
         expect(bookmarks_for_topic.count).to eq(1)
         expect(bookmarks_for_topic.first.post_id).to eq(post.id)
       end
 
       it "errors if the topic is already bookmarked for the user" do
         post = create_post
-        Bookmark.create(post: post, topic: post.topic, user: user)
+        Bookmark.create(post: post, user: user)
 
         put "/t/#{post.topic_id}/bookmark.json"
         expect(response.status).to eq(400)
@@ -3868,7 +3868,7 @@ RSpec.describe TopicsController do
         fab!(:topic) { Fabricate(:topic, user: user) }
 
         it 'should return the right response' do
-          user.update!(trust_level: TrustLevel[2])
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
 
           expect do
             post "/t/#{topic.id}/invite.json", params: {
@@ -3890,6 +3890,10 @@ RSpec.describe TopicsController do
         end
 
         let!(:recipient) { 'jake@adventuretime.ooo' }
+
+        before do
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        end
 
         it "should attach group to the invite" do
           post "/t/#{group_private_topic.id}/invite.json", params: {
@@ -4383,6 +4387,7 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(group_message.id)
 
       expect(DismissedTopicUser.count).to eq(1)
 
@@ -4396,6 +4401,10 @@ RSpec.describe TopicsController do
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(
+        private_message.id,
+        private_message_2.id
+      )
 
       expect(DismissedTopicUser.count).to eq(2)
 
@@ -4451,6 +4460,45 @@ RSpec.describe TopicsController do
 
       expect(DismissedTopicUser.exists?(topic: private_message, user: user_2))
         .to eq(true)
+    end
+  end
+
+  describe '#archive_message' do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+        g.add(user)
+      end
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'should be able to archive a private message' do
+      sign_in(user)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+
+        put "/t/#{group_message.id}/archive-message.json"
+
+        expect(response.status).to eq(200)
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      body = response.parsed_body
+
+      expect(body["group_name"]).to eq(group.name)
     end
   end
 end

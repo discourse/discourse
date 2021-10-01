@@ -1,7 +1,7 @@
 <p>{{i18n "admin.logs.screened_ips.description"}}</p>
 
 <div class="screened-ip-controls">
-  <div class="filter-screened-ip-address">
+  <div class="filter-screened-ip-address inline-form">
     {{text-field
       value=filter
       class="ip-address-input"
@@ -82,7 +82,9 @@
                   action=(action "save")
                   actionParam=item
                   label="admin.logs.save"}}
-                <a href {{action "cancel" item}}>{{i18n "cancel"}}</a>
+                <a href {{action "cancel" item}} class="cancel-action">
+                  {{i18n "cancel"}}
+                </a>
               {{else}}
                 {{d-button
                   class="btn-default btn-danger"

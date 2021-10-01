@@ -268,33 +268,100 @@ describe TopicQuery do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
       let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
+      # Not used in assertions but fabricated to ensure we're not leaking topics
+      # across categories
+      let!(:_category) { Fabricate(:category_with_definition) }
+      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+
       it "works with subcategories" do
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subcategory.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id, no_subcategories: true)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
       end
 
       it "shows a subcategory definition topic in its parent list with the right site setting" do
         SiteSetting.show_category_definitions_in_topic_lists = true
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, subcategory.topic)
       end
 
       it "works with subsubcategories" do
         SiteSetting.max_category_nesting = 3
 
-        Fabricate(:topic, category: category)
-        Fabricate(:topic, category: subcategory)
-        Fabricate(:topic, category: subsubcategory)
+        category_topic = Fabricate(:topic, category: category)
+        subcategory_topic = Fabricate(:topic, category: subcategory)
+        subsubcategory_topic = Fabricate(:topic, category: subsubcategory)
 
         SiteSetting.max_category_nesting = 2
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, category_topic, subcategory_topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
 
         SiteSetting.max_category_nesting = 3
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          category.topic,
+          category_topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
       end
     end
   end

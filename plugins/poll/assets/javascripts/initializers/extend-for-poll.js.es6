@@ -4,10 +4,30 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-poll";
+let _glued = [];
+let _interval = null;
+
+function rerender() {
+  _glued.forEach((g) => g.queueRerender());
+}
+
+function cleanUpPolls() {
+  if (_interval) {
+    clearInterval(_interval);
+    _interval = null;
+  }
+
+  _glued.forEach((g) => g.cleanUp());
+  _glued = [];
+}
+
 function initializePolls(api) {
   const register = getRegister(api);
+  cleanUpPolls();
 
   api.modifyClass("controller:topic", {
+    pluginId: PLUGIN_ID,
     subscribe() {
       this._super(...arguments);
       this.messageBus.subscribe("/polls/" + this.get("model.id"), (msg) => {
@@ -23,14 +43,8 @@ function initializePolls(api) {
     },
   });
 
-  let _glued = [];
-  let _interval = null;
-
-  function rerender() {
-    _glued.forEach((g) => g.queueRerender());
-  }
-
   api.modifyClass("model:post", {
+    pluginId: PLUGIN_ID,
     _polls: null,
     pollsObject: null,
 
@@ -108,16 +122,6 @@ function initializePolls(api) {
         _glued.push(glue);
       }
     });
-  }
-
-  function cleanUpPolls() {
-    if (_interval) {
-      clearInterval(_interval);
-      _interval = null;
-    }
-
-    _glued.forEach((g) => g.cleanUp());
-    _glued = [];
   }
 
   api.includePostAttributes("polls", "polls_votes");

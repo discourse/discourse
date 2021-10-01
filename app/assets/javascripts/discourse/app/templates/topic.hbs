@@ -148,6 +148,7 @@
             jumpToPostPrompt=(action "jumpToPostPrompt")
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
+            showSummary=(action "showSummary")
             toggleMultiSelect=(action "toggleMultiSelect")
             showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
             deleteTopic=(action "deleteTopic")
@@ -404,5 +405,12 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
+  {{quote-button
+    quoteState=quoteState
+    selectText=(action "selectText")
+    editPost=(action "editPost")
+    topic=model
+    composerVisible=composer.visible
+
+  }}
 {{/discourse-topic}}

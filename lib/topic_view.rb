@@ -392,17 +392,14 @@ class TopicView
 
   def has_bookmarks?
     return false if @user.blank?
-    @topic.bookmarks.exists?(user_id: @user.id)
+    return false if @topic.trashed?
+    bookmarks.any?
   end
 
-  def bookmarked_posts
-    return nil unless has_bookmarks?
-    @topic.bookmarks.where(user: @user).pluck(:post_id, :reminder_at).map do |post_id, reminder_at|
-      {
-        post_id: post_id,
-        reminder_at: reminder_at
-      }
-    end
+  def bookmarks
+    @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
+      :id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference
+    )
   end
 
   MAX_PARTICIPANTS = 24
@@ -464,11 +461,18 @@ class TopicView
     end
   end
 
+  def topic_allowed_group_ids
+    @topic_allowed_group_ids ||= begin
+      @topic.allowed_groups.map(&:id)
+    end
+  end
+
   def group_allowed_user_ids
     return @group_allowed_user_ids unless @group_allowed_user_ids.nil?
 
-    group_ids = @topic.allowed_groups.map(&:id)
-    @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
+    @group_allowed_user_ids = GroupUser
+      .where(group_id: topic_allowed_group_ids)
+      .pluck('distinct user_id')
   end
 
   def category_group_moderator_user_ids
@@ -721,6 +725,7 @@ class TopicView
     return posts.where(post_type: Post.types[:regular]) if @only_regular
 
     visible_types = Topic.visible_post_types(@user)
+
     if @user.present?
       posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
     else
@@ -787,21 +792,23 @@ class TopicView
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
 
-    sql = <<~SQL
+    if @user
+      sql = <<~SQL
         SELECT ignored_user_id
         FROM ignored_users as ig
-        JOIN users as u ON u.id = ig.ignored_user_id
+        INNER JOIN users as u ON u.id = ig.ignored_user_id
         WHERE ig.user_id = :current_user_id
           AND ig.ignored_user_id <> :current_user_id
           AND NOT u.admin
           AND NOT u.moderator
-    SQL
+      SQL
 
-    ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)
+      ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
 
-    if ignored_user_ids.present?
-      @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
-      @contains_gaps = true
+      if ignored_user_ids.present?
+        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.id <> ?", ignored_user_ids, first_post_id)
+        @contains_gaps = true
+      end
     end
 
     # Filters

@@ -115,6 +115,7 @@ hy:
       previous_month: "Նախորդ Ամիս"
       next_month: "Հաջորդ Ամիս"
       placeholder: ամսաթիվ
+      to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber}"
@@ -282,6 +283,9 @@ hy:
       topic_reply: "Պատասխանի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
+    topic_count_categories:
+      one: "Տեսնել %{count} նոր կամ թարմացված թեման"
+      other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
     topic_count_latest:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
@@ -901,7 +905,13 @@ hy:
         latest: "Վերջինները"
         sent: "Ուղարկված"
         unread: "Չկարդացած"
+        unread_with_count:
+          one: "Չկարդացած (%{count})"
+          other: "Չկարդացած (%{count})"
         new: "Նոր"
+        new_with_count:
+          one: "Նոր (%{count})"
+          other: "Նոր (%{count})"
         archive: "Արխիվ"
         groups: "Իմ Խմբերը"
         move_to_inbox: "Տեղափոխել Մուտքերի արկղ"
@@ -1708,7 +1718,7 @@ hy:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
       title: "որոնել թեմաներ, հաղորդագրություններ, օգտատերեր կամ կատեգորիաներ"
-      full_page_title: "որոնել թեմաներ կամ հաղորդագրություններ"
+      full_page_title: "Որոնում"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       post_format: "#%{post_number} %{username}-ի կողմից"
@@ -1720,6 +1730,10 @@ hy:
       search_google: "Փորձեք որոնել Google-ում:"
       search_google_button: "Google"
       search_button: "Որոնում"
+      categories: "Կատեգորիաներ"
+      tags: "Թեգեր"
+      type:
+        users: "Օգտատերեր"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"
@@ -1727,7 +1741,6 @@ hy:
         topic: "Որոնել այս թեմայում"
         private_messages: "Որոնել հաղորդագրություններում"
       advanced:
-        title: Ընդլայնված Որոնում
         posted_by:
           label: Հրապարակել է՝
         in_category:
@@ -1772,7 +1785,6 @@ hy:
             after: հետո
         views:
           label: Դիտումների
-    hamburger_menu: "գնալ այլ թեմաների ցանկ կամ կատեգորիա"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -2185,6 +2197,7 @@ hy:
           other: "Դուք ընտրել եք <b>%{count}</b> գրառում:"
     post:
       quote_reply: "Մեջբերել"
+      quote_edit: "Խմբագրել"
       quote_share: "Կիսվել"
       edit_reason: "Պատճառը՝ "
       post_number: "գրառում %{number}"
@@ -2878,6 +2891,10 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
+    user_activity:
+      no_activity_others: "Ակտիվություն չկա:"
+      no_replies_others: "Պատասխան չկա:"
+      no_likes_others: "Հավանած գրառումներ չկան:"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -2932,7 +2949,7 @@ hy:
         show_traffic_report: "Ցուցադրել այցելությունների մանրամասն հաշվետվությունը"
         community_health: Համայնքի վիճակը
         moderators_activity: Մոդերատորների ակտիվությունը
-        whats_new_in_discourse: 'Ի՞նչ նորություն կա Discouse-ում:'
+        whats_new_in_discourse: 'Ի՞նչ նորություն կա Discourse-ում:'
         activity_metrics: Ակտիվության Չափումները
         all_reports: "Բոլոր հաշվետվությունները"
         general_tab: "Ընդհանուր"
@@ -3797,8 +3814,6 @@ hy:
         silence_message_placeholder: "(թողեք դատարկ՝ լռելյայն հաղորդագրությունն ուղարկելու համար)"
         suspended_until: "(մինչև %{until})"
         cant_suspend: "Այս օգտատերը չի կարող սառեցվել:"
-        delete_all_posts: "Ջնջել բոլոր գրառումները"
-        delete_posts_progress: "Գրառումների ջնջում..."
         delete_posts_failed: "Գրառումները ջնջելիս խնդիր է առաջացել:"
         post_edits: "Գրառման Խմբագրումներ"
         penalty_post_actions: "Ինչպե՞ս եք ցանկանում վարվել կապակցված գրառման հետ:"
@@ -3858,6 +3873,12 @@ hy:
         anonymize_yes: "Այո, անվանազրկել այս հաշիվը"
         anonymize_failed: "Հաշիվը անվանազրկելիս առաջացել է խնդիր:"
         delete: "Ջնջել Օգտատիրոջը"
+        delete_posts:
+          button: "Ջնջել բոլոր գրառումները"
+          progress:
+            description: "Գրառումների ջնջում..."
+          confirmation:
+            cancel: "Չեղարկել"
         merge:
           button: "Միավորել օգտատերերին"
           prompt:
@@ -4229,6 +4250,5 @@ hy:
           moderator: "Մոդերատոր"
           regular: "Սովորական Օգտատեր"
       previews:
-        topic_title: "Քննարկման թեմա"
         share_button: "Կիսվել"
         reply_button: "Պատասխանել"

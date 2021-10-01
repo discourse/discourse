@@ -33,7 +33,8 @@ export default Mixin.create({
     "rejectedPasswords.[]",
     "accountUsername",
     "accountEmail",
-    "passwordMinLength"
+    "passwordMinLength",
+    "forceValidationReason"
   )
   passwordValidation(
     password,
@@ -41,10 +42,12 @@ export default Mixin.create({
     rejectedPasswords,
     accountUsername,
     accountEmail,
-    passwordMinLength
+    passwordMinLength,
+    forceValidationReason
   ) {
     const failedAttrs = {
       failed: true,
+      ok: false,
       element: document.querySelector("#new-account-password"),
     };
 
@@ -67,6 +70,9 @@ export default Mixin.create({
       return EmberObject.create(
         Object.assign(failedAttrs, {
           message: I18n.t("user.password.required"),
+          reason: forceValidationReason
+            ? I18n.t("user.password.required")
+            : null,
         })
       );
     }

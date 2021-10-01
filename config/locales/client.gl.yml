@@ -115,6 +115,7 @@ gl:
       previous_month: "Mes anterior"
       next_month: "Mes seguinte"
       placeholder: data
+      to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación #%{postNumber}"
@@ -303,6 +304,9 @@ gl:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_categories:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -1057,7 +1061,13 @@ gl:
         latest: "Últimos"
         sent: "Enviadas"
         unread: "Sen ler"
+        unread_with_count:
+          one: "(%{count}) pendente de ler"
+          other: "(%{count}) pendente de ler"
         new: "Novo"
+        new_with_count:
+          one: "(%{count}) novo"
+          other: "(%{count}) novo"
         archive: "Arquivo"
         groups: "Os meus grupos"
         move_to_inbox: "Mover á caixa de entrada"
@@ -2023,7 +2033,7 @@ gl:
         one: "<span>%{count} resultado de</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados de</span><span class='term'>%{term}</span>"
       title: "buscar temas, publicacións, usuarios ou categorías"
-      full_page_title: "buscar temas ou publicacións"
+      full_page_title: "Buscar"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
       post_format: "#%{post_number} de %{username}"
@@ -2035,6 +2045,10 @@ gl:
       search_google: "Probe a buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
+      categories: "Categorías"
+      tags: "Etiquetas"
+      type:
+        users: "Usuarios"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -2042,7 +2056,6 @@ gl:
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
       advanced:
-        title: Busca avanzada
         posted_by:
           label: Publicado por
         in_category:
@@ -2095,7 +2108,6 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir a outra lista de temas ou categoría"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
@@ -2570,6 +2582,7 @@ gl:
           other: "Seleccionou <b>%{count}</b> publicacións."
     post:
       quote_reply: "Cita"
+      quote_edit: "Editar"
       quote_share: "Compartir"
       edit_reason: "Razón: "
       post_number: "publicación %{number}"
@@ -3364,6 +3377,10 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
+    user_activity:
+      no_activity_others: "Sen actividade."
+      no_replies_others: "Sen respostas."
+      no_likes_others: "Ningún Gústame en publicacións."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -4383,8 +4400,6 @@ gl:
         silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
-        delete_all_posts: "Eliminar todas as publicacións"
-        delete_posts_progress: "Eliminando publicacións..."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
         post_edits: "Edicións publicadas"
         penalty_post_actions: "Que quere facer coa publicación asociada?"
@@ -4447,8 +4462,12 @@ gl:
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
         delete_posts:
+          button: "Eliminar todas as publicacións"
           progress:
             title: "Progreso na eliminación de publicacións"
+            description: "Eliminando publicacións..."
+          confirmation:
+            cancel: "Cancelar"
         merge:
           button: "Combinar"
           prompt:
@@ -4843,7 +4862,5 @@ gl:
           moderator: "Moderador"
           regular: "Usuario normal"
       previews:
-        topic_title: "Tema de discusión"
-        font_title: "Tipo de letra %{font}"
         share_button: "Compartir"
         reply_button: "Responder"

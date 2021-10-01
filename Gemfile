@@ -105,7 +105,10 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# Pinning oj until https://github.com/ohler55/oj/issues/699 is resolved.
+# Segfaults and stuck processes after upgrading.
+gem 'oj', '3.13.2'
+
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false
@@ -206,6 +209,9 @@ gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
+
+# rss gem is a bundled gem from Ruby 3 onwards
+gem 'rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri

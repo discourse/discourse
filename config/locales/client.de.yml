@@ -116,6 +116,8 @@ de:
       previous_month: "Vormonat"
       next_month: "Nächster Monat"
       placeholder: Datum
+      from_placeholder: "ab Datum"
+      to_placeholder: "zu Datum"
     share:
       topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
       post: "Beitrag #%{postNumber}"
@@ -157,6 +159,7 @@ de:
         disabled: "hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
       forwarded: "hat die obige E-Mail weitergeleitet"
     topic_admin_menu: "Themen-Administration"
+    skip_to_main_content: "Zum Hauptinhalt springen"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     software_update_prompt:
@@ -182,6 +185,7 @@ de:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Mailand)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -239,6 +243,8 @@ de:
     character_count:
       one: "%{count} Zeichen"
       other: "%{count} Zeichen"
+    period_chooser:
+      aria_label: "Filtern nach Zeitraum"
     related_messages:
       title: "Verwandte Nachrichten"
       see_all: 'Siehe <a href="%{path}">alle Nachrichten</a> von @%{username} …'
@@ -271,6 +277,7 @@ de:
       help:
         bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
         edit_bookmark: "Klicke, um das Lesezeichen zu diesem Thema zu bearbeiten"
+        edit_bookmark_for_topic: "Klicke, um das Lesezeichen für dieses Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
     bookmarks:
@@ -313,6 +320,9 @@ de:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
+    topic_count_categories:
+      one: "Zeige %{count} neues oder aktualisiertes Thema"
+      other: "Zeige %{count} neue oder aktualisierte Themen"
     topic_count_latest:
       one: "Zeige %{count} neues oder aktualisiertes Thema"
       other: "Zeige %{count} neue oder aktualisierte Themen"
@@ -363,6 +373,7 @@ de:
         placeholder: "gib hier den Titel, die URL oder die ID der Nachricht ein"
     review:
       order_by: "Sortieren nach"
+      date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
@@ -972,7 +983,9 @@ de:
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
       expand_profile: "Erweitern"
+      sr_expand_profile: "Profildetails erweitern"
       collapse_profile: "Zuklappen"
+      sr_collapse_profile: "Profildetails ausblenden"
       bookmarks: "Lesezeichen"
       bio: "Über mich"
       timezone: "Zeitzone"
@@ -1003,6 +1016,9 @@ de:
       no_notifications_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_body: >
         Du wirst in diesem Panel über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
+      no_notifications_page_title: "Du hast noch keine Benachrichtigungen"
+      no_notifications_page_body: >
+        Du wirst über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus, um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -1111,7 +1127,13 @@ de:
         latest: "Aktuelle"
         sent: "Gesendet"
         unread: "Ungelesen"
+        unread_with_count:
+          one: "Ungelesen (%{count})"
+          other: "Ungelesen (%{count})"
         new: "Neu"
+        new_with_count:
+          one: "Neu (%{count})"
+          other: "Neu (%{count})"
         archive: "Archiv"
         groups: "Meine Gruppen"
         move_to_inbox: "In Posteingang verschieben"
@@ -1119,6 +1141,8 @@ de:
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         tags: "Schlagwörter"
         warnings: "Offizielle Warnungen"
+        read_more_in_group: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
+        read_more_group_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten} } verbleibend, oder durchsuche andere Nachrichten in {groupLink}"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -1632,6 +1656,8 @@ de:
       description_time_MF: "Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>."
       enable: "Dieses Thema zusammenfassen"
       disable: "Alle Beiträge anzeigen"
+      short_label: "Zusammenfassen"
+      short_title: "Eine Zusammenfassung dieses Themas anzeigen: die interessantesten Beiträge, wie sie von der Community bestimmt wurden"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
@@ -1737,21 +1763,27 @@ de:
       google_oauth2:
         name: "Google"
         title: "mit Google"
+        sr_title: "Mit Google anmelden"
       twitter:
         name: "Twitter"
         title: "mit Twitter"
+        sr_title: "Mit Twitter anmelden"
       instagram:
         name: "Instagram"
         title: "mit Instagram"
+        sr_title: "Mit Instagram anmelden"
       facebook:
         name: "Facebook"
         title: "mit Facebook"
+        sr_title: "Mit Facebook anmelden"
       github:
         name: "GitHub"
         title: "mit GitHub"
+        sr_title: "Mit GitHub anmelden"
       discord:
         name: "Discord"
         title: "mit Discord"
+        sr_title: "Mit Discord anmelden"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2102,11 +2134,12 @@ de:
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
+      sort_or_bulk_actions: "Ergebnisse sortieren oder massenweise auswählen"
       result_count:
         one: "<span>%{count} Ergebnis für </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
-      full_page_title: "suche nach Themen oder Beiträgen"
+      full_page_title: "Suche"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
       post_format: "#%{post_number} von %{username}"
@@ -2118,6 +2151,13 @@ de:
       search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
       search_button: "Suche"
+      search_term_label: "Suchbegriff eingeben"
+      categories: "Kategorien"
+      tags: "Schlagwörter"
+      type:
+        default: "Themen/Beiträge"
+        users: "Benutzer"
+        categories_and_tags: "Kategorien/Schlagwörter"
       context:
         user: "Beiträge von @%{username} durchsuchen"
         category: "Kategorie #%{category} durchsuchen"
@@ -2125,9 +2165,10 @@ de:
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
       advanced:
-        title: Erweiterte Suche
+        title: Erweiterte Filter
         posted_by:
           label: Beiträge von
+          aria_label: Filtern nach Beitragsautor
         in_category:
           label: In der Kategorie
         in_group:
@@ -2136,6 +2177,7 @@ de:
           label: Mit dem Abzeichen
         with_tags:
           label: Mit dem Schlagwort
+          aria_label: Nach Schlagwörtern filtern
         filters:
           label: 'Themen/Beiträge einschränken:'
           title: Mit Treffer im Titel
@@ -2166,19 +2208,26 @@ de:
             label: Beiträge
           min:
             placeholder: Minimum
+            aria_label: nach Mindestanzahl von Beiträgen filtern
           max:
             placeholder: Maximum
+            aria_label: nach maximaler Anzahl von Beiträgen filtern
           time:
             label: 'Zeitraum einschränken:'
+            aria_label: Nach Veröffentlichungsdatum filtern
             before: Beiträge vor dem
             after: Beiträge nach dem
         views:
           label: Aufrufe
         min_views:
           placeholder: Minimum
+          aria_label: nach minimaler Anzahl von Ansichten filtern
         max_views:
           placeholder: Maximum
-    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
+          aria_label: nach maximaler Anzahl von Ansichten filtern
+        additional_options:
+          label: "Nach Beitragsanzahl und Themenaufrufen filtern"
+    hamburger_menu: "Menü"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -2689,6 +2738,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       quote_reply: "Zitat"
+      quote_edit: "Bearbeiten"
       quote_share: "Teilen"
       edit_reason: "Grund: "
       post_number: "Beitrag %{number}"
@@ -2737,6 +2787,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
+        file_too_large_humanized: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size}). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
@@ -2870,7 +2921,9 @@ de:
             button: "HTML"
       bookmarks:
         create: "Lesezeichen erstellen"
+        create_for_topic: "Lesezeichen für Thema erstellen"
         edit: "Lesezeichen bearbeiten"
+        edit_for_topic: "Lesezeichen für Thema bearbeiten"
         created: "Erstellt"
         updated: "Aktualisiert"
         name: "Name"
@@ -2993,6 +3046,7 @@ de:
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
+        title: "ändere Benachrichtigungsstufe für diese Kategorie"
         watching:
           title: "Beobachten"
           description: "Du wirst automatisch alle Themen in dieser Kategorie beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
@@ -3517,6 +3571,21 @@ de:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du hast eine nicht unterstützte Datei ausgewählt. Unterstützte Dateitypen – %{types}."
+    user_activity:
+      no_activity_title: "Noch keine Aktivität"
+      no_activity_body: "Willkommen in unserer Community! Du bist hier ganz neu und hast noch nicht an Diskussionen teilgenommen. Besuche als ersten Schritt <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> und beginne mit dem Lesen! Wähle %{heartIcon} auf Beiträgen, die dir gefallen oder über die du mehr erfahren möchtest. Wenn Du dies noch nicht getan hast, dann hilf bitte anderen Dich durch Hinzufügen eines Bildes und einer Bio in Deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> kennen zu lernen."
+      no_activity_others: "Keine Aktivität."
+      no_replies_title: "Du hast noch keine Themen beantwortet"
+      no_replies_others: "Keine Antworten."
+      no_drafts_title: "Du hast noch keine Entwürfe begonnen"
+      no_drafts_body: "Noch nicht ganz bereit? Wir speichern automatisch einen neuen Entwurf und listen ihn hier auf, wenn Du ein Thema, eine Antwort oder eine persönliche Nachricht verfasst. Wähle die Abbrechen-Schaltfläche, um Deinen Entwurf zu verwerfen oder zu speichern, um später fortzufahren."
+      no_likes_title: "Du hast noch keine Themen mit \"gefällt mir\" markiert."
+      no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
+      no_likes_others: "Keine Beiträge mit „Gefällt mir“."
+      no_topics_title: "Du hast noch keine Themen begonnen"
+      no_read_topics_title: "Du hast noch keine Themen gelesen"
+      no_read_topics_body: "Sobald Du mit dem Lesen von Diskussionen beginnst, siehst Du hier eine Liste. Zum Lesen suche nach Themen, die Du in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> oder suche nach dem Stichwort %{searchIcon}"
+    no_group_messages_title: "Keine Gruppennachrichten gefunden"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4564,8 +4633,6 @@ de:
         silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
-        delete_all_posts: "Lösche alle Beiträge"
-        delete_posts_progress: "Beiträge werden gelöscht …"
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
         post_edits: "Beitragsbearbeitungen"
         view_edits: "Bearbeitungen anzeigen"
@@ -4596,6 +4663,7 @@ de:
         logged_out: "Der Benutzer wurde auf allen Geräten abgemeldet"
         revoke_admin: "Administrationsrechte entziehen"
         grant_admin: "Administrationsrechte vergeben"
+        grant_admin_success: "Neuer Administrator wurde bestätigt."
         grant_admin_confirm: "Wir haben dir eine E-Mail geschickt, um den neuen Administrator zu überprüfen. Bitte öffne sie und folge den Anweisungen."
         revoke_moderation: "Moderationsrechte entziehen"
         grant_moderation: "Moderationsrechte vergeben"
@@ -4632,8 +4700,21 @@ de:
         anonymize_failed: "Beim Anonymisieren des Kontos ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
         delete_posts:
+          button: "Lösche alle Beiträge"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
+            description: "Beiträge werden gelöscht …"
+          confirmation:
+            title: "Lösche alle Beiträge von @%{username}"
+            description: |
+              <p>Bist Du sicher, dass Du <b>%{post_count}</b> Beiträge von @%{username}löschen möchtest?
+
+              <p><b>Dies kann nicht rückgängig gemacht werden!</b></p>
+
+              <p>Um fortzufahren bitte eingeben: <code>%{text}</code></p>
+            text: "lösche Beiträge von @%{username}"
+            delete: "Beiträge löschen von @%{username}"
+            cancel: "Abbrechen"
         merge:
           button: "Zusammenführen"
           prompt:
@@ -5042,7 +5123,8 @@ de:
           moderator: "Moderator"
           regular: "Normaler Benutzer"
       previews:
-        topic_title: "Diskussionsthema"
-        font_title: "Schriftart „%{font}“"
+        topic_title: "Überschrift eines Diskussionsthemas"
         share_button: "Teilen"
         reply_button: "Antworten"
+        topic_preview: "Themenvorschau"
+        homepage_preview: "Vorschau der Homepage"

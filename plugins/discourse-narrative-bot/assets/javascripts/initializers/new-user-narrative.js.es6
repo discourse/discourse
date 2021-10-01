@@ -1,12 +1,15 @@
 import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "new-user-narrative";
+
 function initialize(api) {
   const messageBus = api.container.lookup("message-bus:main");
   const currentUser = api.getCurrentUser();
   const appEvents = api.container.lookup("service:app-events");
 
   api.modifyClass("component:site-header", {
+    pluginId: PLUGIN_ID,
     didInsertElement() {
       this._super(...arguments);
       this.dispatch("header:search-context-trigger", "header");
@@ -14,12 +17,14 @@ function initialize(api) {
   });
 
   api.modifyClass("controller:topic", {
-    _togglePostBookmark(post) {
+    pluginId: PLUGIN_ID,
+
+    _modifyBookmark(bookmark, post) {
       // if we are talking to discobot then any bookmarks should just
       // be created without reminder options, to streamline the new user
       // narrative.
       const discobotUserId = -2;
-      if (post.user_id === discobotUserId && !post.bookmarked) {
+      if (post && post.user_id === discobotUserId && !post.bookmarked) {
         return ajax("/bookmarks", {
           type: "POST",
           data: { post_id: post.id },
@@ -32,7 +37,7 @@ function initialize(api) {
           post.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
-      return this._super(post);
+      return this._super(bookmark, post);
     },
   });
 

@@ -341,6 +341,18 @@ module ApplicationHelper
     end
   end
 
+  def application_logo_dark_url
+    @application_logo_dark_url ||= begin
+      if dark_scheme_id != -1
+        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
+        end
+      end
+    end
+  end
+
   def login_path
     "#{Discourse.base_path}/login"
   end

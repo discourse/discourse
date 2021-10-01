@@ -433,13 +433,8 @@ lt:
       description: "Mėgti šį įrašą"
       short_description: "Mėgti šį įrašą"
   user_activity:
-    no_default:
-      self: "Jūsų dar neturite jokios veklos"
-      others: "Jokios veiklos."
     no_bookmarks:
       others: "Nieko neišsaugota"
-    no_replies:
-      others: "Jokių atsakymų."
   topic_flag_types:
     spam:
       title: "Šlamštas"
@@ -829,6 +824,24 @@ lt:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
@@ -1061,32 +1074,27 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Spalvos"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Peržiūrėti"
-      logos:
-        title: "Logotipas"
-        fields:
-          logo:
-            label: "Pirminis logotipas"
-      homepage:
-        title: "Pagrindinis puslapis"
-        fields:
           homepage_style:
             choices:
               latest:
                 label: "Naujausios temos"
               categories_only:
-                label: "Tik kategrijos"
+                label: "Tiktai Kategorijos"
               categories_with_featured_topics:
-                label: "Kategorijos su Išskirtinėmis temomis"
+                label: "Kategorijos su populiariomis temomis"
               categories_and_latest_topics:
-                label: "Kategorijos su Naujausiomis temomis"
+                label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
-                label: "Kategorijos su Top temomis"
+                label: "Kategorijos ir Top temos"
+      logos:
+        title: "Logotipas"
+        fields:
+          logo:
+            label: "Pirminis logotipas"
       invites:
         title: "Pakviesti valdytojus"
       finished:

@@ -1465,6 +1465,20 @@ HTML
       expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
     end
 
+    it "does not replace hashtags and mentions" do
+      Fabricate(:user, username: "test")
+      category = Fabricate(:category, slug: "test")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "test", replacement: "discourse")
+
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
+        <p>
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          discourse
+        </p>
+      HTML
+    end
+
     it "supports overlapping words" do
       Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "meta", replacement: "https://meta.discourse.org")
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "iz", replacement: "is")

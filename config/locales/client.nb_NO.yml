@@ -116,6 +116,7 @@ nb_NO:
       previous_month: "Forrige måned"
       next_month: "Neste måned"
       placeholder: dato
+      to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber}"
@@ -310,6 +311,9 @@ nb_NO:
         confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+    topic_count_categories:
+      one: "Se %{count} nytt eller oppdatert emne"
+      other: "Se %{count} nye eller oppdaterte emner"
     topic_count_latest:
       one: "Se %{count} nytt eller oppdatert emne"
       other: "Se %{count} nye eller oppdaterte emner"
@@ -985,6 +989,7 @@ nb_NO:
       no_notifications_title: "Du har ingen varsler enda"
       no_notifications_body: >
         Du vil bli varslet i dette panelet om aktivitet som er direkte relevant for deg, inkludert svar på dine emner og innlegg, når noen <b>@mentions</b> du eller siterer deg, og svarer på emner du våker. Varsler vil også bli sendt til e-post når du ikke har logget inn en stund. <br><br> Se etter %{icon} for å bestemme hvilke spesielle emner, kategorier og tagger du ønsker å få beskjed om. For mer, se dine <a href='%{preferencesUrl}'>varselpreferanser</a>.
+      no_notifications_page_title: "Du har ingen varsler enda"
       first_notification: "Ditt første varsel! Velg det for å komme i gang."
       dynamic_favicon: "Vis antall på nettleserikonet"
       skip_new_user_tips:
@@ -1091,7 +1096,13 @@ nb_NO:
         latest: "Siste"
         sent: "Sendt"
         unread: "Uleste"
+        unread_with_count:
+          one: "Ulest (%{count})"
+          other: "Ulest (%{count})"
         new: "Nye"
+        new_with_count:
+          one: "Nye (%{count})"
+          other: "Nye (%{count})"
         archive: "Arkiver"
         groups: "Mine grupper"
         move_to_inbox: "Flytt til innboks"
@@ -2057,7 +2068,7 @@ nb_NO:
         one: "<span>%{count} resultat for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
       title: "søk etter emner, innlegg, brukere eller kategorier"
-      full_page_title: "søk etter emner eller innlegg"
+      full_page_title: "Søk"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
       post_format: "#%{post_number} av %{username}"
@@ -2069,6 +2080,10 @@ nb_NO:
       search_google: "Prøv å søke på Google istedenfor:"
       search_google_button: "Google"
       search_button: "Søk"
+      categories: "Kategorier"
+      tags: "Stikkord"
+      type:
+        users: "Brukere"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -2076,7 +2091,6 @@ nb_NO:
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
       advanced:
-        title: Avansert søk
         posted_by:
           label: Skrevet av
         in_category:
@@ -2129,7 +2143,6 @@ nb_NO:
           placeholder: minst
         max_views:
           placeholder: største
-    hamburger_menu: "gå til en annen liste over emner eller en annen kategori"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og preferanser."
@@ -2619,6 +2632,7 @@ nb_NO:
       deleted_by_author_simple: "(emne slettet av forfatter)"
     post:
       quote_reply: "Sitat"
+      quote_edit: "Rediger"
       quote_share: "Del"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
@@ -3437,6 +3451,10 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
+    user_activity:
+      no_activity_others: "Ingen aktivitet."
+      no_replies_others: "Ingen svar."
+      no_likes_others: "Ingen likte innlegg. "
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -4311,7 +4329,6 @@ nb_NO:
         silence_message_placeholder: "(la stå tom for forvalgt melding)"
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke utestenges."
-        delete_all_posts: "Slett alle innlegg"
         penalty_post_actions: "Hva ønsker du å gjøre med det assosierte innlegg"
         penalty_post_delete: "Slett innlegget"
         penalty_post_edit: "Rediger innlegget"
@@ -4367,6 +4384,10 @@ nb_NO:
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett bruker"
+        delete_posts:
+          button: "Slett alle innlegg"
+          confirmation:
+            cancel: "Avbryt"
         merge:
           prompt:
             cancel: "Avbryt"
@@ -4683,6 +4704,5 @@ nb_NO:
           moderator: "Moderator"
           regular: "Aktivt medlem"
       previews:
-        topic_title: "Diskusjonsemne"
         share_button: "Del"
         reply_button: "Svar"

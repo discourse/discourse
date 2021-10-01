@@ -386,7 +386,9 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
       true
     elsif max_image_size > 0 && filesize >= max_image_size
-      @upload.errors.add(:base, I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb))
+      @upload.errors.add(:base, I18n.t(
+        "upload.images.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(max_image_size)
+      ))
       true
     else
       false

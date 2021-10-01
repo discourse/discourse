@@ -812,7 +812,13 @@ bg:
         latest: "Последни"
         sent: "Изпратени"
         unread: "Непрочетени"
+        unread_with_count:
+          one: "Непрочетен (%{count})"
+          other: "Непрочетен (%{count})"
         new: "Нов"
+        new_with_count:
+          one: "Нов (%{count})"
+          other: "Нов (%{count})"
         archive: "Архив"
         groups: "Моите групи"
         move_to_inbox: "Премести във входящи"
@@ -1331,7 +1337,7 @@ bg:
       clear_all: "Изчисти Всички"
       too_short: "Думата за търсене е твърде кратка."
       title: "търсете по тема, пост, потребител или категория"
-      full_page_title: "търсене на теми или публикации"
+      full_page_title: "Търсене"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
       post_format: "#%{post_number} от %{username} "
@@ -1341,13 +1347,16 @@ bg:
       search_google: "Опитайте вместо това търсене с Гугъл:"
       search_google_button: "Google"
       search_button: "Търсене"
+      categories: "Категории"
+      tags: "Етикети"
+      type:
+        users: "Потребители"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
         topic: "Търсете тази тема"
         private_messages: "Търси съобщения"
       advanced:
-        title: Разширено търсене
         posted_by:
           label: Публикувано от
         in_group:
@@ -1371,7 +1380,6 @@ bg:
             after: след
         views:
           label: Преглеждания
-    hamburger_menu: "Отиди към друг списък с теми или друга категория "
     new_item: "нови"
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
@@ -1682,6 +1690,7 @@ bg:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
     post:
+      quote_edit: "Редактирай"
       quote_share: "Споделяне"
       edit_reason: "Причина: "
       post_number: "публикация %{number} "
@@ -2707,7 +2716,6 @@ bg:
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
         silence_reason: "Причина"
-        delete_all_posts: "Изтрий всички публикации. "
         moderator: "Модератор? "
         admin: "Админ? "
         suspended: "Отстранен? "
@@ -2747,6 +2755,10 @@ bg:
         anonymize_yes: "Да, анонимизирай този профил"
         anonymize_failed: "Възникна грешка по време на анонимизирането на профила."
         delete: "Изтрий потребител "
+        delete_posts:
+          button: "Изтрий всички публикации. "
+          confirmation:
+            cancel: "Отмени"
         merge:
           prompt:
             cancel: "Отмени"

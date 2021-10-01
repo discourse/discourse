@@ -835,7 +835,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
+    default: "com|net|org|io|onion|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
   markdown_typographer_quotation_marks:
     client: true
@@ -1009,6 +1009,9 @@ posting:
     client: true
   enable_diffhtml_preview:
     default: false
+    client: true
+  enable_fast_edit:
+    default: true
     client: true
   old_post_notice_days:
     default: 14
@@ -1605,7 +1608,7 @@ security:
     list_type: compact
   browser_update_user_agents:
     hidden: true
-    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9|Xbox|PlayStation"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -2100,6 +2103,9 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   summary_max_results: 100
+  summary_timeline_button:
+    client: true
+    default: false
 
   automatic_topic_heat_values: true
 
@@ -2196,6 +2202,9 @@ uncategorized:
 
   use_site_small_logo_as_system_avatar:
     default: true
+
+  enable_listing_suspended_users_on_search:
+    default: false
 
   disable_system_edit_notifications: true
 

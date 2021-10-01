@@ -62,7 +62,7 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
-    :bookmarked_posts,
+    :bookmarks,
     :message_archived,
     :topic_timer,
     :unicode_title,
@@ -193,8 +193,8 @@ class TopicViewSerializer < ApplicationSerializer
     object.has_bookmarks?
   end
 
-  def bookmarked_posts
-    object.bookmarked_posts
+  def bookmarks
+    object.bookmarks
   end
 
   def topic_timer
@@ -260,20 +260,17 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def requested_group_name
-    if scope&.user
-      group = Group
-        .joins('JOIN group_users ON groups.id = group_users.group_id')
-        .find_by(
-          id: object.topic.custom_fields['requested_group_id'].to_i,
-          group_users: { user_id: scope.user.id, owner: true }
-        )
-
-      group.name if group
-    end
+    Group
+      .joins(:group_users)
+      .where(
+        id: object.topic.custom_fields['requested_group_id'].to_i,
+        group_users: { user_id: scope.user.id, owner: true }
+      )
+      .pluck_first(:name)
   end
 
   def include_requested_group_name?
-    object.personal_message
+    object.personal_message && object.topic.custom_fields['requested_group_id']
   end
 
   def include_published_page?

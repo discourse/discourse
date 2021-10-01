@@ -60,7 +60,6 @@ textarea {
 select,
 textarea {
   display: inline-block;
-  padding: 4px;
   margin-bottom: 9px;
   font-size: $font-0;
   line-height: $line-height-large;
@@ -123,16 +122,9 @@ input {
 }
 
 .form-horizontal {
-  .hide {
-    display: none;
-  }
-
-  input,
-  textarea,
-  select,
-  .input-prepend,
-  .input-append {
-    display: inline-block;
+  input[type="text"],
+  input[type="password"],
+  textarea {
     margin-bottom: 0;
   }
 

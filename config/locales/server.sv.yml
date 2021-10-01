@@ -16,6 +16,7 @@ sv:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -395,6 +396,7 @@ sv:
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste anges för alla påminnelser"
+      for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -865,19 +867,10 @@ sv:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
   user_activity:
-    no_default:
-      self: "Du har ingen aktivitet ännu."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
       search: "Det hittades inga bokmärken med den angivna sökfrågan."
       others: "Inga bokmärken."
-    no_likes_given:
-      self: "Du har inte gillat några inlägg."
-      others: "Inga gillade inlägg."
-    no_replies:
-      self: "Du har inte svarat på några inlägg."
-      others: "Inga svar."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
   email_settings:
@@ -1442,6 +1435,7 @@ sv:
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
+    summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
@@ -1657,6 +1651,7 @@ sv:
     external_emoji_url: "URL till den externa tjänsten för emoji-bilder. Lämna tomt om du vill inaktivera den."
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
+    enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
@@ -1969,6 +1964,7 @@ sv:
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
+    enable_fast_edit: "Gör det möjligt att redigera ett litet urval av en inläggstext på plats."
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -3119,6 +3115,28 @@ sv:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Användare publicerade"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3383,16 +3401,24 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    create_mutlipart_failure: "Det gick inte att skapa uppladdning med flera delar i den externa butiken."
+    abort_mutlipart_failure: "Det gick inte att avbryta uppladdning med flera delar i den externa butiken."
+    complete_mutlipart_failure: "Det gick inte att slutföra uppladdning med flera delar i den externa butiken."
+    external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
+      too_large_humanized: "Tyvärr är filen som du försöker ladda upp för stor (maximal storlek är %{max_size})."
     images:
       too_large: "Tyvärr är bilden som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB). Ändra storleken och försök igen."
+      too_large_humanized: "Tyvärr är bilden som du försöker ladda upp för stor (maximal storlek är %{max_size}). Ändra storlek på den och försök igen."
       larger_than_x_megapixels: "Tyvärr är bilden som du försöker ladda upp för stor (maximal dimension är %{max_image_megapixels} megapixlar). Ändra storleken och försök igen."
       size_not_found: "Tyvärr kunde vi inte avgöra bildens storlek. Kanske är din bildfil skadad?"
     placeholders:
       too_large: "(bild större än %{max_size_kb} kB)"
+      too_large_humanized: "(bild större än %{max_size})"
   avatar:
     missing: "Tyvärr kunde vi inte hitta någon avatar kopplad till den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
@@ -4023,17 +4049,34 @@ sv:
           city_for_disputes:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
-      colors:
-        title: "Färger"
-      fonts:
-        title: "Typsnitt"
+      styling:
+        title: "Formatering"
         fields:
+          color_scheme:
+            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:
             label: "Typsnitt för rubrik"
-          font_preview:
+          styling_preview:
             label: "Förhandsgranska"
+          homepage_style:
+            label: "Hemsidans stil"
+            choices:
+              latest:
+                label: "Senaste ämnen"
+              categories_only:
+                label: "Endast kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med utvalda ämnen"
+              categories_and_latest_topics:
+                label: "Kategorier med senaste ämnen"
+              categories_and_top_topics:
+                label: "Kategorier och toppämnen"
+              categories_boxes:
+                label: "Kategorilådor"
+              categories_boxes_with_topics:
+                label: "Kategorilådor med ämnen"
       logos:
         title: "Logotyper"
         fields:
@@ -4052,26 +4095,6 @@ sv:
           large_icon:
             label: "Stor ikon"
             description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
-      homepage:
-        description: "Vi rekommenderar att du visar de senaste ämnena på din hemsida, men du kan också visa kategorier (grupper av ämnen) där, om du föredrar det."
-        title: "Hemsida"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategorilådor"
-              categories_boxes_with_topics:
-                label: "Kategorilådor med ämnen"
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

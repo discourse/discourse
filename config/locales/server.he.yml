@@ -16,6 +16,7 @@ he:
       date_only: " %-d ב%B,‏ %Y"
       long: " %-d ב%B,‏ %Y,‏ %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -532,6 +533,7 @@ he:
 
       יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
     dominating_topic: פרסמת כאן למעלה מ־%{percent}% מהתגובות, האם כדאי לשמוע דעות של אנשים נוספים?
+    get_a_room: הגבת ל־‎@%{reply_username} ‏%{count} פעמים, ידעת שניתן לשלוח הודעה פרטית במקום?
     too_many_replies: |
       ### הגעת למספר התגובות המרבי לנושא זה
 
@@ -697,6 +699,7 @@ he:
     slow_down: "ביצעת את הפעולה הזאת יותר מדי פעמים, נא לנסות שוב מאוחר יותר."
     too_many_requests: "ביצעת את הפעולה הזאת יותר מדי פעמים. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
     by_type:
+      first_day_replies_per_day: "אנו מעריכים את ההתלהבות שלך, להמשיך ככה! עם זאת, למען בטיחות הקהילה שלנו, הגעת למספר התגובות המרבי שמשתמש חדש יכול לכתוב ביום הראשון שלו. עליך להמתין %{time_left} כדי לכתוב תגובות חדשות נוספות."
       first_day_topics_per_day: "אנו מעריכים את ההתלהבות שלך! עם זאת, למען בטיחות הקהילה שלנו, הגעת למספר הנושאים המרבי שמשתמש חדש יכול ליצור ביום הראשון שלו. עליך להמתין %{time_left} כדי ליצור נושאים חדשים נוספים."
       create_topic: "קצב יצירת הפוסטים שלך מעט מהיר מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
       create_post: "קצב כתיבת התגובות שלך מעט מהיר מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
@@ -964,19 +967,10 @@ he:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
-    no_default:
-      self: "עדיין אין לך פעילות."
-      others: "אין פעילות."
     no_bookmarks:
       self: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
       others: "אין סימניות."
-    no_likes_given:
-      self: "לא עשיתם לייק לאף פוסט."
-      others: "אין פוסטים שנעשה להם לייק."
-    no_replies:
-      self: "לא הגבתם לאף פוסט."
-      others: "אין תגובות."
     no_drafts:
       self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
   email_settings:
@@ -1540,6 +1534,7 @@ he:
     summary_likes_required: "כמות לייקים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את % הפוסטים הראשונים"
     summary_max_results: "מספר הפוסטים המרבי שיוחזר על ידי ‚סיכום הנושא הזה’"
+    summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
     enable_personal_messages: "לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך דרגת אמון מזערית לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
     enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
@@ -1755,6 +1750,7 @@ he:
     external_emoji_url: "כתובת שירות תמונות האמוג׳י החיצוני. ריק משבית את ההגדרה."
     use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
+    enable_listing_suspended_users_on_search: "לאפשר למשתמשים רגילים למצוא משתמשים מושעים."
     selectable_avatars_enabled: "לאלץ משתמשים לבחור בתמונה ייצוגית מהרשימה."
     selectable_avatars: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
@@ -2066,6 +2062,7 @@ he:
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
+    enable_fast_edit: "מאפשר עריכה בתוך השורה של חלק קטן מהטקסט של הפוסט."
     old_post_notice_days: "ימים לפני שהתראת נושא מתיישנת"
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -2616,9 +2613,35 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
+    text_body_template: |
+      הידד, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - ניתן לשדרג בעזרת **[שדרוג מהיר בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
+
+      - מה שחדש בגרסה מופיע ב[הערות ההפצה](https://meta.discourse.org/tag/release-notes) או שניתן לצפות [ביומן השינויים הגולמי ב־GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ממליצים לך לבקר ב־[meta.discourse.org](https://meta.discourse.org) לקבלת חדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
+    text_body_template: |
+      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - אפשר לשדרג בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/upgrade)**
+
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
+
+      ### הערות מהדורה
+
+      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
@@ -3357,6 +3380,26 @@ he:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "משתמש/ה פרסם/ה"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3671,16 +3714,24 @@ he:
     png_to_jpg_conversion_failure_message: "אירעה שגיאה בעת המרה מ־PNG ל־JPG."
     optimize_failure_message: "אירעה שגיאה בעת מיטוב התמונה שהועלתה."
     download_failure: "הורדת הקובץ מהספק החיצוני נכשלה."
+    size_mismatch_failure: "גודל הקובץ שנשלח ל־S3 לא תואם לגודל המשלוח המוצהר. %{additional_detail}"
+    create_mutlipart_failure: "יצירת העלאה מרובת חלקים באחסון החיצוני נכשלה."
+    abort_mutlipart_failure: "ביטול העלאה מרובת חלקים באחסון החיצוני נכשל."
+    complete_mutlipart_failure: "השלמת העלאה מרובת חלקים באחסון החיצוני נכשלה."
+    external_upload_not_found: "ההעלאה לא נמצאה באחסון החיצוני. %{additional_detail}"
     checksum_mismatch_failure: "בדיקת התקינות של הקובץ שהעלית שגויה. יכול להיות שתוכן הקובץ השתנה במהלך ההעלאה. נא לנסות שוב."
     cannot_promote_failure: "לא ניתן להשלים את ההעלאה, יתכן שהיא כבר הושלמה או נכשלה בעבר."
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
+      too_large_humanized: "הקובץ המועמד לשליחה גדול מדי (הגודל המרבי המותר הוא %{max_size}), עמך הסליחה."
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
+      too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
       larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"
+      too_large_humanized: "(גודל התמונה חורג מ־%{max_size})"
   avatar:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
   flag_reason:
@@ -4410,17 +4461,34 @@ he:
           city_for_disputes:
             label: "עיר המחלוקת"
             placeholder: "סן פרנסיסקו, קליפורניה"
-      colors:
-        title: "צבעים"
-      fonts:
-        title: "גופנים"
+      styling:
+        title: "עיצוב"
         fields:
+          color_scheme:
+            label: "ערכת צבעים"
           body_font:
             label: "גופן גוף"
           heading_font:
             label: "גופן כותרת"
-          font_preview:
+          styling_preview:
             label: "תצוגה מקדימה"
+          homepage_style:
+            label: "סגנון עמוד הבית"
+            choices:
+              latest:
+                label: "נושאים אחרונים"
+              categories_only:
+                label: "קטגוריות בלבד"
+              categories_with_featured_topics:
+                label: "קטגוריות עם נושאים מומלצים"
+              categories_and_latest_topics:
+                label: "קטגוריות ונושאים אחרונים"
+              categories_and_top_topics:
+                label: "קטגוריות ונושאים מובילים"
+              categories_boxes:
+                label: "תיבות קטגוריות"
+              categories_boxes_with_topics:
+                label: "תיבות קטגוריות עם נושאים"
       logos:
         title: "לוגואים"
         fields:
@@ -4439,26 +4507,6 @@ he:
           large_icon:
             label: "אייקון גדול"
             description: "תמונת סמל שמשמשת לייצוג האתר שלך במכשירים חדישים ונראית טוב בגדלים גדולים יותר. מומלץ שתהיינה מעל 512 × 512. אנחנו נשתמש בלוגו הריבועי כבררת מחדל."
-      homepage:
-        description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים גם להציג קטגוריות (קבוצות נושאים) בדף הבית אם תעדיפו."
-        title: "דף הבית"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "נושאים אחרונים"
-              categories_only:
-                label: "קטגוריות בלבד"
-              categories_with_featured_topics:
-                label: "קטגוריות עם נושאים מומלצים"
-              categories_and_latest_topics:
-                label: "קטגוריות ונושאים אחרונים"
-              categories_and_top_topics:
-                label: "קטגוריות ונושאים מובילים"
-              categories_boxes:
-                label: "תיבות קטגוריות"
-              categories_boxes_with_topics:
-                label: "תיבות קטגוריות עם נושאים"
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."

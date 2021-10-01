@@ -204,6 +204,7 @@ ar:
       previous_month: "الشهر الماضي"
       next_month: "الشهر القادم"
       placeholder: التاريخ
+      to_placeholder: "إلى التاريخ"
     share:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber}"
@@ -245,6 +246,7 @@ ar:
         disabled: "أزال هذا البانر في %{when}. ولن يظهر بعد الآن في أعلى كل صفحة."
       forwarded: "أعاد توجيه الرسالة الإلكترونية أعلاه"
     topic_admin_menu: "إجراءات الموضوع"
+    skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
     wizard_required: "مرحبًا بك في Discourse! لنبدأ من <a href='%{url}' data-auto-route='true'>معالج الإعداد</a> ✨"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     software_update_prompt:
@@ -417,6 +419,13 @@ ar:
         confirm: "لديك مسودة محفوظة لهذا الموضوع. ماذا تريد أن تفعل بها؟"
         yes_value: "تجاهل"
         no_value: "استئناف التعديل"
+    topic_count_categories:
+      zero: "عرض %{count} موضوع جديد أو محدَّث"
+      one: "عرض موضوع واحد (%{count}) جديد أو محدَّث"
+      two: "عرض موضوعين (%{count}) جديدين أو محدَّثين"
+      few: "عرض %{count} موضوعات جديدة أو محدَّثة"
+      many: "عرض %{count} موضوعًا جديدًا أو محدَّثًا"
+      other: "عرض %{count} موضوع جديد أو محدَّث"
     topic_count_latest:
       zero: "عرض %{count} موضوع جديد أو محدَّث"
       one: "عرض موضوع واحد (%{count}) جديد أو محدَّث"
@@ -1201,6 +1210,7 @@ ar:
       no_notifications_title: "ليس لديك أي إشعارات بعد"
       no_notifications_body: >
         سيتم إعلامك في هذه اللوحة بالنشاط ذي الصلة المباشرة بك، بما في ذلك الردود على موضوعاتك ومنشوراتك، وعندما يشير إليك شخص ما <b>@mentions</b> أو يقتبس منك، وعندما يرد على الموضوعات التي تراقبها. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم قيامك بتسجيل الدخول لفترة من الوقت. <br><br> ابحث عن %{icon} لتحديد الموضوعات والفئات والوسوم المحدَّدة التي تريد أن يتم إرسال إشعار إليك بشأنها. لمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
+      no_notifications_page_title: "ليس لديك أي إشعارات بعد"
       first_notification: "أول إشعار تستلمه! اضغط عليه للبدء."
       dynamic_favicon: "عرض الأعداد على أيقونة المتصفح"
       skip_new_user_tips:
@@ -1307,7 +1317,21 @@ ar:
         latest: "الحديثة"
         sent: "المُرسَلة"
         unread: "غير المقروءة"
+        unread_with_count:
+          zero: "غير المقروءة (%{count})"
+          one: "غير المقروءة (%{count})"
+          two: "غير المقروءة (%{count})"
+          few: "غير المقروءة (%{count})"
+          many: "غير المقروءة (%{count})"
+          other: "غير المقروءة (%{count})"
         new: "الجديدة"
+        new_with_count:
+          zero: "الجديدة (%{count})"
+          one: "الجديدة (%{count})"
+          two: "الجديدة (%{count})"
+          few: "الجديدة (%{count})"
+          many: "الجديدة (%{count})"
+          other: "الجديدة (%{count})"
         archive: "الأرشيف"
         groups: "مجموعاتي"
         move_to_inbox: "النقل إلى صندوق الوارد"
@@ -2433,7 +2457,7 @@ ar:
         many: "<span>%{plus}%{count} نتيجة بحث عن العبارة </span><span class='term'>%{term}</span>"
         other: "<span>%{plus}%{count} نتيجة بحث عن العبارة </span><span class='term'>%{term}</span>"
       title: "البحث في الموضوعات أو المنشورات أو المستخدمين أو الفئات"
-      full_page_title: "البحث في الموضوعات أو المنشورات"
+      full_page_title: "البحث"
       no_results: "لم يتم العثور على نتائج."
       no_more_results: "لم يتم العثور على نتائج أخرى."
       post_format: "#%{post_number} بواسطة %{username}"
@@ -2445,6 +2469,10 @@ ar:
       search_google: "جرِّب البحث باستخدام Google بدلًا من ذلك:"
       search_google_button: "Google"
       search_button: "البحث"
+      categories: "الفئات"
+      tags: "الوسوم"
+      type:
+        users: "المستخدمون"
       context:
         user: "البحث عن المنشورات باسم المستخدم @%{username}"
         category: "البحث في الفئة #%{category}"
@@ -2452,7 +2480,6 @@ ar:
         topic: "البحث في هذا الموضوع"
         private_messages: "البحث في الرسائل"
       advanced:
-        title: البحث المتقدم
         posted_by:
           label: تم النشر بواسطة
         in_category:
@@ -2505,7 +2532,6 @@ ar:
           placeholder: الحد الأدنى
         max_views:
           placeholder: الحد الأقصى
-    hamburger_menu: "الانتقال إلى قائمة موضوعات أو فئة أخرى"
     new_item: "جديد"
     go_back: "الرجوع"
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
@@ -2982,7 +3008,7 @@ ar:
       filters:
         n_posts:
           zero: "%{count} منشور"
-          one: "منشور واحد (%{count})"
+          one: "منشور واحد"
           two: "منشوران (%{count})"
           few: "%{count} منشورات"
           many: "%{count} منشورًا"
@@ -3114,6 +3140,7 @@ ar:
       deleted_by_author_simple: "(تم حذف الموضوع بواسطة الكاتب)"
     post:
       quote_reply: "اقتباس"
+      quote_edit: "تعديل"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -4100,6 +4127,10 @@ ar:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
+    user_activity:
+      no_activity_others: "لا يوجد نشاط."
+      no_replies_others: "لا توجد ردود."
+      no_likes_others: "لا توجد منشورات سجَّلت إعجابك بها."
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:
@@ -5174,8 +5205,6 @@ ar:
         silence_message_placeholder: "(اتركه فارغا لإرسال الرسالة الافتراضية)"
         suspended_until: "(حتى %{until})"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."
-        delete_all_posts: "حذف جميع المنشورات"
-        delete_posts_progress: "جارٍ حذف المنشورات..."
         delete_posts_failed: "حدثت مشكلة في أثناء حذف المنشورات."
         post_edits: "تعديلات المنشور"
         penalty_post_actions: "ما الذي ترغب في فعله بالمنشور ذي الصلة؟"
@@ -5241,8 +5270,12 @@ ar:
         anonymize_failed: "حدثت مشكلة في أثناء إخفاء هوية الحساب."
         delete: "حذف المستخدم"
         delete_posts:
+          button: "حذف جميع المنشورات"
           progress:
             title: "تقدُّم حذف المنشورات"
+            description: "جارٍ حذف المنشورات..."
+          confirmation:
+            cancel: "إلغاء"
         merge:
           button: "دمج"
           prompt:
@@ -5675,7 +5708,5 @@ ar:
           moderator: "مشرف"
           regular: "مستخدم منتظم"
       previews:
-        topic_title: "موضوع المناقشة"
-        font_title: "الخط %{font}"
         share_button: "مشاركة"
         reply_button: "الرد"

@@ -16,6 +16,7 @@ de:
       date_only: "%-d. %B %Y"
       long: "%-d. %B %Y um %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -395,6 +396,7 @@ de:
       cannot_set_past_reminder: "Du kannst keine Lesezeichen-Erinnerung in der Vergangenheit setzen."
       cannot_set_reminder_in_distant_future: "Du kannst keine Lesezeichen-Erinnerung einstellen, die mehr als 10 Jahre in der Zukunft liegt."
       time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
+      for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -483,7 +485,7 @@ de:
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast mehr als %{percent}% der Antworten hier gepostet, gibt es noch jemanden, von dem du gerne hören würdest?
-    get_a_room: Du hast %{count} Mal auf @%{reply_username}geantwortet. Wusstest Du, dass Du ihnen stattdessen eine persönliche Nachricht senden kannst?
+    get_a_room: Du hast @%{reply_username} %{count} mal geantwortet, wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -773,7 +775,7 @@ de:
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
-      discoursehub: "DiscouseHub-App"
+      discoursehub: "DiscourseHub-App"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       ie: "Internet Explorer"
@@ -885,19 +887,10 @@ de:
     pm_title: "Sichere Entwürfe aus laufenden Themen"
     pm_body: "Thema enthält gesicherte Entwürfe"
   user_activity:
-    no_default:
-      self: "Du hast noch keine Aktivität."
-      others: "Keine Aktivität."
     no_bookmarks:
       self: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
       search: "Keine Lesezeichen mit der angegebenen Suchanfrage gefunden."
       others: "Keine Lesezeichen."
-    no_likes_given:
-      self: "Du hast noch keine Beiträge mit einem „Gefällt mir“ markiert."
-      others: "Keine Beiträge mit „Gefällt mir“."
-    no_replies:
-      self: "Du hast auf keine Beiträge geantwortet."
-      others: "Keine Antworten."
     no_drafts:
       self: "Du hast keine Entwürfe; verfasse eine Antwort in einem beliebigen Thema und sie wird automatisch als neuer Entwurf gespeichert."
   email_settings:
@@ -1462,6 +1455,7 @@ de:
     summary_likes_required: "Mindestanzahl an „Gefällt mir“ in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
+    summary_timeline_button: "Schaltfläche \"Zusammenfassen\" in der Zeitleiste anzeigen"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long Polling nutzen."
@@ -1677,6 +1671,7 @@ de:
     external_emoji_url: "URL des externen Dienstes für Emoji-Bilder. Lasse das Feld leer, um dies zu deaktivieren."
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Buchstaben-Avatar-Hintergrund verwendet werden."
+    enable_listing_suspended_users_on_search: "Ermögliche normalen Benutzern, gesperrte Benutzer zu finden."
     selectable_avatars_enabled: "Benutzer zwingen, einen Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste der Avatare, aus denen Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
@@ -1989,6 +1984,7 @@ de:
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
+    enable_fast_edit: "Ermöglicht die Inline-Bearbeitung einer kleinen Auswahl eines Beitragstexts."
     old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
@@ -3278,6 +3274,28 @@ de:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Gruppe wurde in privater Nachricht erwähnt"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Gruppe wurde in privater Nachricht erwähnt"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Benutzer hat einen Beitrag geschrieben"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3588,16 +3606,24 @@ de:
     png_to_jpg_conversion_failure_message: "Beim Konvertieren von PNG in JPG ist ein Fehler aufgetreten."
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
+    size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Abschnittes überein. %{additional_detail}"
+    create_mutlipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
+    abort_mutlipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
+    complete_mutlipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
+    external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
+      too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
+      too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
       larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
+      too_large_humanized: "(Bild größer als %{max_size})"
   avatar:
     missing: "Entschuldige, wir können keinen Avatar finden, der mit dieser E-Mail-Adresse verbunden ist. Kannst du versuchen, ihn erneut hochzuladen?"
   flag_reason:
@@ -4399,17 +4425,34 @@ de:
           city_for_disputes:
             label: "Stadt für Rechtsstreitigkeiten"
             placeholder: "Berlin"
-      colors:
-        title: "Farben"
-      fonts:
-        title: "Schriftarten"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Farbschema"
           body_font:
             label: "Textkörper-Schriftart"
           heading_font:
             label: "Überschrift-Schriftart"
-          font_preview:
+          styling_preview:
             label: "Vorschau"
+          homepage_style:
+            label: "Homepage-Stil"
+            choices:
+              latest:
+                label: "Aktuelle Themen"
+              categories_only:
+                label: "Nur Kategorien"
+              categories_with_featured_topics:
+                label: "Kategorien mit hervorgehobenen Themen"
+              categories_and_latest_topics:
+                label: "Kategorien und aktuelle Themen"
+              categories_and_top_topics:
+                label: "Kategorien und angesagte Themen"
+              categories_boxes:
+                label: "Kategorie-Boxen"
+              categories_boxes_with_topics:
+                label: "Kategorie-Boxen mit Themen"
       logos:
         title: "Logos"
         fields:
@@ -4428,26 +4471,6 @@ de:
           large_icon:
             label: "Großes Symbol"
             description: "Symbol, um deine Website auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
-      homepage:
-        description: "Wir empfehlen, die aktuellen Themen auf deiner Startseite anzuzeigen, aber du kannst dich auch dafür entscheiden, Kategorien (Gruppen von Themen) auf der Startseite anzuzeigen, wenn dir das lieber ist."
-        title: "Homepage"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Aktuelle Themen"
-              categories_only:
-                label: "nur Kategorien"
-              categories_with_featured_topics:
-                label: "Kategorien mit hervorgehobenen Themen"
-              categories_and_latest_topics:
-                label: "Kategorien und aktuelle Themen"
-              categories_and_top_topics:
-                label: "Kategorien und angesagte Themen"
-              categories_boxes:
-                label: "Kategorie-Boxen"
-              categories_boxes_with_topics:
-                label: "Kategorie-Boxen mit Themen"
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."

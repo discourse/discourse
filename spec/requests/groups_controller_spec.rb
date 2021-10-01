@@ -384,6 +384,23 @@ describe GroupsController do
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
+    it "returns the right response for 'messageable' field" do
+      sign_in(user)
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['group']['messageable']).to eq(true)
+
+      SiteSetting.enable_personal_messages = false
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['group']['messageable']).to eq(false)
+    end
+
     context 'as an admin' do
       it "returns the right response" do
         sign_in(Fabricate(:admin))
@@ -624,6 +641,14 @@ describe GroupsController do
 
       body = response.parsed_body
       expect(body["messageable"]).to eq(true)
+
+      SiteSetting.enable_personal_messages = false
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
+      expect(body["messageable"]).to eq(false)
     end
   end
 
@@ -858,6 +883,67 @@ describe GroupsController do
 
       context "user default notifications" do
         it "should update default notification preference for existing users" do
+          group.update!(default_notification_level: NotificationLevels.all[:watching])
+          user1 = Fabricate(:user)
+          user2 = Fabricate(:user)
+          group.add(user1)
+          group.add(user2)
+          group_user1 = user1.group_users.first
+          group_user2 = user2.group_users.first
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: NotificationLevels.all[:tracking]
+            }
+          }
+
+          expect(response.status).to eq(200)
+
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:watching])
+          expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
+
+          group_users = group.group_users
+          expect(response.parsed_body["user_count"]).to eq(group_users.count)
+
+          group_user1.update!(notification_level: NotificationLevels.all[:regular])
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: NotificationLevels.all[:tracking]
+            }
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
+          expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: NotificationLevels.all[:tracking]
+            },
+            update_existing_users: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
+          expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:tracking])
+
+          put "/groups/#{group.id}.json", params: {
+            group: {
+              default_notification_level: NotificationLevels.all[:regular]
+            },
+            update_existing_users: false
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
+          expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:tracking])
+        end
+
+        it "should update category & tag notification preferences for existing users" do
           user1 = Fabricate(:user)
           user2 = Fabricate(:user)
           CategoryUser.create!(user: user1, category: category, notification_level: 4)

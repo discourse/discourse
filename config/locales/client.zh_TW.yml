@@ -90,6 +90,7 @@ zh_TW:
       previous_month: "上個月"
       next_month: "下個月"
       placeholder: 日期
+      to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "貼文 #%{postNumber} "
@@ -276,6 +277,8 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
+    topic_count_categories:
+      other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unseen:
@@ -889,13 +892,18 @@ zh_TW:
         latest: "最新"
         sent: "送出"
         unread: "未讀"
+        unread_with_count:
+          other: "未讀 (%{count})"
         new: "新的"
+        new_with_count:
+          other: "近期 (%{count})"
         archive: "封存"
         groups: "我的群組"
         move_to_inbox: "移動到收件匣"
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標籤"
+        read_more: "想看更多？在<a href='%{basePath}/u/%{username}/message'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
         security: "安全性"
@@ -954,6 +962,7 @@ zh_TW:
         taken: "抱歉，此使用者名稱已經有人使用。"
         invalid: "此使用者名稱無效，只能使用數字與英文字母。"
       add_email:
+        title: "新增電子郵件"
         add: "添加"
       change_email:
         title: "修改電子郵件地址"
@@ -975,8 +984,9 @@ zh_TW:
         title: "電子郵件"
         primary: "主要電子郵件"
         secondary: "次要電子郵件"
-        primary_label: "一級"
+        primary_label: "主要"
         update_email: "修改電子郵件地址"
+        add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
@@ -1610,7 +1620,7 @@ zh_TW:
       result_count:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
       title: "搜尋話題、貼文、使用者或分類"
-      full_page_title: "搜尋話題或貼文"
+      full_page_title: "搜索"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
       post_format: "#%{post_number} %{username}"
@@ -1622,13 +1632,16 @@ zh_TW:
       search_google: "嘗試利用 Google 搜尋:"
       search_google_button: "Google"
       search_button: "搜索"
+      categories: "分類"
+      tags: "標籤"
+      type:
+        users: "使用者"
       context:
         user: "搜尋 @%{username} 的貼文"
         category: "搜索 #%{category} 分類"
         topic: "搜尋此話題"
         private_messages: "搜尋訊息"
       advanced:
-        title: 進階搜尋
         posted_by:
           label: 發文者
         in_category:
@@ -1671,7 +1684,6 @@ zh_TW:
             after: 之後
         views:
           label: 瀏覽
-    hamburger_menu: "轉到另一個話題列表或分類"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
@@ -2052,6 +2064,7 @@ zh_TW:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
     post:
       quote_reply: "引用"
+      quote_edit: "編輯"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -2656,6 +2669,10 @@ zh_TW:
         member: "成員"
         regular: "活躍使用者"
         leader: "資深"
+    user_activity:
+      no_activity_others: "無活動紀錄。"
+      no_replies_others: "沒有回覆。"
+      no_likes_others: "沒有被讚的貼文。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -3492,8 +3509,6 @@ zh_TW:
         silence_message_placeholder: "(留白以傳送預設訊息)"
         suspended_until: "(直到%{until})"
         cant_suspend: "這位使用者無法被停權。"
-        delete_all_posts: "刪除所有貼文"
-        delete_posts_progress: "刪除貼文中⋯⋯"
         delete_posts_failed: "刪除貼文時發生了錯誤。"
         post_edits: "編輯貼文"
         penalty_post_actions: "請問您要如何處理相關貼文？"
@@ -3552,6 +3567,12 @@ zh_TW:
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
+        delete_posts:
+          button: "刪除所有貼文"
+          progress:
+            description: "刪除貼文中⋯⋯"
+          confirmation:
+            cancel: "取消"
         merge:
           prompt:
             cancel: "取消"
@@ -3879,6 +3900,5 @@ zh_TW:
           moderator: "版主"
           regular: "普通使用者"
       previews:
-        topic_title: "討論話題"
         share_button: "分享"
         reply_button: "回覆"

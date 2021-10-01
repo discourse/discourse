@@ -1123,6 +1123,12 @@ class UsersController < ApplicationController
       end
 
     if groups
+      DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.each do |param_name, block|
+        if params[param_name.to_s]
+          groups = block.call(groups, current_user)
+        end
+      end
+
       groups = Group.search_groups(term, groups: groups)
       groups = groups.order('groups.name asc')
 
@@ -1592,7 +1598,10 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
-        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+        @bookmark_reminders = Bookmark.with_reminders
+          .where(user_id: user.id)
+          .includes(:topic)
+          .order(:reminder_at)
       end
     end
   end
@@ -1607,6 +1616,7 @@ class UsersController < ApplicationController
     if field.field_type == "dropdown"
       field.user_field_options.find_by_value(field_values)&.value
     elsif field.field_type == "multiselect"
+      field_values = Array.wrap(field_values)
       bad_values = field_values - field.user_field_options.map(&:value)
       field_values - bad_values
     else

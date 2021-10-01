@@ -60,14 +60,14 @@ if Sidekiq.server?
   # defer queue should simply run in sidekiq
   Scheduler::Defer.async = false
 
-  # warm up AR
-  RailsMultisite::ConnectionManagement.safe_each_connection do
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.first rescue nil
-    end
-  end
-
   Rails.application.config.after_initialize do
+    # warm up AR
+    RailsMultisite::ConnectionManagement.safe_each_connection do
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+        table.classify.constantize.first rescue nil
+      end
+    end
+
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(Discourse.os_hostname)
@@ -111,5 +111,8 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   end
 end
 
-Sidekiq.error_handlers.clear
+unless Rails.env.development?
+  Sidekiq.error_handlers.clear
+end
+
 Sidekiq.error_handlers << SidekiqLogsterReporter.new

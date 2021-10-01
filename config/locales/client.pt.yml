@@ -115,6 +115,7 @@ pt:
       previous_month: "Mês Anterior"
       next_month: "Próximo Mês"
       placeholder: data
+      to_placeholder: "ir para data"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "publicação #%{postNumber}"
@@ -310,6 +311,9 @@ pt:
         confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_categories:
+      one: "Ver %{count} tópico novo ou atualizado"
+      other: "Ver %{count} tópicos novos ou atualizados"
     topic_count_latest:
       one: "Ver %{count} tópico novo ou atualizado"
       other: "Ver %{count} tópicos novos ou atualizados"
@@ -993,6 +997,7 @@ pt:
       no_notifications_title: "Você ainda não possui quaisquer notificações"
       no_notifications_body: >
         Você será notificado neste painel sobre atividades diretamente relevantes para você, incluindo respostas aos seus tópicos e postagens, quando alguém <b>@menciona</b> você ou cita você, e responde aos tópicos que você está observando. As notificações também serão enviadas para o seu e-mail quando você não estiver logado por um tempo. <br><br> Procure o %{icon} para decidir sobre quais tópicos, categorias e marcas específicas você deseja ser notificado. Para obter mais informações, consulte suas <a href='%{preferencesUrl}'>preferências de notificação</a>.
+      no_notifications_page_title: "Você ainda não possui quaisquer notificações"
       first_notification: "A sua primeira notificação! Seleccione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
@@ -1101,7 +1106,13 @@ pt:
         latest: "Recentes"
         sent: "Enviado"
         unread: "Não Lido"
+        unread_with_count:
+          one: "Não Lido (%{count})"
+          other: "Não Lido (%{count})"
         new: "Novo"
+        new_with_count:
+          one: "Novo (%{count})"
+          other: "Novo (%{count})"
         archive: "Arquivo"
         groups: "Os Meus Grupos"
         move_to_inbox: "Mover para Caixa de Entrada"
@@ -2057,7 +2068,7 @@ pt:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "pesquisar por tópicos, publicações, utilizadores, ou categorias"
-      full_page_title: "pesquisar tópicos e publicações"
+      full_page_title: "Pesquisar"
       no_results: "Não foram encontrados resultados."
       no_more_results: "Não foram encontrados mais resultados."
       post_format: "#%{post_number} por %{username}"
@@ -2069,6 +2080,10 @@ pt:
       search_google: "Experimente pesquisar com o Google:"
       search_google_button: "Google"
       search_button: "Pesquisar"
+      categories: "Categorias"
+      tags: "Etiquetas"
+      type:
+        users: "Utilizadores"
       context:
         user: "Procurar publicações por @%{username}"
         category: "Pesquise na categoria #%{category}"
@@ -2076,7 +2091,6 @@ pt:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
-        title: Pesquisa Avançada
         posted_by:
           label: Publicado por
         in_category:
@@ -2129,7 +2143,6 @@ pt:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir para outra lista de tópicos ou categorias"
     new_item: "novo"
     go_back: "voltar atrás"
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
@@ -2623,6 +2636,7 @@ pt:
       deleted_by_author_simple: "(tópico excluído pelo autor)"
     post:
       quote_reply: "Citar"
+      quote_edit: "Editar"
       quote_share: "Partilhar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
@@ -3382,6 +3396,8 @@ pt:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
+    user_activity:
+      no_likes_others: "Sem publicações gostadas."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -4206,7 +4222,6 @@ pt:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         silence_modal_title: "Silenciar Usuário"
-        delete_all_posts: "Eliminar todas as publicações"
         penalty_post_edit: "Editar a mensagem"
         silenced: "Silenciado?"
         moderator: "Moderador?"
@@ -4248,6 +4263,10 @@ pt:
         anonymize_yes: "Sim, tornar esta conta anónima"
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."
         delete: "Eliminar Utilizador"
+        delete_posts:
+          button: "Eliminar todas as publicações"
+          confirmation:
+            cancel: "Cancelar"
         merge:
           prompt:
             cancel: "Cancelar"

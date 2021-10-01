@@ -59,7 +59,7 @@ acceptance("Review", function (needs) {
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer button[aria-label='cancel']");
+    await click(".modal-footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 

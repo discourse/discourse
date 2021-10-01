@@ -122,10 +122,8 @@ export default {
   },
 
   teardown() {
-    if (this.keyTrapper) {
-      this.keyTrapper.reset();
-      this.keyTrapper = null;
-    }
+    this.keyTrapper?.destroy();
+    this.keyTrapper = null;
     this.container = null;
   },
 
@@ -207,7 +205,7 @@ export default {
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
-    // like `z z` are valid for Mousetrap
+    // like `z z` are valid for ItsATrap
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);

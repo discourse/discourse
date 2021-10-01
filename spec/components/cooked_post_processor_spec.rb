@@ -1120,6 +1120,7 @@ describe CookedPostProcessor do
     end
 
     it "replaces large image placeholder" do
+      SiteSetting.max_image_size_kb = 4096
       url = 'https://image.com/my-avatar'
       image_url = 'https://image.com/avatar.png'
 
@@ -1134,6 +1135,7 @@ describe CookedPostProcessor do
       cpp.post_process
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
+      expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
     end
   end
 

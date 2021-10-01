@@ -7,6 +7,14 @@ import toMarkdown from "discourse/lib/to-markdown";
 
 let _defaultHomepage;
 
+export function splitString(str, separator = ",") {
+  if (typeof str === "string") {
+    return str.split(separator).filter(Boolean);
+  } else {
+    return [];
+  }
+}
+
 export function translateSize(size) {
   switch (size) {
     case "tiny":
@@ -469,19 +477,22 @@ const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/c
 //                               |
 //                               +------- paragraphs starting with 4 spaces or tab
 
-export function inCodeBlock(text, pos) {
-  let result = false;
+const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
-  let match;
-  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
-    const begin = match.index;
-    const end = match.index + match[0].length;
-    if (begin <= pos && pos <= end) {
-      result = true;
+export function inCodeBlock(text, pos) {
+  let end = 0;
+  for (const match of text.matchAll(CODE_BLOCKS_REGEX)) {
+    end = match.index + match[0].length;
+    if (match.index <= pos && pos <= end) {
+      return true;
     }
   }
 
-  return result;
+  // Character at position `pos` can be in a code block that is unfinished.
+  // To check this case, we look for any open code blocks after the last closed
+  // code block.
+  const lastOpenBlock = text.substr(end).search(OPEN_CODE_BLOCKS_REGEX);
+  return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
 // This prevents a mini racer crash

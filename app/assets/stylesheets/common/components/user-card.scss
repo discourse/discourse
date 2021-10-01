@@ -221,6 +221,12 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   // custom user fields
   .public-user-fields {
     margin: 0;
+    .user-field-value-list-item:not(:last-of-type) {
+      &:after {
+        // create comma separated list
+        content: ",";
+      }
+    }
   }
 
   // badges

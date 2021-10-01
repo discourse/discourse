@@ -27,10 +27,7 @@
 
     .select-kit-header {
       background: var(--secondary);
-      border: 1px solid var(--primary-medium);
-      padding: 0 0.25em 0 0.5em;
-      font-weight: 500;
-      font-size: $font-0;
+      border-color: var(--primary-medium);
 
       &.is-focused {
         @include default-focus;

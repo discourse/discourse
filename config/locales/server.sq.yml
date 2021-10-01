@@ -1080,6 +1080,24 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       text_body_template: |
         %{header_instructions}
@@ -1373,14 +1391,10 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
-      colors:
-        title: "Ngjyrat"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Parashikimi"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:

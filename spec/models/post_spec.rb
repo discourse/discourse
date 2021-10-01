@@ -1715,6 +1715,17 @@ describe Post do
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
     end
+
+    it "skip S3 cdn urls with different path" do
+      setup_s3
+      SiteSetting.Upload.stubs(:s3_cdn_url).returns("https://cdn.example.com/site1")
+
+      urls = []
+      raw = "<img src='https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg' /><img src='https://cdn.example.com/site2/original/1X/bc68acbc8c022726e69f980e00d68112128.jpg' />"
+      post = Fabricate(:post, raw: raw)
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to contain_exactly("https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg")
+    end
   end
 
   describe "#publish_changes_to_client!" do

@@ -22,7 +22,7 @@ sv:
         vote:
           title: "Resultat kommer att visas vid <strong>röstning</strong>."
         closed:
-          title: "Resultat kommer att visas när den<strong>stängts</strong>."
+          title: "Resultat kommer att visas när den <strong>stängts</strong>."
         staff:
           title: "Resultatet visas enbart för medlemmar i <strong>personalen</strong>."
       multiple:

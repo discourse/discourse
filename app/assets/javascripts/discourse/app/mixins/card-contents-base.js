@@ -7,6 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { bind } from "discourse-common/utils/decorators";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 
@@ -38,7 +39,7 @@ export default Mixin.create({
   isFixed: false,
   isDocked: false,
 
-  _show(username, target) {
+  _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
@@ -53,8 +54,11 @@ export default Mixin.create({
       return false;
     }
 
+    this.appEvents.trigger("card:show", username, target, event);
+
     const currentUsername = this.username;
-    if (username === currentUsername && this.loading === username) {
+    if (username === currentUsername || this.loading === username) {
+      this._positionCard($(target));
       return;
     }
 
@@ -97,35 +101,16 @@ export default Mixin.create({
     afterTransition($(this.element), this._hide.bind(this));
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
-    const clickOutsideEventName = `mousedown.outside-${id}`;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
     const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
       boundCardClickHandler: this._cardClickHandler.bind(this),
-      clickOutsideEventName,
       previewClickEvent,
       mobileScrollEvent,
     });
 
-    $("html")
-      .off(clickOutsideEventName)
-      .on(clickOutsideEventName, (e) => {
-        if (this.visible) {
-          const $target = $(e.target);
-          if (
-            $target.closest(`[data-${id}]`).data(id) ||
-            $target.closest(`a.${triggeringLinkClass}`).length > 0 ||
-            $target.closest(`#${id}`).length > 0
-          ) {
-            return;
-          }
-
-          this._close();
-        }
-
-        return true;
-      });
+    document.addEventListener("mousedown", this._clickOutsideHandler);
 
     _cardClickListenerSelectors.forEach((selector) => {
       document
@@ -170,11 +155,10 @@ export default Mixin.create({
 
       event.preventDefault();
       event.stopPropagation();
-      return this._show(transformText(matchingEl), matchingEl);
+      return this._show(transformText(matchingEl), matchingEl, event);
     }
-    {
-      return false;
-    }
+
+    return false;
   },
 
   _topicHeaderTrigger(username, $target) {
@@ -332,20 +316,21 @@ export default Mixin.create({
     }
 
     this._hide();
+    this.appEvents.trigger("card:hide");
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    const clickOutsideEventName = this.clickOutsideEventName;
-    const previewClickEvent = this.previewClickEvent;
 
-    $("html").off(clickOutsideEventName);
+    document.removeEventListener("mousedown", this._clickOutsideHandler);
+
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
         .removeEventListener("click", this.boundCardClickHandler);
     });
 
+    const previewClickEvent = this.previewClickEvent;
     this.appEvents.off(previewClickEvent, this, "_previewClick");
 
     this.appEvents.off(
@@ -363,5 +348,23 @@ export default Mixin.create({
       this._close();
       target.focus();
     }
+  },
+
+  @bind
+  _clickOutsideHandler(event) {
+    if (this.visible) {
+      const $target = $(event.target);
+      if (
+        $target.closest(`[data-${this.elementId}]`).data(this.elementId) ||
+        $target.closest(`a.${this.triggeringLinkClass}`).length > 0 ||
+        $target.closest(`#${this.elementId}`).length > 0
+      ) {
+        return;
+      }
+
+      this._close();
+    }
+
+    return true;
   },
 });

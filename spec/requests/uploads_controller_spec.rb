@@ -122,7 +122,7 @@ describe UploadsController do
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         errors = response.parsed_body["errors"]
-        expect(errors.first).to eq(I18n.t("upload.attachments.too_large", max_size_kb: 1))
+        expect(errors.first).to eq(I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"))
       end
 
       it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
@@ -817,7 +817,7 @@ describe UploadsController do
       end
 
       it "returns 422 when the file is an attachment and it's too big" do
-        SiteSetting.max_attachment_size_kb = 1000
+        SiteSetting.max_attachment_size_kb = 1024
         post "/uploads/create-multipart.json", {
           params: {
             file_name: "test.zip",
@@ -826,7 +826,7 @@ describe UploadsController do
           }
         }
         expect(response.status).to eq(422)
-        expect(response.body).to include(I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb))
+        expect(response.body).to include(I18n.t("upload.attachments.too_large_humanized", max_size: "1 MB"))
       end
 
       def stub_create_multipart_request

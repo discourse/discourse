@@ -24,18 +24,24 @@ class UserBookmarkSerializer < ApplicationSerializer
              :archived,
              :archetype,
              :highest_post_number,
+             :last_read_post_number,
              :bumped_at,
              :slug,
              :post_user_username,
              :post_user_avatar_template,
-             :post_user_name
+             :post_user_name,
+             :for_topic
+
+  def topic_id
+    post.topic_id
+  end
 
   def topic
-    @topic ||= object.topic || Topic.unscoped.find(object.topic_id)
+    @topic ||= object.topic
   end
 
   def post
-    @post ||= object.post || Post.unscoped.find(object.post_id)
+    @post ||= object.post
   end
 
   def closed
@@ -83,7 +89,15 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def highest_post_number
-    topic.highest_post_number
+    scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
+  end
+
+  def last_read_post_number
+    topic_user&.last_read_post_number
+  end
+
+  def topic_user
+    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
   end
 
   def bumped_at
@@ -95,7 +109,24 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def cooked
-    post.cooked
+    @cooked ||= \
+      if object.for_topic && last_read_post_number.present?
+        for_topic_cooked_post
+      else
+        post.cooked
+      end
+  end
+
+  def for_topic_cooked_post
+    post_number = [last_read_post_number + 1, highest_post_number].min
+    posts = Post.where(topic: topic, post_type: Post.types[:regular]).order(:post_number)
+    first_unread_cooked = posts.where("post_number >= ?", post_number).pluck_first(:cooked)
+
+    # if first_unread_cooked is blank this likely means that the last
+    # read post was either deleted or is a small action post.
+    # in this case we should just get the last regular post and
+    # use that for the cooked value so we have something to show
+    first_unread_cooked || posts.last.cooked
   end
 
   def slug

@@ -89,7 +89,7 @@ RSpec.describe ExternalUploadManager do
           SiteSetting.max_image_size_kb = 1
           upload = subject.promote_to_upload!
           expect(upload.errors.full_messages).to include(
-            "Filesize " + I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb)
+            "Filesize " + I18n.t("upload.images.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_image_size_kb.kilobytes))
           )
         end
 

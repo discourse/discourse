@@ -139,7 +139,7 @@ export default Component.extend(UtilsMixin, {
       this.selectKit.mainElement()
     ) {
       if (!this.selectKit.mainElement().contains(event.relatedTarget)) {
-        this.selectKit.mainElement().open = false;
+        this.selectKit.close(event);
       }
     }
     return false;
@@ -156,6 +156,10 @@ export default Component.extend(UtilsMixin, {
     if (this.selectKit.options.preventHeaderFocus) {
       event.preventDefault();
     }
+  },
+
+  focusIn(event) {
+    event.stopImmediatePropagation();
   },
 
   keyDown(event) {
@@ -184,7 +188,7 @@ export default Component.extend(UtilsMixin, {
         );
         return false;
       } else if (event.key === "Escape") {
-        this.selectKit.mainElement().open = false;
+        this.selectKit.close(event);
         this.selectKit.headerElement().focus();
       } else {
         if (this.isValidInput(event.key)) {

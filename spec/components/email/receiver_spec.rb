@@ -870,9 +870,9 @@ describe Email::Receiver do
     end
 
     describe "reply-to header" do
-      it "handles emails where there is a reply-to address, using that instead of the from address" do
+      it "handles emails where there is a Reply-To address, using that instead of the from address, if X-Original-From is present" do
         SiteSetting.block_auto_generated_emails = false
-        expect { process(:reply_to_different_to_from) }.to change(Topic, :count)
+        expect { process(:reply_to_different_to_from) }.to change(Topic, :count).by(1)
         user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
         topic = incoming.topic
@@ -880,9 +880,19 @@ describe Email::Receiver do
         expect(user.email).to eq("arthurmorgan@reddeadtest.com")
       end
 
+      it "allows for quotes around the display name of the Reply-To address" do
+        SiteSetting.block_auto_generated_emails = false
+        expect { process(:reply_to_different_to_from_quoted_display_name) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("johnmarston@reddeadtest.com")
+        expect(user.email).to eq("johnmarston@reddeadtest.com")
+      end
+
       it "does not use the reply-to address if an X-Original-From header is not present" do
         SiteSetting.block_auto_generated_emails = false
-        expect { process(:reply_to_different_to_from_no_x_original) }.to change(Topic, :count)
+        expect { process(:reply_to_different_to_from_no_x_original) }.to change(Topic, :count).by(1)
         user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
         topic = incoming.topic
@@ -892,7 +902,7 @@ describe Email::Receiver do
 
       it "does not use the reply-to address if the X-Original-From header is different from the reply-to address" do
         SiteSetting.block_auto_generated_emails = false
-        expect { process(:reply_to_different_to_from_x_original_different) }.to change(Topic, :count)
+        expect { process(:reply_to_different_to_from_x_original_different) }.to change(Topic, :count).by(1)
         user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
         topic = incoming.topic
@@ -1033,7 +1043,7 @@ describe Email::Receiver do
     end
 
     context "when a group forwards an email to its inbox" do
-      let!(:topic) do
+      before do
         group.update!(
           email_username: "team@somesmtpaddress.com",
           incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
@@ -1042,13 +1052,80 @@ describe Email::Receiver do
           smtp_ssl: true,
           smtp_enabled: true
         )
-        process(:forwarded_by_group_to_group)
-        Topic.last
       end
 
       it "does not use the team's address as the from_address; it uses the original sender address" do
+        process(:forwarded_by_group_to_inbox)
+        topic = Topic.last
         expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
         expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+      end
+
+      context "with forwarded emails behaviour set to create replies" do
+        before do
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
+        end
+
+        it "does not use the team's address as the from_address; it uses the original sender address" do
+          process(:forwarded_by_group_to_inbox)
+          topic = Topic.last
+          expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+          expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+        end
+
+        it "does not say the email was forwarded by the original sender, it says the email is forwarded by the group" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
+          topic = Topic.last
+          forwarded_small_post = topic.ordered_posts.last
+          expect(forwarded_small_post.action_code).to eq("forwarded")
+          expect(forwarded_small_post.user).to eq(User.find_by_email("team@somesmtpaddress.com"))
+        end
+
+        it "keeps track of the cc addresses of the forwarded email and creates staged users for them" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, cc_user1.id, cc_user2.id
+          ])
+        end
+
+        it "keeps track of the cc addresses of the final forwarded email as well" do
+          expect { process(:forwarded_by_group_to_inbox_double_cc) }.to change { User.where(staged: true).count }.by(5)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          someother_user = User.find_by_email("someotherparty@test.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("someotherparty@test.com;terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, someother_user.id, cc_user1.id, cc_user2.id
+          ])
+        end
+
+        context "when staged user for the team email already exists" do
+          let!(:staged_team_user) do
+            User.create!(
+              email: "team@somesmtpaddress.com",
+              username: UserNameSuggester.suggest("team@somesmtpaddress.com"),
+              name: "team teamson",
+              staged: true
+            )
+          end
+
+          it "uses that and does not create another staged user" do
+            expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(3)
+            topic = Topic.last
+            forwarded_small_post = topic.ordered_posts.last
+            expect(forwarded_small_post.action_code).to eq("forwarded")
+            expect(forwarded_small_post.user).to eq(staged_team_user)
+          end
+        end
       end
     end
 

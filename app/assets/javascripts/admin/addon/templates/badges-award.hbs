@@ -4,7 +4,7 @@
 
   {{#if model}}
     <form class="form-horizontal">
-      <div class="badge-preview">
+      <div class="badge-preview control-group">
         {{#if model}}
           {{icon-or-image model}}
           <span class="badge-display-name">{{model.name}}</span>
@@ -12,11 +12,11 @@
           <span class="badge-placeholder">{{i18n "admin.badges.mass_award.no_badge_selected"}}</span>
         {{/if}}
       </div>
-      <div>
+      <div class="control-group">
         <h4>{{i18n "admin.badges.mass_award.upload_csv"}}</h4>
         <input type="file" id="massAwardCSVUpload" accept=".csv" onchange={{action "updateFileSelected"}}>
       </div>
-      <div>
+      <div class="control-group">
         <label>
           {{input type="checkbox" checked=replaceBadgeOwners}}
           {{i18n "admin.badges.mass_award.replace_owners"}}

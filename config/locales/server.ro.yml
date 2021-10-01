@@ -506,9 +506,6 @@ ro:
     no_bookmarks:
       self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       others: "Nu există semne de carte."
-    no_likes_given:
-      self: "Nu ai apreciat nicio postare."
-      others: "Nu există postări apreciate."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1532,6 +1529,26 @@ ro:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
@@ -1965,12 +1982,22 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-      colors:
-        title: "Culori"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previzualizează"
+          homepage_style:
+            choices:
+              latest:
+                label: "Subiecte recente"
+              categories_only:
+                label: "Numai categorii"
+              categories_with_featured_topics:
+                label: "Categorii cu subiecte promovate"
+              categories_and_latest_topics:
+                label: "Categorii și subiecte recente"
+              categories_and_top_topics:
+                label: "Categorii și discuții în top"
       logos:
         title: "Logo-uri"
         fields:
@@ -1981,21 +2008,6 @@ ro:
         fields:
           large_icon:
             label: "Iconiță mare"
-      homepage:
-        title: "Pagina principală"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu discuții promovate"
-              categories_and_latest_topics:
-                label: "Categorii și cele mai noi discuții"
-              categories_and_top_topics:
-                label: "Categorii și discuții de top"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

@@ -5,10 +5,6 @@
     &:not(:first-child) {
       margin-left: 0.5em;
     }
-    .d-button-label {
-      font-size: $font-up-1;
-      font-weight: normal;
-    }
   }
 
   .notifications-button {
@@ -61,7 +57,8 @@
 #navigation-bar {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 var(--nav-space);
+  margin: 0;
+  margin-bottom: var(--nav-space);
   margin-right: auto;
 }
 
@@ -71,17 +68,6 @@
   margin-bottom: var(--nav-space);
   > * {
     white-space: nowrap;
-  }
-  .select-kit button {
-    height: 100%; // ensures nested select-kit button matches height of button siblings
-  }
-  .btn {
-    // need to reduce vertical padding for consistent height
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    @include breakpoint(mobile-medium) {
-      font-size: var(--font-down-1);
-    }
   }
   @include breakpoint(mobile-large) {
     .edit-category {
@@ -183,6 +169,13 @@
   }
 }
 
+.sticky-header thead {
+  @include sticky;
+  top: var(--header-offset, 60px);
+  background: var(--secondary);
+  z-index: 2;
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
@@ -227,10 +220,8 @@
     text-align: left;
     vertical-align: middle;
   }
-  th {
-    button .d-icon {
-      color: var(--primary-medium);
-    }
+  th .btn-flat .d-icon {
+    color: currentColor;
   }
   td {
     color: var(--primary-medium);
@@ -286,9 +277,6 @@
     word-wrap: break-word;
     line-height: $line-height-large;
     padding-right: 20px;
-  }
-  .topic-statuses:empty {
-    display: none;
   }
 
   .num {
@@ -381,9 +369,10 @@
 }
 
 .top-title-buttons {
-  display: inline-flex;
-  margin: 0.25em 0;
+  display: flex;
+  margin: 0.5em 0;
   flex-wrap: wrap;
+  font-size: var(--font-0-rem);
 
   button {
     margin-right: 0.5em;

@@ -301,6 +301,11 @@ sk:
       new_topic: "Nová téma"
       abandon:
         yes_value: "Zahodiť"
+    topic_count_categories:
+      one: "Pozri si %{count} novú alebo upravenú tému."
+      few: "Pozri si %{count} nových alebo upravených tém."
+      many: "Pozri si %{count} nových alebo upravených tém."
+      other: "Pozri si %{count} nových alebo upravených tém."
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -791,7 +796,17 @@ sk:
         latest: "Najnovšie"
         sent: "Odoslané"
         unread: "Neprečítané"
+        unread_with_count:
+          one: "Neprečítaná (%{count})"
+          few: "Neprečítaná (%{count})"
+          many: "Neprečítaná (%{count})"
+          other: "Neprečítaná (%{count})"
         new: "Nové"
+        new_with_count:
+          one: "Nová (%{count})"
+          few: "Nová (%{count})"
+          many: "Nová (%{count})"
+          other: "Nová (%{count})"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Presuň do prijatej pošty"
@@ -1354,19 +1369,23 @@ sk:
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
       title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
+      full_page_title: "Hľadať"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
       post_format: "#%{post_number} podľa %{username}"
       cant_find: "Nemôžete nájsť to čo hľadáte?"
       search_google_button: "Google"
       search_button: "Hľadať"
+      categories: "Kategórie"
+      tags: "Štítky"
+      type:
+        users: "Používatelia"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
         topic: "Hľadaj v tejto téme"
         private_messages: "Hľadaj správy"
       advanced:
-        title: Rozširené vyhľadávanie
         posted_by:
           label: Autor príspevku
         in_category:
@@ -1395,7 +1414,6 @@ sk:
             after: po
         views:
           label: Zobrazenia
-    hamburger_menu: "prejsť na iné témy, alebo kategórie"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -1738,6 +1756,7 @@ sk:
           other: "Označili ste <b>%{count}</b> príspevkov"
     post:
       quote_reply: "Citácia"
+      quote_edit: "Upraviť"
       quote_share: "Zdieľaj"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
@@ -2266,6 +2285,8 @@ sk:
         member: "člen"
         regular: "bežný"
         leader: "vodca"
+    user_activity:
+      no_activity_others: "Žiadna aktivita"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2802,7 +2823,6 @@ sk:
         suspended_by: "Práva odobraté"
         silence_reason: "Dôvod"
         silence_modal_title: "Tichý užívateľ"
-        delete_all_posts: "Zmazať všetky príspevky"
         moderator: "Moderátor?"
         admin: "Admin?"
         suspended: "Odobrate práva?"
@@ -2842,6 +2862,10 @@ sk:
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"
+        delete_posts:
+          button: "Zmazať všetky príspevky"
+          confirmation:
+            cancel: "Zrušiť"
         merge:
           prompt:
             cancel: "Zrušiť"
@@ -3130,6 +3154,5 @@ sk:
           moderator: "Moderátor"
           regular: "Bežný používateľ"
       previews:
-        topic_title: "Diskusná téma"
         share_button: "Zdieľať"
         reply_button: "Odpoveď"

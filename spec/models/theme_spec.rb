@@ -542,7 +542,7 @@ HTML
         default: ""
     YAML
 
-    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.url, name: "my_upload")
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.id.to_s, name: "my_upload")
     theme.save!
 
     json = JSON.parse(cached_settings(theme.id))

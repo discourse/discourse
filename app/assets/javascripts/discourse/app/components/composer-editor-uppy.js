@@ -9,4 +9,6 @@ export default ComposerEditor.extend(ComposerUploadUppy, {
   uploadType: "composer",
   uppyId: "composer-editor-uppy",
   composerModel: alias("composer"),
+  composerModelContentKey: "reply",
+  editorInputClass: ".d-editor-input",
 });

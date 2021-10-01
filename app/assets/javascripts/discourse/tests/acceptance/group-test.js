@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -191,7 +192,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.equal(
-      queryAll(".modal-header").text().trim(),
+      queryAll(".modal-header .title").text().trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
@@ -227,9 +228,9 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
-      queryAll(".alert").text().trim(),
-      I18n.t("choose_topic.none_found"),
-      "it should display the right alert"
+      query("span.empty-state-title").innerText.trim(),
+      I18n.t("no_group_messages_title"),
+      "it should display the right text"
     );
   });
 

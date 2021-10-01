@@ -13,21 +13,50 @@ describe 'groups' do
   path '/search.json' do
     get 'Search for a term' do
       tags 'Search'
+      operationId 'search'
       consumes 'application/json'
-      expected_request_schema = load_spec_schema('search_request')
-      parameter name: :params, in: :body, schema: expected_request_schema
+      parameter(
+        name: :q,
+        in: :query,
+        type: :string,
+        example: 'api @blake #support tags:api after:2021-06-04 in:unseen in:open order:latest_topic',
+        description: <<~HEREDOC
+          The query string needs to be url encoded and is made up of the following options:
+          - Search term. This is just a string. Usually it would be the first item in the query.
+          - `@<username>`: Use the `@` followed by the username to specify posts by this user.
+          - `#<category>`: Use the `#` followed by the category slug to search within this category.
+          - `tags:`: `api,solved` or for posts that have all the specified tags `api+solved`.
+          - `before:`: `yyyy-mm-dd`
+          - `after:`: `yyyy-mm-dd`
+          - `order:`: `latest`, `likes`, `views`, `latest_topic`
+          - `assigned:`: username (without `@`)
+          - `in:`: `title`, `likes`, `personal`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `wiki`
+          - `with:`: `images`
+          - `status:`: `open`, `closed`, `public`, `archived`, `noreplies`, `single_user`, `solved`, `unsolved`
+          - `min_posts:`: 1
+          - `max_posts:`: 10
+          - `min_views:`: 1
+          - `max_views:`: 10
+
+          If you are using cURL you can use the `-G` and the `--data-urlencode` flags to encode the query:
+
+          ```
+          curl -i -sS -X GET -G "http://localhost:4200/search.json" \\
+          --data-urlencode 'q=wordpress @scossar #fun after:2020-01-01'
+          ```
+        HEREDOC
+      )
+      parameter name: :page, in: :query, type: :integer, example: 1
 
       produces 'application/json'
       response '200', 'success response' do
         expected_response_schema = load_spec_schema('search_response')
         schema expected_response_schema
 
-        let(:params) { { 'q' => 'awesome post' } }
+        let(:q) { 'awesome post' }
+        let(:page) { 1 }
 
-        it_behaves_like "a JSON endpoint", 200 do
-          let(:expected_response_schema) { expected_response_schema }
-          let(:expected_request_schema) { expected_request_schema }
-        end
+        run_test!
       end
     end
   end

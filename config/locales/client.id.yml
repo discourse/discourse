@@ -264,6 +264,8 @@ id:
       abandon:
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
+    topic_count_categories:
+      other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unseen:
@@ -857,6 +859,8 @@ id:
         sent: "Mengirim"
         unread: "Belum dibaca"
         new: "Baru"
+        new_with_count:
+          other: "Baru (%{count})"
         archive: "Arsip"
         groups: "Kelompok Saya"
         move_to_inbox: "Pindah ke Kotak Masuk"
@@ -1372,9 +1376,13 @@ id:
       most_liked: "Paling Disukai"
       select_all: "Pilih Semua"
       title: "mencari topik, artikel, pengguna, atau kategori"
-      full_page_title: "cari topik atau artikel"
+      full_page_title: "Cari"
       search_google_button: "Google"
       search_button: "Cari"
+      categories: "Kategori"
+      tags: "Label"
+      type:
+        users: "Pengguna"
       advanced:
         posted_by:
           label: Dibuat oleh
@@ -1486,6 +1494,7 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
     post:
+      quote_edit: "Ubah"
       edit_reason: "Alasan:"
       collapse: "persempit"
       expand_collapse: "perluas/tutup"
@@ -1863,6 +1872,9 @@ id:
         approve: "Terima"
         time_read: "Waktu Baca"
         delete: "Hapus Pengguna"
+        delete_posts:
+          confirmation:
+            cancel: "Batal"
         merge:
           prompt:
             cancel: "Batal"

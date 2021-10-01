@@ -4,7 +4,7 @@
       {{category-title-link tagName="h4" category=category}}
       {{#if category.description_excerpt}}
         <div class="category-description subcategory-description">
-          {{dir-span category.description_excerpt}}
+          {{dir-span category.description_excerpt htmlSafe="true"}}
         </div>
       {{/if}}
       {{#if category.subcategories}}

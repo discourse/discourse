@@ -31,14 +31,13 @@ acceptance("Share and Invite modal", function (needs) {
     );
 
     assert.ok(count("button[class*='share-']") > 1, "it shows social sources");
-
     assert.ok(
-      exists(".btn[aria-label='Notify']"),
+      exists(".link-share-actions .notify"),
       "it shows the notify button"
     );
 
     assert.ok(
-      exists(".btn[aria-label='Invite']"),
+      exists(".link-share-actions .invite"),
       "it shows the invite button"
     );
   });

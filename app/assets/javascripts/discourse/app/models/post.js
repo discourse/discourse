@@ -308,9 +308,8 @@ const Post = RestModel.extend({
     this.setProperties({
       "topic.bookmarked": true,
       bookmarked: true,
-      bookmark_reminder_at: data.reminderAt,
-      bookmark_reminder_type: data.reminderType,
-      bookmark_auto_delete_preference: data.autoDeletePreference,
+      bookmark_reminder_at: data.reminder_at,
+      bookmark_auto_delete_preference: data.auto_delete_preference,
       bookmark_name: data.name,
       bookmark_id: data.id,
     });
@@ -329,7 +328,6 @@ const Post = RestModel.extend({
   clearBookmark() {
     this.setProperties({
       bookmark_reminder_at: null,
-      bookmark_reminder_type: null,
       bookmark_name: null,
       bookmark_id: null,
       bookmarked: false,

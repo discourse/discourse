@@ -327,15 +327,15 @@ export default Mixin.create({
         }
       });
     });
-
-    this._bindMobileUploadButton();
   },
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      this.mobileUploadButton = document.getElementById("mobile-file-upload");
-      this.mobileUploadButtonEventListener = function mobileButtonEventListener() {
-        document.getElementById("file-uploader").click();
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
       };
       this.mobileUploadButton.addEventListener(
         "click",
@@ -345,13 +345,15 @@ export default Mixin.create({
     }
   },
 
-  @on("willDestroyElement")
-  _unbindUploadTarget() {
+  _unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
       this.mobileUploadButtonEventListener
     );
+  },
 
+  @on("willDestroyElement")
+  _unbindUploadTarget() {
     this._validUploads = 0;
     const $uploadTarget = $(this.element);
     try {
