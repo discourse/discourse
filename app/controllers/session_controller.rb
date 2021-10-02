@@ -444,7 +444,7 @@ class SessionController < ApplicationController
 
     user_presence = user.present? && user.human? && !user.staged
     if user_presence
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = user.email_tokens.create!(email: user.email)
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
 

@@ -876,7 +876,7 @@ describe User do
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
+      email_token = @user.email_tokens.create!(email: 'pasta@delicious.com')
 
       UserAuthToken.generate!(user_id: @user.id)
 

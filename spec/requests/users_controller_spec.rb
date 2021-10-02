@@ -214,7 +214,7 @@ describe UsersController do
       context 'when rendered' do
         it 'renders referrer never on get requests' do
           user = Fabricate(:user)
-          token = user.email_tokens.create(email: user.email).token
+          token = user.email_tokens.create!(email: user.email).token
           get "/u/password-reset/#{token}"
           expect(response.status).to eq(200)
           expect(response.body).to include('<meta name="referrer" content="never">')
@@ -224,7 +224,7 @@ describe UsersController do
       it 'returns success' do
         user = Fabricate(:user)
         user_auth_token = UserAuthToken.generate!(user_id: user.id)
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
 
         events = DiscourseEvent.track_events do
           put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98o' }
@@ -246,7 +246,7 @@ describe UsersController do
 
       it 'disallows double password reset' do
         user = Fabricate(:user)
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
 
         put "/u/password-reset/#{token}", params: { password: 'hg9ow8yHG32O' }
 
@@ -263,7 +263,7 @@ describe UsersController do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
 
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
         get "/u/password-reset/#{token}.json"
         expect(response).not_to redirect_to(wizard_path)
       end
@@ -272,7 +272,7 @@ describe UsersController do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
 
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
         get "/u/password-reset/#{token}"
 
         put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
@@ -284,7 +284,7 @@ describe UsersController do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
 
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
         get "/u/password-reset/#{token}"
 
         expect(user.user_option.timezone).to eq(nil)
@@ -295,7 +295,7 @@ describe UsersController do
       it "logs the password change" do
         user = Fabricate(:admin)
         UserAuthToken.generate!(user_id: user.id)
-        token = user.email_tokens.create(email: user.email).token
+        token = user.email_tokens.create!(email: user.email).token
         get "/u/password-reset/#{token}"
 
         expect do
@@ -312,7 +312,7 @@ describe UsersController do
         user = Fabricate(:user)
         user_token = UserAuthToken.generate!(user_id: user.id)
 
-        email_token = user.email_tokens.create(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email)
 
         get "/u/password-reset/#{email_token.token}.json"
         expect(response.status).to eq(200)
@@ -398,7 +398,7 @@ describe UsersController do
         end
 
         it 'changes password with valid 2-factor tokens' do
-          token = user.email_tokens.create(email: user.email).token
+          token = user.email_tokens.create!(email: user.email).token
 
           get "/u/password-reset/#{token}"
 
@@ -539,14 +539,14 @@ describe UsersController do
     fab!(:user) { Fabricate(:user) }
 
     it "token doesn't match any records" do
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = user.email_tokens.create!(email: user.email)
       get "/u/confirm-email-token/#{SecureRandom.hex}.json"
       expect(response.status).to eq(200)
       expect(email_token.reload.confirmed).to eq(false)
     end
 
     it "token matches" do
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = user.email_tokens.create!(email: user.email)
       get "/u/confirm-email-token/#{email_token.token}.json"
       expect(response.status).to eq(200)
       expect(email_token.reload.confirmed).to eq(true)
@@ -2350,7 +2350,7 @@ describe UsersController do
       context 'for an activated account with email confirmed' do
         it 'fails' do
           user = post_user
-          email_token = user.email_tokens.create(email: user.email).token
+          email_token = user.email_tokens.create!(email: user.email).token
           EmailToken.confirm(email_token)
 
           post "/u/action/send_activation_email.json", params: { username: user.username }
@@ -2390,7 +2390,7 @@ describe UsersController do
           user = post_user
           user.update(active: true)
           user.save!
-          user.email_tokens.create(email: user.email)
+          user.email_tokens.create!(email: user.email)
           post "/u/action/send_activation_email.json", params: {
             username: user.username
           }

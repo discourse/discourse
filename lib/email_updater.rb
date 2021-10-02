@@ -95,7 +95,7 @@ class EmailUpdater
         when EmailChangeRequest.states[:authorizing_old]
           @change_req.update!(
             change_state: EmailChangeRequest.states[:authorizing_new],
-            new_email_token: @user.email_tokens.create(email: @change_req.new_email)
+            new_email_token: @user.email_tokens.create!(email: @change_req.new_email)
           )
           send_email(:confirm_new_email, @change_req.new_email_token)
           confirm_result = :authorizing_new

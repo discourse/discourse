@@ -328,7 +328,7 @@ class Admin::UsersController < Admin::AdminController
   def activate
     guardian.ensure_can_activate!(@user)
     # ensure there is an active email token
-    @user.email_tokens.create(email: @user.email) unless @user.email_tokens.active.exists?
+    @user.email_tokens.create!(email: @user.email) unless @user.email_tokens.active.exists?
     @user.activate
     StaffActionLogger.new(current_user).log_user_activate(@user, I18n.t('user.activated_by_staff'))
     render json: success_json

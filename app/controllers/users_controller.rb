@@ -884,7 +884,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
       if user = User.with_email(params[:email]).admins.human_users.first
-        email_token = user.email_tokens.create(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else

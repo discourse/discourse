@@ -1041,7 +1041,7 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    email_token = self.email_tokens.create(email: self.email)
+    email_token = self.email_tokens.create!(email: self.email)
     EmailToken.confirm(email_token.token, skip_reviewable: true)
     self.update!(active: true)
     create_reviewable

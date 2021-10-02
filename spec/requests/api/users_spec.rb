@@ -567,7 +567,7 @@ describe 'users' do
         expected_response_schema = nil
 
         let(:user) { Fabricate(:user) }
-        let(:token) { user.email_tokens.create(email: user.email).token }
+        let(:token) { user.email_tokens.create!(email: user.email).token }
         let(:params) { {
           'username' => user.username,
           'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
