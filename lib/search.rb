@@ -33,7 +33,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user private_messages tags all_topics)
+    %w(topic category user private_messages tags all_topics exclude_topics)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -230,7 +230,7 @@ class Search
   end
 
   def limit
-    if @opts[:type_filter].present?
+    if @opts[:type_filter].present? && @opts[:type_filter] != "exclude_topics"
       Search.per_filter + 1
     else
       Search.per_facet + 1
@@ -862,13 +862,13 @@ class Search
     groups = Group
       .visible_groups(@guardian.user, "name ASC", include_everyone: false)
       .where("name ILIKE :term OR full_name ILIKE :term", term: "%#{@term}%")
+      .limit(limit)
 
     groups.each { |group| @results.add(group) }
   end
 
   def tags_search
     return unless SiteSetting.tagging_enabled
-
     tags = Tag.includes(:tag_search_data)
       .where("tag_search_data.search_data @@ #{ts_query}")
       .references(:tag_search_data)
@@ -879,6 +879,15 @@ class Search
 
     tags.each do |tag|
       @results.add(tag) if !hidden_tag_names.include?(tag.name)
+    end
+  end
+
+  def exclude_topics_search
+    if @term.present?
+      user_search
+      category_search
+      tags_search
+      groups_search
     end
   end
 

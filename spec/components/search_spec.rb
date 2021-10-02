@@ -1921,4 +1921,37 @@ describe Search do
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
     end
   end
+
+  context 'search all but topics/posts' do
+    before { SiteSetting.tagging_enabled = true }
+    let!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, name: 'bruce-world-fans') }
+    fab!(:topic) { Fabricate(:topic, title: 'Bruce topic not a result') }
+
+    it 'works' do
+      category = Fabricate(:category_with_definition, name: 'bruceland', user: user)
+      tag = Fabricate(:tag, name: 'brucealicious')
+
+      result = Search.execute('bruce', type_filter: 'exclude_topics')
+
+      expect(result.users.length).to eq(1)
+      expect(result.users[0].id).to eq(user.id)
+
+      expect(result.categories.length).to eq(1)
+      expect(result.categories[0].id).to eq(category.id)
+
+      expect(result.groups.length).to eq(1)
+      expect(result.groups[0].id).to eq(group.id)
+
+      expect(result.tags.length).to eq(1)
+      expect(result.tags[0].id).to eq(tag .id)
+
+      expect(result.posts.length).to eq(0)
+    end
+
+    it 'does not fail when parsed term is empty' do
+      result = Search.execute('#cat ', type_filter: 'exclude_topics')
+      expect(result.categories.length).to eq(0)
+    end
+  end
 end
