@@ -415,7 +415,10 @@ class InvitesController < ApplicationController
     Group.refresh_automatic_groups!(:admins, :moderators, :staff) if user.staff?
 
     if user.has_password?
-      send_activation_email(user) unless user.active
+      if !user.active
+        email_token = user.email_tokens.create!(email: user.email)
+        EmailToken.enqueue_signup_email(email_token)
+      end
     elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
@@ -439,15 +442,5 @@ class InvitesController < ApplicationController
         end
       end
     end
-  end
-
-  def send_activation_email(user)
-    email_token = user.email_tokens.create!(email: user.email)
-
-    Jobs.enqueue(:critical_user_email,
-                 type: :signup,
-                 user_id: user.id,
-                 email_token: email_token.token
-    )
   end
 end

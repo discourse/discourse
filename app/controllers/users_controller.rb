@@ -1031,7 +1031,7 @@ class UsersController < ApplicationController
 
       if primary_email.save
         @email_token = @user.email_tokens.create!(email: @user.email)
-        enqueue_activation_email(@email_token)
+        EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
         render json: success_json
       else
         render_json_error(primary_email)
@@ -1063,19 +1063,9 @@ class UsersController < ApplicationController
       render_json_error(I18n.t('activation.activated'), status: 409)
     else
       @email_token = @user.email_tokens.create!(email: @user.email)
-      enqueue_activation_email(@email_token)
+      EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
       render body: nil
     end
-  end
-
-  def enqueue_activation_email(email_token)
-    Jobs.enqueue(
-      :critical_user_email,
-      type: :signup,
-      user_id: @user.id,
-      email_token: email_token.token,
-      to_address: @user.email
-    )
   end
 
   def search_users

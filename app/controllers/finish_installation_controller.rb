@@ -52,10 +52,7 @@ class FinishInstallationController < ApplicationController
     return if @user.active && @user.email_confirmed?
 
     email_token = @user.email_tokens.create!(email: @user.email)
-    Jobs.enqueue(:critical_user_email,
-                  type: :signup,
-                  user_id: @user.id,
-                  email_token: email_token.token)
+    EmailToken.enqueue_signup_email(email_token)
   end
 
   def redirect_confirm(email)

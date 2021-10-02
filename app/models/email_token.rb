@@ -80,6 +80,16 @@ class EmailToken < ActiveRecord::Base
     unconfirmed.active.includes(:user).where(token_hash: hash_token(token)).first
   end
 
+  def self.enqueue_signup_email(email_token, to_address: nil)
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :signup,
+      user_id: email_token.user_id,
+      email_token: email_token.token,
+      to_address: to_address
+    )
+  end
+
   def self.hash_token(token)
     Digest::SHA256.hexdigest(token)
   end
