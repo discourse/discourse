@@ -405,6 +405,7 @@ createWidget("search-menu-assistant", {
                 prefix,
                 category: item.model,
                 slug: `${prefix}${fullSlug}`,
+                withInLabel: attrs.withInLabel,
               })
             );
           } else {
@@ -413,6 +414,7 @@ createWidget("search-menu-assistant", {
                 prefix,
                 tag: item.name,
                 slug: `${prefix}#${item.name}`,
+                withInLabel: attrs.withInLabel,
               })
             );
           }
@@ -458,70 +460,75 @@ createWidget("search-menu-empty-state", {
     const ctx = service.get("searchContext");
 
     const content = [];
-    if (ctx) {
-      const term = attrs.term ? `${attrs.term} ` : "";
-
-      switch (ctx.type) {
-        case "topic":
-          content.push(
-            this.attach("search-menu-assistant-item", {
-              slug: `${term}topic:${ctx.id}`,
-              label: [
-                h("span", term),
-                h("span.label-suffix", I18n.t("search.in_this_topic")),
-              ],
-            })
-          );
-          break;
-
-        case "private_messages":
-          content.push(
-            this.attach("search-menu-assistant-item", {
-              slug: `${term}in:personal`,
-            })
-          );
-          break;
-
-        case "category":
-          const fullSlug = ctx.category.parentCategory
-            ? `#${ctx.category.parentCategory.slug}:${ctx.category.slug}`
-            : `#${ctx.category.slug}`;
-          content.push(
-            this.attach("search-menu-assistant", {
-              term: `${term}${fullSlug}`,
-              suggestionKeyword: "#",
-              results: [{ model: ctx.category }],
-            })
-          );
-
-          break;
-        case "tag":
-          content.push(
-            this.attach("search-menu-assistant", {
-              term: `${term}#${ctx.name}`,
-              suggestionKeyword: "#",
-              results: [{ name: ctx.name }],
-            })
-          );
-          break;
-        case "user":
-          content.push(
-            this.attach("search-menu-assistant-item", {
-              slug: `${term}@${ctx.user.username}`,
-              label: [
-                h("span", term),
-                h(
-                  "span.label-suffix",
-                  I18n.t("search.in_posts_by", { username: ctx.user.username })
-                ),
-              ],
-            })
-          );
-          break;
-      }
-    }
-
     if (attrs.term) {
+      if (ctx) {
+        const term = attrs.term ? `${attrs.term} ` : "";
+
+        switch (ctx.type) {
+          case "topic":
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                slug: `${term}topic:${ctx.id}`,
+                label: [
+                  h("span", term),
+                  h("span.label-suffix", I18n.t("search.in_this_topic")),
+                ],
+              })
+            );
+            break;
+
+          case "private_messages":
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                slug: `${term}in:personal`,
+              })
+            );
+            break;
+
+          case "category":
+            const fullSlug = ctx.category.parentCategory
+              ? `#${ctx.category.parentCategory.slug}:${ctx.category.slug}`
+              : `#${ctx.category.slug}`;
+
+            content.push(
+              this.attach("search-menu-assistant", {
+                term: `${term}${fullSlug}`,
+                suggestionKeyword: "#",
+                results: [{ model: ctx.category }],
+                withInLabel: true,
+              })
+            );
+
+            break;
+          case "tag":
+            content.push(
+              this.attach("search-menu-assistant", {
+                term: `${term}#${ctx.name}`,
+                suggestionKeyword: "#",
+                results: [{ name: ctx.name }],
+                withInLabel: true,
+              })
+            );
+            break;
+          case "user":
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                slug: `${term}@${ctx.user.username}`,
+                label: [
+                  h("span", term),
+                  h(
+                    "span.label-suffix",
+                    I18n.t("search.in_posts_by", {
+                      username: ctx.user.username,
+                    })
+                  ),
+                ],
+              })
+            );
+            break;
+        }
+      }
+
       const rowOptions = { withLabel: true };
       content.push(this.defaultRow(attrs.term, rowOptions));
       return content;
@@ -560,6 +567,10 @@ createWidget("search-menu-assistant-item", {
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));
+    }
+
+    if (attrs.withInLabel) {
+      content.push(h("span.label-suffix", `${I18n.t("search.in")} `));
     }
 
     if (attrs.category) {
