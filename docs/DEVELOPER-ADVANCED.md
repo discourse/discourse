@@ -24,7 +24,7 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
 
     rvm install 2.6.2
     rvm --default use 2.6.2 # If this error out check https://rvm.io/integration/gnome-terminal
-    gem install bundler mailcatcher rake
+    gem install bundler rake
 
     # Download and install postgresql-10 from https://wiki.postgresql.org/wiki/Apt
 
@@ -75,9 +75,12 @@ If you ever need to recreate your database:
     bundle exec rake admin:create
     RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
 
+Configure emails via MailHog (https://github.com/mailhog/MailHog):
+
+    docker run -p 8025:8025 -p 1025:1025 mailhog/mailhog # open http://localhost:8025 to see the emails
+
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
-    mailcatcher # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
     bundle exec sidekiq # open http://localhost:3000/sidekiq to see queues
     bundle exec rails server
 
