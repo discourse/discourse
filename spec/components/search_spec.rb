@@ -1944,7 +1944,7 @@ describe Search do
       expect(result.groups[0].id).to eq(group.id)
 
       expect(result.tags.length).to eq(1)
-      expect(result.tags[0].id).to eq(tag .id)
+      expect(result.tags[0].id).to eq(tag.id)
 
       expect(result.posts.length).to eq(0)
     end
