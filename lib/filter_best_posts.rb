@@ -37,7 +37,7 @@ class FilterBestPosts
   end
 
   def setup_posts
-    @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
+    @posts = @filtered_posts.order('percent_rank asc, post_number asc').where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
   end
 

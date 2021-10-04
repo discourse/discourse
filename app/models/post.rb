@@ -12,7 +12,8 @@ class Post < ActiveRecord::Base
 
   self.ignored_columns = [
     "avg_time", # TODO(2021-01-04): remove
-    "image_url" # TODO(2021-06-01): remove
+    "image_url", # TODO(2021-06-01): remove
+    "sort_order", # TODO(2022-04-01): remove
   ]
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
@@ -400,14 +401,6 @@ class Post < ActiveRecord::Base
 
   def archetype
     topic&.archetype
-  end
-
-  def self.regular_order
-    order(:sort_order, :post_number)
-  end
-
-  def self.reverse_order
-    order('sort_order desc, post_number desc')
   end
 
   def self.summary(topic_id)

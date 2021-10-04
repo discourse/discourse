@@ -308,7 +308,7 @@ class BulkImport::Base
   }
 
   POST_COLUMNS ||= %i{
-    id user_id last_editor_id topic_id post_number sort_order reply_to_post_number
+    id user_id last_editor_id topic_id post_number reply_to_post_number
     like_count raw cooked hidden word_count created_at last_version_at updated_at
   }
 
@@ -524,7 +524,6 @@ class BulkImport::Base
     post[:last_editor_id] = post[:user_id]
     @highest_post_number_by_topic_id[post[:topic_id]] ||= 0
     post[:post_number] = @highest_post_number_by_topic_id[post[:topic_id]] += 1
-    post[:sort_order] = post[:post_number]
     @post_number_by_post_id[post[:id]] = post[:post_number]
     @topic_id_by_post_id[post[:id]] = post[:topic_id]
     post[:raw] = (post[:raw] || "").scrub.strip.presence || "<Empty imported post>"

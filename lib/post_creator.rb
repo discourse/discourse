@@ -306,7 +306,6 @@ class PostCreator
     cooking_options[:topic_id] = post.topic_id
 
     post.cooked ||= post.cook(post.raw, cooking_options.symbolize_keys)
-    post.sort_order = post.post_number
     post.last_version_at ||= Time.now
   end
 

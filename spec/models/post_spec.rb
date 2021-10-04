@@ -901,19 +901,6 @@ describe Post do
     end
   end
 
-  context 'sort_order' do
-    context 'regular topic' do
-
-      let!(:p1) { Fabricate(:post, post_args) }
-      let!(:p2) { Fabricate(:post, post_args) }
-      let!(:p3) { Fabricate(:post, post_args) }
-
-      it 'defaults to created order' do
-        expect(Post.regular_order).to eq([p1, p2, p3])
-      end
-    end
-  end
-
   context "reply_history" do
 
     let!(:p1) { Fabricate(:post, post_args) }

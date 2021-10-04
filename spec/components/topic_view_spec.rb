@@ -494,22 +494,17 @@ describe TopicView do
   context '#posts' do
 
     # Create the posts in a different order than the sort_order
-    let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout) }
-    let!(:p6) { Fabricate(:post, topic: topic, user: user, deleted_at: Time.now) }
-    let!(:p4) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster) }
-    let!(:p7) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster) }
+    let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout, post_number: 5) }
+    let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, post_number: 2) }
+    let!(:p6) { Fabricate(:post, topic: topic, user: user, deleted_at: Time.now, post_number: 6) }
+    let!(:p4) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now, post_number: 4) }
+    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, post_number: 1) }
+    let!(:p7) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now, post_number: 7) }
+    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, post_number: 3) }
 
     before do
       TopicView.stubs(:chunk_size).returns(3)
 
-      # Update them to the sort order we're checking for
-      [p1, p2, p3, p4, p5, p6, p7].each_with_index do |p, idx|
-        p.sort_order = idx + 1
-        p.save
-      end
       p6.user_id = nil # user got nuked
       p6.save!
     end
@@ -840,15 +835,9 @@ describe TopicView do
   end
 
   describe '#first_post_id and #last_post_id' do
-    let!(:p3) { Fabricate(:post, topic: topic) }
-    let!(:p2) { Fabricate(:post, topic: topic) }
-    let!(:p1) { Fabricate(:post, topic: topic) }
-
-    before do
-      [p1, p2, p3].each_with_index do |post, index|
-        post.update!(sort_order: index + 1)
-      end
-    end
+    let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
+    let!(:p2) { Fabricate(:post, topic: topic, post_number: 2) }
+    let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
 
     it 'should return the right id' do
       expect(topic_view.first_post_id).to eq(p1.id)

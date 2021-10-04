@@ -97,12 +97,7 @@ class TopicView
     @include_suggested = options.fetch(:include_suggested) { true }
     @include_related = options.fetch(:include_related) { true }
 
-    @chunk_size =
-      case
-      when @print then TopicView.print_chunk_size
-      else TopicView.chunk_size
-      end
-
+    @chunk_size = TopicView.public_send(@print ? :print_chunk_size : :chunk_size)
     @limit ||= @chunk_size
 
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
@@ -159,7 +154,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+        Gaps.new(filtered_post_ids, unfiltered_posts.order(:post_number).pluck(:id))
       end
     end
   end
@@ -316,21 +311,20 @@ class TopicView
   def filter_posts_near(post_number)
     posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
-    sort_order = get_sort_order(post_number)
 
-    before_post_ids = @filtered_posts.order(sort_order: :desc)
-      .where("posts.sort_order < ?", sort_order)
+    before_post_ids = @filtered_posts.order(post_number: :desc)
+      .where("posts.post_number < ?", post_number)
       .limit(posts_before)
       .pluck(:id)
 
-    post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
-      .where("posts.sort_order >= ?", sort_order)
+    post_ids = before_post_ids + @filtered_posts.order(post_number: :asc)
+      .where("posts.post_number >= ?", post_number)
       .limit(@limit - before_post_ids.length)
       .pluck(:id)
 
     if post_ids.length < @limit
-      post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
-        .where("posts.sort_order < ?", sort_order)
+      post_ids = post_ids + @filtered_posts.order(post_number: :desc)
+        .where("posts.post_number < ?", post_number)
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
         .pluck(:id)
@@ -346,8 +340,8 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    filter_posts_by_ids(
-      @filtered_posts.order(:sort_order)
+    @posts = filter_posts_by_ids(
+      @filtered_posts.order(:post_number)
         .offset(min)
         .limit(@limit)
         .pluck(:id)
@@ -578,7 +572,9 @@ class TopicView
   # the end of the stream (for mods), nor is it correct for filtered
   # streams
   def highest_post_number
-    @highest_post_number ||= @filtered_posts.maximum(:post_number)
+    @highest_post_number ||= begin
+      @filtered_posts.order(post_number: :desc).pluck_first(:post_number)
+    end
   end
 
   def recent_posts
@@ -589,8 +585,7 @@ class TopicView
   # `days_ago` is there for the timeline calculations.
   def filtered_post_stream
     @filtered_post_stream ||= begin
-      posts = @filtered_posts
-        .order(:sort_order)
+      posts = @filtered_posts.order(:post_number)
 
       columns = [:id]
 
@@ -632,11 +627,11 @@ class TopicView
   end
 
   def first_post_id
-    @filtered_posts.order(sort_order: :asc).pluck_first(:id)
+    @filtered_posts.where(post_number: 1).pluck_first(:id)
   end
 
   def last_post_id
-    @filtered_posts.order(sort_order: :desc).pluck_first(:id)
+    @filtered_posts.order(post_number: :desc).pluck_first(:id)
   end
 
   def current_post_number
@@ -678,32 +673,6 @@ class TopicView
     ((posts_count - 1) / @limit) + 1
   end
 
-  def get_sort_order(post_number)
-    sql = <<~SQL
-      SELECT posts.sort_order
-      FROM posts
-      WHERE posts.post_number = #{post_number.to_i}
-      AND posts.topic_id = #{@topic.id.to_i}
-      LIMIT 1
-    SQL
-
-    sort_order = DB.query_single(sql).first
-
-    if !sort_order
-      sql = <<~SQL
-        SELECT posts.sort_order
-        FROM posts
-        WHERE posts.topic_id = #{@topic.id.to_i}
-        ORDER BY @(post_number - #{post_number.to_i})
-        LIMIT 1
-      SQL
-
-      sort_order = DB.query_single(sql).first
-    end
-
-    sort_order
-  end
-
   def filter_post_types(posts)
     return posts.where(post_type: Post.types[:regular]) if @only_regular
 
@@ -717,23 +686,21 @@ class TopicView
   end
 
   def filter_posts_by_post_number(post_number, asc)
-    sort_order = get_sort_order(post_number)
-
     posts =
       if asc
         @filtered_posts
-          .where("sort_order > ?", sort_order)
-          .order(sort_order: :asc)
+          .where("post_number > ?", post_number)
+          .order(post_number: :asc)
       else
         @filtered_posts
-          .where("sort_order < ?", sort_order)
-          .order(sort_order: :desc)
+          .where("post_number < ?", post_number)
+          .order(post_number: :desc)
       end
 
     posts = posts.limit(@limit) if !@skip_limit
     filter_posts_by_ids(posts.pluck(:id))
 
-    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
+    @posts = @posts.unscope(:order).order(post_number: :desc) if !asc
   end
 
   def filter_posts_by_ids(post_ids)
@@ -746,7 +713,8 @@ class TopicView
         :topic,
         :image_upload
       )
-      .order('sort_order')
+      .order(:post_number)
+
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts

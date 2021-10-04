@@ -253,12 +253,10 @@ describe PostMover do
             expect(new_topic.bumped_at).to eq_time(Time.zone.now)
 
             p2.reload
-            expect(p2.sort_order).to eq(1)
             expect(p2.post_number).to eq(1)
             expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
 
             expect(p4.post_number).to eq(2)
-            expect(p4.sort_order).to eq(2)
 
             topic.reload
             expect(topic.featured_user1_id).to be_blank
@@ -574,14 +572,12 @@ describe PostMover do
 
             # Posts should be re-ordered
             p2.reload
-            expect(p2.sort_order).to eq(2)
             expect(p2.post_number).to eq(2)
             expect(p2.topic_id).to eq(moved_to.id)
             expect(p2.reply_count).to eq(1)
             expect(p2.reply_to_post_number).to eq(nil)
 
             expect(p4.post_number).to eq(3)
-            expect(p4.sort_order).to eq(3)
             expect(p4.topic_id).to eq(moved_to.id)
             expect(p4.reply_count).to eq(0)
             expect(p4.reply_to_post_number).to eq(2)
@@ -969,12 +965,10 @@ describe PostMover do
             expect(new_topic.bumped_at).to eq_time(Time.zone.now)
 
             p2.reload
-            expect(p2.sort_order).to eq(1)
             expect(p2.post_number).to eq(1)
             expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
 
             expect(p4.post_number).to eq(2)
-            expect(p4.sort_order).to eq(2)
 
             topic.reload
             expect(topic.featured_user1_id).to be_blank
@@ -1074,7 +1068,6 @@ describe PostMover do
 
             # First post didn't move
             p1.reload
-            expect(p1.sort_order).to eq(1)
             expect(p1.post_number).to eq(1)
             expect(p1.topic_id).to eq(topic.id)
             expect(p1.reply_count).to eq(1)
@@ -1087,7 +1080,6 @@ describe PostMover do
             # Second post is in a new topic
             p2.reload
             expect(p2.post_number).to eq(2)
-            expect(p2.sort_order).to eq(2)
             expect(p2.topic_id).to eq(new_topic.id)
             expect(p2.reply_to_post_number).to eq(1)
             expect(p2.reply_count).to eq(0)
@@ -1158,7 +1150,6 @@ describe PostMover do
 
             # Posts should be re-ordered
             p2.reload
-            expect(p2.sort_order).to eq(3)
             expect(p2.post_number).to eq(3)
             expect(p2.topic_id).to eq(moved_to.id)
             expect(p2.reply_count).to eq(1)
@@ -1166,7 +1157,6 @@ describe PostMover do
 
             p4.reload
             expect(p4.post_number).to eq(4)
-            expect(p4.sort_order).to eq(4)
             expect(p4.topic_id).to eq(moved_to.id)
             expect(p4.reply_to_post_number).to eq(p2.post_number)
           end
