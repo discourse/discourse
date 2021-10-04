@@ -5,6 +5,7 @@ import I18n from "I18n";
 import LogsNotice from "discourse/services/logs-notice";
 import { bind } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
+import { htmlSafe } from "@ember/template";
 
 const _pluginNotices = [];
 
@@ -111,7 +112,9 @@ export default Component.extend({
         const requiredText = I18n.t("wizard_required", {
           url: getURL("/wizard"),
         });
-        notices.push(Notice.create({ text: requiredText, id: "alert-wizard" }));
+        notices.push(
+          Notice.create({ text: htmlSafe(requiredText), id: "alert-wizard" })
+        );
       }
 
       if (
@@ -214,7 +217,7 @@ export default Component.extend({
   @bind
   _handleLogsNoticeUpdate() {
     const logNotice = Notice.create({
-      text: LogsNotice.currentProp("message"),
+      text: htmlSafe(LogsNotice.currentProp("message")),
       id: "alert-logs-notice",
       options: {
         dismissable: true,
