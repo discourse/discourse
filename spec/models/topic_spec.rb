@@ -540,6 +540,12 @@ describe Topic do
       expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
     end
 
+    it 'does not result in invalid statement when title is all stopwords for zh_CN' do
+      SiteSetting.default_locale = "zh_CN"
+
+      expect(Topic.similar_to("怎么上自己的", '')).to eq([])
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
