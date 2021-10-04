@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe TopicQuery::PrivateMessageLists do
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:user_3) { Fabricate(:user) }
@@ -49,6 +50,17 @@ describe TopicQuery::PrivateMessageLists do
       topics = TopicQuery.new(nil).list_private_messages(user_2).topics
 
       expect(topics).to contain_exactly(private_message)
+    end
+
+    it "includes topics with moderator posts" do
+      pm = Fabricate(:private_message_post, user: user_4).topic
+
+      expect(TopicQuery.new(user_4).list_private_messages(user_4).topics).to be_empty
+
+      pm.add_moderator_post(admin, "Thank you for your flag")
+
+      expect(TopicQuery.new(user_4).list_private_messages(user_4).topics)
+        .to contain_exactly(pm)
     end
   end
 

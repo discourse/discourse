@@ -5,6 +5,15 @@ class TopicQuery
     def list_private_messages(user)
       list = private_messages_for(user, :user)
       list = not_archived(list, user)
+
+      list = list.where(<<~SQL)
+        NOT (
+          topics.participant_count = 1
+          AND topics.user_id = #{user.id.to_i}
+          AND topics.moderator_posts_count = 0
+        )
+      SQL
+
       create_list(:private_messages, {}, list)
     end
 
