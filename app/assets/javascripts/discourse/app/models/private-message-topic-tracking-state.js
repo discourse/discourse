@@ -81,6 +81,17 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     }
   },
 
+  stopIncomingTracking() {
+    if (this.inbox) {
+      this.setProperties({
+        newIncoming: [],
+        inbox: null,
+        filter: null,
+        activeGroup: null,
+      });
+    }
+  },
+
   removeTopics(topicIds) {
     if (!this.isTracking) {
       return;
