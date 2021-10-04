@@ -276,7 +276,7 @@ createWidget("search-menu-results", {
     }
 
     if (!term) {
-      return this.attach("search-menu-empty-state", {
+      return this.attach("search-menu-initial-options", {
         term,
       });
     }
@@ -349,7 +349,7 @@ createWidget("search-menu-results", {
     const content = [];
 
     if (!searchTopics) {
-      content.push(this.attach("search-menu-empty-state", { term }));
+      content.push(this.attach("search-menu-initial-options", { term }));
     } else {
       if (mainResultsContent.length) {
         content.push(mainResultsContent);
@@ -448,8 +448,8 @@ createWidget("search-menu-assistant", {
   },
 });
 
-createWidget("search-menu-empty-state", {
-  tagName: "ul.search-menu-empty-state",
+createWidget("search-menu-initial-options", {
+  tagName: "ul.search-menu-initial-options",
 
   html(attrs) {
     if (attrs.term?.match(MODIFIER_REGEXP)) {

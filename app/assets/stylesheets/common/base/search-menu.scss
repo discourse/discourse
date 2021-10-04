@@ -185,7 +185,7 @@ $search-pad-horizontal: 0.5em;
       margin-left: 2px;
     }
 
-    .search-menu-empty-state {
+    .search-menu-initial-options {
       + .search-result-tag,
       + .search-result-category,
       + .search-result-user,
@@ -194,7 +194,7 @@ $search-pad-horizontal: 0.5em;
       }
     }
 
-    .search-menu-empty-state,
+    .search-menu-initial-options,
     .search-result-tag,
     .search-menu-assistant {
       .search-link {
@@ -240,7 +240,7 @@ $search-pad-horizontal: 0.5em;
       margin-top: 2px;
     }
 
-    a.advanced-search,
+    a.show-advanced-search,
     a.clear-search {
       padding: 0px 3px;
       display: inline-block;

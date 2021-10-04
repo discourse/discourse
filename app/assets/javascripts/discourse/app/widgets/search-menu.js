@@ -218,16 +218,12 @@ export default createWidget("search-menu", {
         contents: () => iconNode("times"),
       });
 
-      const advancedSearchButton = h(
-        "a.advanced-search",
-        {
-          attributes: {
-            href: this.fullSearchUrl({ expanded: true }),
-            title: I18n.t("search.open_advanced"),
-          },
-        },
-        iconNode("sliders-h")
-      );
+      const advancedSearchButton = this.attach("link", {
+        href: this.fullSearchUrl({ expanded: true }),
+        contents: () => iconNode("sliders-h"),
+        className: "show-advanced-search",
+        title: I18n.t("search.open_advanced"),
+      });
 
       if (searchData.term) {
         searchInput.push(
@@ -295,18 +291,21 @@ export default createWidget("search-menu", {
     }
 
     if (e.which === 65 /* a */) {
-      let focused = $("header .results .search-link:focus");
-      if (focused.length === 1) {
-        if ($("#reply-control.open").length === 1) {
+      if (document.activeElement?.classList.contains("search-link")) {
+        if (document.querySelector("#reply-control.open")) {
           // add a link and focus composer
 
-          this.appEvents.trigger("composer:insert-text", focused[0].href, {
-            ensureSpace: true,
-          });
+          this.appEvents.trigger(
+            "composer:insert-text",
+            document.activeElement.getAttribute("href"),
+            {
+              ensureSpace: true,
+            }
+          );
           this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
           e.preventDefault();
-          $("#reply-control.open textarea").focus();
+          document.querySelector("#reply-control.open textarea").focus();
           return false;
         }
       }
@@ -315,20 +314,28 @@ export default createWidget("search-menu", {
     const up = e.which === 38;
     const down = e.which === 40;
     if (up || down) {
-      let focused = $(".search-menu *:focus")[0];
+      let focused = document.activeElement.closest(".search-menu")
+        ? document.activeElement
+        : null;
 
       if (!focused) {
         return;
       }
 
-      let links = $(".search-menu .results a");
-      let results = $(".search-menu .results .search-link");
+      let links = document.querySelectorAll(".search-menu .results a");
+      let results = document.querySelectorAll(
+        ".search-menu .results .search-link"
+      );
+
+      if (!results.length) {
+        return;
+      }
 
       let prevResult;
       let result;
 
-      links.each((idx, item) => {
-        if ($(item).hasClass("search-link")) {
+      links.forEach((item) => {
+        if (item.classList.contains("search-link")) {
           prevResult = item;
         }
 
@@ -340,17 +347,17 @@ export default createWidget("search-menu", {
       let index = -1;
 
       if (result) {
-        index = results.index(result);
+        index = Array.prototype.indexOf.call(results, result);
       }
 
       if (index === -1 && down) {
-        $(".search-menu .search-link:first").focus();
+        document.querySelector(".search-menu .results .search-link").focus();
       } else if (index === 0 && up) {
-        $(".search-menu input:first").focus();
+        document.querySelector(".search-menu input#search-term").focus();
       } else if (index > -1) {
         index += down ? 1 : -1;
         if (index >= 0 && index < results.length) {
-          $(results[index]).focus();
+          results[index].focus();
         }
       }
 
