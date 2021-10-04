@@ -581,11 +581,11 @@ class Topic < ActiveRecord::Base
   def self.similar_to(title, raw, user = nil)
     return [] if title.blank?
     raw = raw.presence || ""
+    search_data = Search.prepare_data(title.strip)
 
-    tsquery = Search.set_tsquery_weight_filter(
-      Search.prepare_data(title.strip),
-      'A'
-    )
+    return [] if search_data.blank?
+
+    tsquery = Search.set_tsquery_weight_filter(search_data, 'A')
 
     if raw.present?
       cooked = SearchIndexer::HtmlScrubber.scrub(
