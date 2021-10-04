@@ -10,7 +10,25 @@ import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
-acceptance("Search - Anonymous", function () {
+acceptance("Search - Anonymous", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/search/query", (request) => {
+      if (request.queryParams.type_filter === "exclude_topics") {
+        return helper.response({
+          posts: [],
+          topics: [],
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          tags: searchFixtures["search/query"]["tags"],
+          groups: searchFixtures["search/query"]["groups"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return helper.response(searchFixtures["search/query"]);
+    });
+  });
+
   test("search", async function (assert) {
     await visit("/");
 

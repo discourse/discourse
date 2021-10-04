@@ -26,8 +26,7 @@ export function initSearchData() {
   searchData.results = {};
   searchData.noResults = false;
   searchData.term = undefined;
-  searchData.typeFilter = null;
-  searchData.searchTopics = false;
+  searchData.typeFilter = "exclude_topics";
   searchData.invalidTerm = false;
   searchData.suggestionResults = [];
 }
@@ -150,7 +149,7 @@ const SearchHelper = {
   },
 
   matchesSuggestions() {
-    if (searchData.term === undefined || searchData.searchTopics) {
+    if (searchData.term === undefined || this.includesTopics()) {
       return false;
     }
 
@@ -172,6 +171,10 @@ const SearchHelper = {
     }
 
     return false;
+  },
+
+  includesTopics() {
+    return searchData.typeFilter !== "exclude_topics";
   },
 };
 
@@ -245,7 +248,7 @@ export default createWidget("search-menu", {
           invalidTerm: searchData.invalidTerm,
           suggestionKeyword: searchData.suggestionKeyword,
           suggestionResults: searchData.suggestionResults,
-          searchTopics: searchData.searchTopics,
+          searchTopics: SearchHelper.includesTopics(),
         })
       );
     }
@@ -371,7 +374,7 @@ export default createWidget("search-menu", {
       if (e.ctrlKey || e.metaKey || (isiPad() && e.altKey)) {
         this.fullSearch();
       } else {
-        searchData.searchTopics = true;
+        searchData.typeFilter = null;
         this.triggerSearch();
       }
     }
@@ -383,9 +386,9 @@ export default createWidget("search-menu", {
       const highlightTerm = searchData.term.replace(TOPIC_REPLACE_REGEXP, "");
       this.searchService().set("highlightTerm", highlightTerm);
     }
-    searchData.loading = searchData.searchTopics ? true : false;
+    searchData.loading = SearchHelper.includesTopics() ? true : false;
 
-    const delay = searchData.searchTopics ? 400 : 200;
+    const delay = SearchHelper.includesTopics() ? 400 : 200;
     discourseDebounce(SearchHelper, SearchHelper.perform, this, delay);
   },
 
@@ -395,7 +398,7 @@ export default createWidget("search-menu", {
   },
 
   searchTermChanged(term, opts = {}) {
-    searchData.searchTopics = opts.searchTopics ? true : false;
+    searchData.typeFilter = opts.searchTopics ? null : "exclude_topics";
     searchData.term = term;
     this.triggerSearch();
   },
