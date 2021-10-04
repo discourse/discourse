@@ -2365,6 +2365,7 @@ en:
       type:
         default: "Topics/posts"
         users: "Users"
+        categories: "Categories"
         categories_and_tags: "Categories/tags"
 
       context:
