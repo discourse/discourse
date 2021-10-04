@@ -142,7 +142,10 @@
                   ]
                 },
                 "subcategory_list": {
-                  "type": "array",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
                   "items": [
 
                   ]

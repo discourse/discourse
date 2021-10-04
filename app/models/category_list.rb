@@ -100,6 +100,8 @@ class CategoryList
 
     @categories = @categories.to_a
 
+    include_subcategories = @options[:include_subcategories] == true
+
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
@@ -108,7 +110,6 @@ class CategoryList
       category.notification_level = notification_levels[category.id] || default_notification_level
       category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
       category.has_children = category.subcategories.present?
-      category.subcategory_list = []
     end
 
     if @options[:parent_category_id].blank?
@@ -119,14 +120,16 @@ class CategoryList
         if c.parent_category_id.present?
           subcategory_ids[c.parent_category_id] ||= []
           subcategory_ids[c.parent_category_id] << c.id
-          subcategory_list[c.parent_category_id] ||= []
-          subcategory_list[c.parent_category_id] << c
+          if include_subcategories
+            subcategory_list[c.parent_category_id] ||= []
+            subcategory_list[c.parent_category_id] << c
+          end
           to_delete << c
         end
       end
       @categories.each do |c|
         c.subcategory_ids = subcategory_ids[c.id] || []
-        if @options[:include_subcategories] == true
+        if include_subcategories
           c.subcategory_list = subcategory_list[c.id] || []
         end
       end

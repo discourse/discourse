@@ -86,7 +86,7 @@ describe CategoriesController do
     end
 
     it 'returns the right subcategory response with permission' do
-      subcategory = Fabricate(:category,  user: admin, parent_category: category)
+      subcategory = Fabricate(:category, name: "subcat", user: admin, parent_category: category)
 
       sign_in(user)
 
@@ -99,10 +99,11 @@ describe CategoriesController do
       subcategories_for_category = category_list["categories"][1]["subcategory_list"]
       expect(subcategories_for_category.count).to eq(1)
       expect(subcategories_for_category.first["parent_category_id"]).to eq(category.id)
+      expect(subcategories_for_category.first["name"]).to eq("subcat")
     end
 
     it 'does not return subcategories without query param' do
-      subcategory = Fabricate(:category,  user: admin, parent_category: category)
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
 
       sign_in(user)
 
@@ -113,7 +114,7 @@ describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       subcategories_for_category = category_list["categories"][1]["subcategory_list"]
-      expect(subcategories_for_category.count).to eq(0)
+      expect(subcategories_for_category).to eq(nil)
     end
 
     it 'does not show uncategorized unless allow_uncategorized_topics' do
