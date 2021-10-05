@@ -434,7 +434,7 @@ acceptance(
 
       assert.ok(
         !exists(".show-mores"),
-        `does not display the topic incoming info`
+        "does not display the topic incoming info"
       );
     });
 
