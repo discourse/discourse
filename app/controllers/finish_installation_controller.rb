@@ -51,7 +51,7 @@ class FinishInstallationController < ApplicationController
   def send_signup_email
     return if @user.active && @user.email_confirmed?
 
-    email_token = @user.email_tokens.create!(email: @user.email)
+    email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
     EmailToken.enqueue_signup_email(email_token)
   end
 

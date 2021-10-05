@@ -67,10 +67,10 @@ class EmailUpdater
     end
 
     if @change_req.change_state == EmailChangeRequest.states[:authorizing_old]
-      @change_req.old_email_token = @user.email_tokens.create!(email: @user.email)
+      @change_req.old_email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:old_email])
       send_email(add ? :confirm_old_email_add : :confirm_old_email, @change_req.old_email_token)
     elsif @change_req.change_state == EmailChangeRequest.states[:authorizing_new]
-      @change_req.new_email_token = @user.email_tokens.create!(email: email)
+      @change_req.new_email_token = @user.email_tokens.create!(email: email, scope: EmailToken.scopes[:new_email])
       send_email(:confirm_new_email, @change_req.new_email_token)
     end
 
@@ -95,7 +95,7 @@ class EmailUpdater
         when EmailChangeRequest.states[:authorizing_old]
           @change_req.update!(
             change_state: EmailChangeRequest.states[:authorizing_new],
-            new_email_token: @user.email_tokens.create!(email: @change_req.new_email)
+            new_email_token: @user.email_tokens.create!(email: @change_req.new_email, scope: EmailToken.scopes[:new_email])
           )
           send_email(:confirm_new_email, @change_req.new_email_token)
           confirm_result = :authorizing_new

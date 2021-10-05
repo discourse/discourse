@@ -567,11 +567,13 @@ describe 'users' do
         expected_response_schema = nil
 
         let(:user) { Fabricate(:user) }
-        let(:token) { user.email_tokens.create!(email: user.email).token }
-        let(:params) { {
-          'username' => user.username,
-          'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
-        } }
+        let(:token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]).token }
+        let(:params) do
+          {
+            'username' => user.username,
+            'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
+          }
+        end
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

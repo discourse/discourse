@@ -54,7 +54,7 @@ end
 
 class EmailActivator < UserActivator
   def activate
-    email_token = user.email_tokens.create!(email: user.email)
+    email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
     EmailToken.enqueue_signup_email(email_token)
     success_message
   end

@@ -884,7 +884,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
       if user = User.with_email(params[:email]).admins.human_users.first
-        email_token = user.email_tokens.create!(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:admin_login])
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
@@ -915,7 +915,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
 
       if user_presence
-        email_token = user.email_tokens.create!(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
 
         Jobs.enqueue(:critical_user_email,
           type: :email_login,
@@ -1030,7 +1030,7 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @email_token = @user.email_tokens.create!(email: @user.email)
+        @email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
         render json: success_json
       else
@@ -1062,7 +1062,7 @@ class UsersController < ApplicationController
     if @user.active && @user.email_confirmed?
       render_json_error(I18n.t('activation.activated'), status: 409)
     else
-      @email_token = @user.email_tokens.create!(email: @user.email)
+      @email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
       EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
       render body: nil
     end

@@ -10,14 +10,14 @@ describe EmailToken do
   context '#create' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
-    let!(:email_token) { user.email_tokens.create!(email: 'bubblegum@adventuretime.ooo') }
+    let!(:email_token) { Fabricate(:email_token, user: user, email: 'bubblegum@adventuretime.ooo') }
 
     it 'should create the email token' do
       expect(email_token).to be_present
     end
 
     it 'should downcase the email' do
-      token = user.email_tokens.create!(email: "UpperCaseSoWoW@GMail.com")
+      token = Fabricate(:email_token, user: user, email: "UpperCaseSoWoW@GMail.com")
       expect(token.email).to eq "uppercasesowow@gmail.com"
     end
 

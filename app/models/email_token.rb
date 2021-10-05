@@ -22,11 +22,30 @@ class EmailToken < ActiveRecord::Base
     self.email = self.email.downcase if self.email
   end
 
+  before_save do
+    if self.scope.blank?
+      STDERR.puts "EmailToken has an empty scope"
+      caller.each { |x| STDERR.puts "    #{x}" if x.include?('discourse') }
+    end
+  end
+
   after_create do
     EmailToken
       .where(user_id: self.user_id)
       .where.not(id: self.id)
       .update_all(expired: true)
+  end
+
+  def self.scopes
+    @scopes ||= Enum.new(
+      signup: 1,
+      forgot_password: 2,
+      password_reset: 3,
+      email_login: 4,
+      admin_login: 5,
+      old_email: 6,
+      new_email: 7,
+    )
   end
 
   def token
@@ -108,6 +127,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  token_hash :string           not null
+#  scope      :integer
 #
 # Indexes
 #
