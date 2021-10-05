@@ -106,13 +106,18 @@
 {{#if canChangeDefaultCalendar }}
   <div class="control-group">
     <label class="control-label">{{i18n "download_calendar.default_calendar"}}</label>
-    {{combo-box
-      valueProperty="value"
-      content=calendarOptions
-      value=model.user_option.default_calendar
-      id="user-default-calendar"
-      onChange=(action (mut model.user_option.default_calendar))
-    }}
+    <div>
+      {{combo-box
+        valueProperty="value"
+        content=calendarOptions
+        value=model.user_option.default_calendar
+        id="user-default-calendar"
+        onChange=(action (mut model.user_option.default_calendar))
+      }}
+    </div>
+    <div class="instructions">
+      {{i18n "download_calendar.default_calendar_instruction"}}
+    </div>
   </div>
 {{/if}}
 

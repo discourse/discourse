@@ -258,8 +258,10 @@ end
 #  dark_scheme_id                   :integer
 #  skip_new_user_tips               :boolean          default(FALSE), not null
 #  color_scheme_id                  :integer
+#  default_calendar                 :integer          default("none_selected"), not null
 #
 # Indexes
 #
-#  index_user_options_on_user_id  (user_id) UNIQUE
+#  index_user_options_on_user_id                       (user_id) UNIQUE
+#  index_user_options_on_user_id_and_default_calendar  (user_id,default_calendar)
 #

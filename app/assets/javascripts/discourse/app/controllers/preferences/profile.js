@@ -27,8 +27,8 @@ export default Controller.extend({
     ];
 
     this.calendarOptions = [
-      { name: "Google", value: "google" },
-      { name: "ICS", value: "ics" },
+      { name: I18n.t("download_calendar.google"), value: "google" },
+      { name: I18n.t("download_calendar.ics"), value: "ics" },
     ];
   },
 
