@@ -18,6 +18,7 @@ const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 export const TOPIC_REPLACE_REGEXP = /\stopic:\d+/i;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
+export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 const searchData = {};
 
@@ -26,7 +27,7 @@ export function initSearchData() {
   searchData.results = {};
   searchData.noResults = false;
   searchData.term = undefined;
-  searchData.typeFilter = "exclude_topics";
+  searchData.typeFilter = DEFAULT_TYPE_FILTER;
   searchData.invalidTerm = false;
   searchData.suggestionResults = [];
 }
@@ -174,7 +175,7 @@ const SearchHelper = {
   },
 
   includesTopics() {
-    return searchData.typeFilter !== "exclude_topics";
+    return searchData.typeFilter !== DEFAULT_TYPE_FILTER;
   },
 };
 
@@ -398,7 +399,7 @@ export default createWidget("search-menu", {
   },
 
   searchTermChanged(term, opts = {}) {
-    searchData.typeFilter = opts.searchTopics ? null : "exclude_topics";
+    searchData.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
     searchData.term = term;
     this.triggerSearch();
   },

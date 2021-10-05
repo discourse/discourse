@@ -9,14 +9,14 @@ import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
-      if (request.queryParams.type_filter === "exclude_topics") {
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        // posts/topics are not present in the payload by default
         return helper.response({
-          posts: [],
-          topics: [],
           users: searchFixtures["search/query"]["users"],
           categories: searchFixtures["search/query"]["categories"],
           tags: searchFixtures["search/query"]["tags"],
