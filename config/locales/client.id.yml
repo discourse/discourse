@@ -1383,6 +1383,7 @@ id:
       tags: "Label"
       type:
         users: "Pengguna"
+        categories: "Kategori"
       advanced:
         posted_by:
           label: Dibuat oleh

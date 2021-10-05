@@ -1636,6 +1636,7 @@ zh_TW:
       tags: "標籤"
       type:
         users: "使用者"
+        categories: "分類"
       context:
         user: "搜尋 @%{username} 的貼文"
         category: "搜索 #%{category} 分類"

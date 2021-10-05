@@ -952,7 +952,6 @@ es:
         remove: "Este tema ya no funciona como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Preferencias de correo electrónico actualizadas!"
-    description: "las preferencias de correo electrónico para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de correo electrónico, <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
   uploads:
@@ -4526,20 +4525,7 @@ es:
     missing_version: "Debes incluir un parámetro de versión"
     conflict: "Hubo un conflicto de actualización que no te permitió realizar esa acción."
     reasons:
-      post_count: "Las primeras publicaciones de cada usuario deben ser aprobadas por el personal. Consulta «approve_post_count»."
-      trust_level: "Los usuarios con niveles de confianza bajos deben tener respuestas aprobadas por el personal. Consulta «approve_unless_trust_level»."
-      new_topics_unless_trust_level: "Los usuarios con niveles de confianza bajos deben tener temas aprobados por el personal. Consulta «approve_new_topics_unless_trust_level»."
-      fast_typer: "El usuario nuevo escribió su primer mensaje de forma sospechosamente rápida. Podría tratarse de un bot o un spammer. Consulta «min_first_post_typing_time»."
-      auto_silence_regexp: "Usuario nuevo cuya primera publicación coincide con el ajuste «auto_silence_first_post_regex»."
-      watched_word: "Esta publicación contiene una palabra vigilada. Mira tu <a href='%{base_url}/admin/customize/watched_words'>lista de palabras vigiladas</a>."
-      staged: "Los temas y publicaciones nuevas para usuarios provisionales deben ser aprobados por el personal. Consulta «approve_unless_staged»."
-      category: "Los mensajes en esta categoría requieren la aprobación manual del personal. Consulta la configuración de la categoría."
-      must_approve_users: "Todos los usuarios nuevos deben ser aprobados por el personal. Consulta «must_approve_users»."
-      invite_only: "Todos los usuarios nuevos deben ser invitados. Consulta «invite_only»."
       email_auth_res_enqueue: "Este correo electrónico no superó la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo electrónico para más información."
-      email_spam: "Este correo electrónico se marcó como spam por el encabezado definido en «email_in_spam_header»."
-      suspect_user: "Este usuario nuevo ingresó información de perfil sin haber leído ningún tema o publicación, lo cual sugiere claramente que podría tratarse de un spammer. Revisa «approve_suspect_users»."
-      contains_media: "Esta publicación incluye medios incrustados. Ver «review_media_unless_trust_level»."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
     actions:
       agree:
@@ -4642,6 +4628,7 @@ es:
       other: "%{topic_title} (parte %{count})"
     post_raw: "Siguiendo con el tema %{parent_url}.\n\nPartes anteriores:\n\n%{previous_topics}"
     small_action_post_raw: "Este tema continúa: %{new_title}."
+  fallback_username: "usuario"
   activemodel:
     errors:
       <<: *errors

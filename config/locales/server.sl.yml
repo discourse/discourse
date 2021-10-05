@@ -590,7 +590,6 @@ sl:
         remove: "Ta tema ni več na oglasnem traku. Ne bo se več pojavljala na vrhu strani."
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
-    description: "nastavitve e-pošte za <b>%{email}</b> so bile spremenjene. Za spremembo vaših nastavitev e-pošte <a href='%{url}'>obiščite svoje uporabniške nastavitve</a>."
   unsubscribe:
     title: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
@@ -2089,16 +2088,6 @@ sl:
       high: "Visoka"
     missing_version: "Podati morate verzijo parametra"
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
-    reasons:
-      post_count: "Prvih nekaj prispevkov od vsakega uporabnika mora biti odobrenih s strani osebja. Glej `approve_post_count`."
-      trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
-      fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
-      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
-      staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
-      category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
-      must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."
-      invite_only: "Vsi novi uporavbniki morajo biti povabljeni. Glej `invite_only`."
     actions:
       agree:
         title: "Strinjam se..."
@@ -2162,6 +2151,7 @@ sl:
         title: "Zavrni"
       delete_user:
         reason: "Izbriši preko vrste za pregled"
+  fallback_username: "uporabnik"
   activemodel:
     errors:
       <<: *errors

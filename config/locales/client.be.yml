@@ -895,6 +895,7 @@ be:
       tags: "Цэтлікі"
       type:
         users: "Карыстальнікі"
+        categories: "Катэгорыі"
       context:
         topic: "Пошук у гэтай тэме"
         private_messages: "Пошук паведамленняў"

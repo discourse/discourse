@@ -2159,6 +2159,7 @@ sv:
       type:
         default: "Ämnen/inlägg"
         users: "Användare"
+        categories: "Kategorier"
         categories_and_tags: "Kategorier/taggar"
       context:
         user: "Sök inlägg av @%{username}"

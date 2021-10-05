@@ -2156,6 +2156,7 @@ es:
       type:
         default: "Temas/respuestas"
         users: "Usuarios"
+        categories: "Categorías"
         categories_and_tags: "Categorías/etiquetas"
       context:
         user: "Buscar publicaciones de @%{username}"

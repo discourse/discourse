@@ -2049,6 +2049,7 @@ gl:
       tags: "Etiquetas"
       type:
         users: "Usuarios"
+        categories: "Categorías"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"

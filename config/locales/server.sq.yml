@@ -1427,6 +1427,7 @@ sq:
           title: "Fshij Anëtarin"
       reject:
         title: "Refuzo"
+  fallback_username: "përdorues"
   activemodel:
     errors:
       <<: *errors

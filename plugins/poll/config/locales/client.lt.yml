@@ -24,8 +24,15 @@ lt:
       show-results:
         title: "Rodyti balsavimo rezultatus"
         label: "Rodyti rezultatus"
+      remove-vote:
+        title: "Pašalinti savo balsą"
+        label: "Pašalinti balsą"
       hide-results:
         title: "Grįžti į balsavimus"
+        label: "Rodyti balsavimą"
+      group-results:
+        title: "Grupuoti balsus pagal vartotojo lauką"
+        label: "Rodyti suskirstymą"
       export-results:
         label: "Eksportuoti"
       open:
@@ -37,7 +44,30 @@ lt:
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
       breakdown:
+        title: "Apklausos rezultatai"
+        percentage: "Procentas"
         count: "Skaičiuoti"
+      error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
       ui_builder:
+        title: Kurti apklausą
+        insert: Įterpti apklausą
+        help:
+          options_min_count: Įveskite bent 1 parinktį.
         poll_type:
           label: Tipas
+          regular: Vienas pasirinkimas
+          multiple: Keli pasirinkimai
+        poll_result:
+          label: Rodyti rezultatus...
+          always: Visada matomas
+          vote: Tik po balsavimo
+        poll_chart_type:
+          label: Rezultatų diagrama
+        poll_public:
+          label: Rodyti, kas balsavo
+        poll_title:
+          label: Pavadinimas (neprivaloma)
+        poll_options:
+          add: Pridėti parinktį
+        automatic_close:
+          label: Automatiškai uždaryti apklausą

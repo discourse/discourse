@@ -1204,6 +1204,7 @@ cs:
           title: "Smazat uživatele"
       reject:
         title: "Odmítnout"
+  fallback_username: "uživatel"
   activemodel:
     errors:
       <<: *errors

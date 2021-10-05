@@ -534,6 +534,7 @@ th:
           title: "ลบผู้ใช้"
       reject:
         title: "ละทิ้ง"
+  fallback_username: "ผู้ใช้"
   activemodel:
     errors:
       <<: *errors

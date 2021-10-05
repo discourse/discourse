@@ -1355,6 +1355,7 @@ bg:
           title: "Изтрий потребител "
       reject:
         title: "Отхвърли"
+  fallback_username: "потребител"
   time:
     <<: *datetime_formats
   activemodel:

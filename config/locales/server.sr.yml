@@ -526,6 +526,7 @@ sr:
           title: "Obriši Korisnika"
       reject:
         title: "Odbij"
+  fallback_username: "korisnik"
   time:
     <<: *datetime_formats
   activemodel:

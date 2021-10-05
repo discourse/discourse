@@ -862,7 +862,6 @@ nl:
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
   unsubscribed:
     title: "E-mailvoorkeuren bijgewerkt!"
-    description: "e-mailvoorkeuren voor <b>%{email}</b> zijn bijgewerkt. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
     topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
     private_topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw in te schrijven."
   uploads:
@@ -3038,8 +3037,6 @@ nl:
     conflict: "Een updateconflict heeft ervoor gezorgd dat u dit niet kon doen."
     reasons:
       email_auth_res_enqueue: "Een DMARC-controle op deze e-mail is mislukt; het bericht komt zeer waarschijnlijk niet van wie het lijkt te komen. Controleer de onbewerkte e-mailheader voor meer informatie."
-      email_spam: "Deze e-mail is als spam gemarkeerd door de header zoals gedefinieerd in `email_in_spam_header`."
-      suspect_user: "Deze nieuwe gebruiker heeft profielgegevens ingevoerd zonder topics of berichten te hebben gelezen, wat sterk doet vermoeden dat het een spammer kan zijn. Zie `approve_suspect_users`."
     actions:
       agree:
         title: "Akkoord..."
@@ -3116,6 +3113,7 @@ nl:
       one: "%{topic_title} (Deel %{count})"
       other: "%{topic_title} (Deel %{count})"
     post_raw: "De discussie wordt voortgezet vanaf %{parent_url}.\n\nEerdere discussies:\n\n%{previous_topics}"
+  fallback_username: "gebruiker"
   activemodel:
     errors:
       <<: *errors

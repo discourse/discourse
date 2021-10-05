@@ -1893,6 +1893,7 @@ bs_BA:
       tags: "Tagovi"
       type:
         users: "Korisnici"
+        categories: "Kategorije"
       context:
         user: "Traži postove od @%{username}"
         category: "Traži #%{category} kategoriju"

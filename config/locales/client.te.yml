@@ -790,6 +790,7 @@ te:
       tags: "ట్యాగులు"
       type:
         users: "వాడుకరులు"
+        categories: "వర్గాలు"
       context:
         user: "@%{username} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"

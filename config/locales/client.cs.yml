@@ -1738,6 +1738,7 @@ cs:
       tags: "Štítky"
       type:
         users: "Uživatelé"
+        categories: "Kategorie"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 lt:
+  site_settings:
+    styleguide_admin_only: "Apriboja stiliaus vadovo matomumą administratoriams"

@@ -2308,6 +2308,7 @@ pt:
           title: "Eliminar Utilizador"
       reject:
         title: "Rejeitar"
+  fallback_username: "utilizador"
   activemodel:
     errors:
       <<: *errors

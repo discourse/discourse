@@ -2144,6 +2144,7 @@ it:
       tags: "Etichette"
       type:
         users: "Utenti"
+        categories: "Categorie"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"

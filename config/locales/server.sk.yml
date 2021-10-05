@@ -1441,6 +1441,7 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
+  fallback_username: "používateľ"
   activemodel:
     errors:
       <<: *errors

@@ -1770,6 +1770,7 @@ ca:
       tags: "Etiquetes"
       type:
         users: "Usuaris"
+        categories: "Categories"
       context:
         user: "Cerca publicacions de @%{username}"
         category: "Cerca en la categoria #%{category} "

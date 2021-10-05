@@ -1876,6 +1876,7 @@ el:
       tags: "Ετικέτες"
       type:
         users: "Χρήστες"
+        categories: "Κατηγορίες"
       context:
         user: "Ψάξε στις αναρτήσεις του χρήστη @%{username}"
         category: "Αναζήτηση στην κατηγορία #%{category} "
