@@ -209,7 +209,7 @@ module PostGuardian
     return false if !SiteSetting.can_permanently_delete
     return false if !post
     return false if post.is_first_post?
-    return false if !is_admin? || !can_see_post?(post)
+    return false if !is_admin? || !can_edit_post?(post)
     return false if !post.deleted_at
     return false if post.deleted_by_id == @user.id && post.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
     true
@@ -219,7 +219,7 @@ module PostGuardian
     return nil if !SiteSetting.can_permanently_delete
     return nil if !post
     return nil if post.is_first_post?
-    return nil if !is_admin? || !can_see_post?(post)
+    return nil if !is_admin? || !can_edit_post?(post)
     return nil if !post.deleted_at
     return I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + post.deleted_at.to_i)) if post.deleted_by_id == @user.id && post.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
     true
