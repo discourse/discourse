@@ -13,7 +13,7 @@ acceptance(
   "Download calendar without default calendar option set",
   function (needs) {
     needs.user({ default_calendar: "none_selected" });
-
+    needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
       const response = { ...fixturesByUrl["/t/281.json"] };
       server.get("/t/281.json", () => helper.response(response));
@@ -37,7 +37,7 @@ acceptance(
   "Download calendar with default calendar option set",
   function (needs) {
     needs.user({ default_calendar: "google" });
-
+    needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
       const response = { ...fixturesByUrl["/t/281.json"] };
       server.get("/t/281.json", () => helper.response(response));

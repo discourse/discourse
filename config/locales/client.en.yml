@@ -3725,8 +3725,8 @@ en:
 
     download_calendar:
       title: "Download calendar"
-      ics: "Download .ics file"
-      google: "Add to Google calendar"
+      save_ics: "Download .ics file"
+      save_google: "Add to Google calendar"
       remember: "Don’t ask me again"
       remember_explanation: "(you can change this preference in your user prefs)"
       download: "Download"
