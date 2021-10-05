@@ -53,13 +53,12 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(",")}`;
 
       return ajax({ url, data: this.params }).then((result) => {
-        const topicIds = [];
-
-        this.topics.forEach((topic) => (topicIds[topic.id] = true));
+        const topicIds = new Set();
+        this.topics.forEach((topic) => topicIds.add(topic.id));
 
         let i = 0;
         TopicList.topicsFrom(store, result).forEach((topic) => {
-          if (!topicIds[topic.id]) {
+          if (!topicIds.has(topic.id)) {
             topic.set("highlight", true);
             this.topics.insertAt(i, topic);
             i++;
