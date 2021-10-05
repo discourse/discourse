@@ -613,6 +613,10 @@ module ApplicationHelper
     absolute_url
   end
 
+  def manifest_url
+    @manifest_url || "#{Discourse.base_path}/manifest.webmanifest"
+  end
+
   def can_sign_up?
     SiteSetting.allow_new_registrations &&
     !SiteSetting.invite_only &&
