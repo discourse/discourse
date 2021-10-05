@@ -636,23 +636,43 @@ createWidget("discourse-poll-buttons", {
         })
       );
     } else {
+      let showResultsButton;
+      let infoText;
+
       if (poll.results === "on_vote" && !attrs.hasVoted && !isMe) {
-        contents.push(infoTextHtml(I18n.t("poll.results.vote.title")));
+        infoText = infoTextHtml(I18n.t("poll.results.vote.title"));
       } else if (poll.results === "on_close" && !closed) {
-        contents.push(infoTextHtml(I18n.t("poll.results.closed.title")));
+        infoText = infoTextHtml(I18n.t("poll.results.closed.title"));
       } else if (poll.results === "staff_only" && !isStaff) {
-        contents.push(infoTextHtml(I18n.t("poll.results.staff.title")));
+        infoText = infoTextHtml(I18n.t("poll.results.staff.title"));
       } else {
+        showResultsButton = this.attach("button", {
+          className: "btn-default toggle-results",
+          label: "poll.show-results.label",
+          title: "poll.show-results.title",
+          icon: "far-eye",
+          action: "toggleResults",
+        });
+      }
+
+      if (showResultsButton) {
+        contents.push(showResultsButton);
+      }
+
+      if (attrs.hasSavedVote) {
         contents.push(
           this.attach("button", {
-            className: "btn-default toggle-results",
-            label: "poll.show-results.label",
-            title: "poll.show-results.title",
-            icon: "far-eye",
-            disabled: poll.voters === 0,
-            action: "toggleResults",
+            className: "btn-default remove-vote",
+            label: "poll.remove-vote.label",
+            title: "poll.remove-vote.title",
+            icon: "trash-alt",
+            action: "removeVote",
           })
         );
+      }
+
+      if (infoText) {
+        contents.push(infoText);
       }
     }
 
@@ -894,6 +914,28 @@ export default createWidget("discourse-poll", {
     this.state.showResults = !this.state.showResults;
   },
 
+  removeVote() {
+    const { attrs, state } = this;
+    state.loading = true;
+    return ajax("/polls/vote", {
+      type: "DELETE",
+      data: {
+        post_id: attrs.post.id,
+        poll_name: attrs.poll.name,
+      },
+    })
+      .then(({ poll }) => {
+        attrs.poll.setProperties(poll);
+        attrs.vote.length = 0;
+        attrs.hasSavedVote = false;
+        this.appEvents.trigger("poll:voted", poll, attrs.post, attrs.vote);
+      })
+      .catch((error) => popupAjaxError(error))
+      .finally(() => {
+        state.loading = false;
+      });
+  },
+
   exportResults() {
     const { attrs } = this;
     const queryID = this.siteSettings.poll_export_data_explorer_query_id;
@@ -963,6 +1005,10 @@ export default createWidget("discourse-poll", {
     }
 
     const { vote } = attrs;
+    if (!this.isMultiple() && vote.length === 1 && vote[0] === option.id) {
+      return this.removeVote();
+    }
+
     if (!this.isMultiple()) {
       vote.length = 0;
     }
@@ -994,6 +1040,7 @@ export default createWidget("discourse-poll", {
       },
     })
       .then(({ poll }) => {
+        attrs.hasSavedVote = true;
         attrs.poll.setProperties(poll);
         this.appEvents.trigger("poll:voted", poll, attrs.post, attrs.vote);
 
