@@ -919,7 +919,7 @@ export default Component.extend(TextareaTextManipulation, {
 
     observer.observe(document.querySelector(".d-editor-preview"), {
       childList: true,
-      subtree: false,
+      subtree: true,
       attributes: false,
     });
 
