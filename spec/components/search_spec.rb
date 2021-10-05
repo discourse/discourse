@@ -1936,11 +1936,11 @@ describe Search do
 
       expect(result.users.map(&:id)).to contain_exactly(user.id)
 
-      expect(result.categories.map(&:id)).to eq(category.id)
+      expect(result.categories.map(&:id)).to contain_exactly(category.id)
 
       expect(result.groups.map(&:id)).to contain_exactly(group.id)
 
-      expect(result.tags.map(&:id)).to eq(tag.id)
+      expect(result.tags.map(&:id)).to contain_exactly(tag.id)
 
       expect(result.posts.length).to eq(0)
     end
