@@ -423,6 +423,21 @@ acceptance(
       );
     });
 
+    test("incoming messages is not tracked on non user messages route", async function (assert) {
+      await visit("/u/charlie/messages");
+      await visit("/t/13");
+
+      publishNewToMessageBus({ topicId: 1, userId: 5 });
+
+      await visit("/t/13"); // await re-render
+      await visit("/u/charlie/messages");
+
+      assert.ok(
+        !exists(".show-mores"),
+        "does not display the topic incoming info"
+      );
+    });
+
     test("dismissing all unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
