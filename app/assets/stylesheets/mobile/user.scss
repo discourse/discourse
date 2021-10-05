@@ -22,6 +22,7 @@
   }
   .user-additional-controls {
     grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 2;
   }
   .user-content,
@@ -354,12 +355,14 @@
     width: 100%;
   }
 
-  .admin-controls {
+  .user-additional-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    .pull-right {
-      flex: 1 1 100%;
-      font-size: $font-down-1;
-      padding: 5px 0;
+    .btn {
+      margin-right: 0.5em;
+      margin-bottom: 0.5em;
     }
   }
 
