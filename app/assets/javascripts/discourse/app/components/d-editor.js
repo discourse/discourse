@@ -1,5 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
-import { caretPosition, inCodeBlock } from "discourse/lib/utilities";
+import {
+  caretPosition,
+  inCodeBlock,
+  macFriendlyShortcutLabel,
+} from "discourse/lib/utilities";
 import discourseComputed, {
   observes,
   on,
@@ -192,23 +196,9 @@ class Toolbar {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
       let shortcutTitle = `${mod}+${button.shortcut}`;
-
-      // Mac users are used to glyphs for shortcut keys
-      if (mac) {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", "\u21E7")
-          .replace("Meta", "\u2318")
-          .replace("Alt", "\u2325")
-          .replace(/\+/g, "");
-      } else {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-          .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-          .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
-      }
+      shortcutTitle = macFriendlyShortcutLabel(shortcutTitle);
 
       createdButton.title = `${title} (${shortcutTitle})`;
-
       this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
     } else {
       createdButton.title = title;
