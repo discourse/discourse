@@ -1734,6 +1734,7 @@ hy:
       tags: "Թեգեր"
       type:
         users: "Օգտատերեր"
+        categories: "Կատեգորիաներ"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"

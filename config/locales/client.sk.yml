@@ -1380,6 +1380,7 @@ sk:
       tags: "Štítky"
       type:
         users: "Používatelia"
+        categories: "Kategórie"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"

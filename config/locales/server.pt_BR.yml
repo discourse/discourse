@@ -949,7 +949,6 @@ pt_BR:
         remove: "Este tópico não é mais um banner. Ele deixará de aparecer no topo de todas as páginas."
   unsubscribed:
     title: "Preferências de e-mail atualizadas!"
-    description: "as preferências de e-mail de <b>%{email}</b> foram atualizadas. Para alterar suas configurações de e-mail, <a href='%{url}'>acesse suas preferências de usuário(a)</a>."
     topic_description: "Para se associar novamente em %{link}, use o controle de notificações na parte inferior ou no canto direito do tópico."
     private_topic_description: "Para se associar novamente, use o controle de notificações na parte inferior ou à direita do tópico."
   uploads:
@@ -4457,20 +4456,7 @@ pt_BR:
     missing_version: "Você precisa informar um parâmetro de versão"
     conflict: "Houve um conflito de atualização impedindo de fazer isso."
     reasons:
-      post_count: "As primeiras postagens de todos os(as) usuários(as) devem ser aprovadas pela equipe. Acesse \"approve_post_count\"."
-      trust_level: "Usuários(as) com níveis de confiança baixos precisam ter respostas aprovadas pela equipe. Veja \"approve_unless_trust_level\"."
-      new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja \"approve_unless_trust_level\"."
-      fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja \"min_first_post_typing_time\"."
-      auto_silence_regexp: "Novo(a) usuário(a) cuja primeira postagem corresponde à configuração \"auto_silence_first_post_regex\"."
-      watched_word: "Esta postagem incluiu uma palavra acompanhada. Confira sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras acompanhadas</a>."
-      staged: "Novos tópicos e postagens para usuários encenados(as) precisam ser aprovados pela equipe. Veja \"approve_unless_staged\"."
-      category: "Postagens nesta categoria exigem aprovação manual pela equipe. Veja as configurações da categoria."
-      must_approve_users: "Todos os novos(as) usuários(as) precisam ser aprovados(as) pela equipe. Veja \"must_approve_users\"."
-      invite_only: "Todos os(as) novos(as) usuários(as) devem ser convidados(as). Veja \"invite_only\"."
       email_auth_res_enqueue: "Este e-mail falhou na verificação DMARC, é altamente provável que o remetente não é quem parece ser. Confira os cabeçalhos de e-mail não processados para obter mais informações."
-      email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em \"email_in_spam_header\"."
-      suspect_user: "Este(a) novo(a) usuário(a) inseriu informações de perfil sem ler nenhum tópico ou postagem, o que sugere que possa ser remetente de spam. Consulte \"approve_suspect_users\"."
-      contains_media: "Esta postagem inclui mídias incorporadas. Confira \"review_media_unless_trust_level\"."
       queued_by_staff: "Um membro da equipe acha que esta postagem precisa de revisão. Permanecerá oculta até que isso seja feito."
     actions:
       agree:
@@ -4573,6 +4559,7 @@ pt_BR:
       other: "%{topic_title} (parte %{count})"
     post_raw: "Continuando a discussContinuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
     small_action_post_raw: "Continue a discussão em %{new_title}."
+  fallback_username: "usuário(a)"
   activemodel:
     errors:
       <<: *errors

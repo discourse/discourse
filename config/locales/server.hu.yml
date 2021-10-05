@@ -599,7 +599,6 @@ hu:
         remove: "Ez a téma már nem kiemelt. Ezt követően nem jelenik meg minden oldal tetején."
   unsubscribed:
     title: "Az e-mail beállítások frissítve!"
-    description: "a (z) <b>%{email}</b> e-mail beállításai frissültek. Az e-mail beállítások módosításához <a href='%{url}'>keresse fel a felhasználói beállításokat</a>."
     topic_description: "A(z) %{link} témára történő újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
     private_topic_description: "Az újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
   unsubscribe:
@@ -2016,8 +2015,6 @@ hu:
       low: "Alacsony"
       medium: "Közepes"
       high: "Magas"
-    reasons:
-      suspect_user: "Ez az új felhasználó anélkül adta meg a profil adatait, hogy bármilyen témát vagy bejegyzést olvasott volna, ami erősen azt sugallja, hogy spamelők lehetnek. See `approve_suspect_users`."
     actions:
       agree_and_keep:
         title: "Bejegyzés megtartása"
@@ -2081,6 +2078,7 @@ hu:
       other: "%{topic_title} (%{count}. rész)"
     post_raw: "Beszélgetés folytatása innen: %{parent_url}.\n\nElőző beszélgetések:\n\n%{previous_topics}"
     small_action_post_raw: "Beszélgetés folytatása itt: %{new_title}."
+  fallback_username: "felhasználó"
   activemodel:
     errors:
       <<: *errors

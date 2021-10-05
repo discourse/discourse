@@ -2138,6 +2138,7 @@ sw:
           title: "Futa Mtumiaji"
       reject:
         title: "Kataa"
+  fallback_username: "Mtumiaji"
   activemodel:
     errors:
       <<: *errors

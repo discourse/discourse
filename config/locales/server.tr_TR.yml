@@ -944,7 +944,7 @@ tr_TR:
         remove: "Bu konu artık manşet değildir. Artık her sayfanın en üstünde yer belirmeyecektir."
   unsubscribed:
     title: "E-posta tercihleri güncellendi!"
-    description: "<b>%{email}</b> için e-posta tercihleri güncellendi. E-posta ayarlarınızı değiştirmek için <a href='%{url}'>kullanıcı tercihlerinizi ziyaret edin</a>."
+    description: "<b>%{email}</b> adresi için e-posta tercihleri güncellendi. E-posta ayarlarınızı değiştirmek için <a href='%{url}'>kullanıcı tercihlerinizi</a> ziyaret edin."
     topic_description: "%{link} bağlantısına yeniden abone olmak için konunun altında veya sağında bildirim denetimini kullanın."
     private_topic_description: "Tekrar abone olmak için konunun altındaki veya sağındaki bildirim seçeneğini onaylayın."
   uploads:
@@ -3955,20 +3955,7 @@ tr_TR:
     missing_version: "Bir sürüm parametresi sağlamalısınız"
     conflict: "Bunu yapmanı önleyen bir güncelleme çatışması oldu."
     reasons:
-      post_count: "Her kullanıcının ilk birkaç gönderisi görevli tarafından onaylanmalıdır. Bkz. “approve_post_count`."
-      trust_level: "Düşük güven seviyesindeki kullanıcıların yanıtları personel tarafından onaylanmış olmalıdır. Bkz. `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Güven seviyesi düşük olan kullanıcılar, görevli tarafından onaylanmış konulara sahip olmalıdır. Bkz. “approve_new_topics_unless_trust_level`."
-      fast_typer: "Yeni kullanıcı ilk gönderilerini şüpheli biçimde hızlı yazdı, şüpheli bot veya spam gönderici davranışları. Bkz. “min_first_post_typing_time”."
-      auto_silence_regexp: "İlk gönderisi \"auto_silence_first_post_regex\" ayarıyla eşleşen yeni kullanıcı."
-      watched_word: "Bu gönderi bir İzlenen Kelime içeriyordu. <a href='%{base_url}/admin/customize/watched_words'>İzlenen kelime listeniz</a>."
-      staged: "Aşama kaydetmiş kullanıcılar için yeni konular ve gönderiler moderatör tarafından onaylanmalıdır. Bkz: `approve_unless_staged`."
-      category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."
-      must_approve_users: "Tüm yeni kullanıcılar yetkili tarafından onaylanmalıdır. Bkz. “must_approve_users`."
-      invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz.`invite_only`"
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
-      email_spam: "Bu e-posta, 'email_in_spam_header' içinde tanımlanan başlık tarafından spam olarak işaretlendi."
-      suspect_user: "Bu yeni kullanıcı, herhangi bir konuyu veya gönderiyi okumadan profil bilgilerini girdi, bu da büyük ihtimalle spam gönderici olabileceklerini gösteriyor. Bkz. `approve_suspect_users`"
-      contains_media: "Bu yazı gömülü medya içerir. Bkz. `review_media_unless_trust_level`."
       queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
     actions:
       agree:
@@ -4071,6 +4058,7 @@ tr_TR:
       other: "%{topic_title} (Bölüm %{count})"
     post_raw: "Tartışma %{parent_url} adresinde devam ediyor.\n\nÖnceki tartışmalar:\n\n%{previous_topics}"
     small_action_post_raw: "Tartışmaya %{new_title} başlığı altında devam edin."
+  fallback_username: "kullanıcı"
   activemodel:
     errors:
       <<: *errors

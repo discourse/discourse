@@ -1124,6 +1124,7 @@ et:
           title: "Kustuta kasutaja"
       reject:
         title: "Lükka tagasi"
+  fallback_username: "kasutaja"
   activemodel:
     errors:
       <<: *errors

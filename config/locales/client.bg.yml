@@ -1351,6 +1351,7 @@ bg:
       tags: "Етикети"
       type:
         users: "Потребители"
+        categories: "Категории"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"

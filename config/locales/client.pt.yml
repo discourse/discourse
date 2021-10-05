@@ -2084,6 +2084,7 @@ pt:
       tags: "Etiquetas"
       type:
         users: "Utilizadores"
+        categories: "Categorias"
       context:
         user: "Procurar publicações por @%{username}"
         category: "Pesquise na categoria #%{category}"

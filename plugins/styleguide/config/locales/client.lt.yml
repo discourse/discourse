@@ -7,20 +7,45 @@
 lt:
   js:
     styleguide:
+      title: "Stiliaus vadovas"
+      welcome: "Norėdami pradėti, kairėje esančiame meniu pasirinkite skyrių."
+      categories:
+        atoms: Atomai
+        molecules: Molekulės
+        organisms: Organizmai
       sections:
         typography:
+          title: "Tipografija"
           example: "Sveiki atvykę į Discourse"
+        font_scale:
+          title: "Šriftų sistema"
         colors:
           title: "Spalvos"
+        icons:
+          title: "Piktogramos"
+        buttons:
+          title: "Mygtukai"
         categories:
           title: "Kategorijos"
         navigation:
           title: "Navigacija"
         categories_list:
           title: "Kategorijų sąrašas"
+        topic_link:
+          title: "Temos Nuoroda"
+        topic_list:
+          title: "Temų sąrašas"
+        basic_topic_list:
+          title: "Pagrindinis temų sąrašas"
         topic_timer_info:
           title: "Temos laikmačiai"
         post:
           title: "Įrašai"
+        topic_map:
+          title: "Temos žemėlapis"
+        site_header:
+          title: "Svetainės antraštė"
         suggested_topics:
           title: "Siūlomos Temos"
+        header_icons:
+          title: "Antraštės piktogramos"

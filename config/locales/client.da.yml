@@ -2110,6 +2110,7 @@ da:
       tags: "Mærker"
       type:
         users: "Brugere"
+        categories: "Kategorier"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"

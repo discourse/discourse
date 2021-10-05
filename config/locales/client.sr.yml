@@ -1149,6 +1149,7 @@ sr:
       categories: "Kategorije"
       type:
         users: "Korisnici"
+        categories: "Kategorije"
       context:
         user: "Pretražite poruke od @%{username}"
         topic: "Pretražite ovu temu"

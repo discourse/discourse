@@ -1377,6 +1377,7 @@ sw:
       tags: "Lebo"
       type:
         users: "Watumiaji"
+        categories: "Vikundi"
       context:
         user: "Tafuta machapisho kwa kutumia @%{jina la mtumiaji}"
         category: "Tafuta kategoria #%{category} "

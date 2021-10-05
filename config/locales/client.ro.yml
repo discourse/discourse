@@ -1724,6 +1724,7 @@ ro:
       tags: "Etichete"
       type:
         users: "Utilizatori"
+        categories: "Categorii"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "

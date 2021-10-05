@@ -2118,6 +2118,7 @@ fi:
       tags: "Tunnisteet"
       type:
         users: "Käyttäjiä"
+        categories: "Alueet"
       context:
         user: "Hae käyttäjän @%{username} viestejä"
         category: "Hae alueelta #%{category}"

@@ -1521,6 +1521,7 @@ th:
       tags: "แท็ก"
       type:
         users: "ผู้ใช้"
+        categories: "หมวดหมู่"
       context:
         user: "ค้นหาโพสต์โดย @%{username}"
         category: "ค้นหาหมวด #%{category}"

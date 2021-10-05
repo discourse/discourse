@@ -50,6 +50,7 @@ lt:
   anonymous: "Anonimas"
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
+  on_another_topic: "Kitoje temoje"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
   themes:
@@ -65,7 +66,11 @@ lt:
       name_too_long: "Yra nustatymas su per ilgu pavadinimu. Maksimalus ilgis yra 255"
       enum_value_not_valid: "Pasirinkta vertė nėra viena iš enum pasirinkimų."
       number_value_not_valid: "Nauja vertė neatitinka leidžiamo diapazono."
+      number_value_not_valid_max: "Turi būti mažesnis arba lygus %{max}."
       string_value_not_valid: "Naujos vertės ilgis neatitinka leidžiamo intervalo."
+      string_value_not_valid_min_max: "Turi būti tarp %{min} ir %{max} simbolių ilgio."
+      string_value_not_valid_min: "Turi sudaryti mažiausia %{min} simbolių."
+      string_value_not_valid_max: "Turi sudaryti daugiausia %{max} simbolių."
   emails:
     incoming:
       default_subject: "Šiai temai reikia antraštės"
@@ -76,6 +81,7 @@ lt:
       errors:
         empty_email_error: "Taip atsitinka, kai gaunamas neapdorotas paštas yra tuščias."
         no_message_id_error: "Taip atsitinka, kai laiške nėra antraštės \"Message-Id\"."
+        strangers_not_allowed_error: "Taip atsitinka, kai vartotojas bandė sukurti naują temą kategorijoje, kurioje jis nėra narys."
       unrecognized_error: "Nenustatyta klaida"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -93,15 +99,35 @@ lt:
       has_already_been_used: "jau yra naudojamas"
       inclusion: yra neitrauktas i sąrasą
       invalid: netinkamas
+      is_invalid: "atrodo neaišku, ar tai visas sakinys?"
       not_a_number: nera skaičius
       not_an_integer: privalo buti integruotas
+      odd: turi būti nelyginis
       record_invalid: ! "Patvirtinimas nepavyko: %{errors}"
       max_emojis: "negali turėti daugiau nei %{max_emojis_count}emoji"
+      emojis_disabled: "negali turėti jaustukų"
     embed:
       load_from_remote: "Klaida ikeliant įrašą"
+  word_connector:
+    comma: ", "
+  invite:
+    not_matching_email: "Jūsų el. pašto adresas ir el. pašto adresas, susietas su pakvietimu, nesutampa. Prašome susisiekti su administracija."
+    cant_invite_to_group: "Neleidžiama kviesti vartotojų į nurodytą grupę (-as). Įsitikinkite, kad esate grupės (-ų), į kurią bandote pakviesti, savininkas."
+  invite_link:
+    email_taken: "Šis el. paštas jau naudojamas. Jei jau turite paskyrą, prisijunkite arba iš naujo nustatykite slaptažodį."
+  topic_invite:
+    failed_to_invite: "Vartotojas negali būti pakviestas į šią temą be grupės narystės vienoje iš šių grupių: %{group_names}."
+    user_exists: "Atsiprašome, šis vartotojas jau buvo pakviestas. Galite pakviesti vartotoją į temą tik vieną kartą."
+    muted_topic: "Atsiprašome, kad vartotojas nutildė šią temą."
   backup:
     not_enough_space_on_disk: "Diske neužtenka vietos įkelti šiai atsarginei kopijai."
   not_logged_in: "Norint tęsti, jums reikia būti prisijungusiam."
+  provider_not_found: "Jums neleidžiama peržiūrėti prašomo šaltinio. Autentifikavimo teikėjas neegzistuoja."
+  not_in_group:
+    request_membership: "Prašyti narystės"
+    join_group: "Prisijungti prie grupės"
+  deleted_topic: "Oi! Ši tema buvo ištrinta ir nebepasiekiama."
+  delete_topic_failed: "Ištrinant šią temą įvyko klaida. Prašome susisiekti su svetainės administratoriumi."
   reading_time: "Skaitymo laikas"
   likes: "Patikimai"
   embed:
@@ -124,6 +150,7 @@ lt:
       many: "%{count} atsakymai"
       other: "%{count} atsakymai"
     created: "Sukurta"
+    new_topic: "Sukurti naują temą"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
     one: "Apgailestaujame, tačiau jūs galite paminėti tik vieną vartotoją įraše"
@@ -133,7 +160,11 @@ lt:
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
+  links_require_trust: "Atsiprašome, negalite įtraukti nuorodų į savo įrašus."
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
+  max_pm_recipients: "Atsiprašome, galite išsiųsti pranešimą daugiausia %{recipients_limit} gavėjams."
+  watched_words_auto_tag: "Automatiškai pažymėta tema"
+  slow_mode_enabled: "Ši tema veikia lėtu režimu."
   just_posted_that: "labai panašu į tai, ką parašėte prieš tai"
   invalid_characters: "turi neleistinų simbolių"
   next_page: "kitas puslapis →"
@@ -171,10 +202,15 @@ lt:
   bookmarks:
     reminders:
       later_today: "Šiandien vėliau"
+      next_business_day: "Kitą darbo dieną"
       tomorrow: "Rytoj"
       next_week: "Kitą savaitę"
       next_month: "Kitą mėnesį"
+      custom: "Pasirinkite datą ir laiką"
   groups:
+    errors:
+      invalid_incoming_email: "'%{email}' nėra galiojantis el. pašto adresas."
+      email_already_used_in_group: "„%{email}“ jau naudoja grupė „%{group_name}“."
     default_names:
       everyone: "visi"
       admins: "administratoriai"
@@ -222,6 +258,7 @@ lt:
               too_many_users: "Vienu metu jūs galite siųsti įspėjimus tik vienam vartotojui."
               cant_send_pm: "Atsiprašome, jūs negalite siųsti žinutės šiam nariui."
               no_user_selected: "Privalote pasiringti esamą narį."
+              send_to_email_disabled: "Atsiprašome, negalite siųsti asmeninių žinučių el. paštu."
         user:
           attributes:
             password:
@@ -232,6 +269,12 @@ lt:
           attributes:
             hex:
               invalid: "netinkama spalva"
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "turi būti ateityje."
+            duration_minutes:
+              cannot_be_zero: "turi būti didesnis nei 0."
       <<: *errors
   vip_category_name: "Šaukykla"
   vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
@@ -394,9 +437,41 @@ lt:
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
     title: "Prisijungimas e-paštu"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "“DiscourseHub” programa"
+      edge: "„Microsoft Edge“"
+      firefox: "„Firefox“"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+    device:
+      android: "“Android” įrenginys"
+      chromebook: "„Chrome“ OS"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "„iPod“"
+      linux: "GNU/Linux kompiuteris"
+      mac: "„Mac“"
+      mobile: "Mobilusis įrenginys"
+      windows: "“Windows” kompiuteris"
+      unknown: "nežinomas įrenginys"
+    os:
+      android: "„Android“"
+      chromeos: "„Chrome“ OS"
+      ios: "„iOS“"
+      linux: "„Linux“"
+      macos: "„MacOS“"
+      windows: "Microsoft Windows"
+      unknown: "nežinoma operacinė sistema"
   change_email:
     confirmed: "Jūsų el. pašto adresas buvo atnaujintas."
     please_continue: "Tęsti į %{site_name}"
+    confirm: "Patvirtinti"
+    authorizing_old:
+      description: "Patvirtinkite savo el. pašto adreso pakeitimą"
+      almost_done_title: "Patvirtinamas naujas el. Pašto adresas"
   activation:
     continue_button: "Tęsti į %{site_name}"
     welcome_to: "Sveiki atvykę į %{site_name}!"
@@ -439,6 +514,7 @@ lt:
     spam:
       title: "Šlamštas"
       long_form: "pažymėtas kaip šlamštas"
+      short_description: "Tai reklama"
     inappropriate:
       title: "Nederamas"
     notify_moderators:
@@ -465,13 +541,19 @@ lt:
     read: "skaityti"
     otp_confirmation:
       confirm_title: Tęsti į %{site_name}
+      logging_in_as: Prisijungiama kaip %{username}
+      confirm_button: Baigti prisijungimą
     scopes:
       message_bus: "Tiesioginiai atnaujinimai"
       read: "Skaityti viską"
+      one_time_password: "Sukurkite vienkartinį prisijungimo raktą"
+      bookmarks_calendar: "Skaityti žymių priminimus"
+    invalid_public_key: "Atsiprašome, viešasis raktas yra neteisingas."
   reports:
     default:
       labels:
         count: Skaičiuoti
+        percent: procentas
         day: Diena
     post_edits:
       labels:
@@ -525,13 +607,17 @@ lt:
     topics:
       title: "Temos"
       xaxis: "Diena"
+      description: "Naujos temos, sukurtos per šį laikotarpį."
     posts:
       title: "Pranešimai"
       xaxis: "Diena"
       yaxis: "Nauji pranešimai"
+      description: "Nauji įrašai, sukurti per šį laikotarpį"
     likes:
       title: "Patikimai"
       xaxis: "Diena"
+      yaxis: "Naujų patiktukų skaičius"
+      description: "Naujų patiktukų skaičius."
     flags:
       title: "Pažymėk!"
       xaxis: "Diena"
@@ -540,6 +626,7 @@ lt:
       xaxis: "Diena"
     users_by_trust_level:
       xaxis: "Patikimumo lygis"
+      yaxis: "Vartotojų skaičius"
       labels:
         level: Lygis
     users_by_type:
@@ -551,7 +638,11 @@ lt:
         moderator: Moderatorius
         suspended: Suspenduotas
         silenced: Nutildytas
+    trending_search:
+      labels:
+        searches: Paieškos
     emails:
+      title: "Laiškai išsiųsti"
       xaxis: "Diena"
     user_to_user_private_messages:
       xaxis: "Diena"
@@ -604,6 +695,7 @@ lt:
     page_view_total_reqs:
       title: "Puslapio peržiūros"
       xaxis: "Diena"
+      yaxis: "Iš viso puslapių peržiūrų"
     page_view_logged_in_mobile_reqs:
       xaxis: "Diena"
     page_view_anon_mobile_reqs:
@@ -636,18 +728,27 @@ lt:
     suspicious_logins:
       labels:
         user: Narys
+        client_ip: Kliento IP
         location: Vieta
+        browser: Naršyklė
+        device: Įrenginys
+        os: Operacinė sistema
+        login_time: Prisijungimo laikas
     staff_logins:
+      title: "Administratoriaus prisijungimai"
       labels:
         user: Narys
         location: Vieta
+        login_at: Prisijungti prie
     top_uploads:
       labels:
         filename: Dokumento pavadinimas
         author: Autorius
+        filesize: Failo dydis
   site_settings:
     disabled: "uždrausta"
     send_welcome_message: "Siųskite visiems naujiems vartotojams sveikinimo pranešimą su greitu pradžios vadovu."
+    discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     dark_mode_none: "Nieko"
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maskimalus įterpiamų įrašų skaičius."
@@ -723,6 +824,7 @@ lt:
       title: "Nebenutildytas"
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
+  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     unsubscribe:
@@ -749,6 +851,7 @@ lt:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Vartotojas pakviestas į temą"
       text_body_template: |
         %{header_instructions}
 
@@ -756,6 +859,7 @@ lt:
 
         %{respond_instructions}
     user_replied:
+      title: "Vartotojas atsakė"
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -796,6 +900,7 @@ lt:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Paminėtas vartotojas"
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -878,6 +983,7 @@ lt:
         %{message}
     digest:
       new_topics: "Naujos temos"
+      unread_notifications: "Neskaityti pranešimai"
       liked_received: "Gauta patikimų"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
@@ -898,8 +1004,12 @@ lt:
     admin_login:
       title: "Administratoriaus prisijungimas"
       subject_template: "[%{email_prefix}] Prisijungti"
+    account_created:
+      title: "Paskyra sukurta"
+      subject_template: "[%{email_prefix}] Jūsų nauja paskyra"
     confirm_new_email:
       title: "Patvirtinti naują e-paštą"
+      subject_template: "[%{email_prefix}] Patvirtinkite naują el. Pašto adresą"
     confirm_new_email_via_admin:
       title: "Patvirtinti naują e-paštą"
     signup:
@@ -920,9 +1030,15 @@ lt:
   color_schemes:
     light: "Šviesi"
     dark: "Tamsi"
+    grey_amber: "Pilkas gintaras"
+    shades_of_blue: "Mėlynos spalvos atspalviai"
+    latte: "Latte"
+    summer: "Vasara"
     default_theme_name: "Numatytasis"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
+    grey_amber_theme_name: "Pilkas Gintaras"
+    summer_theme_name: "Vasara"
   edit_this_page: "Redaguoti šį puslapį"
   csv_export:
     boolean_yes: "Taip"
@@ -940,6 +1056,11 @@ lt:
     editor:
       name: Redaguotojas
       description: Pirmasis pranešimo redagavimas
+    wiki_editor:
+      name: Wiki redaktorius
+      description: Pirmasis wiki redagavimas
+      long_description: |
+        Šis ženklelis suteikiamas pirmą kartą redaguojant vieną „Wiki“ įrašą.
     basic_user:
       name: Pagrindinis
     member:
@@ -1021,6 +1142,8 @@ lt:
       name: Nebeliko meilės
     crazy_in_love:
       name: Įsimylėjas
+    thank_you:
+      name: Ačiū
     first_emoji:
       name: Pirmasis Emoji
     first_mention:
@@ -1146,6 +1269,7 @@ lt:
           title: "Ištrinti vartotoją"
       reject:
         title: "Atmesti"
+  fallback_username: "narys"
   activemodel:
     errors:
       <<: *errors

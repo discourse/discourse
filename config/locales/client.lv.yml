@@ -1863,6 +1863,7 @@ lv:
       tags: "Tagi"
       type:
         users: "Lietotāji"
+        categories: "Sadaļas"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"

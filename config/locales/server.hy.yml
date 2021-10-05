@@ -3157,6 +3157,7 @@ hy:
           title: "Ջնջել Օգտատիրոջը"
       reject:
         title: "Մերժել"
+  fallback_username: "օգտատեր"
   activemodel:
     errors:
       <<: *errors

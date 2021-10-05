@@ -1127,6 +1127,7 @@ sq:
       tags: "Etiketat"
       type:
         users: "Anëtarët"
+        categories: "Kategoritë"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"

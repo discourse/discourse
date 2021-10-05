@@ -7,6 +7,9 @@
 lt:
   site_settings:
     discourse_narrative_bot_enabled: "Įgalinti Discourse Botą (discodot)"
+  badges:
+    certified:
+      name: Sertifikuota
   discourse_narrative_bot:
     quote:
       trigger: "citata"
@@ -15,7 +18,7 @@ lt:
         "1": "It is certain"
         "2": "It is decidedly so"
         "3": "Without a doubt"
-        "4": "Yes definitely"
+        "4": "Taip tikrai"
         "5": "You may rely on it"
         "6": "As I see it, yes"
         "7": "Most likely"
@@ -28,7 +31,17 @@ lt:
         "14": "Cannot predict now"
         "15": "Concentrate and ask again"
         "16": "Don't count on it"
-        "17": "My reply is no"
-        "18": "My sources say no"
+        "17": "Mano atsakymas yra ne"
+        "18": "Mano šaltiniai sako “ne”"
         "19": "Outlook not so good"
         "20": "Very doubtful"
+    track_selector:
+      skip_trigger: "praleisti"
+      help_trigger: "rodyti pagalbą"
+      random_mention:
+        reply: |-
+          Sveiki! Norėdami sužinoti, ką galiu padaryti, pasakykite „@%{discobot_username} %{help_trigger}“.
+    new_user_narrative:
+      reset_trigger: "pamoka"
+      hello:
+        title: "Sveikinimai!"

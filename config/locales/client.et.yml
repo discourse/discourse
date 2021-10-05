@@ -1496,6 +1496,7 @@ et:
       tags: "Sildid"
       type:
         users: "Kasutajaid"
+        categories: "Kategooriad"
       context:
         user: "Otsi kasutaja @%{username} postitusi"
         category: "Otsi #%{category} foorumist"

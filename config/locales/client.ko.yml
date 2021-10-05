@@ -2060,6 +2060,7 @@ ko:
       type:
         default: "글/댓글"
         users: "사용자"
+        categories: "카테고리"
         categories_and_tags: "카테고리/태그"
       context:
         user: "@%{username}님의 글 검색"
@@ -2903,6 +2904,7 @@ ko:
       num_auto_bump_daily: "열린 글 중 매일 자동으로 끌어올릴 수:"
       navigate_to_first_post_after_read: "글을 읽은 후 첫 번째 게시물로 이동"
       notifications:
+        title: "이 카테고리에 대한 알림 수준 변경"
         watching:
           title: "주시 중"
           description: "이 카테고리의 모든 글이 자동으로 관심글로 설정됩니다. 모든 글의 모든 새 댓글에 대한 알림을 받게되며 새 댓글 개수가 표시됩니다."

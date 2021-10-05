@@ -1972,6 +1972,7 @@ vi:
       tags: "Thẻ"
       type:
         users: "Người dùng"
+        categories: "Chuyên mục"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"

@@ -953,7 +953,6 @@ de:
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
   unsubscribed:
     title: "E-Mail-Einstellungen aktualisiert!"
-    description: "E-Mail-Einstellungen für <b>%{email}</b> wurden aktualisiert. Um deine E-Mail-Einstellungen zu ändern, rufe <a href='%{url}'>deine Benutzereinstellungen</a> auf."
     topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen unten oder rechts vom Thema."
     private_topic_description: "Um das Thema wieder zu abonnieren, verwende die Benachrichtigungseinstellungen unten oder rechts vom Thema."
   uploads:
@@ -4526,21 +4525,36 @@ de:
     missing_version: "Du musst eine Version angeben."
     conflict: "Es gab einen Update-Konflikt, der dich daran gehindert hat."
     reasons:
-      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_post_count`."
-      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
-      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung `auto_silence_first_post_regex` übereinstimmt."
-      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/customize/watched_words'>Liste der beobachteten Wörter</a>."
-      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
-      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe Kategorie-Einstellungen."
-      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigt werden. Siehe `must_approve_users`. "
-      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe `invite_only`. "
+      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
+      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der %{link} -Einstellung übereinstimmt."
+      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe dein %{link}."
+      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe %{link}."
+      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe %{link}."
       email_auth_res_enqueue: "Diese E-Mail hat eine DMARC-Prüfung nicht bestanden. Sie stammt höchstwahrscheinlich nicht von der Person, von der sie zu stammen scheint. Überprüfe die Roh-E-Mail-Header auf weitere Informationen."
-      email_spam: "Diese E-Mail wurde durch den in `email_in_spam_header` definierten Header als Spam gekennzeichnet."
-      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe `approve_suspect_users`."
-      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe `review_media_unless_trust_level`."
+      email_spam: "Diese E-Mail wurde durch den in %{link} definierten Header als Spam gekennzeichnet."
+      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe %{link}."
+      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe %{link}."
       queued_by_staff: "Ein Team-Mitglied ist der Meinung, dass dieser Beitrag überprüft werden muss. Bis dahin wird er versteckt bleiben."
+      regular_links:
+        watched_word: Liste der beobachteten Wörter
+        category: Kategorie-Einstellungen
+      site_setting_links:
+        post_count: approve_post_count
+        trust_level: approve_unless_trust_level
+        new_topics_unless_trust_level: approve_new_topics_unless_trust_level
+        fast_typer: min_first_post_typing_time
+        auto_silence_regexp: auto_silence_first_post_regex
+        staged: approve_unless_staged
+        must_approve_users: must_approve_users
+        invite_only: invite_only
+        email_spam: email_in_spam_header
+        suspect_user: approve_suspect_users
+        contains_media: review_media_unless_trust_level
     actions:
       agree:
         title: "Zustimmen …"
@@ -4642,6 +4656,7 @@ de:
       other: "%{topic_title} (Teil %{count})"
     post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
     small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
+  fallback_username: "Benutzer"
   activemodel:
     errors:
       <<: *errors

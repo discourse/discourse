@@ -1905,6 +1905,7 @@ ur:
       tags: "ٹیگز"
       type:
         users: "صارفین"
+        categories: "زُمرَہ جات"
       context:
         user: "@%{username} کے حساب سے پوسٹس تلاش کریں"
         category: "#%{category} زُمرَہ میں تلاش کریں"
