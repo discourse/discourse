@@ -1934,17 +1934,13 @@ describe Search do
 
       result = Search.execute('bruce', type_filter: 'exclude_topics')
 
-      expect(result.users.length).to eq(1)
-      expect(result.users[0].id).to eq(user.id)
+      expect(result.users.map(&:id)).to contain_exactly(user.id)
 
-      expect(result.categories.length).to eq(1)
-      expect(result.categories[0].id).to eq(category.id)
+      expect(result.categories.map(&:id)).to eq(category.id)
 
-      expect(result.groups.length).to eq(1)
-      expect(result.groups[0].id).to eq(group.id)
+      expect(result.groups.map(&:id)).to contain_exactly(group.id)
 
-      expect(result.tags.length).to eq(1)
-      expect(result.tags[0].id).to eq(tag.id)
+      expect(result.tags.map(&:id)).to eq(tag.id)
 
       expect(result.posts.length).to eq(0)
     end
