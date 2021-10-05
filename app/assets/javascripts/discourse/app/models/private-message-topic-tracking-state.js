@@ -78,21 +78,20 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   trackIncoming(inbox, filter, group) {
     this.setProperties({ inbox, filter, activeGroup: group });
+    this.set("isTrackingIncoming", true);
   },
 
   resetIncomingTracking() {
-    if (this.inbox) {
+    if (this.isTrackingIncoming) {
       this.set("newIncoming", []);
     }
   },
 
   stopIncomingTracking() {
-    if (this.inbox) {
+    if (this.isTrackingIncoming) {
       this.setProperties({
+        isTrackingIncoming: false,
         newIncoming: [],
-        inbox: null,
-        filter: null,
-        activeGroup: null,
       });
     }
   },
@@ -213,7 +212,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _notifyIncoming(topicId) {
-    if (this.newIncoming.indexOf(topicId) === -1) {
+    if (this.isTrackingIncoming && this.newIncoming.indexOf(topicId) === -1) {
       this.newIncoming.pushObject(topicId);
     }
   },
