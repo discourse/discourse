@@ -317,7 +317,7 @@ class DiscourseSingleSignOn < SingleSignOn
       if user.username.downcase == username.downcase
         user.username = username # there may be a change of case
       elsif user.username != username
-        user.username = UserNameSuggester.suggest(username || name || email, user.username)
+        user.username = UserNameSuggester.suggest(username, user.username)
       end
     end
 

@@ -78,7 +78,7 @@ class Auth::Result
   def apply_user_attributes!
     change_made = false
     if SiteSetting.auth_overrides_username? && username.present? && username != user.username
-      user.username = UserNameSuggester.suggest(username_suggester_attributes, user.username)
+      user.username = UserNameSuggester.suggest(username, user.username)
       change_made = true
     end
 
