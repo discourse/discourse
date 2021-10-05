@@ -223,7 +223,7 @@
     display: flex;
     flex: 1 0 40%;
     max-width: 40%;
-    margin: 0 0 0 10px;
+    margin: 0 0 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
@@ -264,6 +264,7 @@
     }
     .category-input {
       margin-left: 0;
+      margin-bottom: 0px;
       min-width: 0; // allows flex to shrink
       flex-wrap: wrap;
       max-width: 50%;
