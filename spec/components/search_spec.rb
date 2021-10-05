@@ -1922,7 +1922,7 @@ describe Search do
     end
   end
 
-  context 'search all but topics/posts' do
+  context 'exclude_topics filter' do
     before { SiteSetting.tagging_enabled = true }
     let!(:user) { Fabricate(:user) }
     fab!(:group) { Fabricate(:group, name: 'bruce-world-fans') }
