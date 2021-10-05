@@ -30,12 +30,16 @@ module DiscourseAutomation
 
     def script
       key = 'discourse_automation.scriptables'
+      doc_key = "#{key}.#{object.script}.doc"
+      script_with_trigger_key = "#{key}.#{object.script}_with_#{object.trigger}.doc"
+
       {
         id: object.script,
         version: scriptable.version,
         name: I18n.t("#{key}.#{object.script}.title"),
         description: I18n.t("#{key}.#{object.script}.description"),
-        doc: I18n.t("#{key}.#{object.script}.doc"),
+        doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
+        with_trigger_doc: I18n.exists?(script_with_trigger_key, :en) ? I18n.t(script_with_trigger_key) : nil,
         forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found,
         templates: process_templates(scriptable),
@@ -45,11 +49,13 @@ module DiscourseAutomation
 
     def trigger
       key = 'discourse_automation.triggerables'
+      doc_key = "#{key}.#{object.trigger}.doc"
+
       {
         id: object.trigger,
         name: I18n.t("#{key}.#{object.trigger}.title"),
         description: I18n.t("#{key}.#{object.trigger}.description"),
-        doc: I18n.t("#{key}.#{object.trigger}.doc"),
+        doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable.not_found,
         templates: process_templates(triggerable),
         fields: process_fields(object.fields.where(target: 'trigger'))

@@ -63,6 +63,10 @@ module DiscourseAutomation
       end
     end
 
+    def permits_trigger?(triggerable)
+      Array(triggerables.map(&:to_s)).include?(triggerable.to_s)
+    end
+
     def triggerables(*args)
       if args.present?
         @triggerables, = args

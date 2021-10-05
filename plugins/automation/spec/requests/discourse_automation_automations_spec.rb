@@ -3,86 +3,85 @@
 require_relative '../discourse_automation_helper'
 
 describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
-  fab!(:admin) { Fabricate(:admin) }
-
-  before do
-    sign_in(admin)
-  end
-
   describe '#trigger' do
     fab!(:automation) { Fabricate(:automation) }
 
-    it 'triggers the automation' do
-      output = capture_stdout do
-        post "/admin/plugins/discourse-automation/automations/#{automation.id}/trigger.json"
+    describe 'access' do
+      context 'user is not logged in' do
+        before { sign_out }
+
+        it 'raises a 404' do
+          post "/automations/#{automation.id}/trigger.json"
+          expect(response.status).to eq(404)
+        end
       end
 
-      expect(output).to include('"kind":"manual"')
-    end
-  end
+      context 'user is logged in' do
+        context 'user is admin' do
+          before { sign_in(Fabricate(:admin)) }
 
-  describe '#destroy' do
-    fab!(:automation) { Fabricate(:automation) }
+          it 'triggers the automation' do
+            output = JSON.load(capture_stdout do
+              post "/automations/#{automation.id}/trigger.json"
+            end)
 
-    it 'destroys the bookmark' do
-      delete "/admin/plugins/discourse-automation/automations/#{automation.id}.json"
-      expect(DiscourseAutomation::Automation.find_by(id: automation.id)).to eq(nil)
-    end
-  end
-
-  describe '#update' do
-    fab!(:automation) { Fabricate(:automation) }
-
-    context 'invalid field’s component' do
-      it 'errors' do
-        put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
-          automation: {
-            script: automation.script,
-            trigger: automation.trigger,
-            fields: [
-              { name: 'foo', component: 'bar' }
-            ]
-          }
-        }
-
-        expect(response.status).to eq(422)
-      end
-    end
-
-    context 'required field' do
-      before do
-        DiscourseAutomation::Scriptable.add('test_required') do
-          field :foo, component: :text, required: true
+            expect(output['kind']).to eq('api_call')
+          end
         end
 
-        automation.update!(script: 'test_required')
+        context 'user is moderator' do
+          before { sign_in(Fabricate(:moderator)) }
+
+          it 'raises a 404' do
+            post "/automations/#{automation.id}/trigger.json"
+            expect(response.status).to eq(404)
+          end
+        end
+
+        context 'user is regular' do
+          before { sign_in(Fabricate(:user)) }
+
+          it 'raises a 404' do
+            post "/automations/#{automation.id}/trigger.json"
+            expect(response.status).to eq(404)
+          end
+        end
       end
 
-      it 'errors' do
-        put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
-          automation: {
-            script: automation.script,
-            trigger: automation.trigger,
-            fields: [{ name: 'foo', component: 'text', target: 'script', metadata: { value: nil } }]
+      context 'using a user api key' do
+        before { sign_out }
+
+        let(:admin) { Fabricate(:admin) }
+        let(:api_key) { Fabricate(:api_key, user: admin) }
+
+        it 'works' do
+          post "/automations/#{automation.id}/trigger.json", {
+            params: { context: { foo: :bar } },
+            headers: {
+              HTTP_API_KEY: api_key.key
+            }
           }
-        }
-        expect(response.status).to eq(422)
+          expect(response.status).to eq(200)
+        end
       end
     end
 
-    context 'invalid field’s metadata' do
-      it 'errors' do
-        put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
-          automation: {
-            script: automation.script,
-            trigger: automation.trigger,
-            fields: [
-              { name: 'sender', component: 'users', metadata: { baz: 1 } }
-            ]
-          }
-        }
+    describe 'params as context' do
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:automation) { Fabricate(:automation, script: 'something_about_us', trigger: 'api_call') }
 
-        expect(response.status).to eq(422)
+      before do
+        sign_in(admin)
+      end
+
+      it 'passes the params' do
+        output = JSON.load(capture_stdout do
+          post "/automations/#{automation.id}/trigger.json", { params: { foo: '1', bar: '2' } }
+        end)
+
+        expect(output['foo']).to eq('1')
+        expect(output['bar']).to eq('2')
+        expect(response.status).to eq(200)
       end
     end
   end

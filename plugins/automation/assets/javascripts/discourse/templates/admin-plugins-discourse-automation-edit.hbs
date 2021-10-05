@@ -81,6 +81,12 @@
       </div>
 
       {{#if automationForm.trigger}}
+        {{#if model.automation.trigger.doc}}
+          <div class="alert alert-info">
+            <p>{{model.automation.trigger.doc}}</p>
+          </div>
+        {{/if}}
+
         {{#if model.automation.next_pending_automation_at}}
           <div class="alert alert-info next-trigger">
             <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
@@ -109,6 +115,12 @@
         <h2 class="title">
           {{i18n "discourse_automation.edit_automation.fields_section.title"}}
         </h2>
+
+        {{#if model.automation.script.with_trigger_doc}}
+          <div class="alert alert-info">
+            <p>{{model.automation.script.with_trigger_doc}}</p>
+          </div>
+        {{/if}}
 
         <div class="control-group">
           {{#each scriptFields as |field|}}

@@ -33,7 +33,7 @@ def handle_post_created_edited(post, action)
 end
 
 def handle_user_promoted(user_id, new_trust_level, old_trust_level)
-  name = DiscourseAutomation::Triggerable::USER_PROMOTED
+  trigger = DiscourseAutomation::Triggerable::USER_PROMOTED
   user = User.find_by(id: user_id)
   return if user.blank?
 
@@ -41,7 +41,7 @@ def handle_user_promoted(user_id, new_trust_level, old_trust_level)
   # be a separate event in core
   return if new_trust_level < old_trust_level
 
-  DiscourseAutomation::Automation.where(trigger: name).find_each do |automation|
+  DiscourseAutomation::Automation.where(trigger: trigger).find_each do |automation|
     trust_level_code_all = DiscourseAutomation::Triggerable::USER_PROMOTED_TRUST_LEVEL_CHOICES.first[:id]
 
     restricted_group_id = automation.trigger_field('restricted_group')['value']
@@ -53,8 +53,8 @@ def handle_user_promoted(user_id, new_trust_level, old_trust_level)
     transition_code = "TL#{old_trust_level}#{new_trust_level}"
     if trust_level_transition == trust_level_code_all || trust_level_transition == transition_code
       automation.trigger!(
-        'kind' => name,
-        'users' => [user],
+        'kind' => trigger,
+        'usernames' => [user.username],
         'placeholders' => {
           'trust_level_transition' => I18n.t(
             "discourse_automation.triggerables.user_promoted.transition_placeholder",
@@ -73,10 +73,18 @@ require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
 
 after_initialize do
   [
-    '../app/controllers/discourse_automation/admin_discourse_automation_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_automations_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_scriptables_controller',
-    '../app/controllers/discourse_automation/admin_discourse_automation_triggerables_controller',
+    '../app/lib/discourse_automation/triggers/recurring',
+    '../app/lib/discourse_automation/triggers/stalled_wiki',
+    '../app/lib/discourse_automation/triggers/user_added_to_group',
+    '../app/lib/discourse_automation/triggers/point_in_time',
+    '../app/lib/discourse_automation/triggers/post_created_edited',
+    '../app/lib/discourse_automation/triggers/topic',
+    '../app/lib/discourse_automation/triggers/api_call',
+    '../app/controllers/discourse_automation/automations_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_automations_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_scriptables_controller',
+    '../app/controllers/admin/discourse_automation/admin_discourse_automation_triggerables_controller',
     '../app/serializers/discourse_automation/automation_serializer',
     '../app/serializers/discourse_automation/template_serializer',
     '../app/serializers/discourse_automation/automation_field_serializer',
@@ -110,8 +118,14 @@ after_initialize do
 
   add_admin_route 'discourse_automation.title', 'discourse-automation'
 
+  add_api_key_scope(:automations_trigger, { post: { actions: %w[discourse_automation/automations#trigger], params: %i[context], formats: :json }})
+
   DiscourseAutomation::Engine.routes.draw do
-    scope '/admin/plugins/discourse-automation', as: 'admin_discourse_automation', constraints: StaffConstraint.new do
+    scope format: :json, constraints: AdminConstraint.new do
+      post '/automations/:id/trigger' => 'automations#trigger'
+    end
+
+    scope '/admin/plugins/discourse-automation', as: 'admin_discourse_automation', constraints: AdminConstraint.new do
       scope format: false do
         get '/' => 'admin_discourse_automation#index'
         get '/new' => 'admin_discourse_automation#new'
@@ -125,7 +139,6 @@ after_initialize do
         get '/automations/:id' => 'admin_discourse_automation_automations#show'
         delete '/automations/:id' => 'admin_discourse_automation_automations#destroy'
         put '/automations/:id' => 'admin_discourse_automation_automations#update'
-        post '/automations/:id/trigger' => 'admin_discourse_automation_automations#trigger'
         post '/automations' => 'admin_discourse_automation_automations#create'
       end
     end
@@ -143,7 +156,7 @@ after_initialize do
       if joined_group['value'] == group.id
         automation.trigger!(
           'kind' => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
-          'users' => [user],
+          'usernames' => [user.username],
           'group' => group,
           'placeholders' => {
             'group_name' => group.name

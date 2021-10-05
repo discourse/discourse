@@ -68,12 +68,9 @@ export default Ember.Controller.extend({
     this._confirmTrigger(() => {
       this.set("isTriggeringAutomation", true);
 
-      return ajax(
-        `/admin/plugins/discourse-automation/automations/${id}/trigger`,
-        {
-          type: "post"
-        }
-      )
+      return ajax(`/discourse-automation/automations/${id}/trigger.json`, {
+        type: "post"
+      })
         .catch(e => this.set("error", extractError(e)))
         .finally(() => {
           this.set("isTriggeringAutomation", false);

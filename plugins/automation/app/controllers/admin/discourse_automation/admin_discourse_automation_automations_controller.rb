@@ -29,6 +29,8 @@ module DiscourseAutomation
     end
 
     def update
+      params.require(:automation)
+
       automation = DiscourseAutomation::Automation.find(params[:id])
 
       enforce_trigger!(params[:automation])
@@ -64,12 +66,6 @@ module DiscourseAutomation
     def destroy
       automation = DiscourseAutomation::Automation.find(params[:id])
       automation.destroy!
-      render json: success_json
-    end
-
-    def trigger
-      automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.trigger!('kind' => 'manual')
       render json: success_json
     end
 
