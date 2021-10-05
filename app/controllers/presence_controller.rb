@@ -5,21 +5,26 @@ class PresenceController < ApplicationController
   before_action :ensure_logged_in, only: [:update]
 
   def get
-    name = params.require(:channel)
+    names = params.require(:channels)
+    raise Discourse::InvalidParameters.new(:channels) if !(names.is_a?(Array) && names.all? { |n| n.is_a? String })
 
-    begin
+    names.uniq!
+
+    raise Discourse::InvalidParameters.new("Too many channels") if names.length > 50
+
+    result = {}
+    names.each do |name|
       channel = PresenceChannel.new(name)
+      if channel.can_view?(user_id: current_user&.id)
+        result[name] = PresenceChannelStateSerializer.new(channel.state, root: nil)
+      else
+        result[name] = nil
+      end
     rescue PresenceChannel::NotFound
-      raise Discourse::NotFound
+      result[name] = nil
     end
 
-    if !channel.can_view?(user_id: current_user&.id)
-      # Do not reveal existence of channel
-      raise Discourse::NotFound
-    end
-
-    state = channel.state
-    render json: state, serializer: PresenceChannelStateSerializer, root: nil
+    render json: result
   end
 
   def update

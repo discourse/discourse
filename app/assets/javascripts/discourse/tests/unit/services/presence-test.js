@@ -27,23 +27,31 @@ function usersFixture() {
     },
   ];
 }
+
 acceptance("Presence - Subscribing", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/presence/get", (request) => {
-      if (request.queryParams.channel?.startsWith("/test/")) {
-        return helper.response({
-          count: 3,
-          last_message_id: 1,
-          users: usersFixture(),
-        });
-      } else if (request.queryParams.channel?.startsWith("/countonly/")) {
-        return helper.response({
-          count: 3,
-          last_message_id: 1,
-        });
-      }
+      const channels = request.queryParams.channels;
+      const response = {};
 
-      return helper.response(404, {});
+      channels.forEach((c) => {
+        if (c.startsWith("/test/")) {
+          response[c] = {
+            count: 3,
+            last_message_id: 1,
+            users: usersFixture(),
+          };
+        } else if (c.startsWith("/countonly/")) {
+          response[c] = {
+            count: 3,
+            last_message_id: 1,
+          };
+        } else {
+          response[c] = null;
+        }
+      });
+
+      return helper.response(200, response);
     });
   });
 

@@ -122,58 +122,69 @@ describe PresenceController do
     let(:user3) { Fabricate(:user) }
 
     it "works" do
-      get "/presence/get", params: { channel: ch1.name }
+      get "/presence/get", params: { channels: [ch1.name] }
       expect(response.status).to eq(200)
-      body = response.parsed_body
-      expect(body["users"]).to eq([])
-      expect(body["count"]).to eq(0)
-      expect(body["last_message_id"]).to eq(MessageBus.last_id(ch1.message_bus_channel_name))
+      expect(response.parsed_body).to eq(
+        ch1.name => {
+          "users" => [],
+          "count" => 0,
+          "last_message_id" => MessageBus.last_id(ch1.message_bus_channel_name)
+        }
+      )
 
       ch1.present(user_id: user.id, client_id: SecureRandom.hex)
       ch1.present(user_id: user2.id, client_id: SecureRandom.hex)
       ch1.present(user_id: user3.id, client_id: SecureRandom.hex)
 
-      get "/presence/get", params: { channel: ch1.name }
-      body = response.parsed_body
-      expect(body["users"].map { |u| u["id"] }).to contain_exactly(user.id, user2.id, user3.id)
-      expect(body["users"][0].keys).to contain_exactly("avatar_template", "id", "name", "username")
-      expect(body["count"]).to eq(3)
-      expect(body["last_message_id"]).to eq(MessageBus.last_id(ch1.message_bus_channel_name))
+      get "/presence/get", params: { channels: [ch1.name] }
+      expect(response.status).to eq(200)
+      state = response.parsed_body[ch1.name]
+      expect(state["users"].map { |u| u["id"] }).to contain_exactly(user.id, user2.id, user3.id)
+      expect(state["users"][0].keys).to contain_exactly("avatar_template", "id", "name", "username")
+      expect(state["count"]).to eq(3)
+      expect(state["last_message_id"]).to eq(MessageBus.last_id(ch1.message_bus_channel_name))
     end
 
     it "respects the existence/security of the channel" do
       sign_in user
 
-      get "/presence/get", params: { channel: ch1.name }
+      get "/presence/get", params: { channels: [ch1.name] }
       expect(response.status).to eq(200)
+      expect(response.parsed_body[ch1.name]).not_to eq(nil)
 
-      get "/presence/get", params: { channel: secure_user_channel.name }
-      expect(response.status).to eq(404)
-
-      get "/presence/get", params: { channel: secure_group_channel.name }
-      expect(response.status).to eq(404)
-
-      get "/presence/get", params: { channel: allowed_user_channel.name }
+      get "/presence/get", params: { channels: [secure_user_channel.name] }
       expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq({ secure_user_channel.name => nil })
 
-      get "/presence/get", params: { channel: allowed_group_channel.name }
+      get "/presence/get", params: { channels: [secure_group_channel.name] }
       expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq({ secure_group_channel.name => nil })
 
-      get "/presence/get", params: { channel: "/test/nonexistent" }
-      expect(response.status).to eq(404)
+      get "/presence/get", params: { channels: [allowed_user_channel.name] }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body[allowed_user_channel.name]&.keys).to include("users")
+
+      get "/presence/get", params: { channels: [allowed_group_channel.name] }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body[allowed_group_channel.name]&.keys).to include("users")
+
+      get "/presence/get", params: { channels: ["/test/nonexistent"] }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq({ "/test/nonexistent" => nil })
     end
 
     it "works for count_only channels" do
-      get "/presence/get", params: { channel: count_only_channel.name }
+      get "/presence/get", params: { channels: [count_only_channel.name] }
       expect(response.status).to eq(200)
-      expect(response.parsed_body.keys).to contain_exactly("count", "last_message_id")
-      expect(response.parsed_body["count"]).to eq(0)
+      state = response.parsed_body[count_only_channel.name]
+      expect(state.keys).to contain_exactly("count", "last_message_id")
+      expect(state["count"]).to eq(0)
 
       count_only_channel.present(user_id: user.id, client_id: "a")
 
-      get "/presence/get", params: { channel: count_only_channel.name }
+      get "/presence/get", params: { channels: [count_only_channel.name] }
       expect(response.status).to eq(200)
-      expect(response.parsed_body["count"]).to eq(1)
+      expect(response.parsed_body[count_only_channel.name]["count"]).to eq(1)
     end
 
   end

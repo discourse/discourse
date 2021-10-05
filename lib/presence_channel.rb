@@ -70,13 +70,13 @@ class PresenceChannel
 
   attr_reader :name, :timeout, :message_bus_channel_name, :config
 
-  def initialize(name, raise_not_found: true)
+  def initialize(name, raise_not_found: true, use_cache: true)
     @name = name
     @timeout = DEFAULT_TIMEOUT
     @message_bus_channel_name = "/presence#{name}"
 
     begin
-      @config = fetch_config
+      @config = fetch_config(use_cache: use_cache)
     rescue PresenceChannel::NotFound
       raise if raise_not_found
       @config = Config.new
@@ -297,8 +297,10 @@ class PresenceChannel
 
   private
 
-  def fetch_config
-    cached_config = PresenceChannel.redis.get(redis_key_config)
+  def fetch_config(use_cache: true)
+    cached_config = if use_cache
+      PresenceChannel.redis.get(redis_key_config)
+    end
 
     if cached_config == Config::NOT_FOUND
       raise PresenceChannel::NotFound
