@@ -263,7 +263,16 @@ $search-pad-horizontal: 0.5em;
   }
 
   .search-link {
+    display: block;
     padding: $search-pad-vertical $search-pad-horizontal;
+
+    // This is purposefully redundant
+    // the search widget can be used outside of the header
+    // and the focus/hover styles from the header in those cases wouldn't follow
+    &:focus,
+    &:hover {
+      background-color: var(--highlight-medium);
+    }
 
     .topic {
       display: block;
