@@ -2,7 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import {
   caretPosition,
   inCodeBlock,
-  macFriendlyShortcutLabel,
+  translateModKey,
 } from "discourse/lib/utilities";
 import discourseComputed, {
   observes,
@@ -195,8 +195,10 @@ class Toolbar {
     if (button.shortcut) {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
-      let shortcutTitle = `${mod}+${button.shortcut}`;
-      shortcutTitle = macFriendlyShortcutLabel(shortcutTitle);
+
+      const shortcutTitle = `${translateModKey(mod + "+")}${translateModKey(
+        button.shortcut
+      )}`;
 
       createdButton.title = `${title} (${shortcutTitle})`;
       this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;

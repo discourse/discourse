@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import { macFriendlyShortcutLabel } from "discourse/lib/utilities";
+import { translateModKey } from "discourse/lib/utilities";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const KEY = "keyboard_shortcuts_help";
 
 const SHIFT = I18n.t("shortcut_modifier_key.shift");
-const ALT = macFriendlyShortcutLabel(I18n.t("shortcut_modifier_key.alt"));
+const ALT = translateModKey("Alt");
 const CTRL = I18n.t("shortcut_modifier_key.ctrl");
 const ENTER = I18n.t("shortcut_modifier_key.enter");
 
@@ -211,7 +211,7 @@ export default Controller.extend(ModalFunctionality, {
           keys1: ["m", "w"],
         }),
         print: buildShortcut("actions.print", {
-          keys1: [macFriendlyShortcutLabel(CTRL, { replaceCtrl: true }), "p"],
+          keys1: [translateModKey("Meta"), "p"],
           keysDelimiter: PLUS,
         }),
         defer: buildShortcut("actions.defer", {
