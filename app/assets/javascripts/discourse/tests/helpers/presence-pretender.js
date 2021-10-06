@@ -2,7 +2,7 @@ import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
 import { settled } from "@ember/test-helpers";
 
-const channels = {};
+let channels = {};
 
 export default function (helper) {
   this.post("/presence/update", (request) => {
