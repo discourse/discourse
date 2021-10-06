@@ -4,7 +4,6 @@ import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import I18n from "I18n";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isiPad } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -214,9 +213,7 @@ export default createWidget("search-menu", {
       searchInput.push(h("div.searching", h("div.spinner")));
     } else {
       const clearButton = this.attach("link", {
-        attributes: {
-          title: I18n.t("search.clear_search"),
-        },
+        title: "search.clear_search",
         action: "clearSearch",
         className: "clear-search",
         contents: () => iconNode("times"),
@@ -226,7 +223,7 @@ export default createWidget("search-menu", {
         href: this.fullSearchUrl({ expanded: true }),
         contents: () => iconNode("sliders-h"),
         className: "show-advanced-search",
-        title: I18n.t("search.open_advanced"),
+        title: "search.open_advanced",
       });
 
       if (searchData.term) {
