@@ -165,6 +165,10 @@ export default Component.extend(LoadMore, {
     );
   },
 
+  updateAutoAddTopicsToBulkSelect(newVal) {
+    this.set("autoAddTopicsToBulkSelect", newVal);
+  },
+
   click(e) {
     let self = this;
     let onClick = function (sel, callback) {
