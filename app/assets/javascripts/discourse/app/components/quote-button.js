@@ -7,9 +7,12 @@ import {
   selectedElement,
   selectedText,
   setCaretPosition,
+  translateModKey,
 } from "discourse/lib/utilities";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -41,7 +44,7 @@ function regexSafeStr(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export default Component.extend({
+export default Component.extend(KeyEnterEscape, {
   classNames: ["quote-button"],
   classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
   visible: false,
@@ -54,6 +57,9 @@ export default Component.extend({
   _fastEditNewSelection: null,
   _isSavingFastEdit: false,
   _canEditPost: false,
+  _saveEditButtonTitle: I18n.t("composer.title", {
+    modifier: translateModKey("Meta+"),
+  }),
 
   _isMouseDown: false,
   _reselected: false,
@@ -420,6 +426,18 @@ export default Component.extend({
           });
       })
       .catch(popupAjaxError);
+  },
+
+  @action
+  save() {
+    if (this._displayFastEditInput && !this._saveFastEditDisabled) {
+      this._saveFastEdit();
+    }
+  },
+
+  @action
+  cancelled() {
+    this._hideButton();
   },
 
   @action
