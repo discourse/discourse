@@ -4,13 +4,15 @@ class PresenceController < ApplicationController
   skip_before_action :check_xhr
   before_action :ensure_logged_in, only: [:update]
 
+  MAX_CHANNELS_PER_REQUEST ||= 50
+
   def get
     names = params.require(:channels)
     raise Discourse::InvalidParameters.new(:channels) if !(names.is_a?(Array) && names.all? { |n| n.is_a? String })
 
     names.uniq!
 
-    raise Discourse::InvalidParameters.new("Too many channels") if names.length > 50
+    raise Discourse::InvalidParameters.new("Too many channels") if names.length > MAX_CHANNELS_PER_REQUEST
 
     result = {}
     names.each do |name|
@@ -44,7 +46,7 @@ class PresenceController < ApplicationController
       raise Discourse::InvalidParameters.new(:leave_channels)
     end
 
-    if present_channels && present_channels.length > 50
+    if present_channels && present_channels.length > MAX_CHANNELS_PER_REQUEST
       raise Discourse::InvalidParameters.new("Too many present_channels")
     end
 
