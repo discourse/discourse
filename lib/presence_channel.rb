@@ -85,11 +85,13 @@ class PresenceChannel
 
   # Is this user allowed to view this channel?
   # Pass `nil` for anonymous viewers
-  def can_view?(user_id: nil)
+  def can_view?(user_id: nil, group_finder: nil)
     return true if config.public
     return true if user_id && config.allowed_user_ids&.include?(user_id)
+
+    group_finder ||= lambda { |id| GroupUser.where(user_id: id).pluck("group_id") }
     if user_id && config.allowed_group_ids.present?
-      user_group_ids = GroupUser.where(user_id: user_id).pluck("group_id")
+      user_group_ids = group_finder.call(user_id)
       return true if (user_group_ids & config.allowed_group_ids).present?
     end
     false
@@ -97,9 +99,9 @@ class PresenceChannel
 
   # Is a user allowed to enter this channel?
   # Currently equal to the the can_view? permission
-  def can_enter?(user_id: nil)
+  def can_enter?(user_id: nil, group_finder: nil)
     return false if user_id.nil?
-    can_view?(user_id: user_id)
+    can_view?(user_id: user_id, group_finder: group_finder)
   end
 
   # Mark a user's client as present in this channel. The client_id should be unique per
