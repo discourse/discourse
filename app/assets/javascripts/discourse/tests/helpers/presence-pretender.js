@@ -78,3 +78,7 @@ export function leaveChannel(name, user) {
 export function presentUserIds(channelName) {
   return getChannelInfo(channelName).users.map((u) => u.id);
 }
+
+export function clearState() {
+  channels = {};
+}
