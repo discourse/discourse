@@ -614,6 +614,9 @@ module ApplicationHelper
   end
 
   def manifest_url
+    # If you want the `manifest_url` to be different for a specific action,
+    # in the action set @manifest_url = X. Originally added for chat to add a
+    # separate manifest
     @manifest_url || "#{Discourse.base_path}/manifest.webmanifest"
   end
 
