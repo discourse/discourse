@@ -858,7 +858,7 @@ class UsersController < ApplicationController
 
   def confirm_email_token
     expires_now
-    EmailToken.confirm(params[:token])
+    EmailToken.confirm(params[:token], scope: :signup)
     render json: success_json
   end
 
@@ -884,7 +884,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
       if user = User.with_email(params[:email]).admins.human_users.first
-        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:admin_login])
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
@@ -985,7 +985,7 @@ class UsersController < ApplicationController
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
 
-    if @user = EmailToken.confirm(params[:token])
+    if @user = EmailToken.confirm(params[:token], scope: :signup)
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -1618,7 +1618,12 @@ class UsersController < ApplicationController
   end
 
   def password_reset_find_user(token, committing_change:)
-    @user = committing_change ? EmailToken.confirm(token) : EmailToken.confirmable(token)&.user
+    @user = if committing_change
+      EmailToken.confirm(token, scope: :password_reset)
+    else
+      EmailToken.confirmable(token, scope: :password_reset)&.user
+    end
+
     if @user
       secure_session["password-#{token}"] = @user.id
     else

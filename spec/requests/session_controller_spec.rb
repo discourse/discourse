@@ -3,10 +3,9 @@
 require 'rails_helper'
 require 'rotp'
 
-RSpec.describe SessionController do
-  let(:email_token) { Fabricate(:email_token) }
-  let(:user) { email_token.user }
-  let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
+describe SessionController do
+  let(:user) { Fabricate(:user) }
+  let(:email_token) { Fabricate(:email_token, user: user) }
 
   shared_examples 'failed to continue local login' do
     it 'should return the right response' do
@@ -16,6 +15,8 @@ RSpec.describe SessionController do
   end
 
   describe '#email_login_info' do
+    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]) }
+
     before do
       SiteSetting.enable_local_logins_via_email = true
     end
@@ -118,6 +119,8 @@ RSpec.describe SessionController do
   end
 
   describe '#email_login' do
+    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]) }
+
     before do
       SiteSetting.enable_local_logins_via_email = true
     end
@@ -200,7 +203,6 @@ RSpec.describe SessionController do
         post "/session/email-login/#{email_token.token}.json"
 
         expect(response.status).to eq(200)
-
         expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
         expect(session[:current_user_id]).to eq(nil)
       end
@@ -1112,6 +1114,8 @@ RSpec.describe SessionController do
     let(:headers) { { host: Discourse.current_hostname } }
 
     describe 'can act as an SSO provider' do
+      let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
+
       before do
         stub_request(:any, /#{Discourse.current_hostname}\/uploads/).to_return(
           status: 200,

@@ -339,7 +339,7 @@ class SessionController < ApplicationController
 
   def email_login_info
     token = params[:token]
-    matched_token = EmailToken.confirmable(token)
+    matched_token = EmailToken.confirmable(token, scope: :email_login)
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
@@ -377,7 +377,7 @@ class SessionController < ApplicationController
 
   def email_login
     token = params[:token]
-    matched_token = EmailToken.confirmable(token)
+    matched_token = EmailToken.confirmable(token, scope: :email_login)
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
@@ -388,7 +388,7 @@ class SessionController < ApplicationController
       return render(json: @second_factor_failure_payload)
     end
 
-    if user = EmailToken.confirm(token)
+    if user = EmailToken.confirm(token, scope: :email_login)
       if login_not_approved_for?(user)
         return render json: login_not_approved
       elsif payload = login_error_check(user)
@@ -444,7 +444,7 @@ class SessionController < ApplicationController
 
     user_presence = user.present? && user.human? && !user.staged
     if user_presence
-      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:forgot_password])
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
 

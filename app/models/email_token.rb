@@ -39,12 +39,9 @@ class EmailToken < ActiveRecord::Base
   def self.scopes
     @scopes ||= Enum.new(
       signup: 1,
-      forgot_password: 2,
-      password_reset: 3,
-      email_login: 4,
-      admin_login: 5,
-      old_email: 6,
-      new_email: 7,
+      password_reset: 2,
+      email_login: 3,
+      email_update: 4,
     )
   end
 
@@ -53,9 +50,9 @@ class EmailToken < ActiveRecord::Base
     self[:token]
   end
 
-  def self.confirm(token, skip_reviewable: false)
+  def self.confirm(token, scope: nil, skip_reviewable: false)
     User.transaction do
-      email_token = confirmable(token)
+      email_token = confirmable(token, scope: scope)
       return if email_token.blank?
 
       email_token.update!(confirmed: true)
@@ -77,10 +74,20 @@ class EmailToken < ActiveRecord::Base
     # If the user's email is already taken, just return nil (failure)
   end
 
-  def self.confirmable(token)
+  def self.confirmable(token, scope: nil)
     return nil if token.blank?
 
-    unconfirmed.active.includes(:user).where(token_hash: hash_token(token)).first
+    relation = unconfirmed.active
+      .includes(:user)
+      .where(token_hash: hash_token(token))
+
+    # TODO(2022-01-01): All email tokens should have scopes by now
+    if !scope
+      relation.first
+    else
+      relation.where(scope: EmailToken.scopes[scope]).first ||
+      relation.where(scope: nil).first
+    end
   end
 
   def self.enqueue_signup_email(email_token, to_address: nil)

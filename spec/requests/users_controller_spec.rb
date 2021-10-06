@@ -42,7 +42,7 @@ describe UsersController do
   end
 
   describe '#perform_account_activation' do
-    let(:token) { Fabricate(:email_token, user: user).token }
+    let(:email_token) { Fabricate(:email_token, user: user) }
 
     before do
       UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)
@@ -61,7 +61,7 @@ describe UsersController do
         it 'enqueues a welcome message if the user object indicates so' do
           SiteSetting.send_welcome_message = true
           user.update(active: false)
-          put "/u/activate-account/#{token}"
+          put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
           expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           expect(Jobs::SendSystemMessage.jobs.first["args"].first["message_type"]).to eq("welcome_user")
@@ -69,7 +69,7 @@ describe UsersController do
 
         it "doesn't enqueue the welcome message if the object returns false" do
           user.update(active: true)
-          put "/u/activate-account/#{token}"
+          put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
         end
@@ -78,24 +78,21 @@ describe UsersController do
       context "honeypot" do
         it "raises an error if the honeypot is invalid" do
           UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(true)
-          put "/u/activate-account/#{token}"
+          put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(403)
         end
       end
 
       context 'response' do
-        before do
-          Guardian.any_instance.expects(:can_access_forum?).returns(true)
-          EmailToken.expects(:confirm).with("#{token}").returns(user)
-        end
-
         it 'correctly logs on user' do
+          email_token
+
           events = DiscourseEvent.track_events do
-            put "/u/activate-account/#{token}"
+            put "/u/activate-account/#{email_token.token}"
           end
 
           expect(events.map { |event| event[:event_name] }).to contain_exactly(
-            :user_logged_in, :user_first_logged_in
+            :user_confirmed_email, :user_first_logged_in, :user_logged_in
           )
 
           expect(response.status).to eq(200)
@@ -110,11 +107,10 @@ describe UsersController do
       context 'user is not approved' do
         before do
           SiteSetting.must_approve_users = true
-          EmailToken.expects(:confirm).with("#{token}").returns(user)
-          put "/u/activate-account/#{token}"
         end
 
         it 'should return the right response' do
+          put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
 
           expect(CGI.unescapeHTML(response.body))
@@ -135,7 +131,7 @@ describe UsersController do
         destination_url = 'http://thisisasite.com/somepath'
         cookies[:destination_url] = destination_url
 
-        put "/u/activate-account/#{token}"
+        put "/u/activate-account/#{email_token.token}"
 
         expect(response).to redirect_to(destination_url)
       end
@@ -206,23 +202,21 @@ describe UsersController do
     end
 
     context 'valid token' do
+      let!(:user) { Fabricate(:user) }
+      let!(:user_auth_token) { UserAuthToken.generate!(user_id: user.id) }
+      let!(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]) }
+
       context 'when rendered' do
         it 'renders referrer never on get requests' do
-          user = Fabricate(:user)
-          token = Fabricate(:email_token, user: user).token
-          get "/u/password-reset/#{token}"
+          get "/u/password-reset/#{email_token.token}"
           expect(response.status).to eq(200)
           expect(response.body).to include('<meta name="referrer" content="never">')
         end
       end
 
       it 'returns success' do
-        user = Fabricate(:user)
-        user_auth_token = UserAuthToken.generate!(user_id: user.id)
-        token = Fabricate(:email_token, user: user).token
-
         events = DiscourseEvent.track_events do
-          put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98o' }
+          put "/u/password-reset/#{email_token.token}", params: { password: 'hg9ow8yhg98o' }
         end
 
         expect(events.map { |event| event[:event_name] }).to contain_exactly(
@@ -235,87 +229,57 @@ describe UsersController do
           expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
         end
 
-        expect(session["password-#{token}"]).to be_blank
+        expect(session["password-#{email_token.token}"]).to be_blank
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 
       it 'disallows double password reset' do
-        user = Fabricate(:user)
-        token = Fabricate(:email_token, user: user).token
-
-        put "/u/password-reset/#{token}", params: { password: 'hg9ow8yHG32O' }
-
-        put "/u/password-reset/#{token}", params: { password: 'test123987AsdfXYZ' }
-
-        user.reload
-        expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
-
-        # logged in now
+        put "/u/password-reset/#{email_token.token}", params: { password: 'hg9ow8yHG32O' }
+        put "/u/password-reset/#{email_token.token}", params: { password: 'test123987AsdfXYZ' }
+        expect(user.reload.confirm_password?('hg9ow8yHG32O')).to eq(true)
         expect(user.user_auth_tokens.count).to eq(1)
       end
 
       it "doesn't redirect to wizard on get" do
-        user = Fabricate(:admin)
-        UserAuthToken.generate!(user_id: user.id)
+        user.update!(admin: true)
 
-        token = Fabricate(:email_token, user: user).token
-        get "/u/password-reset/#{token}.json"
+        get "/u/password-reset/#{email_token.token}.json"
         expect(response).not_to redirect_to(wizard_path)
       end
 
       it "redirects to the wizard if you're the first admin" do
-        user = Fabricate(:admin)
-        UserAuthToken.generate!(user_id: user.id)
+        user.update!(admin: true)
 
-        token = Fabricate(:email_token, user: user).token
-        get "/u/password-reset/#{token}"
-
-        put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
-
+        get "/u/password-reset/#{email_token.token}"
+        put "/u/password-reset/#{email_token.token}", params: { password: 'hg9ow8yhg98oadminlonger' }
         expect(response).to redirect_to(wizard_path)
       end
 
       it "sets the users timezone if the param is present" do
-        user = Fabricate(:admin)
-        UserAuthToken.generate!(user_id: user.id)
-
-        token = Fabricate(:email_token, user: user).token
-        get "/u/password-reset/#{token}"
-
+        get "/u/password-reset/#{email_token.token}"
         expect(user.user_option.timezone).to eq(nil)
-        put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger', timezone: "America/Chicago" }
+
+        put "/u/password-reset/#{email_token.token}", params: { password: 'hg9ow8yhg98oadminlonger', timezone: "America/Chicago" }
         expect(user.user_option.reload.timezone).to eq("America/Chicago")
       end
 
       it "logs the password change" do
-        user = Fabricate(:admin)
-        UserAuthToken.generate!(user_id: user.id)
-        token = Fabricate(:email_token, user: user).token
-        get "/u/password-reset/#{token}"
+        get "/u/password-reset/#{email_token.token}"
 
         expect do
-          put "/u/password-reset/#{token}", params: { password: 'hg9ow8yhg98oadminlonger' }
+          put "/u/password-reset/#{email_token.token}", params: { password: 'hg9ow8yhg98oadminlonger' }
         end.to change { UserHistory.count }.by (1)
 
-        entry = UserHistory.last
-
-        expect(entry.target_user_id).to eq(user.id)
-        expect(entry.action).to eq(UserHistory.actions[:change_password])
+        user_history = UserHistory.last
+        expect(user_history.target_user_id).to eq(user.id)
+        expect(user_history.action).to eq(UserHistory.actions[:change_password])
       end
 
       it "doesn't invalidate the token when loading the page" do
-        user = Fabricate(:user)
-        user_token = UserAuthToken.generate!(user_id: user.id)
-
-        email_token = Fabricate(:email_token, user: user)
-
         get "/u/password-reset/#{email_token.token}.json"
         expect(response.status).to eq(200)
-
-        email_token.reload
-
-        expect(email_token.confirmed).to eq(false)
-        expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
+        expect(email_token.reload.confirmed).to eq(false)
+        expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(1)
       end
 
       context "rate limiting" do
@@ -324,10 +288,8 @@ describe UsersController do
         it "rate limits reset passwords" do
           freeze_time
 
-          token = Fabricate(:email_token, user: user).token
-
           6.times do
-            put "/u/password-reset/#{token}", params: {
+            put "/u/password-reset/#{email_token.token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
             }
@@ -335,7 +297,7 @@ describe UsersController do
             expect(response.status).to eq(200)
           end
 
-          put "/u/password-reset/#{token}", params: {
+          put "/u/password-reset/#{email_token.token}", params: {
             second_factor_token: 123456,
             second_factor_method: 1
           }
@@ -346,10 +308,8 @@ describe UsersController do
         it "rate limits reset passwords by username" do
           freeze_time
 
-          token = Fabricate(:email_token, user: user).token
-
           6.times do |x|
-            put "/u/password-reset/#{token}", params: {
+            put "/u/password-reset/#{email_token.token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
             }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
@@ -357,7 +317,7 @@ describe UsersController do
             expect(response.status).to eq(200)
           end
 
-          put "/u/password-reset/#{token}", params: {
+          put "/u/password-reset/#{email_token.token}", params: {
             second_factor_token: 123456,
             second_factor_method: 1
           }, env: { "REMOTE_ADDR": "1.2.3.4" }
@@ -370,16 +330,16 @@ describe UsersController do
         let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         it 'does not change with an invalid token' do
-          token = Fabricate(:email_token, user: user).token
+          user.user_auth_tokens.destroy_all
 
-          get "/u/password-reset/#{token}"
+          get "/u/password-reset/#{email_token.token}"
 
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
             expect(json['password_reset']).to include('{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}')
           end
 
-          put "/u/password-reset/#{token}", params: {
+          put "/u/password-reset/#{email_token.token}", params: {
             password: 'hg9ow8yHG32O',
             second_factor_token: '000000',
             second_factor_method: UserSecondFactor.methods[:totp]
@@ -393,11 +353,9 @@ describe UsersController do
         end
 
         it 'changes password with valid 2-factor tokens' do
-          token = Fabricate(:email_token, user: user).token
+          get "/u/password-reset/#{email_token.token}"
 
-          get "/u/password-reset/#{token}"
-
-          put "/u/password-reset/#{token}", params: {
+          put "/u/password-reset/#{email_token.token}", params: {
             password: 'hg9ow8yHG32O',
             second_factor_token: ROTP::TOTP.new(second_factor.data).now,
             second_factor_method: UserSecondFactor.methods[:totp]
@@ -419,13 +377,12 @@ describe UsersController do
             public_key: valid_security_key_data[:public_key]
           )
         end
-        let(:token) { Fabricate(:email_token, user: user).token }
 
         before do
           simulate_localhost_webauthn_challenge
 
           # store challenge in secure session by visiting the email login page
-          get "/u/password-reset/#{token}"
+          get "/u/password-reset/#{email_token.token}"
         end
 
         it 'preloads with a security key challenge and allowed credential ids' do
@@ -445,34 +402,32 @@ describe UsersController do
         end
 
         it 'changes password with valid security key challenge and authentication' do
-          put "/u/password-reset/#{token}.json", params: {
+          put "/u/password-reset/#{email_token.token}.json", params: {
             password: 'hg9ow8yHG32O',
             second_factor_token: valid_security_key_auth_post_data,
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
-          user.reload
           expect(response.status).to eq(200)
-
+          user.reload
           expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
           expect(user.user_auth_tokens.count).to eq(1)
         end
 
         it "does not change a password if a fake TOTP token is provided" do
-          put "/u/password-reset/#{token}.json", params: {
+          put "/u/password-reset/#{email_token.token}.json", params: {
             password: 'hg9ow8yHG32O',
             second_factor_token: 'blah',
             second_factor_method: UserSecondFactor.methods[:security_key]
           }
 
-          user.reload
           expect(response.status).to eq(200)
-          expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
+          expect(user.reload.confirm_password?('hg9ow8yHG32O')).to eq(false)
         end
 
         context "when security key authentication fails" do
           it 'shows an error message and does not change password' do
-            put "/u/password-reset/#{token}", params: {
+            put "/u/password-reset/#{email_token.token}", params: {
               password: 'hg9ow8yHG32O',
               second_factor_token: {
                 signature: 'bad',
@@ -483,17 +438,16 @@ describe UsersController do
               second_factor_method: UserSecondFactor.methods[:security_key]
             }
 
-            user.reload
-            expect(user.confirm_password?('hg9ow8yHG32O')).to eq(false)
             expect(response.status).to eq(200)
             expect(response.body).to include(I18n.t("webauthn.validation.not_found_error"))
+            expect(user.reload.confirm_password?('hg9ow8yHG32O')).to eq(false)
           end
         end
       end
     end
 
     context 'submit change' do
-      let(:email_token) { Fabricate(:email_token, user: user) }
+      let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]) }
 
       it "fails when the password is blank" do
         put "/u/password-reset/#{email_token.token}.json", params: { password: '' }
