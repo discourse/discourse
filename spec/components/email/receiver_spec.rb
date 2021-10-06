@@ -2024,4 +2024,12 @@ describe Email::Receiver do
       expect { receive(email_3) }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
     end
   end
+
+  it 'fixes valid addresses in embedded emails' do
+    Fabricate(:group, incoming_email: "group-fwd@example.com")
+    process(:long_embedded_email_headers)
+    incoming_email = IncomingEmail.find_by(message_id: "example1@mail.gmail.com")
+    expect(incoming_email.cc_addresses).to include("a@example.com")
+    expect(incoming_email.cc_addresses).to include("c@example.com")
+  end
 end
