@@ -41,6 +41,7 @@ class Plugin::Metadata
     "discourse-login-with-amazon",
     "discourse-logster-rate-limit-checker",
     "discourse-logster-transporter",
+    "discourse-lti",
     "discourse-math",
     "discourse-moderator-attention",
     "discourse-narrative-bot",
