@@ -775,6 +775,9 @@
             },
             "skip_new_user_tips": {
               "type": "boolean"
+            },
+            "default_calendar": {
+              "type": "none_selected"
             }
           },
           "required": [
