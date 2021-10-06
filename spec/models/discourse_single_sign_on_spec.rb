@@ -360,6 +360,19 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq I18n.t('fallback_username')
   end
 
+  it "doesn't use email as a source for name suggestions" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.name).to eq ""
+  end
+
   it "can fill in data on way back" do
     sso = make_sso
 

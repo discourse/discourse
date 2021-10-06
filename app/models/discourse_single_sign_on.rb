@@ -242,7 +242,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
         user_params = {
           primary_email: UserEmail.new(email: email, primary: true),
-          name: try_name || User.suggest_name(try_username || email),
+          name: try_name || User.suggest_name(try_username),
           username: UserNameSuggester.suggest(try_username || try_name),
           ip_address: ip_address
         }
