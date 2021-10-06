@@ -42,6 +42,9 @@ en:
       pin_topic:
         title: Pin Topic
         description: Pins a specified topic at a given date
+      banner_topic:
+        title: Make banner topic
+        description: Make a topic into a banner
       gift_exchange:
         title: Gift exchange
         description: Allows to anonymously pair users of a group to send each other a gift.

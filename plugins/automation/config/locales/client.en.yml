@@ -120,6 +120,15 @@ en:
               label: Pinned globally
             pinned_until:
               label: Pinned until
+        banner_topic:
+          fields:
+            topic_id:
+              label: Topic ID
+            banner_until:
+              label: Make banner until
+            user:
+              label: User
+              description: "The user creating the banner (default: system)"
         flag_post_on_words:
           fields:
             words:
