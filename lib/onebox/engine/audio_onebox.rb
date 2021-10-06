@@ -23,7 +23,7 @@ module Onebox
       end
 
       def placeholder_html
-        ::Onebox::Helpers.audio_placeholder_html
+        SiteSetting.enable_diffhtml_preview ? to_html : ::Onebox::Helpers.audio_placeholder_html
       end
     end
   end
