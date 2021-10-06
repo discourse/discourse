@@ -267,12 +267,11 @@ export default class PresenceService extends Service {
     try {
       result = await this._initialDataAjax;
     } catch (e) {
-      this._initialDataAjax = null;
       later(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
       throw e;
+    } finally {
+      this._initialDataAjax = null;
     }
-
-    this._initialDataAjax = null;
 
     for (const channel in result) {
       if (!result.hasOwnProperty(channel)) {
