@@ -182,7 +182,7 @@ function _downloadCalendarNode(element) {
     "data-starts-at",
     moment
       .tz(
-        `${startDataset.date} ${startDataset.time || ""}`,
+        `${startDataset.date} ${startDataset.time || ""}`.trim(),
         startDataset.timezone
       )
       .toISOString()
@@ -191,7 +191,10 @@ function _downloadCalendarNode(element) {
     node.setAttribute(
       "data-ends-at",
       moment
-        .tz(`${endDataset.date} ${endDataset.time || ""}`, endDataset.timezone)
+        .tz(
+          `${endDataset.date} ${endDataset.time || ""}`.trim(),
+          endDataset.timezone
+        )
         .toISOString()
     );
   }
