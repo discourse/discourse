@@ -110,6 +110,7 @@ describe DiscourseRedis do
         argv = ["arg1", "arg2"]
 
         script = "return { KEYS, ARGV };"
+        Discourse.redis.script(:load, script)
         sha = Digest::SHA1.hexdigest(script)
         expect(Discourse.redis.evalsha(
           sha,
