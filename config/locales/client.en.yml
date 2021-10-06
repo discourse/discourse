@@ -2341,11 +2341,13 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      open_advanced: "Open advanced search"
+      clear_search: "Clear search"
       sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
-      title: "search topics, posts, users, or categories"
+      title: "Search"
       full_page_title: "Search"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -2361,6 +2363,10 @@ en:
       search_term_label: "enter search keyword"
       categories: "Categories"
       tags: "Tags"
+      in: "in"
+      in_this_topic: "in this topic"
+      in_topics_posts: "in all topics and posts"
+      in_posts_by: "in posts by %{username}"
 
       type:
         default: "Topics/posts"
@@ -2374,6 +2380,14 @@ en:
         tag: "Search the #%{tag} tag"
         topic: "Search this topic"
         private_messages: "Search messages"
+
+      tips:
+        category_tag: "filters by category or tag"
+        author: "filters by post author"
+        in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
+        status: "filters by topic status"
+        full_search: "launches full page search"
+        full_search_key: "%{modifier} + Enter"
 
       advanced:
         title: Advanced filters

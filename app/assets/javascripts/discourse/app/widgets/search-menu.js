@@ -2,9 +2,11 @@ import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import I18n from "I18n";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { isiPad } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -14,6 +16,9 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
+export const TOPIC_REPLACE_REGEXP = /\stopic:\d+/i;
+export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
+export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 const searchData = {};
 
@@ -22,10 +27,8 @@ export function initSearchData() {
   searchData.results = {};
   searchData.noResults = false;
   searchData.term = undefined;
-  searchData.typeFilter = null;
+  searchData.typeFilter = DEFAULT_TYPE_FILTER;
   searchData.invalidTerm = false;
-  searchData.topicId = null;
-  searchData.afterAutocomplete = false;
   searchData.suggestionResults = [];
 }
 
@@ -46,8 +49,7 @@ const SearchHelper = {
   perform(widget) {
     this.cancel();
 
-    const { term, typeFilter, contextEnabled } = searchData;
-    const searchContext = contextEnabled ? widget.searchContext() : null;
+    const { term, typeFilter } = searchData;
     const fullSearchUrl = widget.fullSearchUrl();
     const matchSuggestions = this.matchesSuggestions();
 
@@ -105,7 +107,14 @@ const SearchHelper = {
 
     searchData.suggestionKeyword = false;
 
-    if (!isValidSearchTerm(term, widget.siteSettings)) {
+    if (!term) {
+      searchData.noResults = false;
+      searchData.results = [];
+      searchData.loading = false;
+      searchData.invalidTerm = false;
+
+      widget.scheduleRerender();
+    } else if (!isValidSearchTerm(term, widget.siteSettings)) {
       searchData.noResults = true;
       searchData.results = [];
       searchData.loading = false;
@@ -114,9 +123,9 @@ const SearchHelper = {
       widget.scheduleRerender();
     } else {
       searchData.invalidTerm = false;
+
       this._activeSearch = searchForTerm(term, {
         typeFilter,
-        searchContext,
         fullSearchUrl,
       });
       this._activeSearch
@@ -124,48 +133,49 @@ const SearchHelper = {
           // we ensure the current search term is the one used
           // when starting the query
           if (results && term === searchData.term) {
+            if (term.includes("topic:")) {
+              widget.appEvents.trigger("post-stream:refresh", { force: true });
+            }
+
             searchData.noResults = results.resultTypes.length === 0;
             searchData.results = results;
-
-            if (searchContext && searchContext.type === "topic") {
-              widget.appEvents.trigger("post-stream:refresh", { force: true });
-              searchData.topicId = searchContext.id;
-            } else {
-              searchData.topicId = null;
-            }
           }
         })
         .catch(popupAjaxError)
         .finally(() => {
           searchData.loading = false;
-          searchData.afterAutocomplete = false;
           widget.scheduleRerender();
         });
     }
   },
 
   matchesSuggestions() {
-    if (searchData.term === undefined) {
+    if (searchData.term === undefined || this.includesTopics()) {
       return false;
     }
 
-    const categoriesMatch = searchData.term.match(CATEGORY_SLUG_REGEXP);
+    const term = searchData.term.trim();
+    const categoriesMatch = term.match(CATEGORY_SLUG_REGEXP);
 
     if (categoriesMatch) {
       return { type: "category", categoriesMatch };
     }
 
-    const usernamesMatch = searchData.term.match(USERNAME_REGEXP);
+    const usernamesMatch = term.match(USERNAME_REGEXP);
     if (usernamesMatch) {
       return { type: "username", usernamesMatch };
     }
 
-    const suggestionsMatch = searchData.term.match(SUGGESTIONS_REGEXP);
+    const suggestionsMatch = term.match(SUGGESTIONS_REGEXP);
     if (suggestionsMatch) {
       return suggestionsMatch;
     }
 
     return false;
+  },
+
+  includesTopics() {
+    return searchData.typeFilter !== DEFAULT_TYPE_FILTER;
   },
 };
 
@@ -174,11 +184,6 @@ export default createWidget("search-menu", {
   searchData,
 
   fullSearchUrl(opts) {
-    const contextEnabled = searchData.contextEnabled;
-
-    const ctx = contextEnabled ? this.searchContext() : null;
-    const type = ctx ? get(ctx, "type") : null;
-
     let url = "/search";
     const params = [];
 
@@ -186,24 +191,6 @@ export default createWidget("search-menu", {
       let query = "";
 
       query += `q=${encodeURIComponent(searchData.term)}`;
-
-      if (contextEnabled && ctx) {
-        if (type === "private_messages") {
-          if (
-            this.currentUser &&
-            ctx.id.toString().toLowerCase() ===
-              this.currentUser.get("username_lower")
-          ) {
-            query += " in:personal";
-          } else {
-            query += encodeURIComponent(
-              ` personal_messages:${ctx.id.toString().toLowerCase()}`
-            );
-          }
-        } else {
-          query += encodeURIComponent(" " + type + ":" + ctx.id);
-        }
-      }
 
       if (query) {
         params.push(query);
@@ -222,42 +209,60 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
-    const { contextEnabled, afterAutocomplete } = searchData;
-
-    let searchInput = [
-      this.attach(
-        "search-term",
-        { value: searchData.term, contextEnabled },
-        { state: { afterAutocomplete } }
-      ),
-    ];
-    if (searchData.term && searchData.loading) {
+    let searchInput = [this.attach("search-term", { value: searchData.term })];
+    if (searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
+    } else {
+      const clearButton = this.attach("link", {
+        attributes: {
+          title: I18n.t("search.clear_search"),
+        },
+        action: "clearSearch",
+        className: "clear-search",
+        contents: () => iconNode("times"),
+      });
+
+      const advancedSearchButton = this.attach("link", {
+        href: this.fullSearchUrl({ expanded: true }),
+        contents: () => iconNode("sliders-h"),
+        className: "show-advanced-search",
+        title: I18n.t("search.open_advanced"),
+      });
+
+      if (searchData.term) {
+        searchInput.push(
+          h("div.searching", [clearButton, advancedSearchButton])
+        );
+      } else {
+        searchInput.push(h("div.searching", advancedSearchButton));
+      }
     }
 
-    const results = [
-      h("div.search-input", searchInput),
-      this.attach("search-context", {
-        contextEnabled,
-        url: this.fullSearchUrl({ expanded: true }),
-      }),
-    ];
+    const results = [h("div.search-input", searchInput)];
 
-    if (searchData.term && !searchData.loading) {
+    if (!searchData.loading) {
       results.push(
         this.attach("search-menu-results", {
           term: searchData.term,
           noResults: searchData.noResults,
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
-          searchContextEnabled: searchData.contextEnabled,
           suggestionKeyword: searchData.suggestionKeyword,
           suggestionResults: searchData.suggestionResults,
+          searchTopics: SearchHelper.includesTopics(),
         })
       );
     }
 
     return results;
+  },
+
+  clearSearch() {
+    searchData.term = "";
+    const searchInput = document.getElementById("search-term");
+    searchInput.value = "";
+    searchInput.focus();
+    this.triggerSearch();
   },
 
   searchService() {
@@ -267,29 +272,7 @@ export default createWidget("search-menu", {
     return this._searchService;
   },
 
-  searchContext() {
-    if (!this._searchContext) {
-      this._searchContext = this.searchService().get("searchContext");
-    }
-    return this._searchContext;
-  },
-
-  html(attrs) {
-    const searchContext = this.searchContext();
-
-    const shouldTriggerSearch =
-      searchData.contextEnabled !== attrs.contextEnabled ||
-      (searchContext &&
-        searchContext.type === "topic" &&
-        searchData.topicId !== null &&
-        searchData.topicId !== searchContext.id);
-
-    if (shouldTriggerSearch && searchData.term) {
-      this.triggerSearch();
-    }
-
-    searchData.contextEnabled = attrs.contextEnabled;
-
+  html() {
     return this.attach("menu-panel", {
       maxWidth: 500,
       contents: () => this.panelContents(),
@@ -312,18 +295,21 @@ export default createWidget("search-menu", {
     }
 
     if (e.which === 65 /* a */) {
-      let focused = $("header .results .search-link:focus");
-      if (focused.length === 1) {
-        if ($("#reply-control.open").length === 1) {
+      if (document.activeElement?.classList.contains("search-link")) {
+        if (document.querySelector("#reply-control.open")) {
           // add a link and focus composer
 
-          this.appEvents.trigger("composer:insert-text", focused[0].href, {
-            ensureSpace: true,
-          });
+          this.appEvents.trigger(
+            "composer:insert-text",
+            document.activeElement.getAttribute("href"),
+            {
+              ensureSpace: true,
+            }
+          );
           this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
           e.preventDefault();
-          $("#reply-control.open textarea").focus();
+          document.querySelector("#reply-control.open textarea").focus();
           return false;
         }
       }
@@ -332,20 +318,28 @@ export default createWidget("search-menu", {
     const up = e.which === 38;
     const down = e.which === 40;
     if (up || down) {
-      let focused = $(".search-menu *:focus")[0];
+      let focused = document.activeElement.closest(".search-menu")
+        ? document.activeElement
+        : null;
 
       if (!focused) {
         return;
       }
 
-      let links = $(".search-menu .results a");
-      let results = $(".search-menu .results .search-link");
+      let links = document.querySelectorAll(".search-menu .results a");
+      let results = document.querySelectorAll(
+        ".search-menu .results .search-link"
+      );
+
+      if (!results.length) {
+        return;
+      }
 
       let prevResult;
       let result;
 
-      links.each((idx, item) => {
-        if ($(item).hasClass("search-link")) {
+      links.forEach((item) => {
+        if (item.classList.contains("search-link")) {
           prevResult = item;
         }
 
@@ -357,30 +351,46 @@ export default createWidget("search-menu", {
       let index = -1;
 
       if (result) {
-        index = results.index(result);
+        index = Array.prototype.indexOf.call(results, result);
       }
 
       if (index === -1 && down) {
-        $(".search-menu .search-link:first").focus();
+        document.querySelector(".search-menu .results .search-link").focus();
       } else if (index === 0 && up) {
-        $(".search-menu input:first").focus();
+        document.querySelector(".search-menu input#search-term").focus();
       } else if (index > -1) {
         index += down ? 1 : -1;
         if (index >= 0 && index < results.length) {
-          $(results[index]).focus();
+          results[index].focus();
         }
       }
 
       e.preventDefault();
       return false;
     }
+
+    const searchInput = document.querySelector("#search-term");
+    if (e.which === 13 && e.target === searchInput) {
+      // same combination as key-enter-escape mixin
+      if (e.ctrlKey || e.metaKey || (isiPad() && e.altKey)) {
+        this.fullSearch();
+      } else {
+        searchData.typeFilter = null;
+        this.triggerSearch();
+      }
+    }
   },
 
   triggerSearch() {
     searchData.noResults = false;
-    this.searchService().set("highlightTerm", searchData.term);
-    searchData.loading = true;
-    discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
+    if (searchData.term.includes("topic:")) {
+      const highlightTerm = searchData.term.replace(TOPIC_REPLACE_REGEXP, "");
+      this.searchService().set("highlightTerm", highlightTerm);
+    }
+    searchData.loading = SearchHelper.includesTopics() ? true : false;
+
+    const delay = SearchHelper.includesTopics() ? 400 : 200;
+    discourseDebounce(SearchHelper, SearchHelper.perform, this, delay);
   },
 
   moreOfType(type) {
@@ -388,30 +398,17 @@ export default createWidget("search-menu", {
     this.triggerSearch();
   },
 
-  searchContextChanged(enabled) {
-    // This indicates the checkbox has been clicked, NOT that the context has changed.
-    searchData.typeFilter = null;
-    this.sendWidgetAction("searchMenuContextChanged", enabled);
-    searchData.contextEnabled = enabled;
-    this.triggerSearch();
-  },
-
-  searchTermChanged(term) {
-    searchData.typeFilter = null;
+  searchTermChanged(term, opts = {}) {
+    searchData.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
     searchData.term = term;
     this.triggerSearch();
   },
 
   triggerAutocomplete(term) {
-    searchData.afterAutocomplete = true;
-    this.searchTermChanged(term);
+    this.searchTermChanged(term, { searchTopics: true });
   },
 
   fullSearch() {
-    if (!isValidSearchTerm(searchData.term, this.siteSettings)) {
-      return;
-    }
-
     searchData.results = [];
     searchData.loading = false;
     SearchHelper.cancel();
