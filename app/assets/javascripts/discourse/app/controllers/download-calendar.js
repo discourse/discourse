@@ -8,7 +8,7 @@ export default Controller.extend(ModalFunctionality, {
   remember: false,
 
   @action
-  perform() {
+  downloadCalendar() {
     if (this.remember) {
       this.currentUser.setProperties({
         default_calendar: this.selectedCalendar,

@@ -30,7 +30,7 @@ export function downloadIcs(postId, title, dates) {
   const link = getURL(
     `/calendars.ics?post_id=${postId}&title=${title}&${datesParam}`
   );
-  window.open(link, "_blank", "noopener");
+  window.open(link, "_blank", "noopener", "noreferrer");
 }
 
 export function downloadGoogle(title, dates) {
@@ -41,7 +41,7 @@ export function downloadGoogle(title, dates) {
       date.startsAt
     )}/${_formatDateForGoogleApi(date.endsAt)}
     `).trim();
-    window.open(link, "_blank", "noopener");
+    window.open(link, "_blank", "noopener", "noreferrer");
   });
 }
 

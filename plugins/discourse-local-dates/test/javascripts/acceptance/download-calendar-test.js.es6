@@ -10,7 +10,7 @@ import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 
 acceptance(
-  "Download calendar without default calendar option set",
+  "Local Dates - Download calendar without default calendar option set",
   function (needs) {
     needs.user({ default_calendar: "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });
@@ -34,7 +34,7 @@ acceptance(
 );
 
 acceptance(
-  "Download calendar with default calendar option set",
+  "Local Dates - Download calendar with default calendar option set",
   function (needs) {
     needs.user({ default_calendar: "google" });
     needs.settings({ discourse_local_dates_enabled: true });
@@ -59,7 +59,8 @@ acceptance(
         window.open.calledWith(
           "https://www.google.com/calendar/event?action=TEMPLATE&text=Local%20dates%20&dates=20210930T110000Z/20210930T120000Z",
           "_blank",
-          "noopener"
+          "noopener",
+          "noreferrer"
         )
       );
     });

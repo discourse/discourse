@@ -24,7 +24,8 @@ module("Unit | Utility | download-calendar", function (hooks) {
       window.open.calledWith(
         "/calendars.ics?post_id=1&title=event&&dates[0][starts_at]=2021-10-12T15:00:00.000Z&dates[0][ends_at]=2021-10-12T16:00:00.000Z",
         "_blank",
-        "noopener"
+        "noopener",
+        "noreferrer"
       )
     );
   });
@@ -40,7 +41,8 @@ module("Unit | Utility | download-calendar", function (hooks) {
       window.open.calledWith(
         "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z/20211012T160000Z",
         "_blank",
-        "noopener"
+        "noopener",
+        "noreferrer"
       )
     );
   });

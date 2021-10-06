@@ -1,7 +1,7 @@
 <div>
   {{#d-modal-body title="download_calendar.title"}}
     <div class="control-group">
-      <div>
+      <div class="ics">
         <label class="radio" for="ics">
           {{radio-button
             name="select-calendar"
@@ -13,7 +13,7 @@
           {{i18n "download_calendar.save_ics"}}
         </label>
       </div>
-      <div>
+      <div class="google">
         <label class="radio" for="google">
           {{radio-button
             name="select-calendar"
@@ -31,13 +31,13 @@
       <label>
         {{input type="checkbox" checked=remember}} <span>{{i18n "download_calendar.remember"}}</span>
       </label>
-      {{i18n "download_calendar.remember_explanation"}}
+      <span>{{i18n "download_calendar.remember_explanation"}}</span>
     </div>
   {{/d-modal-body}}
   <div class="modal-footer">
     {{d-button
       class="btn-primary"
-      action=(action "perform")
+      action=(action "downloadCalendar")
       label="download_calendar.download"
     }}
     {{d-modal-cancel close=(route-action "closeModal")}}
