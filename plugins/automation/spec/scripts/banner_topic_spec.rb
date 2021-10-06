@@ -42,7 +42,7 @@ describe 'BannerTopic' do
       automation.trigger!
       topic.reload
 
-      expect(topic.banner_until).to be_nil
+      expect(topic.bannered_until).to be_nil
       expect(topic.archetype).to eq(Archetype.banner)
     end
   end
