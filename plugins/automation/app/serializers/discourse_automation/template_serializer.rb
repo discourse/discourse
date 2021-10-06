@@ -2,7 +2,7 @@
 
 module DiscourseAutomation
   class TemplateSerializer < ApplicationSerializer
-    attributes :name, :component, :extra, :accepts_placeholders, :default_value
+    attributes :name, :component, :extra, :accepts_placeholders, :default_value, :is_required
 
     def default_value
       if scope[:targetable].scriptable?
@@ -24,6 +24,10 @@ module DiscourseAutomation
 
     def accepts_placeholders
       object[:accepts_placeholders]
+    end
+
+    def is_required
+      object[:required]
     end
   end
 end
