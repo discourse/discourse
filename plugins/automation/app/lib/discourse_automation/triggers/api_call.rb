@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::ApiCall = 'api_call'
+DiscourseAutomation::Triggerable::API_CALL = 'api_call'
 
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::ApiCall) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::API_CALL) do
 end
