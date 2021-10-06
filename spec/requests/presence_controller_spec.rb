@@ -148,29 +148,27 @@ describe PresenceController do
     it "respects the existence/security of the channel" do
       sign_in user
 
-      get "/presence/get", params: { channels: [ch1.name] }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body[ch1.name]).not_to eq(nil)
+      get "/presence/get", params: {
+        channels: [
+          ch1.name,
+          allowed_user_channel.name,
+          allowed_group_channel.name,
+          secure_user_channel.name,
+          secure_group_channel.name,
+          "/test/nonexistent"
+        ]
+      }
 
-      get "/presence/get", params: { channels: [secure_user_channel.name] }
       expect(response.status).to eq(200)
-      expect(response.parsed_body).to eq({ secure_user_channel.name => nil })
 
-      get "/presence/get", params: { channels: [secure_group_channel.name] }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).to eq({ secure_group_channel.name => nil })
-
-      get "/presence/get", params: { channels: [allowed_user_channel.name] }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body[allowed_user_channel.name]&.keys).to include("users")
-
-      get "/presence/get", params: { channels: [allowed_group_channel.name] }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body[allowed_group_channel.name]&.keys).to include("users")
-
-      get "/presence/get", params: { channels: ["/test/nonexistent"] }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).to eq({ "/test/nonexistent" => nil })
+      expect(response.parsed_body).to include(
+        ch1.name => be_truthy,
+        allowed_user_channel.name => be_truthy,
+        allowed_group_channel.name => be_truthy,
+        secure_user_channel.name => be_nil,
+        secure_group_channel.name => be_nil,
+        "/test/nonexistent" => be_nil,
+      )
     end
 
     it "works for count_only channels" do
