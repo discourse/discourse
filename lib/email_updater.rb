@@ -82,36 +82,37 @@ class EmailUpdater
     confirm_result = nil
 
     User.transaction do
-      result = EmailToken.atomic_confirm(token)
-      if result[:success]
-        token = result[:email_token]
-        @user = token.user
-
-        @change_req = @user.email_change_requests
-          .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: token.id)
-          .first
-
-        case @change_req.try(:change_state)
-        when EmailChangeRequest.states[:authorizing_old]
-          @change_req.update!(
-            change_state: EmailChangeRequest.states[:authorizing_new],
-            new_email_token: @user.email_tokens.create!(email: @change_req.new_email, scope: EmailToken.scopes[:new_email])
-          )
-          send_email(:confirm_new_email, @change_req.new_email_token)
-          confirm_result = :authorizing_new
-        when EmailChangeRequest.states[:authorizing_new]
-          @change_req.update!(change_state: EmailChangeRequest.states[:complete])
-          if !@user.staff?
-            # Send an email notification only to users who did not confirm old
-            # email.
-            send_email_notification(@change_req.old_email, @change_req.new_email)
-          end
-          update_user_email(@change_req.old_email, @change_req.new_email)
-          confirm_result = :complete
-        end
-      else
+      email_token = EmailToken.confirmable(token)
+      if email_token.blank?
         errors.add(:base, I18n.t('change_email.already_done'))
         confirm_result = :error
+        next
+      end
+
+      email_token.update!(confirmed: true)
+
+      @user = email_token.user
+      @change_req = @user.email_change_requests
+        .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: email_token.id)
+        .first
+
+      case @change_req.try(:change_state)
+      when EmailChangeRequest.states[:authorizing_old]
+        @change_req.update!(
+          change_state: EmailChangeRequest.states[:authorizing_new],
+          new_email_token: @user.email_tokens.create!(email: @change_req.new_email, scope: EmailToken.scopes[:new_email])
+        )
+        send_email(:confirm_new_email, @change_req.new_email_token)
+        confirm_result = :authorizing_new
+      when EmailChangeRequest.states[:authorizing_new]
+        @change_req.update!(change_state: EmailChangeRequest.states[:complete])
+        if !@user.staff?
+          # Send an email notification only to users who did not confirm old
+          # email.
+          send_email_notification(@change_req.old_email, @change_req.new_email)
+        end
+        update_user_email(@change_req.old_email, @change_req.new_email)
+        confirm_result = :complete
       end
     end
 

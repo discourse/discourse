@@ -55,42 +55,26 @@ class EmailToken < ActiveRecord::Base
 
   def self.confirm(token, skip_reviewable: false)
     User.transaction do
-      result = atomic_confirm(token)
-      user = result[:user]
+      email_token = confirmable(token)
+      return if email_token.blank?
 
-      if result[:success]
-        user.send_welcome_message = !user.active?
-        user.email = result[:email_token].email
-        user.active = true
-        user.custom_fields.delete('activation_reminder')
-        user.save!
-        user.create_reviewable if !skip_reviewable
-        user.set_automatic_groups
-        DiscourseEvent.trigger(:user_confirmed_email, user)
-      end
+      email_token.update!(confirmed: true)
 
-      if user
-        Invite.redeem_from_email(user.email)
-        user.reload
-      end
+      user = email_token.user
+      user.send_welcome_message = !user.active?
+      user.email = email_token.email
+      user.active = true
+      user.custom_fields.delete('activation_reminder')
+      user.save!
+      user.create_reviewable if !skip_reviewable
+      user.set_automatic_groups
+      DiscourseEvent.trigger(:user_confirmed_email, user)
+      Invite.redeem_from_email(user.email)
+
+      user.reload
     end
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
-  end
-
-  def self.atomic_confirm(token)
-    email_token = confirmable(token)
-    return { success: false } if email_token.blank?
-
-    row_count = active
-      .where(id: email_token.id)
-      .update_all(confirmed: true)
-
-    if row_count == 1
-      { success: true, user: email_token.user, email_token: email_token }
-    else
-      { success: false, user: email_token.user }
-    end
   end
 
   def self.confirmable(token)
