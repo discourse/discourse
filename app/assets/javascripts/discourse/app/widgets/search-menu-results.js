@@ -33,18 +33,22 @@ const QUICK_TIPS = [
   {
     label: "#",
     description: I18n.t("search.tips.category_tag"),
+    clickable: true,
   },
   {
     label: "@",
     description: I18n.t("search.tips.author"),
+    clickable: true,
   },
   {
     label: "in:",
     description: I18n.t("search.tips.in"),
+    clickable: true,
   },
   {
     label: "status:",
     description: I18n.t("search.tips.status"),
+    clickable: true,
   },
   {
     label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
@@ -55,6 +59,12 @@ const QUICK_TIPS = [
 export function addSearchSuggestion(value) {
   if (suggestionShortcuts.indexOf(value) === -1) {
     suggestionShortcuts.push(value);
+  }
+}
+
+export function addQuickSearchRandomTip(tip) {
+  if (QUICK_TIPS.indexOf(tip) === -1) {
+    QUICK_TIPS.push(tip);
   }
 }
 
@@ -609,7 +619,10 @@ createWidget("search-menu-assistant-item", {
     const searchInput = document.querySelector("#search-term");
     searchInput.value = this.attrs.slug;
     searchInput.focus();
-    this.sendWidgetAction("triggerAutocomplete", this.attrs.slug);
+    this.sendWidgetAction("triggerAutocomplete", {
+      value: this.attrs.slug,
+      searchTopics: true,
+    });
     e.preventDefault();
     return false;
   },
@@ -618,11 +631,31 @@ createWidget("search-menu-assistant-item", {
 createWidget("random-quick-tip", {
   tagName: "li.search-random-quick-tip",
 
-  html() {
-    const item = QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+  buildKey: () => "random-quick-tip",
+
+  defaultState() {
+    return QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+  },
+
+  html(attrs, state) {
     return [
-      h("span.tip-label", item.label),
-      h("span.tip-description", item.description),
+      h(
+        `span.tip-label${state.clickable ? ".tip-clickable" : ""}`,
+        state.label
+      ),
+      h("span.tip-description", state.description),
     ];
+  },
+
+  click(e) {
+    if (e.target.classList.contains("tip-clickable")) {
+      const searchInput = document.querySelector("#search-term");
+      searchInput.value = this.state.label;
+      searchInput.focus();
+      this.sendWidgetAction("triggerAutocomplete", {
+        value: this.state.label,
+        searchTopics: this.state.searchTopics,
+      });
+    }
   },
 });

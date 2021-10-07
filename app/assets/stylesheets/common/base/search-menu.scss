@@ -222,6 +222,9 @@ $search-pad-horizontal: 0.5em;
         margin-right: 4px;
         padding: 2px 4px;
         display: inline-block;
+        &.tip-clickable {
+          cursor: pointer;
+        }
       }
     }
   }

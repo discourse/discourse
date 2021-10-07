@@ -85,7 +85,10 @@ import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
+import {
+  addQuickSearchRandomTip,
+  addSearchSuggestion,
+} from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 
 // If you add any methods to the API ensure you bump up this number
@@ -1421,6 +1424,25 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Add a quick search tip shown randomly when the search dropdown is invoked on desktop.
+   *
+   * Example usage:
+   * ```
+   * const tip = {
+   *    label: "in:docs",
+   *    description: I18n.t("search.tips.in_docs"),
+   *    clickable: true,
+   *    showTopics: true
+   * };
+   * api.addQuickSearchRandomTip(tip);
+   * ```
+   *
+   */
+  addQuickSearchRandomTip(tip) {
+    addQuickSearchRandomTip(tip);
   }
 
   /**
