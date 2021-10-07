@@ -192,11 +192,6 @@ module Email
         end
       end
 
-      if reply_key.present? && @message.header['Reply-To'].to_s =~ /\<([^\>]+)\>/ && !smtp_group_id
-        email = Regexp.last_match[1]
-        @message.header['List-Post'] = "<mailto:#{email}>"
-      end
-
       if Email::Sender.bounceable_reply_address?
         email_log.bounce_key = SecureRandom.hex
 
