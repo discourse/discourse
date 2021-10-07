@@ -39,7 +39,7 @@ export function avatarImg(wanted, attrs) {
 
   let title;
   if (!attrs.hideTitle) {
-    title = attrs.name || formatUsername(attrs.username);
+    title = attrs.title || attrs.name || formatUsername(attrs.username);
   }
 
   let alt = "";

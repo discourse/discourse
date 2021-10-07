@@ -84,6 +84,15 @@
       {{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
     </label>
   </section>
+
+  {{#if siteSettings.allow_publish_read_state_on_categories}}
+    <section class="field pubish-read-state">
+      <label>
+        {{input type="checkbox" checked=category.publish_read_state}}
+        {{i18n "category.publish_read_state"}}
+      </label>
+    </section>
+  {{/if}}
 </section>
 
 <section>

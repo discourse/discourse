@@ -304,6 +304,8 @@ class CategoriesController < ApplicationController
         end
       end
 
+      custom_param_keys = []
+
       if SiteSetting.tagging_enabled
         params[:allowed_tags] = params[:allowed_tags].presence || [] if params[:allowed_tags]
         params[:allowed_tag_groups] = params[:allowed_tag_groups].presence || [] if params[:allowed_tag_groups]
@@ -314,8 +316,13 @@ class CategoriesController < ApplicationController
         params[:reviewable_by_group_id] = Group.where(name: params[:reviewable_by_group_name]).pluck_first(:id) if params[:reviewable_by_group_name]
       end
 
+      if SiteSetting.allow_publish_read_state_on_categories
+        custom_param_keys << :publish_read_state
+      end
+
       result = params.permit(
         *required_param_keys,
+        *custom_param_keys,
         :position,
         :name,
         :color,

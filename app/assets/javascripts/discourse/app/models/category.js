@@ -241,6 +241,7 @@ const Category = RestModel.extend({
         reviewable_by_group_name: this.reviewable_by_group_name,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
+        publish_read_state: this.publish_read_state,
       },
       type: id ? "PUT" : "POST",
     });

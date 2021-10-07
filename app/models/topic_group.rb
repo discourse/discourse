@@ -7,7 +7,6 @@ class TopicGroup < ActiveRecord::Base
   def self.update_last_read(user, topic_id, post_number)
     updated_groups = update_read_count(user, topic_id, post_number)
     create_topic_group(user, topic_id, post_number, updated_groups.map(&:group_id))
-    TopicTrackingState.publish_read_indicator_on_read(topic_id, post_number, user.id)
   end
 
   def self.new_message_update(user, topic_id, post_number)

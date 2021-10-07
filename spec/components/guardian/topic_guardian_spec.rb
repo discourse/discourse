@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe TopicGuardian do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
   fab!(:tl3_user) { Fabricate(:leader) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:category) { Fabricate(:category) }
@@ -119,6 +120,64 @@ describe TopicGuardian do
       topic = Fabricate(:topic)
 
       expect(Guardian.new(tl4_user).can_review_topic?(topic)).to eq(false)
+    end
+  end
+
+  describe '#publish_read_state?' do
+    fab!(:category) { Fabricate(:category, publish_read_state: true) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    fab!(:group) do
+      Fabricate(:group,
+        messageable_level: Group::ALIAS_LEVELS[:everyone],
+        publish_read_state: true
+      ).tap { |g| g.add(user) }
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message
+      ).topic
+    end
+
+    it 'returns true for a valid topic' do
+      SiteSetting.allow_publish_read_state_on_categories = true
+
+      expect(Guardian.new(user).publish_read_state?(topic, user)).to eq(true)
+    end
+
+    it 'returns false if publish read state in category site setting has been disabled' do
+      SiteSetting.allow_publish_read_state_on_categories = false
+
+      expect(Guardian.new(user).publish_read_state?(topic, user)).to eq(false)
+    end
+
+    it 'returns false if category is not configured to publish read state' do
+      category.update!(publish_read_state: false)
+
+      expect(Guardian.new(user).publish_read_state?(topic, user)).to eq(false)
+    end
+
+    it 'returns false if group is not configured to publish read state' do
+      group.update!(publish_read_state: false)
+
+      expect(Guardian.new(user).publish_read_state?(group_message, user))
+        .to eq(false)
+    end
+
+    it 'returns false if user does not have access to group message' do
+      user_2 = Fabricate(:user)
+
+      expect(Guardian.new(user_2).publish_read_state?(group_message, user_2))
+        .to eq(false)
+    end
+
+    it 'returns true if group has been configured to publish read state' do
+      expect(Guardian.new(user).publish_read_state?(group_message, user))
+        .to eq(true)
     end
   end
 end

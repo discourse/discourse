@@ -136,11 +136,7 @@ class TopicView
   end
 
   def show_read_indicator?
-    return false if !@user || !topic.private_message?
-
-    topic.allowed_groups.any? do |group|
-      group.publish_read_state? && group.users.include?(@user)
-    end
+    @guardian.publish_read_state?(@topic, @user)
   end
 
   def canonical_path

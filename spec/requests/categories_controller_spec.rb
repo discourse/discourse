@@ -396,6 +396,7 @@ describe CategoriesController do
       describe "success" do
         it "updates attributes correctly" do
           SiteSetting.tagging_enabled = true
+          SiteSetting.allow_publish_read_state_on_categories = true
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
           tag_group = Fabricate(:tag_group)
@@ -416,7 +417,8 @@ describe CategoriesController do
             minimum_required_tags: "",
             allow_global_tags: 'true',
             required_tag_group_name: tag_group.name,
-            min_tags_from_required_group: 2
+            min_tags_from_required_group: 2,
+            publish_read_state: true
           }
 
           expect(response.status).to eq(200)
@@ -433,6 +435,18 @@ describe CategoriesController do
           expect(category.allow_global_tags).to eq(true)
           expect(category.required_tag_group_id).to eq(tag_group.id)
           expect(category.min_tags_from_required_group).to eq(2)
+          expect(category.publish_read_state).to eq(true)
+        end
+
+        it 'does not update Category#publish_read_state when disabled' do
+          SiteSetting.allow_publish_read_state_on_categories = false
+
+          put "/categories/#{category.id}.json", params: {
+            publish_read_state: true
+          }
+
+          expect(response.status).to eq(200)
+          expect(category.reload.publish_read_state).to eq(false)
         end
 
         it 'logs the changes correctly' do

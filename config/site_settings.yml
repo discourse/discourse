@@ -788,6 +788,10 @@ posting:
     refresh: true
   allow_duplicate_topic_titles: false
   allow_duplicate_topic_titles_category: false
+  allow_publish_read_state_on_categories:
+    default: false
+    client: true
+    hidden: true
   min_title_similar_length:
     client: true
     default: 10

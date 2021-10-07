@@ -6,6 +6,8 @@ import { h } from "virtual-dom";
 import { isTesting } from "discourse-common/config/environment";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
+import { longDate } from "discourse/lib/formatter";
+import I18n from "I18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -738,7 +740,17 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then((users) => {
-      state.readers = users.map(smallUserAtts);
+      state.readers = users.map((u) => {
+        const userAttrs = smallUserAtts(u);
+
+        if (u.first_visited_at) {
+          userAttrs.title = I18n.t("post.actions.first_visited_at", {
+            date: longDate(new Date(u.first_visited_at)),
+          });
+        }
+
+        return userAttrs;
+      });
       state.totalReaders = users.totalRows;
     });
   },

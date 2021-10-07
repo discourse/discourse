@@ -245,80 +245,140 @@ describe TopicTrackingState do
     end
   end
 
-  describe '#publish_read_private_message' do
-    fab!(:group) { Fabricate(:group) }
-    let(:read_topic_key) { "/private-messages/unread-indicator/#{group_message.id}" }
-    let(:read_post_key) { "/topic/#{group_message.id}" }
-    let(:latest_post_number) { 3 }
-    let(:group_message) { Fabricate(:private_message_topic,
+  describe '#publish_read_indicator_on_read' do
+    fab!(:group) do
+      Fabricate(:group, publish_read_state: true).tap { |g| g.add(user) }
+    end
+
+    fab!(:latest_post_number) { 3 }
+
+    fab!(:group_message) do
+      Fabricate(:private_message_topic,
         allowed_groups: [group],
         topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
         highest_post_number: latest_post_number
       )
-    }
-    let!(:post) {
+    end
+
+    fab!(:post) do
       Fabricate(:post, topic: group_message, post_number: latest_post_number)
-    }
-
-    before do
-      group.add(user)
     end
 
-    it 'does not trigger a read count update if no allowed groups have the option enabled' do
-      messages = MessageBus.track_publish(read_post_key) do
-        TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
-      end
-
-      expect(messages).to be_empty
+    def read_topic_key(topic_id)
+      "/private-messages/unread-indicator/#{topic_id}"
     end
 
-    context 'when the read indicator is enabled' do
-      before { group.update!(publish_read_state: true) }
+    def read_post_key(topic_id)
+      "/topic/#{topic_id}"
+    end
 
-      it 'publishes a message to hide the unread indicator' do
-        message = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
-        end.first
+    context "regular topics" do
+      fab!(:category) { Fabricate(:category, publish_read_state: true) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
 
-        expect(message.data['topic_id']).to eq group_message.id
-        expect(message.data['show_indicator']).to eq false
+      before do
+        SiteSetting.allow_publish_read_state_on_categories = true
       end
 
-      it 'publishes a message to show the unread indicator when a non-member creates a new post' do
-        allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
-        message = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_write(group_message.id, latest_post_number, allowed_user.id)
-        end.first
+      it 'does not publish a read count message when site setting is not enabled' do
+        SiteSetting.allow_publish_read_state_on_categories = false
 
-        expect(message.data['topic_id']).to eq group_message.id
-        expect(message.data['show_indicator']).to eq true
-      end
-
-      it 'does not publish the unread indicator if the message is not the last one' do
-        not_last_post_number = latest_post_number - 1
-        Fabricate(:post, topic: group_message, post_number: not_last_post_number)
-        messages = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(group_message.id, not_last_post_number, user.id)
+        messages = MessageBus.track_publish(read_post_key(topic.id)) do
+          TopicTrackingState.publish_read_indicator_on_read(
+            topic.id,
+            post.post_number,
+            user.id
+          )
         end
 
         expect(messages).to be_empty
       end
 
-      it 'does not publish the read indicator if the user is not a group member' do
-        allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
-        messages = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, allowed_user.user_id)
+      it 'does not publish a read count message for an invalid topic' do
+        category.update!(publish_read_state: false)
+
+        messages = MessageBus.track_publish(read_post_key(topic.id)) do
+          TopicTrackingState.publish_read_indicator_on_read(
+            topic.id,
+            post.post_number,
+            user.id
+          )
         end
 
         expect(messages).to be_empty
       end
 
-      it 'publish a read count update to every client' do
-        message = MessageBus.track_publish(read_post_key) do
-          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
+      it 'publishes the right message for a valid topic' do
+        message = MessageBus.track_publish(read_post_key(topic.id)) do
+          TopicTrackingState.publish_read_indicator_on_read(
+            topic.id,
+            post.post_number,
+            user.id
+          )
         end.first
 
-        expect(message.data[:type]).to eq :read
+        expect(message.data[:readers_count].present?).to eq(true)
+      end
+    end
+
+    context "private group messages" do
+      it 'does not trigger a read count update if no allowed groups have the option enabled' do
+        group.update!(publish_read_state: false)
+
+        messages = MessageBus.track_publish(read_post_key(group_message.id)) do
+          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
+        end
+
+        expect(messages).to be_empty
+      end
+
+      context 'when the read indicator is enabled' do
+        it 'publishes a message to hide the unread indicator' do
+          message = MessageBus.track_publish(read_topic_key(group_message.id)) do
+            TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
+          end.first
+
+          expect(message.data['topic_id']).to eq group_message.id
+          expect(message.data['show_indicator']).to eq false
+        end
+
+        it 'publishes a message to show the unread indicator when a non-member creates a new post' do
+          allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
+          message = MessageBus.track_publish(read_topic_key(group_message.id)) do
+            TopicTrackingState.publish_read_indicator_on_write(group_message.id, latest_post_number, allowed_user.id)
+          end.first
+
+          expect(message.data['topic_id']).to eq group_message.id
+          expect(message.data['show_indicator']).to eq true
+        end
+
+        it 'does not publish the unread indicator if the message is not the last one' do
+          not_last_post_number = latest_post_number - 1
+          Fabricate(:post, topic: group_message, post_number: not_last_post_number)
+          messages = MessageBus.track_publish(read_topic_key(group_message.id)) do
+            TopicTrackingState.publish_read_indicator_on_read(group_message.id, not_last_post_number, user.id)
+          end
+
+          expect(messages).to be_empty
+        end
+
+        it 'does not publish the read indicator if the user is not a group member' do
+          allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
+          messages = MessageBus.track_publish(read_topic_key(group_message.id)) do
+            TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, allowed_user.user_id)
+          end
+
+          expect(messages).to be_empty
+        end
+
+        it 'publish a read count update to every client' do
+          message = MessageBus.track_publish(read_post_key(group_message.id)) do
+            TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
+          end.first
+
+          expect(message.data[:type]).to eq :read
+        end
       end
     end
   end

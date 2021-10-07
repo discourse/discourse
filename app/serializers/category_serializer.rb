@@ -21,7 +21,8 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :reviewable_by_group_name,
-             :default_slow_mode_seconds
+             :default_slow_mode_seconds,
+             :publish_read_state
 
   def reviewable_by_group_name
     object.reviewable_by_group.name
@@ -104,5 +105,9 @@ class CategorySerializer < SiteCategorySerializer
 
   def include_custom_fields?
     true
+  end
+
+  def include_publish_read_state?
+    SiteSetting.allow_publish_read_state_on_categories
   end
 end

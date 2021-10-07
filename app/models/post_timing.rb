@@ -206,6 +206,12 @@ SQL
     TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
     TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 
+    TopicTrackingState.publish_read_indicator_on_read(
+      topic_id,
+      highest_seen,
+      current_user.id
+    )
+
     if total_changed > 0
       current_user.reload
       current_user.publish_notifications_state

@@ -252,4 +252,27 @@ module TopicGuardian
   def affected_by_slow_mode?(topic)
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
   end
+
+  def publish_read_state?(topic, user)
+    return false if !user
+
+    if SiteSetting.allow_publish_read_state_on_categories && topic.category.publish_read_state
+      return true
+    end
+
+    return false if !topic.private_message?
+
+    GroupUser
+      .joins(:group)
+      .joins(<<~SQL)
+        INNER JOIN topic_allowed_groups tag
+        ON tag.topic_id = #{topic.id.to_i} AND tag.group_id = group_users.group_id
+      SQL
+      .exists?(
+        user: current_user,
+        groups: {
+          publish_read_state: true
+        }
+      )
+  end
 end
