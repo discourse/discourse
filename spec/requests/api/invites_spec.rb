@@ -24,7 +24,7 @@ describe 'invites' do
           topic_id: { type: :integer },
           group_id: { type: :integer, description: "optional, either this or `group_names`" },
           group_names: { type: :string, description: "optional, either this or `group_id`" },
-          expires_at: { type: :string, default: "controlled by invite_expiry_days site setting" },
+          expires_at: { type: :string, description: "optional, if not supplied, the invite_expiry_days site setting is used" },
         }
       }
 
