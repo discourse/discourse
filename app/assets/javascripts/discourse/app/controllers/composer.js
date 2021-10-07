@@ -240,13 +240,22 @@ export default Controller.extend({
     return SAVE_ICONS[modelAction];
   },
 
+  // Note we update when some other attributes like tag/category change to allow
+  // text customizations to use those.
   @discourseComputed(
     "model.action",
     "isWhispering",
     "model.editConflict",
-    "model.privateMessage"
+    "model.privateMessage",
+    "model.tags",
+    "model.category"
   )
   saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+    let result = this.model.customizationFor("saveLabel");
+    if (result) {
+      return result;
+    }
+
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {

@@ -37,6 +37,7 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { resetComposerCustomizations } from "discourse/models/composer";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
@@ -280,6 +281,7 @@ export function acceptance(name, optionsOrCallback) {
       resetCustomPostMessageCallbacks();
       resetUserSearchCache();
       resetCardClickListenerSelector();
+      resetComposerCustomizations();
       resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
