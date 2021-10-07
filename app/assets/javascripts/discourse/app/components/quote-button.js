@@ -176,7 +176,7 @@ export default Component.extend(KeyEnterEscape, {
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
+    const { isIOS, isAndroid, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     // Don't mess with the original range as it results in weird behaviours
@@ -228,12 +228,10 @@ export default Component.extend(KeyEnterEscape, {
 
       this.element.querySelector("button")?.focus();
 
-      // work around Safari that would sometimes lose the selection
-      if (isSafari) {
-        this._reselected = true;
-        selection.removeAllRanges();
-        selection.addRange(clone);
-      }
+      // workaround so Safari and Firefox don't lose the selection
+      this._reselected = true;
+      selection.removeAllRanges();
+      selection.addRange(clone);
     });
   },
 
