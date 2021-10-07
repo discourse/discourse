@@ -61,7 +61,9 @@ export function addSearchSuggestion(value) {
 class Highlighted extends RawHtml {
   constructor(html, term) {
     super({ html: `<span>${html}</span>` });
-    this.term = term.replace(TOPIC_REPLACE_REGEXP, "");
+    if (term) {
+      this.term = term.replace(TOPIC_REPLACE_REGEXP, "");
+    }
   }
 
   decorate($html) {
