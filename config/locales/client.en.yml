@@ -3016,7 +3016,9 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_reply_shortcut: "Or press q"
       quote_edit: "Edit"
+      quote_edit_shortcut: "Or press e"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"

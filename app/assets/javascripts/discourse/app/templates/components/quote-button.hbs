@@ -4,7 +4,9 @@
       class="btn-flat insert-quote"
       action=(action "insertQuote")
       icon="quote-left"
-      label="post.quote_reply"}}
+      label="post.quote_reply"
+      title="post.quote_reply_shortcut"
+    }}
   {{/if}}
 
   {{#if siteSettings.enable_fast_edit}}
@@ -14,6 +16,7 @@
         action=(action "_toggleFastEditForm")
         label="post.quote_edit"
         class="btn-flat quote-edit-label"
+        title="post.quote_edit_shortcut"
       }}
     {{/if}}
   {{/if}}
