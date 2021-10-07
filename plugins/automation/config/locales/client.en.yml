@@ -112,6 +112,15 @@ en:
               description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspend until (default)
+            reason:
+              label: Reason (default)
+            actor:
+              label: User
+              description: "The user responsible for the suspension (default: system)"
         pin_topic:
           fields:
             pinnable_topic:

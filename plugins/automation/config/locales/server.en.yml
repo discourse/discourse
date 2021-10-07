@@ -53,6 +53,10 @@ en:
         title: Send pms
         description: Allows to send PMs (possibly delayed).
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
+      suspend_user_by_email:
+        title: Suspend user by email
+      suspend_user_by_email_with_api_call:
+        doc: When triggering `suspend_user_by_email` with an api call, the endpoint expects a valid `email` to be present in the params sent. `reasons` and `suspend_until (ISO 8601 format)` can also be used to override default fields values.
       send_pms_with_api_call:
         doc: When using `send pms` script with `api call` trigger, the `usernames` param of your request will be used to fill the receivers list.
       topic_required_words:
