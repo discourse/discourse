@@ -190,6 +190,8 @@ after_initialize do
       validate :discourse_automation_topic_required_words
 
       def discourse_automation_topic_required_words
+        return if self.post_type == Post.types[:small_action]
+
         if topic.custom_fields['discourse_automation_id'].present?
           automation = DiscourseAutomation::Automation.find(topic.custom_fields['discourse_automation_id'])
           if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS

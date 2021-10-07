@@ -15,6 +15,7 @@ describe 'TopicRequiredWords' do
   end
 
   before do
+    topic.upsert_custom_fields(discourse_automation_id: automation.id)
     automation.upsert_field!('words', 'text_list', { value: ['#foo', '#bar'] })
   end
 
@@ -50,6 +51,22 @@ describe 'TopicRequiredWords' do
           expect(post.valid?).to be(true)
         end
       end
+    end
+  end
+
+  context 'moving posts' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, raw: "this is quite cool #foo") }
+    fab!(:post) { Fabricate(:post, topic: topic, raw: "this is quite cool #bar") }
+    fab!(:destination_topic) { Fabricate(:post).topic }
+
+    it 'works' do
+      expect do
+        topic.move_posts(admin, [post.id], destination_topic_id: destination_topic.id)
+      end.to_not raise_error
+
+      expect(topic.posts.where(post_type: Post.types[:regular]).size).to eq(1)
+      expect(destination_topic.posts.where(post_type: Post.types[:regular]).size).to eq(2)
     end
   end
 end
