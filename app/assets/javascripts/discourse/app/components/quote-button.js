@@ -206,13 +206,6 @@ export default Component.extend(KeyEnterEscape, {
     // merge back all text nodes so they don't get messed up
     parent.normalize();
 
-    // work around Safari that would sometimes lose the selection
-    if (isSafari) {
-      this._reselected = true;
-      selection.removeAllRanges();
-      selection.addRange(clone);
-    }
-
     // change the position of the button
     schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -234,6 +227,13 @@ export default Component.extend(KeyEnterEscape, {
       $quoteButton.offset({ top, left });
 
       this.element.querySelector("button")?.focus();
+
+      // work around Safari that would sometimes lose the selection
+      if (isSafari) {
+        this._reselected = true;
+        selection.removeAllRanges();
+        selection.addRange(clone);
+      }
     });
   },
 
