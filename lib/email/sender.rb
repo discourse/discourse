@@ -102,7 +102,7 @@ module Email
 
       post_id   = header_value('X-Discourse-Post-Id')
       topic_id  = header_value('X-Discourse-Topic-Id')
-      reply_key = set_reply_key(post_id, user_id)
+      reply_key = get_reply_key(post_id, user_id)
       from_address = @message.from&.first
       smtp_group_id = from_address.blank? ? nil : Group.where(
         email_username: from_address, smtp_enabled: true
@@ -209,7 +209,17 @@ module Email
       @message.header['X-Discourse-Post-Id']  = nil if post_id.present?
 
       if reply_key.present?
+        @message.header['Reply-To'] = header_value('Reply-To').gsub!("%{reply_key}", reply_key)
         @message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = nil
+      end
+
+      # Replace reply_key in custom headers or remove
+      MessageBuilder.custom_headers(SiteSetting.email_custom_headers).each do |key, _|
+        value = header_value(key)
+        if value&.include?('%{reply_key}')
+          @message.header[key] = nil
+          @message.header[key] = reply_key.present? ? value.gsub!('%{reply_key}', reply_key) : nil
+        end
       end
 
       # pass the original message_id when using mailjet/mandrill/sparkpost
@@ -425,7 +435,7 @@ module Email
       @message.header[name] = data.to_json
     end
 
-    def set_reply_key(post_id, user_id)
+    def get_reply_key(post_id, user_id)
       # ALLOW_REPLY_BY_EMAIL_HEADER is only added if we are _not_ sending
       # via group SMTP and if reply by email site settings are configured
       return if !user_id || !post_id || !header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
@@ -435,9 +445,6 @@ module Email
         post_id: post_id,
         user_id: user_id
       ).reply_key
-
-      @message.header['Reply-To'] =
-        header_value('Reply-To').gsub!("%{reply_key}", reply_key)
     end
 
     def self.bounceable_reply_address?
