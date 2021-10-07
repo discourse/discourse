@@ -33,6 +33,7 @@ import { registerObjects } from "discourse/pre-initializers/inject-discourse-obj
 import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { isLegacyEmber } from "discourse-common/config/environment";
+import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -308,6 +309,7 @@ function setupTestsCommon(application, container, config) {
   QUnit.testDone(function () {
     sinon.restore();
     resetPretender();
+    clearPresenceState();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
