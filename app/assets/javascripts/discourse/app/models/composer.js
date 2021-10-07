@@ -24,6 +24,15 @@ import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throwAjaxError } from "discourse/lib/ajax-error";
 
+let _customizations = [];
+export function registerCustomizationCallback(cb) {
+  _customizations.push(cb);
+}
+
+export function resetComposerCustomizations() {
+  _customizations = [];
+}
+
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
   CREATE_SHARED_DRAFT = "createSharedDraft",
@@ -1304,6 +1313,18 @@ const Composer = RestModel.extend({
       .finally(() => {
         this.set("draftSaving", false);
       });
+  },
+
+  customizationFor(type) {
+    for (let i = 0; i < _customizations.length; i++) {
+      let cb = _customizations[i][type];
+      if (cb) {
+        let result = cb(this);
+        if (result) {
+          return result;
+        }
+      }
+    }
   },
 });
 

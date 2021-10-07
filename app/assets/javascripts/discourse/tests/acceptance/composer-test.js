@@ -12,7 +12,8 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { NEW_TOPIC_KEY } from "discourse/models/composer";
+import { CREATE_TOPIC, NEW_TOPIC_KEY } from "discourse/models/composer";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { Promise } from "rsvp";
 import { run } from "@ember/runloop";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -1006,5 +1007,53 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "Something");
     await click(".save-or-cancel .cancel");
     assert.notOk(exists(".discard-draft-modal .save-draft"));
+  });
+});
+
+acceptance("Composer - Customizations", function (needs) {
+  needs.user();
+  needs.site({ can_tag_topics: true });
+
+  function customComposerAction(composer) {
+    return (
+      (composer.tags || []).indexOf("monkey") !== -1 &&
+      composer.action === CREATE_TOPIC
+    );
+  }
+
+  needs.hooks.beforeEach(() => {
+    withPluginApi("0.8.14", (api) => {
+      api.customizeComposerText({
+        actionTitle(model) {
+          if (customComposerAction(model)) {
+            return "custom text";
+          }
+        },
+
+        saveLabel(model) {
+          if (customComposerAction(model)) {
+            return "composer.emoji";
+          }
+        },
+      });
+    });
+  });
+
+  test("Supports text customization", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.equal(query(".action-title").innerText, I18n.t("topic.create_long"));
+    assert.equal(
+      query(".save-or-cancel button").innerText,
+      I18n.t("composer.create_topic")
+    );
+    const tags = selectKit(".mini-tag-chooser");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
+    assert.equal(query(".action-title").innerText, "custom text");
+    assert.equal(
+      query(".save-or-cancel button").innerText,
+      I18n.t("composer.emoji")
+    );
   });
 });
