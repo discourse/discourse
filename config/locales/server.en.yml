@@ -5012,21 +5012,9 @@ en:
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See %{link}."
       contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
-      regular_links:
+      links:
         watched_word: list of watched words
         category: category settings
-      site_setting_links:
-        post_count: approve_post_count
-        trust_level: approve_unless_trust_level
-        new_topics_unless_trust_level: approve_new_topics_unless_trust_level
-        fast_typer: min_first_post_typing_time
-        auto_silence_regexp: auto_silence_first_post_regex
-        staged: approve_unless_staged
-        must_approve_users: must_approve_users
-        invite_only: invite_only
-        email_spam: email_in_spam_header
-        suspect_user: approve_suspect_users
-        contains_media: review_media_unless_trust_level
 
     actions:
       agree:
