@@ -1,14 +1,14 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
+import { action } from "@ember/object";
 
 export default function (filter) {
   return DiscourseRoute.extend({
-    actions: {
-      didTransition() {
-        this.controllerFor("user-posts")._showFooter();
-        return true;
-      },
+    @action
+    didTransition() {
+      this.controllerFor("user-posts")._showFooter();
+      return true;
     },
 
     model() {

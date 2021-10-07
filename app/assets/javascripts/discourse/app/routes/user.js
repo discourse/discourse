@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import User from "discourse/models/user";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -10,14 +11,14 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    undoRevokeApiKey(key) {
-      key.undoRevoke();
-    },
+  @action
+  undoRevokeApiKey(key) {
+    key.undoRevoke();
+  },
 
-    revokeApiKey(key) {
-      key.revoke();
-    },
+  @action
+  revokeApiKey(key) {
+    key.revoke();
   },
 
   beforeModel() {

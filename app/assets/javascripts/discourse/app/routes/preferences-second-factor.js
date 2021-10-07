@@ -1,4 +1,5 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
+import { action } from "@ember/object";
 
 export default RestrictedUserRoute.extend({
   showFooter: true,
@@ -34,27 +35,26 @@ export default RestrictedUserRoute.extend({
       .finally(() => controller.set("loading", false));
   },
 
-  actions: {
-    willTransition(transition) {
-      this._super(...arguments);
+  @action
+  willTransition(transition) {
+    this._super(...arguments);
 
-      const controller = this.controllerFor("preferences/second-factor");
-      const user = controller.get("currentUser");
-      const settings = controller.get("siteSettings");
+    const controller = this.controllerFor("preferences/second-factor");
+    const user = controller.get("currentUser");
+    const settings = controller.get("siteSettings");
 
-      if (
-        transition.targetName === "preferences.second-factor" ||
-        !user ||
-        user.is_anonymous ||
-        user.second_factor_enabled ||
-        (settings.enforce_second_factor === "staff" && !user.staff) ||
-        settings.enforce_second_factor === "no"
-      ) {
-        return true;
-      }
+    if (
+      transition.targetName === "preferences.second-factor" ||
+      !user ||
+      user.is_anonymous ||
+      user.second_factor_enabled ||
+      (settings.enforce_second_factor === "staff" && !user.staff) ||
+      settings.enforce_second_factor === "no"
+    ) {
+      return true;
+    }
 
-      transition.abort();
-      return false;
-    },
+    transition.abort();
+    return false;
   },
 });

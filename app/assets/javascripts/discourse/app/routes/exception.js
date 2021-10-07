@@ -1,14 +1,14 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   serialize() {
     return "";
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("application").set("showFooter", true);
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("application").set("showFooter", true);
+    return true;
   },
 });

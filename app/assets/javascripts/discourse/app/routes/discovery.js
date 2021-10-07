@@ -8,6 +8,7 @@ import User from "discourse/models/user";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Site from "discourse/models/site";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(OpenComposer, {
   queryParams: {
@@ -44,53 +45,58 @@ export default DiscourseRoute.extend(OpenComposer, {
     }
   },
 
-  actions: {
-    loading() {
-      this.controllerFor("discovery").set("loading", true);
-      return true;
-    },
+  @action
+  loading() {
+    this.controllerFor("discovery").set("loading", true);
+    return true;
+  },
 
-    loadingComplete() {
-      this.controllerFor("discovery").set("loading", false);
-      if (!this.session.get("topicListScrollPosition")) {
-        scrollTop();
-      }
-      return false;
-    },
+  @action
+  loadingComplete() {
+    this.controllerFor("discovery").set("loading", false);
+    if (!this.session.get("topicListScrollPosition")) {
+      scrollTop();
+    }
+    return false;
+  },
 
-    didTransition() {
-      this.controllerFor("discovery")._showFooter();
-      this.send("loadingComplete");
+  @action
+  didTransition() {
+    this.controllerFor("discovery")._showFooter();
+    this.send("loadingComplete");
 
-      const model = this.controllerFor("discovery/topics").get("model");
-      setTopicList(model);
-      return false;
-    },
+    const model = this.controllerFor("discovery/topics").get("model");
+    setTopicList(model);
+    return false;
+  },
 
-    // clear a pinned topic
-    clearPin(topic) {
-      topic.clearPin();
-    },
+  // clear a pinned topic
+  @action
+  clearPin(topic) {
+    topic.clearPin();
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        this.openComposer(this.controllerFor("discovery/topics"));
-      }
-    },
+  @action
+  createTopic() {
+    if (this.get("currentUser.has_topic_draft")) {
+      this.openTopicDraft();
+    } else {
+      this.openComposer(this.controllerFor("discovery/topics"));
+    }
+  },
 
-    dismissReadTopics(dismissTopics) {
-      const operationType = dismissTopics ? "topics" : "posts";
-      this.send("dismissRead", operationType);
-    },
+  @action
+  dismissReadTopics(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+    this.send("dismissRead", operationType);
+  },
 
-    dismissRead(operationType) {
-      const controller = this.controllerFor("discovery/topics");
-      controller.send("dismissRead", operationType, {
-        categoryId: controller.get("category.id"),
-        includeSubcategories: !controller.noSubcategories,
-      });
-    },
+  @action
+  dismissRead(operationType) {
+    const controller = this.controllerFor("discovery/topics");
+    controller.send("dismissRead", operationType, {
+      categoryId: controller.get("category.id"),
+      includeSubcategories: !controller.noSubcategories,
+    });
   },
 });

@@ -4,6 +4,7 @@ import Draft from "discourse/models/draft";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({
@@ -114,16 +115,12 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    willTransition() {
-      this.controllerFor("topic").set(
-        "previousURL",
-        document.location.pathname
-      );
+  @action
+  willTransition() {
+    this.controllerFor("topic").set("previousURL", document.location.pathname);
 
-      // NOTE: omitting this return can break the back button when transitioning quickly between
-      // topics and the latest page.
-      return true;
-    },
+    // NOTE: omitting this return can break the back button when transitioning quickly between
+    // topics and the latest page.
+    return true;
   },
 });

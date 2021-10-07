@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { isPresent } from "@ember/utils";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -74,9 +75,8 @@ export default DiscourseRoute.extend({
     this.messageBus.unsubscribe("/reviewable_claimed");
   },
 
-  actions: {
-    refreshRoute() {
-      this.refresh();
-    },
+  @action
+  refreshRoute() {
+    this.refresh();
   },
 });

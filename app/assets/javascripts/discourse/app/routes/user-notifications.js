@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
@@ -9,11 +10,10 @@ export default DiscourseRoute.extend(ViewingActionType, {
     this.render("user/notifications");
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("user-notifications")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("user-notifications")._showFooter();
+    return true;
   },
 
   model(params) {
