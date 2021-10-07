@@ -14,13 +14,16 @@ class PresenceController < ApplicationController
 
     raise Discourse::InvalidParameters.new("Too many channels") if names.length > MAX_CHANNELS_PER_REQUEST
 
-    user_group_ids = nil
-    group_finder = lambda { |id| user_group_ids ||= GroupUser.where(user_id: id).pluck("group_id") }
+    user_group_ids = if current_user
+      GroupUser.where(user_id: current_user.id).pluck("group_id")
+    else
+      []
+    end
 
     result = {}
     names.each do |name|
       channel = PresenceChannel.new(name)
-      if channel.can_view?(user_id: current_user&.id, group_finder: group_finder)
+      if channel.can_view?(user_id: current_user&.id, group_ids: user_group_ids)
         result[name] = PresenceChannelStateSerializer.new(channel.state, root: nil)
       else
         result[name] = nil

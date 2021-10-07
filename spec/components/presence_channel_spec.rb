@@ -219,17 +219,6 @@ describe PresenceChannel do
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: user.id)).to eq(false)
   end
 
-  it "will use a provided lambda for group lookup" do
-    call_count = 0
-    finder = lambda { |user_id| call_count += 1; [] }
-
-    PresenceChannel.new("/test/public1").can_view?(user_id: user.id, group_finder: finder)
-    expect(call_count).to eq(0)
-
-    PresenceChannel.new("/test/securegroup").can_view?(user_id: user.id, group_finder: finder)
-    expect(call_count).to eq(1)
-  end
-
   it 'publishes messages with appropriate security' do
     channel = PresenceChannel.new("/test/alloweduser")
     messages = MessageBus.track_publish(channel.message_bus_channel_name) do
