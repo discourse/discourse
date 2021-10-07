@@ -29,6 +29,7 @@ export function initSearchData() {
   searchData.typeFilter = DEFAULT_TYPE_FILTER;
   searchData.invalidTerm = false;
   searchData.suggestionResults = [];
+  searchData.suggestionKeyword = false;
 }
 
 initSearchData();
