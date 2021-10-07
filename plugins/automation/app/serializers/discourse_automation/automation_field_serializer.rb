@@ -9,7 +9,7 @@ module DiscourseAutomation
     end
 
     def is_required
-      object.template[:required]
+      object.template&.dig(:required)
     end
   end
 end
