@@ -3444,25 +3444,29 @@ RSpec.describe TopicsController do
     it "can correctly get excerpts" do
       first_post = create_post(raw: 'This is the first post :)', title: 'This is a test title I am making yay')
       second_post = create_post(raw: 'This is second post', topic: first_post.topic)
+      third_post = first_post.topic.add_small_action(first_post.user, "autobumped")
 
       random_post = Fabricate(:post)
 
       get "/t/#{first_post.topic_id}/excerpts.json", params: {
-        post_ids: [first_post.id, second_post.id, random_post.id]
+        post_ids: [first_post.id, second_post.id, third_post.id, random_post.id]
       }
 
       json = response.parsed_body
       json.sort! { |a, b| a["post_id"] <=> b["post_id"] }
 
       # no random post
-      expect(json.length).to eq(2)
+      expect(json.map { |p| p["post_id"] }).to contain_exactly(first_post.id, second_post.id, third_post.id)
       # keep emoji images
       expect(json[0]["excerpt"]).to match(/emoji/)
       expect(json[0]["excerpt"]).to match(/first post/)
       expect(json[0]["username"]).to eq(first_post.user.username)
-      expect(json[0]["post_id"]).to eq(first_post.id)
+      expect(json[0]["created_at"].present?).to eq(false)
 
       expect(json[1]["excerpt"]).to match(/second post/)
+
+      expect(json[2]["action_code"]).to eq("autobumped")
+      expect(json[2]["created_at"].present?).to eq(true)
     end
   end
 
