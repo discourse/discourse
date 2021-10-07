@@ -346,6 +346,52 @@ describe DiscourseSingleSignOn do
     expect(admin.name).to eq "Louis C.K."
   end
 
+  it "can override username with a number at the end to a simpler username without a number" do
+    SiteSetting.auth_overrides_username = true
+
+    user = Fabricate(:user)
+    sso = new_discourse_sso
+    sso.external_id = "A"
+    sso.email = user.email
+
+    username_with_number = "bob1"
+    username_without_number = "bob"
+
+    sso.username = username_with_number
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq username_with_number
+
+    sso.username = username_without_number
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq username_without_number
+  end
+
+  it "can override username after min_username_length was made smaller" do
+    SiteSetting.auth_overrides_username = true
+
+    user = Fabricate(:user)
+    sso = new_discourse_sso
+    sso.external_id = "A"
+    sso.email = user.email
+
+    long_username = "bob"
+    short_username = "bo"
+
+    SiteSetting.min_username_length = 3
+    sso.username = long_username
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq long_username
+
+    SiteSetting.min_username_length = 2
+    sso.username = short_username
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq short_username
+  end
+
   it "can fill in data on way back" do
     sso = make_sso
 
