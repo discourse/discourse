@@ -5,30 +5,14 @@ import {
   exists,
   query,
   queryAll,
+  selectText,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-
-async function selectText(selector) {
-  const range = document.createRange();
-  const node = document.querySelector(selector);
-  range.selectNodeContents(node);
-
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  await settled();
-}
 
 acceptance("Topic", function (needs) {
   needs.user();

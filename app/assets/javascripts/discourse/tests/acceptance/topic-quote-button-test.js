@@ -3,20 +3,11 @@ import {
   chromeTest,
   exists,
   queryAll,
+  selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { settled, visit } from "@ember/test-helpers";
 
-async function selectText(selector) {
-  const range = document.createRange();
-  const node = document.querySelector(selector);
-  range.selectNodeContents(node);
-
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  await settled();
-}
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`
 acceptance("Topic - Quote button - logged in", function (needs) {
