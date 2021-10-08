@@ -365,7 +365,7 @@ class Guardian
   end
 
   def can_invite_to?(object, groups = nil)
-    return false if !can_invite_to_forum?(groups)
+    return false if !authenticated?
     return false if !object.is_a?(Topic) || !can_see?(object)
     return false if groups.present?
 
@@ -385,6 +385,7 @@ class Guardian
   end
 
   def can_invite_via_email?(object)
+    return false if !can_invite_to_forum?
     return false if !can_invite_to?(object)
 
     (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
