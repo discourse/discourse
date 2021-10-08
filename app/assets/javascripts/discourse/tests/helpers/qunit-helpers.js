@@ -495,9 +495,32 @@ export async function selectText(selector, endOffset = null) {
     range.setEnd(node, endOffset);
   }
 
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
+  const performSelection = () => {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  if (LEGACY_ENV) {
+    // In the Ember CLI environment, the settled() helper seems to take care of waiting
+    // for this event to fire. In legacy, we need to do it manually.
+    let callback;
+    const selectEventFiredPromise = new Promise((resolve) => {
+      callback = resolve;
+      document.addEventListener("selectionchange", callback);
+    });
+
+    performSelection();
+
+    try {
+      await selectEventFiredPromise;
+    } finally {
+      document.removeEventListener("selectionchange", callback);
+    }
+  } else {
+    performSelection();
+  }
+
   await settled();
 }
 
