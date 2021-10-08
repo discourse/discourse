@@ -973,7 +973,9 @@ pt_BR:
       use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste(a) usuário(a) está oculto."
       expand_profile: "Expandir"
+      sr_expand_profile: "Expandir detalhes do perfil"
       collapse_profile: "Recolher"
+      sr_collapse_profile: "Recolher detalhes do perfil"
       bookmarks: "Favoritos"
       bio: "Sobre mim"
       timezone: "Fuso horário"
@@ -2123,6 +2125,7 @@ pt_BR:
       tags: "Etiquetas"
       type:
         users: "Usuários"
+        categories: "Categorias"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"

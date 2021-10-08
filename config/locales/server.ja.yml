@@ -897,7 +897,6 @@ ja:
         remove: "このトピックはバナーではなくなりました。各ページの上部に表示されなくなります。"
   unsubscribed:
     title: "メールの設定を更新しました！"
-    description: "<b>%{email}</b> のメールの設定が更新されました。変更するには<a href='%{url}'>あなたのユーザー設定にアクセス</a>してください。"
     topic_description: "%{link} を購読し直すには、トピックの下または右にある通知の管理を使用してください。"
     private_topic_description: "購読し直すには、トピックの下か右にある通知の管理を使用してください。"
   uploads:
@@ -4336,20 +4335,7 @@ ja:
     missing_version: "バージョンパラメーターを指定する必要があります"
     conflict: "更新の競合があるため、それを行えませんでした。"
     reasons:
-      post_count: "すべてのユーザーの最初の数件の投稿はスタッフによって承認される必要があります。`approve_post_count` をご覧ください。"
-      trust_level: "信頼レベルが低いユーザーはその返信をスタッフが承認する必要があります。`approve_unless_trust_level` をご覧ください。"
-      new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。`pprove_new_topics_unless_trust_level` をご覧ください。"
-      fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。`min_first_post_typing_time` をご覧ください。"
-      auto_silence_regexp: "最初の投稿が `auto_silence_first_post_regex` 設定に一致する新規ユーザー。"
-      watched_word: "この投稿にはウォッチ語が含まれていました。<a href='%{base_url}/admin/customize/watched_words'>ウォッチ語のリスト</a>をご覧ください"
-      staged: "ステージングユーザーの新しいトピックと投稿はスタッフによる承認が必要です。`approve_unless_staged` をご覧ください。"
-      category: "このカテゴリの投稿には、スタッフによる手動の承認が必要です。カテゴリ設定をご覧ください。"
-      must_approve_users: "すべての新規ユーザーはスタッフによる承認が必要です。`must_approve_users` をご覧ください。"
-      invite_only: "すべての新規ユーザーは招待される必要があります。`invite_only` をご覧ください。"
       email_auth_res_enqueue: "このメールは DMARC チェックに失敗しました。これは誰からのものでもないようです。詳細については、生のメールヘッダーを確認してください。"
-      email_spam: "このメールは、`email_in_spam_header` に定義されているヘッダーによって、迷惑として通報されました。"
-      suspect_user: "この新規ユーザーは、トピックまたは投稿を一切読まずにプロフィール情報を入力しました。これは、迷惑行為者であることを強く示唆しています。`approve_suspect_users` をご覧ください。"
-      contains_media: "この投稿には埋め込みメディアが含まれています。`review_media_unless_trust_level` をご覧ください。"
       queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
     actions:
       agree:
@@ -4451,6 +4437,7 @@ ja:
       other: "%{topic_title} (パート %{count})"
     post_raw: "%{parent_url} のディスカッションを継続中です。\n\n前のディスカッション:\n\n%{previous_topics}"
     small_action_post_raw: "%{new_title} でディスカッションを続けます。"
+  fallback_username: "ユーザー"
   activemodel:
     errors:
       <<: *errors

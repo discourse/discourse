@@ -25,6 +25,11 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this.statesModificationCounter = 0;
     this.isTracking = false;
     this.newIncoming = [];
+    this.stateChangeCallbacks = {};
+  },
+
+  onStateChange(name, callback) {
+    this.stateChangeCallbacks[name] = callback;
   },
 
   startTracking() {
@@ -34,7 +39,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
     this._establishChannels();
 
-    this._loadInitialState().finally(() => {
+    return this._loadInitialState().finally(() => {
       this.set("isTracking", true);
     });
   },
@@ -73,11 +78,21 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   trackIncoming(inbox, filter, group) {
     this.setProperties({ inbox, filter, activeGroup: group });
+    this.set("isTrackingIncoming", true);
   },
 
   resetIncomingTracking() {
-    if (this.inbox) {
+    if (this.isTrackingIncoming) {
       this.set("newIncoming", []);
+    }
+  },
+
+  stopIncomingTracking() {
+    if (this.isTrackingIncoming) {
+      this.setProperties({
+        isTrackingIncoming: false,
+        newIncoming: [],
+      });
     }
   },
 
@@ -87,7 +102,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     }
 
     topicIds.forEach((topicId) => this.states.delete(topicId));
-    this.incrementProperty("statesModificationCounter");
+    this._afterStateChange();
   },
 
   _userChannel() {
@@ -197,7 +212,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _notifyIncoming(topicId) {
-    if (this.newIncoming.indexOf(topicId) === -1) {
+    if (this.isTrackingIncoming && this.newIncoming.indexOf(topicId) === -1) {
       this.newIncoming.pushObject(topicId);
     }
   },
@@ -225,8 +240,13 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this.states.set(topicId, newState);
 
     if (!opts.skipIncrement) {
-      this.incrementProperty("statesModificationCounter");
+      this._afterStateChange();
     }
+  },
+
+  _afterStateChange() {
+    this.incrementProperty("statesModificationCounter");
+    Object.values(this.stateChangeCallbacks).forEach((callback) => callback());
   },
 });
 

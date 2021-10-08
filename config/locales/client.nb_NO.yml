@@ -2084,6 +2084,7 @@ nb_NO:
       tags: "Stikkord"
       type:
         users: "Brukere"
+        categories: "Kategorier"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"

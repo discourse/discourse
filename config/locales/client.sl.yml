@@ -2057,6 +2057,7 @@ sl:
       tags: "Oznake"
       type:
         users: "Uporabniki"
+        categories: "Kategorije"
       context:
         user: "Išči prispevke od @%{username}"
         category: "Išči po #%{category} kategoriji"

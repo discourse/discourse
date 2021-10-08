@@ -2151,6 +2151,7 @@ tr_TR:
       type:
         default: "Konular/yazılar"
         users: "Kullanıcılar"
+        categories: "Kategoriler"
         categories_and_tags: "Kategoriler/etiketler"
       context:
         user: "@%{username} kullancısına ait gönderilerde ara"

@@ -933,7 +933,7 @@ sv:
         remove: "Detta ämne är inte längre en banderoll. Den kommer inte att visas överst på varje sida."
   unsubscribed:
     title: "E-postinställningar uppdaterade!"
-    description: "e-postinställningarna för <b>%{email}</b> uppdaterades. Du kan ändra dina e-postinställningar <a href='%{url}'>i dina användarinställningar</a>."
+    description: "E-postinställningar för <b>%{email}</b> uppdaterades. Du kan ändra dina e-postinställningar <a href='%{url}'>i dina användarinställningar</a>."
     topic_description: "För att prenumerera på %{link} igen använder du aviseringsreglaget nederst i, eller till höger om, ämnet."
     private_topic_description: "För att prenumerera igen använder du aviseringsreglaget nederst i, eller till höger om, ämnet."
   uploads:
@@ -4150,20 +4150,7 @@ sv:
     missing_version: "Du måste ange en versionsparameter"
     conflict: "Det uppstod en uppdateringskonflikt som hindrade dig från att göra det."
     reasons:
-      post_count: "De första inläggen från alla användare måste godkännas av personalen. Se `approve_post_count`."
-      trust_level: "Användare med låg förtroendenivå måste få svar godkända av personalen. Se `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Användare med låg förtroendenivå måste få ämnen godkända av personalen. Se `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, alltså misstänkt bot eller skräppostarbeteende. Se `min_first_post_typing_time`."
-      auto_silence_regexp: "Ny användare vars första inlägg matchar inställningen `auto_silence_first_post_regex`."
-      watched_word: "Detta inlägg innehöll ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
-      staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas av personalen. Se `approve_unless_staged`."
-      category: "Inlägg i denna kategori kräver manuellt godkännande av personalen. Se kategoriinställningarna."
-      must_approve_users: "Alla nya användare måste godkännas av personalen. Se `must_approve_users`."
-      invite_only: "Alla nya användare ska bjudas in. Se `invite_only`."
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
-      email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
-      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
-      contains_media: "Detta inlägg omfattar inbäddade medier. Se `review_media_unless_trust_level`."
       queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
     actions:
       agree:
@@ -4259,6 +4246,7 @@ sv:
       other: "%{topic_title} (del %{count})"
     post_raw: "Fortsätter diskussionen från %{parent_url}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
     small_action_post_raw: "Fortsätt diskussionen vid %{new_title}."
+  fallback_username: "användare"
   activemodel:
     errors:
       <<: *errors

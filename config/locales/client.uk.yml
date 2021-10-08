@@ -2323,6 +2323,7 @@ uk:
       type:
         default: "Теми/повідомлення"
         users: "Користувачі"
+        categories: "Категорії"
         categories_and_tags: "Категорії/теги"
       context:
         user: "Шукати повідомлення від @%{username}"

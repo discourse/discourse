@@ -49,7 +49,7 @@ export default Controller.extend(BulkTopicSelection, {
   },
 
   unsubscribe() {
-    this.pmTopicTrackingState.resetIncomingTracking();
+    this.pmTopicTrackingState.stopIncomingTracking();
   },
 
   @action

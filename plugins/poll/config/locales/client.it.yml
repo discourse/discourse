@@ -43,6 +43,9 @@ it:
       show-results:
         title: "Visualizza i risultati del sondaggio"
         label: "Mostra i risultati"
+      remove-vote:
+        title: "Annulla il tuo voto"
+        label: "Annulla voto"
       hide-results:
         title: "Torna ai sondaggi"
         label: "Mostra voto"

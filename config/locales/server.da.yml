@@ -911,7 +911,6 @@ da:
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: "E-mail-præferencer opdateret!"
-    description: "email præferencer for <b>%{email}</b> blev opdateret. For at ændre dine e-mail indstillinger, kan du <a href='%{url}'>besøg dine brugerindstillinger</a>."
     topic_description: "For at følge %{link}, brug notifikationsindstillinger i bunden, eller til højre for emnet."
     private_topic_description: "For at genabonnere skal du bruge notifikationskontrollen nederst eller til højre for emnet."
   uploads:
@@ -3744,15 +3743,7 @@ da:
     missing_version: "Du skal angive en versionsparameter"
     conflict: "Der var en opdateringskonflikt, der forhindrede dig i at gøre dette."
     reasons:
-      post_count: "De første par indlæg fra hver bruger skal godkendes af personalet. Se `godkend_indlæg_antal`."
-      trust_level: "Brugere på lavt tillidsniveau skal have svar godkendt af personalet. Se `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Brugere på lavt tillidsniveau skal have emner godkendt af personalet. Se `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ny bruger skrev deres første indlæg mistænkeligt hurtigt, mistænkelig adfærd fra bot eller spammer. Se 'min_first_post_typing_time'."
-      category: "Indlæg i denne kategori kræver manuel godkendelse af personalet. Se kategoriindstillingerne."
-      must_approve_users: "Alle nye brugere skal godkendes af personalet. Se `must_approve_users`."
-      invite_only: "Alle nye brugere skal inviteres. Se `invite_only`."
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
-      email_spam: "Denne e-mail blev markeret som spam af headeren defineret i `email_in_spam_header`."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
@@ -3819,6 +3810,7 @@ da:
   notification_level:
     ignore_error: "Beklager, du kan ikke ignorere denne bruger."
     mute_error: "Beklager, du kan ikke gøre denne bruger tavs."
+  fallback_username: "bruger"
   activemodel:
     errors:
       <<: *errors

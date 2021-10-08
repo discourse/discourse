@@ -18,12 +18,8 @@ module Onebox
       end
 
       def to_html
-        video_id = oembed_data[:video_id]
-        if video_id.nil?
-          # for private videos
-          video_id = uri.path[/\/(\d+)/, 1]
-        end
-        video_src = "https://player.vimeo.com/video/#{video_id}"
+        video_src = Nokogiri::HTML5::fragment(oembed_data[:html]).at_css('iframe')&.[]("src")
+        video_src = "https://player.vimeo.com/video/#{oembed_data[:video_id]}" if video_src.blank?
         video_src = video_src.gsub('autoplay=1', '').chomp("?")
 
         <<-HTML

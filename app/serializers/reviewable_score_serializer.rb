@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 class ReviewableScoreSerializer < ApplicationSerializer
+  REASONS_AND_SETTINGS = {
+    post_count: 'approve_post_count',
+    trust_level: 'approve_unless_trust_level',
+    new_topics_unless_trust_level: 'approve_new_topics_unless_trust_level',
+    fast_typer: 'min_first_post_typing_time',
+    auto_silence_regexp: 'auto_silence_first_post_regex',
+    staged: 'approve_unless_staged',
+    must_approve_users: 'must_approve_users',
+    invite_only: 'invite_only',
+    email_spam: 'email_in_spam_header',
+    suspect_user: 'approve_suspect_users',
+    contains_media: 'review_media_unless_trust_level',
+  }
 
   attributes :id, :score, :agree_stats, :status, :reason, :created_at, :reviewed_at
   has_one :user, serializer: BasicUserSerializer, root: 'users'
@@ -19,8 +32,8 @@ class ReviewableScoreSerializer < ApplicationSerializer
   def reason
     return unless object.reason
 
-    link_text = I18n.t("reviewables.reasons.site_setting_links.#{object.reason}", default: nil)
-    link_text = I18n.t("reviewables.reasons.regular_links.#{object.reason}", default: nil) if link_text.nil?
+    link_text = setting_name_for_reason(object.reason)
+    link_text = I18n.t("reviewables.reasons.links.#{object.reason}", default: nil) if link_text.nil?
 
     if link_text
       link = build_link_for(object.reason, link_text)
@@ -39,6 +52,19 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   def include_reason?
     reason.present?
+  end
+
+  def setting_name_for_reason(reason)
+    setting_name = REASONS_AND_SETTINGS[reason.to_sym]
+
+    if setting_name.nil?
+      plugin_options = DiscoursePluginRegistry.reviewable_score_links
+      option = plugin_options.detect { |o| o[:reason] == reason.to_sym }
+
+      setting_name = option[:setting] if option
+    end
+
+    setting_name
   end
 
   private

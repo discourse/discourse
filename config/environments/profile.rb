@@ -29,7 +29,7 @@ Discourse::Application.configure do
   # Specifies the header that your server uses for sending files
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
-  # we recommend you use mailcatcher https://github.com/sj26/mailcatcher
+  # we recommend you use mailhog https://github.com/mailhog/MailHog
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
   # Send deprecation notices to registered listeners

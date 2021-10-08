@@ -2329,6 +2329,7 @@ pl_PL:
       type:
         default: "Tematy/posty"
         users: "Użytkownicy"
+        categories: "Kategorie"
         categories_and_tags: "Kategorie/tagi"
       context:
         user: "Szukaj postów @%{username}"

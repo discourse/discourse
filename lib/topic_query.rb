@@ -60,7 +60,8 @@ class TopicQuery
          tags
          match_all_tags
          no_subcategories
-         no_tags)
+         no_tags
+         exclude_tag)
   end
 
   def self.valid_options
@@ -688,6 +689,10 @@ class TopicQuery
       elsif @options[:no_tags]
         # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
+      end
+
+      if @options[:exclude_tag] && tag = Tag.find_by(name: @options[:exclude_tag])
+        result = result.where.not(id: TopicTag.distinct.where(tag_id: tag.id).pluck(:topic_id))
       end
     end
 

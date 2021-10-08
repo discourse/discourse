@@ -383,6 +383,11 @@ describe TopicQuery do
       fab!(:no_tags_topic) { Fabricate(:topic) }
       let(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
 
+      it "excludes a tag if desired" do
+        topics = TopicQuery.new(moderator, exclude_tag: tag.name).list_latest.topics
+        expect(topics.any? { |t| t.tags.include?(tag) }).to eq(false)
+      end
+
       it "returns topics with the tag when filtered to it" do
         expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
           .to contain_exactly(tagged_topic1, tagged_topic3)

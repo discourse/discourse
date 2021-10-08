@@ -2076,6 +2076,7 @@ nl:
       tags: "Tags"
       type:
         users: "Gebruikers"
+        categories: "Categorieën"
       context:
         user: "Berichten van @%{username} doorzoeken"
         category: "De categorie #%{category} doorzoeken"

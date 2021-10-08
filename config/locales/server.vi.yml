@@ -575,7 +575,6 @@ vi:
         remove: "Chủ đề này không còn là một banner. Nó sẽ không hiện ở đầu mọi trang nữa."
   unsubscribed:
     title: "Đã cập nhật tùy chọn email!"
-    description: "tùy chọn email cho <b>%{email}</b> đã được cập nhật. Để thay đổi cài đặt email của bạn <a href='%{url}'>hãy truy cập tùy chọn người dùng của bạn</a>."
   unsubscribe:
     title: "Hủy đăng ký"
     log_out: "Đăng Xuất"
@@ -2019,8 +2018,6 @@ vi:
       medium: "Trung bình"
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
-    reasons:
-      contains_media: "Bài đăng này bao gồm phương tiện được nhúng. Xem `review_media_unless_trust_level`."
     actions:
       agree_and_keep:
         title: "Giữ bài viết"
@@ -2056,6 +2053,7 @@ vi:
       %{keys}
 
       Không cần thực hiện hành động nào vào lúc này, tuy nhiên, đây được coi là phương pháp bảo mật tốt để chu kỳ tất cả các thông tin quan trọng của bạn vài năm một lần.
+  fallback_username: "người dùng"
   activemodel:
     errors:
       <<: *errors

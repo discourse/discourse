@@ -1499,6 +1499,7 @@ nb_NO:
           title: "Slett bruker"
       reject:
         title: "Avvis"
+  fallback_username: "bruker"
   activemodel:
     errors:
       <<: *errors

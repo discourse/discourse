@@ -137,7 +137,7 @@ def rebake_post(post, opts = {})
   if !opts[:priority]
     opts[:priority] = :ultra_low
   end
-  post.rebake!(opts)
+  post.rebake!(**opts)
 rescue => e
   puts "", "Failed to rebake (topic_id: #{post.topic_id}, post_id: #{post.id})", e, e.backtrace.join("\n")
 end

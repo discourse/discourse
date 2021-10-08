@@ -1243,6 +1243,7 @@ he:
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
+        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/message'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -2322,6 +2323,7 @@ he:
       type:
         default: "נושאים/פוסטים"
         users: "משתמשים"
+        categories: "קטגוריות"
         categories_and_tags: "קטגוריה/תגיות"
       context:
         user: "חיפוש פוסטים לפי @%{username}"
@@ -2392,6 +2394,7 @@ he:
           aria_label: סינון לפי כמות הצפיות המרבית
         additional_options:
           label: "סינון לפי כמות פוסטים וצפיות בנושאים"
+    hamburger_menu: "תפריט"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"

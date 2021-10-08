@@ -950,7 +950,7 @@ it:
         remove: "Questo argomento non è più un banner. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Preferenze email aggiornate!"
-    description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
+    description: "Le impostazioni email per <b>%{email}</b> sono state aggiornate. Per modificarle <a href='%{url}'>visita le preferenze utente</a>."
     topic_description: "Per iscriverti di nuovo a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
     private_topic_description: "Per iscriverti di nuovo, usa il controllo notifica in fondo o sulla destra dell'argomento."
   uploads:
@@ -4067,20 +4067,13 @@ it:
     missing_version: "Devi fornire un parametro versione"
     conflict: "C'è stato un conflitto di aggiornamento che ti impedisce di compiere questa azione."
     reasons:
-      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi 'approve_post_count'."
-      trust_level: "Le risposte degli utenti con un basso livello di attendibilità devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Gli Argomenti di utenti con basso livello di attendibilità devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
-      fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
-      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione `auto_silence_first_post_regex`."
-      watched_word: "Questo messaggio include una parola osservata. Guarda il tuo <a href='%{base_url}/admin/customize/watched_words'>elenco di parole osservate</a> ."
-      staged: "Nuovi argomenti e messaggi per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
-      category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
-      must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."
-      invite_only: "Tutti i nuovi utenti dovrebbero essere invitati. Vedi `invite_only`."
+      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi %{link}"
+      trust_level: "Le risposte degli utenti con un basso livello di fiducia devono essere approvate dallo staff. Vedi %{link}"
+      new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di fiducia devono essere approvati dallo staff. Vedi %{link}"
+      fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione %{link} ."
+      watched_word: "Questo post includeva una parola osservata. Vedi il tuo %{link}."
       email_auth_res_enqueue: "Questa email ha fallito un controllo DMARC, molto probabilmente non arriva da chi sembra provenire. Controlla le intestazioni email non elaborate per ulteriori informazioni."
-      email_spam: "Questa email è stata contrassegnata come spam dall'intestazione definita in `email_in_spam_header`."
-      suspect_user: "Questo nuovo utente ha inserito le informazioni del profilo senza leggere alcun argomento o messaggio, il che suggerisce fortemente che potrebbe essere uno spammer. Vedi `approve_suspect_users`."
-      contains_media: "Questo post include i contenuti multimediali incorporati. Vedi `review_media_unless_trust_level`."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
     actions:
       agree:
@@ -4176,6 +4169,7 @@ it:
       other: "%{topic_title} (Parti %{count})"
     post_raw: "La discussione prosegue da %{parent_url}.\n\nDiscussioni precedenti:\n\n%{previous_topics}"
     small_action_post_raw: "Continua la discussione su %{new_title}."
+  fallback_username: "utente"
   activemodel:
     errors:
       <<: *errors

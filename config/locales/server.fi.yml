@@ -948,7 +948,6 @@ fi:
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun yläosassa."
   unsubscribed:
     title: "Sähköpostiasetukset päivitetty"
-    description: "sähköpostiasetukset osoitteelle <b>%{email}</b> päivitettiin. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
     private_topic_description: "Voit tilata ketjun uudelleen sen alla tai oikealla puolella sijaitsevan ilmoitusvalikon kautta."
   uploads:
@@ -4422,20 +4421,7 @@ fi:
     missing_version: "Sinun on annettava version parametri"
     conflict: "Tapahtui muutosristiriita, joka estää tämän toimenpiteen."
     reasons:
-      post_count: "Muutama ensimmäinen viesti jokaiselta uudelta käyttäjältä tulee henkilökunnan hyväksyttäväksi. Katso `approve_post_count`."
-      trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Katso `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Matalan luottamustason käyttäjien aloittamat ketjut tulevat henkilökunnan hyväksyttäviksi. Katso `approve_new_topics_unless_trust_level`."
-      fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso `min_first_post_typing_time`."
-      auto_silence_regexp: "Uusi käyttäjä, jonka ensimmäinen viesti täsmää `auto_silence_first_post_regex` -asetukseen."
-      watched_word: "Tämä viesti sisältää tarkkailussa olevan sanan. Katso <a href='%{base_url}/admin/customize/watched_words'>tarkkailtavien sanojen luettelosi</a>."
-      staged: "Henkilökunnan täytyy hyväksyä esikäyttäjien uudet ketjut ja viestit. Katso `approve_unless_staged`."
-      category: "Tämän alueen viestit vaativat henkilökunnan hyväksyntää. Katso alueen asetukset."
-      must_approve_users: "Kaikki uudet käyttäjät tulevat henkilökunnan hyväksyttäviksi. Katso `must_approve_users`."
-      invite_only: "Kaikki uudet käyttäjät täytyy kutsua. Katso `invite_only`."
       email_auth_res_enqueue: "Tämän sähköpostiviestin DMARC-tarkistus epäonnistui, todennäköisesti se ei ole kyseiseltä henkilöltä. Tarkista sähköpostin otsikkotiedot saadaksesi lisätietoja."
-      email_spam: "Tämä sähköposti liputettiin roskapostiksi kohdassa `email_in_spam_header` määritellyllä otsikolla."
-      suspect_user: "Tämä uusi käyttäjä täytti profiilitiedot lukematta ketjuja tai viestejä, mikä viittaa vahvasti siihen, että hän saattaa olla roskapostittaja. Katso `approve_suspect_users`."
-      contains_media: "Tämä viesti sisältää upotettua mediaa. Katso `review_media_unless_trust_level`."
       queued_by_staff: "Henkilökunnan jäsen kokee, että tämä viesti on tarkistettava. Se pysyy piilotettuna, kunnes se on tarkastettu."
     actions:
       agree:
@@ -4538,6 +4524,7 @@ fi:
       other: "%{topic_title} (osa %{count})"
     post_raw: "Jatkaa keskustelua ketjusta %{parent_url}.\n\nAikaisemmat keskustelut:\n\n%{previous_topics}"
     small_action_post_raw: "Jatka keskustelua ketjussa %{new_title}."
+  fallback_username: "käyttäjä"
   activemodel:
     errors:
       <<: *errors

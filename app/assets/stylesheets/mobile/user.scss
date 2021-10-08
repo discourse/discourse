@@ -360,9 +360,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    .btn {
-      margin-right: 0.5em;
-      margin-bottom: 0.5em;
     }
   }
 
@@ -411,6 +408,10 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
+    }
+
+    td.invite-actions {
+      display: flex;
     }
   }
 

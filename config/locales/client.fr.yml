@@ -2115,6 +2115,7 @@ fr:
       tags: "Étiquettes"
       type:
         users: "Utilisateurs"
+        categories: "Catégories"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"

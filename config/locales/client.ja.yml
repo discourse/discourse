@@ -2036,6 +2036,7 @@ ja:
       tags: "タグ"
       type:
         users: "ユーザー"
+        categories: "カテゴリ"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"

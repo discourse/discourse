@@ -2335,6 +2335,7 @@ ru:
       type:
         default: "По темам и сообщениям"
         users: "По пользователям"
+        categories: "Разделы"
         categories_and_tags: "По разделам и тегам"
       context:
         user: "Искать сообщения от @%{username}"

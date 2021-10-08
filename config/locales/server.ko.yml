@@ -901,7 +901,6 @@ ko:
         remove: "이 글은 더 이상 배너가 아닙니다. 더 이상 모든 페이지의 상단에 나타나지 않습니다."
   unsubscribed:
     title: "이메일 환경 설정이 업데이트되었습니다!"
-    description: "<b>%{email}</b> 에 대한 이메일 환경 설정이 업데이트되었습니다. 이메일 설정을 변경하려면 <a href='%{url}'>사용자 기본</a> 설정을 <a href='%{url}'>방문하십시오</a> ."
     topic_description: "%{link}를 재구독하려면 토픽 하단, 또는 우측에 있는 알림 설정을 사용하세요."
     private_topic_description: "다시 구독하려면 주제의 맨 아래 또는 오른쪽에있는 알림 제어를 사용하십시오."
   uploads:
@@ -4251,20 +4250,7 @@ ko:
     missing_version: "버전 매개 변수를 제공해야합니다"
     conflict: "그렇게하지 못하는 업데이트 충돌이있었습니다."
     reasons:
-      post_count: "모든 사용자의 처음 몇 개의 게시물은 직원의 승인을 받아야합니다. `approve_post_count`를 참조하십시오."
-      trust_level: "신뢰 수준이 낮은 사용자는 직원의 승인을 받아야합니다. `approve_unless_trust_level`을 참조하십시오."
-      new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
-      fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
-      auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
-      watched_word: "이 게시물에는 검열중인 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>검열 단어 목록</a>을 참조하십시오."
-      staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
-      category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
-      must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."
-      invite_only: "모든 신규 사용자를 초대해야합니다. `invite_only`를 참조하십시오."
       email_auth_res_enqueue: "이 이메일은 DMARC 확인에 실패했으며, 발신자가 아닌 것 같습니다. 자세한 내용은 원시 이메일 헤더를 확인하십시오."
-      email_spam: "이 이메일은`email_in_spam_header`에 정의 된 헤더에 의해 스팸으로 표시되었습니다."
-      suspect_user: "이 새로운 사용자는 주제 나 게시물을 읽지 않고 프로필 정보를 입력했으며, 이는 스팸 발송자 일 수 있음을 강력하게 제안합니다. `approve_suspect_users`를 참조하십시오."
-      contains_media: "이 게시물에는 임베디드 미디어가 포함되어 있습니다. `review_media_unless_trust_level`을 참조하십시오."
       queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."
     actions:
       agree:
@@ -4366,6 +4352,7 @@ ko:
       other: "%{topic_title} (파트 %{count})"
     post_raw: "%{parent_url}에서 대화를 계속합니다.\n\n이전 대화:\n\n%{previous_topics}"
     small_action_post_raw: "%{new_title}에서 대화를 계속합니다."
+  fallback_username: "사용자"
   activemodel:
     errors:
       <<: *errors

@@ -39,7 +39,7 @@ class DiscourseRedis
   # prefix the key with the namespace
   def method_missing(meth, *args, **kwargs, &block)
     if @redis.respond_to?(meth)
-      DiscourseRedis.ignore_readonly { @redis.public_send(meth, *args, &block) }
+      DiscourseRedis.ignore_readonly { @redis.public_send(meth, *args, **kwargs, &block) }
     else
       super
     end
@@ -94,12 +94,12 @@ class DiscourseRedis
         end
 
       if block
-        @redis.scan_each(options) do |key|
+        @redis.scan_each(**options) do |key|
           key = remove_namespace(key) if @namespace
           block.call(key)
         end
       else
-        @redis.scan_each(options).map do |key|
+        @redis.scan_each(**options).map do |key|
           key = remove_namespace(key) if @namespace
           key
         end

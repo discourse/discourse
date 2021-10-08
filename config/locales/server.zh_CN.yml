@@ -902,7 +902,6 @@ zh_CN:
         remove: "此话题不再是横幅。它将不再显示在每个页面的顶部。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
-    description: "<b>%{email}</b> 的电子邮件偏好设置已更新。要更改您的电子邮件设置，请<a href='%{url}'>访问您的用户偏好设置</a>。"
     topic_description: "要重新订阅%{link}，请使用话题底部或右侧的通知控件。"
     private_topic_description: "要重新订阅，请使用话题底部或右侧的通知控件。"
   uploads:
@@ -4435,20 +4434,7 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
-      post_count: "每个用户的前几个帖子必须由管理人员审批。请参阅 `approve_post_count`。"
-      trust_level: "信任级别低的用户的回复必须由管理人员审批。请参阅 `approve_unless_trust_level`。"
-      new_topics_unless_trust_level: "信任级别低的用户的话题必须由管理人员审批。请参阅 `approve_new_topics_unless_trust_level`。"
-      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅 `min_firse_post_typing_time`。"
-      auto_silence_regexp: "首个帖子符合 `auto_silence_first_post_regex` 设置的新用户。"
-      watched_word: "此帖子包含关注词，请参见您的<a href='%{base_url}/admin/customize/watched_words'>关注词列表</a>。"
-      staged: "暂存用户的新话题和帖子必须由管理人员审批。请参阅 `approve_unless_staged`。"
-      category: "此类别中的帖子要求管理人员手动审批。请参阅类别设置。"
-      must_approve_users: "所有新用户都必须由管理人员审批。请参阅 `must_approve_users`。"
-      invite_only: "所有新用户都应是受到邀请的用户。请参阅 `invite_only`。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
-      email_spam: "此电子邮件因 `email_in_spam_header` 中定义的标头被标记为垃圾邮件。"
-      suspect_user: "此新用户在没有阅读任何话题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾信息发布者。请参阅 `approve_suspect_users`。"
-      contains_media: "此帖子包括嵌入式媒体。请参阅 `review_media_unless_trust_level`。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
     actions:
       agree:
@@ -4550,6 +4536,7 @@ zh_CN:
       other: "%{topic_title}（第 %{count} 部分）"
     post_raw: "从%{parent_url}继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在%{new_title}继续讨论。"
+  fallback_username: "用户"
   activemodel:
     errors:
       <<: *errors

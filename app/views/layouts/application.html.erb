@@ -45,7 +45,7 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
-    <link rel="manifest" href="<%= Discourse.base_path %>/manifest.webmanifest" crossorigin="use-credentials">
+    <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">

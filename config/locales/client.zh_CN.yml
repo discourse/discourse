@@ -217,6 +217,8 @@ zh_CN:
     max_of_count: "最多 %{count} 个"
     character_count:
       other: "%{count} 个字符"
+    period_chooser:
+      aria_label: "按时间间隔过滤"
     related_messages:
       title: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
@@ -1087,6 +1089,7 @@ zh_CN:
         tags: "标签"
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
+        read_more: "想阅读更多？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>中浏览其他消息。"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -2065,6 +2068,7 @@ zh_CN:
       tags: "标签"
       type:
         users: "用户"
+        categories: "类别"
         categories_and_tags: "分类/标签"
       context:
         user: "搜索 @%{username} 的帖子"
@@ -2129,6 +2133,7 @@ zh_CN:
           placeholder: 最小值
         max_views:
           placeholder: 最大值
+    hamburger_menu: "菜单"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"

@@ -688,7 +688,6 @@ zh_TW:
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "Email 偏好設定已更新！"
-    description: "郵件偏好設定<b>%{email}</b>已經更新。更改郵件設定請訪問<a href='%{url}'>使用者設定</a>"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
     private_topic_description: "若要重新訂閱，請使用話題底部或右邊的通知控制列。"
   unsubscribe:
@@ -3192,16 +3191,6 @@ zh_TW:
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"
     conflict: "有一個更新衝突阻止您這樣做"
-    reasons:
-      post_count: "每個使用者的前幾個貼文發佈，必須得到管理員的批准，更多資訊請參閱`approve_post_count`。"
-      trust_level: "低信任等級的使用者必須擁有管理員批准，更多資訊請參閱 `approve_unless_trust_level`。"
-      new_topics_unless_trust_level: "低信任等級的使用者必須擁有管理員批准，才可發佈討論話題，更多資訊請參閱`approve_new_topics_unless_trust_level`。"
-      fast_typer: "新使用者輸入他們的第一個貼文，由於發送速度過快，疑似機器人或垃圾郵件發送者的行為，更多資訊請參閱`min_first_post_typing_time`。"
-      auto_silence_regexp: "第一個貼文與`auto_silence_first_post_regex`設定匹配相符的新使用者"
-      staged: "分階段使用者的新討論話題及貼文，必須得到管理員的批准，更多資訊請參閱`approve_unless_staged`。"
-      category: "在這個分類的貼文需要管理員手動批准，更多資訊請參閱分類設定（category setting）。"
-      must_approve_users: "所有新使用者必須得到管理員的批准，更多資訊請參閱`must_approve_users`。"
-      invite_only: "所有的新使用者應被邀請，更多資訊請參閱`invite_only`。"
     actions:
       agree:
         title: "同意..."
@@ -3265,6 +3254,7 @@ zh_TW:
         title: "拒絕"
       delete_user:
         reason: "透過排隊中的審核刪除"
+  fallback_username: "使用者"
   activemodel:
     errors:
       <<: *errors

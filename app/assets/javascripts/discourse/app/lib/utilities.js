@@ -1,5 +1,6 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
+import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
 import { helperContext } from "discourse-common/lib/helpers";
@@ -495,5 +496,24 @@ export function inCodeBlock(text, pos) {
   return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
+export function translateModKey(string) {
+  const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+  // Mac users are used to glyphs for shortcut keys
+  if (mac) {
+    string = string
+      .replace("Shift", "\u21E7")
+      .replace("Meta", "\u2318")
+      .replace("Alt", "\u2325")
+      .replace(/\+/g, "");
+  } else {
+    string = string
+      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+  }
+
+  return string;
+}
 // This prevents a mini racer crash
 export default {};

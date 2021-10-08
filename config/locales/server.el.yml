@@ -2663,6 +2663,7 @@ el:
           title: "Διαγραφή Χρήστη"
       reject:
         title: "Απόρριψη"
+  fallback_username: "χρήστης"
   activemodel:
     errors:
       <<: *errors

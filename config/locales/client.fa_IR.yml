@@ -1915,6 +1915,7 @@ fa_IR:
       tags: "برچسب‌ها"
       type:
         users: "کاربران"
+        categories: "دسته‌بندی‌ها"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
