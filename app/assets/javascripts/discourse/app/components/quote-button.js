@@ -176,7 +176,7 @@ export default Component.extend(KeyEnterEscape, {
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isOpera } = this.capabilities;
+    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     // Don't mess with the original range as it results in weird behaviours
@@ -206,6 +206,13 @@ export default Component.extend(KeyEnterEscape, {
     // merge back all text nodes so they don't get messed up
     parent.normalize();
 
+    // work around Safari that would sometimes lose the selection
+    if (isSafari) {
+      this._reselected = true;
+      selection.removeAllRanges();
+      selection.addRange(clone);
+    }
+
     // change the position of the button
     schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -225,13 +232,6 @@ export default Component.extend(KeyEnterEscape, {
       }
 
       $quoteButton.offset({ top, left });
-
-      this.element.querySelector("button")?.focus();
-
-      // workaround so Safari and Firefox don't lose the selection
-      this._reselected = true;
-      selection.removeAllRanges();
-      selection.addRange(clone);
     });
   },
 
@@ -277,24 +277,6 @@ export default Component.extend(KeyEnterEscape, {
           onSelectionChanged();
         }
       });
-  },
-
-  keyDown(event) {
-    this._super(...arguments);
-
-    if (!this.visible) {
-      return;
-    }
-
-    if (!this._displayFastEditInput && event.key === "e") {
-      this._toggleFastEditForm();
-      return false;
-    }
-
-    if (event.key === "q") {
-      this.insertQuote();
-      return false;
-    }
   },
 
   willDestroyElement() {
