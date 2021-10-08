@@ -217,8 +217,11 @@ module Email
       MessageBuilder.custom_headers(SiteSetting.email_custom_headers).each do |key, _|
         value = header_value(key)
         if value&.include?('%{reply_key}')
+          # Delete old header first or else the same header will be added twice
           @message.header[key] = nil
-          @message.header[key] = reply_key.present? ? value.gsub!('%{reply_key}', reply_key) : nil
+          if reply_key.present?
+            @message.header[key] = value.gsub!('%{reply_key}', reply_key)
+          end
         end
       end
 
