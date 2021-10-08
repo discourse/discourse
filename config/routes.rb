@@ -386,7 +386,7 @@ Discourse::Application.routes.draw do
     end
 
     get "my/*path", to: 'users#my_redirect'
-    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
+    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/security', status: 302)
 
     get "user-cards" => "users#cards", format: :json
     get "directory-columns" => "directory_columns#index", format: :json
