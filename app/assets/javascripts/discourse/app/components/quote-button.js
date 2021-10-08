@@ -277,6 +277,8 @@ export default Component.extend(KeyEnterEscape, {
           onSelectionChanged();
         }
       });
+    this.appEvents.on("quote-button:quote", this, "insertQuote");
+    this.appEvents.on("quote-button:edit", this, "_toggleFastEditForm");
   },
 
   willDestroyElement() {
@@ -284,6 +286,8 @@ export default Component.extend(KeyEnterEscape, {
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
       .off("selectionchange.quote-button");
+    this.appEvents.off("quote-button:quote", this, "insertQuote");
+    this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
   },
 
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")

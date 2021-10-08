@@ -29,7 +29,7 @@ const DEFAULT_BINDINGS = {
   "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
-  e: { postAction: "editPost" },
+  e: { handler: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
   "command+down": { handler: "goToLastPost", anonymous: true },
   f: { handler: "toggleBookmarkTopic" },
@@ -107,10 +107,10 @@ export default {
     this.searchService = this.container.lookup("search-service:main");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
-    let siteSettings = this.container.lookup("site-settings:main");
+    this.siteSettings = this.container.lookup("site-settings:main");
 
     // Disable the shortcut if private messages are disabled
-    if (!siteSettings.enable_personal_messages) {
+    if (!this.siteSettings.enable_personal_messages) {
       delete DEFAULT_BINDINGS["g m"];
     }
   },
@@ -261,9 +261,25 @@ export default {
   },
 
   quoteReply() {
+    if (this.isPostTextSelected()) {
+      this.appEvents.trigger("quote-button:quote");
+      return false;
+    }
+
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     later(() => $(".d-editor .quote").click(), 500);
+
+    return false;
+  },
+
+  editPost() {
+    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected()) {
+      this.appEvents.trigger("quote-button:edit");
+      return false;
+    } else {
+      this.sendToSelectedPost("editPost");
+    }
 
     return false;
   },
@@ -487,6 +503,11 @@ export default {
         return topic;
       }
     }
+  },
+
+  isPostTextSelected() {
+    const topicController = this.container.lookup("controller:topic");
+    return !!topicController?.get("quoteState")?.postId;
   },
 
   sendToSelectedPost(action, elem) {
