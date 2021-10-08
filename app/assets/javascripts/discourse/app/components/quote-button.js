@@ -232,8 +232,6 @@ export default Component.extend(KeyEnterEscape, {
       }
 
       $quoteButton.offset({ top, left });
-
-      this.element.querySelector("button")?.focus();
     });
   },
 
@@ -279,24 +277,6 @@ export default Component.extend(KeyEnterEscape, {
           onSelectionChanged();
         }
       });
-  },
-
-  keyDown(event) {
-    this._super(...arguments);
-
-    if (!this.visible) {
-      return;
-    }
-
-    if (!this._displayFastEditInput && event.key === "e") {
-      this._toggleFastEditForm();
-      return false;
-    }
-
-    if (event.key === "q") {
-      this.insertQuote();
-      return false;
-    }
   },
 
   willDestroyElement() {
