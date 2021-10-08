@@ -110,7 +110,7 @@ function initializeDiscourseLocalDates(api) {
 
       const topicTitle = helper?.getModel()?.topic?.title;
       dates.forEach((date) => {
-        date.dataset.title ||= topicTitle || defaultTitle;
+        date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
       });
     },
     { id: "discourse-local-date" }
