@@ -10,7 +10,7 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext } from "@ember/test-helpers";
+import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
@@ -477,6 +477,28 @@ export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .map((c) => c.func(...args));
+}
+
+export async function selectText(selector, endOffset = null) {
+  const range = document.createRange();
+  let node;
+
+  if (typeof selector === "string") {
+    node = document.querySelector(selector);
+  } else {
+    node = selector;
+  }
+
+  range.selectNodeContents(node);
+
+  if (endOffset) {
+    range.setEnd(node, endOffset);
+  }
+
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  await settled();
 }
 
 export function conditionalTest(name, condition, testCase) {
