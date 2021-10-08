@@ -6,6 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 export function applyLocalDates(dates, siteSettings) {
   if (!siteSettings.discourse_local_dates_enabled) {
@@ -76,6 +77,9 @@ function _rangeElements(element) {
 function initializeDiscourseLocalDates(api) {
   const siteSettings = api.container.lookup("site-settings:main");
   const chat = api.container.lookup("service:chat");
+  const defaultTitle = I18n.t("discourse_local_dates.default_title", {
+    site_name: siteSettings.title,
+  });
 
   if (chat) {
     chat.addToolbarButton({
@@ -99,11 +103,15 @@ function initializeDiscourseLocalDates(api) {
   }
 
   api.decorateCookedElement(
-    (elem) => {
-      applyLocalDates(
-        elem.querySelectorAll(".discourse-local-date"),
-        siteSettings
-      );
+    (elem, helper) => {
+      const dates = elem.querySelectorAll(".discourse-local-date");
+
+      applyLocalDates(dates, siteSettings);
+
+      const topicTitle = helper?.getModel()?.topic?.title;
+      dates.forEach((date) => {
+        date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
+      });
     },
     { id: "discourse-local-date" }
   );
@@ -207,11 +215,11 @@ function _downloadCalendarNode(element) {
         .toISOString()
     );
   }
+  node.setAttribute("data-title", startDataset.title);
   node.setAttribute(
-    "data-title",
-    document.querySelector("#topic-title a").innerText
+    "data-post-id",
+    element.closest("article")?.dataset?.postId
   );
-  node.setAttribute("data-post-id", element.closest("article").dataset.postId);
   return node;
 }
 

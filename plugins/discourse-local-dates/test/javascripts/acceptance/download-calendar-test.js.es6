@@ -57,7 +57,7 @@ acceptance(
       assert.ok(!exists(document.querySelector("#discourse-modal-title")));
       assert.ok(
         window.open.calledWith(
-          "https://www.google.com/calendar/event?action=TEMPLATE&text=Local%20dates%20&dates=20210930T110000Z/20210930T120000Z",
+          "https://www.google.com/calendar/event?action=TEMPLATE&text=Local%20dates&dates=20210930T110000Z/20210930T120000Z",
           "_blank",
           "noopener",
           "noreferrer"
