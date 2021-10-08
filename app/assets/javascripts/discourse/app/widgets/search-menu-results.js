@@ -29,7 +29,7 @@ const suggestionShortcuts = [
   "order:latest_topic",
 ];
 
-const QUICK_TIPS = [
+const DEFAULT_QUICK_TIPS = [
   {
     label: "#",
     description: I18n.t("search.tips.category_tag"),
@@ -56,6 +56,8 @@ const QUICK_TIPS = [
   },
 ];
 
+let QUICK_TIPS = [];
+
 export function addSearchSuggestion(value) {
   if (suggestionShortcuts.indexOf(value) === -1) {
     suggestionShortcuts.push(value);
@@ -67,6 +69,12 @@ export function addQuickSearchRandomTip(tip) {
     QUICK_TIPS.push(tip);
   }
 }
+
+export function resetQuickSearchRandomTips() {
+  QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
+}
+
+resetQuickSearchRandomTips();
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
