@@ -78,6 +78,18 @@ Answer the following questions when prompted:
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
+## Note
+You might get an error mentioning:
+>Your Docker installation is not using a supported storage driver. If we were to proceed you may have a broken install.
+overlay2 is the recommended storage driver, although zfs and aufs may work as well.
+
+In that case, you can edit the `launcher` file with nano or similar text editor and find around line 171:
+
+`if ! $docker_path info 2> /dev/null | egrep -q 'Storage Driver: (aufs|zfs|overlay2)$';` 
+
+Change that line to include the driver your server uses, for example, if it is `vfs` then make the line look like so:
+`if ! $docker_path info 2> /dev/null | egrep -q 'Storage Driver: (vfs|aufs|zfs|overlay2)$';`
+
 ### Start Discourse
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier.
