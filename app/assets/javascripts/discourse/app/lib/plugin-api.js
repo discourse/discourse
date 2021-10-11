@@ -87,6 +87,7 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
+import { unsubscribeFromNotifications } from "discourse/initializers/subscribe-user-notifications";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.12.5";
@@ -1472,6 +1473,13 @@ class PluginApi {
       },
       { ignoreMissing: true }
     );
+  }
+  /**
+   * Stops the subscribe-user-notifications initializer from listening to
+   * notifications
+   */
+  unsubscribeFromNotifications() {
+    unsubscribeFromNotifications();
   }
 
   /**
