@@ -779,13 +779,6 @@ describe TopicQuery do
         category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
-
-        topic1 = Fabricate(:topic, category: category, like_count: 1000, posts_count: 100, created_at: 1.day.ago)
-        topic2 = Fabricate(:topic, category: category, like_count: 5200, posts_count: 500, created_at: 1.hour.ago)
-        TopTopic.refresh!
-
-        topic_ids = TopicQuery.new(user, category: category.id).list_top_for(:monthly).topics.map(&:id)
-        expect(topic_ids).to eq([topic2.id, topic1.id])
       end
 
       it "should apply default sort order to latest and unseen filters only" do
