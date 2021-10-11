@@ -352,6 +352,9 @@ GEM
     rexml (3.2.5)
     rinku (2.0.6)
     rotp (6.2.0)
+    routes_lazy_routes (0.4.1)
+      actionpack
+      railties
     rqrcode (2.1.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -578,6 +581,7 @@ DEPENDENCIES
   redis-namespace
   rinku
   rotp
+  routes_lazy_routes
   rqrcode
   rspec
   rspec-html-matchers
