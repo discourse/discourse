@@ -6,7 +6,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     trust_level: 'approve_unless_trust_level',
     new_topics_unless_trust_level: 'approve_new_topics_unless_trust_level',
     fast_typer: 'min_first_post_typing_time',
-    auto_silence_regexp: 'auto_silence_first_post_regex',
+    auto_silence_regex: 'auto_silence_first_post_regex',
     staged: 'approve_unless_staged',
     must_approve_users: 'must_approve_users',
     invite_only: 'invite_only',
@@ -40,11 +40,12 @@ class ReviewableScoreSerializer < ApplicationSerializer
       text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: nil)
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: nil)
+
       # TODO(roman): Remove after the 2.8 release.
       # The discourse-antivirus and akismet plugins still use the backtick format for settings.
       # It'll be hard to migrate them to the new format without breaking backwards compatibility, so I'm keeping the old behavior for now.
       # Will remove after the 2.8 release.
-      linkify_backticks(object.reason, text)
+      linkify_backticks(object.reason, text) if text
     end
 
     text

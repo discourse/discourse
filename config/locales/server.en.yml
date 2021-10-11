@@ -5001,7 +5001,7 @@ en:
       trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
-      auto_silence_regexp: "New user whose first post matches the %{link} setting."
+      auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word: "This post included a Watched Word. See your %{link}."
       staged: "New topics and posts for staged users must be approved by staff. See %{link}."
       category: "Posts in this category require manual approval by staff. See the %{link}."

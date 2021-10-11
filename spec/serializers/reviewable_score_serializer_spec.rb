@@ -29,7 +29,7 @@ describe ReviewableScoreSerializer do
 
     context 'site setting links' do
       reasons = %w[
-        post_count trust_level new_topics_unless_trust_level fast_typer auto_silence_regexp
+        post_count trust_level new_topics_unless_trust_level fast_typer auto_silence_regex
         staged must_approve_users invite_only email_spam suspect_user contains_media
       ]
 
