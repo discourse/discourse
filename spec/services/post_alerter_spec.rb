@@ -848,6 +848,30 @@ describe PostAlerter do
     end
   end
 
+  describe "create_notification_alert" do
+    it "does not nothing for suspended users" do
+      evil_trout.update_columns(suspended_till: 1.year.from_now)
+      post = Fabricate(:post)
+
+      events = nil
+      messages = MessageBus.track_publish do
+        events = DiscourseEvent.track_events do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:custom],
+            excerpt: "excerpt",
+            username: "username"
+          )
+        end
+      end
+
+      expect(events.size).to eq(0)
+      expect(messages.size).to eq(0)
+      expect(Jobs::PushNotification.jobs.size).to eq(0)
+    end
+  end
+
   describe "watching_first_post" do
     fab!(:group) { Fabricate(:group) }
     fab!(:user) { Fabricate(:user) }

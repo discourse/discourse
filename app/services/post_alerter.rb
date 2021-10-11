@@ -14,6 +14,8 @@ class PostAlerter
   end
 
   def self.create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+    return if user.suspended?
+
     if post_url = post.url
       payload = {
        notification_type: notification_type,
@@ -502,7 +504,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type)
       create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
