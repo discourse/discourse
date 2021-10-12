@@ -402,8 +402,8 @@ export default createWidget("search-menu", {
     this.triggerSearch();
   },
 
-  triggerAutocomplete(term) {
-    this.searchTermChanged(term, { searchTopics: true });
+  triggerAutocomplete(opts = {}) {
+    this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
   },
 
   fullSearch() {
