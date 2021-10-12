@@ -1901,7 +1901,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      title: "Eller tryk Ctrl+Enter"
       users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
@@ -2093,7 +2092,7 @@ da:
       result_count:
         one: "<span>%{count} resultat for</span> <span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span> <span class='term'>%{term}</span>"
-      title: "søg efter emner, indlæg, brugere eller kategorier"
+      title: "Søg"
       full_page_title: "Søg"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
@@ -3326,6 +3325,8 @@ da:
           name: Skriver
       favorite_max_reached: "Du kan ikke favorisere flere badges."
       favorite_max_not_reached: "Markér dette badge som favorit"
+    download_calendar:
+      download: "Download"
     tagging:
       all_tags: "Alle Mærker"
       other_tags: "Andre Mærker"

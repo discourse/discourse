@@ -1019,7 +1019,7 @@ zh_TW:
       title: "可疑登入"
       labels:
         user: 使用者
-        client_ip: Client IP
+        client_ip: 使用者 IP
         location: 位置
         browser: 瀏覽器
         device: 裝置

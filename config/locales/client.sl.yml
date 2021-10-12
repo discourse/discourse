@@ -1854,7 +1854,6 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
-      title: "Ali pritisnite Ctrl+Enter"
       users_placeholder: "Dodaj uporabnika"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
@@ -2040,7 +2039,7 @@ sl:
         two: "<span>%{count}%{plus} zadetka za</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} zadetki za</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} zadetkov za</span><span class='term'>%{term}</span>"
-      title: "išči po temah, prispevkih, uporabnikih ali kategorijah"
+      title: "Išči"
       full_page_title: "Išči"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
@@ -3252,6 +3251,8 @@ sl:
           name: Druge
         posting:
           name: Prispevki
+    download_calendar:
+      download: "Naloži"
     tagging:
       all_tags: "Vse oznake"
       other_tags: "Druge oznake"

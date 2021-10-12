@@ -1861,7 +1861,6 @@ zh_CN:
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
-      title: "或按 Ctrl+Enter"
       users_placeholder: "添加用户"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
@@ -2050,7 +2049,7 @@ zh_CN:
       sort_or_bulk_actions: "分类或者从结果中批量选择"
       result_count:
         other: "<span>%{count}%{plus} 条与 </span>“<span class='term'>%{term}</span>”有关的结果"
-      title: "搜索话题、帖子、用户或类别"
+      title: "搜索"
       full_page_title: "搜索"
       no_results: "找不到结果。"
       no_more_results: "没有找到更多结果。"
@@ -3263,6 +3262,8 @@ zh_CN:
       favorite_max_reached: "您无法将更多徽章加入书签。"
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
+    download_calendar:
+      download: "下载"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"

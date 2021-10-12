@@ -1085,7 +1085,6 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       create_pm: "Privatna poruka"
-      title: "Ili pritisnite Ctrl+Enter"
       users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
@@ -1139,7 +1138,7 @@ sr:
       most_liked: "Najviše sviđanja"
       select_all: "Izaberi sve"
       too_short: "Vaš termin za pretragu je previše kratak."
-      title: "pretražite teme, poruke, korisnike ili kategorije"
+      title: "Pretraži"
       full_page_title: "Pretraži"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
@@ -1754,6 +1753,8 @@ sr:
           name: Ostalo
         posting:
           name: Poruke
+    download_calendar:
+      download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
       sort_by_count: "broj"

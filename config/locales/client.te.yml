@@ -738,7 +738,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      title: "లేదా కంట్రోల్ + ఎంటర్ నొక్కు"
       users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
@@ -780,7 +779,7 @@ te:
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:
-      title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
+      title: "వెతుకు"
       full_page_title: "వెతుకు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
@@ -1317,6 +1316,8 @@ te:
           name: ఇతర
         posting:
           name: రాస్తున్నారు
+    download_calendar:
+      download: "దిగుమతి"
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"

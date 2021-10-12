@@ -1931,7 +1931,7 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "Oppure premi Ctrl+Invio"
+      title: "Oppure premi %{modifier}Invio"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
@@ -2124,10 +2124,12 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
+      open_advanced: "Apri ricerca avanzata"
+      clear_search: "Azzera ricerca"
       result_count:
         one: "<span>%{count} risultato per</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
-      title: "cerca argomenti, messaggi, utenti o categorie"
+      title: "Cerca"
       full_page_title: "Cerca"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -2142,6 +2144,10 @@ it:
       search_button: "Cerca"
       categories: "Categorie"
       tags: "Etichette"
+      in: "in"
+      in_this_topic: "in questo argomento"
+      in_topics_posts: "in tutti gli argomenti e i messaggi"
+      in_posts_by: "nei messaggi di @%{username}"
       type:
         users: "Utenti"
         categories: "Categorie"
@@ -2151,6 +2157,13 @@ it:
         tag: "Cerca l'etichetta #%{tag}"
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
+      tips:
+        category_tag: "filtra per categoria o etichetta"
+        author: "filtra per autore del messaggio"
+        in: "filtra per metadati (per es. in:title, in:personal, in:pinned)"
+        status: "filtra per status dell'argomento"
+        full_search: "avvia la ricerca a pagina intera"
+        full_search_key: "%{modifier} + Invio"
       advanced:
         posted_by:
           label: Pubblicato da
@@ -2713,7 +2726,9 @@ it:
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
+      quote_reply_shortcut: "Oppure premi \"q\""
       quote_edit: "Modifica"
+      quote_edit_shortcut: "Oppure premi \"e\""
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -3385,6 +3400,18 @@ it:
       favorite_max_reached: "Non puoi aggiungere altri distintivi ai preferiti."
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
+    download_calendar:
+      title: "Scarica il calendario"
+      save_ics: "Scarica il file.ics"
+      save_google: "Aggiungi al calendario di Google"
+      remember: "Non chiedermelo più"
+      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
+      download: "Scarica"
+      default_calendar: "Calendario predefinito"
+      default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
+      add_to_calendar: "Aggiungi al calendario"
+      google: "Google Calendar"
+      ics: "ICS"
     tagging:
       all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"

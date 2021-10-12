@@ -243,6 +243,8 @@ tr_TR:
     character_count:
       one: "%{count} karakter"
       other: "%{count} karakter"
+    period_chooser:
+      aria_label: "Döneme göre filtrele"
     related_messages:
       title: "İlgili Mesajlar"
       see_all: '@%{username} kullanıcısından gelen <a href="%{path}">bütün mesajları</a> gör...'
@@ -1935,7 +1937,7 @@ tr_TR:
       create_whisper: "Fısılda"
       create_shared_draft: "Paylaşılmış taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
-      title: "Ya da Ctrl+Enter'a bas"
+      title: "Veya %{modifier}Enter tuşuna basın"
       users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
@@ -2128,11 +2130,13 @@ tr_TR:
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
+      open_advanced: "Gelişmiş aramayı aç"
+      clear_search: "Aramayı temizle"
       sort_or_bulk_actions: "Sonuçları sırala veya toplu olarak seç"
       result_count:
         one: "<span class='term'>%{term}</span> <span>için %{count} sonuç</span>"
         other: "<span class='term'>%{term}</span> için <span>%{count} %{plus} sonuç</span>"
-      title: "konu, gönderi, kullanıcı veya kategori ara"
+      title: "Arama"
       full_page_title: "Arama"
       no_results: "Hiçbir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
@@ -2148,6 +2152,10 @@ tr_TR:
       search_term_label: "arama anahtar sözcüğü girin"
       categories: "Kategoriler"
       tags: "Etiketler"
+      in: "içinde"
+      in_this_topic: "bu konuda"
+      in_topics_posts: "tüm konularda ve gönderilerde"
+      in_posts_by: "@%{username} kullancısına ait gönderilerde"
       type:
         default: "Konular/yazılar"
         users: "Kullanıcılar"
@@ -2159,6 +2167,13 @@ tr_TR:
         tag: "# %{tag} etiketini arayın"
         topic: "Bu konuyu ara"
         private_messages: "Mesajlarda ara"
+      tips:
+        category_tag: "kategoriye veya etikete göre filtreler"
+        author: "gönderi yazarına göre filtreler"
+        in: "meta verilere göre filtreler (ör. in:title, in:personal, in:pinned)"
+        status: "konu durumuna göre filtreler"
+        full_search: "tam sayfa aramaya geçer"
+        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Gelişmiş filtreler
         posted_by:
@@ -2733,7 +2748,9 @@ tr_TR:
       deleted_by_author_simple: "(konu yazarı tarafından silindi)"
     post:
       quote_reply: "Alıntı"
+      quote_reply_shortcut: "Ya da q tuşuna basın"
       quote_edit: "Düzenle"
+      quote_edit_shortcut: "Ya da e tuşuna basın"
       quote_share: "Paylaş"
       edit_reason: "Neden: "
       post_number: "gönderi %{number}"
@@ -3414,6 +3431,18 @@ tr_TR:
       favorite_max_reached: "Daha fazla rozeti favorilere ekleyemezsiniz."
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
+    download_calendar:
+      title: "Takvimi indir"
+      save_ics: ".ics dosyasını indir"
+      save_google: "Google takvimine ekle"
+      remember: "Bir daha sorma"
+      remember_explanation: "(bu tercihi kullanıcı tercihlerinizde değiştirebilirsiniz)"
+      download: "İndir"
+      default_calendar: "Varsayılan takvim"
+      default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirle"
+      add_to_calendar: "Takvime ekle"
+      google: "Google Takvim"
+      ics: "ICS"
     tagging:
       all_tags: "Tüm Etiketler"
       other_tags: "Diğer Etiketler"

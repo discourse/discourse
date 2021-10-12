@@ -1750,7 +1750,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      title: "Vai nospiediet Ctrl+Enter"
       users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
@@ -1846,7 +1845,7 @@ lv:
       select_all: "Izvēlēties visu"
       clear_all: "Noņemt visus"
       too_short: "Jūsu meklēšanas frāze ir pārāk īsa."
-      title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
+      title: "Meklēt"
       full_page_title: "Meklēt"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
@@ -2762,6 +2761,8 @@ lv:
           name: Citi
         posting:
           name: Ieraksti
+    download_calendar:
+      download: "Lejuplādēt"
     tagging:
       all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"

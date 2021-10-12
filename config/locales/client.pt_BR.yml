@@ -1912,7 +1912,6 @@ pt_BR:
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
-      title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
@@ -2108,7 +2107,7 @@ pt_BR:
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "pesquisar tópicos, postagens, usuários ou categorias"
+      title: "Pesquisar"
       full_page_title: "Pesquisar"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
@@ -3361,6 +3360,8 @@ pt_BR:
       favorite_max_reached: "Não é possível adicionar mais emblemas aos favoritos."
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
+    download_calendar:
+      download: "Download"
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"

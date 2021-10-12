@@ -1865,7 +1865,6 @@ nl:
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
-      title: "Of druk op Ctrl+Enter"
       users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
@@ -2059,7 +2058,7 @@ nl:
       result_count:
         one: "<span>%{count} resultaat voor</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultaten voor</span><span class='term'>%{term}</span>"
-      title: "zoeken naar topics, berichten, gebruikers of categorieën"
+      title: "Zoeken"
       full_page_title: "Zoeken"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -3284,6 +3283,8 @@ nl:
           name: Anders
         posting:
           name: Schrijven
+    download_calendar:
+      download: "Downloaden"
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andere tags"

@@ -820,7 +820,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      title: "Or press Ctrl Enter"
       users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
@@ -885,7 +884,7 @@ be:
       sort_by: "сартаваць па"
       latest_post: "апошняе паведамленне"
       select_all: "выбраць усе"
-      title: "пошук тэмаў, пастоў, юзераў альбо катэгорыяў"
+      title: "Пошук"
       full_page_title: "Пошук"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
@@ -1311,6 +1310,8 @@ be:
           name: іншае
         posting:
           name: апублікаванне
+    download_calendar:
+      download: "спампаваць"
     tagging:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"

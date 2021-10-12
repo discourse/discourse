@@ -1045,7 +1045,6 @@ sq:
       cancel: "Anulo"
       create_topic: "Krijo temën"
       create_pm: "Mesazh"
-      title: "Ose shtyp Ctrl+Enter"
       users_placeholder: "Shto një anëtar"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
@@ -1116,7 +1115,7 @@ sq:
       select_all: "Zgjidhni Gjithçka"
       clear_all: "Pastro kriteret"
       too_short: "Fraza e kërkuar është shumë e shkurtër. "
-      title: "kërko në faqe"
+      title: "Kërko"
       full_page_title: "Kërko"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
@@ -1872,6 +1871,8 @@ sq:
           name: Tjetër
         posting:
           name: Postimet
+    download_calendar:
+      download: "Shkarko"
     tagging:
       all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"

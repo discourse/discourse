@@ -132,6 +132,7 @@ zh_TW:
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
       forwarded: "轉寄上述電子郵件"
     topic_admin_menu: "話題動作"
+    skip_to_main_content: "跳到主要內容"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     software_update_prompt:
@@ -252,10 +253,12 @@ zh_TW:
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
+      list_permission_denied: "您沒有權限查看此用戶的書籤。"
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
       auto_delete_preference:
         label: "自動刪除"
         never: "永不"
+        when_reminder_sent: "一旦發送提醒"
         on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
@@ -360,6 +363,7 @@ zh_TW:
       deleted_post: "（貼文已被刪除）"
       deleted_user: "（使用者已被刪除）"
       user:
+        bio: "自我介紹"
         website: "網站"
         username: "使用者名稱"
         email: "電子信箱"
@@ -400,6 +404,7 @@ zh_TW:
           score: "分數"
           created_at: "建立於"
         priority:
+          title: "最小優先權"
           low: "低"
           medium: "中間的"
           high: "高"
@@ -441,6 +446,8 @@ zh_TW:
           other: "你有 <strong>%{count}</strong> 篇貼文在等待審核中"
         ok: "確定"
       example_username: "username"
+      reject_reason:
+        title: "為何拒絕此使用者？"
     relative_time_picker:
       minutes:
         other: "分鐘"
@@ -515,6 +522,7 @@ zh_TW:
       member_requested: "請求"
       add_members:
         usernames_placeholder: "使用者名稱"
+        usernames_or_emails_placeholder: "使用者名稱或電子郵件"
       requests:
         title: "請求"
         reason: "原因"
@@ -545,7 +553,10 @@ zh_TW:
           save_settings: "儲存設定"
           last_updated: "上次更新："
           last_updated_by: "由"
+          settings_required: "所有設定皆為必填，請輸入所有欄位再進行驗證。"
           imap_additional_settings: "其他設定"
+          prefill:
+            gmail: "Gmail"
           credentials:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
@@ -558,6 +569,7 @@ zh_TW:
           settings:
             title: "設定"
           mailboxes:
+            synchronized: "信箱已同步"
             disabled: "停用"
         membership:
           title: 會員身份
@@ -593,6 +605,7 @@ zh_TW:
       leave: "離開"
       request: "請求"
       message: "訊息"
+      confirm_leave: "您確定要離開此群組？"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -635,6 +648,8 @@ zh_TW:
         make_owner_description: "將 <b>%{username}</b> 設為這個群組的擁有者"
         remove_owner: "移除擁有者身份"
         remove_owner_description: "移除 <b>%{username}</b> 的擁有者身份"
+        remove_members: "移除成員"
+        remove_owners: "移除擁有者"
         owner: "擁有者"
         primary: "主要"
       topics: "話題"
@@ -674,6 +689,7 @@ zh_TW:
       flair_preview_icon: "預覽圖示"
       flair_preview_image: "預覽圖片"
       default_notifications:
+        modal_title: "使用者預設通知"
         modal_yes: "是"
     user_action_groups:
       "1": "已按讚"
@@ -705,6 +721,7 @@ zh_TW:
       topics: "話題"
       latest: "最新"
       subcategories: "次分類"
+      muted: "已靜音的分類"
       topic_sentence:
         other: "%{count} 個話題"
       topic_stat_unit:
@@ -751,6 +768,8 @@ zh_TW:
           all: "全部"
           read: "已讀"
           unread: "未讀"
+          unseen: "未讀"
+        ignore_duration_title: "忽略使用者"
         ignore_duration_username: "使用者名稱"
         ignore_duration_when: "持續時間："
         ignore_duration_save: "忽略"
@@ -765,6 +784,10 @@ zh_TW:
         normal_option: "一般"
         normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       notification_schedule:
+        title: "通知時程"
+        label: "啟用自定義通知時程"
+        tip: "若在這些時間之外，自動進入勿擾模式。"
+        midnight: "半夜"
         none: "無"
         monday: "星期一"
         tuesday: "週二"
@@ -776,6 +799,7 @@ zh_TW:
         to: "至"
       activity_stream: "活動"
       read: "已讀"
+      read_help: "最近看過的主題"
       preferences: "偏好設定"
       feature_topic_on_profile:
         open_search: "選擇一個新主題"
@@ -787,7 +811,9 @@ zh_TW:
       use_current_timezone: "使用目前時區"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
       expand_profile: "展開"
+      sr_expand_profile: "展開詳細個人資料"
       collapse_profile: "收合"
+      sr_collapse_profile: "收起詳細個人資料"
       bookmarks: "書籤"
       bio: "關於我"
       timezone: "時區"
@@ -807,15 +833,24 @@ zh_TW:
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
+      no_messages_title: "您沒有任何訊息"
+      no_bookmarks_title: "您尚未添加任何書籤"
+      no_notifications_title: "您尚未收到任何通知"
+      no_notifications_page_title: "您尚未收到任何通知"
       first_notification: "你的第一則通知！選擇以開始。"
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
+      skip_new_user_tips:
+        skip_link: "跳過這些提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
+      color_scheme: "色彩配置"
       color_schemes:
+        default_description: "預設佈景主題"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
       dark_mode: "夜間模式"
+      dark_mode_enable: "啟用自動深色模式色彩配置"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
@@ -870,6 +905,7 @@ zh_TW:
       admin_delete: "刪除"
       users: "使用者"
       muted_users: "靜音"
+      allowed_pm_users: "允許的"
       ignored_users: "忽略"
       tracked_topics_link: "顯示"
       automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
@@ -889,6 +925,7 @@ zh_TW:
         warnings_received: "警告"
       messages:
         inbox: "收件匣"
+        personal: "個人的"
         latest: "最新"
         sent: "送出"
         unread: "未讀"
@@ -948,11 +985,15 @@ zh_TW:
         short_description: |
           以一次性安全碼保護您的帳號
         disable: "禁用"
+        disable_confirm: "您確定要停用所有兩步驟驗證的方法？"
         save: "儲存"
         edit: "編輯"
         security_key:
           register: "註冊"
+          edit: "編輯安全金鑰"
           save: "儲存"
+          edit_description: "安全金鑰名稱"
+          name_required_error: "您必須提供安全金鑰名稱"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -986,10 +1027,12 @@ zh_TW:
         secondary: "次要電子郵件"
         primary_label: "主要"
         update_email: "修改電子郵件地址"
+        destroy: "移除電子信箱"
         add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
+        required: "請輸入電子郵件地址"
         invalid: "請輸入有效的電子郵件地址。"
         authenticated: "你的 Email 已由 %{provider} 驗證完成。"
         frequency_immediately: "如果您沒有閱讀過重要通知，我們會立即發送電子郵件給您。"
@@ -1005,6 +1048,7 @@ zh_TW:
         title: "名稱"
         instructions: "您的全名 (選填)"
         instructions_required: "您的匿稱"
+        required: "請輸入名稱"
         too_short: "你的匿稱太短。"
         ok: "你的匿稱符合要求。"
       username:
@@ -1018,6 +1062,8 @@ zh_TW:
         too_long: "你的使用者名稱太長。"
         checking: "正在檢查使用者名稱是否已經有人使用..."
         prefilled: "電子郵件地址與此註冊的使用者名稱相符。"
+        required: "請輸入使用者名稱"
+        edit: "編輯使用者名稱"
       locale:
         title: "界面語言"
         instructions: "使用者介面的語言，當頁面重新整理的時候會更換成你的設定。"
@@ -1025,6 +1071,8 @@ zh_TW:
         any: "任何"
       password_confirmation:
         title: "再次輸入密碼"
+      invite_code:
+        title: "邀請代碼"
       auth_tokens:
         title: "最近使用的裝置"
         details: "詳細訊息"
@@ -1116,7 +1164,9 @@ zh_TW:
         topic: "話題"
         edit: "編輯"
         remove: "移除"
+        reinvite: "重新送出電子郵件"
         reinvited: "邀請已經重送"
+        removed: "已移除"
         search: "輸入要搜尋邀請的文字..."
         user: "受邀請的使用者"
         none: "沒有可顯示的邀請"
@@ -1473,7 +1523,6 @@ zh_TW:
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
-      title: "或者按 Ctrl+Enter"
       users_placeholder: "新增使用者"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
@@ -1619,7 +1668,7 @@ zh_TW:
       too_short: "你的搜尋詞語太短。"
       result_count:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
-      title: "搜尋話題、貼文、使用者或分類"
+      title: "搜索"
       full_page_title: "搜索"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
@@ -2576,6 +2625,8 @@ zh_TW:
           name: 其它
         posting:
           name: 發文
+    download_calendar:
+      download: "下載"
     tagging:
       all_tags: "所有標籤"
       other_tags: "其他標籤"
@@ -2660,9 +2711,15 @@ zh_TW:
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
     do_not_disturb:
+      label: "勿擾"
       remaining: "剩餘 %{remaining}"
       options:
+        half_hour: "30 分鐘"
+        one_hour: "1 小時"
+        two_hours: "2 小時"
+        tomorrow: "直到明天"
         custom: "客製"
+      set_schedule: "設定通知時程"
     trust_levels:
       names:
         newuser: "新使用者"
@@ -2699,7 +2756,9 @@ zh_TW:
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
         new_features:
+          title: "\U0001F381 新功能"
           dismiss: "忽略"
+          learn_more: "了解更多"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"

@@ -1265,7 +1265,6 @@ bg:
       cancel: "Прекрати"
       create_topic: "Създай тема"
       create_pm: "Съобщение"
-      title: "Или натиснете Ctrl+Enter"
       users_placeholder: "Добави потребител"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
@@ -1336,7 +1335,7 @@ bg:
       select_all: "Избери Всички "
       clear_all: "Изчисти Всички"
       too_short: "Думата за търсене е твърде кратка."
-      title: "търсете по тема, пост, потребител или категория"
+      title: "Търсене"
       full_page_title: "Търсене"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
@@ -2139,6 +2138,8 @@ bg:
           name: Други
         posting:
           name: Публикуване
+    download_calendar:
+      download: "Изтегли"
     tagging:
       all_tags: "Всички тагове"
       other_tags: "Други тагове"

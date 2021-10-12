@@ -1943,7 +1943,7 @@ de:
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
-      title: "Oder drücke Strg + Eingabetaste"
+      title: "Oder drücke %{modifier} Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
@@ -2136,11 +2136,13 @@ de:
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
+      open_advanced: "Erweiterte Suche öffnen"
+      clear_search: "Suche löschen"
       sort_or_bulk_actions: "Ergebnisse sortieren oder massenweise auswählen"
       result_count:
         one: "<span>%{count} Ergebnis für </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
-      title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
+      title: "Suche"
       full_page_title: "Suche"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
@@ -2156,6 +2158,10 @@ de:
       search_term_label: "Suchbegriff eingeben"
       categories: "Kategorien"
       tags: "Schlagwörter"
+      in: "in"
+      in_this_topic: "in diesem Thema"
+      in_topics_posts: "in allen Themen und Beiträgen"
+      in_posts_by: "in Beiträgen von %{username}"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
@@ -2167,6 +2173,13 @@ de:
         tag: "Das Schlagwort #%{tag} suchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
+      tips:
+        category_tag: "filtern nach Kategorie oder Schlagwort"
+        author: "filtern nach Beitragsautor"
+        in: "filtern nach Metadaten (z.B. in:title, in:personal, in:pinned)"
+        status: "filtern nach Themenstatus"
+        full_search: "startet die Ganzseitensuche"
+        full_search_key: "%{modifier} + Eingabetaste"
       advanced:
         title: Erweiterte Filter
         posted_by:
@@ -2741,7 +2754,9 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       quote_reply: "Zitat"
+      quote_reply_shortcut: "Oder drücke q"
       quote_edit: "Bearbeiten"
+      quote_edit_shortcut: "Oder drücke e"
       quote_share: "Teilen"
       edit_reason: "Grund: "
       post_number: "Beitrag %{number}"
@@ -2763,7 +2778,7 @@ de:
         other: "%{count} versteckte Beiträge anzeigen"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
-        returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag ist vom %{time}."
+        returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "%{count} Antwort"
@@ -3423,6 +3438,18 @@ de:
       favorite_max_reached: "Du kannst keine weiteren Abzeichen favorisieren."
       favorite_max_not_reached: "Markiere dieses Abzeichen als Favorit"
       favorite_count: "%{count}/%{max} Abzeichen als Favorit markiert"
+    download_calendar:
+      title: "Kalender herunterladen"
+      save_ics: ".ics-Datei herunterladen"
+      save_google: "Zum Google-Kalender hinzufügen"
+      remember: "Frag mich nicht mehr"
+      remember_explanation: "(Du kannst diese Einstellung in Deinen Benutzereinstellungen ändern)"
+      download: "Herunterladen"
+      default_calendar: "Standard-Kalender"
+      default_calendar_instruction: "Lege fest, welcher Kalender verwendet werden soll, wenn Daten gespeichert werden"
+      add_to_calendar: "Zum Kalender hinzufügen"
+      google: "Google Kalender"
+      ics: "ICS"
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
