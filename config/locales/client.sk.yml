@@ -1297,7 +1297,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      title: "Alebo stlačte Ctrl+Enter"
       users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
@@ -1368,7 +1367,7 @@ sk:
       select_all: "Označ všetky"
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
-      title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
+      title: "Hľadať"
       full_page_title: "Hľadať"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
@@ -2220,6 +2219,8 @@ sk:
           name: Ostatné
         posting:
           name: Prispievanie
+    download_calendar:
+      download: "Stiahnuť"
     tagging:
       all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"

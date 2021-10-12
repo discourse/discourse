@@ -231,6 +231,7 @@ pl_PL:
         cn_northwest_1: "Chiny (Ningxia)"
         eu_central_1: "UE (Frankfurt)"
         eu_north_1: "UE (Sztokholm)"
+        eu_south_1: "UE (Mediolan)"
         eu_west_1: "UE (Irlandia)"
         eu_west_2: "UE (Londyn)"
         eu_west_3: "EU (Paryż)"
@@ -328,6 +329,7 @@ pl_PL:
       help:
         bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
         edit_bookmark: "Kliknij, aby edytować zakładkę w tym temacie"
+        edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
@@ -1245,6 +1247,7 @@ pl_PL:
         tags: "Tagi"
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/message'>wiadomościach prywatnych</a>."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -2097,7 +2100,7 @@ pl_PL:
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
-      title: "Lub naciśnij Ctrl+Enter"
+      title: "Lub naciśnij %{modifier}Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
@@ -2304,13 +2307,15 @@ pl_PL:
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
+      open_advanced: "Otwórz wyszukiwanie zaawansowane"
+      clear_search: "Wyczyść wyszukiwanie"
       sort_or_bulk_actions: "Sortuj lub zbiorczo wybierz wyniki"
       result_count:
         one: "<span>%{count} wynik dla</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} wyniki dla</span><span class='term'>%{term}</span>"
         many: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
-      title: "szukaj tematów, postów, użytkowników lub kategorii"
+      title: "Wyszukaj"
       full_page_title: "Wyszukaj"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
@@ -2326,6 +2331,10 @@ pl_PL:
       search_term_label: "wpisz słowo kluczowe wyszukiwania"
       categories: "Kategorie"
       tags: "Tagi"
+      in: "w"
+      in_this_topic: "w tym temacie"
+      in_topics_posts: "we wszystkich tematach i postach"
+      in_posts_by: "w postach %{username}"
       type:
         default: "Tematy/posty"
         users: "Użytkownicy"
@@ -2337,6 +2346,13 @@ pl_PL:
         tag: "Wyszukaj znacznik # %{tag}"
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
+      tips:
+        category_tag: "filtry według kategorii lub tagu"
+        author: "filtry według autora posta"
+        in: "filtruje według metadanych (np. in:title, in:personal, in:pinned)"
+        status: "filtry według statusu tematu"
+        full_search: "uruchamia wyszukiwanie pełnej strony"
+        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Zaawansowane filtry
         posted_by:
@@ -2381,18 +2397,25 @@ pl_PL:
             label: Wpisy
           min:
             placeholder: minimum
+            aria_label: filtruj według minimalnej liczby postów
           max:
             placeholder: maksimum
+            aria_label: filtruj według maksymalnej liczby postów
           time:
             label: Opublikowano
+            aria_label: Filtruj według daty opublikowania
             before: przed
             after: po
         views:
           label: Odsłony
         min_views:
           placeholder: minimum
+          aria_label: filtruj według minimalnych wyświetleń
         max_views:
           placeholder: maksimum
+          aria_label: filtrować według maksymalnych wyświetleń
+        additional_options:
+          label: "Filtruj według liczby postów i wyświetleń tematu"
     hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
@@ -2956,7 +2979,9 @@ pl_PL:
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
       quote_reply: "Cytuj"
+      quote_reply_shortcut: "Lub naciśnij q"
       quote_edit: "Edytuj"
+      quote_edit_shortcut: "Lub naciśnij e"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -3017,6 +3042,7 @@ pl_PL:
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
+        file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files:
           one: "Przepraszamy, możesz przesłać %{count} plik jednocześnie."
@@ -3170,7 +3196,9 @@ pl_PL:
             button: "HTML"
       bookmarks:
         create: "Utwórz zakładkę"
+        create_for_topic: "Utwórz zakładkę do tematu"
         edit: "Edytuj zakładkę"
+        edit_for_topic: "Edytuj zakładkę dla tematu"
         created: "Utworzono"
         updated: "Zaktualizowane"
         name: "Imię"
@@ -3293,6 +3321,7 @@ pl_PL:
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
       notifications:
+        title: "zmień poziom powiadomień dla tej kategorii"
         watching:
           title: "Obserwuj wszystko"
           description: "Będziesz automatycznie obserwować wszystkie tematy w tej kategorii. Zostaniesz powiadomiony o każdym nowym poście w każdym wątku, a liczba nowych odpowiedzi zostanie wyświetlona."
@@ -3704,6 +3733,18 @@ pl_PL:
       favorite_max_reached: "Nie możesz faworyzować więcej odznak."
       favorite_max_not_reached: "Oznacz tę odznakę jako ulubioną"
       favorite_count: "%{count}/%{max} odznaki oznaczone jako ulubione"
+    download_calendar:
+      title: "Pobierz kalendarz"
+      save_ics: "Pobierz plik .ics"
+      save_google: "Dodaj do kalendarza Google"
+      remember: "Nie pytaj ponownie"
+      remember_explanation: "(możesz zmienić tę preferencję w swoich ustawieniach użytkownika)"
+      download: "Pobierz"
+      default_calendar: "Domyślny kalendarz"
+      default_calendar_instruction: "Określ, który kalendarz powinien być używany podczas zapisywania dat"
+      add_to_calendar: "Dodaj do kalendarza"
+      google: "Kalendarz Google"
+      ics: "ICS"
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -3872,10 +3913,15 @@ pl_PL:
     user_activity:
       no_activity_title: "Brak aktywności"
       no_activity_others: "Brak aktywności"
+      no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_others: "Brak odpowiedzi."
+      no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
+      no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
+      no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
       no_likes_others: "Brak polubionych wpisów."
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
+    no_group_messages_title: "Nie znaleziono wiadomości grupowych"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

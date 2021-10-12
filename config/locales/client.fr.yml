@@ -1903,7 +1903,6 @@ fr:
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
-      title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
@@ -2098,7 +2097,7 @@ fr:
       result_count:
         one: "<span>%{count} résultat pour</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
-      title: "rechercher des sujets, messages, utilisateurs ou catégories"
+      title: "Recherche"
       full_page_title: "Recherche"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
@@ -3346,6 +3345,8 @@ fr:
       favorite_max_reached: "Vous ne pouvez pas choisir davantage de badges préférés"
       favorite_max_not_reached: "Faire de ce badge un de mes préférés"
       favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
+    download_calendar:
+      download: "Télécharger"
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"

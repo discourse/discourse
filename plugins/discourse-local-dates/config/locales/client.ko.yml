@@ -40,3 +40,4 @@ ko:
             every_three_months: "3개월마다"
             every_six_months: "6개월마다"
             every_year: "매년"
+      default_title: "%{site_name} 이벤트"

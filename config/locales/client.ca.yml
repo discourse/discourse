@@ -1583,7 +1583,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      title: "O prem Ctrl+Retorn"
       users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
@@ -1753,7 +1752,7 @@ ca:
       result_count:
         one: "<span>%{count} resultat per a </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
-      title: "cerca temes, publicacions, usuaris o categories"
+      title: "Cerca"
       full_page_title: "Cerca"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
@@ -2769,6 +2768,8 @@ ca:
           name: Altres
         posting:
           name: Publicant
+    download_calendar:
+      download: "Descarrega"
     tagging:
       all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"

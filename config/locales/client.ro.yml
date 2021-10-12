@@ -1591,7 +1591,6 @@ ro:
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
-      title: "Sau apasă Ctrl+Enter"
       users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
@@ -1710,7 +1709,7 @@ ro:
       select_all: "Selectează tot"
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
-      title: "Caută subiecte, postări, utilizatori sau categorii"
+      title: "Caută"
       full_page_title: "Caută"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
@@ -2686,6 +2685,8 @@ ro:
           name: Altele
         posting:
           name: Care postează
+    download_calendar:
+      download: "Descărcare"
     tagging:
       all_tags: "Toate etichetele"
       other_tags: "Alte etichete"

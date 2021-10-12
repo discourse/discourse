@@ -2228,7 +2228,6 @@ ar:
       create_whisper: "همس"
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
-      title: "أو اضغط على Ctrl+Enter"
       users_placeholder: "إضافة مستخدم"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
@@ -2456,7 +2455,7 @@ ar:
         few: "<span>%{plus}%{count} نتائج بحث عن العبارة </span><span class='term'>%{term}</span>"
         many: "<span>%{plus}%{count} نتيجة بحث عن العبارة </span><span class='term'>%{term}</span>"
         other: "<span>%{plus}%{count} نتيجة بحث عن العبارة </span><span class='term'>%{term}</span>"
-      title: "البحث في الموضوعات أو المنشورات أو المستخدمين أو الفئات"
+      title: "البحث"
       full_page_title: "البحث"
       no_results: "لم يتم العثور على نتائج."
       no_more_results: "لم يتم العثور على نتائج أخرى."
@@ -3950,6 +3949,8 @@ ar:
       favorite_max_reached: "لا يمكنك تفضيل المزيد من الشارات."
       favorite_max_not_reached: "وضع علامة على هذه الشارة كمفضَّلة"
       favorite_count: "تم وضع علامة على %{count}/%{max} شارة كمفضَّلة"
+    download_calendar:
+      download: "تنزيل"
     tagging:
       all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"

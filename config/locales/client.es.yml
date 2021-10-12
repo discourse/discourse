@@ -1940,7 +1940,7 @@ es:
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
-      title: "O pulsa Ctrl+Intro"
+      title: "O pulsa %{modifier}Intro"
       users_placeholder: "Añadir un usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
@@ -2133,11 +2133,13 @@ es:
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
+      open_advanced: "Abrir búsqueda avanzada"
+      clear_search: "Limpiar búsqueda"
       sort_or_bulk_actions: "Ordenar resultados o seleccionar en masa"
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "buscar temas, publicaciones, usuarios o categorías"
+      title: "Buscar"
       full_page_title: "Buscar"
       no_results: "No se encontró ningún resultado."
       no_more_results: "No se encontraron más resultados."
@@ -2153,6 +2155,10 @@ es:
       search_term_label: "escribe lo que quieras buscar"
       categories: "Categorías"
       tags: "Etiquetas"
+      in: "en"
+      in_this_topic: "en este tema"
+      in_topics_posts: "en todos los temas y publicaciones"
+      in_posts_by: "en publicaciones por %{username}"
       type:
         default: "Temas/respuestas"
         users: "Usuarios"
@@ -2164,6 +2170,9 @@ es:
         tag: "Buscar la etiqueta #%{tag}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
+      tips:
+        full_search: "lanza la página de búsqueda"
+        full_search_key: "%{modifier} + Intro"
       advanced:
         title: Filtros avanzados
         posted_by:
@@ -3420,6 +3429,17 @@ es:
       favorite_max_reached: "No puedes marcar más insignias como favoritas."
       favorite_max_not_reached: "Marcar esta insignia como favorita"
       favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
+    download_calendar:
+      title: "Descargar calendario"
+      save_ics: "Descargar archivo.ics"
+      save_google: "Añadir a calendario de Google"
+      remember: "No volver a preguntar"
+      remember_explanation: "(puedes cambiar esto en tus preferencias)"
+      download: "Descargar"
+      default_calendar: "Calendario por defecto"
+      add_to_calendar: "Añadir al calendario"
+      google: "Calendario de Google"
+      ics: "ICS"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"

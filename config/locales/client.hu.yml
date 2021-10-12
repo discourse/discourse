@@ -1744,7 +1744,6 @@ hu:
       create_whisper: "Suttogás"
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
-      title: "Vagy nyomja le a Ctrl+Enter billentyűkombinációt"
       users_placeholder: "Felhasználó hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
       title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
@@ -1888,7 +1887,7 @@ hu:
       select_all: "Összes kijelölése"
       clear_all: "Összes törlése"
       too_short: "Keresési kifejezésed túl rövid."
-      title: "keresés témakörök, bejegyzések, felhasználók és kategóriák között"
+      title: "Keresés"
       full_page_title: "Keresés"
       no_results: "Nincs találat."
       no_more_results: "Nincs több találat."
@@ -2764,6 +2763,8 @@ hu:
           name: Egyéb
         posting:
           name: Közzététel
+    download_calendar:
+      download: "Letöltés"
     tagging:
       all_tags: "Összes címke"
       other_tags: "Egyéb címkék"
