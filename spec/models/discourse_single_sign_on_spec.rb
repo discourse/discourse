@@ -10,6 +10,7 @@ describe DiscourseSingleSignOn do
     SiteSetting.discourse_connect_url = @discourse_connect_url
     SiteSetting.enable_discourse_connect = true
     SiteSetting.discourse_connect_secret = @discourse_connect_secret
+    SiteSetting.reserved_usernames = ''
     Jobs.run_immediately!
   end
 
@@ -344,6 +345,32 @@ describe DiscourseSingleSignOn do
     expect(admin.email).to eq("test@bob.com")
     expect(admin.username).to eq "bob_the_admin"
     expect(admin.name).to eq "Louis C.K."
+  end
+
+  it "doesn't use email as a source for username suggestions" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq I18n.t('fallback_username')
+  end
+
+  it "doesn't use email as a source for name suggestions" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.name).to eq ""
   end
 
   it "can override username with a number at the end to a simpler username without a number" do

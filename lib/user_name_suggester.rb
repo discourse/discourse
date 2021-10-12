@@ -5,8 +5,6 @@ module UserNameSuggester
   LAST_RESORT_USERNAME = "user"
 
   def self.suggest(name_or_email, allowed_username = nil)
-    return unless name_or_email.present?
-
     name = parse_name_from_email(name_or_email)
     find_available_username_based_on(name, allowed_username)
   end
