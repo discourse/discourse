@@ -77,9 +77,8 @@ class Auth::Result
 
   def apply_user_attributes!
     change_made = false
-    if SiteSetting.auth_overrides_username? && username.present? && username != user.username
-      user.username = UserNameSuggester.suggest(username_suggester_attributes, user.username)
-      change_made = true
+    if SiteSetting.auth_overrides_username? && username.present?
+      change_made = UsernameOverrider.override(user, username)
     end
 
     if SiteSetting.auth_overrides_email && email_valid && email.present? && user.email != Email.downcase(email)

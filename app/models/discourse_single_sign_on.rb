@@ -314,11 +314,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if SiteSetting.auth_overrides_username? && username.present?
-      if user.username.downcase == username.downcase
-        user.username = username # there may be a change of case
-      elsif user.username != username
-        user.username = UserNameSuggester.suggest(username || name || email, user.username)
-      end
+      UsernameOverrider.override(user, username)
     end
 
     if SiteSetting.auth_overrides_name && user.name != name && name.present?
