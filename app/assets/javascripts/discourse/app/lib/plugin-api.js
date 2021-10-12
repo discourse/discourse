@@ -1243,8 +1243,8 @@ class PluginApi {
    * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
    *
    **/
-  addGlobalNotice(id, text, options) {
-    addGlobalNotice(id, text, options);
+  addGlobalNotice(text, id, options) {
+    addGlobalNotice(text, id, options);
   }
 
   /**
