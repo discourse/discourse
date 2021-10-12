@@ -35,7 +35,8 @@ export default DiscourseRoute.extend({
           value: template.value || field?.metadata?.value
         },
         isDisabled: isPresent(template.value),
-        isRequired: template.is_required
+        isRequired: template.is_required,
+        extra: template.extra
       });
     });
   },
