@@ -2137,7 +2137,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press Ctrl+Enter"
+      title: "Or press %{modifier}Enter"
 
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -3016,7 +3016,9 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_reply_shortcut: "Or press q"
       quote_edit: "Edit"
+      quote_edit_shortcut: "Or press e"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"

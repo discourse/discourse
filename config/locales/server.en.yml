@@ -5001,7 +5001,7 @@ en:
       trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
-      auto_silence_regexp: "New user whose first post matches the %{link} setting."
+      auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word: "This post included a Watched Word. See your %{link}."
       staged: "New topics and posts for staged users must be approved by staff. See %{link}."
       category: "Posts in this category require manual approval by staff. See the %{link}."
@@ -5012,21 +5012,9 @@ en:
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See %{link}."
       contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
-      regular_links:
+      links:
         watched_word: list of watched words
         category: category settings
-      site_setting_links:
-        post_count: approve_post_count
-        trust_level: approve_unless_trust_level
-        new_topics_unless_trust_level: approve_new_topics_unless_trust_level
-        fast_typer: min_first_post_typing_time
-        auto_silence_regexp: auto_silence_first_post_regex
-        staged: approve_unless_staged
-        must_approve_users: must_approve_users
-        invite_only: invite_only
-        email_spam: email_in_spam_header
-        suspect_user: approve_suspect_users
-        contains_media: review_media_unless_trust_level
 
     actions:
       agree:

@@ -777,7 +777,7 @@
               "type": "boolean"
             },
             "default_calendar": {
-              "type": "none_selected"
+              "type": "string"
             }
           },
           "required": [

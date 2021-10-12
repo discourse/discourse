@@ -151,6 +151,7 @@ group :test do
 end
 
 group :test, :development do
+  gem 'routes_lazy_routes'
   gem 'rspec'
   gem 'mock_redis'
   gem 'listen', require: false

@@ -10,7 +10,7 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext } from "@ember/test-helpers";
+import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
@@ -37,6 +37,7 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { resetComposerCustomizations } from "discourse/models/composer";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
@@ -280,6 +281,7 @@ export function acceptance(name, optionsOrCallback) {
       resetCustomPostMessageCallbacks();
       resetUserSearchCache();
       resetCardClickListenerSelector();
+      resetComposerCustomizations();
       resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
@@ -475,6 +477,51 @@ export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .map((c) => c.func(...args));
+}
+
+export async function selectText(selector, endOffset = null) {
+  const range = document.createRange();
+  let node;
+
+  if (typeof selector === "string") {
+    node = document.querySelector(selector);
+  } else {
+    node = selector;
+  }
+
+  range.selectNodeContents(node);
+
+  if (endOffset) {
+    range.setEnd(node, endOffset);
+  }
+
+  const performSelection = () => {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  if (LEGACY_ENV) {
+    // In the Ember CLI environment, the settled() helper seems to take care of waiting
+    // for this event to fire. In legacy, we need to do it manually.
+    let callback;
+    const selectEventFiredPromise = new Promise((resolve) => {
+      callback = resolve;
+      document.addEventListener("selectionchange", callback);
+    });
+
+    performSelection();
+
+    try {
+      await selectEventFiredPromise;
+    } finally {
+      document.removeEventListener("selectionchange", callback);
+    }
+  } else {
+    performSelection();
+  }
+
+  await settled();
 }
 
 export function conditionalTest(name, condition, testCase) {

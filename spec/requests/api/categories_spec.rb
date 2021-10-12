@@ -39,11 +39,19 @@ describe 'categories' do
       operationId 'listCategories'
       consumes 'application/json'
       expected_request_schema = nil
+      parameter name: :include_subcategories,
+                in: :query,
+                schema: {
+                   type: :boolean,
+                   enum: [true]
+                 }
 
       produces 'application/json'
       response '200', 'success response' do
         expected_response_schema = load_spec_schema('category_list_response')
         schema expected_response_schema
+
+        let(:include_subcategories) { true }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

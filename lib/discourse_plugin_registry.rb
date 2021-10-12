@@ -87,6 +87,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :permitted_bulk_action_parameters
   define_filtered_register :reviewable_params
+  define_filtered_register :reviewable_score_links
 
   define_filtered_register :presence_channel_prefixes
 
