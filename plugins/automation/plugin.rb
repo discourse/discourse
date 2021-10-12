@@ -73,7 +73,6 @@ require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
 
 after_initialize do
   [
-    '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/point_in_time',
@@ -96,12 +95,7 @@ after_initialize do
     '../app/jobs/scheduled/discourse_automation_tracker',
     '../app/jobs/scheduled/stalled_wiki_tracker',
     '../app/lib/discourse_automation/triggers/recurring',
-    '../app/lib/discourse_automation/triggers/stalled_wiki',
-    '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/user_promoted',
-    '../app/lib/discourse_automation/triggers/point_in_time',
-    '../app/lib/discourse_automation/triggers/post_created_edited',
-    '../app/lib/discourse_automation/triggers/topic',
     '../app/lib/discourse_automation/scripts/banner_topic',
     '../app/lib/discourse_automation/scripts/suspend_user_by_email',
     '../app/lib/discourse_automation/scripts/pin_topic',
