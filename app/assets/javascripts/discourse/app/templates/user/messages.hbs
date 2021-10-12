@@ -103,6 +103,16 @@
 {{/unless}}
 
 <section class="user-content">
+  <div class="list-actions">
+    {{#if (and site.mobileView showNewPM)}}
+      {{d-button
+        class="btn-primary new-private-message"
+        action=(route-action "composePrivateMessage")
+        icon="envelope"
+        label="user.new_private_message"}}
+    {{/if}}
+  </div>
+
   {{#if showWarningsWarning}}
     <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
   {{/if}}
