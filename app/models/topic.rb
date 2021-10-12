@@ -1787,6 +1787,15 @@ class Topic < ActiveRecord::Base
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
   end
+
+  def cannot_permanently_delete_reason(user)
+    if self.posts_count > 1
+      I18n.t('post.cannot_permanently_delete.many_posts')
+    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
+  end
 end
 
 # == Schema Information

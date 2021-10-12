@@ -604,7 +604,7 @@ class TopicsController < ApplicationController
     force_destroy = false
     if params[:force_destroy].present?
       if !guardian.can_permanently_delete?(topic)
-        return render_json_error guardian.cannot_permanently_delete_topic_reason(topic), status: 403
+        return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
 
       force_destroy = true

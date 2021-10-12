@@ -307,7 +307,7 @@ class PostsController < ApplicationController
     force_destroy = false
     if params[:force_destroy].present?
       if !guardian.can_permanently_delete?(post)
-        return render_json_error guardian.cannot_permanently_delete_post_reason(post), status: 403
+        return render_json_error post.cannot_permanently_delete_reason(current_user), status: 403
       end
 
       force_destroy = true
