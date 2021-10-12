@@ -20,8 +20,8 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest('saM')).to eq('saM3')
     end
 
-    it "doesn't raise an error on nil username" do
-      expect(UserNameSuggester.suggest(nil)).to eq(nil)
+    it "doesn't raise an error on nil username and suggest the fallback username" do
+      expect(UserNameSuggester.suggest(nil)).to eq(I18n.t('fallback_username'))
     end
 
     it "doesn't raise an error on integer username" do
