@@ -120,7 +120,8 @@ describe PostMover do
             .to  change { p2.reload.topic_id }
             .and change { p2.post_number }
             .and change { p3.reload.raw }
-            .and change { p3.baked_version }.to nil
+            .and change { p2.baked_version }.to(nil)
+            .and change { p3.baked_version }.to(nil)
 
           expect(p3.raw).to include("post:#{p2.post_number}, topic:#{p2.topic_id}")
         end
