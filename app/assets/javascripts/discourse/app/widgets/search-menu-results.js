@@ -564,12 +564,12 @@ createWidget("search-menu-initial-options", {
   defaultRow(term, opts = { withLabel: false }) {
     return this.attach("search-menu-assistant-item", {
       slug: term,
+      extraHint: I18n.t("search.enter_hint"),
       label: [
-        h("span", `${term} `),
-        h(
-          "span.label-suffix",
-          opts.withLabel ? I18n.t("search.in_topics_posts") : null
-        ),
+        h("span.keyword", `${term} `),
+        opts.withLabel
+          ? h("span.label-suffix", I18n.t("search.in_topics_posts"))
+          : null,
       ],
     });
   },
@@ -619,6 +619,9 @@ createWidget("search-menu-assistant-item", {
       content.push(h("span.search-item-user", userResult));
     } else {
       content.push(h("span.search-item-slug", attrs.label || attrs.slug));
+      if (attrs.extraHint) {
+        content.push(h("span.extra-hint", attrs.extraHint));
+      }
     }
     return h("a.widget-link.search-link", { attributes }, content);
   },
