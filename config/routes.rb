@@ -386,7 +386,7 @@ Discourse::Application.routes.draw do
     end
 
     get "my/*path", to: 'users#my_redirect'
-    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
+    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/security', status: 302)
 
     get "user-cards" => "users#cards", format: :json
     get "directory-columns" => "directory_columns#index", format: :json
@@ -649,6 +649,8 @@ Discourse::Application.routes.draw do
         put "merge_posts"
       end
     end
+
+    get "/calendars" => "calendars#download", constraints: { format: :ics }
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"

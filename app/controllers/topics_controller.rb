@@ -262,14 +262,21 @@ class TopicsController < ApplicationController
     @posts = Post.where(hidden: false, deleted_at: nil, topic_id: @topic.id)
       .where('posts.id in (?)', post_ids)
       .joins("LEFT JOIN users u on u.id = posts.user_id")
-      .pluck(:id, :cooked, :username)
-      .map do |post_id, cooked, username|
-      {
-        post_id: post_id,
-        username: username,
-        excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
-      }
-    end
+      .pluck(:id, :cooked, :username, :action_code, :created_at)
+      .map do |post_id, cooked, username, action_code, created_at|
+        attrs = {
+          post_id: post_id,
+          username: username,
+          excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true),
+        }
+
+        if action_code
+          attrs[:action_code] = action_code
+          attrs[:created_at] = created_at
+        end
+
+        attrs
+      end
 
     render json: @posts.to_json
   end

@@ -66,6 +66,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_topic_draft,
              :can_review,
              :draft_count,
+             :default_calendar,
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -138,6 +139,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def timezone
     object.user_option.timezone
+  end
+
+  def default_calendar
+    object.user_option.default_calendar
   end
 
   def can_send_private_email_messages

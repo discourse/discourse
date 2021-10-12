@@ -651,6 +651,7 @@ createWidget("discourse-poll-buttons", {
           label: "poll.show-results.label",
           title: "poll.show-results.title",
           icon: "far-eye",
+          disabled: poll.voters === 0,
           action: "toggleResults",
         });
       }

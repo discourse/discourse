@@ -78,5 +78,58 @@ describe DiscourseRedis do
         expect(Discourse.recently_readonly?).to eq(true)
       end
     end
+
+    describe "#eval" do
+      it "keys and arvg are passed correcty" do
+        keys = ["key1", "key2"]
+        argv = ["arg1", "arg2"]
+
+        expect(Discourse.redis.eval(
+          "return { KEYS, ARGV };",
+          keys: keys,
+          argv: argv,
+        )).to eq([keys, argv])
+
+        expect(Discourse.redis.eval(
+          "return { KEYS, ARGV };",
+          keys,
+          argv: argv,
+        )).to eq([keys, argv])
+
+        expect(Discourse.redis.eval(
+          "return { KEYS, ARGV };",
+          keys,
+          argv,
+        )).to eq([keys, argv])
+      end
+    end
+
+    describe "#evalsha" do
+      it "keys and arvg are passed correcty" do
+        keys = ["key1", "key2"]
+        argv = ["arg1", "arg2"]
+
+        script = "return { KEYS, ARGV };"
+        Discourse.redis.script(:load, script)
+        sha = Digest::SHA1.hexdigest(script)
+        expect(Discourse.redis.evalsha(
+          sha,
+          keys: keys,
+          argv: argv,
+        )).to eq([keys, argv])
+
+        expect(Discourse.redis.evalsha(
+          sha,
+          keys,
+          argv: argv,
+        )).to eq([keys, argv])
+
+        expect(Discourse.redis.evalsha(
+          sha,
+          keys,
+          argv,
+        )).to eq([keys, argv])
+      end
+    end
   end
 end

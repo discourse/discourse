@@ -548,11 +548,11 @@ describe Guardian do
         expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_truthy
 
         SiteSetting.max_invites_per_day = 0
 
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_truthy
         # staff should be immune to max_invites_per_day setting
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
       end
@@ -575,9 +575,9 @@ describe Guardian do
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
 
-      it 'fails for normal users if must_approve_users' do
+      it 'return true for normal users even if must_approve_users' do
         SiteSetting.must_approve_users = true
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_truthy
         expect(Guardian.new(admin).can_invite_to?(topic)).to be_truthy
       end
 
@@ -640,23 +640,6 @@ describe Guardian do
 
         it "doesn't allow a regular user to invite" do
           expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
-          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
-        end
-      end
-
-      context "when private messages are enabled" do
-        before do
-          SiteSetting.enable_personal_messages = true
-          SiteSetting.min_trust_level_to_allow_invite = 2
-        end
-
-        it "returns true if user has sufficient trust level" do
-          user.trust_level = 2
-          expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
-        end
-
-        it "returns false if user has sufficient trust level" do
-          user.trust_level = 1
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
         end
       end

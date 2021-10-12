@@ -22,6 +22,7 @@
   }
   .user-additional-controls {
     grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 2;
   }
   .user-content,
@@ -354,12 +355,25 @@
     width: 100%;
   }
 
-  .admin-controls {
+  .user-additional-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    .pull-right {
-      flex: 1 1 100%;
-      font-size: $font-down-1;
-      padding: 5px 0;
+    .user-invite-search {
+      width: 100%;
+    }
+    .user-invite-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .btn {
+        margin-bottom: 0.5em;
+      }
+      .btn:not(:last-of-type) {
+        margin-right: 0.5em;
+      }
     }
   }
 
@@ -408,6 +422,10 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
+    }
+
+    td.invite-actions {
+      display: flex;
     }
   }
 

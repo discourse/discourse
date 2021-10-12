@@ -37,7 +37,9 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import Composer from "discourse/models/composer";
+import Composer, {
+  registerCustomizationCallback,
+} from "discourse/models/composer";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import Sharing from "discourse/lib/sharing";
@@ -87,7 +89,7 @@ import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.3";
+const PLUGIN_API_VERSION = "0.12.5";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1470,6 +1472,28 @@ class PluginApi {
       },
       { ignoreMissing: true }
     );
+  }
+
+  /**
+   * Support for customizing the composer text. By providing a callback. Callbacks should
+   * return `null` or `undefined` if you don't need a customization based on the current state.
+   *
+   * ```
+   * api.customizeComposerText({
+   *   actionTitle(model) {
+   *     if (model.hello) {
+   *        return "hello.world";
+   *     }
+   *   },
+   *
+   *   saveLabel(model) {
+   *     return "my.custom_save_label_key";
+   *   }
+   * })
+   *
+   */
+  customizeComposerText(callbacks) {
+    registerCustomizationCallback(callbacks);
   }
 }
 

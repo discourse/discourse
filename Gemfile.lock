@@ -129,7 +129,7 @@ GEM
       sprockets (>= 3.3, < 4.1)
     ember-source (2.18.2)
     erubi (1.10.0)
-    excon (0.86.0)
+    excon (0.87.0)
     execjs (2.8.1)
     exifr (1.3.9)
     fabrication (2.22.0)
@@ -225,7 +225,7 @@ GEM
     message_bus (3.3.6)
       rack (>= 1.1.3)
     method_source (1.0.0)
-    mini_mime (1.1.1)
+    mini_mime (1.1.2)
     mini_portile2 (2.6.1)
     mini_racer (0.4.0)
       libv8-node (~> 15.14.0.0)
@@ -352,6 +352,9 @@ GEM
     rexml (3.2.5)
     rinku (2.0.6)
     rotp (6.2.0)
+    routes_lazy_routes (0.4.2)
+      actionpack
+      railties
     rqrcode (2.1.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -578,6 +581,7 @@ DEPENDENCIES
   redis-namespace
   rinku
   rotp
+  routes_lazy_routes
   rqrcode
   rspec
   rspec-html-matchers

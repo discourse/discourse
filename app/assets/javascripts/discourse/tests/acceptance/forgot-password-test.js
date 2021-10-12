@@ -85,3 +85,37 @@ acceptance("Forgot password", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Forgot password - hide_email_address_taken enabled",
+  function (needs) {
+    needs.pretender((server, helper) => {
+      server.post("/session/forgot_password", () => {
+        return helper.response({});
+      });
+    });
+
+    test("requesting password reset", async function (assert) {
+      await visit("/");
+      await click("header .login-button");
+      await click("#forgot-password-link");
+
+      assert.equal(
+        queryAll(".forgot-password-reset").attr("disabled"),
+        "disabled",
+        "it should disable the button until the field is filled"
+      );
+
+      await fillIn("#username-or-email", "someuser");
+      await click(".forgot-password-reset");
+
+      assert.equal(
+        queryAll(".modal-body").html().trim(),
+        I18n.t("forgot_password.complete_username", {
+          username: "someuser",
+        }),
+        "it should display a success message"
+      );
+    });
+  }
+);

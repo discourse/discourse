@@ -245,9 +245,14 @@ acceptance("Group - Authenticated", function (needs) {
     );
 
     await click("#search-button");
-    assert.ok(
-      exists(".search-context input:checked"),
-      "scope to message checkbox is checked"
+    await fillIn("#search-term", "smth");
+
+    assert.equal(
+      query(
+        ".search-menu .results .search-menu-assistant-item:first-child"
+      ).innerText.trim(),
+      "smth in:personal",
+      "contextual search is available as first option"
     );
   });
 

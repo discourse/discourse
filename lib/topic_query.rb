@@ -60,7 +60,8 @@ class TopicQuery
          tags
          match_all_tags
          no_subcategories
-         no_tags)
+         no_tags
+         exclude_tag)
   end
 
   def self.valid_options
@@ -407,6 +408,7 @@ class TopicQuery
   end
 
   def create_list(filter, options = {}, topics = nil)
+    options[:filter] ||= filter
     topics ||= default_results(options)
     topics = yield(topics) if block_given?
 
@@ -635,9 +637,10 @@ class TopicQuery
       result = result.references(:categories)
 
       if !@options[:order]
+        filter = (options[:filter] || options[:f])
         # category default sort order
         sort_order, sort_ascending = Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
-        if sort_order
+        if sort_order && (filter.blank? || [:latest, :unseen].include?(filter))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'
         else
@@ -688,6 +691,10 @@ class TopicQuery
       elsif @options[:no_tags]
         # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
+      end
+
+      if @options[:exclude_tag] && tag = Tag.find_by(name: @options[:exclude_tag])
+        result = result.where.not(id: TopicTag.distinct.where(tag_id: tag.id).pluck(:topic_id))
       end
     end
 

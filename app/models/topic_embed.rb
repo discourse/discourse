@@ -34,7 +34,7 @@ class TopicEmbed < ActiveRecord::Base
       contents = first_paragraph_from(contents)
     end
     contents ||= ''
-    contents = +contents << imported_from_html(url)
+    contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
 
