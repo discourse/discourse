@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'sidekiq/api'
-
 module Jobs
 
   def self.queued
