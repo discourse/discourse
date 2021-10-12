@@ -55,7 +55,7 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu .results ul.search-menu-initial-options li:first-child"
       ).innerText.trim(),
-      `dev ${I18n.t("search.in_topics_posts")}`,
+      `dev ${I18n.t("search.in_topics_posts")}${I18n.t("search.enter_hint")}`,
       "shows topic search as first dropdown item"
     );
 
