@@ -40,3 +40,4 @@ lt:
             every_three_months: "Kas tris mėnesius"
             every_six_months: "Kas šešis mėnesius"
             every_year: "Kiekvienais metais"
+      default_title: "%{site_name} Renginys"

@@ -224,6 +224,65 @@ describe PostsController do
 
         delete "/posts/#{post.id}.json"
       end
+
+      context "permanently destroy" do
+        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+
+        before do
+          SiteSetting.can_permanently_delete = true
+        end
+
+        it "does not work for a post that was not deleted yet" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
+
+        it "needs some time to pass to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "needs two users to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(Fabricate(:admin))
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "moderators cannot permanently delete topics" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(moderator)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 

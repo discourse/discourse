@@ -437,6 +437,7 @@ pl_PL:
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
+      for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -1054,6 +1055,7 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Zaktualizowano preferencje e-mail!"
+    description: "Preferencje wiadomości e-mail dla <b>%{email}</b> zostały zaktualizowane. Aby zmienić ustawienia poczty e-mail <a href='%{url}'>odwiedź preferencje użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
     private_topic_description: "Aby ponownie zasubskrybować, użyj opcji powiadomienia na dole lub po prawej stronie tematu."
   uploads:
@@ -1773,6 +1775,7 @@ pl_PL:
     external_emoji_url: "Adres URL zewnętrznej usługi dla obrazów emoji. Pozostaw puste, aby wyłączyć."
     use_site_small_logo_as_system_avatar: "Użyj małego logo witryny zamiast awatara użytkownika system. Wymaga obecności logo."
     restrict_letter_avatar_colors: "Lista 6-cyfrowych szesnastkowych wartości kolorów, które mają być używane jako tło awatara."
+    enable_listing_suspended_users_on_search: "Zezwól zwykłym użytkownikom na znajdowanie zawieszonych użytkowników."
     selectable_avatars_enabled: "Wymuś na użytkownikach wybieranie awatara z listy."
     selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
@@ -3755,6 +3758,8 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
+    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
+    create_mutlipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
@@ -4675,8 +4680,22 @@ pl_PL:
     missing_version: "Musisz wprowadzić parametr wersji"
     conflict: "Wystąpił konflikt aktualizacji, który uniemożliwia Ci to działanie."
     reasons:
+      new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
+      fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
+      auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
+      watched_word: "Ten post zawierał obserwowane słowo. Zobacz swoje %{link}."
+      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz %{link}."
+      category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz %{link}."
+      must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz %{link}."
+      invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz %{link}."
       email_auth_res_enqueue: "Ten e-mail nie powiódł się sprawdzenie DMARC, najprawdopodobniej nie pochodzi od nadawcy, za którego się podaje. Sprawdź surowe nagłówki wiadomości e-mail, aby uzyskać więcej informacji."
+      email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w %{link}."
+      suspect_user: "Ten nowy użytkownik wprowadził informacje o profilu, nie czytając żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz %{link}."
+      contains_media: "Ten post zawiera osadzone media. Zobacz %{link}."
       queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
+      links:
+        watched_word: lista obserwowanych słów
+        category: ustawienia kategorii
     actions:
       agree:
         title: "Zgadzam się..."

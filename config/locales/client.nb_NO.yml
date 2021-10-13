@@ -1874,7 +1874,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
-      title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
@@ -2067,7 +2066,7 @@ nb_NO:
       result_count:
         one: "<span>%{count} resultat for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
-      title: "søk etter emner, innlegg, brukere eller kategorier"
+      title: "Søk"
       full_page_title: "Søk"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
@@ -3302,6 +3301,8 @@ nb_NO:
       favorite_max_reached: "Du kan ikke favorisere flere distinksjoner."
       favorite_max_not_reached: "Marker dette merket som favoritt"
       favorite_count: "%{count}/%{max} merker markert som favoritt"
+    download_calendar:
+      download: "Last ned"
     tagging:
       all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"

@@ -1767,7 +1767,6 @@ vi:
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
-      title: "Hoặc nhất Ctrl+Enter"
       users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
@@ -1955,7 +1954,7 @@ vi:
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
       result_count:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
-      title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
+      title: "Tìm kiếm"
       full_page_title: "Tìm kiếm"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
@@ -3088,6 +3087,8 @@ vi:
           name: Khác
         posting:
           name: Gửi bài
+    download_calendar:
+      download: "Tải xuống"
     tagging:
       all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"

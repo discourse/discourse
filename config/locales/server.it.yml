@@ -4071,10 +4071,13 @@ it:
       trust_level: "Le risposte degli utenti con un basso livello di fiducia devono essere approvate dallo staff. Vedi %{link}"
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di fiducia devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
-      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione %{link} ."
+      auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
       watched_word: "Questo post includeva una parola osservata. Vedi il tuo %{link}."
       email_auth_res_enqueue: "Questa email ha fallito un controllo DMARC, molto probabilmente non arriva da chi sembra provenire. Controlla le intestazioni email non elaborate per ulteriori informazioni."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
+      links:
+        watched_word: lista delle parole osservate
+        category: impostazioni della categoria
     actions:
       agree:
         title: "Acconsenti..."

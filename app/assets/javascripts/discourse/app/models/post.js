@@ -249,10 +249,10 @@ const Post = RestModel.extend({
     }
   },
 
-  destroy(deletedBy) {
+  destroy(deletedBy, opts) {
     return this.setDeletedState(deletedBy).then(() => {
       return ajax("/posts/" + this.id, {
-        data: { context: window.location.pathname },
+        data: { context: window.location.pathname, ...opts },
         type: "DELETE",
       });
     });

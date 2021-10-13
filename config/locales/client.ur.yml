@@ -1700,7 +1700,6 @@ ur:
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
-      title: "یا Ctrl+Enter دبائیں"
       users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
@@ -1888,7 +1887,7 @@ ur:
       result_count:
         one: "<span class='term'>%{term}</span><span>کیلئے %{count} نتیجہ</span>"
         other: "<span class='term'>%{term}</span><span>کیلئے %{count}%{plus} نتائج</span>"
-      title: "ٹاپک، پوسٹس، صارفین، یا زمرہ جات کو سَرچ کریں"
+      title: "تلاش کریں"
       full_page_title: "تلاش کریں"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
@@ -2960,6 +2959,8 @@ ur:
           name: دیگر
         posting:
           name: پوسٹ کرنا
+    download_calendar:
+      download: "ڈاؤن لوڈ"
     tagging:
       all_tags: "تمام ٹیگز"
       other_tags: "دیگر ٹیگز"

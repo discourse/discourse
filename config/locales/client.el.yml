@@ -1675,7 +1675,6 @@ el:
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
-      title: "Ή πάτα Ctrl+Enter"
       users_placeholder: "Προσθήκη χρήστη"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
@@ -1859,7 +1858,7 @@ el:
       result_count:
         one: "<span>%{count} αποτέλεσμα για</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} αποτελέσματα για</span><span class='term'>%{term}</span>"
-      title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
+      title: "Αναζήτηση"
       full_page_title: "Αναζήτηση"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
@@ -2959,6 +2958,8 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
+    download_calendar:
+      download: "Κατέβασμα"
     tagging:
       all_tags: "Όλες οι Ετικέτες"
       other_tags: "Άλλες ετικέτες"

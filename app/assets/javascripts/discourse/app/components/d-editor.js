@@ -263,6 +263,8 @@ export default Component.extend(TextareaTextManipulation, {
   didInsertElement() {
     this._super(...arguments);
 
+    this._previewMutationObserver = this._disablePreviewTabIndex();
+
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
@@ -280,8 +282,6 @@ export default Component.extend(TextareaTextManipulation, {
         return false;
       });
     });
-
-    this._previewMutationObserver = this._disablePreviewTabIndex();
 
     // disable clicking on links in the preview
     $(this.element.querySelector(".d-editor-preview")).on(

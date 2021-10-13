@@ -4436,6 +4436,9 @@ zh_CN:
     reasons:
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
+      links:
+        watched_word: 列出关注的关键字
+        category: 分类设置
     actions:
       agree:
         title: "同意…"

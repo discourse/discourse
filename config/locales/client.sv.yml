@@ -1943,7 +1943,6 @@ sv:
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
-      title: "eller tryck på Ctrl+Enter"
       users_placeholder: "Lägg till en användare"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
@@ -2136,11 +2135,13 @@ sv:
       select_all: "Markera alla"
       clear_all: "Rensa allt"
       too_short: "Din sökterm är för kort."
+      open_advanced: "Öppna avancerad sökning"
+      clear_search: "Rensa sökning"
       sort_or_bulk_actions: "Sortera eller massmarkera resultat"
       result_count:
         one: "<span>%{count} resultat för</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
-      title: "sök efter ämnen, inlägg, användare eller kategorier"
+      title: "Sök"
       full_page_title: "Sök"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
@@ -2156,6 +2157,10 @@ sv:
       search_term_label: "ange sökord"
       categories: "Kategorier"
       tags: "Taggar"
+      in: "i"
+      in_this_topic: "i detta ämne"
+      in_topics_posts: "i alla ämnen och inlägg"
+      in_posts_by: "i inlägg av %{username}"
       type:
         default: "Ämnen/inlägg"
         users: "Användare"
@@ -2167,6 +2172,13 @@ sv:
         tag: "Sök efter taggen #%{tag}"
         topic: "Sök i det här ämnet"
         private_messages: "Sök meddelanden"
+      tips:
+        category_tag: "filter efter kategori eller tagg"
+        author: "filter efter inläggsförfattare"
+        in: "filter efter metadata (t.ex. i: titel, i:personlig, i:fäst)"
+        status: "filter efter ämnesstatus"
+        full_search: "startar helsidesökning"
+        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Avancerade filter
         posted_by:
@@ -2741,7 +2753,9 @@ sv:
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
+      quote_reply_shortcut: "Eller tryck på q"
       quote_edit: "Redigera"
+      quote_edit_shortcut: "Eller tryck på e"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -3423,6 +3437,18 @@ sv:
       favorite_max_reached: "Du kan inte markera fler utmärkelser som favoriter."
       favorite_max_not_reached: "Markera denna utmärkelse som favorit"
       favorite_count: "%{count}/%{max} utmärkelser markerade som favorit"
+    download_calendar:
+      title: "Ladda ner kalender"
+      save_ics: "Ladda ner .ics -fil"
+      save_google: "Lägg till i Google -kalender"
+      remember: "Fråga mig inte igen"
+      remember_explanation: "(du kan ändra denna inställning under dina användarinställningar)"
+      download: "Ladda ner"
+      default_calendar: "Standardkalender"
+      default_calendar_instruction: "Bestäm vilken kalender som ska användas när datum sparas"
+      add_to_calendar: "Lägg till i kalender"
+      google: "Google -kalender"
+      ics: "ICS"
     tagging:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"

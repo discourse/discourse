@@ -4525,8 +4525,12 @@ es:
     missing_version: "Debes incluir un parámetro de versión"
     conflict: "Hubo un conflicto de actualización que no te permitió realizar esa acción."
     reasons:
+      post_count: "Las primeras publicaciones de las cuentas recién registradas deben ser aprobadas por el personal. Ver %{link}."
+      watched_word: "Esta publicación incluía una palabra vigilada. Ver tu %{link}."
       email_auth_res_enqueue: "Este correo electrónico no superó la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo electrónico para más información."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
+      links:
+        category: ajustes de la categoría
     actions:
       agree:
         title: "Estar de acuerdo..."

@@ -16,6 +16,7 @@ ko:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "% B % Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -901,6 +902,7 @@ ko:
         remove: "이 글은 더 이상 배너가 아닙니다. 더 이상 모든 페이지의 상단에 나타나지 않습니다."
   unsubscribed:
     title: "이메일 환경 설정이 업데이트되었습니다!"
+    description: "이메일 <b>%{email}</b>의 기본 설정이 업데이트되었습니다. 이메일 설정을 변경하려면 <a href='%{url}'>사용자 환경 설정</a>을 방문하십시오."
     topic_description: "%{link}를 재구독하려면 토픽 하단, 또는 우측에 있는 알림 설정을 사용하세요."
     private_topic_description: "다시 구독하려면 주제의 맨 아래 또는 오른쪽에있는 알림 제어를 사용하십시오."
   uploads:
@@ -3514,8 +3516,10 @@ ko:
     cannot_promote_failure: "업로드를 완료할 수 없습니다. 이미 완료되었거나 이전에 실패했을 수 있습니다."
     attachments:
       too_large: "죄송합니다, 업로드하려는 파일이 너무 큽니다. (최대 크기 %{max_size_kb}KB)."
+      too_large_humanized: "죄송합니다. 업로드하려는 파일이 너무 큽니다. (최대 크기는 %{max_size})."
     images:
       too_large: "죄송합니다, 업로드하려는 이미지가 너무 큽니다. (최대 크기 %{max_size_kb}KB). 크기를 줄여서 다시 시도해보세요."
+      too_large_humanized: "죄송합니다. 업로드하려는 이미지가 너무 큽니다. (최대 크기는 %{max_size}). 크기를 조정하고 다시 시도하십시오."
       larger_than_x_megapixels: "죄송합니다. 업로드하려는 이미지가 너무 큽니다 (최대 크기는 %{max_image_megapixels}- 메가 픽셀). 크기를 조정하고 다시 시도하십시오."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
     placeholders:
@@ -4250,8 +4254,15 @@ ko:
     missing_version: "버전 매개 변수를 제공해야합니다"
     conflict: "그렇게하지 못하는 업데이트 충돌이있었습니다."
     reasons:
+      post_count: "모든 사용자의 처음 몇 개의 게시물은 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
+      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. 다음 링크를 참조하십시오. %{link}"
+      must_approve_users: "모든 신규 사용자는 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
       email_auth_res_enqueue: "이 이메일은 DMARC 확인에 실패했으며, 발신자가 아닌 것 같습니다. 자세한 내용은 원시 이메일 헤더를 확인하십시오."
+      contains_media: "이 게시물에는 미디어가 포함되어 있습니다. 다음을 참조하십시오. %{link}"
       queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."
+      links:
+        watched_word: 감시 단어 목록
+        category: 카테고리 설정
     actions:
       agree:
         title: "동의..."

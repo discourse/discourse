@@ -3955,8 +3955,18 @@ tr_TR:
     missing_version: "Bir sürüm parametresi sağlamalısınız"
     conflict: "Bunu yapmanı önleyen bir güncelleme çatışması oldu."
     reasons:
+      watched_word: "Bu gönderi bir İzlenen Kelime içeriyordu. Bkz %{link}."
+      staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler personel tarafından onaylanmalıdır. Bkz. %{link}."
+      category: "Bu kategorideki gönderiler, personel tarafından manuel onay gerektirir. Bkz. %{link}."
+      must_approve_users: "Tüm yeni kullanıcılar personel tarafından onaylanmalıdır. Bkz. %{link}."
+      invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz. %{link}."
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
+      email_spam: "Bu e-posta, %{link} adresinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      contains_media: "Bu yazı gömülü medya içerir. Bkz. %{link}."
       queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
+      links:
+        watched_word: izlenen kelimeler listesi
+        category: kategori ayarları
     actions:
       agree:
         title: "Kabul..."

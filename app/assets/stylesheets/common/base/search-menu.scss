@@ -111,8 +111,12 @@ $search-pad-horizontal: 0.5em;
         height: 20px;
       }
 
-      .avatar-flair {
+      .avatar-flair,
+      .d-icon-users {
         margin-right: 0.5em;
+      }
+
+      .avatar-flair {
         border-radius: 50%;
         &.avatar-flair-image {
           background-repeat: no-repeat;
@@ -222,6 +226,9 @@ $search-pad-horizontal: 0.5em;
         margin-right: 4px;
         padding: 2px 4px;
         display: inline-block;
+        &.tip-clickable {
+          cursor: pointer;
+        }
       }
     }
   }

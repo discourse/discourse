@@ -1852,7 +1852,6 @@ ko:
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 만들기"
       edit_shared_draft: "공유 초안 편집"
-      title: "혹은 Ctrl + Enter 누름"
       users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요."
@@ -1910,7 +1909,7 @@ ko:
         error: "이 항목은 느린 모드입니다. 최근에 이미 게시했습니다; %{timeLeft}후 다시 게시 할 수 있습니다."
       admin_options_title: "이 글에 대한 옵션 설정"
       composer_actions:
-        reply: 댓글
+        reply: 댓글쓰기
         draft: 임시저장
         edit: 편집
         reply_to_post:
@@ -2038,10 +2037,12 @@ ko:
       select_all: "모두 선택"
       clear_all: "모두 지우기"
       too_short: "검색어가 너무 짧습니다."
+      open_advanced: "상세 검색 열기"
+      clear_search: "검색 지우기"
       sort_or_bulk_actions: "결과 정렬 또는 일괄 선택"
       result_count:
         other: "<span><span class='term'>%{term}</span>에 대한 %{count}%{plus}개의 검색 결과</span>"
-      title: "글, 사용자 또는 카테고리 검색"
+      title: "검색"
       full_page_title: "검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
@@ -2057,6 +2058,9 @@ ko:
       search_term_label: "검색 키워드 입력"
       categories: "카테고리"
       tags: "태그"
+      in_this_topic: "이 글에서"
+      in_topics_posts: "모든 글과 댓글에서"
+      in_posts_by: "%{username}님의 글에서"
       type:
         default: "글/댓글"
         users: "사용자"
@@ -2068,6 +2072,13 @@ ko:
         tag: "#%{tag} 태그 검색"
         topic: "이 글에서 검색"
         private_messages: "메시지 검색"
+      tips:
+        category_tag: "카테고리 또는 태그별 필터"
+        author: "게시물 작성자별 필터"
+        in: "메타데이터별 필터 (예: in:title, in:personal, in:pinned)"
+        status: "글 상태별 필터"
+        full_search: "전체 페이지 검색 시작"
+        full_search_key: "%{modifier} + 엔터"
       advanced:
         title: 상세검색
         posted_by:
@@ -2656,6 +2667,7 @@ ko:
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 해당 파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         file_too_large: "죄송합니다, 해당 파일이 너무 큽니다. (최대 %{max_size_kb}KB) 대용량 파일은 클라우드 공유 서비스에 업로드 한 다음 링크를 붙여 넣으십시오."
+        file_too_large_humanized: "죄송합니다. 파일이 너무 큽니다. (최대 크기는 %{max_size}). 대용량 파일을 클라우드 공유 서비스에 업로드한 다음 링크를 붙여넣으십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
         too_many_dragged_and_dropped_files:
           other: "죄송합니다. 한 번에 %{count}개의 파일만 업로드 할 수 있습니다."
@@ -3249,6 +3261,18 @@ ko:
       favorite_max_reached: "더 이상 좋아하는 배지로 추가할 수 없습니다."
       favorite_max_not_reached: "이 배지를 좋아하는 배지로 표시"
       favorite_count: "%{count}/%{max}개의 배지가 좋아하는 배지로 표시"
+    download_calendar:
+      title: "캘린더 다운로드"
+      save_ics: ".ics 파일 다운로드"
+      save_google: "Google 캘린더에 추가"
+      remember: "다시 묻지 마세요"
+      remember_explanation: "(사용자 환경설정에서 이 환경설정을 변경할 수 있습니다)"
+      download: "다운로드"
+      default_calendar: "기본 캘린더"
+      default_calendar_instruction: "날짜를 저장할 때 어떤 달력을 사용해야 하는지 결정합니다."
+      add_to_calendar: "캘린더에 추가"
+      google: "구글 캘린더"
+      ics: "ICS"
     tagging:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
@@ -4472,6 +4496,7 @@ ko:
         logged_out: "사용자가 모든 디바이스에서 로그아웃 되었습니다."
         revoke_admin: "관리자 권한 회수"
         grant_admin: "관리자 권한 부여"
+        grant_admin_success: "새 관리자가 확인되었습니다."
         grant_admin_confirm: "새로운 관리자를 인증하기 위해 메일을 보냈습니다. 메일을 열어서 메일에 적힌 지시에 따라 주세요."
         revoke_moderation: "운영자 권한 회수"
         grant_moderation: "운영자 권한 부여"
@@ -4514,6 +4539,12 @@ ko:
             description: "글 삭제중..."
           confirmation:
             title: "%{username}님의 모든 게시물 삭제"
+            description: |
+              <p>정말로 <b>%{post_count}</b>개의 @%{username}님 게시물을 삭제하시겠습니까?
+
+              <p><b>이것은 취소할 수 없습니다!</b></p>
+
+              <p>계속 하려면 다음을 입력하세요: <code>%{text}</code></p>
             text: "%{username}님의 게시물 삭제"
             delete: "%{username}님의 게시물 삭제"
             cancel: "취소"
@@ -4916,6 +4947,7 @@ ko:
           moderator: "운영자"
           regular: "일반 유저"
       previews:
+        topic_title: "대화 글 제목"
         share_button: "공유"
         reply_button: "댓글"
         topic_preview: "글 미리보기"

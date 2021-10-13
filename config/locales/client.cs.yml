@@ -1571,7 +1571,6 @@ cs:
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
-      title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
@@ -1721,7 +1720,7 @@ cs:
         few: "<span>%{count}%{plus} výsledky pro</span><span class='term'>%{term}</span>"
         many: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
-      title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
+      title: "Vyhledat"
       full_page_title: "Vyhledat"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
@@ -2747,6 +2746,8 @@ cs:
           name: Ostatní
         posting:
           name: Přispívání
+    download_calendar:
+      download: "Stáhnout"
     tagging:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
