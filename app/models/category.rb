@@ -920,6 +920,21 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def cannot_delete_reason
+    return I18n.t('category.cannot_delete.uncategorized') if self.uncategorized?
+    return I18n.t('category.cannot_delete.has_subcategories') if self.has_children?
+
+    if self.topic_count != 0
+      oldest_topic = self.topics.where.not(id: self.topic_id).order('created_at ASC').limit(1).first
+      if oldest_topic
+        I18n.t('category.cannot_delete.topic_exists', count: self.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{CGI.escapeHTML(oldest_topic.title)}</a>")
+      else
+        # This is a weird case, probably indicating a bug.
+        I18n.t('category.cannot_delete.topic_exists_no_oldest', count: self.topic_count)
+      end
+    end
+  end
+
   private
 
   def should_update_reviewables?

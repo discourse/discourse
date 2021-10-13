@@ -43,6 +43,7 @@ class PostSerializer < BasicPostSerializer
              :version,
              :can_edit,
              :can_delete,
+             :can_permanently_delete,
              :can_recover,
              :can_wiki,
              :link_counts,
@@ -164,6 +165,14 @@ class PostSerializer < BasicPostSerializer
 
   def can_delete
     scope.can_delete?(object)
+  end
+
+  def can_permanently_delete
+    true
+  end
+
+  def include_can_permanently_delete?
+    SiteSetting.can_permanently_delete && object.deleted_at
   end
 
   def can_recover

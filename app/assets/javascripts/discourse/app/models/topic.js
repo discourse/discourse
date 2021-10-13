@@ -433,9 +433,9 @@ const Topic = RestModel.extend({
   },
 
   // Delete this topic
-  destroy(deleted_by) {
+  destroy(deleted_by, opts) {
     return ajax(`/t/${this.id}`, {
-      data: { context: window.location.pathname },
+      data: { context: window.location.pathname, ...opts },
       type: "DELETE",
     })
       .then(() => {

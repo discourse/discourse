@@ -25,6 +25,9 @@ class Post < ActiveRecord::Base
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
 
+  # Time between the delete and permanent delete of a post
+  PERMANENT_DELETE_TIMER = 5.minutes
+
   rate_limit
   rate_limit :limit_posts_per_day
 
@@ -1088,6 +1091,13 @@ class Post < ActiveRecord::Base
   def image_url
     raw_url = image_upload&.url
     UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
+  end
+
+  def cannot_permanently_delete_reason(user)
+    if self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
   end
 
   private

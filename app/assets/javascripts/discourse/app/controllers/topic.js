@@ -595,9 +595,9 @@ export default Controller.extend(bufferedProperty("model"), {
       post.get("post_number") === 1 ? this.recoverTopic() : post.recover();
     },
 
-    deletePost(post) {
+    deletePost(post, opts) {
       if (post.get("post_number") === 1) {
-        return this.deleteTopic();
+        return this.deleteTopic(opts);
       } else if (!post.can_delete) {
         return false;
       }
@@ -611,7 +611,7 @@ export default Controller.extend(bufferedProperty("model"), {
         ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
           if (replies.length === 0) {
             return post
-              .destroy(user)
+              .destroy(user, opts)
               .then(refresh)
               .catch((error) => {
                 popupAjaxError(error);
@@ -630,7 +630,7 @@ export default Controller.extend(bufferedProperty("model"), {
             label: I18n.t("post.controls.delete_replies.just_the_post"),
             callback() {
               post
-                .destroy(user)
+                .destroy(user, opts)
                 .then(refresh)
                 .catch((error) => {
                   popupAjaxError(error);
@@ -685,13 +685,26 @@ export default Controller.extend(bufferedProperty("model"), {
         });
       } else {
         return post
-          .destroy(user)
+          .destroy(user, opts)
           .then(refresh)
           .catch((error) => {
             popupAjaxError(error);
             post.undoDeleteState();
           });
       }
+    },
+
+    permanentlyDeletePost(post) {
+      return bootbox.confirm(
+        I18n.t("post.controls.permanently_delete_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (result) => {
+          if (result) {
+            this.send("deletePost", post, { force_destroy: true });
+          }
+        }
+      );
     },
 
     editPost(post) {
@@ -1497,13 +1510,13 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
-  deleteTopic() {
+  deleteTopic(opts) {
     if (
       this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {
       this.deleteTopicModal();
     } else {
-      this.model.destroy(this.currentUser);
+      this.model.destroy(this.currentUser, opts);
     }
   },
 

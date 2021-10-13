@@ -1677,6 +1677,9 @@ security:
   disable_onebox_media_download_controls:
     default: false
     hidden: true
+  can_permanently_delete:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:

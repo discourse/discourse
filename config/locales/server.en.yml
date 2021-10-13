@@ -721,6 +721,9 @@ en:
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
+    cannot_permanently_delete:
+      many_posts: "You can not permanently delete this topic because there are other posts."
+      wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
     slow_down: "You’ve performed this action too many times, please try again later."
