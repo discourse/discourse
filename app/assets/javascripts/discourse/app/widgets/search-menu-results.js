@@ -480,7 +480,8 @@ createWidget("search-menu-initial-options", {
     const ctx = service.get("searchContext");
 
     const content = [];
-    if (attrs.term) {
+
+    if (attrs.term || ctx) {
       if (ctx) {
         const term = attrs.term ? `${attrs.term} ` : "";
 
@@ -549,8 +550,9 @@ createWidget("search-menu-initial-options", {
         }
       }
 
-      const rowOptions = { withLabel: true };
-      content.push(this.defaultRow(attrs.term, rowOptions));
+      if (attrs.term) {
+        content.push(this.defaultRow(attrs.term, { withLabel: true }));
+      }
       return content;
     }
 
@@ -601,6 +603,7 @@ createWidget("search-menu-assistant-item", {
           category: attrs.category,
           allowUncategorized: true,
           recursive: true,
+          link: false,
         })
       );
     } else if (attrs.tag) {

@@ -117,6 +117,13 @@ acceptance("Search - Anonymous", function (needs) {
 
     await visit("/tag/important");
     await click("#search-button");
+
+    assert.equal(
+      query(firstResult).textContent.trim(),
+      `${I18n.t("search.in")} test`,
+      "contenxtual tag search is first available option with no term"
+    );
+
     await fillIn("#search-term", "smth");
 
     assert.equal(
@@ -132,6 +139,11 @@ acceptance("Search - Anonymous", function (needs) {
       query(firstResult).textContent.trim(),
       `smth ${I18n.t("search.in")} bug`,
       "category-scoped search is first available option"
+    );
+
+    assert.ok(
+      exists(`${firstResult} span.badge-wrapper`),
+      "category badge is a span (i.e. not a link)"
     );
 
     await visit("/t/internationalization-localization/280");
@@ -159,6 +171,16 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/t/internationalization-localization/280/1");
 
     await click("#search-button");
+
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
+
+    assert.equal(
+      query(firstResult).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "contenxtual topic search is first available option"
+    );
+
     await fillIn("#search-term", "a proper");
     await focus("input#search-term");
     await triggerKeyEvent(".search-menu", "keydown", 40);
