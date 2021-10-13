@@ -2653,6 +2653,7 @@ en:
         time_frame_required: "Please select a time frame"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
+        duration: "Duration"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -3931,8 +3932,6 @@ en:
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
 
     no_group_messages_title: "No group messages found"
-
-
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
