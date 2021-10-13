@@ -70,7 +70,7 @@ export default Component.extend(LoadMore, {
     if (lastElement === this._lastDecoratedElement) {
       return;
     }
-    this.set("_lastDecoratedElement", lastElement);
+    this._lastDecoratedElement = lastElement;
   },
 
   actions: {
