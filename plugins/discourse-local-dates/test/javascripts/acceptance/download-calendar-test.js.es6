@@ -77,6 +77,7 @@ acceptance(
         .add(1, "days")
         .format("YYYY-MM-DD");
       response.post_stream.posts[0].cooked = `<p><span data-date=\"${startDate}\" data-time=\"13:00:00\" class=\"discourse-local-date\" data-timezone=\"Africa/Cairo\" data-email-preview=\"${startDate}T11:00:00Z UTC\">${startDate}T11:00:00Z</span></p>`;
+      response.title = "   title to trim   ";
       server.get("/t/281.json", () => helper.response(response));
     });
 
@@ -98,7 +99,7 @@ acceptance(
       assert.ok(!exists(document.querySelector("#discourse-modal-title")));
       assert.ok(
         window.open.calledWith(
-          `https://www.google.com/calendar/event?action=TEMPLATE&text=Local%20dates&dates=${startDate}T110000Z/${startDate}T120000Z`,
+          `https://www.google.com/calendar/event?action=TEMPLATE&text=title%20to%20trim&dates=${startDate}T110000Z/${startDate}T120000Z`,
           "_blank",
           "noopener",
           "noreferrer"

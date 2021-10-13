@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
       this.currentUser.save(["default_calendar"]);
     }
     if (this.selectedCalendar === "ics") {
-      downloadIcs(this.model.postId, this.model.title, this.model.dates);
+      downloadIcs(this.model.title, this.model.dates);
     } else {
       downloadGoogle(this.model.title, this.model.dates);
     }

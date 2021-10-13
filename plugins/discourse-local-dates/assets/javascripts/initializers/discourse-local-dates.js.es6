@@ -221,10 +221,6 @@ function _downloadCalendarNode(element) {
     node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
   }
   node.setAttribute("data-title", startDataset.title);
-  node.setAttribute(
-    "data-post-id",
-    element.closest("article")?.dataset?.postId
-  );
   return node;
 }
 
@@ -265,7 +261,7 @@ export default {
     } else if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
       hidePopover(event);
-      downloadCalendar(dataset.postId, dataset.title, [
+      downloadCalendar(dataset.title, [
         {
           startsAt: dataset.startsAt,
           endsAt: dataset.endsAt,
