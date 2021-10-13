@@ -10,6 +10,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
+    // must have the Badging API
     if (defaultBadgingDisabled || !navigator.setAppBadge) {
       return;
     }
