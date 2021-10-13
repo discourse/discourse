@@ -184,7 +184,14 @@ $search-pad-horizontal: 0.5em;
       color: var(--primary-medium);
     }
 
-    .badge-wrapper {
+    .extra-hint {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-1);
+      float: right;
+      margin-top: 2px;
+    }
+
+    .search-item-slug .badge-wrapper {
       font-size: var(--font-0);
       margin-left: 2px;
     }

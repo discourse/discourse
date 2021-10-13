@@ -2366,6 +2366,7 @@ en:
       in: "in"
       in_this_topic: "in this topic"
       in_topics_posts: "in all topics and posts"
+      enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
 
       type:
