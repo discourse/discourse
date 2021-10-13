@@ -37,7 +37,7 @@ export function registerServiceWorker(container, serviceWorkerURL) {
   }
 }
 
-export function unregister(registration) {
+function unregister(registration) {
   if (isAbsoluteURL(registration.scope)) {
     registration.unregister();
   }
