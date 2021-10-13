@@ -347,6 +347,25 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq "TestUser"
   end
 
+  it 'do not override username when a new username after fixing is the same' do
+    SiteSetting.auth_overrides_username = true
+
+    sso = new_discourse_sso
+    sso.username = "testuser"
+    sso.name = "test user"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+
+    # create the original user
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # change the username case
+    sso.username = "testuserგამარჯობა"
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+  end
+
   it "doesn't use email as a source for username suggestions" do
     sso = new_discourse_sso
     sso.external_id = "100"
