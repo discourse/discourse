@@ -26,6 +26,32 @@ describe UserEmail do
     end
   end
 
+  describe 'normalized_email' do
+    it 'checks if normalized email is unique' do
+      SiteSetting.normalize_emails = true
+
+      user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)
+      expect(user_email.normalized_email).to eq("ab@example.com")
+      expect(user_email).to be_valid
+
+      user_email = user.user_emails.create(email: "a.b+d@example.com", primary: false)
+      expect(user_email.normalized_email).to eq("ab@example.com")
+      expect(user_email).not_to be_valid
+    end
+
+    it 'does not check uniqueness if email normalization is not enabled' do
+      SiteSetting.normalize_emails = false
+
+      user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)
+      expect(user_email.normalized_email).to eq("ab@example.com")
+      expect(user_email).to be_valid
+
+      user_email = user.user_emails.create(email: "a.b+d@example.com", primary: false)
+      expect(user_email.normalized_email).to eq("ab@example.com")
+      expect(user_email).to be_valid
+    end
+  end
+
   context "indexes" do
     it "allows only one primary email" do
       expect {
