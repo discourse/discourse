@@ -1,12 +1,19 @@
 // Updates the PWA badging if available
+
+let defaultBadgingDisabled = false;
+export function disableDefaultBadging() {
+  defaultBadgingDisabled = true;
+}
+
 export default {
   name: "badging",
   after: "message-bus",
 
   initialize(container) {
-    if (!navigator.setAppBadge) {
+    // must have the Badging API
+    if (defaultBadgingDisabled || !navigator.setAppBadge) {
       return;
-    } // must have the Badging API
+    }
 
     const user = container.lookup("current-user:main");
     if (!user) {
