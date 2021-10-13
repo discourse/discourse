@@ -299,7 +299,7 @@ export default createWidget("search-menu", {
 
           this.appEvents.trigger(
             "composer:insert-text",
-            document.activeElement.getAttribute("href"),
+            document.activeElement.href,
             {
               ensureSpace: true,
             }

@@ -350,7 +350,7 @@ acceptance("Search - Authenticated", function (needs) {
 
     assert.equal(
       query("#reply-control textarea").value,
-      firstLink,
+      `${window.location.origin}${firstLink}`,
       "hitting A when focused on a search result copies link to composer"
     );
   });
