@@ -111,8 +111,12 @@ $search-pad-horizontal: 0.5em;
         height: 20px;
       }
 
-      .avatar-flair {
+      .avatar-flair,
+      .d-icon-users {
         margin-right: 0.5em;
+      }
+
+      .avatar-flair {
         border-radius: 50%;
         &.avatar-flair-image {
           background-repeat: no-repeat;
