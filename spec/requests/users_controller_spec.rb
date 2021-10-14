@@ -1877,6 +1877,7 @@ describe UsersController do
             invites = response.parsed_body['invites']
             expect(invites.size).to eq(1)
             expect(invites.first).to include("email" => invite.email)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
           end
         end
 
@@ -1896,8 +1897,8 @@ describe UsersController do
         end
 
         context 'with permission to see invite links' do
-          it 'returns invites' do
-            inviter = sign_in(Fabricate(:admin))
+          it 'returns own invites' do
+            inviter = sign_in(Fabricate(:user, trust_level: 2))
             invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
             get "/u/#{inviter.username}/invited/pending.json"
@@ -1906,6 +1907,21 @@ describe UsersController do
             invites = response.parsed_body['invites']
             expect(invites.size).to eq(1)
             expect(invites.first).to include("id" => invite.id)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
+          end
+
+          it 'allows admin to see invites' do
+            inviter = Fabricate(:user, trust_level: 2)
+            admin = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
           end
         end
 
