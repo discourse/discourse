@@ -586,6 +586,7 @@ users:
     default: true
   invite_expiry_days:
     default: 30
+    client: true
     max: 36500
   invites_per_page:
     client: true

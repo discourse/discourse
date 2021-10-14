@@ -1,18 +1,26 @@
+{{#if flashText}}
+  <div id="modal-alert" role="alert" class="alert alert-{{flashClass}}">
+    {{#if flashLink}}
+      <div class="input-group invite-link">
+        <label for="invite-link">{{flashText}} {{i18n "user.invited.invite.instructions"}}</label>
+        <div class="link-share-container">
+          {{input
+            name="invite-link"
+            class="invite-link"
+            value=invite.link
+            readonly=true
+          }}
+          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+        </div>
+      </div>
+    {{else}}
+      {{flashText}}
+    {{/if}}
+  </div>
+{{/if}}
+
 {{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <form>
-    <div class="input-group invite-link">
-      <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
-      <div class="link-share-container">
-        {{input
-          name="invite-link"
-          class="invite-link"
-          value=invite.link
-          readonly=true
-        }}
-        {{copy-button selector="input.invite-link" copied=(action "copied")}}
-      </div>
-    </div>
-
     <div class="input-group input-email">
       <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
       <div class="invite-email-container">
