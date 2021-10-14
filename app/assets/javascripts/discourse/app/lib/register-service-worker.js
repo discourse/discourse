@@ -1,6 +1,10 @@
 import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 
-export function registerServiceWorker(container, serviceWorkerURL, scope = "/") {
+export function registerServiceWorker(
+  container,
+  serviceWorkerURL,
+  scope = "/"
+) {
   const isSecured = document.location.protocol === "https:";
 
   if (isSecured && "serviceWorker" in navigator) {
