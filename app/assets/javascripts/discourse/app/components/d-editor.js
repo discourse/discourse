@@ -913,6 +913,7 @@ export default Component.extend(TextareaTextManipulation, {
       childList: true,
       subtree: true,
       attributes: false,
+      characterData: true,
     });
 
     return observer;
