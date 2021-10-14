@@ -37,13 +37,14 @@ after_initialize do
       topic = Topic.find(post.topic_id)
 
       config = PresenceChannel::Config.new
-
-      config.allowed_user_ids = [ post.user_id ]
       config.allowed_group_ids = [ ::Group::AUTO_GROUPS[:staff] ]
 
-      if post.locked? || post.whisper?
-        # no additional groups/users allowed
-      elsif topic.private_message? && post.wiki
+      # Locked and whisper posts are staff only
+      next config if post.locked? || post.whisper?
+
+      config.allowed_user_ids = [ post.user_id ]
+
+      if topic.private_message? && post.wiki
         # Ignore trust level and just publish to all allowed groups since
         # trying to figure out which users in the allowed groups have
         # the necessary trust levels can lead to a large array of user ids
@@ -52,12 +53,19 @@ after_initialize do
         config.allowed_group_ids += topic.allowed_groups.pluck(:id)
       elsif post.wiki
         config.allowed_group_ids << Group::AUTO_GROUPS[:"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"]
-      elsif !topic.private_message? && SiteSetting.trusted_users_can_edit_others?
+      end
+
+      if !topic.private_message? && SiteSetting.trusted_users_can_edit_others?
         config.allowed_group_ids << Group::AUTO_GROUPS[:trust_level_4]
       end
+
+      if SiteSetting.enable_category_group_moderation? && group_id = topic.category&.reviewable_by_group_id
+        config.allowed_group_ids << group_id
+      end
+
       config
     end
-  rescue ActiveRecord::NotFound
+  rescue ActiveRecord::RecordNotFound
     nil
   end
 end
