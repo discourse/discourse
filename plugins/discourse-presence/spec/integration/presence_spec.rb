@@ -34,7 +34,7 @@ describe "discourse-presence" do
       end.to raise_error(PresenceChannel::NotFound)
     end
 
-    it 'handles PM permissions for reply' do
+    it 'handles secure category permissions for reply' do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_topic.id}")
       expect(c.can_view?(user_id: user.id)).to eq(true)
       expect(c.can_enter?(user_id: user.id)).to eq(true)
@@ -46,7 +46,7 @@ describe "discourse-presence" do
       expect(c.can_enter?(user_id: user.id)).to eq(false)
     end
 
-    it 'handles PM permissions for edit' do
+    it 'handles secure category permissions for edit' do
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.can_view?(user_id: user.id)).to eq(false)
