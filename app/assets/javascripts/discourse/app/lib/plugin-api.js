@@ -311,12 +311,10 @@ class PluginApi {
     if (!opts.onlyStream) {
       decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
       decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
-      decorate(
-        this.container.factoryFor("component:user-stream").class,
-        "didInsertElement",
-        callback,
-        opts.id
-      );
+      ["didInsertElement", "user-stream:new-item-inserted"].forEach((event) => {
+        const klass = this.container.factoryFor("component:user-stream").class;
+        decorate(klass, event, callback, opts.id);
+      });
     }
   }
 
