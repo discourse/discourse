@@ -3,7 +3,7 @@ import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 export function registerServiceWorker(
   container,
   serviceWorkerURL,
-  scope = "/"
+  registerOptions = {}
 ) {
   const isSecured = document.location.protocol === "https:";
 
@@ -26,7 +26,7 @@ export function registerServiceWorker(
       });
 
       navigator.serviceWorker
-        .register(getAbsoluteURL(`/${serviceWorkerURL}`), { scope })
+        .register(getAbsoluteURL(`/${serviceWorkerURL}`), registerOptions)
         .catch((error) => {
           // eslint-disable-next-line no-console
           console.info(`Failed to register Service Worker: ${error}`);
