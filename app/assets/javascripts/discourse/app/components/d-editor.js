@@ -64,7 +64,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { siteSettings } = opts;
+    const { site } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -129,39 +129,29 @@ class Toolbar {
       action: (...args) => this.context.send("formatCode", args),
     });
 
-    this.addButton({
-      id: "bullet",
-      group: "extras",
-      icon: "list-ul",
-      shortcut: "Shift+8",
-      title: "composer.ulist_title",
-      preventFocus: true,
-      perform: (e) => e.applyList("* ", "list_item"),
-    });
-
-    this.addButton({
-      id: "list",
-      group: "extras",
-      icon: "list-ol",
-      shortcut: "Shift+7",
-      title: "composer.olist_title",
-      preventFocus: true,
-      perform: (e) =>
-        e.applyList(
-          (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-          "list_item"
-        ),
-    });
-
-    if (siteSettings.support_mixed_text_direction) {
+    if (!site.mobileView) {
       this.addButton({
-        id: "toggle-direction",
+        id: "bullet",
         group: "extras",
-        icon: "exchange-alt",
-        shortcut: "Shift+6",
-        title: "composer.toggle_direction",
+        icon: "list-ul",
+        shortcut: "Shift+8",
+        title: "composer.ulist_title",
         preventFocus: true,
-        perform: (e) => e.toggleDirection(),
+        perform: (e) => e.applyList("* ", "list_item"),
+      });
+
+      this.addButton({
+        id: "list",
+        group: "extras",
+        icon: "list-ol",
+        shortcut: "Shift+7",
+        title: "composer.olist_title",
+        preventFocus: true,
+        perform: (e) =>
+          e.applyList(
+            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+            "list_item"
+          ),
       });
     }
 
@@ -343,9 +333,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed()
   toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink")
-    );
+    const toolbar = new Toolbar(this.getProperties("site", "showLink"));
     toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(toolbar));

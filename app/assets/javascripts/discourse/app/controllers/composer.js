@@ -318,6 +318,40 @@ export default Controller.extend({
         })
       );
 
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
+
+      if (this.siteSettings.support_mixed_text_direction) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "toggleDirection",
+              icon: "exchange-alt",
+              label: "composer.toggle_direction",
+            };
+          })
+        );
+      }
+
       options.push(
         this._setupPopupMenuOption(() => {
           return {
@@ -678,6 +712,21 @@ export default Controller.extend({
           body,
         });
       });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
+    },
+
+    toggleDirection() {
+      this.toolbarEvent.toggleDirection();
     },
   },
 
