@@ -92,9 +92,10 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { unsubscribeFromNotifications } from "discourse/initializers/subscribe-user-notifications";
 import { disableDefaultBadging } from "discourse/initializers/badging";
+import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.6";
+const PLUGIN_API_VERSION = "0.13.6";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1424,6 +1425,23 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Download calendar modal which allow to pick between ICS and Google Calendar
+   *
+   * ```
+   * api.downloadCalendar("title of the event", [
+   * {
+        startsAt: "2021-10-12T15:00:00.000Z",
+        endsAt: "2021-10-12T16:00:00.000Z",
+      },
+   * ]);
+   * ```
+   *
+   */
+  downloadCalendar(title, dates) {
+    downloadCalendar(title, dates);
   }
 
   /**
