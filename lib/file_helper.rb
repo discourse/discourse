@@ -127,7 +127,8 @@ class FileHelper
         jpegrecompress: false,
         # Skip looking for gifsicle, svgo binaries
         gifsicle: false,
-        svgo: false
+        svgo: false,
+        oxipng: false
       )
     end
   end
