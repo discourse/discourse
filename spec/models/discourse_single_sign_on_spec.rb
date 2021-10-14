@@ -347,7 +347,7 @@ describe DiscourseSingleSignOn do
     expect(admin.name).to eq "Louis C.K."
   end
 
-  it "doesn't use email as a source for username suggestions" do
+  it "doesn't use email as a source for username suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
 
@@ -360,7 +360,21 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq I18n.t('fallback_username')
   end
 
-  it "doesn't use email as a source for name suggestions" do
+  it "use email as a source for username suggestions if enabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "mail"
+  end
+
+  it "doesn't use email as a source for name suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
 
@@ -371,6 +385,20 @@ describe DiscourseSingleSignOn do
 
     user = sso.lookup_or_create_user(ip_address)
     expect(user.name).to eq ""
+  end
+
+  it "use email as a source for name suggestions if enabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.name).to eq "Mail"
   end
 
   it "can override username with a number at the end to a simpler username without a number" do
