@@ -34,8 +34,7 @@ after_initialize do
       PresenceChannel::Config.new(allowed_group_ids: [::Group::AUTO_GROUPS[:staff]])
     elsif post_id = channel_name[/\/discourse-presence\/edit\/(\d+)/, 1]
       post = Post.find(post_id)
-      topic = post.topic
-      next nil if topic.nil?
+      topic = Topic.find(post.topic_id)
 
       config = PresenceChannel::Config.new
 
