@@ -296,9 +296,7 @@ createWidget("search-menu-results", {
     }
 
     if (!term) {
-      return this.attach("search-menu-initial-options", {
-        term,
-      });
+      return this.attach("search-menu-initial-options", { term });
     }
 
     const resultTypes = results.resultTypes || [];
@@ -484,12 +482,12 @@ createWidget("search-menu-initial-options", {
     if (attrs.term || ctx) {
       if (ctx) {
         const term = attrs.term ? `${attrs.term} ` : "";
-
         switch (ctx.type) {
           case "topic":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}topic:${ctx.id}`,
+                slug: term,
+                setTopicContext: true,
                 label: [
                   h("span", term),
                   h("span.label-suffix", I18n.t("search.in_this_topic")),
@@ -636,6 +634,7 @@ createWidget("search-menu-assistant-item", {
     this.sendWidgetAction("triggerAutocomplete", {
       value: this.attrs.slug,
       searchTopics: true,
+      setTopicContext: this.attrs.setTopicContext,
     });
     e.preventDefault();
     return false;

@@ -22,6 +22,8 @@ $search-pad-horizontal: 0.5em;
   .search-input {
     position: relative;
     padding: $search-pad-vertical 0.1em;
+    display: flex;
+    align-items: center;
   }
 
   .heading {
@@ -32,8 +34,7 @@ $search-pad-horizontal: 0.5em;
   }
 
   input[type="text"] {
-    width: 100%;
-    margin-bottom: 0;
+    margin-right: 0px;
   }
 
   .results {
