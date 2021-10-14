@@ -183,6 +183,14 @@ export default createWidget("search-menu", {
   tagName: "div.search-menu",
   searchData,
 
+  buildKey: () => "search-menu",
+
+  defaultState() {
+    return {
+      contextEnabled: false,
+    };
+  },
+
   fullSearchUrl(opts) {
     let url = "/search";
     const params = [];
@@ -209,6 +217,18 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
+    if (this.attrs.forceTopicContext && !this.state.contextEnabled) {
+      const service = this.register.lookup("search-service:main");
+      const ctx = service.get("searchContext");
+      if (
+        ctx?.type === "topic" &&
+        (!searchData.term || !searchData.term.includes("topic:"))
+      ) {
+        searchData.term = `topic:${ctx.id} ${searchData.term || ""}`;
+        this.state.contextEnabled = true;
+      }
+    }
+
     let searchInput = [this.attach("search-term", { value: searchData.term })];
     if (searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
