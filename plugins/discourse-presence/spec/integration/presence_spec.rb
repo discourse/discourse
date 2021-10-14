@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe "discourse-presence" do
-  describe '#handle_message' do
+  describe 'PresenceChannel configuration' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
