@@ -18,6 +18,14 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
+  after_create do
+    EmailToken
+      .where(user_id: self.user_id)
+      .where(scope: [nil, self.scope])
+      .where.not(id: self.id)
+      .update_all(expired: true)
+  end
+
   before_validation do
     self.email = self.email.downcase if self.email
   end
@@ -27,13 +35,6 @@ class EmailToken < ActiveRecord::Base
       STDERR.puts "EmailToken has an empty scope"
       caller.each { |x| STDERR.puts "    #{x}" if x.include?('discourse') }
     end
-  end
-
-  after_create do
-    EmailToken
-      .where(user_id: self.user_id)
-      .where.not(id: self.id)
-      .update_all(expired: true)
   end
 
   def self.scopes
