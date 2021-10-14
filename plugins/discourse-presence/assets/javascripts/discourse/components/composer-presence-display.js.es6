@@ -34,16 +34,16 @@ export default Component.extend({
   isWhisper: equal("state", "whisper"),
 
   @discourseComputed("model.topic.id", "isReply", "isWhisper")
-  replyChannelName(id, isReply, isWhisper) {
-    if (id && (isReply || isWhisper)) {
-      return `/discourse-presence/reply/${id}`;
+  replyChannelName(topicId, isReply, isWhisper) {
+    if (topicId && (isReply || isWhisper)) {
+      return `/discourse-presence/reply/${topicId}`;
     }
   },
 
   @discourseComputed("model.topic.id", "isReply", "isWhisper")
-  whisperChannelName(id, isReply, isWhisper) {
-    if (id && this.currentUser.staff && (isReply || isWhisper)) {
-      return `/discourse-presence/whisper/${id}`;
+  whisperChannelName(topicId, isReply, isWhisper) {
+    if (topicId && this.currentUser.staff && (isReply || isWhisper)) {
+      return `/discourse-presence/whisper/${topicId}`;
     }
   },
 
