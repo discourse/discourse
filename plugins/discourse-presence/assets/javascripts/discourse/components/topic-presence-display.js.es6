@@ -11,7 +11,10 @@ export default Component.extend({
 
   @discourseComputed("replyChannel.users.[]")
   replyUsers(users) {
-    return users?.filter((u) => u.id !== this.currentUser?.id);
+    if (!this.currentUser) {
+      return users;
+    }
+    return users?.filter((u) => u.id !== this.currentUser.id);
   },
 
   @discourseComputed("whisperChannel.users.[]")
