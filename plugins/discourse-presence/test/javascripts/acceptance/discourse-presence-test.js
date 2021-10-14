@@ -133,6 +133,18 @@ acceptance("Discourse Presence Plugin", function (needs) {
       [User.current().id],
       "becomes present in the edit channel"
     );
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/reply/280"),
+      [],
+      "is not made present in the reply channel"
+    );
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/whisper/280"),
+      [],
+      "is not made present in the whisper channel"
+    );
   });
 
   test("Displays replying and whispering presence at bottom of topic", async function (assert) {
