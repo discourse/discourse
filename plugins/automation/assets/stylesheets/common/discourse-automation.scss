@@ -123,8 +123,10 @@
 
   .controls-row {
     display: flex;
-    align-items: center;
-    height: 34px;
+
+    input {
+      margin-bottom: 0;
+    }
   }
 
   .text-field {

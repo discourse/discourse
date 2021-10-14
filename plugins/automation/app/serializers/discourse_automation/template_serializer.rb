@@ -5,9 +5,7 @@ module DiscourseAutomation
     attributes :name, :component, :extra, :accepts_placeholders, :default_value, :is_required
 
     def default_value
-      if scope[:targetable].scriptable?
-        scope[:targetable]&.forced_triggerable&.dig(:state, name)
-      end
+      scope[:automation].scriptable&.forced_triggerable&.dig(:state, name)
     end
 
     def name

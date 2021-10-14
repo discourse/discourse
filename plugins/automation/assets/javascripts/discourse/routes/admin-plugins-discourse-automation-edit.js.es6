@@ -32,9 +32,10 @@ export default DiscourseRoute.extend({
         name: template.name,
         component: template.component,
         metadata: {
-          value: template.value || field?.metadata?.value
+          value:
+            template.default_value || template.value || field?.metadata?.value
         },
-        isDisabled: isPresent(template.value),
+        isDisabled: isPresent(template.default_value),
         isRequired: template.is_required,
         extra: template.extra
       });

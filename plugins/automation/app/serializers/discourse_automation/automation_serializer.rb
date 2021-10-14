@@ -67,7 +67,7 @@ module DiscourseAutomation
     def process_templates(targetable)
       ActiveModel::ArraySerializer.new(
           targetable.fields,
-          each_serializer: DiscourseAutomation::TemplateSerializer, scope: { targetable: targetable }
+          each_serializer: DiscourseAutomation::TemplateSerializer, scope: { automation: object }
         ).as_json
     end
 

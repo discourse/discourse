@@ -87,17 +87,19 @@
           </div>
         {{/if}}
 
-        {{#if model.automation.next_pending_automation_at}}
-          <div class="alert alert-info next-trigger">
-            <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
+        {{#if model.automation.enabled}}
+          {{#if model.automation.next_pending_automation_at}}
+            <div class="alert alert-info next-trigger">
+              <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
 
-            {{d-button
-              label="discourse_automation.edit_automation.trigger_section.trigger_now"
-              class="btn-primary trigger-now-btn"
-              isLoading=isTriggeringAutomation
-              action=(action "onManualAutomationTrigger" model.automation.id)
-            }}
-          </div>
+              {{d-button
+                label="discourse_automation.edit_automation.trigger_section.trigger_now"
+                class="btn-primary trigger-now-btn"
+                isLoading=isTriggeringAutomation
+                action=(action "onManualAutomationTrigger" model.automation.id)
+              }}
+            </div>
+          {{/if}}
         {{/if}}
 
         {{#each triggerFields as |field|}}
@@ -111,27 +113,29 @@
     </section>
 
     {{#if automationForm.trigger}}
-      <section class="fields-section form-section edit">
-        <h2 class="title">
-          {{i18n "discourse_automation.edit_automation.fields_section.title"}}
-        </h2>
+      {{#if scriptFields}}
+        <section class="fields-section form-section edit">
+          <h2 class="title">
+            {{i18n "discourse_automation.edit_automation.fields_section.title"}}
+          </h2>
 
-        {{#if model.automation.script.with_trigger_doc}}
-          <div class="alert alert-info">
-            <p>{{model.automation.script.with_trigger_doc}}</p>
+          {{#if model.automation.script.with_trigger_doc}}
+            <div class="alert alert-info">
+              <p>{{model.automation.script.with_trigger_doc}}</p>
+            </div>
+          {{/if}}
+
+          <div class="control-group">
+            {{#each scriptFields as |field|}}
+              {{automation-field
+                automation=automation
+                field=field
+                onChangeField=(action "onChangeField")
+              }}
+            {{/each}}
           </div>
-        {{/if}}
-
-        <div class="control-group">
-          {{#each scriptFields as |field|}}
-            {{automation-field
-              automation=automation
-              field=field
-              onChangeField=(action "onChangeField")
-            }}
-          {{/each}}
-        </div>
-      </section>
+        </section>
+      {{/if}}
 
       <div class="control-group">
         {{d-button

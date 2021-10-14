@@ -7,5 +7,5 @@ export default {
 
   initialize() {
     withPluginApi("0.8.24", initializeDiscourseAutomation);
-  },
+  }
 };

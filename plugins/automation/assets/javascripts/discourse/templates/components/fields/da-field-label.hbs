@@ -1,8 +1,10 @@
 {{#if label}}
   <label class="control-label">
-    <span>{{label}}</span>
-    {{#if field.isRequired}}
-      <span>*</span>
-    {{/if}}
+    <span>
+      {{label}}
+      {{#if field.isRequired}}
+        *
+      {{/if}}
+    </span>
   </label>
 {{/if}}
