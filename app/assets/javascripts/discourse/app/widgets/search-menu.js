@@ -15,7 +15,7 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-export const TOPIC_REPLACE_REGEXP = /\stopic:\d+/i;
+export const TOPIC_REPLACE_REGEXP = /\btopic:\d+\s?/i;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -385,10 +385,14 @@ export default createWidget("search-menu", {
       const highlightTerm = searchData.term.replace(TOPIC_REPLACE_REGEXP, "");
       this.searchService().set("highlightTerm", highlightTerm);
     }
-    searchData.loading = SearchHelper.includesTopics() ? true : false;
 
-    const delay = SearchHelper.includesTopics() ? 400 : 200;
-    discourseDebounce(SearchHelper, SearchHelper.perform, this, delay);
+    if (SearchHelper.includesTopics()) {
+      searchData.loading = true;
+      SearchHelper.perform(this);
+    } else {
+      searchData.loading = false;
+      discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
+    }
   },
 
   moreOfType(type) {

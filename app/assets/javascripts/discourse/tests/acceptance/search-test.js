@@ -197,6 +197,17 @@ acceptance("Search - Anonymous", function (needs) {
       "highlights the post correctly"
     );
 
+    await fillIn("#search-term", "topic:280 interface");
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.equal(
+      query("#post_7 span.highlighted").textContent.trim(),
+      "interface",
+      "highlights the post when term is after modifier"
+    );
+
     await click(".clear-search");
     assert.equal(query("#search-term").value, "", "clear button works");
   });
