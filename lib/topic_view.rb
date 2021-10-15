@@ -87,7 +87,6 @@ class TopicView
     check_and_raise_exceptions(options[:skip_staff_action])
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
-    @print = options[:print].present?
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
@@ -109,10 +108,6 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
-
-    @initial_load = true
-    @index_reverse = false
-
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -315,13 +310,6 @@ class TopicView
     end
 
     @group_names = result
-  end
-
-  # Find the sort order for a post in the topic
-  def sort_order_for_post_number(post_number)
-    posts = Post.where(topic_id: @topic.id, post_number: post_number).with_deleted
-    posts = filter_post_types(posts)
-    posts.select(:sort_order).first.try(:sort_order)
   end
 
   # Filter to all posts near a particular post number
@@ -562,12 +550,6 @@ class TopicView
 
   def link_counts
     @link_counts ||= TopicLink.counts_for(@guardian, @topic, posts)
-  end
-
-  # Are we the initial page load? If so, we can return extra information like
-  # user post counts, etc.
-  def initial_load?
-    @initial_load
   end
 
   def pm_params
