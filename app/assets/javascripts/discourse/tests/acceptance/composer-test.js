@@ -23,11 +23,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 
 acceptance("Composer", function (needs) {
   needs.user();
-  needs.settings({
-    enable_whispers: true,
-    support_mixed_text_direction: true,
-    default_locale: "en",
-  });
+  needs.settings({ enable_whispers: true });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -499,18 +495,6 @@ acceptance("Composer", function (needs) {
       menu.rowByValue("toggleWhisper").exists(),
       "whisper toggling is still present when going fullscreen"
     );
-  });
-
-  test("Composer can toggle direction from ltr to rtl", async function (assert) {
-    const menu = selectKit(".toolbar-popup-menu-options");
-
-    await visit("/t/this-is-a-test-topic/9");
-    await click(".topic-post:nth-of-type(1) button.reply");
-
-    await menu.expand();
-    await menu.selectRowByValue("toggleDirection");
-
-    assert.ok(query("textarea.d-editor-input").getAttribute("dir"), "rtl");
   });
 
   test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -1071,5 +1055,25 @@ acceptance("Composer - Customizations", function (needs) {
       query(".save-or-cancel button").innerText,
       I18n.t("composer.emoji")
     );
+  });
+});
+
+acceptance("Composer - Text Direction", function (needs) {
+  needs.user();
+  needs.settings({
+    support_mixed_text_direction: true,
+    default_locale: "en",
+  });
+
+  test("Composer can toggle direction from ltr to rtl", async function (assert) {
+    const menu = selectKit(".toolbar-popup-menu-options");
+
+    await visit("/t/this-is-a-test-topic/9");
+    await click(".topic-post:nth-of-type(1) button.reply");
+
+    await menu.expand();
+    await menu.selectRowByValue("toggleDirection");
+
+    assert.ok(query("textarea.d-editor-input").getAttribute("dir"), "rtl");
   });
 });
