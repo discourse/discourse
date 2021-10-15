@@ -321,20 +321,23 @@ class TopicView
     before_post_ids = @filtered_posts.order(sort_order: :desc)
       .where("posts.sort_order < ?", sort_order)
       .limit(posts_before)
-      .pluck(:id)
+      .pluck(:id, :sort_order)
 
     post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
       .where("posts.sort_order >= ?", sort_order)
       .limit(@limit - before_post_ids.length)
-      .pluck(:id)
+      .pluck(:id, :sort_order)
 
     if post_ids.length < @limit
       post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
         .where("posts.sort_order < ?", sort_order)
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
-        .pluck(:id)
+        .pluck(:id, :sort_order)
     end
+
+    post_ids.sort_by! { |p| p[1] }
+    post_ids.map! { |p| p[0] }
 
     filter_posts_by_ids(post_ids)
   end
@@ -732,12 +735,16 @@ class TopicView
 
     posts = posts.limit(@limit) if !@skip_limit
     filter_posts_by_ids(posts.pluck(:id))
-
-    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
   end
 
+  # @posts will be ordered by the order of post_ids given.
   def filter_posts_by_ids(post_ids)
+    post_ids = post_ids.uniq
+
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
+      .joins(<<~SQL)
+      INNER JOIN unnest('{#{post_ids.join(',')}}'::int[]) WITH ORDINALITY t(post_id, ord) ON t.post_id = posts.id
+      SQL
       .includes(
         { user: :primary_group },
         :reply_to_user,
@@ -746,7 +753,8 @@ class TopicView
         :topic,
         :image_upload
       )
-      .order('sort_order')
+      .order("t.ord")
+
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
