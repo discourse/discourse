@@ -3,6 +3,9 @@
 require "csv"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# NOTE: this importer expects a text file obtained through Vanilla Porter
+# user documentation: https://meta.discourse.org/t/how-to-migrate-import-from-vanilla-to-discourse/27273
+
 class ImportScripts::Vanilla < ImportScripts::Base
 
   def initialize
@@ -199,7 +202,9 @@ class ImportScripts::Vanilla < ImportScripts::Base
       user_emails_in_conversation = @users.select { |u| user_ids_in_conversation.include?(u[:user_id]) }
         .map { |u| u[:email] }
       # retrieve their usernames from the database
-      target_usernames = User.where("email IN (?)", user_emails_in_conversation).pluck(:username).to_a
+      target_usernames = User.joins(:user_emails)
+        .where(user_emails: { email: user_emails_in_conversation })
+        .pluck(:username)
 
       next if target_usernames.blank?
 
@@ -207,7 +212,6 @@ class ImportScripts::Vanilla < ImportScripts::Base
       first_message = @conversation_messages.select { |cm| cm[:message_id] == conversation[:first_message_id] }.first
 
       {
-        archetype: Archetype.private_message,
         id: "conversation#" + conversation[:conversation_id],
         user_id: user.id,
         title: "Private message from #{user.username}",
