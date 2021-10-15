@@ -31,7 +31,7 @@ def setup_message_bus_env(env)
       "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
       "Access-Control-Allow-Methods" => "GET, POST",
       "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present",
-      "Access-Control-Max-Age" = "7200",
+      "Access-Control-Max-Age" => "7200",
     }
 
     user = nil
