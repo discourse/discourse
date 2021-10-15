@@ -286,16 +286,17 @@ class TopicView
   end
 
   def filter_posts(opts = {})
-    return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
-    return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
-
-    if opts[:filter_post_number].present?
-      return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    if opts[:post_number].present?
+      filter_posts_near(opts[:post_number].to_i)
+    elsif opts[:post_ids].present?
+      filter_posts_by_ids(opts[:post_ids])
+    elsif opts[:filter_post_number].present?
+      filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    elsif opts[:best].present?
+      filter_best(opts[:best], opts)
+    else
+      filter_posts_paged(@page)
     end
-
-    return filter_best(opts[:best], opts) if opts[:best].present?
-
-    filter_posts_paged(@page)
   end
 
   def primary_group_names
