@@ -90,8 +90,6 @@ import {
   addSearchSuggestion,
 } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { unsubscribeFromNotifications } from "discourse/initializers/subscribe-user-notifications";
-import { disableDefaultBadging } from "discourse/initializers/badging";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
@@ -1512,14 +1510,6 @@ class PluginApi {
       },
       { ignoreMissing: true }
     );
-  }
-  // Stops the subscribe-user-notifications initializer from listening to notifications
-  unsubscribeFromNotifications() {
-    unsubscribeFromNotifications();
-  }
-  // Stops the badging initializer from updating the PWA badge with the user's notification count
-  disableDefaultBadging() {
-    disableDefaultBadging();
   }
 
   /**
