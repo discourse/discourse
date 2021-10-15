@@ -19,7 +19,7 @@ export default Component.extend({
 
   @discourseComputed("whisperChannel.users.[]")
   whisperUsers(users) {
-    return users?.filter((u) => u.id !== this.currentUser?.id);
+    return users?.filter((u) => u.id !== this.currentUser.id);
   },
 
   users: union("replyUsers", "whisperUsers"),
