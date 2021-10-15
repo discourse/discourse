@@ -789,7 +789,7 @@ class TopicView
       ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
 
       if ignored_user_ids.present?
-        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.id <> ?", ignored_user_ids, first_post_id)
+        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.post_number != 1", ignored_user_ids)
         @contains_gaps = true
       end
     end
