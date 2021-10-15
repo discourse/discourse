@@ -87,7 +87,6 @@ class TopicView
     check_and_raise_exceptions(options[:skip_staff_action])
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
-    @print = options[:print].present?
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
@@ -109,10 +108,6 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
-
-    @initial_load = true
-    @index_reverse = false
-
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -286,16 +281,17 @@ class TopicView
   end
 
   def filter_posts(opts = {})
-    return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
-    return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
-
-    if opts[:filter_post_number].present?
-      return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    if opts[:post_number].present?
+      filter_posts_near(opts[:post_number].to_i)
+    elsif opts[:post_ids].present?
+      filter_posts_by_ids(opts[:post_ids])
+    elsif opts[:filter_post_number].present?
+      filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    elsif opts[:best].present?
+      filter_best(opts[:best], opts)
+    else
+      filter_posts_paged(@page)
     end
-
-    return filter_best(opts[:best], opts) if opts[:best].present?
-
-    filter_posts_paged(@page)
   end
 
   def primary_group_names
@@ -314,13 +310,6 @@ class TopicView
     end
 
     @group_names = result
-  end
-
-  # Find the sort order for a post in the topic
-  def sort_order_for_post_number(post_number)
-    posts = Post.where(topic_id: @topic.id, post_number: post_number).with_deleted
-    posts = filter_post_types(posts)
-    posts.select(:sort_order).first.try(:sort_order)
   end
 
   # Filter to all posts near a particular post number
@@ -357,7 +346,7 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    @posts = filter_posts_by_ids(
+    filter_posts_by_ids(
       @filtered_posts.order(:sort_order)
         .offset(min)
         .limit(@limit)
@@ -561,12 +550,6 @@ class TopicView
 
   def link_counts
     @link_counts ||= TopicLink.counts_for(@guardian, @topic, posts)
-  end
-
-  # Are we the initial page load? If so, we can return extra information like
-  # user post counts, etc.
-  def initial_load?
-    @initial_load
   end
 
   def pm_params
