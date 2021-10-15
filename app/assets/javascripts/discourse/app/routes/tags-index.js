@@ -45,7 +45,7 @@ export default DiscourseRoute.extend({
       return true;
     },
 
-    refresh() {
+    triggerRefresh() {
       this.refresh();
     },
   },
