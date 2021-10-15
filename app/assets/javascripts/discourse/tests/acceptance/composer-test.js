@@ -1057,23 +1057,3 @@ acceptance("Composer - Customizations", function (needs) {
     );
   });
 });
-
-acceptance("Composer - Text Direction", function (needs) {
-  needs.user();
-  needs.settings({
-    support_mixed_text_direction: true,
-    default_locale: "en",
-  });
-
-  test("Composer can toggle direction from ltr to rtl", async function (assert) {
-    const menu = selectKit(".toolbar-popup-menu-options");
-
-    await visit("/t/this-is-a-test-topic/9");
-    await click(".topic-post:nth-of-type(1) button.reply");
-
-    await menu.expand();
-    await menu.selectRowByValue("toggleDirection");
-
-    assert.ok(query("textarea.d-editor-input").getAttribute("dir"), "rtl");
-  });
-});

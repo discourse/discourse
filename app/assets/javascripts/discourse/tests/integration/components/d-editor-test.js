@@ -623,6 +623,35 @@ third line`
     assert.equal(textarea.selectionEnd, 18);
   });
 
+  componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
+    template: hbs`{{d-editor value=value}}`,
+    beforeEach() {
+      this.siteSettings.support_mixed_text_direction = true;
+      this.siteSettings.default_locale = "en";
+    },
+
+    async test(assert) {
+      const textarea = queryAll("textarea.d-editor-input");
+      await click("button.toggle-direction");
+      assert.equal(textarea.attr("dir"), "rtl");
+    },
+  });
+
+  componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
+    template: hbs`{{d-editor value=value}}`,
+    beforeEach() {
+      this.siteSettings.support_mixed_text_direction = true;
+      this.siteSettings.default_locale = "en";
+    },
+
+    async test(assert) {
+      const textarea = queryAll("textarea.d-editor-input");
+      textarea.attr("dir", "ltr");
+      await click("button.toggle-direction");
+      assert.equal(textarea.attr("dir"), "rtl");
+    },
+  });
+
   testCase(
     `doesn't jump to bottom with long text`,
     async function (assert, textarea) {

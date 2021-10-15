@@ -64,7 +64,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { site } = opts;
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -152,6 +152,18 @@ class Toolbar {
             (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
             "list_item"
           ),
+      });
+    }
+
+    if (siteSettings.support_mixed_text_direction) {
+      this.addButton({
+        id: "toggle-direction",
+        group: "extras",
+        icon: "exchange-alt",
+        shortcut: "Shift+6",
+        title: "composer.toggle_direction",
+        preventFocus: true,
+        perform: (e) => e.toggleDirection(),
       });
     }
 
@@ -333,7 +345,9 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed()
   toolbar() {
-    const toolbar = new Toolbar(this.getProperties("site", "showLink"));
+    const toolbar = new Toolbar(
+      this.getProperties("site", "siteSettings", "showLink")
+    );
     toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(toolbar));
