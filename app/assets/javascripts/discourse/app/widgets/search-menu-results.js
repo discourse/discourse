@@ -11,10 +11,7 @@ import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
-import {
-  MODIFIER_REGEXP,
-  TOPIC_REPLACE_REGEXP,
-} from "discourse/widgets/search-menu";
+import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 
 const suggestionShortcuts = [
   "in:title",
@@ -79,9 +76,7 @@ resetQuickSearchRandomTips();
 class Highlighted extends RawHtml {
   constructor(html, term) {
     super({ html: `<span>${html}</span>` });
-    if (term) {
-      this.term = term.replace(TOPIC_REPLACE_REGEXP, "");
-    }
+    this.term = term;
   }
 
   decorate($html) {

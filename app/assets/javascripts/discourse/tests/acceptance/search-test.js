@@ -197,19 +197,38 @@ acceptance("Search - Anonymous", function (needs) {
       "highlights the post correctly"
     );
 
-    await fillIn("#search-term", "topic:280 interface");
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+    await click(".clear-search");
+    assert.equal(query("#search-term").value, "", "clear button works");
+
+    await click(".search-context");
+
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "search context indicator is no longer visible"
+    );
+
+    await fillIn("#search-term", "dev");
     await focus("input#search-term");
     await triggerKeyEvent(".search-menu", "keydown", 40);
     await click(document.activeElement);
 
-    assert.equal(
-      query("#post_7 span.highlighted").textContent.trim(),
-      "interface",
-      "highlights the post when term is after modifier"
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
     );
 
-    await click(".clear-search");
-    assert.equal(query("#search-term").value, "", "clear button works");
+    await fillIn("#search-term", "");
+    await focus("input#search-term");
+    await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
+
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "backspace resets search context"
+    );
   });
 
   test("Right filters are shown in full page search", async function (assert) {

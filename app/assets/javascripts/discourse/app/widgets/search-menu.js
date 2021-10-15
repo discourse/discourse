@@ -15,7 +15,6 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-export const TOPIC_REPLACE_REGEXP = /\btopic:\d+\s?/i;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -136,7 +135,7 @@ const SearchHelper = {
           // we ensure the current search term is the one used
           // when starting the query
           if (results && term === searchData.term) {
-            if (term.includes("topic:")) {
+            if (searchContext) {
               widget.appEvents.trigger("post-stream:refresh", { force: true });
             }
 
@@ -416,7 +415,7 @@ export default createWidget("search-menu", {
       }
     }
 
-    if (e.which === 8 /* backspace */) {
+    if (e.target === searchInput && e.which === 8 /* backspace */) {
       if (!searchInput.value) {
         this.clearTopicContext();
       }
@@ -425,12 +424,12 @@ export default createWidget("search-menu", {
 
   triggerSearch() {
     searchData.noResults = false;
-    if (searchData.term.includes("topic:")) {
-      const highlightTerm = searchData.term.replace(TOPIC_REPLACE_REGEXP, "");
-      this.searchService().set("highlightTerm", highlightTerm);
-    }
 
     if (SearchHelper.includesTopics()) {
+      if (this.state.inTopicContext) {
+        this.searchService().set("highlightTerm", searchData.term);
+      }
+
       searchData.loading = true;
       SearchHelper.perform(this);
     } else {
