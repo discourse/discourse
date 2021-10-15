@@ -346,7 +346,7 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    @posts = filter_posts_by_ids(
+    filter_posts_by_ids(
       @filtered_posts.order(:sort_order)
         .offset(min)
         .limit(@limit)
