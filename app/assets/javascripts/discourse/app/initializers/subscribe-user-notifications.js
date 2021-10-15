@@ -13,20 +13,11 @@ import {
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
 
-let subscribeToNotifications = true;
-export function unsubscribeFromNotifications() {
-  subscribeToNotifications = false;
-}
-
 export default {
   name: "subscribe-user-notifications",
   after: "message-bus",
 
   initialize(container) {
-    if (!subscribeToNotifications) {
-      return;
-    }
-
     const user = container.lookup("current-user:main");
     const bus = container.lookup("message-bus:main");
     const appEvents = container.lookup("service:app-events");
