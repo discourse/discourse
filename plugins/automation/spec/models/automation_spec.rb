@@ -29,6 +29,26 @@ describe DiscourseAutomation::Automation do
     end
   end
 
+  describe '#detach_custom_field' do
+    fab!(:automation) { Fabricate(:automation) }
+
+    it 'expects a User/Topic/Post instance' do
+      expect {
+        automation.detach_custom_field(Invite.new)
+      }.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#attach_custom_field' do
+    fab!(:automation) { Fabricate(:automation) }
+
+    it 'expects a User/Topic/Post instance' do
+      expect {
+        automation.attach_custom_field(Invite.new)
+      }.to raise_error(RuntimeError)
+    end
+  end
+
   context 'automation’s script has a required field' do
     before do
       DiscourseAutomation::Scriptable.add('required_dogs') do

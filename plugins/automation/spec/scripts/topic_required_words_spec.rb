@@ -15,7 +15,7 @@ describe 'TopicRequiredWords' do
   end
 
   before do
-    topic.upsert_custom_fields(discourse_automation_id: automation.id)
+    topic.upsert_custom_fields(discourse_automation_ids: automation.id)
     automation.upsert_field!('words', 'text_list', { value: ['#foo', '#bar'] })
   end
 

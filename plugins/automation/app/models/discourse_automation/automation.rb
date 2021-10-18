@@ -14,6 +14,35 @@ module DiscourseAutomation
     MAX_NAME_LENGTH = 30
     validates :name, length: { in: MIN_NAME_LENGTH..MAX_NAME_LENGTH }
 
+    def attach_custom_field(target)
+      if ![Topic, Post, User].any? { |m| target.is_a?(m) }
+        raise "Expected an instance of Topic/Post/User."
+      end
+
+      now = Time.now
+      fk = target.custom_fields_fk
+      row = {
+        fk => target.id,
+        name: DiscourseAutomation::CUSTOM_FIELD,
+        value: id,
+        created_at: now,
+        updated_at: now
+      }
+
+      relation = "#{target.class.name}CustomField".constantize
+      relation.upsert(row, unique_by: "idx_#{target.class.name.downcase}_custom_fields_discourse_automation_unique_id_partial")
+    end
+
+    def detach_custom_field(target)
+      if ![Topic, Post, User].any? { |m| target.is_a?(m) }
+        raise "Expected an instance of Topic/Post/User."
+      end
+
+      fk = target.custom_fields_fk
+      relation = "#{target.class.name}CustomField".constantize
+      relation.where(fk => target.id, name: DiscourseAutomation::CUSTOM_FIELD, value: id).delete_all
+    end
+
     def trigger_field(name)
       field = fields.find_by(target: 'trigger', name: name)
       field ? field.metadata : {}

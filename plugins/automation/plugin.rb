@@ -106,6 +106,8 @@ after_initialize do
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   module ::DiscourseAutomation
+    CUSTOM_FIELD ||= 'discourse_automation_ids'
+
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
       isolate_namespace DiscourseAutomation
@@ -175,7 +177,9 @@ after_initialize do
     handle_post_created_edited(post, :edit)
   end
 
-  register_topic_custom_field_type('discourse_automation_id', :integer)
+  register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
+  register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
+  register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type('stalled_wiki_triggered_at', :string)
 
   reloadable_patch do
@@ -187,18 +191,20 @@ after_initialize do
       def discourse_automation_topic_required_words
         return if self.post_type == Post.types[:small_action]
 
-        if topic.custom_fields['discourse_automation_id'].present?
-          automation = DiscourseAutomation::Automation.find(topic.custom_fields['discourse_automation_id'])
-          if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
-            words = automation.fields.find_by(name: 'words')
+        if topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].present?
+          topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|
+            automation = DiscourseAutomation::Automation.find_by(id: automation_id)
+            if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
+              words = automation.fields.find_by(name: 'words')
 
-            return if !words
+              return if !words
 
-            words = words.metadata['value']
+              words = words.metadata['value']
 
-            if words.present?
-              if words.none? { |word| raw.include?(word) }
-                errors.add(:base, I18n.t('discourse_automation.scriptables.topic_required_words.errors.must_include_word', words: words.join(', ')))
+              if words.present?
+                if words.none? { |word| raw.include?(word) }
+                  errors.add(:base, I18n.t('discourse_automation.scriptables.topic_required_words.errors.must_include_word', words: words.join(', ')))
+                end
               end
             end
           end
