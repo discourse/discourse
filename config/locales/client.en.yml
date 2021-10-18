@@ -2365,6 +2365,7 @@ en:
       tags: "Tags"
       in: "in"
       in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"

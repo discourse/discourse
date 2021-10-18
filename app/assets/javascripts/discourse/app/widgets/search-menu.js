@@ -226,6 +226,7 @@ export default createWidget("search-menu", {
         this.attach("button", {
           icon: "times",
           label: "search.in_this_topic",
+          title: "search.in_this_topic_tooltip",
           className: "btn btn-small search-context",
           action: "clearTopicContext",
           iconRight: true,
