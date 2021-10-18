@@ -2129,6 +2129,8 @@ en:
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
+    disable_category_edit_notifications: "Disable category edit notifications on topics."
+
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."

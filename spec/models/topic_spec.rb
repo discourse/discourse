@@ -1529,6 +1529,7 @@ describe Topic do
     fab!(:category) { Fabricate(:category_with_definition, user: user) }
 
     describe 'without a previous category' do
+
       it 'changes the category' do
         topic.change_category_to_id(category.id)
         category.reload
@@ -1618,6 +1619,16 @@ describe Topic do
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
             ).exists?).to eq(true)
+          end
+
+          it 'should not generate a notification if SiteSetting.disable_category_edit_notifications is enabled' do
+            SiteSetting.disable_category_edit_notifications = true
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(0)
+
+            expect(topic.category_id).to eq(new_category.id)
           end
 
           it 'should generate the modified notification for the topic if already seen' do

@@ -103,6 +103,9 @@ class PostActionNotifier
     return if post.topic.blank?
     return if post.topic.private_message?
     return if SiteSetting.disable_system_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
+    if SiteSetting.disable_category_edit_notifications && post_revision.modifications&.dig("category_id").present?
+      return
+    end
 
     user_ids = []
 
