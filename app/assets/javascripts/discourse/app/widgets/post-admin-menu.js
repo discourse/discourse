@@ -37,6 +37,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
+  if (attrs.canPermanentlyDelete || attrs.canPermanentlyDeleteTopic) {
+    contents.push({
+      icon: "trash-alt",
+      className: "popup-menu-button permanently-delete",
+      label: "post.controls.permanently_delete",
+      action: "permanentlyDeletePost",
+    });
+  }
+
   if (!attrs.isWhisper && currentUser.staff) {
     const buttonAtts = {
       action: "togglePostType",

@@ -786,7 +786,6 @@ ca:
         remove: "Aquest tema ja no és un bàner. Ja no apareixerà més al començament de cada pàgina."
   unsubscribed:
     title: "S'han actualitzat les preferències de correu electrònic."
-    description: "S'han actualitzat les preferències de correu electrònic per a <b>%{email}</b>. Per a canviar la configuració de correu electrònic, <a href='%{url}'>aneu a les vostres preferències d'usuari</a>."
     topic_description: "Per a tornar a subscriure-us a %{link}, feu servir el control de notificacions a baix o a la dreta del tema."
     private_topic_description: "Per a tornar a subscriure-us, utilitzeu el control de notificació a baix o la dreta del tema."
   unsubscribe:
@@ -3154,16 +3153,6 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
-    reasons:
-      post_count: "L'equip responsable ha d'aprovar les primeres publicacions de tots els usuaris. Vegeu `approve_post_count`."
-      trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
-      fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
-      staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
-      category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."
-      must_approve_users: "Tots els usuaris nous han de ser aprovats per l'equip responsable. Vegeu `must_approve_users`."
-      invite_only: "Cal convidar tots els usuaris nous. Vegeu `invite_only`."
     actions:
       agree:
         title: "D'acord..."
@@ -3235,6 +3224,7 @@ ca:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:
     not_in_allowed_guild: "L'autenticació ha fallat. No sou membre d’un gremi de Discord autoritzat."
+  fallback_username: "usuari"
   activemodel:
     errors:
       <<: *errors

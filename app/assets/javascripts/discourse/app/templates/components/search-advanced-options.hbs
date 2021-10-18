@@ -168,7 +168,7 @@
         {{date-input
           date=searchedTerms.time.days
           onChange=(action "onChangeWhenDate")
-          id="search-post-date"
+          inputId="search-post-date"
         }}
       </div>
     </div>
@@ -191,6 +191,7 @@
           id="search-min-post-count"
           input=(action "onChangeSearchTermMinPostCount" value="target.value")
           placeholder=(i18n "search.advanced.post.min.placeholder")
+          aria-label=(i18n "search.advanced.post.min.aria_label")
         }}
         {{d-icon "arrows-alt-h"}}
         {{input
@@ -200,6 +201,7 @@
           id="search-max-post-count"
           input=(action "onChangeSearchTermMaxPostCount" value="target.value")
           placeholder=(i18n "search.advanced.post.max.placeholder")
+          aria-label=(i18n "search.advanced.post.max.aria_label")
         }}
       </div>
     </div>
@@ -215,6 +217,7 @@
           id="search-min-views"
           input=(action "onChangeSearchTermMinViews" value="target.value")
           placeholder=(i18n "search.advanced.min_views.placeholder")
+          aria-label=(i18n "search.advanced.post.min_views.aria_label")
         }}
         {{d-icon "arrows-alt-h"}}
         {{input
@@ -224,6 +227,7 @@
           id="search-max-views"
           input=(action "onChangeSearchTermMaxViews" value="target.value")
           placeholder=(i18n "search.advanced.max_views.placeholder")
+          aria-label=(i18n "search.advanced.post.max_views.aria_label")
         }}
       </div>
     </div>

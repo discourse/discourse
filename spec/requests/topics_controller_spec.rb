@@ -3369,7 +3369,7 @@ RSpec.describe TopicsController do
 
         TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [topic2.id, topic3.id]).at_least_once
 
-        put "/topics/reset-new.json", { params: { topic_ids: [topic2.id, topic3.id] } }
+        put "/topics/reset-new.json", **{ params: { topic_ids: [topic2.id, topic3.id] } }
         expect(response.status).to eq(200)
         user.reload
         expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
@@ -3391,7 +3391,7 @@ RSpec.describe TopicsController do
           old_date = 2.years.ago
           user.user_stat.update_column(:new_since, old_date)
 
-          put "/topics/reset-new.json?tracked=true", { params: { topic_ids: [topic2.id, topic3.id] } }
+          put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [topic2.id, topic3.id] } }
           expect(response.status).to eq(200)
           user.reload
           expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
@@ -3412,7 +3412,7 @@ RSpec.describe TopicsController do
 
           create_post # This is a new post, but is not tracked so a record will not be created for it
           expect do
-            put "/topics/reset-new.json?tracked=true", { params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
+            put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
           end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(2)
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([tracked_topic.id, topic2.id])
         end
@@ -3444,25 +3444,29 @@ RSpec.describe TopicsController do
     it "can correctly get excerpts" do
       first_post = create_post(raw: 'This is the first post :)', title: 'This is a test title I am making yay')
       second_post = create_post(raw: 'This is second post', topic: first_post.topic)
+      third_post = first_post.topic.add_small_action(first_post.user, "autobumped")
 
       random_post = Fabricate(:post)
 
       get "/t/#{first_post.topic_id}/excerpts.json", params: {
-        post_ids: [first_post.id, second_post.id, random_post.id]
+        post_ids: [first_post.id, second_post.id, third_post.id, random_post.id]
       }
 
       json = response.parsed_body
       json.sort! { |a, b| a["post_id"] <=> b["post_id"] }
 
       # no random post
-      expect(json.length).to eq(2)
+      expect(json.map { |p| p["post_id"] }).to contain_exactly(first_post.id, second_post.id, third_post.id)
       # keep emoji images
       expect(json[0]["excerpt"]).to match(/emoji/)
       expect(json[0]["excerpt"]).to match(/first post/)
       expect(json[0]["username"]).to eq(first_post.user.username)
-      expect(json[0]["post_id"]).to eq(first_post.id)
+      expect(json[0]["created_at"].present?).to eq(false)
 
       expect(json[1]["excerpt"]).to match(/second post/)
+
+      expect(json[2]["action_code"]).to eq("autobumped")
+      expect(json[2]["created_at"].present?).to eq(true)
     end
   end
 
@@ -3868,7 +3872,7 @@ RSpec.describe TopicsController do
         fab!(:topic) { Fabricate(:topic, user: user) }
 
         it 'should return the right response' do
-          user.update!(trust_level: TrustLevel[2])
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
 
           expect do
             post "/t/#{topic.id}/invite.json", params: {
@@ -3890,6 +3894,10 @@ RSpec.describe TopicsController do
         end
 
         let!(:recipient) { 'jake@adventuretime.ooo' }
+
+        before do
+          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        end
 
         it "should attach group to the invite" do
           post "/t/#{group_private_topic.id}/invite.json", params: {

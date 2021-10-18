@@ -313,6 +313,9 @@ da:
         confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med den?"
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
+    topic_count_categories:
+      one: "Se %{count} nyt eller opdateret emne"
+      other: "Se %{count} nye eller opdaterede emner"
     topic_count_latest:
       one: "Se %{count} nyt eller opdateret emne"
       other: "Se %{count} nye eller opdaterede emner"
@@ -1898,7 +1901,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      title: "Eller tryk Ctrl+Enter"
       users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
@@ -2090,7 +2092,7 @@ da:
       result_count:
         one: "<span>%{count} resultat for</span> <span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span> <span class='term'>%{term}</span>"
-      title: "søg efter emner, indlæg, brugere eller kategorier"
+      title: "Søg"
       full_page_title: "Søg"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
@@ -2107,6 +2109,7 @@ da:
       tags: "Mærker"
       type:
         users: "Brugere"
+        categories: "Kategorier"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
@@ -2166,7 +2169,6 @@ da:
           placeholder: minimum
         max_views:
           placeholder: maksimum
-    hamburger_menu: "gå til en anden emneliste eller kategori"
     new_item: "ny"
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
@@ -3323,6 +3325,8 @@ da:
           name: Skriver
       favorite_max_reached: "Du kan ikke favorisere flere badges."
       favorite_max_not_reached: "Markér dette badge som favorit"
+    download_calendar:
+      download: "Download"
     tagging:
       all_tags: "Alle Mærker"
       other_tags: "Andre Mærker"

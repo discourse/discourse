@@ -1984,7 +1984,7 @@ de:
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
-    enable_fast_edit: "Experimentelle Funktion, die es ermöglicht, eine kleine Auswahl eines Beitragstextes inline zu bearbeiten."
+    enable_fast_edit: "Ermöglicht die Inline-Bearbeitung einer kleinen Auswahl eines Beitragstexts."
     old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
@@ -3615,12 +3615,15 @@ de:
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
+      too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
+      too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
       larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
+      too_large_humanized: "(Bild größer als %{max_size})"
   avatar:
     missing: "Entschuldige, wir können keinen Avatar finden, der mit dieser E-Mail-Adresse verbunden ist. Kannst du versuchen, ihn erneut hochzuladen?"
   flag_reason:
@@ -4523,21 +4526,24 @@ de:
     missing_version: "Du musst eine Version angeben."
     conflict: "Es gab einen Update-Konflikt, der dich daran gehindert hat."
     reasons:
-      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_post_count`."
-      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
-      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung `auto_silence_first_post_regex` übereinstimmt."
-      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/customize/watched_words'>Liste der beobachteten Wörter</a>."
-      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
-      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe Kategorie-Einstellungen."
-      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigt werden. Siehe `must_approve_users`. "
-      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe `invite_only`. "
+      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
+      auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link} -Einstellung übereinstimmt."
+      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe dein %{link}."
+      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe %{link}."
+      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe %{link}."
       email_auth_res_enqueue: "Diese E-Mail hat eine DMARC-Prüfung nicht bestanden. Sie stammt höchstwahrscheinlich nicht von der Person, von der sie zu stammen scheint. Überprüfe die Roh-E-Mail-Header auf weitere Informationen."
-      email_spam: "Diese E-Mail wurde durch den in `email_in_spam_header` definierten Header als Spam gekennzeichnet."
-      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe `approve_suspect_users`."
-      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe `review_media_unless_trust_level`."
+      email_spam: "Diese E-Mail wurde durch den in %{link} definierten Header als Spam gekennzeichnet."
+      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe %{link}."
+      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe %{link}."
       queued_by_staff: "Ein Team-Mitglied ist der Meinung, dass dieser Beitrag überprüft werden muss. Bis dahin wird er versteckt bleiben."
+      links:
+        watched_word: Liste der beobachteten Wörter
+        category: Kategorie-Einstellungen
     actions:
       agree:
         title: "Zustimmen …"
@@ -4639,6 +4645,7 @@ de:
       other: "%{topic_title} (Teil %{count})"
     post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
     small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
+  fallback_username: "Benutzer"
   activemodel:
     errors:
       <<: *errors

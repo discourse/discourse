@@ -327,6 +327,10 @@ sr:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
+    topic_count_categories:
+      one: "Pregledajte %{count} novu ili ažuriranu temu"
+      few: "Pregledajte %{count} nove ili ažurirane teme"
+      other: "Pregledajte %{count} novih ili ažuriranih tema"
     topic_count_latest:
       one: "Pregledajte %{count} novu ili ažuriranu temu"
       few: "Pregledajte %{count} nove ili ažurirane teme"
@@ -1081,7 +1085,6 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       create_pm: "Privatna poruka"
-      title: "Ili pritisnite Ctrl+Enter"
       users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
@@ -1135,7 +1138,7 @@ sr:
       most_liked: "Najviše sviđanja"
       select_all: "Izaberi sve"
       too_short: "Vaš termin za pretragu je previše kratak."
-      title: "pretražite teme, poruke, korisnike ili kategorije"
+      title: "Pretraži"
       full_page_title: "Pretraži"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
@@ -1145,6 +1148,7 @@ sr:
       categories: "Kategorije"
       type:
         users: "Korisnici"
+        categories: "Kategorije"
       context:
         user: "Pretražite poruke od @%{username}"
         topic: "Pretražite ovu temu"
@@ -1159,7 +1163,6 @@ sr:
             before: pre
         views:
           label: Pregledi
-    hamburger_menu: "idi na drugi popis tema ili kategoriju"
     new_item: "novo"
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
@@ -1750,6 +1753,8 @@ sr:
           name: Ostalo
         posting:
           name: Poruke
+    download_calendar:
+      download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
       sort_by_count: "broj"

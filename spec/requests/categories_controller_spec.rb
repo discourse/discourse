@@ -68,6 +68,55 @@ describe CategoriesController do
       )
     end
 
+    it 'does not returns subcatgories without permission' do
+      subcategory = Fabricate(:category,  user: admin, parent_category: category)
+      subcategory.set_permissions(admins: :full)
+      subcategory.save!
+
+      sign_in(user)
+
+      get "/categories.json?include_subcategories=true"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category).to eq(nil)
+    end
+
+    it 'returns the right subcategory response with permission' do
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      sign_in(user)
+
+      get "/categories.json?include_subcategories=true"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category.count).to eq(1)
+      expect(subcategories_for_category.first["parent_category_id"]).to eq(category.id)
+      expect(subcategories_for_category.first["id"]).to eq(subcategory.id)
+    end
+
+    it 'does not return subcategories without query param' do
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      sign_in(user)
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category).to eq(nil)
+    end
+
     it 'does not show uncategorized unless allow_uncategorized_topics' do
       SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
 

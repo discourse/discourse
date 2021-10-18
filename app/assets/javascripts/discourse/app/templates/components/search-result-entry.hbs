@@ -10,7 +10,7 @@
       {{track-selected selectedList=selected selectedId=post.topic class="bulk-select"}}
     {{/if}}
 
-    <a href={{post.url}} {{action "logClick" post.topic_id}} class="search-link" role="heading">
+    <a href={{post.url}} {{action "logClick" post.topic_id}} class="search-link" role="heading" aria-level="2">
       {{raw "topic-status" topic=post.topic showPrivateMessageIcon=true}}
       <span class="topic-title">
         {{#if post.useTopicTitleHeadline}}

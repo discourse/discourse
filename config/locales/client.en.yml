@@ -267,6 +267,8 @@ en:
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
+    period_chooser:
+      aria_label: "Filter by period"
 
     related_messages:
       title: "Related Messages"
@@ -1216,7 +1218,7 @@ en:
         tags: "Tags"
         warnings: "Official Warnings"
         read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
-        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages/personal'>personal messages</a>."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/message'>personal messages</a>."
 
         read_more_group_pm_MF: "There {
           UNREAD, plural,
@@ -1237,16 +1239,16 @@ en:
           UNREAD, plural,
           =0 {}
           one {
-          is <a href='{basePath}/u/{username}/messages/personal/unread'># unread</a>
+          is <a href='{basePath}/u/{username}/messages/unread'># unread</a>
           } other {
-          are <a href='{basePath}/u/{username}/messages/personal/unread'># unread</a>
+          are <a href='{basePath}/u/{username}/messages/unread'># unread</a>
           }
           } {
           NEW, plural,
           =0 {}
-          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># new</a> message}
-          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># new</a> messages}
-          } remaining, or browse other <a href='{basePath}/u/{username}/messages/personal'>personal messages</a>"
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
+          } remaining, or browse other <a href='{basePath}/u/{username}/message'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
@@ -2135,7 +2137,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press Ctrl+Enter"
+      title: "Or press %{modifier}Enter"
 
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -2339,11 +2341,13 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      open_advanced: "Open advanced search"
+      clear_search: "Clear search"
       sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
-      title: "search topics, posts, users, or categories"
+      title: "Search"
       full_page_title: "Search"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -2359,10 +2363,17 @@ en:
       search_term_label: "enter search keyword"
       categories: "Categories"
       tags: "Tags"
+      in: "in"
+      in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
+      in_topics_posts: "in all topics and posts"
+      enter_hint: "or press Enter"
+      in_posts_by: "in posts by %{username}"
 
       type:
         default: "Topics/posts"
         users: "Users"
+        categories: "Categories"
         categories_and_tags: "Categories/tags"
 
       context:
@@ -2371,6 +2382,14 @@ en:
         tag: "Search the #%{tag} tag"
         topic: "Search this topic"
         private_messages: "Search messages"
+
+      tips:
+        category_tag: "filters by category or tag"
+        author: "filters by post author"
+        in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
+        status: "filters by topic status"
+        full_search: "launches full page search"
+        full_search_key: "%{modifier} + Enter"
 
       advanced:
         title: Advanced filters
@@ -2416,8 +2435,10 @@ en:
             label: Posts
           min:
             placeholder: minimum
+            aria_label: filter by minimum number of posts
           max:
             placeholder: maximum
+            aria_label: filter by maximum number of posts
           time:
             label: Posted
             aria_label: Filter by posted date
@@ -2427,12 +2448,14 @@ en:
           label: Views
         min_views:
           placeholder: minimum
+          aria_label: filter by minimum views
         max_views:
           placeholder: maximum
+          aria_label: filter by maximum views
         additional_options:
           label: "Filter by post count and topic views"
 
-    hamburger_menu: "go to another topic list or category"
+    hamburger_menu: "menu"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -2632,6 +2655,7 @@ en:
         time_frame_required: "Please select a time frame"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
+        duration: "Duration"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -2995,7 +3019,9 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_reply_shortcut: "Or press q"
       quote_edit: "Edit"
+      quote_edit_shortcut: "Or press e"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -3101,6 +3127,8 @@ en:
             other: "Yes, and all %{count} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
+        permanently_delete: "Permanently Delete"
+        permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
@@ -3324,6 +3352,7 @@ en:
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
+        title: "change notification level for this category"
         watching:
           title: "Watching"
           description: "You will automatically watch all topics in this category. You will be notified of every new post in every topic, and a count of new replies will be shown."
@@ -3715,6 +3744,18 @@ en:
       favorite_max_not_reached: "Mark this badge as favorite"
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
+    download_calendar:
+      title: "Download calendar"
+      save_ics: "Download .ics file"
+      save_google: "Add to Google calendar"
+      remember: "Don’t ask me again"
+      remember_explanation: "(you can change this preference in your user prefs)"
+      download: "Download"
+      default_calendar: "Default calendar"
+      default_calendar_instruction: "Determine which calendar should be used when dates are saved"
+      add_to_calendar: "Add to calendar"
+      google: "Google Calendar"
+      ics: "ICS"
     tagging:
       all_tags: "All Tags"
       other_tags: "Other Tags"
@@ -3895,8 +3936,6 @@ en:
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
 
     no_group_messages_title: "No group messages found"
-
-
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

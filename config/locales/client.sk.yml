@@ -301,6 +301,11 @@ sk:
       new_topic: "Nová téma"
       abandon:
         yes_value: "Zahodiť"
+    topic_count_categories:
+      one: "Pozri si %{count} novú alebo upravenú tému."
+      few: "Pozri si %{count} nových alebo upravených tém."
+      many: "Pozri si %{count} nových alebo upravených tém."
+      other: "Pozri si %{count} nových alebo upravených tém."
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -1292,7 +1297,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      title: "Alebo stlačte Ctrl+Enter"
       users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
@@ -1363,7 +1367,7 @@ sk:
       select_all: "Označ všetky"
       clear_all: "Odznač všetky"
       too_short: "Vyhladávací termín je príliš krátky."
-      title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
+      title: "Hľadať"
       full_page_title: "Hľadať"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
@@ -1375,6 +1379,7 @@ sk:
       tags: "Štítky"
       type:
         users: "Používatelia"
+        categories: "Kategórie"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
@@ -1409,7 +1414,6 @@ sk:
             after: po
         views:
           label: Zobrazenia
-    hamburger_menu: "prejsť na iné témy, alebo kategórie"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -2215,6 +2219,8 @@ sk:
           name: Ostatné
         posting:
           name: Prispievanie
+    download_calendar:
+      download: "Stiahnuť"
     tagging:
       all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"

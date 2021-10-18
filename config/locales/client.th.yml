@@ -252,6 +252,8 @@ th:
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
       topic_reply: "ตอบแบบร่าง"
+    topic_count_categories:
+      other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_unseen:
@@ -1356,7 +1358,6 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       create_pm: "ข้อความ"
-      title: "หรือกด Ctrl+Enter"
       users_placeholder: "เพิ่มผู้ใช้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
@@ -1504,7 +1505,7 @@ th:
       select_all: "เลือกทั้งหมด"
       clear_all: "ล้างทั้งหมด"
       too_short: "คำค้นหาสั้นเกินไป"
-      title: "ค้นหากระทู้ โพสต์ ผู้ใช้ หรือหมวดหมู่"
+      title: "ค้นหา"
       full_page_title: "ค้นหา"
       no_results: "ไม่มีผลการค้นหา"
       no_more_results: "ไม่มีผลการค้นหาเพิ่มเติมแล้ว"
@@ -1519,6 +1520,7 @@ th:
       tags: "แท็ก"
       type:
         users: "ผู้ใช้"
+        categories: "หมวดหมู่"
       context:
         user: "ค้นหาโพสต์โดย @%{username}"
         category: "ค้นหาหมวด #%{category}"
@@ -1565,7 +1567,6 @@ th:
             after: หลังจาก
         views:
           label: ดู
-    hamburger_menu: "ไปยังรายการกระทู้หรือหมวดหมู่อื่น"
     new_item: "ใหม่"
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
@@ -2348,6 +2349,8 @@ th:
           name: อื่นๆ
         posting:
           name: โพสต์
+    download_calendar:
+      download: "ดาวน์โหลด"
     tagging:
       all_tags: "แท็กทั้งหมด"
       other_tags: "แท็กอื่น"

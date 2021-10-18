@@ -243,6 +243,8 @@ it:
     character_count:
       one: "%{count} carattere"
       other: "%{count} caratteri"
+    period_chooser:
+      aria_label: "Filtra per periodo"
     related_messages:
       title: "Messaggi correlati"
       see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
@@ -318,6 +320,9 @@ it:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
+    topic_count_categories:
+      one: "Visualizza %{count} argomento nuovo o aggiornato"
+      other: "Visualizza %{count} argomenti nuovi o aggiornati."
     topic_count_latest:
       one: "Visualizza %{count} argomento nuovo o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
@@ -1137,7 +1142,7 @@ it:
         tags: "Etichette"
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
-        read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages/personal'>messaggi personali</a>."
+        read_more: "Vuoi saperne di più? Sfoglia altri messaggi nei <a href='%{basePath}/u/%{username}/message'>messaggi personali</a>."
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1926,7 +1931,7 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "Oppure premi Ctrl+Invio"
+      title: "Oppure premi %{modifier}Invio"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
@@ -2119,10 +2124,12 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
+      open_advanced: "Apri ricerca avanzata"
+      clear_search: "Azzera ricerca"
       result_count:
         one: "<span>%{count} risultato per</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
-      title: "cerca argomenti, messaggi, utenti o categorie"
+      title: "Cerca"
       full_page_title: "Cerca"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -2137,14 +2144,26 @@ it:
       search_button: "Cerca"
       categories: "Categorie"
       tags: "Etichette"
+      in: "in"
+      in_this_topic: "in questo argomento"
+      in_topics_posts: "in tutti gli argomenti e i messaggi"
+      in_posts_by: "nei messaggi di @%{username}"
       type:
         users: "Utenti"
+        categories: "Categorie"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
         tag: "Cerca l'etichetta #%{tag}"
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
+      tips:
+        category_tag: "filtra per categoria o etichetta"
+        author: "filtra per autore del messaggio"
+        in: "filtra per metadati (per es. in:title, in:personal, in:pinned)"
+        status: "filtra per status dell'argomento"
+        full_search: "avvia la ricerca a pagina intera"
+        full_search_key: "%{modifier} + Invio"
       advanced:
         posted_by:
           label: Pubblicato da
@@ -2186,8 +2205,10 @@ it:
             label: Messaggi
           min:
             placeholder: minimo
+            aria_label: filtra per numero minimo di messaggi
           max:
             placeholder: massimo
+            aria_label: filtra per numero massimo di messaggi
           time:
             label: Pubblicato
             before: prima del
@@ -2196,9 +2217,11 @@ it:
           label: Visualizzazioni
         min_views:
           placeholder: minimo
+          aria_label: filtra per visualizzazioni minime
         max_views:
           placeholder: massimo
-    hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
+          aria_label: filtra per visualizzazioni massime
+    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -2703,7 +2726,9 @@ it:
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
+      quote_reply_shortcut: "Oppure premi \"q\""
       quote_edit: "Modifica"
+      quote_edit_shortcut: "Oppure premi \"e\""
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -2752,6 +2777,7 @@ it:
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
+        file_too_large_humanized: "Purtroppo questo file è troppo grande (la dimensione massima consentita è %{max_size}). Perché non carichi il file su un servizio di condivisione in cloud e poi incolli qui il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files:
           one: "Spiacenti, puoi caricare solo %{count} file alla volta."
@@ -3005,6 +3031,7 @@ it:
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
+        title: "cambia il livello di notifica per questa categoria"
         watching:
           title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in questa categoria. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
@@ -3373,6 +3400,18 @@ it:
       favorite_max_reached: "Non puoi aggiungere altri distintivi ai preferiti."
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
+    download_calendar:
+      title: "Scarica il calendario"
+      save_ics: "Scarica il file.ics"
+      save_google: "Aggiungi al calendario di Google"
+      remember: "Non chiedermelo più"
+      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
+      download: "Scarica"
+      default_calendar: "Calendario predefinito"
+      default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
+      add_to_calendar: "Aggiungi al calendario"
+      google: "Google Calendar"
+      ics: "ICS"
     tagging:
       all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"

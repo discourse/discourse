@@ -299,6 +299,9 @@ ca:
       topic_reply: "Esborrany de resposta"
       abandon:
         yes_value: "Descarta"
+    topic_count_categories:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -1580,7 +1583,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      title: "O prem Ctrl+Retorn"
       users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
@@ -1750,7 +1752,7 @@ ca:
       result_count:
         one: "<span>%{count} resultat per a </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
-      title: "cerca temes, publicacions, usuaris o categories"
+      title: "Cerca"
       full_page_title: "Cerca"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
@@ -1767,6 +1769,7 @@ ca:
       tags: "Etiquetes"
       type:
         users: "Usuaris"
+        categories: "Categories"
       context:
         user: "Cerca publicacions de @%{username}"
         category: "Cerca en la categoria #%{category} "
@@ -1816,7 +1819,6 @@ ca:
             after: després de
         views:
           label: Vistes
-    hamburger_menu: "vés a una altra llista de temes o categories"
     new_item: "nous"
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
@@ -2766,6 +2768,8 @@ ca:
           name: Altres
         posting:
           name: Publicant
+    download_calendar:
+      download: "Descarrega"
     tagging:
       all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"

@@ -33,7 +33,7 @@ shared_context "shared stuff" do
   end
 
   def expect_db_migrate
-    Discourse::Utils.expects(:execute_command).with do |env, *command, **options|
+    Discourse::Utils.expects(:execute_command).with do |env, *command, options|
       env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" &&
         env["SKIP_OPTIMIZE_ICONS"] == "1" &&
         env["DISABLE_TRANSLATION_OVERRIDES"] == "1" &&

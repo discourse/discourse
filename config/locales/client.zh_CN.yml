@@ -217,6 +217,8 @@ zh_CN:
     max_of_count: "最多 %{count} 个"
     character_count:
       other: "%{count} 个字符"
+    period_chooser:
+      aria_label: "按时间间隔过滤"
     related_messages:
       title: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
@@ -249,6 +251,7 @@ zh_CN:
       help:
         bookmark: "点击以将此话题的第一个帖子加入书签"
         edit_bookmark: "点击以编辑有关此话题的书签"
+        edit_bookmark_for_topic: "单击来为本主题编辑书签"
         unbookmark: "点击以移除此话题中的所有书签"
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
@@ -291,6 +294,8 @@ zh_CN:
         confirm: "您在此话题下有一个进行中的草稿。您想对它做什么？"
         yes_value: "舍弃"
         no_value: "恢复编辑"
+    topic_count_categories:
+      other: "查看 %{count} 个新或更新过的主题"
     topic_count_latest:
       other: "查看 %{count} 个新的或更新的话题"
     topic_count_unseen:
@@ -1084,7 +1089,7 @@ zh_CN:
         tags: "标签"
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
-        read_more: "想阅读更多？ 浏览其他消息 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>。"
+        read_more: "想阅读更多？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>中浏览其他消息。"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -1856,7 +1861,6 @@ zh_CN:
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
-      title: "或按 Ctrl+Enter"
       users_placeholder: "添加用户"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
@@ -2042,9 +2046,10 @@ zh_CN:
       select_all: "全选"
       clear_all: "全部清除"
       too_short: "您的搜索词过短。"
+      sort_or_bulk_actions: "分类或者从结果中批量选择"
       result_count:
         other: "<span>%{count}%{plus} 条与 </span>“<span class='term'>%{term}</span>”有关的结果"
-      title: "搜索话题、帖子、用户或类别"
+      title: "搜索"
       full_page_title: "搜索"
       no_results: "找不到结果。"
       no_more_results: "没有找到更多结果。"
@@ -2057,10 +2062,13 @@ zh_CN:
       search_google: "尝试使用 Google 进行搜索："
       search_google_button: "Google"
       search_button: "搜索"
+      search_term_label: "输入搜索关键字"
       categories: "类别"
       tags: "标签"
       type:
         users: "用户"
+        categories: "类别"
+        categories_and_tags: "分类/标签"
       context:
         user: "搜索 @%{username} 的帖子"
         category: "搜索 #%{category} 类别"
@@ -2068,8 +2076,10 @@ zh_CN:
         topic: "搜索此话题"
         private_messages: "搜索消息"
       advanced:
+        title: 高级过滤器
         posted_by:
           label: 发帖人
+          aria_label: 按作者过滤
         in_category:
           label: 分类
         in_group:
@@ -2078,6 +2088,7 @@ zh_CN:
           label: 有该徽章
         with_tags:
           label: 拥有该标签
+          aria_label: 按标签过滤
         filters:
           label: 只返回话题/帖子…
           title: 仅在标题中匹配
@@ -2112,6 +2123,7 @@ zh_CN:
             placeholder: 最大值
           time:
             label: 发布时间
+            aria_label: 按发布日期过滤
             before: 早于
             after: 晚于
         views:
@@ -2120,7 +2132,7 @@ zh_CN:
           placeholder: 最小值
         max_views:
           placeholder: 最大值
-    hamburger_menu: "转到另一个话题列表或类别"
+    hamburger_menu: "菜单"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
@@ -2771,7 +2783,9 @@ zh_CN:
             button: "HTML"
       bookmarks:
         create: "创建书签"
+        create_for_topic: "为主题创建一个书签"
         edit: "编辑书签"
+        edit_for_topic: "为主题创建的书签进行编辑"
         created: "已创建"
         updated: "更新"
         name: "名称"
@@ -3248,6 +3262,8 @@ zh_CN:
       favorite_max_reached: "您无法将更多徽章加入书签。"
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
+    download_calendar:
+      download: "下载"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"

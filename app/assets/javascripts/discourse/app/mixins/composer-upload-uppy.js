@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { Promise } from "rsvp";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
@@ -374,6 +375,7 @@ export default Mixin.create(ExtendableUploader, {
 
   _useS3MultipartUploads() {
     const self = this;
+    const retryDelays = [0, 1000, 3000, 5000];
 
     this._uppyInstance.use(AwsS3Multipart, {
       // controls how many simultaneous _chunks_ are uploaded, not files,
@@ -384,6 +386,7 @@ export default Mixin.create(ExtendableUploader, {
       // chunk size via getChunkSize(file), so we may want to increase
       // the chunk size for larger files
       limit: 10,
+      retryDelays,
 
       createMultipartUpload(file) {
         self._uppyInstance.emit("create-multipart", file.id);
@@ -419,22 +422,53 @@ export default Mixin.create(ExtendableUploader, {
       },
 
       prepareUploadParts(file, partData) {
-        return (
-          ajax("/uploads/batch-presign-multipart-parts.json", {
-            type: "POST",
-            data: {
-              part_numbers: partData.partNumbers,
-              unique_identifier: file.meta.unique_identifier,
-            },
+        if (file.preparePartsRetryAttempts === undefined) {
+          file.preparePartsRetryAttempts = 0;
+        }
+        return ajax("/uploads/batch-presign-multipart-parts.json", {
+          type: "POST",
+          data: {
+            part_numbers: partData.partNumbers,
+            unique_identifier: file.meta.unique_identifier,
+          },
+        })
+          .then((data) => {
+            if (file.preparePartsRetryAttempts) {
+              delete file.preparePartsRetryAttempts;
+              self._consoleDebug(
+                `[uppy] Retrying batch fetch for ${file.id} was successful, continuing.`
+              );
+            }
+            return { presignedUrls: data.presigned_urls };
           })
-            .then((data) => {
-              return { presignedUrls: data.presigned_urls };
-            })
-            // uppy is inconsistent, an error here does not fire the upload-error event
-            .catch((err) => {
+          .catch((err) => {
+            const status = err.jqXHR.status;
+
+            // it is kind of ugly to have to track the retry attempts for
+            // the file based on the retry delays, but uppy's `retryable`
+            // function expects the rejected Promise data to be structured
+            // _just so_, and provides no interface for us to tell how many
+            // times the upload has been retried (which it tracks internally)
+            //
+            // if we exceed the attempts then there is no way that uppy will
+            // retry the upload once again, so in that case the alert can
+            // be safely shown to the user that their upload has failed.
+            if (file.preparePartsRetryAttempts < retryDelays.length) {
+              file.preparePartsRetryAttempts += 1;
+              const attemptsLeft =
+                retryDelays.length - file.preparePartsRetryAttempts + 1;
+              self._consoleDebug(
+                `[uppy] Fetching a batch of upload part URLs for ${file.id} failed with status ${status}, retrying ${attemptsLeft} more times...`
+              );
+              return Promise.reject({ source: { status } });
+            } else {
+              self._consoleDebug(
+                `[uppy] Fetching a batch of upload part URLs for ${file.id} failed too many times, throwing error.`
+              );
+              // uppy is inconsistent, an error here does not fire the upload-error event
               self._handleUploadError(file, err);
-            })
-        );
+            }
+          });
       },
 
       completeMultipartUpload(file, data) {

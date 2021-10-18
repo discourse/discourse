@@ -37,7 +37,7 @@ class SiteSettings::TypeSupervisor
       color: 22,
       simple_list: 23,
       emoji_list: 24,
-      html: 25
+      html_deprecated: 25,
     )
   end
 

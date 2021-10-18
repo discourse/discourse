@@ -375,6 +375,7 @@ zh_CN:
       cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
       cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
+      for_topic_must_use_first_post: "只能使用最早发布的内容来为主题创建书签"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -901,7 +902,6 @@ zh_CN:
         remove: "此话题不再是横幅。它将不再显示在每个页面的顶部。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
-    description: "<b>%{email}</b> 的电子邮件偏好设置已更新。要更改您的电子邮件设置，请<a href='%{url}'>访问您的用户偏好设置</a>。"
     topic_description: "要重新订阅%{link}，请使用话题底部或右侧的通知控件。"
     private_topic_description: "要重新订阅，请使用话题底部或右侧的通知控件。"
   uploads:
@@ -1931,7 +1931,6 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     watched_words_regular_expressions: "关注词是正则表达式。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
-    enable_fast_edit: "实验性功能：可以对要内联编辑的帖子文本进行少量选择。"
     old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
@@ -4435,21 +4434,11 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
-      post_count: "每个用户的前几个帖子必须由管理人员审批。请参阅 `approve_post_count`。"
-      trust_level: "信任级别低的用户的回复必须由管理人员审批。请参阅 `approve_unless_trust_level`。"
-      new_topics_unless_trust_level: "信任级别低的用户的话题必须由管理人员审批。请参阅 `approve_new_topics_unless_trust_level`。"
-      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅 `min_firse_post_typing_time`。"
-      auto_silence_regexp: "首个帖子符合 `auto_silence_first_post_regex` 设置的新用户。"
-      watched_word: "此帖子包含关注词，请参见您的<a href='%{base_url}/admin/customize/watched_words'>关注词列表</a>。"
-      staged: "暂存用户的新话题和帖子必须由管理人员审批。请参阅 `approve_unless_staged`。"
-      category: "此类别中的帖子要求管理人员手动审批。请参阅类别设置。"
-      must_approve_users: "所有新用户都必须由管理人员审批。请参阅 `must_approve_users`。"
-      invite_only: "所有新用户都应是受到邀请的用户。请参阅 `invite_only`。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
-      email_spam: "此电子邮件因 `email_in_spam_header` 中定义的标头被标记为垃圾邮件。"
-      suspect_user: "此新用户在没有阅读任何话题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾信息发布者。请参阅 `approve_suspect_users`。"
-      contains_media: "此帖子包括嵌入式媒体。请参阅 `review_media_unless_trust_level`。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
+      links:
+        watched_word: 列出关注的关键字
+        category: 分类设置
     actions:
       agree:
         title: "同意…"
@@ -4550,6 +4539,7 @@ zh_CN:
       other: "%{topic_title}（第 %{count} 部分）"
     post_raw: "从%{parent_url}继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在%{new_title}继续讨论。"
+  fallback_username: "用户"
   activemodel:
     errors:
       <<: *errors

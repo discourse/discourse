@@ -287,6 +287,8 @@ vi:
         confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_categories:
+      other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unseen:
@@ -1765,7 +1767,6 @@ vi:
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
-      title: "Hoặc nhất Ctrl+Enter"
       users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
@@ -1953,7 +1954,7 @@ vi:
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
       result_count:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
-      title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
+      title: "Tìm kiếm"
       full_page_title: "Tìm kiếm"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
@@ -1970,6 +1971,7 @@ vi:
       tags: "Thẻ"
       type:
         users: "Người dùng"
+        categories: "Chuyên mục"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"
@@ -2029,7 +2031,6 @@ vi:
           placeholder: tối thiểu
         max_views:
           placeholder: tối đa
-    hamburger_menu: "đi đến danh sách chủ đề hoặc danh mục khác"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
@@ -3086,6 +3087,8 @@ vi:
           name: Khác
         posting:
           name: Gửi bài
+    download_calendar:
+      download: "Tải xuống"
     tagging:
       all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"

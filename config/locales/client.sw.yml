@@ -237,6 +237,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    topic_count_categories:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
@@ -1223,7 +1226,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      title: "Au bonyeza Ctrl+Enter"
       users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
@@ -1357,7 +1359,7 @@ sw:
       result_count:
         one: "<span>jibu kwa</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} majibu kwa</span><span class='term'>%{term}</span>"
-      title: "Tafuta mada, machapisho, watumiaji, au kategoria"
+      title: "Tafuta"
       full_page_title: "Tafuta"
       no_results: "Hakuna Majibu Yaliyopatikana."
       no_more_results: "Hakuna majibu zaidi yaliyopatikana."
@@ -1374,6 +1376,7 @@ sw:
       tags: "Lebo"
       type:
         users: "Watumiaji"
+        categories: "Vikundi"
       context:
         user: "Tafuta machapisho kwa kutumia @%{jina la mtumiaji}"
         category: "Tafuta kategoria #%{category} "
@@ -1422,7 +1425,6 @@ sw:
             after: baada
         views:
           label: Imeonwa
-    hamburger_menu: "nenda kwenye orodha ya mada au kategoria nyingine"
     new_item: "mpya"
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"
@@ -2193,6 +2195,8 @@ sw:
           name: Nyingine
         posting:
           name: Kuchapisha
+    download_calendar:
+      download: "Pakua"
     tagging:
       all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"

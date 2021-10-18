@@ -75,7 +75,6 @@ discourseModule(
             ],
             voters: 1,
             chart_type: "bar",
-            groups: "foo",
           },
           vote: ["1f972d1df351de3ce35a787c89faad29"],
         },

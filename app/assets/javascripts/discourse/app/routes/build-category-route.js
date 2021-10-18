@@ -192,6 +192,8 @@ export default (filterArg, params) => {
           outlet: "header-list-container",
           model: this._categoryList,
         });
+      } else {
+        this.disconnectOutlet({ outlet: "header-list-container" });
       }
       this.render("discovery/topics", {
         controller: "discovery/topics",

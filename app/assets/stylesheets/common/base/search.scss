@@ -1,9 +1,11 @@
 @mixin search-page-spacing {
-  padding: 1rem 10%;
+  padding: 2rem 10%;
+
   @include breakpoint(medium) {
     padding: 1rem;
   }
 }
+
 .search-highlight {
   font-weight: bold;
 }
@@ -61,6 +63,7 @@
 
   .search-advanced {
     position: relative;
+
     .search-actions,
     .search-title,
     .search-bar {
@@ -69,7 +72,6 @@
 
     .search-results {
       @include search-page-spacing();
-      padding-bottom: 3em;
     }
 
     .search-info {
@@ -120,6 +122,24 @@
 
   .search-context {
     margin-top: 1em;
+  }
+
+  .user-items {
+    display: grid;
+    gap: 2em 1em;
+    grid: auto-flow / repeat(4, 1fr);
+
+    @include breakpoint(medium) {
+      grid: auto-flow / repeat(3, 1fr);
+    }
+
+    @include breakpoint(tablet) {
+      grid: auto-flow / 1fr 1fr;
+    }
+
+    @include breakpoint(mobile-large) {
+      grid: auto-flow / 1fr;
+    }
   }
 
   .search-filters {
@@ -333,10 +353,10 @@
 
 .search-results {
   .fps-user-item {
-    margin-bottom: 1.5em;
     display: flex;
     flex-direction: row;
     align-items: center;
+
     .avatar {
       margin-right: 0.5em;
       min-width: 25px;

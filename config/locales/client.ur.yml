@@ -302,6 +302,9 @@ ur:
         confirm: "آپ کے پاس اس عنوان کے لئے ایک مسودہ ہے۔ آپ اس کے ساتھ کیا کرنا چاہیں گے؟"
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
+    topic_count_categories:
+      one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+      other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
     topic_count_latest:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
@@ -1697,7 +1700,6 @@ ur:
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
-      title: "یا Ctrl+Enter دبائیں"
       users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
@@ -1885,7 +1887,7 @@ ur:
       result_count:
         one: "<span class='term'>%{term}</span><span>کیلئے %{count} نتیجہ</span>"
         other: "<span class='term'>%{term}</span><span>کیلئے %{count}%{plus} نتائج</span>"
-      title: "ٹاپک، پوسٹس، صارفین، یا زمرہ جات کو سَرچ کریں"
+      title: "تلاش کریں"
       full_page_title: "تلاش کریں"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
@@ -1902,6 +1904,7 @@ ur:
       tags: "ٹیگز"
       type:
         users: "صارفین"
+        categories: "زُمرَہ جات"
       context:
         user: "@%{username} کے حساب سے پوسٹس تلاش کریں"
         category: "#%{category} زُمرَہ میں تلاش کریں"
@@ -1950,7 +1953,6 @@ ur:
             after: کے بعد
         views:
           label: وِیوز
-    hamburger_menu: "ایک اور ٹاپک فہرست یا زمرہ پر جائیں"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2957,6 +2959,8 @@ ur:
           name: دیگر
         posting:
           name: پوسٹ کرنا
+    download_calendar:
+      download: "ڈاؤن لوڈ"
     tagging:
       all_tags: "تمام ٹیگز"
       other_tags: "دیگر ٹیگز"

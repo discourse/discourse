@@ -1,7 +1,7 @@
 .search-container {
   .search-advanced .search-info {
-    padding-left: 0;
-    padding-right: 0;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .second-search-button {
@@ -11,4 +11,14 @@
       width: 100%;
     }
   }
+
+  .search-advanced .search-results {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+.fps-result {
+  padding-left: 0;
+  padding-right: 0;
 }

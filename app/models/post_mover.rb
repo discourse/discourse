@@ -191,7 +191,8 @@ class PostMover
       post_number: @move_map[post.post_number],
       reply_to_post_number: @move_map[post.reply_to_post_number],
       topic_id: destination_topic.id,
-      sort_order: @move_map[post.post_number]
+      sort_order: @move_map[post.post_number],
+      baked_version: nil
     }
 
     unless @move_map[post.reply_to_post_number]

@@ -948,7 +948,6 @@ fr:
         remove: "Ce sujet n'est plus à la une. Il ne sera plus affiché en haut de chaque page."
   unsubscribed:
     title: "Préférences de courriel enregistrées !"
-    description: "les préférences de courriel pour <b>%{email}</b> ont été mises à jour. Pour modifier vos paramètres de messagerie, <a href='%{url}'>consultez vos préférences utilisateur</a>."
     topic_description: "Pour vous réabonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
     private_topic_description: "Pour vous réabonner, utilisez le contrôle des notifications en bas ou à droite du sujet."
   uploads:
@@ -4433,20 +4432,7 @@ fr:
     missing_version: "Vous devez fournir un paramètre de version"
     conflict: "Un conflit de mise à jour vous empêche de faire cette action."
     reasons:
-      post_count: "Les premiers messages de chaque utilisateur doivent être approuvés par un responsable. Voir « approve_post_count »."
-      trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est faible doivent être approuvées par un responsable. Voir « approve_unless_trust_level »."
-      new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est faible doivent être approuvées par un responsable. Voir « approve_new_topics_unless_trust_level »."
-      fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir « min_first_post_typing_time »."
-      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond à la règle « auto_silence_first_post_regex »."
-      watched_word: "Ce message contient un Mot Surveillé. Vous pouvez consulter la <a href='%{base_url}/admin/customize/watched_words'>liste des mots surveillés</a>."
-      staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir « approve_unless_staged »."
-      category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."
-      must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir « must_approve_users »."
-      invite_only: "Tous les nouveaux utilisateurs doivent être invités. Voir « invite_only »."
       email_auth_res_enqueue: "Ce courriel n'a pas passé une vérification DMARC, il est fort probable qu'il ne provienne pas de l'expéditeur annoncé. Vérifiez les en-têtes du courriel brut pour plus d'informations."
-      email_spam: "Ce courriel a été signalé comme spam par l'en-tête défini dans « email_in_spam_header »."
-      suspect_user: "Ce nouvel utilisateur a renseigné des informations sur son profil sans lire de sujets ou messages, ce qui indique qu'il pourrait être un spammeur. Voir « approve_suspect_users »."
-      contains_media: "Ce message contient un média intégré. Voir « review_media_unless_trust_level »."
       queued_by_staff: "Un responsable a estimé que ce message devait être examiné avant sa publication. Il restera masqué jusqu'à son approbation par un modérateur."
     actions:
       agree:
@@ -4549,6 +4535,7 @@ fr:
       other: "%{topic_title} (partie %{count})"
     post_raw: "Suite de la discussion depuis %{parent_url}.\n\nDiscussions précédentes :\n\n%{previous_topics}"
     small_action_post_raw: "Poursuivre la discussion dans %{new_title}."
+  fallback_username: "utilisateur"
   activemodel:
     errors:
       <<: *errors

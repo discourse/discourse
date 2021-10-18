@@ -243,6 +243,8 @@ tr_TR:
     character_count:
       one: "%{count} karakter"
       other: "%{count} karakter"
+    period_chooser:
+      aria_label: "Döneme göre filtrele"
     related_messages:
       title: "İlgili Mesajlar"
       see_all: '@%{username} kullanıcısından gelen <a href="%{path}">bütün mesajları</a> gör...'
@@ -275,6 +277,7 @@ tr_TR:
       help:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıkla"
         edit_bookmark: "Bu konudaki yer işaretini düzenlemek için tıklayın"
+        edit_bookmark_for_topic: "Bu konunun yer imini düzenlemek için tıklayın"
         unbookmark: "Bu konudaki tüm işaretlenenleri kaldırmak için tıkla"
         unbookmark_with_reminder: "Bu konudaki tüm yer işaretlerini ve anımsatıcıları kaldırmak için tıklayın."
     bookmarks:
@@ -317,6 +320,9 @@ tr_TR:
         confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "At"
         no_value: "Düzenlemeye devam et"
+    topic_count_categories:
+      one: "%{count} yeni ya da güncellenmiş konu."
+      other: "%{count} yeni ya da güncellenmiş konu."
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -1133,7 +1139,7 @@ tr_TR:
         failed_to_move: "Seçilen mesajların taşınması başarısız oldu (muhtemelen şebeke çöktü)"
         tags: "Etiketler"
         warnings: "Resmi Uyarılar"
-        read_more: "Daha fazlasını okumak ister misiniz? <a href='%{basePath}/u/%{username}/messages/personal'>Kişisel mesajlar altında</a> diğer mesajlara göz atın."
+        read_more_in_group: "Daha fazla okumak ister misin? %{groupLink} bağlantısındaki diğer iletilere göz atın."
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -1931,7 +1937,7 @@ tr_TR:
       create_whisper: "Fısılda"
       create_shared_draft: "Paylaşılmış taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
-      title: "Ya da Ctrl+Enter'a bas"
+      title: "Veya %{modifier}Enter tuşuna basın"
       users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
@@ -2124,10 +2130,13 @@ tr_TR:
       select_all: "Tümünü Seç"
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
+      open_advanced: "Gelişmiş aramayı aç"
+      clear_search: "Aramayı temizle"
+      sort_or_bulk_actions: "Sonuçları sırala veya toplu olarak seç"
       result_count:
         one: "<span class='term'>%{term}</span> <span>için %{count} sonuç</span>"
         other: "<span class='term'>%{term}</span> için <span>%{count} %{plus} sonuç</span>"
-      title: "konu, gönderi, kullanıcı veya kategori ara"
+      title: "Arama"
       full_page_title: "Arama"
       no_results: "Hiçbir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
@@ -2140,19 +2149,36 @@ tr_TR:
       search_google: "Google'la aramayı dene:"
       search_google_button: "Google"
       search_button: "Ara"
+      search_term_label: "arama anahtar sözcüğü girin"
       categories: "Kategoriler"
       tags: "Etiketler"
+      in: "içinde"
+      in_this_topic: "bu konuda"
+      in_topics_posts: "tüm konularda ve gönderilerde"
+      in_posts_by: "@%{username} kullancısına ait gönderilerde"
       type:
+        default: "Konular/yazılar"
         users: "Kullanıcılar"
+        categories: "Kategoriler"
+        categories_and_tags: "Kategoriler/etiketler"
       context:
         user: "@%{username} kullancısına ait gönderilerde ara"
         category: "#%{category} kategorisini ara"
         tag: "# %{tag} etiketini arayın"
         topic: "Bu konuyu ara"
         private_messages: "Mesajlarda ara"
+      tips:
+        category_tag: "kategoriye veya etikete göre filtreler"
+        author: "gönderi yazarına göre filtreler"
+        in: "meta verilere göre filtreler (ör. in:title, in:personal, in:pinned)"
+        status: "konu durumuna göre filtreler"
+        full_search: "tam sayfa aramaya geçer"
+        full_search_key: "%{modifier} + Enter"
       advanced:
+        title: Gelişmiş filtreler
         posted_by:
           label: Gönderen
+          aria_label: Gönderi yazarına göre filtrele
         in_category:
           label: Kategorilendirilmiş
         in_group:
@@ -2161,6 +2187,7 @@ tr_TR:
           label: Rozetli
         with_tags:
           label: Etiketlenmiş
+          aria_label: Etiketleri kullanarak filtrele
         filters:
           label: Sadece şu konulara/ gönderilere dön...
           title: Sadece başlıkta eşleştirme
@@ -2191,19 +2218,26 @@ tr_TR:
             label: Gönderi
           min:
             placeholder: en az
+            aria_label: minimum gönderi sayısına göre filtrele
           max:
             placeholder: en fazla
+            aria_label: maksimum gönderi sayısına göre filtrele
           time:
             label: Gönderilen
+            aria_label: Yayınlanan tarihe göre filtrele
             before: önce
             after: sonra
         views:
           label: Görüntüleme
         min_views:
           placeholder: en az
+          aria_label: minimum görüntülemeye göre filtrele
         max_views:
           placeholder: en fazla
-    hamburger_menu: "Diğer bir konu ya da kategoriye git"
+          aria_label: maksimum görüntülemeye göre filtrele
+        additional_options:
+          label: "Gönderi sayısına ve konu görüntülemelerine göre filtrele"
+    hamburger_menu: "menü"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel aktivitelerin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -2714,7 +2748,9 @@ tr_TR:
       deleted_by_author_simple: "(konu yazarı tarafından silindi)"
     post:
       quote_reply: "Alıntı"
+      quote_reply_shortcut: "Ya da q tuşuna basın"
       quote_edit: "Düzenle"
+      quote_edit_shortcut: "Ya da e tuşuna basın"
       quote_share: "Paylaş"
       edit_reason: "Neden: "
       post_number: "gönderi %{number}"
@@ -2836,8 +2872,8 @@ tr_TR:
       actions:
         people:
           like:
-            one: "bu beğenildi"
-            other: "bunlar beğenildi"
+            one: "tarafından beğenildi"
+            other: "tarafından beğenildi"
           read:
             one: "bunu oku"
             other: "bunları oku"
@@ -2896,7 +2932,9 @@ tr_TR:
             button: "HTML"
       bookmarks:
         create: "Yer işareti oluştur"
+        create_for_topic: "Konu için yer imi oluştur"
         edit: "Yer işaretini düzenleyin"
+        edit_for_topic: "Konu için yer imi düzenle"
         created: "Oluşturuldu"
         updated: "Güncellenmiş"
         name: "İsim"
@@ -3019,6 +3057,7 @@ tr_TR:
       num_auto_bump_daily: "Günlük otomatik olarak açılan açık konuların sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye dön"
       notifications:
+        title: "bu kategori için bildirim seviyesini değiştir"
         watching:
           title: "İzleniyor"
           description: "Bu kategorideki tüm konuları otomatik olarak izleyeceksiniz. Her konudaki her yeni gönderi size bildirilecek ve bir dizi yeni yanıt gösterilecektir."
@@ -3392,6 +3431,18 @@ tr_TR:
       favorite_max_reached: "Daha fazla rozeti favorilere ekleyemezsiniz."
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
+    download_calendar:
+      title: "Takvimi indir"
+      save_ics: ".ics dosyasını indir"
+      save_google: "Google takvimine ekle"
+      remember: "Bir daha sorma"
+      remember_explanation: "(bu tercihi kullanıcı tercihlerinizde değiştirebilirsiniz)"
+      download: "İndir"
+      default_calendar: "Varsayılan takvim"
+      default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirle"
+      add_to_calendar: "Takvime ekle"
+      google: "Google Takvim"
+      ics: "ICS"
     tagging:
       all_tags: "Tüm Etiketler"
       other_tags: "Diğer Etiketler"
@@ -3546,7 +3597,9 @@ tr_TR:
     user_activity:
       no_activity_title: "Henüz aktivite yok"
       no_activity_others: "Aktivite yok."
+      no_replies_title: "Henüz hiçbir konuya cevap vermediniz"
       no_replies_others: "Cevap yok."
+      no_drafts_title: "Hiç taslak başlatmadınız"
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
       no_likes_others: "Beğenilen gönderi yok."
       no_topics_title: "Henüz herhangi bir konu başlatmadın"

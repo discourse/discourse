@@ -42,6 +42,7 @@ async function runAllTests() {
         "--disable-dev-shm-usage",
         "--mute-audio",
         "--window-size=1440,900",
+        "--enable-precise-memory-info",
       ],
     };
 

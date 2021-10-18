@@ -437,6 +437,7 @@ pl_PL:
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
+      for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -1054,7 +1055,7 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Zaktualizowano preferencje e-mail!"
-    description: "preferencje e-mailowe dla <b>%{email}</b> zostały zapisane. Aby zmienić ustawienia e-mailowe <a href='%{url}'>zajrzyj do ustawień użytkownika</a>."
+    description: "Preferencje wiadomości e-mail dla <b>%{email}</b> zostały zaktualizowane. Aby zmienić ustawienia poczty e-mail <a href='%{url}'>odwiedź preferencje użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
     private_topic_description: "Aby ponownie zasubskrybować, użyj opcji powiadomienia na dole lub po prawej stronie tematu."
   uploads:
@@ -1558,6 +1559,7 @@ pl_PL:
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
+    summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "Zezwalaj użytkownikom o poziomie zaufania 1 (możliwe do zmiany przez min trust level to send messages) na tworzenie wiadomości i odpowiadanie na nie. Zwróć uwagę, że administracja zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -1773,6 +1775,7 @@ pl_PL:
     external_emoji_url: "Adres URL zewnętrznej usługi dla obrazów emoji. Pozostaw puste, aby wyłączyć."
     use_site_small_logo_as_system_avatar: "Użyj małego logo witryny zamiast awatara użytkownika system. Wymaga obecności logo."
     restrict_letter_avatar_colors: "Lista 6-cyfrowych szesnastkowych wartości kolorów, które mają być używane jako tło awatara."
+    enable_listing_suspended_users_on_search: "Zezwól zwykłym użytkownikom na znajdowanie zawieszonych użytkowników."
     selectable_avatars_enabled: "Wymuś na użytkownikach wybieranie awatara z listy."
     selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
@@ -3755,16 +3758,20 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
+    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
+    create_mutlipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
+      too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
       larger_than_x_megapixels: "Przepraszamy, obraz który próbujesz dodać jest zbyt duży (maksymalny wymiar to %{max_image_megapixels}-megapikseli), proszę zmienić rozmiar i spróbować ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
+      too_large_humanized: "(obraz większy niż %{max_size})"
   avatar:
     missing: "Przepraszamy, nie możemy odnaleźć żadnego avatara przypisanego do tego konta email. Spróbuj załadować go ponownie"
   flag_reason:
@@ -4673,21 +4680,22 @@ pl_PL:
     missing_version: "Musisz wprowadzić parametr wersji"
     conflict: "Wystąpił konflikt aktualizacji, który uniemożliwia Ci to działanie."
     reasons:
-      post_count: "Pierwsze kilka postów od każdego użytkownika musi zostać zatwierdzone przez personel. Zobacz `approve_post_count`."
-      trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz `approve_new_topics_unless_trust_level`."
-      fast_typer: "Nowy użytkownik wpisał swój pierwszy post podejrzanie szybko, co sugeruje zachowanie bota lub spamera. Zobacz `min_first_post_typing_time`."
-      auto_silence_regexp: "Nowy użytkownik, którego pierwszy post pasuje do ustawienia `auto_silence_first_post_regex`."
-      watched_word: "Ten post zawierał obserwowane słowo. Zobacz listę <a href='%{base_url}/admin/customize/watched_words'>obserwowanych słów</a>."
-      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
-      category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz ustawienia kategorii."
-      must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz `must_approve_users`."
-      invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz `invite_only`."
+      new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
+      fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
+      auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
+      watched_word: "Ten post zawierał obserwowane słowo. Zobacz swoje %{link}."
+      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz %{link}."
+      category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz %{link}."
+      must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz %{link}."
+      invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz %{link}."
       email_auth_res_enqueue: "Ten e-mail nie powiódł się sprawdzenie DMARC, najprawdopodobniej nie pochodzi od nadawcy, za którego się podaje. Sprawdź surowe nagłówki wiadomości e-mail, aby uzyskać więcej informacji."
-      email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w `email_in_spam_header`."
-      suspect_user: "Ten nowy użytkownik wprowadził informacje profilowe bez czytania żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz `approve_suspect_users`."
-      contains_media: "Ten post zawiera osadzone multimedia. Zobacz `review_media_unless_trust_level`."
+      email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w %{link}."
+      suspect_user: "Ten nowy użytkownik wprowadził informacje o profilu, nie czytając żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz %{link}."
+      contains_media: "Ten post zawiera osadzone media. Zobacz %{link}."
       queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
+      links:
+        watched_word: lista obserwowanych słów
+        category: ustawienia kategorii
     actions:
       agree:
         title: "Zgadzam się..."
@@ -4791,6 +4799,7 @@ pl_PL:
       other: "%{topic_title} (Część %{count})"
     post_raw: "Kontynuacja dyskusji z %{parent_url}.\n\nPoprzednie dyskusje:\n\n%{previous_topics}"
     small_action_post_raw: "Kontynuuj dyskusję na %{new_title}."
+  fallback_username: "użytkownik"
   activemodel:
     errors:
       <<: *errors

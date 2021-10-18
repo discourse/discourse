@@ -530,7 +530,6 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
-    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -2056,6 +2055,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
+  fallback_username: "utilizatori"
   activemodel:
     errors:
       <<: *errors

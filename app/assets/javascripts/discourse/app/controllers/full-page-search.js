@@ -17,6 +17,7 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import showModal from "discourse/lib/show-modal";
 import userSearch from "discourse/lib/user-search";
 
 const SortOrders = [
@@ -31,14 +32,6 @@ export const SEARCH_TYPE_DEFAULT = "topics_posts";
 export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
 export const SEARCH_TYPE_USERS = "users";
 
-const SearchTypes = [
-  { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
-  {
-    name: I18n.t("search.type.categories_and_tags"),
-    id: SEARCH_TYPE_CATS_TAGS,
-  },
-  { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
-];
 const PAGE_LIMIT = 10;
 
 export default Controller.extend({
@@ -65,11 +58,21 @@ export default Controller.extend({
   invalidSearch: false,
   page: 1,
   resultCount: null,
-  searchTypes: SearchTypes,
+  searchTypes: null,
 
   init() {
     this._super(...arguments);
 
+    this.set("searchTypes", [
+      { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
+      {
+        name: this.siteSettings.tagging_enabled
+          ? I18n.t("search.type.categories_and_tags")
+          : I18n.t("search.type.categories"),
+        id: SEARCH_TYPE_CATS_TAGS,
+      },
+      { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
+    ]);
     this.selected = [];
   },
 
@@ -409,6 +412,17 @@ export default Controller.extend({
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
       this.selected.clear();
+    },
+
+    showBulkActions() {
+      const modalController = showModal("topic-bulk-actions", {
+        model: {
+          topics: this.selected,
+        },
+        title: "topics.bulk.actions",
+      });
+
+      modalController.set("refreshClosure", () => this._search());
     },
 
     search(options = {}) {

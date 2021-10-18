@@ -139,7 +139,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :subcategory_list, :notification_level, :has_children
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
@@ -917,6 +917,21 @@ class Category < ActiveRecord::Base
       slug_path
     else
       [self.slug_for_url]
+    end
+  end
+
+  def cannot_delete_reason
+    return I18n.t('category.cannot_delete.uncategorized') if self.uncategorized?
+    return I18n.t('category.cannot_delete.has_subcategories') if self.has_children?
+
+    if self.topic_count != 0
+      oldest_topic = self.topics.where.not(id: self.topic_id).order('created_at ASC').limit(1).first
+      if oldest_topic
+        I18n.t('category.cannot_delete.topic_exists', count: self.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{CGI.escapeHTML(oldest_topic.title)}</a>")
+      else
+        # This is a weird case, probably indicating a bug.
+        I18n.t('category.cannot_delete.topic_exists_no_oldest', count: self.topic_count)
+      end
     end
   end
 

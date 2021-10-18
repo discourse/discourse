@@ -69,7 +69,7 @@
                   tagName=""
                 }}
               {{else}}
-                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -217,6 +217,7 @@
                 showLogin=(route-action "showLogin")
                 showRawEmail=(route-action "showRawEmail")
                 deletePost=(action "deletePost")
+                permanentlyDeletePost=(action "permanentlyDeletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
                 toggleBookmark=(action "toggleBookmark")

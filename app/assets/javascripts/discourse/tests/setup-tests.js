@@ -3,9 +3,10 @@ import {
   exists,
   resetSite,
 } from "discourse/tests/helpers/qunit-helpers";
-import createPretender, {
+import pretender, {
   applyDefaultHandlers,
   pretenderHelpers,
+  resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import {
   currentSettings,
@@ -29,8 +30,10 @@ import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
-import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
+import { run } from "@ember/runloop";
+import { isLegacyEmber } from "discourse-common/config/environment";
+import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -63,6 +66,10 @@ let app;
 let started = false;
 
 function createApplication(config, settings) {
+  if (app) {
+    run(app, "destroy");
+  }
+
   app = Application.create(config);
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -120,6 +127,32 @@ function setupToolbar() {
     label: "Plugin",
     value: Array.from(pluginNames),
   });
+}
+
+function reportMemoryUsageAfterTests() {
+  QUnit.done(() => {
+    const usageBytes = performance.memory?.usedJSHeapSize;
+    let result;
+    if (usageBytes) {
+      result = `${(usageBytes / Math.pow(2, 30)).toFixed(3)}GB`;
+    } else {
+      result = "(performance.memory api unavailable)";
+    }
+
+    writeSummaryLine(`Used JS Heap Size: ${result}`);
+  });
+}
+
+function writeSummaryLine(message) {
+  // eslint-disable-next-line no-console
+  console.log(`\n${message}\n`);
+  if (window.Testem) {
+    window.Testem.useCustomAdapter(function (socket) {
+      socket.emit("test-metadata", "summary-line", {
+        message: message,
+      });
+    });
+  }
 }
 
 function setupTestsCommon(application, container, config) {
@@ -213,8 +246,7 @@ function setupTestsCommon(application, container, config) {
       setupS3CDN(null, null);
     }
 
-    server = createPretender;
-    server.handlers = [];
+    server = pretender;
     applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
@@ -276,12 +308,14 @@ function setupTestsCommon(application, container, config) {
 
   QUnit.testDone(function () {
     sinon.restore();
+    resetPretender();
+    clearPresenceState();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
     flushMap();
 
-    if (!setupApplicationTest) {
+    if (isLegacyEmber()) {
       // ensures any event not removed is not leaking between tests
       // most likely in initializers, other places (controller, component...)
       // should be fixed in code
@@ -330,28 +364,25 @@ function setupTestsCommon(application, container, config) {
     return true;
   };
 
-  try {
-    // Ember CLI
-    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
-    emberCliTestLoader.addModuleExcludeMatcher(
-      (name) => !shouldLoadModule(name)
-    );
-  } catch (e) {
-    if (!String(e).indexOf("Could not find module")) {
-      throw e;
-    }
-    // Legacy
+  if (isLegacyEmber()) {
     Object.keys(requirejs.entries).forEach(function (entry) {
       if (shouldLoadModule(entry)) {
         require(entry, null, null, true);
       }
     });
+  } else {
+    // Ember CLI
+    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
+    emberCliTestLoader.addModuleExcludeMatcher(
+      (name) => !shouldLoadModule(name)
+    );
   }
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
 
   setupToolbar();
+  reportMemoryUsageAfterTests();
   setApplication(application);
   setDefaultOwner(application.__container__);
   resetSite();

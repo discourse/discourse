@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 lt:
+  site_settings:
+    presence_enabled: "Rodyti vartotojus, kurie šiuo metu atsako į dabartinę temą arba redaguoja dabartinį įrašą?"
+    presence_max_users_shown: "Rodomas didžiausias vartotojų skaičius."

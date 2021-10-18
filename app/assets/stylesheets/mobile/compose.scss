@@ -187,7 +187,8 @@
   }
 
   .with-tags {
-    .mini-tag-chooser {
+    .mini-tag-chooser,
+    .category-chooser {
       z-index: z("base");
       margin-bottom: 5px;
     }

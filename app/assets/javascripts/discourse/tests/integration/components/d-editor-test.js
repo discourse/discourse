@@ -37,6 +37,19 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     },
   });
 
+  componentTest("links in preview are not tabbable", {
+    template: hbs`{{d-editor value=value}}`,
+
+    async test(assert) {
+      await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
+
+      assert.equal(
+        queryAll(".d-editor-preview").html().trim(),
+        '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
+      );
+    },
+  });
+
   componentTest("preview sanitizes HTML", {
     template: hbs`{{d-editor value=value}}`,
 

@@ -287,6 +287,8 @@ ja:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+    topic_count_categories:
+      other: "%{count} 件の新規/更新トピックを見る"
     topic_count_latest:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_unseen:
@@ -1829,7 +1831,6 @@ ja:
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
-      title: "Ctrl+Enter でも投稿できます"
       users_placeholder: "ユーザーを追加"
       title_placeholder: "トピックのタイトルを入力してください"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
@@ -2017,7 +2018,7 @@ ja:
       too_short: "検索文字が短すぎます。"
       result_count:
         other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
-      title: "トピック、投稿、ユーザー、カテゴリを検索"
+      title: "検索"
       full_page_title: "検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
@@ -2034,6 +2035,7 @@ ja:
       tags: "タグ"
       type:
         users: "ユーザー"
+        categories: "カテゴリ"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
@@ -2093,7 +2095,6 @@ ja:
           placeholder: 最小
         max_views:
           placeholder: 最大
-    hamburger_menu: "他のトピックリストやカテゴリに移動"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
@@ -3205,6 +3206,8 @@ ja:
       favorite_max_reached: "これ以上のバッジをお気に入りにできません。"
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
+    download_calendar:
+      download: "ダウンロード"
     tagging:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"

@@ -2334,6 +2334,7 @@ fa_IR:
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن..."
+  fallback_username: "کاربران"
   activemodel:
     errors:
       <<: *errors

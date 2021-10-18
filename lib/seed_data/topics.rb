@@ -23,7 +23,7 @@ module SeedData
         topics(site_setting_names).each do |params|
           params.except!(:category, :after_create)
           params[:skip_changed] = skip_changed
-          update_topic(params)
+          update_topic(**params)
         end
       end
     end

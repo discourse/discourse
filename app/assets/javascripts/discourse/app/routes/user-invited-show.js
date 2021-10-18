@@ -11,6 +11,9 @@ export default DiscourseRoute.extend({
     if (!model.can_see_invite_details) {
       this.replaceWith("userInvited.show", "redeemed");
     }
+    this.controllerFor("user.invited").setProperties({
+      invitesCount: model.counts,
+    });
   },
 
   setupController(controller, model) {

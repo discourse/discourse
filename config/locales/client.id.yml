@@ -264,6 +264,8 @@ id:
       abandon:
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
+    topic_count_categories:
+      other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unseen:
@@ -1292,7 +1294,6 @@ id:
       create_pm: "Pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
-      title: "Atau tekan Ctrl+Enter"
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
@@ -1373,7 +1374,7 @@ id:
     search:
       most_liked: "Paling Disukai"
       select_all: "Pilih Semua"
-      title: "mencari topik, artikel, pengguna, atau kategori"
+      title: "Cari"
       full_page_title: "Cari"
       search_google_button: "Google"
       search_button: "Cari"
@@ -1381,6 +1382,7 @@ id:
       tags: "Label"
       type:
         users: "Pengguna"
+        categories: "Kategori"
       advanced:
         posted_by:
           label: Dibuat oleh

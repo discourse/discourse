@@ -311,6 +311,9 @@ fi:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
+    topic_count_categories:
+      one: "Katso %{count} uusi tai päivitetty ketju"
+      other: "Katso %{count} uutta tai päivitettyä ketjua"
     topic_count_latest:
       one: "Katso %{count} uusi tai päivitetty ketju"
       other: "Katso %{count} uutta tai päivitettyä ketjua"
@@ -1903,7 +1906,6 @@ fi:
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
-      title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
@@ -2098,7 +2100,7 @@ fi:
       result_count:
         one: "<span>%{count} tulos haulle</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} tulosta haulle</span><span class='term'>%{term}</span>"
-      title: "hae ketjuja, viestejä, käyttäjiä tai alueita"
+      title: "Haku"
       full_page_title: "Haku"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
@@ -2115,6 +2117,7 @@ fi:
       tags: "Tunnisteet"
       type:
         users: "Käyttäjiä"
+        categories: "Alueet"
       context:
         user: "Hae käyttäjän @%{username} viestejä"
         category: "Hae alueelta #%{category}"
@@ -2174,7 +2177,6 @@ fi:
           placeholder: vähintään
         max_views:
           placeholder: enintään
-    hamburger_menu: "vaihda ketjulistausta tai siirry toiselle alueelle"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
@@ -3346,6 +3348,8 @@ fi:
       favorite_max_reached: "Et voi lisätä enempää kunniamerkkejä suosikkeihin."
       favorite_max_not_reached: "Merkitse tämä kunniamerkki suosikiksi"
       favorite_count: "%{count}/%{max} kunniamerkkiä merkitty suosikeiksi"
+    download_calendar:
+      download: "Lataa"
     tagging:
       all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"

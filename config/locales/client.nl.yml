@@ -309,6 +309,9 @@ nl:
         confirm: "U hebt een concept in uitvoering voor dit topic. Wat wilt u er mee doen?"
         yes_value: "Negeren"
         no_value: "Bewerken hervatten"
+    topic_count_categories:
+      one: "%{count} nieuw of bijgewerkt topic bekijken"
+      other: "%{count} nieuwe of bijgewerkte topics bekijken"
     topic_count_latest:
       one: "%{count} nieuw of bijgewerkt topic bekijken"
       other: "%{count} nieuwe of bijgewerkte topics bekijken"
@@ -1862,7 +1865,6 @@ nl:
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
-      title: "Of druk op Ctrl+Enter"
       users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
@@ -2056,7 +2058,7 @@ nl:
       result_count:
         one: "<span>%{count} resultaat voor</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultaten voor</span><span class='term'>%{term}</span>"
-      title: "zoeken naar topics, berichten, gebruikers of categorieën"
+      title: "Zoeken"
       full_page_title: "Zoeken"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -2073,6 +2075,7 @@ nl:
       tags: "Tags"
       type:
         users: "Gebruikers"
+        categories: "Categorieën"
       context:
         user: "Berichten van @%{username} doorzoeken"
         category: "De categorie #%{category} doorzoeken"
@@ -2132,7 +2135,6 @@ nl:
           placeholder: minimaal
         max_views:
           placeholder: maximaal
-    hamburger_menu: "naar een andere topiclijst of categorie"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
@@ -3281,6 +3283,8 @@ nl:
           name: Anders
         posting:
           name: Schrijven
+    download_calendar:
+      download: "Downloaden"
     tagging:
       all_tags: "Alle tags"
       other_tags: "Andere tags"

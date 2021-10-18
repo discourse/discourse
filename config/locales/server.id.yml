@@ -703,6 +703,7 @@ id:
           title: "Hapus Pengguna"
       reject:
         title: "Tolak"
+  fallback_username: "pengguna"
   time:
     <<: *datetime_formats
   activemodel:

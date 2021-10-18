@@ -37,7 +37,8 @@
   &.disabled {
     cursor: not-allowed;
     .d-editor-button-bar {
-      visibility: hidden;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
@@ -230,6 +231,9 @@
     display: inline-block;
     border-left: 1px solid var(--primary-low-mid);
     margin: 0 0.25em;
+    .mobile-view & {
+      display: none;
+    }
   }
 
   .btn:focus {

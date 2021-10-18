@@ -721,6 +721,9 @@ en:
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
+    cannot_permanently_delete:
+      many_posts: "You can not permanently delete this topic because there are other posts."
+      wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
     slow_down: "You’ve performed this action too many times, please try again later."
@@ -1031,7 +1034,7 @@ en:
 
   unsubscribed:
     title: "Email preferences updated!"
-    description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    description: "Email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
@@ -2125,6 +2128,8 @@ en:
     global_notice: "Display an URGENT, EMERGENCY, non-dismissible global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+
+    disable_category_edit_notifications: "Disable category edit notifications on topics."
 
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
@@ -4997,21 +5002,24 @@ en:
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
     reasons:
-      post_count: "The first few posts from every user must be approved by staff. See `approve_post_count`."
-      trust_level: "Users at low trust levels must have replies approved by staff. See `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
-      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
-      auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
-      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/customize/watched_words'>list of watched words</a>."
-      staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
-      category: "Posts in this category require manual approval by staff. See the category settings."
-      must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
-      invite_only: "All new users should be invited. See `invite_only`."
+      post_count: "The first few posts from every user must be approved by staff. See %{link}."
+      trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
+      new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
+      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      auto_silence_regex: "New user whose first post matches the %{link} setting."
+      watched_word: "This post included a Watched Word. See your %{link}."
+      staged: "New topics and posts for staged users must be approved by staff. See %{link}."
+      category: "Posts in this category require manual approval by staff. See the %{link}."
+      must_approve_users: "All new users must be approved by staff. See %{link}."
+      invite_only: "All new users should be invited. See %{link}."
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
-      email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
-      suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
-      contains_media: "This post includes embedded media. See `review_media_unless_trust_level`."
+      email_spam: "This email was flagged as spam by the header defined in %{link}."
+      suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See %{link}."
+      contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
+      links:
+        watched_word: list of watched words
+        category: category settings
 
     actions:
       agree:
@@ -5119,3 +5127,5 @@ en:
       other: "%{topic_title} (Part %{count})"
     post_raw: "Continuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
     small_action_post_raw: "Continue discussion at %{new_title}."
+
+  fallback_username: "user"

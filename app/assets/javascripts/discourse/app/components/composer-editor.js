@@ -124,11 +124,6 @@ export default Component.extend(ComposerUpload, {
     );
   },
 
-  @discourseComputed("composer.requiredCategoryMissing", "composer.replyLength")
-  disableTextarea(requiredCategoryMissing, replyLength) {
-    return requiredCategoryMissing && replyLength === 0;
-  },
-
   @observes("focusTarget")
   setFocus() {
     if (this.focusTarget === "editor") {

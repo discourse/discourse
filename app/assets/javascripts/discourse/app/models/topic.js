@@ -384,7 +384,13 @@ const Topic = RestModel.extend({
     }
     this.set(
       "bookmarks",
-      this.bookmarks.filter((bookmark) => bookmark.id !== id)
+      this.bookmarks.filter((bookmark) => {
+        if (bookmark.id === id && bookmark.for_topic) {
+          this.appEvents.trigger("topic:bookmark-toggled");
+        }
+
+        return bookmark.id !== id;
+      })
     );
     this.set("bookmarked", this.bookmarks.length);
     this.incrementProperty("bookmarksWereChanged");
@@ -427,9 +433,9 @@ const Topic = RestModel.extend({
   },
 
   // Delete this topic
-  destroy(deleted_by) {
+  destroy(deleted_by, opts) {
     return ajax(`/t/${this.id}`, {
-      data: { context: window.location.pathname },
+      data: { context: window.location.pathname, ...opts },
       type: "DELETE",
     })
       .then(() => {

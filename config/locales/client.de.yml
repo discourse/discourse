@@ -243,6 +243,8 @@ de:
     character_count:
       one: "%{count} Zeichen"
       other: "%{count} Zeichen"
+    period_chooser:
+      aria_label: "Filtern nach Zeitraum"
     related_messages:
       title: "Verwandte Nachrichten"
       see_all: 'Siehe <a href="%{path}">alle Nachrichten</a> von @%{username} …'
@@ -318,6 +320,9 @@ de:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
+    topic_count_categories:
+      one: "Zeige %{count} neues oder aktualisiertes Thema"
+      other: "Zeige %{count} neue oder aktualisierte Themen"
     topic_count_latest:
       one: "Zeige %{count} neues oder aktualisiertes Thema"
       other: "Zeige %{count} neue oder aktualisierte Themen"
@@ -1137,9 +1142,9 @@ de:
         tags: "Schlagwörter"
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
-        read_more: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in <a href='%{basePath}/u/%{username}/messages/personal'>persönliche Nachrichten</a>."
+        read_more: "Möchtest Du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/message'>persönliche Nachrichten</a>."
         read_more_group_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten} } verbleibend, oder durchsuche andere Nachrichten in {groupLink}"
-        read_more_personal_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/personal/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/personal/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># neue</a> Nachrichten} } verbleibend oder durchsuche andere <a href='{basePath}/u/{username}/messages/personal'>persönliche Nachrichten</a>"
+        read_more_personal_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten} } verbleibend oder durchsuche andere <a href='{basePath}/u/{username}/message'>persönliche Nachrichten</a>"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -1938,7 +1943,7 @@ de:
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
-      title: "Oder drücke Strg + Eingabetaste"
+      title: "Oder drücke %{modifier} Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
@@ -2131,10 +2136,13 @@ de:
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
+      open_advanced: "Erweiterte Suche öffnen"
+      clear_search: "Suche löschen"
+      sort_or_bulk_actions: "Ergebnisse sortieren oder massenweise auswählen"
       result_count:
         one: "<span>%{count} Ergebnis für </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
-      title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
+      title: "Suche"
       full_page_title: "Suche"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
@@ -2150,9 +2158,14 @@ de:
       search_term_label: "Suchbegriff eingeben"
       categories: "Kategorien"
       tags: "Schlagwörter"
+      in: "in"
+      in_this_topic: "in diesem Thema"
+      in_topics_posts: "in allen Themen und Beiträgen"
+      in_posts_by: "in Beiträgen von %{username}"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
+        categories: "Kategorien"
         categories_and_tags: "Kategorien/Schlagwörter"
       context:
         user: "Beiträge von @%{username} durchsuchen"
@@ -2160,10 +2173,18 @@ de:
         tag: "Das Schlagwort #%{tag} suchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
+      tips:
+        category_tag: "filtern nach Kategorie oder Schlagwort"
+        author: "filtern nach Beitragsautor"
+        in: "filtern nach Metadaten (z.B. in:title, in:personal, in:pinned)"
+        status: "filtern nach Themenstatus"
+        full_search: "startet die Ganzseitensuche"
+        full_search_key: "%{modifier} + Eingabetaste"
       advanced:
         title: Erweiterte Filter
         posted_by:
           label: Beiträge von
+          aria_label: Filtern nach Beitragsautor
         in_category:
           label: In der Kategorie
         in_group:
@@ -2172,6 +2193,7 @@ de:
           label: Mit dem Abzeichen
         with_tags:
           label: Mit dem Schlagwort
+          aria_label: Nach Schlagwörtern filtern
         filters:
           label: 'Themen/Beiträge einschränken:'
           title: Mit Treffer im Titel
@@ -2202,21 +2224,26 @@ de:
             label: Beiträge
           min:
             placeholder: Minimum
+            aria_label: nach Mindestanzahl von Beiträgen filtern
           max:
             placeholder: Maximum
+            aria_label: nach maximaler Anzahl von Beiträgen filtern
           time:
             label: 'Zeitraum einschränken:'
+            aria_label: Nach Veröffentlichungsdatum filtern
             before: Beiträge vor dem
             after: Beiträge nach dem
         views:
           label: Aufrufe
         min_views:
           placeholder: Minimum
+          aria_label: nach minimaler Anzahl von Ansichten filtern
         max_views:
           placeholder: Maximum
+          aria_label: nach maximaler Anzahl von Ansichten filtern
         additional_options:
           label: "Nach Beitragsanzahl und Themenaufrufen filtern"
-    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
+    hamburger_menu: "Menü"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -2727,7 +2754,9 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       quote_reply: "Zitat"
+      quote_reply_shortcut: "Oder drücke q"
       quote_edit: "Bearbeiten"
+      quote_edit_shortcut: "Oder drücke e"
       quote_share: "Teilen"
       edit_reason: "Grund: "
       post_number: "Beitrag %{number}"
@@ -2749,7 +2778,7 @@ de:
         other: "%{count} versteckte Beiträge anzeigen"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
-        returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag ist vom %{time}."
+        returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "%{count} Antwort"
@@ -2776,6 +2805,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
+        file_too_large_humanized: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size}). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
@@ -3034,6 +3064,7 @@ de:
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
+        title: "ändere Benachrichtigungsstufe für diese Kategorie"
         watching:
           title: "Beobachten"
           description: "Du wirst automatisch alle Themen in dieser Kategorie beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
@@ -3407,6 +3438,18 @@ de:
       favorite_max_reached: "Du kannst keine weiteren Abzeichen favorisieren."
       favorite_max_not_reached: "Markiere dieses Abzeichen als Favorit"
       favorite_count: "%{count}/%{max} Abzeichen als Favorit markiert"
+    download_calendar:
+      title: "Kalender herunterladen"
+      save_ics: ".ics-Datei herunterladen"
+      save_google: "Zum Google-Kalender hinzufügen"
+      remember: "Frag mich nicht mehr"
+      remember_explanation: "(Du kannst diese Einstellung in Deinen Benutzereinstellungen ändern)"
+      download: "Herunterladen"
+      default_calendar: "Standard-Kalender"
+      default_calendar_instruction: "Lege fest, welcher Kalender verwendet werden soll, wenn Daten gespeichert werden"
+      add_to_calendar: "Zum Kalender hinzufügen"
+      google: "Google Kalender"
+      ics: "ICS"
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"

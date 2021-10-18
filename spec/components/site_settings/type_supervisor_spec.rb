@@ -94,9 +94,6 @@ describe SiteSettings::TypeSupervisor do
       it "'emoji_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(24)
       end
-      it "'html' should be at the right position" do
-        expect(SiteSettings::TypeSupervisor.types[:html]).to eq(25)
-      end
     end
   end
 

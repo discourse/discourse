@@ -312,6 +312,9 @@ fa_IR:
         confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
         yes_value: "حذف"
         no_value: "ادامه"
+    topic_count_categories:
+      one: "%{count} موضوع تازه یا به‌ روز شده."
+      other: "%{count} موضوع تازه یا به‌ روز شده."
     topic_count_latest:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -1730,7 +1733,6 @@ fa_IR:
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
-      title: "یا Ctrl+Enter را بفشارید"
       users_placeholder: "افزودن یک کاربر"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
@@ -1895,7 +1897,7 @@ fa_IR:
       select_all: "انتخاب همه"
       clear_all: "پاک کردن همه"
       too_short: "کلمه جستجو شده بسیار کوتاه است"
-      title: "جستجوی موضوعات، نوشته‌ها، کاربران یا دسته‌‌بندی‌ها"
+      title: "جستجو"
       full_page_title: "جستجو"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
@@ -1912,6 +1914,7 @@ fa_IR:
       tags: "برچسب‌ها"
       type:
         users: "کاربران"
+        categories: "دسته‌بندی‌ها"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
@@ -1969,7 +1972,6 @@ fa_IR:
           placeholder: حداقل
         max_views:
           placeholder: حداکثر
-    hamburger_menu: "به فهرست مبحث یا دسته بندی دیگر بروید"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -2929,6 +2931,8 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
+    download_calendar:
+      download: "دانلود"
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"

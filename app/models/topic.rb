@@ -581,11 +581,11 @@ class Topic < ActiveRecord::Base
   def self.similar_to(title, raw, user = nil)
     return [] if title.blank?
     raw = raw.presence || ""
+    search_data = Search.prepare_data(title.strip)
 
-    tsquery = Search.set_tsquery_weight_filter(
-      Search.prepare_data(title.strip),
-      'A'
-    )
+    return [] if search_data.blank?
+
+    tsquery = Search.set_tsquery_weight_filter(search_data, 'A')
 
     if raw.present?
       cooked = SearchIndexer::HtmlScrubber.scrub(
@@ -844,7 +844,7 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if post = self.ordered_posts.first
+        if !SiteSetting.disable_category_edit_notifications && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
@@ -1787,6 +1787,15 @@ class Topic < ActiveRecord::Base
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
   end
+
+  def cannot_permanently_delete_reason(user)
+    if self.posts_count > 1
+      I18n.t('post.cannot_permanently_delete.many_posts')
+    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
+  end
 end
 
 # == Schema Information
@@ -1846,7 +1855,7 @@ end
 #  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
-#  index_topics_on_bumped_at               (bumped_at)
+#  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))

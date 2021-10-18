@@ -1,5 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
-import { caretPosition, inCodeBlock } from "discourse/lib/utilities";
+import {
+  caretPosition,
+  inCodeBlock,
+  translateModKey,
+} from "discourse/lib/utilities";
 import discourseComputed, {
   observes,
   on,
@@ -60,7 +64,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { siteSettings } = opts;
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -125,29 +129,31 @@ class Toolbar {
       action: (...args) => this.context.send("formatCode", args),
     });
 
-    this.addButton({
-      id: "bullet",
-      group: "extras",
-      icon: "list-ul",
-      shortcut: "Shift+8",
-      title: "composer.ulist_title",
-      preventFocus: true,
-      perform: (e) => e.applyList("* ", "list_item"),
-    });
+    if (!site.mobileView) {
+      this.addButton({
+        id: "bullet",
+        group: "extras",
+        icon: "list-ul",
+        shortcut: "Shift+8",
+        title: "composer.ulist_title",
+        preventFocus: true,
+        perform: (e) => e.applyList("* ", "list_item"),
+      });
 
-    this.addButton({
-      id: "list",
-      group: "extras",
-      icon: "list-ol",
-      shortcut: "Shift+7",
-      title: "composer.olist_title",
-      preventFocus: true,
-      perform: (e) =>
-        e.applyList(
-          (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-          "list_item"
-        ),
-    });
+      this.addButton({
+        id: "list",
+        group: "extras",
+        icon: "list-ol",
+        shortcut: "Shift+7",
+        title: "composer.olist_title",
+        preventFocus: true,
+        perform: (e) =>
+          e.applyList(
+            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+            "list_item"
+          ),
+      });
+    }
 
     if (siteSettings.support_mixed_text_direction) {
       this.addButton({
@@ -191,24 +197,12 @@ class Toolbar {
     if (button.shortcut) {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
-      let shortcutTitle = `${mod}+${button.shortcut}`;
 
-      // Mac users are used to glyphs for shortcut keys
-      if (mac) {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", "\u21E7")
-          .replace("Meta", "\u2318")
-          .replace("Alt", "\u2325")
-          .replace(/\+/g, "");
-      } else {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-          .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-          .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
-      }
+      const shortcutTitle = `${translateModKey(mod + "+")}${translateModKey(
+        button.shortcut
+      )}`;
 
       createdButton.title = `${title} (${shortcutTitle})`;
-
       this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
     } else {
       createdButton.title = title;
@@ -270,6 +264,8 @@ export default Component.extend(TextareaTextManipulation, {
 
   didInsertElement() {
     this._super(...arguments);
+
+    this._previewMutationObserver = this._disablePreviewTabIndex();
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
@@ -339,6 +335,8 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap = null;
 
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
+
+    this._previewMutationObserver?.disconnect();
 
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
@@ -427,11 +425,6 @@ export default Component.extend(TextareaTextManipulation, {
           if (!preview) {
             return;
           }
-
-          // prevents any tab focus in preview
-          preview.querySelectorAll("a").forEach((anchor) => {
-            anchor.setAttribute("tabindex", "-1");
-          });
 
           if (this.previewUpdated) {
             this.previewUpdated($(preview));
@@ -909,5 +902,22 @@ export default Component.extend(TextareaTextManipulation, {
     focusOut() {
       this.set("isEditorFocused", false);
     },
+  },
+
+  _disablePreviewTabIndex() {
+    const observer = new MutationObserver(function () {
+      document.querySelectorAll(".d-editor-preview a").forEach((anchor) => {
+        anchor.setAttribute("tabindex", "-1");
+      });
+    });
+
+    observer.observe(document.querySelector(".d-editor-preview"), {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: true,
+    });
+
+    return observer;
   },
 });

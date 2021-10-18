@@ -2,6 +2,7 @@ import ComponentConnector from "discourse/widgets/component-connector";
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
+import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { later } from "@ember/runloop";
@@ -456,7 +457,16 @@ export default createWidget("topic-timeline", {
             excerpt = "<span class='username'>" + info.username + ":</span> ";
           }
 
-          this.state.excerpt = excerpt + info.excerpt;
+          if (info.excerpt) {
+            this.state.excerpt = excerpt + info.excerpt;
+          } else if (info.action_code) {
+            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+              info.action_code,
+              info.created_at,
+              info.username
+            )}`;
+          }
+
           this.scheduleRerender();
         }
       });

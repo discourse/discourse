@@ -6,12 +6,6 @@
     </div>
   </div>
 {{else}}
-  {{#unless site.mobileView}}
-    {{#if showToggleBulkSelect}}
-      {{bulk-select-button canDoBulkActions=true selected=selected action=(route-action "refresh")}}
-    {{/if}}
-  {{/unless}}
-
   {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
     {{topic-dismiss-buttons
       position="top"
@@ -30,16 +24,18 @@
     {{/if}}
 
     {{basic-topic-list topicList=model
-       hideCategory=hideCategory
-       showPosters=showPosters
-       bulkSelectEnabled=bulkSelectEnabled
-       selected=selected
-       tagsForUser=tagsForUser
-       onScroll=saveScrollPosition
-       canBulkSelect=canBulkSelect
-       scrollOnLoad=true
-       toggleBulkSelect=(action "toggleBulkSelect")
-       updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")}}
+      hideCategory=hideCategory
+      showPosters=showPosters
+      bulkSelectEnabled=bulkSelectEnabled
+      bulkSelectAction=(route-action "refresh")
+      selected=selected
+      tagsForUser=tagsForUser
+      onScroll=saveScrollPosition
+      canBulkSelect=canBulkSelect
+      scrollOnLoad=true
+      toggleBulkSelect=(action "toggleBulkSelect")
+      updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
+    }}
 
     {{topic-dismiss-buttons
       position="bottom"

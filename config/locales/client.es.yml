@@ -243,6 +243,8 @@ es:
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"
+    period_chooser:
+      aria_label: "Filtrar por periodo"
     related_messages:
       title: "Mensajes relacionados"
       see_all: 'Ver <a href="%{path}">todos los mensajes</a> de @%{username}...'
@@ -318,6 +320,9 @@ es:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
+    topic_count_categories:
+      one: "Ver %{count} tema nuevo o actualizado"
+      other: "Ver %{count} temas nuevos o actualizados"
     topic_count_latest:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
@@ -1137,7 +1142,6 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
-        read_more: "¿Quieres leer más? Consulta otros <a href='%{basePath}/u/%{username}/messages/personal'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1936,7 +1940,7 @@ es:
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
-      title: "O pulsa Ctrl+Intro"
+      title: "O pulsa %{modifier}Intro"
       users_placeholder: "Añadir un usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
@@ -2129,10 +2133,13 @@ es:
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
+      open_advanced: "Abrir búsqueda avanzada"
+      clear_search: "Limpiar búsqueda"
+      sort_or_bulk_actions: "Ordenar resultados o seleccionar en masa"
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "buscar temas, publicaciones, usuarios o categorías"
+      title: "Buscar"
       full_page_title: "Buscar"
       no_results: "No se encontró ningún resultado."
       no_more_results: "No se encontraron más resultados."
@@ -2148,9 +2155,14 @@ es:
       search_term_label: "escribe lo que quieras buscar"
       categories: "Categorías"
       tags: "Etiquetas"
+      in: "en"
+      in_this_topic: "en este tema"
+      in_topics_posts: "en todos los temas y publicaciones"
+      in_posts_by: "en publicaciones por %{username}"
       type:
         default: "Temas/respuestas"
         users: "Usuarios"
+        categories: "Categorías"
         categories_and_tags: "Categorías/etiquetas"
       context:
         user: "Buscar publicaciones de @%{username}"
@@ -2158,10 +2170,14 @@ es:
         tag: "Buscar la etiqueta #%{tag}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
+      tips:
+        full_search: "lanza la página de búsqueda"
+        full_search_key: "%{modifier} + Intro"
       advanced:
         title: Filtros avanzados
         posted_by:
           label: Publicado por
+          aria_label: Filtrar por autor
         in_category:
           label: Categorizado
         in_group:
@@ -2170,6 +2186,7 @@ es:
           label: Con insignia
         with_tags:
           label: Etiquetado
+          aria_label: Filtrar por etiqueta
         filters:
           label: Solo temas/mensajes que...
           title: coincide el título únicamente
@@ -2200,21 +2217,26 @@ es:
             label: Publicaciones
           min:
             placeholder: mínimo
+            aria_label: filtrar por número mínimo de publicaciones
           max:
             placeholder: máximo
+            aria_label: filtrar por número máximo de publicaciones
           time:
             label: Fecha de publicación
+            aria_label: Filtrar por fecha de publicación
             before: antes de
             after: después de
         views:
           label: Vistas
         min_views:
           placeholder: mínimo
+          aria_label: filtrar por número mínimo de visitas
         max_views:
           placeholder: máximo
+          aria_label: filtrar por número máximo de visitas
         additional_options:
           label: "Filtra por número de respuestas y visitas del tema"
-    hamburger_menu: "ir a otra lista de temas o categoría"
+    hamburger_menu: "menú"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -2774,6 +2796,7 @@ es:
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
         upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
+        file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
         too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
           one: "Solo se pueden subir archivos de %{count} en 1."
@@ -3032,6 +3055,7 @@ es:
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
       notifications:
+        title: "cambiar el nivel de notificación de esta categoría"
         watching:
           title: "Vigilar"
           description: "Vigilarás automáticamente todos los temas en esta categoría. Se te notificará de cada nueva respuesta en cada tema, y verás un contador de nuevas respuestas."
@@ -3405,6 +3429,17 @@ es:
       favorite_max_reached: "No puedes marcar más insignias como favoritas."
       favorite_max_not_reached: "Marcar esta insignia como favorita"
       favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
+    download_calendar:
+      title: "Descargar calendario"
+      save_ics: "Descargar archivo.ics"
+      save_google: "Añadir a calendario de Google"
+      remember: "No volver a preguntar"
+      remember_explanation: "(puedes cambiar esto en tus preferencias)"
+      download: "Descargar"
+      default_calendar: "Calendario por defecto"
+      add_to_calendar: "Añadir al calendario"
+      google: "Calendario de Google"
+      ics: "ICS"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -5019,6 +5054,7 @@ es:
           upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario
           aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario
           success: Archivo CSV recibido. %{count} usuarios recibirán sus medallas en unos instantes.
+          csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
           csv_has_unmatched_users_truncated_list: "El archivo CSV tenía %{count} filas que han coincidido con ningún usuario, por lo que no se han repartido sus medallas. Debido al gran número de filas que no han coincidido, solo se muestran las 100 primeras:"
           replace_owners: Quitar insignia de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan

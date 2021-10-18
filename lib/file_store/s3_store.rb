@@ -158,8 +158,11 @@ module FileStore
       end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
-      cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
-      return true if cdn_hostname.presence && url[cdn_hostname]
+
+      s3_cdn_url = URI.parse(SiteSetting.Upload.s3_cdn_url || "")
+      cdn_hostname = s3_cdn_url.hostname
+
+      return true if cdn_hostname.presence && url[cdn_hostname] && (s3_cdn_url.path.blank? || parsed_url.path.starts_with?(s3_cdn_url.path))
       false
     end
 

@@ -63,7 +63,8 @@ class FinalDestination
     end
 
     @status = :ready
-    @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
+    @follow_canonical = @opts[:follow_canonical]
+    @http_verb = http_verb(@force_get_hosts, @follow_canonical)
     @cookie = nil
     @limited_ips = []
     @verbose = @opts[:verbose] || false
@@ -75,6 +76,14 @@ class FinalDestination
 
   def self.connection_timeout
     20
+  end
+
+  def http_verb(force_get_hosts, follow_canonical)
+    if follow_canonical || force_get_hosts.any? { |host| hostname_matches?(host) }
+      :get
+    else
+      :head
+    end
   end
 
   def timeout
@@ -212,6 +221,18 @@ class FinalDestination
       if @http_verb == :get
         if Oneboxer.cache_response_body?(@uri)
           Oneboxer.cache_response_body(@uri.to_s, response.body)
+        end
+      end
+
+      if @follow_canonical
+        next_url = uri(fetch_canonical_url(response.body))
+
+        if next_url.to_s.present? && next_url != @uri
+          @follow_canonical = false
+          @uri = next_url
+          @http_verb = http_verb(@force_get_hosts, @follow_canonical)
+
+          return resolve
         end
       end
 
@@ -458,4 +479,12 @@ class FinalDestination
     end
   end
 
+  def fetch_canonical_url(body)
+    return if body.blank?
+    canonical_link = Nokogiri::HTML5(body).at("link[rel='canonical']")
+
+    return if canonical_link.nil?
+
+    canonical_link['href']
+  end
 end
