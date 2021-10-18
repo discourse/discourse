@@ -21,8 +21,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SUSPEND_USE
     guardian = Guardian.new(actor)
     guardian.ensure_can_suspend!(target)
 
-    suspend_until = context['suspend_until'] || fields.dig('suspend_until', 'value')
-    reason = context['reason'] || fields.dig('reason', 'value')
+    suspend_until = context['suspend_until'].presence || fields.dig('suspend_until', 'value')
+    reason = context['reason'].presence || fields.dig('reason', 'value')
 
     User.transaction do
       target.suspended_till = suspend_until
