@@ -1438,7 +1438,7 @@ class User < ActiveRecord::Base
     ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
   end
 
-  def username_equal_to?(another_username)
+  def username_equals_to?(another_username)
     username_lower == User.normalize_username(another_username)
   end
 

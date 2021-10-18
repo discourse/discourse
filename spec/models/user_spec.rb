@@ -2588,7 +2588,7 @@ describe User do
     end
   end
 
-  describe "#username_equal_to?" do
+  describe "#username_equals_to?" do
     [
       ["returns true for equal usernames", "john", "john", true],
       ["returns false for different usernames", "john", "bill", false],
@@ -2596,7 +2596,7 @@ describe User do
     ].each do |testcase_name, current_username, another_username, is_equal|
       it "#{testcase_name}" do
         user = Fabricate(:user, username: current_username)
-        result = user.username_equal_to?(another_username)
+        result = user.username_equals_to?(another_username)
 
         expect(result).to be(is_equal)
       end
@@ -2608,7 +2608,7 @@ describe User do
       raw = "Lo\u0308we" # Löwe, u0308 stands for ¨, so o\u0308 adds up to ö
       normalized = "l\u00F6we" # Löwe normilized, \u00F6 stands for ö
       user = Fabricate(:user, username: normalized)
-      result = user.username_equal_to?(raw)
+      result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
     end
