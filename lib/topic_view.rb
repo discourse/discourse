@@ -237,10 +237,10 @@ class TopicView
 
   def desired_post
     return @desired_post if @desired_post.present?
-    return nil if posts.blank?
+    return nil if @posts.blank?
 
-    @desired_post = posts.detect { |p| p.post_number == @post_number }
-    @desired_post ||= posts.first
+    @desired_post = @posts.detect { |p| p.post_number == @post_number }
+    @desired_post ||= @posts.first
     @desired_post
   end
 
@@ -287,8 +287,10 @@ class TopicView
     elsif opts[:post_ids].present?
       filter_posts_by_ids(opts[:post_ids])
     elsif opts[:filter_post_number].present?
+      # Used for megatopics which does not load the entire post stream upfront
       filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
     elsif opts[:best].present?
+      # Used for wordpress only
       filter_best(opts[:best], opts)
     else
       filter_posts_paged(@page)
@@ -315,29 +317,34 @@ class TopicView
 
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
-    posts_before = (@limit.to_f / 4).floor
-    posts_before = 1 if posts_before.zero?
-    sort_order = get_sort_order(post_number)
+    if is_mega_topic?
+      posts_before = (@limit.to_f / 4).floor
+      posts_before = 1 if posts_before.zero?
+      sort_order = get_sort_order(post_number)
 
-    before_post_ids = @filtered_posts.reverse_order
-      .where("posts.sort_order < ?", sort_order)
-      .limit(posts_before)
-      .pluck(:id)
-
-    post_ids = before_post_ids + @filtered_posts
-      .where("posts.sort_order >= ?", sort_order)
-      .limit(@limit - before_post_ids.length)
-      .pluck(:id)
-
-    if post_ids.length < @limit
-      post_ids = post_ids + @filtered_posts.reverse_order
+      before_post_ids = @filtered_posts.reverse_order
         .where("posts.sort_order < ?", sort_order)
-        .offset(before_post_ids.length)
-        .limit(@limit - post_ids.length)
+        .limit(posts_before)
         .pluck(:id)
-    end
 
-    filter_posts_by_ids(post_ids)
+      post_ids = before_post_ids + @filtered_posts
+        .where("posts.sort_order >= ?", sort_order)
+        .limit(@limit - before_post_ids.length)
+        .pluck(:id)
+
+      if post_ids.length < @limit
+        post_ids = post_ids + @filtered_posts.reverse_order
+          .where("posts.sort_order < ?", sort_order)
+          .offset(before_post_ids.length)
+          .limit(@limit - post_ids.length)
+          .pluck(:id)
+      end
+
+      filter_posts_by_ids(post_ids)
+    else
+      min_idx, max_idx = get_minmax_ids(post_number)
+      filter_posts_in_range(min_idx, max_idx)
+    end
   end
 
   def filter_posts_paged(page)
@@ -347,12 +354,17 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    filter_posts_by_ids(
-      @filtered_posts
-        .offset(min)
-        .limit(@limit)
-        .pluck(:id)
-    )
+    if is_mega_topic?
+      filter_posts_by_ids(
+        @filtered_posts
+          .offset(min)
+          .limit(@limit)
+          .pluck(:id)
+      )
+    else
+      max = (min + @limit) - 1
+      filter_posts_in_range(min, max)
+    end
   end
 
   def filter_best(max, opts = {})
@@ -886,5 +898,51 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
+  end
+
+  def filter_posts_in_range(min, max)
+    post_count = (filtered_post_ids.length - 1)
+
+    max = [max, post_count].min
+
+    return @posts = Post.none if min > max
+
+    min = [[min, max].min, 0].max
+
+    @posts = filter_posts_by_ids(filtered_post_ids[min..max])
+    @posts
+  end
+
+  def get_minmax_ids(post_number)
+    # Find the closest number we have
+    closest_index = closest_post_to(post_number)
+
+    # Make sure to get at least one post before, even with rounding
+    posts_before = (@limit.to_f / 4).floor
+    posts_before = 1 if posts_before.zero?
+
+    min_idx = closest_index - posts_before
+    min_idx = 0 if min_idx < 0
+    max_idx = min_idx + (@limit - 1)
+
+    # Get a full page even if at the end
+    ensure_full_page(min_idx, max_idx)
+  end
+
+  def ensure_full_page(min, max)
+    upper_limit = (filtered_post_ids.length - 1)
+    if max >= upper_limit
+      return (upper_limit - @limit) + 1, upper_limit
+    else
+      return min, max
+    end
+  end
+
+  def closest_post_to(post_number)
+    # happy path
+    closest_post_id = filtered_post_id(post_number)
+
+    (closest_post_id && filtered_post_ids.index(closest_post_id)) ||
+      filtered_post_ids[0]
   end
 end
