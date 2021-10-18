@@ -181,6 +181,7 @@ GEM
       progress (~> 3.0, >= 3.0.1)
     image_size (2.1.2)
     in_threads (1.5.4)
+    ipaddr (1.2.2)
     jmespath (1.4.0)
     jquery-rails (4.4.0)
       rails-dom-testing (>= 1, < 3)
@@ -283,7 +284,8 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (2.2.0)
+    openssl (2.2.1)
+      ipaddr
     openssl-signature_algorithm (1.1.1)
       openssl (~> 2.0)
     optimist (3.0.1)
