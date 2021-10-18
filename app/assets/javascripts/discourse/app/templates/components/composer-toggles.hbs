@@ -20,7 +20,7 @@
     tabindex=-1
   }}
 
-  {{#unless site.mobileView}}
+  {{#if showFullScreenButton}}
     {{d-button
       class="btn-flat toggle-fullscreen btn-mini-toggle"
       icon=fullscreenIcon
@@ -28,5 +28,5 @@
       title=fullscreenTitle
       tabindex=-1
     }}
-  {{/unless}}
+  {{/if}}
 </div>

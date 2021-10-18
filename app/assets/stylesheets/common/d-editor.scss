@@ -37,7 +37,8 @@
   &.disabled {
     cursor: not-allowed;
     .d-editor-button-bar {
-      visibility: hidden;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
