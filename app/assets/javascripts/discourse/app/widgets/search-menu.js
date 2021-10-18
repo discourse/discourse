@@ -15,7 +15,6 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-export const TOPIC_REPLACE_REGEXP = /\btopic:\d+\s?/i;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -50,6 +49,8 @@ const SearchHelper = {
     this.cancel();
 
     const { term, typeFilter } = searchData;
+    const searchContext = widget.searchContext();
+
     const fullSearchUrl = widget.fullSearchUrl();
     const matchSuggestions = this.matchesSuggestions();
 
@@ -127,13 +128,14 @@ const SearchHelper = {
       this._activeSearch = searchForTerm(term, {
         typeFilter,
         fullSearchUrl,
+        searchContext,
       });
       this._activeSearch
         .then((results) => {
           // we ensure the current search term is the one used
           // when starting the query
           if (results && term === searchData.term) {
-            if (term.includes("topic:")) {
+            if (searchContext) {
               widget.appEvents.trigger("post-stream:refresh", { force: true });
             }
 
@@ -183,6 +185,14 @@ export default createWidget("search-menu", {
   tagName: "div.search-menu",
   searchData,
 
+  buildKey: () => "search-menu",
+
+  defaultState(attrs) {
+    return {
+      inTopicContext: attrs.inTopicContext,
+    };
+  },
+
   fullSearchUrl(opts) {
     let url = "/search";
     const params = [];
@@ -209,7 +219,23 @@ export default createWidget("search-menu", {
   },
 
   panelContents() {
-    let searchInput = [this.attach("search-term", { value: searchData.term })];
+    let searchInput = [];
+
+    if (this.state.inTopicContext) {
+      searchInput.push(
+        this.attach("button", {
+          icon: "times",
+          label: "search.in_this_topic",
+          title: "search.in_this_topic_tooltip",
+          className: "btn btn-small search-context",
+          action: "clearTopicContext",
+          iconRight: true,
+        })
+      );
+    }
+
+    searchInput.push(this.attach("search-term", { value: searchData.term }));
+
     if (searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
     } else {
@@ -237,6 +263,13 @@ export default createWidget("search-menu", {
     }
 
     const results = [h("div.search-input", searchInput)];
+
+    if (
+      this.state.inTopicContext &&
+      (!SearchHelper.includesTopics() || !searchData.term)
+    ) {
+      return results;
+    }
 
     if (!searchData.loading) {
       results.push(
@@ -270,7 +303,11 @@ export default createWidget("search-menu", {
     return this._searchService;
   },
 
-  html() {
+  html(attrs, state) {
+    if (attrs.inTopicContext === false) {
+      state.inTopicContext = false;
+    }
+
     return this.attach("menu-panel", {
       maxWidth: 500,
       contents: () => this.panelContents(),
@@ -279,6 +316,10 @@ export default createWidget("search-menu", {
 
   clickOutside() {
     this.sendWidgetAction("toggleSearchMenu");
+  },
+
+  clearTopicContext() {
+    this.sendWidgetAction("clearContext");
   },
 
   keyDown(e) {
@@ -377,16 +418,22 @@ export default createWidget("search-menu", {
         this.triggerSearch();
       }
     }
+
+    if (e.target === searchInput && e.which === 8 /* backspace */) {
+      if (!searchInput.value) {
+        this.clearTopicContext();
+      }
+    }
   },
 
   triggerSearch() {
     searchData.noResults = false;
-    if (searchData.term.includes("topic:")) {
-      const highlightTerm = searchData.term.replace(TOPIC_REPLACE_REGEXP, "");
-      this.searchService().set("highlightTerm", highlightTerm);
-    }
 
     if (SearchHelper.includesTopics()) {
+      if (this.state.inTopicContext) {
+        this.searchService().set("highlightTerm", searchData.term);
+      }
+
       searchData.loading = true;
       SearchHelper.perform(this);
     } else {
@@ -407,6 +454,10 @@ export default createWidget("search-menu", {
   },
 
   triggerAutocomplete(opts = {}) {
+    if (opts.setTopicContext) {
+      this.sendWidgetAction("setTopicContext");
+      this.state.inTopicContext = true;
+    }
     this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
   },
 
@@ -419,5 +470,13 @@ export default createWidget("search-menu", {
       this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
     }
+  },
+
+  searchContext() {
+    if (this.state.inTopicContext) {
+      return this.searchService().get("searchContext");
+    }
+
+    return false;
   },
 });
