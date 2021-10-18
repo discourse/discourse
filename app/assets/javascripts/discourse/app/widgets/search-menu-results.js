@@ -476,7 +476,7 @@ createWidget("search-menu-initial-options", {
 
     if (attrs.term || ctx) {
       if (ctx) {
-        const term = attrs.term ? `${attrs.term} ` : "";
+        const term = attrs.term || "";
         switch (ctx.type) {
           case "topic":
             content.push(
@@ -484,7 +484,7 @@ createWidget("search-menu-initial-options", {
                 slug: term,
                 setTopicContext: true,
                 label: [
-                  h("span", term),
+                  h("span", `${term} `),
                   h("span.label-suffix", I18n.t("search.in_this_topic")),
                 ],
               })
@@ -494,7 +494,7 @@ createWidget("search-menu-initial-options", {
           case "private_messages":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}in:personal`,
+                slug: `${term} in:personal`,
               })
             );
             break;
@@ -506,7 +506,7 @@ createWidget("search-menu-initial-options", {
 
             content.push(
               this.attach("search-menu-assistant", {
-                term: `${term}${fullSlug}`,
+                term: `${term} ${fullSlug}`,
                 suggestionKeyword: "#",
                 results: [{ model: ctx.category }],
                 withInLabel: true,
@@ -517,7 +517,7 @@ createWidget("search-menu-initial-options", {
           case "tag":
             content.push(
               this.attach("search-menu-assistant", {
-                term: `${term}#${ctx.name}`,
+                term: `${term} #${ctx.name}`,
                 suggestionKeyword: "#",
                 results: [{ name: ctx.name }],
                 withInLabel: true,
@@ -527,9 +527,9 @@ createWidget("search-menu-initial-options", {
           case "user":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}@${ctx.user.username}`,
+                slug: `${term} @${ctx.user.username}`,
                 label: [
-                  h("span", term),
+                  h("span", `${term} `),
                   h(
                     "span.label-suffix",
                     I18n.t("search.in_posts_by", {

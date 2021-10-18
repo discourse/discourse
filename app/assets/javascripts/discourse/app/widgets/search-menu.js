@@ -226,7 +226,7 @@ export default createWidget("search-menu", {
         this.attach("button", {
           icon: "times",
           label: "search.in_this_topic",
-          className: "btn btn-default search-context",
+          className: "btn btn-small search-context",
           action: "clearTopicContext",
           iconRight: true,
         })
@@ -261,9 +261,12 @@ export default createWidget("search-menu", {
       }
     }
 
-    const results = [h("div.search-input.inline-form.full-width", searchInput)];
+    const results = [h("div.search-input", searchInput)];
 
-    if (this.state.inTopicContext && !SearchHelper.includesTopics()) {
+    if (
+      this.state.inTopicContext &&
+      (!SearchHelper.includesTopics() || !searchData.term)
+    ) {
       return results;
     }
 
