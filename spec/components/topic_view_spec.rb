@@ -816,18 +816,6 @@ describe TopicView do
         [post3.id, 0]
       ])
     end
-
-    describe 'for mega topics' do
-      it 'should return the right columns' do
-        stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
-          expect(topic_view.filtered_post_stream).to eq([
-            post.id,
-            post2.id,
-            post3.id
-          ])
-        end
-      end
-    end
   end
 
   describe '#filtered_post_id' do

@@ -592,24 +592,17 @@ class TopicView
       posts = @filtered_posts
         .order(:sort_order)
 
-      columns = [:id]
-
-      if !is_mega_topic?
-        columns << '(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - posts.created_at) / 86400)::INT AS days_ago'
-      end
+      columns = [
+        :id,
+        '(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - posts.created_at) / 86400)::INT AS days_ago'
+      ]
 
       posts.pluck(*columns)
     end
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map do |tuple|
-      if is_mega_topic?
-        tuple
-      else
-        tuple[0]
-      end
-    end
+    @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
   end
 
   def unfiltered_post_ids
