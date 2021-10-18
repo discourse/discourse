@@ -839,7 +839,7 @@ describe TopicView do
     end
   end
 
-  describe '#first_post_id and #last_post_id' do
+  describe '#last_post_id' do
     let!(:p3) { Fabricate(:post, topic: topic) }
     let!(:p2) { Fabricate(:post, topic: topic) }
     let!(:p1) { Fabricate(:post, topic: topic) }
@@ -851,7 +851,6 @@ describe TopicView do
     end
 
     it 'should return the right id' do
-      expect(topic_view.first_post_id).to eq(p1.id)
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end

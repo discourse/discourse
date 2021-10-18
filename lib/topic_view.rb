@@ -631,10 +631,6 @@ class TopicView
     @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 
-  def first_post_id
-    @filtered_posts.order(sort_order: :asc).pluck_first(:id)
-  end
-
   def last_post_id
     @filtered_posts.order(sort_order: :desc).pluck_first(:id)
   end
