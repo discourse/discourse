@@ -160,7 +160,6 @@ export default Mixin.create({
       this._reset();
     });
 
-    // hidden setting like enable_experimental_image_uploader
     if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3Uploads();
     } else {

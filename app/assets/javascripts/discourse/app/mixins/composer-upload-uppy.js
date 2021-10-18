@@ -136,7 +136,6 @@ export default Mixin.create(ExtendableUploader, {
       this._instrumentUploadTimings();
     }
 
-    // hidden setting like enable_experimental_image_uploader
     if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3MultipartUploads();
     } else {
