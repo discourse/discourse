@@ -230,6 +230,9 @@
     display: inline-block;
     border-left: 1px solid var(--primary-low-mid);
     margin: 0 0.25em;
+    .mobile-view & {
+      display: none;
+    }
   }
 
   .btn:focus {
