@@ -114,7 +114,7 @@
               highlightQuery=highlightQuery
             }}
 
-            {{#conditional-loading-spinner condition=loading }}
+            {{#conditional-loading-spinner condition=loading}}
               {{#unless hasResults}}
                 {{#if searchActive}}
                   <h3>{{i18n "search.no_results"}}</h3>
@@ -144,21 +144,19 @@
               {{/unless}}
 
               {{#if hasResults}}
-                {{#unless loading}}
-                  <h3 class="search-footer">
-                    {{#if model.grouped_search_result.more_full_page_results}}
-                      {{#if isLastPage }}
-                        {{i18n "search.more_results"}}
-                      {{/if}}
-                    {{else}}
-                      {{i18n "search.no_more_results"}}
+                <h3 class="search-footer">
+                  {{#if model.grouped_search_result.more_full_page_results}}
+                    {{#if isLastPage}}
+                      {{i18n "search.more_results"}}
                     {{/if}}
-                  </h3>
-                {{/unless}}
+                  {{else}}
+                    {{i18n "search.no_more_results"}}
+                  {{/if}}
+                </h3>
               {{/if}}
             {{/conditional-loading-spinner}}
           {{else}}
-            {{#conditional-loading-spinner condition=loading }}
+            {{#conditional-loading-spinner condition=loading}}
               {{#if hasResults}}
                 {{#if model.categories.length}}
                   <h4 class="category-heading">
@@ -175,6 +173,7 @@
                   <h4 class="tag-heading">
                     {{i18n "search.tags"}}
                   </h4>
+
                   <div class="tag-items">
                     {{#each model.tags as |tag|}}
                       <div class="fps-tag-item">
@@ -187,28 +186,31 @@
                 {{/if}}
 
                 {{#if model.users}}
-                  {{#each model.users as |user|}}
-                    {{#user-link user=user class="fps-user-item"}}
-                      {{avatar user imageSize="large"}}
-                      <div class="user-titles">
-                        {{#if user.name}}
-                          <span class="name">
-                            {{user.name}}
+                  <div class="user-items">
+                    {{#each model.users as |user|}}
+                      {{#user-link user=user class="fps-user-item"}}
+                        {{avatar user imageSize="large"}}
+
+                        <div class="user-titles">
+                          {{#if user.name}}
+                            <span class="name">
+                              {{user.name}}
+                            </span>
+                          {{/if}}
+
+                          <span class="username">
+                            {{user.username}}
                           </span>
-                        {{/if}}
-                        <span class="username">
-                          {{user.username}}
-                        </span>
-                      </div>
-                    {{/user-link}}
-                  {{/each}}
+                        </div>
+                      {{/user-link}}
+                    {{/each}}
+                  </div>
                 {{/if}}
               {{else}}
                 {{#if searchActive}}
                   <h3>{{i18n "search.no_results"}}</h3>
                 {{/if}}
               {{/if}}
-
             {{/conditional-loading-spinner}}
           {{/if}}
         {{/load-more}}
