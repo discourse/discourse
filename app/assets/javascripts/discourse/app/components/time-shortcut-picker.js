@@ -236,7 +236,7 @@ export default Component.extend({
 
     options.forEach((option) => {
       if (customLabels[option.id]) {
-        option.customLabel = customLabels[option.id];
+        option.label = customLabels[option.id];
       }
     });
 
