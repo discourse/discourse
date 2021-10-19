@@ -578,7 +578,7 @@ export default Mixin.create(ExtendableUploader, {
     this.element.addEventListener("paste", this.pasteEventListener);
   },
 
-  _addFiles(files, opts) {
+  _addFiles(files, opts = {}) {
     files = Array.isArray(files) ? files : [files];
     try {
       this._uppyInstance.addFiles(
