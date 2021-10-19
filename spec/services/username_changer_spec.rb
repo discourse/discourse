@@ -107,6 +107,7 @@ describe UsernameChanger do
       end
 
       def create_post_and_change_username(args = {}, &block)
+        stub_image_size
         post = create_post(args.merge(topic_id: topic.id))
 
         args.delete(:revisions)&.each do |revision|

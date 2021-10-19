@@ -900,6 +900,7 @@ describe PostAction do
       Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
+      stub_image_size
       result = PostActionCreator.create(user, post, :spam, message: "WAT")
       topic = result.post_action.related_post.topic
       reviewable = result.reviewable

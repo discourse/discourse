@@ -1293,8 +1293,6 @@ files:
     default: "1|1.5|2"
     type: list
     list_type: compact
-  crawl_images:
-    default: true
   max_image_width:
     client: true
     default: 690
