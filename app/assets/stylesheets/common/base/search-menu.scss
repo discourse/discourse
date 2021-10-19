@@ -28,13 +28,16 @@ $search-pad-horizontal: 0.5em;
     input#search-term {
       border-width: 0;
       margin-bottom: 0;
+      width: auto;
+      flex-grow: 1;
+      padding-right: 50px;
       &:focus {
         outline: none;
       }
     }
 
     .btn {
-      margin-left: 1px;
+      margin: 2px;
     }
     &:focus-within {
       @include default-focus;
