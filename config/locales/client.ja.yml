@@ -2256,6 +2256,7 @@ ja:
         time_frame_required: "時間枠を選択してください"
         min_duration: "期間は 0 より大きくする必要があります"
         max_duration: "期間は 20 年未満である必要があります"
+        duration: "期間"
       auto_update_input:
         none: "時間枠を選択してください"
         now: "今"
@@ -2656,6 +2657,7 @@ ja:
             other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
+        permanently_delete: "永久に削除"
         wiki: "ウィキにする"
         unwiki: "ウィキから削除"
         convert_to_moderator: "スタッフの色を追加"

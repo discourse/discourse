@@ -1486,6 +1486,7 @@ bg:
         remove: "Деактивиране"
       topic_status_update:
         when: "Кога:"
+        duration: "Продължителност"
       auto_update_input:
         none: "Избери времева рамка"
         later_today: "По-късно днес"

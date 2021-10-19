@@ -2154,6 +2154,7 @@ tr_TR:
       tags: "Etiketler"
       in: "içinde"
       in_this_topic: "bu konuda"
+      in_this_topic_tooltip: "tüm konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
       in_posts_by: "@%{username} kullancısına ait gönderilerde"
       type:
@@ -2414,6 +2415,7 @@ tr_TR:
         time_frame_required: "Bir zaman dilimi seç"
         min_duration: "Süre sıfırdan büyük olmalıdır"
         max_duration: "Süre 20 yıldan az olmalıdır"
+        duration: "Süre"
       auto_update_input:
         none: "Zaman aralığı seç"
         now: "Şimdi"
@@ -2842,6 +2844,7 @@ tr_TR:
             other: "Evet, ve tüm %{count} yanıtlar"
           just_the_post: "Hayır, sadece bu gönderi"
         admin: "gönderi yönetici eylemleri"
+        permanently_delete: "Kalıcı Olarak Sil"
         wiki: "Wiki Yap"
         unwiki: "Wiki'yi Kaldır"
         convert_to_moderator: "Görevli Rengi Ekle"

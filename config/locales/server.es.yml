@@ -662,6 +662,9 @@ es:
     has_likes:
       one: "%{count} me gusta"
       other: "%{count} Me gusta"
+    cannot_permanently_delete:
+      many_posts: "No puedes eliminar para siempre este tema porque tiene otras publicaciones."
+      wait_or_different_admin: "Debes esperar %{time_left} antes de eliminar para siempre esta publicación, pero otra persona con permisos de administrador puede eliminarla inmediatamente."
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces. Inténtalo de nuevo más tarde."
     too_many_requests: "Has realizado esta acción demasiadas veces. Espera %{time_left} antes de intentarlo de nuevo."
@@ -952,6 +955,7 @@ es:
         remove: "Este tema ya no funciona como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Preferencias de correo electrónico actualizadas!"
+    description: "Preferencias de correo para <b>%{email}</b> actualizadas. Para cambiar tus ajustes de correo <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
   uploads:
@@ -4526,10 +4530,22 @@ es:
     conflict: "Hubo un conflicto de actualización que no te permitió realizar esa acción."
     reasons:
       post_count: "Las primeras publicaciones de las cuentas recién registradas deben ser aprobadas por el personal. Ver %{link}."
+      trust_level: "Las respuestas de los usuarios con niveles de confianza bajos deben ser aprobadas por el personal. Ver %{link}."
+      new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
+      fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
+      auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
       watched_word: "Esta publicación incluía una palabra vigilada. Ver tu %{link}."
+      staged: "El personal debe aprobar los nuevos temas y publicaciones de usuarios temporales. Ver %{link}."
+      category: "El personal debe aprobar manualmente las publicaciones en esta categoría. Ver %{link}."
+      must_approve_users: "El personal debe aprobar todos los usuarios nuevos. Ver %{link}."
+      invite_only: "Todos los usuarios nuevos deben ser invitados. Ver %{link}."
       email_auth_res_enqueue: "Este correo electrónico no superó la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo electrónico para más información."
+      email_spam: "Esta dirección de correo electrónico ha sido marcada para revisar por ser posiblemente spam debido al encabezado definido en %{link}."
+      suspect_user: "Este usuario ha rellenado su información de perfil sin leer antes ningún tema o publicación, lo que crea indicios de que pueda ser un spammer. Ver %{link}."
+      contains_media: "Esta publicación incluye archivos multimedia incrustados. Ver %{link}."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
       links:
+        watched_word: lista de palabras vigiladas
         category: ajustes de la categoría
     actions:
       agree:

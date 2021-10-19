@@ -2060,6 +2060,7 @@ ko:
       tags: "태그"
       in_this_topic: "이 글에서"
       in_topics_posts: "모든 글과 댓글에서"
+      enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
       type:
         default: "글/댓글"
@@ -2305,6 +2306,7 @@ ko:
         time_frame_required: "기간을 선택하세요."
         min_duration: "기간은 0보다 커야 합니다."
         max_duration: "기간은 20년 미만이어야 합니다."
+        duration: "기간"
       auto_update_input:
         none: "시간대 선택"
         now: "지금"
@@ -2624,7 +2626,9 @@ ko:
       deleted_by_author_simple: "(작성자가 삭제한 글)"
     post:
       quote_reply: "인용하기"
+      quote_reply_shortcut: "또는 q를 누르십시오."
       quote_edit: "편집"
+      quote_edit_shortcut: "또는 e를 누르십시오."
       quote_share: "공유"
       edit_reason: "사유: "
       post_number: "%{number}번째 글"
@@ -2708,6 +2712,7 @@ ko:
             other: "예, %{count}개 모두 답변"
           just_the_post: "아니오, 글만 삭제합니다."
         admin: "관리자 기능"
+        permanently_delete: "영구적으로 삭제"
         wiki: "위키 만들기"
         unwiki: "위키 제거하기"
         convert_to_moderator: "스태프 색상 추가하기"
@@ -3423,6 +3428,7 @@ ko:
       no_replies_others: "답글이 없습니다."
       no_drafts_title: "초안을 시작하지 않았습니다."
       no_likes_title: "아직 어떤 글에도 좋아요를 클릭하지 않으셨습니다."
+      no_likes_body: "참여와 기여를 시작하는 가장 좋은 방법은 다른 사용자의 글을 읽고 %{heartIcon} 을 클릭하는 것입니다!"
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
       no_topics_title: "아직 작성한 글이 없습니다."
       no_read_topics_title: "아직 읽은 글이 없습니다."
@@ -4862,6 +4868,8 @@ ko:
           perform: "사용자에게 보너스 배지"
           upload_csv: 사용자 이메일 또는 사용자 이름으로 CSV 업로드
           aborted: 사용자 이메일 또는 사용자 이름이 포함 된 CSV를 업로드하십시오
+          success: CSV가 등록 되었으며 %{count}명의 사용자가 곧 배지를 받게 됩니다.
+          csv_has_unmatched_users: "다음 항목은 CSV 파일에 있지만 기존 사용자와 일치하지 않아 배지를 받지 못합니다."
           replace_owners: 이전 소유자에서 배지를 제거합니다
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:

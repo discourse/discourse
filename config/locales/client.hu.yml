@@ -438,6 +438,9 @@ hu:
         fields: "Mezők"
         reject_reason: "Ok"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (a legutóbbi megjelölés)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (a legutóbbi %{count} megjelölés)"
         agreed:
           one: "%{count}% egyetért"
           other: "%{count}% egyetért"
@@ -558,7 +561,9 @@ hu:
       this_weekend: "Hétvégén"
       start_of_next_business_week: "Hétfő"
       start_of_next_business_week_alt: "Jövő hétfő"
+      two_weeks: "Két hét"
       next_month: "Jövő hónapban"
+      six_months: "Hat hónap"
       custom: "Egyéni dátum és idő"
       relative: "Relatív idő"
       none: "Nem szükséges"
@@ -1012,6 +1017,8 @@ hu:
       no_notifications_body: >
         Ebben a panelben fog értesítést kapni az Ön számára közvetlenül releváns tevékenységekről, köztük a témákra és bejegyzésekre adott válaszokról, arról ha valaki <b>@megemlíti</b> vagy idézi Önt, illetve az Ön által figyelt témákra adott válaszokról. Az értesítéseket e-mailben is meg fogja kapni, ha már egy ideje nem lépett be. <br><br>Keresse a %{icon} ikont, hogy eldöntse, mely témákról, kategóriákról és címkékről akar értesítést kapni. A továbbiakért tekintse meg az <a href='%{preferencesUrl}'>értesítési beállításait</a>.
       no_notifications_page_title: "Még nincsenek értesítései"
+      no_notifications_page_body: >
+        Értesítést kapni az Ön számára közvetlenül releváns tevékenységekről, köztük a témákra és bejegyzésekre adott válaszokról, arról ha valaki <b>@megemlíti</b> vagy idézi Önt, illetve az Ön által figyelt témákra adott válaszokról. Az értesítéseket e-mailben is meg fogja kapni, ha már egy ideje nem lépett be. <br><br>Keresse a %{icon} ikont, hogy eldöntse, mely témákról, kategóriákról és címkékről akar értesítést kapni. A továbbiakért tekintse meg az <a href='%{preferencesUrl}'>értesítési beállításait</a>.
       first_notification: "Az első értesítése! Válassza ki a kezdéshez."
       dynamic_favicon: "Számok megjelenítése a böngésző ikonján"
       skip_new_user_tips:
@@ -1020,9 +1027,18 @@ hu:
         skip_link: "A tippek kihagyása"
         read_later: "Később elolvasom."
       theme_default_on_all_devices: "Legyen ez az alapértelmezett téma az összes eszközén"
+      color_scheme_default_on_all_devices: "Alapértelmezett színsémák beállítása az összes eszközömön"
+      color_scheme: "Színséma"
       color_schemes:
+        default_description: "Téma alapértelmezése"
+        disable_dark_scheme: "Ugyanaz, mint a szokásos"
+        dark_instructions: "A sötét mód színsémájának előnézetét az eszköz sötét módjának bekapcsolásával tekintheti meg."
         undo: "Visszaállítás"
         regular: "Átlagos"
+        dark: "Sötét mód"
+        default_dark_scheme: "(webhely alapértelmezése)"
+      dark_mode: "Sötét mód"
+      dark_mode_enable: "Automatikus sötét módú színséma engedélyezése"
       text_size_default_on_all_devices: "Legyen ez az alapértelmezett szövegméret az összes eszközén"
       allow_private_messages: "Engedélyezés a többi felhasználónak, hogy privát üzenetet küldjenek Önnek"
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
@@ -1080,6 +1096,7 @@ hu:
       users: "Felhasználók"
       muted_users: "Némított"
       muted_users_instructions: "Letiltja az összes értesítést és PÜ-t ezektől a felhasználóktól."
+      allowed_pm_users: "Engedélyezett"
       allowed_pm_users_instructions: "PÜ-k engedélyezése csak ezeknek a felhasználóknak."
       allow_private_messages_from_specific_users: "Személyes üzenetek küldésének engedélyezése kizárólag meghatározott felhasználók számára."
       ignored_users: "Figyelmen kívül hagyott"
@@ -1095,14 +1112,16 @@ hu:
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
       staff_counters:
-        flags_given: "hasznos jelzők"
+        flags_given: "hasznos megjelölések"
         flagged_posts: "megjelölt bejegyzések"
         deleted_posts: "törölt bejegyzések"
         suspensions: "felfüggesztések"
         warnings_received: "figyelmeztetések"
         rejected_posts: "elutasított bejegyzések"
       messages:
+        all: "összes bejövő postaláda"
         inbox: "Bejövő"
+        personal: "Személyes"
         latest: "Legutóbbi"
         sent: "Elküldött"
         unread: "Olvasatlan"
@@ -1119,6 +1138,11 @@ hu:
         move_to_archive: "Archiválás"
         failed_to_move: "A kijelölt üzenetek áthelyezése nem sikerült (lehet, hogy nincs hálózat)"
         tags: "Címkék"
+        warnings: "Hivatalos figyelmeztetések"
+        read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
+        read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/message'>személyes üzenetekben</a>."
+        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{és} false{} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen } other { {BOTH, select, true{és} false{Böngésszen} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen} } más üzeneteket ebben a csoportban: {groupLink}"
+        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># olvasatlan</a> } other {<a href='{basePath}/u/{username}/messages/unread'># olvasatlan</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{és} false{} other{}} <a href='{basePath}/u/{username}/messages/new'># új</a> üzenet van hátra, vagy böngésszen } other { {BOTH, select, true{és} false{Böngésszen} other{}} <a href='{basePath}/u/{username}/messages/new'># új</a> üzenet van hátra, vagy böngésszen} } más <a href='{basePath}/u/{username}/message'>személyes üzeneteket</a>"
       preferences_nav:
         account: "Fiók"
         security: "Biztonság"
@@ -1140,40 +1164,66 @@ hu:
         choose_new: "Válasszon új jelszót"
         choose: "Válasszon jelszót"
       second_factor_backup:
+        title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
         disable: "Letiltás"
         enable: "Engedélyezés"
         enable_long: "Biztonsági kódok engedélyezése"
+        manage:
+          one: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
+          other: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
         copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adatok vágólapra másolásakor"
         copied_to_clipboard: "Vágólapra másolva"
         download_backup_codes: "Biztonsági kódok letöltése"
+        remaining_codes:
+          one: "<strong>%{count}</strong> biztonsági kódja maradt."
+          other: "<strong>%{count}</strong> biztonsági kódja maradt."
         use: "Biztonsági kód használata"
         enable_prerequisites: "A biztonsági kódok létrehozása előtt engedélyeznie kell egy elsődleges kétfaktoros módszert."
         codes:
           title: "Biztonsági kódok előállítva"
+          description: "Mindegyik biztonsági kód csak egyszer használható. Tartsa őket biztonságos, de hozzáférhető helyen."
       second_factor:
         title: "Kétfaktoros hitelesítés"
         enable: "A kétfaktoros hitelesítés kezelése"
+        disable_all: "Összes letiltása"
         forgot_password: "Elfelejtette a jelszavát?"
         confirm_password_description: "A folytatáshoz erősítse meg a jelszavát"
         name: "Név"
         label: "Kód"
+        rate_limit: "Várjon, mielőtt egy másik hitelesítési kódot próbálna ki."
+        enable_description: |
+          Olvassa be ezt a QR-kódot egy támogatott alkalmazásban (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) és adja meg a hitelesítési kódját.
         disable_description: "Írja be az azonosító kódját az alkalmazásból"
         show_key_description: "Kézi beírás"
+        short_description: |
+          Védje fiókját egyszer használatos biztonsági kódokkal.
         extended_description: |
           A kétfaktoros hitelesítés további biztonságot nyújt a fiókja számára, mert a jelszaván kívül még egy egyszer használatos token beírását is igényli. A tokenek <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>androidos</a> és <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-es</a> eszközökön egyaránt előállíthatók.
         oauth_enabled_warning: "Felhívjuk figyelmét, hogy a közösségi bejelentkezések letiltásra kerülnek, ha a fiókjában engedélyezi a kétfaktoros hitelesítést."
+        use: "Hitelesítő alkalmazás használata"
         enforced_notice: "A webhely elérése előtt engedélyeznie kell a kétfaktoros hitelesítést."
         disable: "Letiltás"
         disable_confirm: "Biztos, hogy letiltja az összes kétfaktoros hitelesítési módot?"
         save: "Mentés"
         edit: "Szerkesztés"
+        edit_title: "Hitelesítő szerkesztése"
+        edit_description: "Hitelesítő neve"
+        enable_security_key_description: |
+          Ha előkészítette a <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardveres biztonsági kulcsát</a>, nyomja meg a lenti Regisztráció gombot.
+        totp:
+          title: "Token alapú hitelesítők"
+          add: "Hitelesítő hozzáadása"
+          default_name: "Saját hitelesítő"
+          name_and_code_required_error: "Meg kell adnia egy nevet, és egy kódot a hitelesítő alkalmazásból."
         security_key:
           register: "Regisztráció"
           title: "Biztonsági kulcsok"
           add: "Biztonsági kulcs hozzáadása"
           default_name: "Elsődleges biztonsági kulcs"
+          not_allowed_error: "A biztonsági hardverkulcs regisztrációs folyamata során időtúllépés történt, vagy megszakították."
+          already_added_error: "Már regisztrálta ezt a biztonsági kulcsot. Nem kell újraregisztrálnia."
           edit: "Biztonsági kulcs szerkesztése"
           save: "Mentés"
           edit_description: "Biztonsági kulcs neve"
@@ -1197,7 +1247,10 @@ hu:
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
       change_avatar:
         title: "Profilkép megváltoztatása"
-        refresh_gravatar_title: "„%{gravatarName}” frissítése"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
+        gravatar_title: "Profilkép módosítása a %{gravatarName} weboldalán"
+        gravatar_failed: "Nem található %{gravatarName} ezzel az e-mail-címmel."
+        refresh_gravatar_title: "%{gravatarName} frissítése"
         letter_based: "A rendszer által adott profilkép"
         uploaded_avatar: "Egyéni kép"
         uploaded_avatar_empty: "Egyéni kép hozzáadása"
@@ -1225,12 +1278,15 @@ hu:
         set_primary: "Elsődleges e-mail-cím beállítása"
         destroy: "E-mail-cím eltávolítása"
         add_email: "Alternatív e-mail-cím hozzáadása"
+        auth_override_instructions: "Az e-mail-címet a hitelesítésszolgáltató tudja frissíteni."
         no_secondary: "Nincsenek másodlagos e-mail-címek"
         instructions: "Sosem jelenik meg nyilvánosan."
         ok: "E-mailt fogunk küldeni a megerősítéshez"
         required: "Adjon meg egy e-mail-címet"
         invalid: "Adjon meg egy érvényes e-mail-címet"
         authenticated: "Az e-mail-címét a(z) %{provider} hitelesítette"
+        invite_auth_email_invalid: "A meghívási e-mail-címe nem egyezik a(z) %{provider} által hitelesített e-mail-címmel"
+        authenticated_by_invite: "Az e-mail-címét a meghívás hitelesítette"
         frequency_immediately: "Azonnal e-mailt fog kapni, ha még nem olvasta el azt, amiről e-mailt küldtünk."
         frequency:
           one: "Csak akkor küldünk e-mailt, ha nem láttuk az elmúlt percben."
@@ -1265,6 +1321,9 @@ hu:
         any: "bármely"
       password_confirmation:
         title: "Jelszó újra"
+      invite_code:
+        title: "Meghívási kód"
+        instructions: "A fiókregisztrációhoz meghívási kód szükséges"
       auth_tokens:
         title: "Nemrég használt eszközök"
         details: "Részletek"
@@ -1273,7 +1332,13 @@ hu:
         show_all: "Összes megjelenítése (%{count})"
         show_few: "Kevesebb megjelenítése"
         was_this_you: "Ez Ön volt?"
+        was_this_you_description: "Ha nem Ön volt, akkor azt javasoljuk, hogy változtasson jelszót, és jelentkezzen ki mindenhonnan."
+        browser_and_device: "%{browser} ezen: %{device}"
+        secure_account: "Saját fiók biztonságossá tétele"
         latest_post: "Legutóbbi bejegyzése…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">jelenleg aktív</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Utolsó hozzászólás"
       last_seen: "Utolsó látogatás"
       created: "Tagság kezdete"
@@ -1284,6 +1349,7 @@ hu:
       hide_profile_and_presence: "A nyilvános profilom és a jelenlétem elrejtése"
       text_size:
         title: "Szövegméret"
+        smallest: "Legkisebb"
         smaller: "Kisebb"
         normal: "Közepes"
         larger: "Nagyobb"
@@ -1295,6 +1361,7 @@ hu:
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"
+        first_time_and_daily: "Egy bejegyzés első kedvelésekor és naponta"
         first_time: "Egy bejegyzés első kedvelésekor"
         never: "Soha"
       email_previous_replies:
@@ -1349,24 +1416,35 @@ hu:
         redeemed_tab: "Felhasználva"
         redeemed_tab_with_count: "Felhasználva (%{count})"
         invited_via: "Meghívás"
+        invited_via_link: "%{key} hivatkozás (%{count} / %{max} felhasználva)"
         groups: "Csoportok"
         topic: "Téma"
         sent: "Létrehozva / utoljára elküldve"
         expires_at: "Lejár"
         edit: "Szerkesztés"
         remove: "Eltávolítás"
+        copy_link: "Hivatkozás kérése"
+        reinvite: "E-mail újraküldése"
         reinvited: "Meghívó újraküldve"
+        removed: "Eltávolítva"
         search: "gépeljen a meghívók kereséséhez…"
         user: "Meghívott felhasználó"
         none: "Nincs megjeleníthető meghívó."
+        truncated:
+          one: "Az első meghívó megjelenítése."
+          other: "Az első %{count} meghívó megjelenítése."
         redeemed: "Felhasznált meghívók"
         redeemed_at: "Felhasznált"
         pending: "Függőben levő meghívások"
         topics_entered: "Megtekintett témák"
         posts_read_count: "Elolvasott bejegyzések"
         expired: "Ez a meghívó lejárt!"
+        remove_all: "Lejárt meghívók eltávolítása"
+        removed_all: "Összes lejárt meghívó eltávolítva!"
         remove_all_confirm: "Biztos, hogy eltávolítja az összes lejárt meghívót?"
+        reinvite_all: "Összes meghívó újraküldése"
         reinvite_all_confirm: "Biztos, hogy újraküldi az összes meghívót?"
+        reinvited_all: "Összes meghívó elküldve!"
         time_read: "Olvasási idő"
         days_visited: "Látogatott napok"
         account_age_days: "Fiók kora napokban"
@@ -1375,6 +1453,7 @@ hu:
         link_generated: "Itt van a meghívási hivatkozása!"
         valid_for: "A meghívási hivatkozás csak ehhez az e-mail-címhez érvényes: %{email}"
         single_user: "Meghívás e-mailben"
+        multiple_user: "Meghívás hivatkozással"
         invite_link:
           title: "Meghívási hivatkozás"
           success: "Meghívási hivatkozás elkészült!"
@@ -1383,11 +1462,29 @@ hu:
           expires_at: "Mikor jár le ez a meghívási hivatkozás?"
         invite:
           new_title: "Meghívási hivatkozás létrehozása"
+          edit_title: "Meghívó szerkesztése"
+          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez"
+          copy_link: "hivatkozás másolása"
+          expires_in_time: "%{time} múlva lejár"
+          expired_at_time: "Lejárt: %{time}"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
+          restrict_email: "Egy e-mail-címre korlátozás"
+          max_redemptions_allowed: "Max. használat"
+          add_to_groups: "Hozzáadás csoportokhoz"
+          invite_to_topic: "Érkezés erre a témára"
+          expires_at: "Ennyi idő múlva lejár:"
+          custom_message: "Nem kötelező személyes üzenet"
+          send_invite_email: "Mentés és e-mail küldése"
+          save_invite: "Meghívó mentése"
+          invite_saved: "Meghívó mentve."
+          invite_copied: "Meghívási hivatkozás másolva."
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
-          error: "Sajnos a fájlnak CSV formátumúnak kell lennie."
+          text: "Tömeges meghívás"
+          progress: "%{progress}% feltöltve…"
+          success: "A fájl sikeresen feltöltve. Értesítést fog kapni., ha a folyamat befejeződött."
+          error: "Sajnáljuk, a fájlnak CSV formátumúnak kell lennie."
       password:
         title: "Jelszó"
         too_short: "A jelszava túl rövid."
@@ -2063,6 +2160,7 @@ hu:
         publish_to: "Közzététel itt:"
         when: "Mikor:"
         time_frame_required: "Kérjük, válassz ki egy időkeretet"
+        duration: "Időtartam"
       auto_update_input:
         none: "Válassz időkeretet"
         now: "Most"

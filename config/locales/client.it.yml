@@ -283,6 +283,7 @@ it:
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
+      remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
@@ -2147,6 +2148,7 @@ it:
       in: "in"
       in_this_topic: "in questo argomento"
       in_topics_posts: "in tutti gli argomenti e i messaggi"
+      enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
       type:
         users: "Utenti"
@@ -2394,6 +2396,7 @@ it:
         time_frame_required: "Seleziona un intervallo di tempo"
         min_duration: "La durata deve essere maggiore di 0"
         max_duration: "La durata deve essere inferiore a 20 anni"
+        duration: "Durata"
       auto_update_input:
         none: "Seleziona un intervallo di tempo"
         now: "Adesso"
@@ -2821,6 +2824,8 @@ it:
             other: "Sì, e tutte le %{count} risposte"
           just_the_post: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
+        permanently_delete: "Elimina Definitivamente"
+        permanently_delete_confirmation: "Sicuro di voler eliminare definitivamente questo messaggio? Non sarà possibile recuperarlo."
         wiki: "Rendi Wiki"
         unwiki: "Rimuovi Wiki"
         convert_to_moderator: "Aggiungi Colore Staff"

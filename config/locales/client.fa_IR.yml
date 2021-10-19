@@ -2109,6 +2109,7 @@ fa_IR:
         when: "در زمان:"
         time_frame_required: "یک بازه ی زمانی انتخاب کنید"
         min_duration: "مدت زمان باید بیشتر از ۰ باشد"
+        duration: "مدت زمان"
       auto_update_input:
         none: "انتخاب یک دوره‌زمانی"
         now: "اکنون"

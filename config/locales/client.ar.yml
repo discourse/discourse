@@ -2748,6 +2748,7 @@ ar:
         time_frame_required: "يُرجى تحديد إطار زمني"
         min_duration: "يجب أن تكون المدة أكبر من 0"
         max_duration: "يجب أن تكون المدة أقل من 20 عامًا"
+        duration: "المدة"
       auto_update_input:
         none: "تحديد إطار زمني"
         now: "الآن"
@@ -3268,6 +3269,7 @@ ar:
             other: "نعم، و%{count} رد"
           just_the_post: "لا، هذا المنشور فقط"
         admin: "إجراءات المسؤول على المنشور"
+        permanently_delete: "الحذف بشكلٍ دائم"
         wiki: "التحويل إلى Wiki"
         unwiki: "إزالة Wiki"
         convert_to_moderator: "لون إضافة فريق العمل"

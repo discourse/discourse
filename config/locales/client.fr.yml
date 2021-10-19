@@ -2346,6 +2346,7 @@ fr:
         time_frame_required: "Veuillez sélectionner un intervalle de temps"
         min_duration: "La durée doit être supérieure à 0"
         max_duration: "La durée doit être inférieure à 20 ans"
+        duration: "Durée "
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
@@ -2769,6 +2770,7 @@ fr:
             other: "Oui, et les %{count} réponses"
           just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
+        permanently_delete: "Supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
