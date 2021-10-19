@@ -929,7 +929,7 @@ blockquote > *:last-child {
     }
   }
 
-  .small-action.deleted {
+  &.deleted {
     background-color: var(--danger-low-mid);
   }
 

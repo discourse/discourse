@@ -87,6 +87,17 @@ export default createWidget("post-small-action", {
   html(attrs) {
     const contents = [];
 
+    if (attrs.canRecover) {
+      contents.push(
+        this.attach("button", {
+          className: "small-action-recover",
+          icon: "undo",
+          action: "recoverPost",
+          title: "post.controls.undelete",
+        })
+      );
+    }
+
     if (attrs.canDelete) {
       contents.push(
         this.attach("button", {
@@ -98,7 +109,7 @@ export default createWidget("post-small-action", {
       );
     }
 
-    if (attrs.canEdit) {
+    if (attrs.canEdit && !attrs.canRecover) {
       contents.push(
         this.attach("button", {
           className: "small-action-edit",
