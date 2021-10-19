@@ -37,6 +37,8 @@ function getQuoteTitle(element) {
 }
 
 function fixQuotes(str) {
+  // u+201c “
+  // u+201d ”
   return str.replace(/[\u201C\u201D]/g, '"');
 }
 
