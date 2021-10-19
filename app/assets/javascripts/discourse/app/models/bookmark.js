@@ -64,6 +64,15 @@ const Bookmark = RestModel.extend({
     return url;
   },
 
+  modalTitle() {
+    if (this.for_topic) {
+      return this.id
+        ? "post.bookmarks.edit_for_topic"
+        : "post.bookmarks.create_for_topic";
+    }
+    return this.id ? "post.bookmarks.edit" : "post.bookmarks.create";
+  },
+
   // returns createdAt if there's no bumped date
   @discourseComputed("bumped_at", "createdAt")
   bumpedAt(bumped_at, createdAt) {
