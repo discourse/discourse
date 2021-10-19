@@ -560,6 +560,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       post.topic.allowed_users.each do |u|
+        next if u.id == user.id
+
         if SiteSetting.prioritize_username_in_ux?
           participant_list.push "[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})"
         else
