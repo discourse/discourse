@@ -11,6 +11,9 @@ export default Component.extend({
 
   @discourseComputed("replyChannel.users.[]")
   replyUsers(users) {
+    if (!this.currentUser) {
+      return users;
+    }
     return users?.filter((u) => u.id !== this.currentUser.id);
   },
 
@@ -43,7 +46,7 @@ export default Component.extend({
     }
 
     if (
-      this.currentUser.staff &&
+      this.currentUser?.staff &&
       this.whisperChannel?.name !== this.whisperChannelName
     ) {
       this.whisperChannel?.unsubscribe();
