@@ -348,6 +348,14 @@ export default createWidget("header", {
   },
 
   html(attrs, state) {
+    let inTopicRoute = false;
+
+    if (this.state.inTopicContext) {
+      inTopicRoute = this.router
+        .get("_router.currentPath")
+        .startsWith("topic.");
+    }
+
     let contents = () => {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
@@ -367,7 +375,7 @@ export default createWidget("header", {
       if (state.searchVisible) {
         panels.push(
           this.attach("search-menu", {
-            inTopicContext: state.inTopicContext,
+            inTopicContext: state.inTopicContext && inTopicRoute,
           })
         );
       } else if (state.hamburgerVisible) {
