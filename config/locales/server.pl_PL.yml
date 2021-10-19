@@ -16,6 +16,7 @@ pl_PL:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -717,6 +718,9 @@ pl_PL:
       few: "%{count} polubienia"
       many: "%{count} polubień"
       other: "%{count} polubień"
+    cannot_permanently_delete:
+      many_posts: "Nie możesz trwale usunąć tego tematu, ponieważ są tam inne posty."
+      wait_or_different_admin: "Musisz odczekać %{time_left} przed trwałym usunięciem tego posta lub musi to zrobić inny administrator."
   rate_limiter:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie za %{time_left}."
@@ -2027,6 +2031,7 @@ pl_PL:
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
     global_notice: "Wyświetlaj PILNE, AWARYJNE lub zawsze widoczny banner informacyjny, który będzie widoczny dla wszystkich odwiedzających. Ustaw to pole jako puste, aby go ukryć. (HTML dozwolony)"
     disable_system_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
+    disable_category_edit_notifications: "Wyłącz powiadomienia o edycji kategorii w tematach."
     notification_consolidation_threshold: "Liczba polubień lub powiadomień o członkostwie otrzymanych przed połączeniem powiadomień w jedno. Ustaw 0 aby wyłączyć."
     likes_notification_consolidation_window_mins: "Czas w minutach, po którym powiadomienia o polubieniach są łączone w jedno powiadomienie. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."
@@ -2088,6 +2093,7 @@ pl_PL:
     max_allowed_message_recipients: "Maksymalna dozwolona liczba odbiorców dla wiadomości."
     watched_words_regular_expressions: "Obserwowane słowa są wyrażeniami regularnymi."
     enable_diffhtml_preview: "Funkcja eksperymentalna, która używa dyfHTML do synchronizacji podglądu zamiast pełnego renderowania"
+    enable_fast_edit: "Umożliwia mały wybór tekstu posta do edycji w wierszu."
     old_post_notice_days: "Dni przed tym, jak ogłoszenie pocztowe stanie się stare"
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."
     returning_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o postach powracających użytkowników."
@@ -3764,6 +3770,7 @@ pl_PL:
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
+      too_large_humanized: "Przepraszamy, plik, który próbujesz przesłać, jest za duży (maksymalny rozmiar to %{max_size})."
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
       too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."

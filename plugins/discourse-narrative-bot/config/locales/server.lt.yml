@@ -46,6 +46,7 @@ lt:
       "8":
         quote: "Kasdien darykite vieną dalyką, kuris jus gąsdina."
       "9":
+        quote: "Klaidos visada atleidžiamos, jei žmogus turi drąsos jas pripažinti."
         author: "Bruce Lee"
       "10":
         author: "Napoleono kalnas"
@@ -72,6 +73,8 @@ lt:
         "18": "Mano šaltiniai sako “ne”"
         "19": "Perspektyva nėra tokia gera"
         "20": "Labai abejotina"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "pradėti"
       skip_trigger: "praleisti"
@@ -111,6 +114,14 @@ lt:
         not_found: |-
           Panašu, kad vis dar žiūrite :eyes: šią temą! Jei jums sunku rasti, pranešimo lygio mygtukas yra temos apačioje.
       details:
+        not_found: |-
+          Kyla sunkumų kuriant išsamios informacijos valdiklį? Į kitą atsakymą pabandykite įtraukti:
+
+          "" tekstas
+          [detalės = Pasirinkite mane, jei norite gauti daugiau informacijos]
+          Čia yra išsami informacija
+          [/details]
+          "
         reply: |-
           Puikus darbas - jūsų dėmesys detalėms yra žavingas!
       certificate:

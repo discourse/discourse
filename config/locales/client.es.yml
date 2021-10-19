@@ -1142,6 +1142,7 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
+        read_more: "¿Quieres leer más? Echa un vistazo a otros mensajes dentro de tus <a href='%{basePath}/u/%{username}/message'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -2158,6 +2159,7 @@ es:
       in: "en"
       in_this_topic: "en este tema"
       in_topics_posts: "en todos los temas y publicaciones"
+      enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
       type:
         default: "Temas/respuestas"
@@ -2171,6 +2173,10 @@ es:
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
       tips:
+        category_tag: "filtra por categoría o etiqueta"
+        author: "filtra por el autor de la publicación"
+        in: "filtra según los metadatos (por ejemplo, in:title, in:personal, in:pinned)"
+        status: "filtra por el estado del tema"
         full_search: "lanza la página de búsqueda"
         full_search_key: "%{modifier} + Intro"
       advanced:
@@ -2413,6 +2419,7 @@ es:
         time_frame_required: "Selecciona un intervalo de tiempo"
         min_duration: "La duración debe ser mayor que 0"
         max_duration: "La duración debe ser inferior a 20 años"
+        duration: "Duración"
       auto_update_input:
         none: "Selecciona el plazo"
         now: "Ahora"
@@ -2747,7 +2754,9 @@ es:
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post:
       quote_reply: "Citar"
+      quote_reply_shortcut: "O pulsa q"
       quote_edit: "Editar"
+      quote_edit_shortcut: "O pulsa e"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"
@@ -2840,6 +2849,8 @@ es:
             other: "Sí, y todas las %{count} respuestas"
           just_the_post: "No, solo esta publicación"
         admin: "acciones de administrador para la publicación"
+        permanently_delete: "Eliminar permanentemente"
+        permanently_delete_confirmation: "¿Seguro que quieres eliminar para siempre esta publicación? No podrás recuperarla."
         wiki: "Transformar en formato wiki"
         unwiki: "Deshacer formato wiki"
         convert_to_moderator: "Añadir color del personal"
@@ -3437,6 +3448,7 @@ es:
       remember_explanation: "(puedes cambiar esto en tus preferencias)"
       download: "Descargar"
       default_calendar: "Calendario por defecto"
+      default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
       ics: "ICS"

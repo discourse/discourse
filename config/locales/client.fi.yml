@@ -2349,6 +2349,7 @@ fi:
         time_frame_required: "Valitse ajanjakso"
         min_duration: "Keston on oltava suurempi kuin 0"
         max_duration: "Keston on oltava alle 20 vuotta"
+        duration: "Kesto"
       auto_update_input:
         none: "Valitse ajanjakso"
         now: "Nyt"
@@ -2772,6 +2773,7 @@ fi:
             other: "Kyllä, ja kaikki %{count} vastausta"
           just_the_post: "Ei, vain tämä viesti"
         admin: "viestin ylläpitotoimet"
+        permanently_delete: "Poista pysyvästi"
         wiki: "Tee wiki"
         unwiki: "Poista wiki"
         convert_to_moderator: "Lisää henkilökunnan taustaväri"

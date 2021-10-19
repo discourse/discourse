@@ -2331,6 +2331,7 @@ da:
         time_frame_required: "Vælg venligst en tidsramme"
         min_duration: "Varigheden skal være større end 0"
         max_duration: "Varigheden skal være mindre end 20 år"
+        duration: "Varighed"
       auto_update_input:
         none: "Vælg en tidsramme"
         now: "Nu"
@@ -2747,6 +2748,7 @@ da:
             other: "Ja, og alle %{count} svar"
           just_the_post: "Nej, kun dette indlæg"
         admin: "indlæg administrator handlinger"
+        permanently_delete: "Slet permanent"
         wiki: "Opret Wiki"
         unwiki: "Fjern Wiki"
         convert_to_moderator: "Tilføj Personale farve"

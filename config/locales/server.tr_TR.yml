@@ -1852,6 +1852,7 @@ tr_TR:
     permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygula, mesela: /(\\/topic.*)\\?.*/\\1 konu yönlendirmelerindeki sorgu dizelerini kaldırır. Formatlama regex+string, yakalamalara erişmek \\1 vs."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM, global olmayan banner uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_system_edit_notifications: "'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
+    disable_category_edit_notifications: "Konularda kategori düzenleme bildirimlerini devre dışı bırakın."
     notification_consolidation_threshold: "Bildirimler tek bir konsolide toplanmadan önce alınan beğeni veya üyelik talebi bildirimlerinin sayısı. Devre dışı bırakmak için 0 olarak ayarlayın."
     likes_notification_consolidation_window_mins: "Beğenilen bildirimlerin eşiğe ulaşıldığında tek bir bildirimde birleştirildiği dakika cinsinden süre. Eşik değeri 'SiteSetting.notification_consolidation_threshold' aracılığıyla yapılandırılabilir."
     automatically_unpin_topics: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."

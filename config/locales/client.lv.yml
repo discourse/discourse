@@ -2042,6 +2042,7 @@ lv:
         remove: "Noņemt taimeri"
         publish_to: "Publicēt: "
         when: "Kad:"
+        duration: "Ilgums"
       auto_update_input:
         later_today: "Vēlāk šodien"
         tomorrow: "Rītdien"

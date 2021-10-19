@@ -636,6 +636,9 @@ ko:
       broken: "이미지를 표시할수없음"
     has_likes:
       other: "좋아요 %{count}"
+    cannot_permanently_delete:
+      many_posts: "다른 댓글이 있어 이 글을 영구적으로 삭제할 수 없습니다."
+      wait_or_different_admin: "이 게시물을 영구적으로 삭제하려면 %{time_left}을 기다리거나 다른 관리자가 삭제해야 합니다."
   rate_limiter:
     slow_down: "이 작업을 너무 많이 수행했습니다, 나중에 다시 시도하십시오."
     too_many_requests: "이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
@@ -3770,6 +3773,7 @@ ko:
     mass_award:
       errors:
         invalid_csv: 라인 %{line_number}에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하십시오.
+        too_many_csv_entries: CSV 파일에 항목이 너무 많습니다. 항목이 %{count}개 이하인 CSV 파일을 제공하십시오.
         badge_disabled: 먼저 %{badge_name} 배지를 활성화하십시오.
         cant_grant_multiple_times: 단일 사용자에게 %{badge_name} 배지를 여러 번 부여할 수 없습니다.
     editor:
@@ -4255,8 +4259,10 @@ ko:
     conflict: "그렇게하지 못하는 업데이트 충돌이있었습니다."
     reasons:
       post_count: "모든 사용자의 처음 몇 개의 게시물은 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
+      auto_silence_regex: "%{link}의 설정과 일치하는 새 사용자입니다."
       watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. 다음 링크를 참조하십시오. %{link}"
       must_approve_users: "모든 신규 사용자는 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
+      invite_only: "모든 신규 사용자를 초대해야 합니다. 다음 링크를 참조하십시오. %{link}"
       email_auth_res_enqueue: "이 이메일은 DMARC 확인에 실패했으며, 발신자가 아닌 것 같습니다. 자세한 내용은 원시 이메일 헤더를 확인하십시오."
       contains_media: "이 게시물에는 미디어가 포함되어 있습니다. 다음을 참조하십시오. %{link}"
       queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."

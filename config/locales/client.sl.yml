@@ -2276,6 +2276,7 @@ sl:
         time_frame_required: "Izberite časovni okvir"
         min_duration: "Trajanje mora biti večje od 0"
         max_duration: "Trajanje mora biti krajše od 20 let"
+        duration: "Trajanje"
       auto_update_input:
         none: "Izberi časovni okvir"
         now: "Zdaj"
@@ -2690,6 +2691,7 @@ sl:
             other: "Da, in vseh %{count} odgovorov"
           just_the_post: "Ne, samo ta prispevek"
         admin: "ukrepi administratorja"
+        permanently_delete: "Trajno izbriši"
         wiki: "Naredi wiki"
         unwiki: "Odstrani wiki"
         convert_to_moderator: "Dodaj barvo osebja"

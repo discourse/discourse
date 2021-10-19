@@ -25,10 +25,13 @@ lt:
           title: "Spalvos"
         icons:
           title: "Piktogramos"
+          full_list: "Peržiūrėkite visą nuostabių šriftų piktogramų sąrašą"
         input_fields:
           title: "Įvesties laukai"
         buttons:
           title: "Mygtukai"
+        dropdowns:
+          title: "Išskleidžiamieji meniu"
         categories:
           title: "Kategorijos"
         navigation:
@@ -45,6 +48,10 @@ lt:
           title: "Temų sąrašas"
         basic_topic_list:
           title: "Pagrindinis temų sąrašas"
+        footer_message:
+          title: "Poraštės žinutė"
+        signup_cta:
+          title: "Registracijos CTA"
         topic_timer_info:
           title: "Temos laikmačiai"
         topic_footer_buttons:
@@ -61,5 +68,7 @@ lt:
           title: "Siūlomos Temos"
         modal:
           title: "Modalinis"
+          header: "Modalinis pavadinimas"
+          footer: "Modalinė poraštė"
         header_icons:
           title: "Antraštės piktogramos"
