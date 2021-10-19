@@ -20,8 +20,9 @@ class ExternalUploadManager
     Discourse.redis.get("#{BAN_USER_REDIS_PREFIX}#{user.id}") == "1"
   end
 
-  def initialize(external_upload_stub)
+  def initialize(external_upload_stub, upload_create_opts = {})
     @external_upload_stub = external_upload_stub
+    @upload_create_opts = upload_create_opts
   end
 
   def can_promote?
@@ -67,18 +68,13 @@ class ExternalUploadManager
     end
 
     # TODO (martin): See if these additional opts will be needed
-    #
-    # for_private_message: for_private_message,
-    # for_site_setting: for_site_setting,
-    # pasted: pasted,
-    #
-    # also check if retain_hours is needed
+    # - check if retain_hours is needed
     opts = {
       type: external_upload_stub.upload_type,
       existing_external_upload_key: external_upload_stub.key,
       external_upload_too_big: external_size > DOWNLOAD_LIMIT,
       filesize: external_size
-    }
+    }.merge(@upload_create_opts)
 
     UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
       external_upload_stub.created_by_id

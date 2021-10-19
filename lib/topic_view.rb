@@ -108,6 +108,7 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
+    @filtered_posts = apply_default_order(@filtered_posts)
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -159,7 +160,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+        Gaps.new(filtered_post_ids, apply_default_order(unfiltered_posts).pluck(:id))
       end
     end
   end
@@ -318,18 +319,18 @@ class TopicView
     posts_before = 1 if posts_before.zero?
     sort_order = get_sort_order(post_number)
 
-    before_post_ids = @filtered_posts.order(sort_order: :desc)
+    before_post_ids = @filtered_posts.reverse_order
       .where("posts.sort_order < ?", sort_order)
       .limit(posts_before)
       .pluck(:id)
 
-    post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
+    post_ids = before_post_ids + @filtered_posts
       .where("posts.sort_order >= ?", sort_order)
       .limit(@limit - before_post_ids.length)
       .pluck(:id)
 
     if post_ids.length < @limit
-      post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
+      post_ids = post_ids + @filtered_posts.reverse_order
         .where("posts.sort_order < ?", sort_order)
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
@@ -347,7 +348,7 @@ class TopicView
     min = 1 if min == 0 && @exclude_first
 
     filter_posts_by_ids(
-      @filtered_posts.order(:sort_order)
+      @filtered_posts
         .offset(min)
         .limit(@limit)
         .pluck(:id)
@@ -582,7 +583,7 @@ class TopicView
   end
 
   def recent_posts
-    @filtered_posts.by_newest.with_user.first(25)
+    @filtered_posts.unscope(:order).by_newest.with_user.first(25)
   end
 
   # Returns an array of [id, days_ago] tuples.
@@ -590,8 +591,6 @@ class TopicView
   def filtered_post_stream
     @filtered_post_stream ||= begin
       posts = @filtered_posts
-        .order(:sort_order)
-
       columns = [:id]
 
       if !is_mega_topic?
@@ -631,12 +630,8 @@ class TopicView
     @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 
-  def first_post_id
-    @filtered_posts.order(sort_order: :asc).pluck_first(:id)
-  end
-
   def last_post_id
-    @filtered_posts.order(sort_order: :desc).pluck_first(:id)
+    @filtered_posts.reverse_order.pluck_first(:id)
   end
 
   def current_post_number
@@ -721,19 +716,15 @@ class TopicView
 
     posts =
       if asc
-        @filtered_posts
-          .where("sort_order > ?", sort_order)
-          .order(sort_order: :asc)
+        @filtered_posts.where("sort_order > ?", sort_order)
       else
-        @filtered_posts
-          .where("sort_order < ?", sort_order)
-          .order(sort_order: :desc)
+        @filtered_posts.reverse_order.where("sort_order < ?", sort_order)
       end
 
     posts = posts.limit(@limit) if !@skip_limit
     filter_posts_by_ids(posts.pluck(:id))
 
-    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
+    @posts = @posts.reverse_order if !asc
   end
 
   def filter_posts_by_ids(post_ids)
@@ -746,7 +737,8 @@ class TopicView
         :topic,
         :image_upload
       )
-      .order('sort_order')
+
+    @posts = apply_default_order(@posts)
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
@@ -770,6 +762,10 @@ class TopicView
     result
   end
 
+  def apply_default_order(scope)
+    scope.order(sort_order: :asc)
+  end
+
   def setup_filtered_posts
     # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
@@ -789,7 +785,7 @@ class TopicView
       ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
 
       if ignored_user_ids.present?
-        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.id <> ?", ignored_user_ids, first_post_id)
+        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.post_number != 1", ignored_user_ids)
         @contains_gaps = true
       end
     end
@@ -873,7 +869,6 @@ class TopicView
 
       @contains_gaps = true
     end
-
   end
 
   def check_and_raise_exceptions(skip_staff_action)

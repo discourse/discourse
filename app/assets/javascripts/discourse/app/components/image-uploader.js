@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import deprecated from "discourse-common/lib/deprecated";
 import UploadMixin from "discourse/mixins/upload";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -14,6 +15,10 @@ export default Component.extend(UploadMixin, {
 
   init() {
     this._super(...arguments);
+    // TODO (martin) (2022-01-22) Remove this component.
+    deprecated(
+      "image-uploader will be removed in a future version, use uppy-image-uploader instead (the API is the same)"
+    );
     this._applyLightbox();
   },
 

@@ -302,6 +302,11 @@ export default Controller.extend({
     return defaultComposer;
   },
 
+  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
+  },
+
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
@@ -317,6 +322,28 @@ export default Controller.extend({
           };
         })
       );
+
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
 
       options.push(
         this._setupPopupMenuOption(() => {
@@ -678,6 +705,17 @@ export default Controller.extend({
           body,
         });
       });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
     },
   },
 

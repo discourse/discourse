@@ -312,6 +312,7 @@ en:
     bookmarks:
       created: "You've bookmarked this post. %{name}"
       not_bookmarked: "bookmark this post"
+      remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
@@ -2365,6 +2366,7 @@ en:
       tags: "Tags"
       in: "in"
       in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
