@@ -28,7 +28,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SUSPEND_USE
       target.suspended_till = suspend_until
       target.suspended_at = DateTime.now
       target.save!
-      StaffActionLogger.new(actor).log_user_suspend(actor, reason)
+
+      StaffActionLogger.new(actor).log_user_suspend(target, reason)
     end
   end
 end
