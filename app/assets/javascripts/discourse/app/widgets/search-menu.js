@@ -428,7 +428,6 @@ export default createWidget("search-menu", {
 
   triggerSearch() {
     searchData.noResults = false;
-
     if (SearchHelper.includesTopics()) {
       if (this.state.inTopicContext) {
         this.searchService().set("highlightTerm", searchData.term);
@@ -438,7 +437,9 @@ export default createWidget("search-menu", {
       SearchHelper.perform(this);
     } else {
       searchData.loading = false;
-      discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
+      if (!this.state.inTopicContext) {
+        discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
+      }
     }
   },
 
