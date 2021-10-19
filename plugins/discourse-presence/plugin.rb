@@ -25,7 +25,8 @@ after_initialize do
       elsif secure_group_ids = topic.secure_group_ids
         config.allowed_group_ids = secure_group_ids
       else
-        config.public = true
+        # config.public=true would make data available to anon, so use the tl0 group instead
+        config.allowed_group_ids = [ ::Group::AUTO_GROUPS[:trust_level_0] ]
       end
 
       config
