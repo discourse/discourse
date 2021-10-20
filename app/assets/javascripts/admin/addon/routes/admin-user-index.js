@@ -20,6 +20,8 @@ export default DiscourseRoute.extend({
       originalPrimaryGroupId: model.primary_group_id,
       availableGroups: this._availableGroups,
       customGroupIdsBuffer: model.customGroups.mapBy("id"),
+      ssoExternalEmail: null,
+      ssoLastPayload: null,
       model,
     });
   },
