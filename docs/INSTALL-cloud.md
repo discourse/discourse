@@ -24,9 +24,6 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
-### Install Docker / Git (Optional)
-
-If you have reason to install your own version of Docker, you may do so. If docker is not installed, `discourse-setup` will automatically install it from get.docker.com.
 
 ### Install Discourse
 
@@ -42,11 +39,15 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 > ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
 
-- Already have a mail server? Great. Use your existing mail server credentials.
+> 💡 Email here refers to [Transactional Email](https://www.google.com/search?q=what+is+transactional+email) not the usual email service like Gmail, Outlook and/or Yahoo.
 
 - No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
-- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=spf+dkim) in your DNS. See your mail provider instructions for specifics.
+- Already have a mail server? Great. Use your existing mail server credentials. (Free email services like Gmail/Outlook/Yahoo do not support transactional emails.)
+
+- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. See your mail provider instructions for specifics.
+
+- If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
 ### Domain Name
 
@@ -54,7 +55,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
 
-- No domain name? We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
+- No domain name? Get one! We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
 
 - Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 
@@ -72,9 +73,12 @@ Answer the following questions when prompted:
     SMTP port? [587]: 
     SMTP user name? [user@example.com]: 
     SMTP password? [pa$$word]: 
-    notification email address? [noreply@x.y.com]: 
-    Optional email address for Let's Encrypt warnings? (ENTER to skip) [me@example.com]: 
-    Optional Maxmind License key (ENTER to continue without MAXMIND GeoLite2 geolocation database) [1234567890123456]: 
+    Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
+    Optional Maxmind License key () [xxxxxxxxxxxxxxxx]:
+
+You'll get the SMTP details from your [email](#email) setup, be sure to complete that section.
+
+Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
@@ -104,13 +108,23 @@ After completing the setup wizard, you should see Staff topics and **READ ME FIR
 
 ### Post-Install Maintenance
 
-- We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command. In CentOS/RHEL, use the [`yum-cron`](https://www.cyberciti.biz/faq/fedora-automatic-update-retrieval-installation-with-cron/) package.
-- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package. We also recommend `fail2ban` which blocks any IP addresses for 10 minutes that attempt more than 3 password retries.
-  - **Ubuntu**: `apt-get install fail2ban`
-  - **CentOS/RHEL**: `sudo yum install fail2ban` (requires [EPEL](https://support.rackspace.com/how-to/install-epel-and-additional-repositories-on-centos-and-red-hat/))
-- If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584) for Ubuntu or use `firewalld` for CentOS/RHEL 7 or later.
+- We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command. In CentOS/RHEL, use the [`yum-cron`](https://www.redhat.com/sysadmin/using-yum-cron) package.
+- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt install libpam-cracklib` package. We also recommend `fail2ban` which blocks any IP addresses for 10 minutes that attempt more than 3 password retries.
+  - **Ubuntu**: `apt install fail2ban`
+  - **CentOS/RHEL**: `sudo dnf install fail2ban`
+- If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584) for Ubuntu or use `firewalld` for CentOS/RHEL.
 
-You will get email reminders as new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
+> 💡 Discourse will send you an email notification when new versions of Discourse are released. Please stay current to get the latest features and security fixes. 
+
+To **upgrade Discourse to the latest version**, visit `https://discourse.example.com/admin/upgrade` in your browser and click the Upgrade button.
+
+Alternatively, you can ssh into your server and rebuild using:
+
+```
+cd /var/discourse
+git pull
+./launcher rebuild app
+```
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
@@ -154,7 +168,7 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
-- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/main/script/import_scripts).
+- Import/migrate old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/main/script/import_scripts) and our [migration guide](https://meta.discourse.org/t/how-to-migrate-from-one-platform-forum-to-discourse/197236).
 
 - A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 

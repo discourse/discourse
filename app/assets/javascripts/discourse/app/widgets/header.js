@@ -7,7 +7,6 @@ import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -348,6 +347,12 @@ export default createWidget("header", {
   },
 
   html(attrs, state) {
+    let inTopicRoute = false;
+
+    if (this.state.inTopicContext) {
+      inTopicRoute = this.router.currentRouteName.startsWith("topic.");
+    }
+
     let contents = () => {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
@@ -367,7 +372,7 @@ export default createWidget("header", {
       if (state.searchVisible) {
         panels.push(
           this.attach("search-menu", {
-            inTopicContext: state.inTopicContext,
+            inTopicContext: state.inTopicContext && inTopicRoute,
           })
         );
       } else if (state.hamburgerVisible) {
@@ -450,9 +455,7 @@ export default createWidget("header", {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
-      const currentPath = this.router.get("_router.currentPath");
-
-      if (currentPath === "full-page-search") {
+      if (this.router.currentRouteName === "full-page-search") {
         scrollTop();
         $(".full-page-search").focus();
         return false;
@@ -525,16 +528,10 @@ export default createWidget("header", {
     const { state } = this;
     state.inTopicContext = false;
 
-    const currentPath = this.router.get("_router.currentPath");
-    const blocklist = [/^discovery\.categories/];
-    const allowlist = [/^topic\./];
-    const check = function (regex) {
-      return !!currentPath.match(regex);
-    };
-    let showSearch = allowlist.any(check) && !blocklist.any(check);
+    let showSearch = this.router.currentRouteName.startsWith("topic.");
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
-    if (showSearch && currentPath.match(/^topic\./)) {
+    if (showSearch) {
       const controller = this.register.lookup("controller:topic");
       const total = controller.get("model.postStream.stream.length") || 0;
       const chunkSize = controller.get("model.chunk_size") || 0;
@@ -626,7 +623,9 @@ export default createWidget("header", {
   focusSearchInput() {
     if (this.state.searchVisible) {
       schedule("afterRender", () => {
-        putCursorAtEnd(document.querySelector("#search-term"));
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
       });
     }
   },

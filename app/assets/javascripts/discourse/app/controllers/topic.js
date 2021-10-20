@@ -4,7 +4,7 @@ import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
@@ -26,6 +26,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
 
 let customPostMessageCallbacks = {};
 
@@ -1223,83 +1224,40 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyTopicBookmark(bookmark) {
-    const title = bookmark.id
-      ? "post.bookmarks.edit_for_topic"
-      : "post.bookmarks.create_for_topic";
-    return this._openBookmarkModal(bookmark, title, {
-      onAfterSave: () => {
+    bookmark = Bookmark.create(bookmark);
+    return openBookmarkModal(bookmark, {
+      onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
         this.model.set("bookmarked", true);
         this.model.incrementProperty("bookmarksWereChanged");
         this.appEvents.trigger("topic:bookmark-toggled");
+      },
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
       },
     });
   },
 
   _modifyPostBookmark(bookmark, post) {
-    const title = bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create";
-    return this._openBookmarkModal(bookmark, title, {
+    bookmark = Bookmark.create(bookmark);
+    return openBookmarkModal(bookmark, {
       onCloseWithoutSaving: () => {
         post.appEvents.trigger("post-stream:refresh", {
           id: bookmark.post_id,
         });
       },
       onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
         post.createBookmark(savedData);
         this.model.afterPostBookmarked(post, savedData);
         return [post.id];
       },
-      onAfterDelete: (topicBookmarked) => {
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
         post.deleteBookmark(topicBookmarked);
       },
-    });
-  },
-
-  _openBookmarkModal(
-    bookmark,
-    title,
-    callbacks = {
-      onCloseWithoutSaving: null,
-      onAfterSave: null,
-      onAfterDelete: null,
-    }
-  ) {
-    return new Promise((resolve) => {
-      let modalController = showModal("bookmark", {
-        model: {
-          postId: bookmark.post_id,
-          id: bookmark.id,
-          reminderAt: bookmark.reminder_at,
-          autoDeletePreference: bookmark.auto_delete_preference,
-          name: bookmark.name,
-          forTopic: bookmark.for_topic,
-        },
-        title,
-        modalClass: "bookmark-with-reminder",
-      });
-      modalController.setProperties({
-        onCloseWithoutSaving: () => {
-          if (callbacks.onCloseWithoutSaving) {
-            callbacks.onCloseWithoutSaving();
-          }
-          resolve();
-        },
-        afterSave: (savedData) => {
-          this._syncBookmarks(savedData);
-          this.model.set("bookmarking", false);
-          let resolveData;
-          if (callbacks.onAfterSave) {
-            resolveData = callbacks.onAfterSave(savedData);
-          }
-          resolve(resolveData);
-        },
-        afterDelete: (topicBookmarked, bookmarkId) => {
-          this.model.removeBookmark(bookmarkId);
-          if (callbacks.onAfterDelete) {
-            callbacks.onAfterDelete(topicBookmarked);
-          }
-          resolve();
-        },
-      });
     });
   },
 
