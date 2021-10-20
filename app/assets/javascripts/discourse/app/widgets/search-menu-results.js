@@ -436,11 +436,12 @@ createWidget("search-menu-assistant", {
         });
         break;
       case "@":
+        // when only one user matches while in topic
+        // quick suggest user search in the topic or globally
         if (
           attrs.results.length === 1 &&
           this.router.currentRouteName.startsWith("topic.")
         ) {
-          // when only one user matches, offer in topic + global search
           attrs.results.forEach((user) => {
             content.push(
               this.attach("search-menu-assistant-item", {
