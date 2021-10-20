@@ -27,6 +27,18 @@ acceptance("Search - Anonymous", function (needs) {
       }
       return helper.response(searchFixtures["search/query"]);
     });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "admin",
+            name: "admin",
+            avatar_template: "/images/avatar.png",
+          },
+        ],
+      });
+    });
   });
 
   test("search", async function (assert) {
@@ -228,6 +240,31 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(
       !exists(".search-menu .search-context"),
       "backspace resets search context"
+    );
+  });
+
+  test("topic search scope - special case when matching a single user", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+
+    await click("#search-button");
+    await fillIn("#search-term", "@admin");
+
+    assert.equal(count(".search-menu-assistant-item"), 2);
+
+    assert.equal(
+      query(
+        ".search-menu-assistant-item:first-child .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "first result hints in this topic search"
+    );
+
+    assert.equal(
+      query(
+        ".search-menu-assistant-item:nth-child(2) .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_topics_posts"),
+      "second result hints global search"
     );
   });
 
