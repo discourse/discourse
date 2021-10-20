@@ -1219,7 +1219,7 @@ en:
         tags: "Tags"
         warnings: "Official Warnings"
         read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
-        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/message'>personal messages</a>."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages'>personal messages</a>."
 
         read_more_group_pm_MF: "There {
           UNREAD, plural,
@@ -1249,7 +1249,7 @@ en:
           =0 {}
           one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
           other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
-          } remaining, or browse other <a href='{basePath}/u/{username}/message'>personal messages</a>"
+          } remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
