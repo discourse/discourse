@@ -6,22 +6,11 @@ var clone = null;
 
 $.fn.caret = function(elem) {
   var getCaret = function(el) {
-    var r, rc, re;
     if (el.selectionStart) {
       return el.selectionStart;
-    } else if (document.selection) {
-      el.focus();
-      r = document.selection.createRange();
-      if (!r) return 0;
-      re = el.createTextRange();
-      rc = re.duplicate();
-      re.moveToBookmark(r.getBookmark());
-      rc.setEndPoint("EndToStart", re);
-      return rc.text.length;
     }
     return 0;
   };
-
   return getCaret(elem || this[0]);
 };
 
@@ -167,6 +156,8 @@ $.fn.caretPosition = function(options) {
     left: pos.left - pPos.left,
     top: pos.top - pPos.top - clone.scrollTop()
   };
+
+  console.log(position)
 
   clone.remove();
   return position;
