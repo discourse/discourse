@@ -7,7 +7,6 @@ import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -626,7 +625,9 @@ export default createWidget("header", {
   focusSearchInput() {
     if (this.state.searchVisible) {
       schedule("afterRender", () => {
-        putCursorAtEnd(document.querySelector("#search-term"));
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
       });
     }
   },
