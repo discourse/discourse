@@ -1201,7 +1201,7 @@ describe UploadsController do
           :post,
           "#{temp_location}?uploadId=#{external_upload_stub.external_upload_identifier}"
         ).with(
-          body: "<CompleteMultipartUpload xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">\n  <Part>\n    <ETag>test1</ETag>\n    <PartNumber>1</PartNumber>\n  </Part>\n  <Part>\n    <ETag>test2</ETag>\n    <PartNumber>2</PartNumber>\n  </Part>\n</CompleteMultipartUpload>\n"
+          body: "<CompleteMultipartUpload xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Part><ETag>test1</ETag><PartNumber>1</PartNumber></Part><Part><ETag>test2</ETag><PartNumber>2</PartNumber></Part></CompleteMultipartUpload>"
         ).to_return(status: 200, body: <<~XML)
           <?xml version="1.0" encoding="UTF-8"?>
           <CompleteMultipartUploadResult>
