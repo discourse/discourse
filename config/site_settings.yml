@@ -465,7 +465,7 @@ login:
     default: false
   verbose_auth_token_logging:
     hidden: true
-    default: true
+    default: false
   max_suspicious_distance_km:
     hidden: true
     default: 500
