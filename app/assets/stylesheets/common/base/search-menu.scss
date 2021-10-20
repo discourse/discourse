@@ -36,8 +36,9 @@ $search-pad-horizontal: 0.5em;
       }
     }
 
-    .btn {
+    .btn.search-context {
       margin: 2px;
+      margin-right: 0;
     }
     &:focus-within {
       @include default-focus;

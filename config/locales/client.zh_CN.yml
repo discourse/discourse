@@ -2700,6 +2700,7 @@ zh_CN:
             other: "是，%{count} 个回复"
           just_the_post: "否，仅删除此帖子"
         admin: "帖子管理员操作"
+        permanently_delete: "永久删除"
         wiki: "设为 Wiki"
         unwiki: "移除 Wiki"
         convert_to_moderator: "添加管理人员颜色"

@@ -2061,6 +2061,7 @@ el:
         publish_to: "Δημοσίευση Σε:"
         when: "Πότε:"
         time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
+        duration: "Διάρκεια"
       auto_update_input:
         none: "Επιλέξτε χρονικό περιθώριο"
         now: "Τώρα"

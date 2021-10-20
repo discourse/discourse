@@ -2358,6 +2358,7 @@ pt_BR:
         time_frame_required: "Selecione um intervalo de tempo"
         min_duration: "A duração deve ser maior do que 0"
         max_duration: "A duração deve ser menor do que 20 anos"
+        duration: "Duração"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         now: "Agora"
@@ -2782,6 +2783,7 @@ pt_BR:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta postagem"
         admin: "ações administrativas da postagem"
+        permanently_delete: "Excluir permanentemente"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar cor da equipe"

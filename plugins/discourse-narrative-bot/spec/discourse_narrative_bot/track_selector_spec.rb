@@ -17,6 +17,7 @@ describe DiscourseNarrativeBot::TrackSelector do
   end
 
   before do
+    stub_image_size
     stub_request(:get, "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote").
       to_return(status: 200, body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}")
 

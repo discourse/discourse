@@ -2067,6 +2067,7 @@ bs_BA:
         publish_to: "Objavi u:"
         when: "Kada:"
         time_frame_required: "Odaberite vremenski okvir"
+        duration: "Trajanje"
       auto_update_input:
         none: "Označi vremenski period"
         later_today: "Na kraju dana"

@@ -2265,6 +2265,7 @@ gl:
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
+        duration: "Duración"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2673,6 +2674,7 @@ gl:
             other: "Si, e as %{count} respostas"
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
+        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"

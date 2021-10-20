@@ -2090,6 +2090,7 @@ ur:
         time_frame_required: "براہ کرم ایک ٹائم فریم منتخب کریں"
         min_duration: "دورانیہ 0 سے زیادہ ہونا ضروری ہے"
         max_duration: "دورانیہ 20 سال سے کم ہونا ضروری ہے"
+        duration: "دورانیہ"
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
         now: "ابھی"

@@ -18,6 +18,9 @@ lt:
         many: "balsų iš viso"
         other: "balsų iš viso"
       average_rating: "Vidutinis reitingas: <strong>%{average}</strong>."
+      results:
+        groups:
+          title: "Jūs turite būti %{groups} narys, norėdami balsuoti šioje apklausoje."
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
@@ -34,6 +37,7 @@ lt:
         title: "Grupuoti balsus pagal vartotojo lauką"
         label: "Rodyti suskirstymą"
       export-results:
+        title: "Eksportuokite apklausos rezultatus"
         label: "Eksportuoti"
       open:
         title: "Atidaryti balsavimą"
@@ -45,6 +49,7 @@ lt:
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
       breakdown:
         title: "Apklausos rezultatai"
+        votes: "%{count} balsų"
         percentage: "Procentas"
         count: "Skaičiuoti"
       error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
@@ -57,6 +62,8 @@ lt:
           options_min_count: Įveskite bent 1 parinktį.
           options_max_count: Įveskite daugiausia %{count} parinkčių.
           invalid_min_value: Minimali vertė turi būti bent 1.
+          invalid_max_value: Didžiausia vertė turi būti bent 1, bet mažesnė arba lygi parinkčių skaičiui.
+          invalid_values: Minimali vertė turi būti mažesnė už didžiausią vertę.
         poll_type:
           label: Tipas
           regular: Vienas pasirinkimas
@@ -71,6 +78,10 @@ lt:
           label: Balsavimo apribojimas šioms grupėms
         poll_chart_type:
           label: Rezultatų diagrama
+        poll_config:
+          max: Maksimalūs pasirinkimai
+          min: Minimalūs pasirinkimai
+          step: Žingsnis
         poll_public:
           label: Rodyti, kas balsavo
         poll_title:

@@ -335,6 +335,7 @@ he:
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
+      remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       remove: "הסרה מהסימניות"
       delete: "מחיקת סימנייה"
@@ -2324,7 +2325,9 @@ he:
       tags: "תגיות"
       in: "בתוך"
       in_this_topic: "בנושא הזה"
+      in_this_topic_tooltip: "מעבר לחיפוש בכל הנושאים"
       in_topics_posts: "בכל הנושאים והפוסטים"
+      enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
       type:
         default: "נושאים/פוסטים"
@@ -2590,6 +2593,7 @@ he:
         time_frame_required: "נא לבחור מסגרת זמנים"
         min_duration: "משך הזמן חייב להיות גדול מ־0"
         max_duration: "משך הזמן חייב להיות פחות מ־20 שנה"
+        duration: "משך"
       auto_update_input:
         none: "נא לבחור טווח זמן"
         now: "כעת"
@@ -3067,6 +3071,8 @@ he:
             other: "כן, וכל %{count}התגובות."
           just_the_post: "לא, רק את הפוסט"
         admin: "פעולות ניהול של הפוסט"
+        permanently_delete: "למחוק לצמיתות"
+        permanently_delete_confirmation: "למחוק את הפוסט הזה לצמיתות? לא תהיה אפשרות לשחזר אותו."
         wiki: "יצירת wiki"
         unwiki: "הסרת ה-Wiki"
         convert_to_moderator: "הוספת צבע סגל"
@@ -3888,6 +3894,7 @@ he:
       no_replies_title: "עדיין לא הגבת לאף נושא"
       no_replies_others: "אין תגובות."
       no_drafts_title: "לא התחלת טיוטות"
+      no_drafts_body: "לא סיימת לכתוב את הפוסט? אנו נשמור טיוטה חדשה אוטומטית ונציג אותה כאן עם כל כתיבה של נושא, תגובה או הודעה פרטית חדשים. יש לבחור בכפתור הביטול כדי להתעלם או לשמור את הטיוטה שלך ולהמשיך אחר כך."
       no_likes_title: "עדיין לא סימנת אף נושא בלייק"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"

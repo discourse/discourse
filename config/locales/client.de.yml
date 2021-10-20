@@ -283,6 +283,7 @@ de:
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
+      remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
       created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
       remove: "Lesezeichen entfernen"
       delete: "Lesezeichen löschen"
@@ -2160,7 +2161,9 @@ de:
       tags: "Schlagwörter"
       in: "in"
       in_this_topic: "in diesem Thema"
+      in_this_topic_tooltip: "zur Suche in allen Themen wechseln"
       in_topics_posts: "in allen Themen und Beiträgen"
+      enter_hint: "oder drücke die Eingabetaste"
       in_posts_by: "in Beiträgen von %{username}"
       type:
         default: "Themen/Beiträge"
@@ -2420,6 +2423,7 @@ de:
         time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         min_duration: "Dauer muss mehr als 0 betragen"
         max_duration: "Dauer muss weniger als 20 Jahre betragen"
+        duration: "Dauer"
       auto_update_input:
         none: "Wähle einen Zeitrahmen aus"
         now: "Jetzt"
@@ -2849,6 +2853,8 @@ de:
             other: "Ja und alle %{count} Antworten"
           just_the_post: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
+        permanently_delete: "Endgültig löschen"
+        permanently_delete_confirmation: "Bist Du sicher, dass Du diesen Beitrag dauerhaft löschen möchtest? Du wirst ihn nicht wiederherstellen können."
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
         convert_to_moderator: "Team-Einfärbung hinzufügen"
