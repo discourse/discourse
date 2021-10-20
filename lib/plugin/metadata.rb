@@ -22,6 +22,7 @@ class Plugin::Metadata
     "discourse-calendar",
     "discourse-canned-replies",
     "discourse-categories-suppressed",
+    "discourse-category-experts",
     "discourse-characters-required",
     "discourse-chat-integration",
     "discourse-checklist",
