@@ -700,7 +700,7 @@ export default Component.extend(
       const value = this.getValue(rowItem);
 
       let rowContainer;
-      if (value) {
+      if (isPresent(value)) {
         rowContainer = this.element.querySelector(
           `.select-kit-row[data-value="${value}"]`
         );
