@@ -555,7 +555,7 @@ export default createWidget("topic-timeline", {
     if (!attrs.mobileView) {
       const streamLength = attrs.topic.get("postStream.stream.length");
 
-      if (streamLength < 2) {
+      if (streamLength === 1) {
         const postsWrapper = document.querySelector(".posts-wrapper");
         if (postsWrapper && postsWrapper.offsetHeight < 1000) {
           displayTimeLineScrollArea = false;
