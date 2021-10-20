@@ -981,6 +981,19 @@ class Topic < ActiveRecord::Base
       Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
     end
 
+    allowed_user_usernames_to_remove = DB.query_single(<<~SQL, group_id: group.id, topic_id: id)
+      SELECT DISTINCT users.username
+      FROM topic_allowed_users
+      INNER JOIN group_users ON group_users.user_id = topic_allowed_users.user_id
+      INNER JOIN topic_allowed_groups ON topic_allowed_groups.group_id = group_users.group_id
+      INNER JOIN users ON users.id = topic_allowed_users.user_id
+      WHERE topic_allowed_groups.group_id = :group_id AND topic_allowed_groups.topic_id = :topic_id
+    SQL
+    allowed_users_to_remove = User.where(username: allowed_user_usernames_to_remove)
+    allowed_users_to_remove.each do |allowed_user|
+      remove_allowed_user(Discourse.system_user, allowed_user)
+    end
+
     true
   end
 

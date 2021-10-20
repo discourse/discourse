@@ -1021,6 +1021,25 @@ describe Topic do
               .to eq(Notification.types[:group_message_summary])
 
           end
+
+          it "removes users in topic_allowed_users who are part of the added group" do
+            admins = Group[:admins]
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+            extra_user1 = topic.allowed_users.last
+            tau = Fabricate(:topic_allowed_user, topic: topic)
+            extra_user2 = topic.allowed_users.last
+            admins.add(extra_user1)
+            admins.add(extra_user2)
+
+            other_topic = Fabricate(:topic)
+            Fabricate(:topic_allowed_user, user: extra_user1, topic: other_topic)
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+            expect(topic.posts.last.action_code).to eq("removed_user")
+            expect(topic.allowed_users.include?(extra_user1)).to eq(false)
+            expect(topic.allowed_users.include?(extra_user2)).to eq(false)
+            expect(other_topic.allowed_users.include?(extra_user1)).to eq(true)
+          end
         end
       end
     end
