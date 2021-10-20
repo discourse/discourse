@@ -157,8 +157,6 @@ $.fn.caretPosition = function(options) {
     top: pos.top - pPos.top - clone.scrollTop()
   };
 
-  console.log(position)
-
   clone.remove();
   return position;
 };
