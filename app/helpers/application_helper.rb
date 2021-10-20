@@ -341,6 +341,18 @@ module ApplicationHelper
     end
   end
 
+  def application_logo_dark_url
+    @application_logo_dark_url ||= begin
+      if dark_scheme_id != -1
+        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
+        end
+      end
+    end
+  end
+
   def login_path
     "#{Discourse.base_path}/login"
   end
@@ -599,6 +611,13 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def manifest_url
+    # If you want the `manifest_url` to be different for a specific action,
+    # in the action set @manifest_url = X. Originally added for chat to add a
+    # separate manifest
+    @manifest_url || "#{Discourse.base_path}/manifest.webmanifest"
   end
 
   def can_sign_up?

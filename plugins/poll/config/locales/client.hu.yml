@@ -9,7 +9,7 @@ hu:
     poll:
       voters:
         one: "szavazó"
-        other: "szavazók"
+        other: "szavazó"
       total_votes:
         one: "összes szavazat"
         other: "összes szavazat"
@@ -53,15 +53,15 @@ hu:
         title: "Eredmények exportálása"
         label: "Exportálás"
       open:
-        title: "A szavazás megnyitása"
+        title: "Szavazás megnyitása"
         label: "Megnyitás"
-        confirm: "Biztosan megnyitod ezt a szavazást?"
+        confirm: "Biztos, hogy megnyitja ezt a szavazást?"
       close:
-        title: "A szavazás lezárása"
+        title: "Szavazás lezárása"
         label: "Lezárás"
         confirm: "Biztos, hogy lezárja ezt a szavazást?"
       automatic_close:
-        closes_in: "Lezárul: <strong>%{timeLeft}</strong>."
+        closes_in: "<strong>%{timeLeft}</strong> múlva zárul le."
         age: "Lezárva: <strong>%{age}</strong>"
       breakdown:
         title: "Szavazás eredménye"
@@ -77,16 +77,16 @@ hu:
         title: Szavazás összeállítása
         insert: Szavazás beillesztése
         help:
-          options_min_count: Adjon meg legalább egy lehetőséget.
+          options_min_count: Adjon meg legalább 1 lehetőséget.
           options_max_count: Adjon meg legfeljebb %{count} lehetőséget.
           invalid_min_value: A minimális értéknek legalább 1-nek kell lennie.
-          invalid_max_value: A maximális értéknek legalább 1-nek kell lennie, de legfeljebb az opciók számával egyezhet meg.
+          invalid_max_value: A maximális értéknek legalább 1-nek kell lennie, de legfeljebb a lehetősége számával egyezhet meg.
           invalid_values: A minimum értéknek alacsonyabbnak kell lennie a maximum értéknél.
-          min_step_value: A lépés minimális értéke 1
+          min_step_value: A léptetés minimális értéke 1
         poll_type:
           label: Típus
-          regular: Egyszerű választás
-          multiple: Több választási lehetőség
+          regular: Egyetlen választás
+          multiple: Többválasztós
           number: Számszerű értékelés
         poll_result:
           label: Eredmények megjelenítése…

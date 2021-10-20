@@ -9,7 +9,6 @@ export default Component.extend(UtilsMixin, {
   attributeBindings: [
     "role",
     "tabindex",
-    "ariaLevel:aria-level",
     "selectedValue:data-value",
     "selectedNames:data-name",
     "buttonTitle:title",
@@ -18,9 +17,7 @@ export default Component.extend(UtilsMixin, {
 
   selectKit: null,
 
-  role: "application",
-
-  ariaLevel: 1,
+  role: "listbox",
 
   tabindex: 0,
 
@@ -60,7 +57,10 @@ export default Component.extend(UtilsMixin, {
   },
 
   click(event) {
-    event.stopImmediatePropagation();
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectKit.toggle(event);
   },
 
   keyUp(event) {
@@ -95,7 +95,7 @@ export default Component.extend(UtilsMixin, {
           return false;
         }
       } else {
-        this.selectKit.mainElement().open = false;
+        this.selectKit.close(event);
       }
     } else if (event.key === "ArrowUp") {
       event.stopPropagation();
@@ -103,7 +103,7 @@ export default Component.extend(UtilsMixin, {
       if (this.selectKit.isExpanded) {
         this.selectKit.highlightPrevious();
       } else {
-        this.selectKit.mainElement().open = true;
+        this.selectKit.open(event);
       }
       return false;
     } else if (event.key === "ArrowDown") {
@@ -111,17 +111,17 @@ export default Component.extend(UtilsMixin, {
       if (this.selectKit.isExpanded) {
         this.selectKit.highlightNext();
       } else {
-        this.selectKit.mainElement().open = true;
+        this.selectKit.open(event);
       }
       return false;
     } else if (event.key === " ") {
       event.stopPropagation();
       event.preventDefault(); // prevents the space to trigger a scroll page-next
-      this.selectKit.mainElement().open = true;
+      this.selectKit.open(event);
     } else if (event.key === "Escape") {
       event.stopPropagation();
       if (this.selectKit.isExpanded) {
-        this.selectKit.mainElement().open = false;
+        this.selectKit.close(event);
       } else {
         this.element.blur();
       }
@@ -139,7 +139,7 @@ export default Component.extend(UtilsMixin, {
       } else {
         if (this.isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
-          this.selectKit.mainElement().open = true;
+          this.selectKit.open(event);
           event.preventDefault();
           event.stopPropagation();
         }

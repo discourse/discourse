@@ -6,6 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import { isEmpty } from "@ember/utils";
 
 function isNew(topic) {
@@ -237,6 +238,17 @@ const TopicTrackingState = EmberObject.extend({
     // always add incoming if looking at the latest list and a latest channel
     // message comes through
     if (filter === "latest" && data.message_type === "latest") {
+      this._addIncoming(data.topic_id);
+    }
+
+    // Add incoming to the 'categories and latest topics' desktop view
+    if (
+      filter === "categories" &&
+      data.message_type === "latest" &&
+      !Site.current().mobileView &&
+      this.siteSettings.desktop_category_page_style ===
+        "categories_and_latest_topics"
+    ) {
       this._addIncoming(data.topic_id);
     }
 

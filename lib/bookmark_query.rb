@@ -68,10 +68,13 @@ class BookmarkQuery
   private
 
   def user_bookmarks
+    # There is guaranteed to be a TopicUser record if the user has bookmarked
+    # a topic, see BookmarkManager
     Bookmark.where(user: @user)
-      .includes(topic: :tags)
       .includes(post: :user)
-      .references(:topic)
+      .includes(post: { topic: :tags })
+      .includes(topic: :topic_users)
       .references(:post)
+      .where(topic_users: { user_id: @user.id })
   end
 end

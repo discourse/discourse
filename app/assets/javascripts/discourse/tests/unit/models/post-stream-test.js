@@ -44,7 +44,6 @@ module("Unit | Model | post-stream", function () {
     const postStream = buildStream(4567, [1, 3, 4]);
     const store = postStream.store;
 
-    assert.equal(postStream.get("firstPostId"), 1);
     assert.equal(postStream.get("lastPostId"), 4, "the last post id is 4");
 
     assert.ok(!postStream.get("hasPosts"), "there are no posts by default");
@@ -1040,19 +1039,6 @@ module("Unit | Model | post-stream", function () {
     postStream.set("topic.highest_post_number", 4);
 
     assert.equal(postStream.get("filteredPostsCount"), 4);
-  });
-
-  test("firstPostId", function (assert) {
-    const postStream = buildStream(4567, [1, 3, 4]);
-
-    assert.equal(postStream.get("firstPostId"), 1);
-
-    postStream.setProperties({
-      isMegaTopic: true,
-      firstId: 2,
-    });
-
-    assert.equal(postStream.get("firstPostId"), 2);
   });
 
   test("lastPostId", function (assert) {

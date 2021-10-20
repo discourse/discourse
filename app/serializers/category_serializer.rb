@@ -71,11 +71,7 @@ class CategorySerializer < SiteCategorySerializer
     scope && scope.can_delete?(object)
   end
 
-  def cannot_delete_reason
-    scope && scope.cannot_delete_category_reason(object)
-  end
-
-  def include_cannot_delete_reason
+  def include_cannot_delete_reason?
     !include_can_delete? && scope && scope.can_edit?(object)
   end
 

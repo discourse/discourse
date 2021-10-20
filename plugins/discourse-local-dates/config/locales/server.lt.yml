@@ -9,3 +9,4 @@ lt:
     discourse_local_dates_enabled: "Įgalinti discourse-local-dates feature. Tai papildys paramą vietinėms žiniatinklio laiko datas įrašuose, naudojant elementą [date]."
     discourse_local_dates_default_formats: "Dažniausiai naudojami datos formatai, žiūrėkite: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
     discourse_local_dates_default_timezones: "Numatytasis laiko juostos sąrašas turi galioti <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Formatas, naudojamas rodyti datą el. laiškuose."

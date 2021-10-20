@@ -15,6 +15,7 @@ describe 'categories' do
 
     post 'Creates a category' do
       tags 'Categories'
+      operationId 'createCategory'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('category_create_request')
       parameter name: :params, in: :body, schema: expected_request_schema
@@ -35,13 +36,22 @@ describe 'categories' do
 
     get 'Retrieves a list of categories' do
       tags 'Categories'
+      operationId 'listCategories'
       consumes 'application/json'
       expected_request_schema = nil
+      parameter name: :include_subcategories,
+                in: :query,
+                schema: {
+                   type: :boolean,
+                   enum: [true]
+                 }
 
       produces 'application/json'
       response '200', 'success response' do
         expected_response_schema = load_spec_schema('category_list_response')
         schema expected_response_schema
+
+        let(:include_subcategories) { true }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -55,6 +65,7 @@ describe 'categories' do
 
     put 'Updates a category' do
       tags 'Categories'
+      operationId 'updateCategory'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('category_create_request')
       parameter name: :id, in: :path, schema: { type: :integer }
@@ -80,6 +91,7 @@ describe 'categories' do
 
     get 'List topics' do
       tags 'Categories'
+      operationId 'listCategoryTopics'
       produces 'application/json'
       parameter name: :slug, in: :path, schema: { type: :string }
       parameter name: :id, in: :path, schema: { type: :integer }
@@ -105,6 +117,7 @@ describe 'categories' do
 
     get 'Show category' do
       tags 'Categories'
+      operationId 'getCategory'
       consumes 'application/json'
       parameter name: :id, in: :path, schema: { type: :integer }
       expected_request_schema = nil

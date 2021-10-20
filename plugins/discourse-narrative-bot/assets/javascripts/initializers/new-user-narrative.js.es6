@@ -19,12 +19,12 @@ function initialize(api) {
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
 
-    _togglePostBookmark(post) {
+    _modifyBookmark(bookmark, post) {
       // if we are talking to discobot then any bookmarks should just
       // be created without reminder options, to streamline the new user
       // narrative.
       const discobotUserId = -2;
-      if (post.user_id === discobotUserId && !post.bookmarked) {
+      if (post && post.user_id === discobotUserId && !post.bookmarked) {
         return ajax("/bookmarks", {
           type: "POST",
           data: { post_id: post.id },
@@ -37,7 +37,7 @@ function initialize(api) {
           post.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
-      return this._super(post);
+      return this._super(bookmark, post);
     },
   });
 

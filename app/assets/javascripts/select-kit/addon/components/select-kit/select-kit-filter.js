@@ -73,7 +73,7 @@ export default Component.extend(UtilsMixin, {
 
     if (event.key === "Tab" && this.selectKit.isLoading) {
       this.selectKit.cancelSearch();
-      this.selectKit.mainElement().open = false;
+      this.selectKit.close(event);
       return true;
     }
 
@@ -92,7 +92,7 @@ export default Component.extend(UtilsMixin, {
     }
 
     if (event.key === "Escape") {
-      this.selectKit.mainElement().open = false;
+      this.selectKit.close(event);
       this.selectKit.headerElement().focus();
       return false;
     }

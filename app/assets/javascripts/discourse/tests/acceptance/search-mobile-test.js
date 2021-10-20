@@ -3,6 +3,7 @@ import {
   count,
   exists,
   queryAll,
+  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -22,11 +23,10 @@ acceptance("Search - Mobile", function (needs) {
 
     assert.ok(!exists(".search-results .fps-topic"), "no results by default");
 
-    await click(".search-advanced-title");
+    await click(".advanced-filters summary");
 
-    assert.equal(
-      count(".search-advanced-filters"),
-      1,
+    assert.ok(
+      visible(".search-advanced-filters"),
       "it should expand advanced search filters"
     );
 
@@ -36,7 +36,7 @@ acceptance("Search - Mobile", function (needs) {
     assert.equal(count(".fps-topic"), 1, "has one post");
 
     assert.ok(
-      !exists(".search-advanced-filters"),
+      !visible(".search-advanced-filters"),
       "it should collapse advanced search filters"
     );
 

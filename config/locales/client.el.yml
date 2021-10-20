@@ -115,6 +115,7 @@ el:
       previous_month: "Προηγούμενος μήνας"
       next_month: "Επόμενος μήνας"
       placeholder: ημερομηνία
+      to_placeholder: "μέχρι σήμερα"
     share:
       topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
       post: "ανάρτηση #%{postNumber}"
@@ -295,6 +296,9 @@ el:
       topic_reply: "Προσχέδιο απάντησης"
       abandon:
         yes_value: "Απόρριψη"
+    topic_count_categories:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
     topic_count_latest:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
@@ -1671,7 +1675,6 @@ el:
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
-      title: "Ή πάτα Ctrl+Enter"
       users_placeholder: "Προσθήκη χρήστη"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
@@ -1855,8 +1858,8 @@ el:
       result_count:
         one: "<span>%{count} αποτέλεσμα για</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} αποτελέσματα για</span><span class='term'>%{term}</span>"
-      title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
-      full_page_title: "αναζήτηση θεμάτων ή αναρτήσεων"
+      title: "Αναζήτηση"
+      full_page_title: "Αναζήτηση"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
       post_format: "#%{post_number} από %{username}"
@@ -1868,6 +1871,11 @@ el:
       search_google: "Προσπαθήστε να κάνετε αναζήτηση με το Google:"
       search_google_button: "Google"
       search_button: "Αναζήτηση"
+      categories: "Κατηγορίες"
+      tags: "Ετικέτες"
+      type:
+        users: "Χρήστες"
+        categories: "Κατηγορίες"
       context:
         user: "Ψάξε στις αναρτήσεις του χρήστη @%{username}"
         category: "Αναζήτηση στην κατηγορία #%{category} "
@@ -1875,7 +1883,6 @@ el:
         topic: "Ψάξε σε αυτό το νήμα"
         private_messages: "Αναζήτηση στα μηνύματα"
       advanced:
-        title: Προηγμένη Αναζήτηση
         posted_by:
           label: Αναρτήθηκε από
         in_category:
@@ -1920,7 +1927,6 @@ el:
             after: μετά
         views:
           label: Προβολές
-    hamburger_menu: "πήγαινε σε άλλη καταχώρηση νήματος ή κατηγορία"
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
@@ -2055,6 +2061,7 @@ el:
         publish_to: "Δημοσίευση Σε:"
         when: "Πότε:"
         time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
+        duration: "Διάρκεια"
       auto_update_input:
         none: "Επιλέξτε χρονικό περιθώριο"
         now: "Τώρα"
@@ -2353,6 +2360,7 @@ el:
           other: "Έχεις επιλέξει <b>%{count}</b> αναρτήσεις."
     post:
       quote_reply: "Παράθεση"
+      quote_edit: "Επεξεργασία"
       quote_share: "Κοινοποίηση"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση %{number}"
@@ -2951,6 +2959,8 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
+    download_calendar:
+      download: "Κατέβασμα"
     tagging:
       all_tags: "Όλες οι Ετικέτες"
       other_tags: "Άλλες ετικέτες"
@@ -3080,6 +3090,10 @@ el:
         member: "μέλος"
         regular: "τακτικός"
         leader: "αρχηγός"
+    user_activity:
+      no_activity_others: "Χωρίς δραστηριότητα."
+      no_replies_others: "Χωρίς απαντήσεις."
+      no_likes_others: "Καμία αρεστή ανάρτηση."
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:

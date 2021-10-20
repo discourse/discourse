@@ -176,6 +176,10 @@ class PostMover
 
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
+    # we don't want to keep the old topic's OP bookmarked when we are
+    # moving it into a new topic
+    Bookmark.where(post_id: post.id).update_all(post_id: new_post.id)
+
     new_post
   end
 
@@ -187,7 +191,8 @@ class PostMover
       post_number: @move_map[post.post_number],
       reply_to_post_number: @move_map[post.reply_to_post_number],
       topic_id: destination_topic.id,
-      sort_order: @move_map[post.post_number]
+      sort_order: @move_map[post.post_number],
+      baked_version: nil
     }
 
     unless @move_map[post.reply_to_post_number]
@@ -479,8 +484,6 @@ class PostMover
   end
 
   def update_bookmarks
-    Bookmark.where(post_id: post_ids).update_all(topic_id: @destination_topic.id)
-
     DB.after_commit do
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @original_topic.id)
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @destination_topic.id)

@@ -1,5 +1,5 @@
-<div class="fps-result-entries">
+<div class="fps-result-entries" role="list">
   {{#each posts as |post|}}
-    {{search-result-entry post=post bulkSelectEnabled=bulkSelectEnabled selected=selected}}
+    {{search-result-entry post=post bulkSelectEnabled=bulkSelectEnabled selected=selected highlightQuery=highlightQuery}}
   {{/each}}
 </div>

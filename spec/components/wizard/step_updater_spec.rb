@@ -169,7 +169,11 @@ describe Wizard::StepUpdater do
 
   context "styling step" do
     it "updates fonts" do
-      updater = wizard.create_updater('styling', body_font: 'open_sans', heading_font: 'oswald')
+      updater = wizard.create_updater('styling',
+        body_font: 'open_sans',
+        heading_font: 'oswald',
+        homepage_style: 'latest'
+      )
       updater.update
       expect(updater.success?).to eq(true)
       expect(wizard.completed_steps?('styling')).to eq(true)
@@ -182,7 +186,12 @@ describe Wizard::StepUpdater do
         fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
         it "updates the scheme" do
-          updater = wizard.create_updater('styling', color_scheme: 'Dark', body_font: 'arial', heading_font: 'arial', homepage_style: 'latest')
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Dark',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
           updater.update
           expect(updater.success?).to eq(true)
           expect(wizard.completed_steps?('styling')).to eq(true)
@@ -277,12 +286,41 @@ describe Wizard::StepUpdater do
           expect(theme.color_scheme_id).to eq(color_scheme.id)
         end
       end
+
+      context "auto dark mode" do
+        before do
+          dark_scheme = ColorScheme.where(name: "Dark").first
+          SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+        end
+
+        it "does nothing when selected scheme is light" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Neutral',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+
+          expect { updater.update }.not_to change { SiteSetting.default_dark_mode_color_scheme_id }
+        end
+
+        it "unsets auto dark mode site setting when default selected scheme is also dark" do
+          updater = wizard.create_updater('styling',
+            color_scheme: 'Latte',
+            body_font: 'arial',
+            heading_font: 'arial',
+            homepage_style: 'latest'
+          )
+
+          expect { updater.update }.to change { SiteSetting.default_dark_mode_color_scheme_id }.to(-1)
+        end
+      end
+
     end
 
     context "homepage style" do
       it "updates the fields correctly" do
         updater = wizard.create_updater('styling',
-          color_scheme: 'Dark',
           body_font: 'arial',
           heading_font: 'arial',
           homepage_style: "categories_and_top_topics"
@@ -295,7 +333,6 @@ describe Wizard::StepUpdater do
         expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
         updater = wizard.create_updater('styling',
-          color_scheme: 'Dark',
           body_font: 'arial',
           heading_font: 'arial',
           homepage_style: "latest"

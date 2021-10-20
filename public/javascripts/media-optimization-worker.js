@@ -155,8 +155,15 @@ async function loadLibs(settings){
 
   if (self.codecs) return;
 
-  importScripts(settings.mozjpeg_script);
-  importScripts(settings.resize_script);
+  if (!self.loadedMozJpeg) {
+    importScripts(settings.mozjpeg_script);
+    self.loadedMozJpeg = true;
+  }
+
+  if (!self.loadedResizeScript) {
+    importScripts(settings.resize_script);
+    self.loadedResizeScript = true;
+  }
 
   let encoderModuleOverrides = {
     locateFile: function(path, prefix) {

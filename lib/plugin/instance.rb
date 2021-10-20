@@ -369,6 +369,27 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_param to Group, respecting if the plugin is enabled
+  # Used in GroupsController#update and Admin::GroupsController#create
+  def register_group_param(param)
+    DiscoursePluginRegistry.register_group_param(param, self)
+  end
+
+  # Add a custom callback for search to Group
+  # Callback is called in UsersController#search_users
+  # Block takes groups and optional current_user
+  # For example:
+  # plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |groups, user|
+  #   groups.where(name: "admins")
+  # end
+  def register_groups_callback_for_users_search_controller_action(callback, &block)
+    if DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.key?(callback)
+      raise "groups_callback_for_users_search_controller_action callback already registered"
+    end
+
+    DiscoursePluginRegistry.groups_callback_for_users_search_controller_action[callback] = block
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
@@ -927,6 +948,26 @@ class Plugin::Instance
   # for usage instructions
   def register_presence_channel_prefix(prefix, &block)
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
+  end
+
+  # Register a ReviewableScore setting_name associated with a reason.
+  # We'll use this to build a site setting link and add it to the reason's translation.
+  #
+  # If your plugin has a reason translation looking like this:
+  #
+  #   my_plugin_reason: "This is the reason this post was flagged. See %{link}."
+  #
+  # And you associate the reason with a setting:
+  #
+  #   add_reviewable_score_link(:my_plugin_reason, 'a_plugin_setting')
+  #
+  # We'll generate the following link and attach it to the translation:
+  #
+  #   <a href="/admin/site_settings/category/all_results?filter=a_plugin_setting">
+  #     a plugin setting
+  #   </a>
+  def add_reviewable_score_link(reason, setting_name)
+    DiscoursePluginRegistry.register_reviewable_score_link({ reason: reason.to_sym, setting: setting_name }, self)
   end
 
   protected

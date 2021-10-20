@@ -62,39 +62,6 @@ export default Controller.extend({
     return invitesCountTotal > 0;
   },
 
-  @discourseComputed("invitesCount.total", "invitesCount.pending")
-  pendingLabel(invitesCountTotal, invitesCountPending) {
-    if (invitesCountTotal > 0) {
-      return I18n.t("user.invited.pending_tab_with_count", {
-        count: invitesCountPending,
-      });
-    } else {
-      return I18n.t("user.invited.pending_tab");
-    }
-  },
-
-  @discourseComputed("invitesCount.total", "invitesCount.expired")
-  expiredLabel(invitesCountTotal, invitesCountExpired) {
-    if (invitesCountTotal > 0) {
-      return I18n.t("user.invited.expired_tab_with_count", {
-        count: invitesCountExpired,
-      });
-    } else {
-      return I18n.t("user.invited.expired_tab");
-    }
-  },
-
-  @discourseComputed("invitesCount.total", "invitesCount.redeemed")
-  redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
-    if (invitesCountTotal > 0) {
-      return I18n.t("user.invited.redeemed_tab_with_count", {
-        count: invitesCountRedeemed,
-      });
-    } else {
-      return I18n.t("user.invited.redeemed_tab");
-    }
-  },
-
   @action
   createInvite() {
     const controller = showModal("create-invite");

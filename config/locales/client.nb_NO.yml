@@ -116,6 +116,7 @@ nb_NO:
       previous_month: "Forrige måned"
       next_month: "Neste måned"
       placeholder: dato
+      to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber}"
@@ -310,6 +311,9 @@ nb_NO:
         confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+    topic_count_categories:
+      one: "Se %{count} nytt eller oppdatert emne"
+      other: "Se %{count} nye eller oppdaterte emner"
     topic_count_latest:
       one: "Se %{count} nytt eller oppdatert emne"
       other: "Se %{count} nye eller oppdaterte emner"
@@ -1870,7 +1874,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
-      title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
@@ -2063,8 +2066,8 @@ nb_NO:
       result_count:
         one: "<span>%{count} resultat for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
-      title: "søk etter emner, innlegg, brukere eller kategorier"
-      full_page_title: "søk etter emner eller innlegg"
+      title: "Søk"
+      full_page_title: "Søk"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
       post_format: "#%{post_number} av %{username}"
@@ -2076,6 +2079,11 @@ nb_NO:
       search_google: "Prøv å søke på Google istedenfor:"
       search_google_button: "Google"
       search_button: "Søk"
+      categories: "Kategorier"
+      tags: "Stikkord"
+      type:
+        users: "Brukere"
+        categories: "Kategorier"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -2083,7 +2091,6 @@ nb_NO:
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
       advanced:
-        title: Avansert søk
         posted_by:
           label: Skrevet av
         in_category:
@@ -2136,7 +2143,6 @@ nb_NO:
           placeholder: minst
         max_views:
           placeholder: største
-    hamburger_menu: "gå til en annen liste over emner eller en annen kategori"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og preferanser."
@@ -2300,6 +2306,7 @@ nb_NO:
         time_frame_required: "Vennligst velg et tidsrom"
         min_duration: "Varigheten må være større enn 0"
         max_duration: "Varigheten må være under 20 år"
+        duration: "Varighet"
       auto_update_input:
         none: "Velg et tidsrom"
         now: "Nå"
@@ -2626,6 +2633,7 @@ nb_NO:
       deleted_by_author_simple: "(emne slettet av forfatter)"
     post:
       quote_reply: "Sitat"
+      quote_edit: "Rediger"
       quote_share: "Del"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
@@ -3294,6 +3302,8 @@ nb_NO:
       favorite_max_reached: "Du kan ikke favorisere flere distinksjoner."
       favorite_max_not_reached: "Marker dette merket som favoritt"
       favorite_count: "%{count}/%{max} merker markert som favoritt"
+    download_calendar:
+      download: "Last ned"
     tagging:
       all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"
@@ -3444,6 +3454,10 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
+    user_activity:
+      no_activity_others: "Ingen aktivitet."
+      no_replies_others: "Ingen svar."
+      no_likes_others: "Ingen likte innlegg. "
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

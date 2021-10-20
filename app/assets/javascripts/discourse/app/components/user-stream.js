@@ -14,6 +14,7 @@ import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
+  _lastDecoratedElement: null,
 
   _initialize: on("init", function () {
     const filter = this.get("stream.filter");
@@ -47,6 +48,7 @@ export default Component.extend(LoadMore, {
     $(this.element).on("click.discourse-redirect", ".excerpt a", (e) => {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
+    this._updateLastDecoratedElement();
   }),
 
   // This view is being removed. Shut down operations
@@ -58,6 +60,18 @@ export default Component.extend(LoadMore, {
     // Unbind link tracking
     $(this.element).off("click.discourse-redirect", ".excerpt a");
   }),
+
+  _updateLastDecoratedElement() {
+    const nodes = this.element.querySelectorAll(".user-stream-item");
+    if (nodes.length === 0) {
+      return;
+    }
+    const lastElement = nodes[nodes.length - 1];
+    if (lastElement === this._lastDecoratedElement) {
+      return;
+    }
+    this._lastDecoratedElement = lastElement;
+  },
 
   actions: {
     removeBookmark(userAction) {
@@ -123,7 +137,15 @@ export default Component.extend(LoadMore, {
 
       this.set("loading", true);
       const stream = this.stream;
-      stream.findItems().then(() => this.set("loading", false));
+      stream.findItems().then(() => {
+        this.set("loading", false);
+        let element = this._lastDecoratedElement?.nextElementSibling;
+        while (element) {
+          this.trigger("user-stream:new-item-inserted", element);
+          element = element.nextElementSibling;
+        }
+        this._updateLastDecoratedElement();
+      });
     },
   },
 });

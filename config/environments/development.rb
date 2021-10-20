@@ -42,7 +42,7 @@ Discourse::Application.configure do
 
   config.handlebars.precompile = true
 
-  # we recommend you use mailcatcher https://github.com/sj26/mailcatcher
+  # we recommend you use mailhog https://github.com/mailhog/MailHog
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
   config.action_mailer.raise_delivery_errors = true

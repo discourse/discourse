@@ -51,7 +51,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
   test("basic functionality", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
     assert.equal(
       find("input.invite-link")[0].value,
       "http://example.com/invites/52641ae8878790bc7b79916247cfe6ba",
@@ -69,7 +69,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
   test("saving", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
 
     assert.ok(!exists("tbody tr"), "does not show invite before saving");
 
@@ -83,7 +83,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
   test("copying saves invite", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
 
     await click(".invite-link .btn");
 
@@ -93,7 +93,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
   test("copying an email invite without an email shows error message", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
 
     await fillIn("#invite-email", "error");
     await click(".invite-link .btn");
@@ -128,7 +128,7 @@ acceptance("Invites - Link Invites", function (needs) {
 
   test("invite links", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
 
     assert.ok(exists("#invite-max-redemptions"), "shows max redemptions field");
   });
@@ -167,7 +167,7 @@ acceptance("Invites - Email Invites", function (needs) {
 
   test("invite email", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    await click(".invite-controls .btn:first-child");
+    await click(".user-invite-buttons .btn:first-child");
 
     assert.ok(exists("#invite-email"), "shows email field");
     await fillIn("#invite-email", "test@example.com");
@@ -226,7 +226,7 @@ acceptance(
     test("shows correct timeframe options", async function (assert) {
       await visit("/u/eviltrout/invited/pending");
 
-      await click(".invite-controls .btn:first-child");
+      await click(".user-invite-buttons .btn:first-child");
       await click(".modal-footer .show-advanced");
       await click(".future-date-input-selector-header");
 

@@ -98,6 +98,7 @@ module FileStore
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
         original_path = opts[:existing_external_upload_key]
+        options[:apply_metadata_to_destination] = true
         path, etag = s3_helper.copy(
           original_path,
           path,
@@ -157,8 +158,11 @@ module FileStore
       end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
-      cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
-      return true if cdn_hostname.presence && url[cdn_hostname]
+
+      s3_cdn_url = URI.parse(SiteSetting.Upload.s3_cdn_url || "")
+      cdn_hostname = s3_cdn_url.hostname
+
+      return true if cdn_hostname.presence && url[cdn_hostname] && (s3_cdn_url.path.blank? || parsed_url.path.starts_with?(s3_cdn_url.path))
       false
     end
 

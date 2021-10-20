@@ -44,8 +44,8 @@ div.poll {
       line-height: 2em;
     }
 
-    :not(:first-child):not(:last-child) {
-      margin-left: 1em;
+    button:not(:first-child) {
+      margin-left: 0.5em;
     }
 
     .btn-danger.toggle-status {

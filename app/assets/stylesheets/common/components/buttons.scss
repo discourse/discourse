@@ -13,16 +13,12 @@
   $hover-bg-color: var(--primary-medium),
   $hover-icon-color: var(--primary-low)
 ) {
-  box-sizing: border-box;
+  @include form-item-sizing;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0.53em 0.8em;
-  border: none;
   font-weight: normal;
-  font-size: $font-0;
-  line-height: normal;
   color: $text-color;
   background: $bg-color;
   cursor: pointer;
@@ -32,10 +28,13 @@
     margin-right: 0.45em;
     transition: color 0.25s;
   }
+  .d-button-label + .d-icon {
+    margin-left: 0.45em;
+    margin-right: 0;
+  }
   &.no-text {
     .d-icon {
       margin-right: 0;
-      min-height: 17px;
     }
   }
   @include hover {
@@ -59,10 +58,13 @@
   &:active,
   &.btn-active {
     @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
+    border-bottom-color: $bg-color;
   }
   &[disabled],
   &.disabled {
-    opacity: 0.4;
+    &:not(.is-loading) {
+      opacity: 0.4;
+    }
     &:hover {
       color: $text-color;
       background: $bg-color;
@@ -253,20 +255,14 @@
 // Small
 
 .btn-small {
-  padding: 6px;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   min-height: 20px;
-  .d-icon {
-    max-height: 0.87em;
-  }
 }
 
 // Large
 
 .btn-large {
-  padding: 9px 18px;
-  font-size: $font-up-1;
-  line-height: $line-height-small;
+  font-size: var(--font-up-1);
 }
 
 // Bonus Buttons
@@ -287,9 +283,8 @@
   }
   &.close {
     padding: 0;
-    min-height: unset;
     background: transparent;
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     .d-icon {
       color: var(--primary-high);
     }

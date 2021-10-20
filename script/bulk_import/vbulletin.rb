@@ -118,6 +118,7 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: row[0],
         username: normalize_text(row[1]),
         name: normalize_text(row[1]),
+        email: row[2],
         created_at: Time.zone.at(row[3]),
         date_of_birth: parse_birthday(row[4]),
         primary_group_id: group_id_from_imported_id(row[6]),

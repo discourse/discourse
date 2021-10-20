@@ -6,6 +6,11 @@ import logout from "discourse/lib/logout";
 import { inject as service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
 
+let pluginCounterFunctions = [];
+export function addPluginDocumentTitleCounter(counterFunction) {
+  pluginCounterFunctions.push(counterFunction);
+}
+
 export default Component.extend({
   tagName: "",
   documentTitle: service(),
@@ -44,10 +49,11 @@ export default Component.extend({
       return;
     }
 
-    this.documentTitle.updateNotificationCount(
+    const count =
+      pluginCounterFunctions.reduce((sum, fn) => sum + fn(), 0) +
       this.currentUser.unread_notifications +
-        this.currentUser.unread_high_priority_notifications
-    );
+      this.currentUser.unread_high_priority_notifications;
+    this.documentTitle.updateNotificationCount(count);
   },
 
   @bind

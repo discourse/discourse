@@ -100,23 +100,18 @@ export default RestModel.extend({
   canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
   canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
-  @discourseComputed("hasLoadedData", "firstPostId", "posts.[]")
-  firstPostPresent(hasLoadedData, firstPostId) {
+  @discourseComputed("hasLoadedData", "posts.[]")
+  firstPostPresent(hasLoadedData) {
     if (!hasLoadedData) {
       return false;
     }
-    return !!this.posts.findBy("id", firstPostId);
+
+    return !!this.posts.findBy("post_number", 1);
   },
 
   firstPostNotLoaded: not("firstPostPresent"),
 
-  firstId: null,
   lastId: null,
-
-  @discourseComputed("isMegaTopic", "stream.firstObject", "firstId")
-  firstPostId(isMegaTopic, streamFirstId, firstId) {
-    return isMegaTopic ? firstId : streamFirstId;
-  },
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {
@@ -1076,9 +1071,7 @@ export default RestModel.extend({
     const store = this.store;
 
     return ajax(url, { data }).then((result) => {
-      if (result.suggested_topics) {
-        this.set("topic.suggested_topics", result.suggested_topics);
-      }
+      this._setSuggestedTopics(result);
 
       const posts = get(result, "post_stream.posts");
 
@@ -1124,9 +1117,7 @@ export default RestModel.extend({
       data,
       headers,
     }).then((result) => {
-      if (result.suggested_topics) {
-        this.set("topic.suggested_topics", result.suggested_topics);
-      }
+      this._setSuggestedTopics(result);
 
       const posts = get(result, "post_stream.posts");
 
@@ -1243,6 +1234,21 @@ export default RestModel.extend({
           );
         });
       }
+    }
+  },
+
+  _setSuggestedTopics(result) {
+    if (!result.suggested_topics) {
+      return;
+    }
+
+    this.topic.setProperties({
+      suggested_topics: result.suggested_topics,
+      suggested_group_name: result.suggested_group_name,
+    });
+
+    if (this.topic.isPrivateMessage) {
+      this.pmTopicTrackingState.startTracking();
     }
   },
 });

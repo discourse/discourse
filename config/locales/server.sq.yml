@@ -1080,6 +1080,24 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       text_body_template: |
         %{header_instructions}
@@ -1409,6 +1427,7 @@ sq:
           title: "Fshij Anëtarin"
       reject:
         title: "Refuzo"
+  fallback_username: "përdorues"
   activemodel:
     errors:
       <<: *errors

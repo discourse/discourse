@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 class UserActionsController < ApplicationController
-
   def index
     params.require(:username)
     params.permit(:filter, :offset, :acting_username, :limit)
 
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-
     offset = [0, params[:offset].to_i].max
     action_types = (params[:filter] || "").split(",").map(&:to_i)
     limit = params.fetch(:limit, 30).to_i
+
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
 
     opts = {
       user_id: user.id,

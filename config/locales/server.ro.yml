@@ -506,9 +506,6 @@ ro:
     no_bookmarks:
       self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       others: "Nu există semne de carte."
-    no_likes_given:
-      self: "Nu ai apreciat nicio postare."
-      others: "Nu există postări apreciate."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -533,7 +530,6 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
-    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -1532,6 +1528,26 @@ ro:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
@@ -2039,6 +2055,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
+  fallback_username: "utilizatori"
   activemodel:
     errors:
       <<: *errors

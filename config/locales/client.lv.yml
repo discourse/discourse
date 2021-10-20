@@ -1750,7 +1750,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      title: "Vai nospiediet Ctrl+Enter"
       users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
@@ -1846,8 +1845,8 @@ lv:
       select_all: "Izvēlēties visu"
       clear_all: "Noņemt visus"
       too_short: "Jūsu meklēšanas frāze ir pārāk īsa."
-      title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
-      full_page_title: "meklēt tēmas vai ziņas"
+      title: "Meklēt"
+      full_page_title: "Meklēt"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
       post_format: "#%{post_number} - %{username}"
@@ -1859,6 +1858,11 @@ lv:
       search_google: "Vai arī mēģiniet meklēt, izmantojot Google:"
       search_google_button: "Google"
       search_button: "Meklēt"
+      categories: "Sadaļas"
+      tags: "Tagi"
+      type:
+        users: "Lietotāji"
+        categories: "Sadaļas"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"
@@ -1866,7 +1870,6 @@ lv:
         topic: "Meklēt šai tēmā"
         private_messages: "Meklēt ziņās"
       advanced:
-        title: Izvērstā meklēšana
         posted_by:
           label: Ierakstīja
         in_category:
@@ -1919,7 +1922,6 @@ lv:
           placeholder: minimums
         max_views:
           placeholder: maksimums
-    hamburger_menu: "iet uz citu tēmu sarakstu vai sadaļu"
     new_item: "jauns"
     go_back: "atgriezties"
     not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"
@@ -2040,6 +2042,7 @@ lv:
         remove: "Noņemt taimeri"
         publish_to: "Publicēt: "
         when: "Kad:"
+        duration: "Ilgums"
       auto_update_input:
         later_today: "Vēlāk šodien"
         tomorrow: "Rītdien"
@@ -2280,6 +2283,7 @@ lv:
           other: "Jūs esat izvēlējies <b>%{count}</b> ierakstus."
     post:
       quote_reply: "Citāts"
+      quote_edit: "Labot"
       quote_share: "Dalīties"
       edit_reason: "Iemesls:"
       post_number: "ieraksts %{number}"
@@ -2758,6 +2762,8 @@ lv:
           name: Citi
         posting:
           name: Ieraksti
+    download_calendar:
+      download: "Lejuplādēt"
     tagging:
       all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"

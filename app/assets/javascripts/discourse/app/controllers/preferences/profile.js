@@ -23,6 +23,12 @@ export default Controller.extend({
       "card_background_upload_url",
       "date_of_birth",
       "timezone",
+      "default_calendar",
+    ];
+
+    this.calendarOptions = [
+      { name: I18n.t("download_calendar.google"), value: "google" },
+      { name: I18n.t("download_calendar.ics"), value: "ics" },
     ];
   },
 
@@ -45,6 +51,11 @@ export default Controller.extend({
     }
   },
 
+  @discourseComputed("model.default_calendar")
+  canChangeDefaultCalendar(defaultCalendar) {
+    return defaultCalendar !== "none_selected";
+  },
+
   canChangeBio: readOnly("model.can_change_bio"),
 
   canChangeLocation: readOnly("model.can_change_location"),
@@ -55,10 +66,6 @@ export default Controller.extend({
 
   canUploadUserCardBackground: readOnly(
     "model.can_upload_user_card_background"
-  ),
-
-  experimentalUserCardImageUpload: readOnly(
-    "siteSettings.enable_experimental_image_uploader"
   ),
 
   actions: {

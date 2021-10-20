@@ -159,7 +159,7 @@ module ImportScripts::PhpBB3
       attachment_regexp = /\[attachment=([\d])+\]<!-- [\w]+ -->([^<]+)<!-- [\w]+ -->\[\/attachment\]?/i
       unreferenced_attachments = attachments.dup
 
-      text = text.gsub(attachment_regexp) do
+      text.gsub!(attachment_regexp) do
         index = $1.to_i
         real_filename = $2
         unreferenced_attachments[index] = nil

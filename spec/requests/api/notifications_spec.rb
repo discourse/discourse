@@ -15,6 +15,7 @@ describe 'notifications' do
 
     get 'Get the notifications that belong to the current user' do
       tags 'Notifications'
+      operationId 'getNotifications'
 
       produces 'application/json'
       response '200', 'notifications' do
@@ -60,6 +61,7 @@ describe 'notifications' do
 
     put 'Mark notifications as read' do
       tags 'Notifications'
+      operationId 'markNotificationsAsRead'
       consumes 'application/json'
       parameter name: :notification, in: :body, schema: {
         type: :object,

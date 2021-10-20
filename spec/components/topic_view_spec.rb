@@ -408,7 +408,7 @@ describe TopicView do
       end
     end
 
-    context "#bookmarked_posts" do
+    context "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
       let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
@@ -416,7 +416,7 @@ describe TopicView do
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
-        first, second = topic_view.bookmarked_posts
+        first, second = topic_view.bookmarks
         expect(first[:post_id]).to eq(bookmark1.post_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         expect(second[:post_id]).to eq(bookmark2.post_id)
@@ -424,16 +424,25 @@ describe TopicView do
       end
 
       context "when the topic is deleted" do
-        it "gets the first post bookmark reminder at for the user" do
+        it "returns []" do
           topic_view = TopicView.new(topic, user)
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
 
-          first, second = topic_view.bookmarked_posts
+          expect(topic_view.bookmarks).to eq([])
+        end
+      end
+
+      context "when one of the posts is deleted" do
+        it "does not return that post's bookmark" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.posts.second).destroy
+          topic.reload
+
+          expect(topic_view.bookmarks.length).to eq(1)
+          first = topic_view.bookmarks.first
           expect(first[:post_id]).to eq(bookmark1.post_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
-          expect(second[:post_id]).to eq(bookmark2.post_id)
-          expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
         end
       end
     end
@@ -830,7 +839,7 @@ describe TopicView do
     end
   end
 
-  describe '#first_post_id and #last_post_id' do
+  describe '#last_post_id' do
     let!(:p3) { Fabricate(:post, topic: topic) }
     let!(:p2) { Fabricate(:post, topic: topic) }
     let!(:p1) { Fabricate(:post, topic: topic) }
@@ -842,7 +851,6 @@ describe TopicView do
     end
 
     it 'should return the right id' do
-      expect(topic_view.first_post_id).to eq(p1.id)
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end

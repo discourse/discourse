@@ -216,7 +216,7 @@ By default, development.rb will attempt to connect locally to send email.
 config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 ```
 
-Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
+Set up [MailHog](https://github.com/mailhog/MailHog) so the app can intercept
 outbound email and you can verify what is being sent.
 
 ## Additional Image Tooling

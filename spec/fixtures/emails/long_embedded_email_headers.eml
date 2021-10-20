@@ -1,0 +1,21 @@
+MIME-Version: 1.0
+Date: Sat, 2 Oct 2021 21:52:36 -0400
+Message-ID: <example1@mail.gmail.com>
+Subject: Fwd: Test Email
+From: Example Group <group@example.com>
+To: group-fwd@example.com
+Cc: C <c@example.com>, D <d@
+example.com>
+
+
+---------- Forwarded message ---------
+Date: Sat, 2 Oct 2021 21:52:36 -0400
+Message-ID: <example2@mail.gmail.com>
+Subject: Test Email
+From: User <user@example.com>
+To: Example Group <group@example.com>
+Cc: A <a@example.com>, B <
+b@example.com>
+
+
+Hello world!

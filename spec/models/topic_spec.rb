@@ -7,7 +7,7 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -540,6 +540,12 @@ describe Topic do
       expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
     end
 
+    it 'does not result in invalid statement when title is all stopwords for zh_CN' do
+      SiteSetting.default_locale = "zh_CN"
+
+      expect(Topic.similar_to("怎么上自己的", '')).to eq([])
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
@@ -899,7 +905,7 @@ describe Topic do
         end
 
         describe 'when user can invite via email' do
-          before { user.update!(trust_level: TrustLevel[2]) }
+          before { user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
           it 'should create an invite' do
             Jobs.run_immediately!
@@ -1523,6 +1529,7 @@ describe Topic do
     fab!(:category) { Fabricate(:category_with_definition, user: user) }
 
     describe 'without a previous category' do
+
       it 'changes the category' do
         topic.change_category_to_id(category.id)
         category.reload
@@ -1612,6 +1619,16 @@ describe Topic do
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
             ).exists?).to eq(true)
+          end
+
+          it 'should not generate a notification if SiteSetting.disable_category_edit_notifications is enabled' do
+            SiteSetting.disable_category_edit_notifications = true
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(0)
+
+            expect(topic.category_id).to eq(new_category.id)
           end
 
           it 'should generate the modified notification for the topic if already seen' do

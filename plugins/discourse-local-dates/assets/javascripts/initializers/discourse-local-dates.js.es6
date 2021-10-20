@@ -4,6 +4,9 @@ import { hidePopover, showPopover } from "discourse/lib/d-popover";
 import LocalDateBuilder from "../lib/local-date-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
+import { downloadCalendar } from "discourse/lib/download-calendar";
+import { renderIcon } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 export function applyLocalDates(dates, siteSettings) {
   if (!siteSettings.discourse_local_dates_enabled) {
@@ -39,6 +42,11 @@ export function applyLocalDates(dates, siteSettings) {
 function buildOptionsFromElement(element, siteSettings) {
   const opts = {};
   const dataset = element.dataset;
+
+  if (_rangeElements(element).length === 2) {
+    opts.duration = _calculateDuration(element);
+  }
+
   opts.time = dataset.time;
   opts.date = dataset.date;
   opts.recurring = dataset.recurring;
@@ -57,15 +65,53 @@ function buildOptionsFromElement(element, siteSettings) {
   return opts;
 }
 
+function _rangeElements(element) {
+  if (!element.parentElement) {
+    return [];
+  }
+  return Array.from(element.parentElement.children).filter(
+    (span) => span.dataset.date
+  );
+}
+
 function initializeDiscourseLocalDates(api) {
   const siteSettings = api.container.lookup("site-settings:main");
+  const chat = api.container.lookup("service:chat");
+  const defaultTitle = I18n.t("discourse_local_dates.default_title", {
+    site_name: siteSettings.title,
+  });
+
+  if (chat) {
+    chat.addToolbarButton({
+      title: "discourse_local_dates.title",
+      id: "local-dates",
+      icon: "calendar-alt",
+      action: "insertDiscourseLocalDate",
+    });
+
+    api.modifyClass("component:chat-composer", {
+      pluginId: "discourse-local-dates",
+      actions: {
+        insertDiscourseLocalDate() {
+          const insertDate = this.addText.bind(this);
+          showModal("discourse-local-dates-create-modal").setProperties({
+            insertDate,
+          });
+        },
+      },
+    });
+  }
 
   api.decorateCookedElement(
-    (elem) => {
-      applyLocalDates(
-        elem.querySelectorAll(".discourse-local-date"),
-        siteSettings
-      );
+    (elem, helper) => {
+      const dates = elem.querySelectorAll(".discourse-local-date");
+
+      applyLocalDates(dates, siteSettings);
+
+      const topicTitle = helper?.getModel()?.topic?.title;
+      dates.forEach((date) => {
+        date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
+      });
     },
     { id: "discourse-local-date" }
   );
@@ -86,7 +132,9 @@ function initializeDiscourseLocalDates(api) {
     actions: {
       insertDiscourseLocalDate(toolbarEvent) {
         showModal("discourse-local-dates-create-modal").setProperties({
-          toolbarEvent,
+          insertDate: (markup) => {
+            toolbarEvent.addText(markup);
+          },
         });
       },
     },
@@ -114,7 +162,7 @@ function buildHtmlPreview(element, siteSettings) {
 
     const dateTimeNode = document.createElement("span");
     dateTimeNode.classList.add("date-time");
-    dateTimeNode.innerText = preview.formated;
+    dateTimeNode.innerHTML = preview.formated;
     previewNode.appendChild(dateTimeNode);
 
     return previewNode;
@@ -124,7 +172,72 @@ function buildHtmlPreview(element, siteSettings) {
   previewsNode.classList.add("locale-dates-previews");
   htmlPreviews.forEach((htmlPreview) => previewsNode.appendChild(htmlPreview));
 
+  const calendarNode = _downloadCalendarNode(element);
+  if (calendarNode) {
+    previewsNode.appendChild(calendarNode);
+  }
+
   return previewsNode.outerHTML;
+}
+
+function calculateStartAndEndDate(startDataset, endDataset) {
+  let startDate, endDate;
+  startDate = moment.tz(
+    `${startDataset.date} ${startDataset.time || ""}`.trim(),
+    startDataset.timezone
+  );
+  if (endDataset) {
+    endDate = moment.tz(
+      `${endDataset.date} ${endDataset.time || ""}`.trim(),
+      endDataset.timezone
+    );
+  }
+  return [startDate, endDate];
+}
+
+function _downloadCalendarNode(element) {
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  const [startDate, endDate] = calculateStartAndEndDate(
+    startDataset,
+    endDataset
+  );
+
+  if (startDate < moment().tz(startDataset.timezone)) {
+    return false;
+  }
+
+  const node = document.createElement("div");
+  node.classList.add("download-calendar");
+  node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
+    "download_calendar.add_to_calendar"
+  )}`;
+  node.setAttribute("data-starts-at", startDate.toISOString());
+  if (endDataset) {
+    node.setAttribute("data-ends-at", endDate.toISOString());
+  }
+  if (!startDataset.time && !endDataset) {
+    node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
+  }
+  node.setAttribute("data-title", startDataset.title);
+  return node;
+}
+
+function _calculateDuration(element) {
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  const startDateTime = moment(
+    `${startDataset.date} ${startDataset.time || ""}`.trim()
+  );
+  const endDateTime = moment(
+    `${endDataset.date} ${endDataset.time || ""}`.trim()
+  );
+  const duration = endDateTime.diff(startDateTime, "minutes");
+
+  // negative duration is used when we calculate difference for end date from range
+  return element.dataset === startDataset ? duration : -duration;
 }
 
 export default {
@@ -138,9 +251,24 @@ export default {
 
     const siteSettings = owner.lookup("site-settings:main");
     if (event?.target?.classList?.contains("discourse-local-date")) {
-      showPopover(event, {
-        htmlContent: buildHtmlPreview(event.target, siteSettings),
-      });
+      if ($(document.getElementById("d-popover"))[0]) {
+        hidePopover(event);
+      } else {
+        showPopover(event, {
+          htmlContent: buildHtmlPreview(event.target, siteSettings),
+        });
+      }
+    } else if (event?.target?.classList?.contains("download-calendar")) {
+      const dataset = event.target.dataset;
+      hidePopover(event);
+      downloadCalendar(dataset.title, [
+        {
+          startsAt: dataset.startsAt,
+          endsAt: dataset.endsAt,
+        },
+      ]);
+    } else {
+      hidePopover(event);
     }
   },
 
@@ -155,8 +283,6 @@ export default {
     router.on("routeWillChange", hidePopover);
 
     window.addEventListener("click", this.showDatePopover);
-    window.addEventListener("mouseover", this.showDatePopover);
-    window.addEventListener("mouseout", this.hideDatePopover);
 
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
@@ -174,7 +300,5 @@ export default {
 
   teardown() {
     window.removeEventListener("click", this.showDatePopover);
-    window.removeEventListener("mouseover", this.showDatePopover);
-    window.removeEventListener("mouseout", this.hideDatePopover);
   },
 };

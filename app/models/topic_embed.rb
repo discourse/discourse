@@ -27,14 +27,14 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   # Import an article from a source (RSS/Atom/Other)
-  def self.import(user, url, title, contents, category_id: nil, cook_method: nil)
+  def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
     return unless url =~ /^https?\:\/\//
 
     if SiteSetting.embed_truncate && cook_method.nil?
       contents = first_paragraph_from(contents)
     end
     contents ||= ''
-    contents = +contents << imported_from_html(url)
+    contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
 
@@ -58,7 +58,8 @@ class TopicEmbed < ActiveRecord::Base
           raw: absolutize_urls(url, contents),
           skip_validations: true,
           cook_method: cook_method,
-          category: category_id || eh.try(:category_id)
+          category: category_id || eh.try(:category_id),
+          tags: SiteSetting.tagging_enabled ? tags : nil,
         }
         if SiteSetting.embed_unlisted?
           create_args[:visible] = false
@@ -112,7 +113,8 @@ class TopicEmbed < ActiveRecord::Base
     fd = FinalDestination.new(
       url,
       validate_uri: true,
-      max_redirects: 5
+      max_redirects: 5,
+      follow_canonical: true,
     )
 
     url = fd.resolve

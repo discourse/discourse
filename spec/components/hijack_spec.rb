@@ -110,7 +110,8 @@ describe Hijack do
       "Access-Control-Allow-Origin" => "www.rainbows.com",
       "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
       "Access-Control-Allow-Credentials" => "true",
-      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE"
+      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
+      "Access-Control-Max-Age" => "7200",
     }
 
     expect(headers).to eq(expected)
@@ -147,7 +148,8 @@ describe Hijack do
       "Access-Control-Allow-Origin" => "https://www.rainbows.com",
       "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
       "Access-Control-Allow-Credentials" => "true",
-      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE"
+      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
+      "Access-Control-Max-Age" => "7200",
     }
 
     expect(headers).to eq(expected)

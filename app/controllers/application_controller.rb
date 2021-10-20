@@ -534,11 +534,16 @@ class ApplicationController < ActionController::Base
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')
-      find_opts = { username_lower: username_lower }
-      find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-      result = User
-      (result = result.includes(*eager_load)) if !eager_load.empty?
-      result.find_by(find_opts)
+
+      if current_user && current_user.username_lower == username_lower
+        current_user
+      else
+        find_opts = { username_lower: username_lower }
+        find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
+        result = User
+        (result = result.includes(*eager_load)) if !eager_load.empty?
+        result.find_by(find_opts)
+      end
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
       if provider_name = params[:external_provider]

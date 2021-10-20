@@ -44,7 +44,7 @@ module DiscourseDev
     end
 
     def self.random
-      super(::User)
+      super(::User, use_existing_records: false)
     end
 
     def set_random_avatar(user)

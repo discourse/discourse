@@ -49,6 +49,13 @@ describe FinalDestination do
     }
   end
 
+  def canonical_follow(from, dest)
+    stub_request(:get, from).to_return(
+      status: 200,
+      body: "<head><link rel=\"canonical\" href=\"#{dest}\"></head>"
+    )
+  end
+
   def redirect_response(from, dest)
     stub_request(:head, from).to_return(
       status: 302,
@@ -170,6 +177,39 @@ describe FinalDestination do
       it "does not follow redirect" do
         final = FinalDestination.new('https://eviltrout.com/t/xyz/1', opts)
         expect(final.resolve.to_s).to eq('https://eviltrout.com/t/xyz/1')
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+    end
+
+    context 'follows canonical links' do
+      it 'resolves the canonical link as the final destination' do
+        canonical_follow("https://eviltrout.com", "https://codinghorror.com/blog")
+        stub_request(:head, "https://codinghorror.com/blog").to_return(doc_response)
+
+        final = FinalDestination.new('https://eviltrout.com', opts.merge(follow_canonical: true))
+
+        expect(final.resolve.to_s).to eq("https://codinghorror.com/blog")
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+
+      it "does not follow the canonical link if it's the same as the current URL" do
+        canonical_follow("https://eviltrout.com", "https://eviltrout.com")
+
+        final = FinalDestination.new('https://eviltrout.com', opts.merge(follow_canonical: true))
+
+        expect(final.resolve.to_s).to eq("https://eviltrout.com")
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+
+      it "does not follow the canonical link if it's invalid" do
+        canonical_follow("https://eviltrout.com", "")
+
+        final = FinalDestination.new('https://eviltrout.com', opts.merge(follow_canonical: true))
+
+        expect(final.resolve.to_s).to eq("https://eviltrout.com")
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end

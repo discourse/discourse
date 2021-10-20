@@ -122,7 +122,7 @@ describe UploadsController do
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         errors = response.parsed_body["errors"]
-        expect(errors.first).to eq(I18n.t("upload.attachments.too_large", max_size_kb: 1))
+        expect(errors.first).to eq(I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"))
       end
 
       it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
@@ -742,7 +742,7 @@ describe UploadsController do
       end
 
       it "includes accepted metadata in the presigned url when provided" do
-        post "/uploads/generate-presigned-put.json", {
+        post "/uploads/generate-presigned-put.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -806,7 +806,7 @@ describe UploadsController do
 
       it "returns 422 when the create request errors" do
         FileStore::S3Store.any_instance.stubs(:create_multipart).raises(Aws::S3::Errors::ServiceError.new({}, "test"))
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -817,8 +817,8 @@ describe UploadsController do
       end
 
       it "returns 422 when the file is an attachment and it's too big" do
-        SiteSetting.max_attachment_size_kb = 1000
-        post "/uploads/create-multipart.json", {
+        SiteSetting.max_attachment_size_kb = 1024
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.zip",
             file_size: 9999999,
@@ -826,7 +826,7 @@ describe UploadsController do
           }
         }
         expect(response.status).to eq(422)
-        expect(response.body).to include(I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb))
+        expect(response.body).to include(I18n.t("upload.attachments.too_large_humanized", max_size: "1 MB"))
       end
 
       def stub_create_multipart_request
@@ -846,7 +846,7 @@ describe UploadsController do
 
       it "creates a multipart upload and creates an external upload stub that is marked as multipart" do
         stub_create_multipart_request
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,
@@ -879,7 +879,7 @@ describe UploadsController do
           "test.png", "image/png", metadata: { "sha1-checksum" => "testing" }
         ).returns({ key: "test" })
 
-        post "/uploads/create-multipart.json", {
+        post "/uploads/create-multipart.json", **{
           params: {
             file_name: "test.png",
             file_size: 1024,

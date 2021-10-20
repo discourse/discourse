@@ -5,6 +5,9 @@
     {{/if ~}}
     {{~#if bulkSelectEnabled}}
       <span class='bulk-select-topics'>
+        {{~#if canDoBulkActions}}
+          <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
+        {{/if ~}}
         <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
         <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
       </span>

@@ -290,7 +290,12 @@ aside.onebox {
       }
     }
 
-    .instagram-video-icon {
+    .image-wrapper {
+      display: block;
+      position: relative;
+    }
+
+    .video-icon {
       &:before {
         opacity: 0.8;
         // ideally, the SVG used here should be in HTML and reference the SVG sprite

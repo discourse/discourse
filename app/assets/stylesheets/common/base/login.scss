@@ -60,7 +60,10 @@
     min-height: 35px;
   }
   #modal-alert:empty {
-    display: none;
+    min-height: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: inline;
   }
   .login-welcome-header {
     z-index: z("modal", "content");
@@ -331,7 +334,8 @@
       line-height: $line-height-medium;
     }
     .tip {
-      padding-left: 5px;
+      font-size: var(--font-down-1);
+      margin-bottom: 0.25em;
     }
   }
 }

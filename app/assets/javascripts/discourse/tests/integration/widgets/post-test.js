@@ -649,6 +649,36 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
   });
 
+  componentTest("permanently delete topic", {
+    template: hbs`{{mount-widget widget="post" args=args permanentlyDeletePost=permanentlyDeletePost}}`,
+    beforeEach() {
+      this.set("args", { canManage: true, canPermanentlyDeleteTopic: true });
+      this.set("permanentlyDeletePost", () => (this.deleted = true));
+    },
+    async test(assert) {
+      await click(".post-menu-area .show-post-admin-menu");
+      await click(".post-admin-menu .permanently-delete");
+      assert.ok(this.deleted);
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+    },
+  });
+
+  componentTest("permanently delete post", {
+    template: hbs`
+      {{mount-widget widget="post" args=args permanentlyDeletePost=permanentlyDeletePost}}
+    `,
+    beforeEach() {
+      this.set("args", { canManage: true, canPermanentlyDelete: true });
+      this.set("permanentlyDeletePost", () => (this.deleted = true));
+    },
+    async test(assert) {
+      await click(".post-menu-area .show-post-admin-menu");
+      await click(".post-admin-menu .permanently-delete");
+      assert.ok(this.deleted);
+      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+    },
+  });
+
   componentTest("toggle moderator post", {
     template: hbs`
       {{mount-widget widget="post" args=args togglePostType=togglePostType}}

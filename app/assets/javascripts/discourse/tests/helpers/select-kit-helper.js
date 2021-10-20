@@ -128,7 +128,10 @@ function headerHelper(header) {
       return header.attr("data-name");
     },
     label() {
-      return header.text().trim();
+      return header
+        .text()
+        .trim()
+        .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "");
     },
     icon() {
       return header.find(".d-icon");

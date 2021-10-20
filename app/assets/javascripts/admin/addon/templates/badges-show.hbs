@@ -1,6 +1,6 @@
 {{#d-section class="current-badge content-body"}}
   <form class="form-horizontal">
-    <div>
+    <div class="control-group">
       <label for="name">{{i18n "admin.badges.name"}}</label>
       {{#if readOnly}}
         {{input type="text" name="name" value=buffered.name disabled=true}}
@@ -14,9 +14,9 @@
       {{/if}}
     </div>
 
-    <div>
+    <div class="control-group">
       <label for="graphic">{{i18n "admin.badges.graphic"}}</label>
-      <div class="radios">
+      <div class="radios inline-form full-width">
         <label class="radio-label" for="badge-icon">
           {{radio-button
             name="badge-icon"
@@ -40,12 +40,14 @@
         </label>
       </div>
       {{#if imageUploaderSelected}}
-        {{image-uploader
+        {{uppy-image-uploader
+          id="badge-image-uploader"
           imageUrl=buffered.image_url
+          type="badge_image"
           onUploadDone=(action "setImage")
           onUploadDeleted=(action "removeImage")
-          type="badge_image"
-          class="no-repeat contain-image"}}
+          class="no-repeat contain-image"
+        }}
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
         </div>
@@ -59,7 +61,7 @@
       {{/if}}
     </div>
 
-    <div>
+    <div class="control-group">
       <label for="badge_type_id">{{i18n "admin.badges.badge_type"}}</label>
       {{combo-box
         name="badge_type_id"
@@ -70,7 +72,7 @@
       }}
     </div>
 
-    <div>
+    <div class="control-group">
       <label for="badge_grouping_id">{{i18n "admin.badges.badge_grouping"}}</label>
 
       <div class="badge-grouping-control">
@@ -90,7 +92,7 @@
       </div>
     </div>
 
-    <div>
+    <div class="control-group">
       <label for="description">{{i18n "admin.badges.description"}}</label>
       {{#if buffered.system}}
         {{textarea name="description" value=buffered.description disabled=true}}
@@ -104,7 +106,7 @@
       {{/if}}
     </div>
 
-    <div>
+    <div class="control-group">
       <label for="long_description">{{i18n "admin.badges.long_description"}}</label>
       {{#if buffered.system}}
         {{textarea name="long_description" value=buffered.long_description disabled=true}}
@@ -119,7 +121,7 @@
     </div>
 
     {{#if siteSettings.enable_badge_sql}}
-      <div>
+      <div class="control-group">
         <label for="query">{{i18n "admin.badges.query"}}</label>
         {{ace-editor content=buffered.query mode="sql" disabled=readOnly}}
       </div>
@@ -132,21 +134,21 @@
           {{i18n "loading"}}
         {{/if}}
 
-        <div>
+        <div class="control-group">
           <label>
             {{input type="checkbox" checked=buffered.auto_revoke disabled=readOnly}}
             {{i18n "admin.badges.auto_revoke"}}
           </label>
         </div>
 
-        <div>
+        <div class="control-group">
           <label>
             {{input type="checkbox" checked=buffered.target_posts disabled=readOnly}}
             {{i18n "admin.badges.target_posts"}}
           </label>
         </div>
 
-        <div>
+        <div class="control-group">
           <label for="trigger">{{i18n "admin.badges.trigger"}}</label>
           {{combo-box
             name="trigger"
@@ -159,39 +161,41 @@
       {{/if}}
     {{/if}}
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=buffered.allow_title}}
-        {{i18n "admin.badges.allow_title"}}
-      </label>
-    </div>
+    <div class="control-group">
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.allow_title}}
+          {{i18n "admin.badges.allow_title"}}
+        </label>
+      </div>
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=buffered.multiple_grant disabled=readOnly}}
-        {{i18n "admin.badges.multiple_grant"}}
-      </label>
-    </div>
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.multiple_grant disabled=readOnly}}
+          {{i18n "admin.badges.multiple_grant"}}
+        </label>
+      </div>
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=buffered.listable disabled=readOnly}}
-        {{i18n "admin.badges.listable"}}
-      </label>
-    </div>
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.listable disabled=readOnly}}
+          {{i18n "admin.badges.listable"}}
+        </label>
+      </div>
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=buffered.show_posts disabled=readOnly}}
-        {{i18n "admin.badges.show_posts"}}
-      </label>
-    </div>
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.show_posts disabled=readOnly}}
+          {{i18n "admin.badges.show_posts"}}
+        </label>
+      </div>
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=buffered.enabled}}
-        {{i18n "admin.badges.enabled"}}
-      </label>
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.enabled}}
+          {{i18n "admin.badges.enabled"}}
+        </label>
+      </div>
     </div>
 
     <div class="buttons">

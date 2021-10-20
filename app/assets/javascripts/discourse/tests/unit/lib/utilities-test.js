@@ -251,18 +251,28 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("inCodeBlock", function (assert) {
-    const text =
-      "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
-    for (let i = 0; i < text.length; ++i) {
-      if (text[i] === "0") {
-        assert.notOk(
-          inCodeBlock(text, i),
-          `position ${i} is not in code block`
-        );
-      } else if (text[i] === "1") {
-        assert.ok(inCodeBlock(text, i), `position ${i} is in code block`);
+    const texts = [
+      // closed code blocks
+      "000\n\n    111\n\n000",
+      "000 `111` 000",
+      "000\n```\n111\n```\n000",
+      "000\n[code]111[/code]\n000",
+      // open code blocks
+      "000\n\n    111",
+      "000 `111",
+      "000\n```\n111",
+      "000\n[code]111",
+      // complex test
+      "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`111",
+    ];
+
+    texts.forEach((text) => {
+      for (let i = 0; i < text.length; ++i) {
+        if (text[i] === "0" || text[i] === "1") {
+          assert.equal(inCodeBlock(text, i), text[i] === "1");
+        }
       }
-    }
+    });
   });
 
   skip("inCodeBlock - runs fast", function (assert) {

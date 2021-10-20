@@ -1265,7 +1265,6 @@ bg:
       cancel: "Прекрати"
       create_topic: "Създай тема"
       create_pm: "Съобщение"
-      title: "Или натиснете Ctrl+Enter"
       users_placeholder: "Добави потребител"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
@@ -1336,8 +1335,8 @@ bg:
       select_all: "Избери Всички "
       clear_all: "Изчисти Всички"
       too_short: "Думата за търсене е твърде кратка."
-      title: "търсете по тема, пост, потребител или категория"
-      full_page_title: "търсене на теми или публикации"
+      title: "Търсене"
+      full_page_title: "Търсене"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
       post_format: "#%{post_number} от %{username} "
@@ -1347,13 +1346,17 @@ bg:
       search_google: "Опитайте вместо това търсене с Гугъл:"
       search_google_button: "Google"
       search_button: "Търсене"
+      categories: "Категории"
+      tags: "Етикети"
+      type:
+        users: "Потребители"
+        categories: "Категории"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
         topic: "Търсете тази тема"
         private_messages: "Търси съобщения"
       advanced:
-        title: Разширено търсене
         posted_by:
           label: Публикувано от
         in_group:
@@ -1377,7 +1380,6 @@ bg:
             after: след
         views:
           label: Преглеждания
-    hamburger_menu: "Отиди към друг списък с теми или друга категория "
     new_item: "нови"
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
@@ -1484,6 +1486,7 @@ bg:
         remove: "Деактивиране"
       topic_status_update:
         when: "Кога:"
+        duration: "Продължителност"
       auto_update_input:
         none: "Избери времева рамка"
         later_today: "По-късно днес"
@@ -1688,6 +1691,7 @@ bg:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
     post:
+      quote_edit: "Редактирай"
       quote_share: "Споделяне"
       edit_reason: "Причина: "
       post_number: "публикация %{number} "
@@ -2135,6 +2139,8 @@ bg:
           name: Други
         posting:
           name: Публикуване
+    download_calendar:
+      download: "Изтегли"
     tagging:
       all_tags: "Всички тагове"
       other_tags: "Други тагове"

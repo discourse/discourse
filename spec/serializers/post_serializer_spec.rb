@@ -45,7 +45,8 @@ describe PostSerializer do
     it "should not allow user to flag post and notify non human user" do
       post.update!(user: Discourse.system_user)
 
-      serializer = PostSerializer.new(post,
+      serializer = PostSerializer.new(
+        post,
         scope: Guardian.new(actor),
         root: false
       )
@@ -244,6 +245,17 @@ describe PostSerializer do
 
         it "returns the reminder_at for the bookmark" do
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
+        end
+      end
+    end
+
+    context "when the post bookmark is for_topic" do
+      let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, post: post, for_topic: true) }
+
+      context "bookmarks with reminders" do
+        it "returns false, because we do not want to mark the post as bookmarked, because the bookmark is for the topic" do
+          expect(serialized.as_json[:bookmarked]).to eq(false)
+          expect(serialized.as_json[:bookmark_reminder_at]).to eq(nil)
         end
       end
     end

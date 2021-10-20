@@ -18,7 +18,7 @@
           <category><%= topic.category.name %></category>
           <description><![CDATA[
             <%- if first_post = topic.ordered_posts.first %>
-            <%= first_post.cooked.html_safe %>
+            <%= PrettyText.format_for_email(first_post.cooked, first_post).html_safe %>
             <%- end %>
             <p><small><%= t 'rss_num_posts', count: topic.posts_count %> - <%= t 'rss_num_participants', count: topic.participant_count %></small></p>
             <p><%= link_to t('read_full_topic'), topic_url %></p>

@@ -16,6 +16,7 @@ it:
       date_only: "%B %-d, %Y"
       long: "%-d %B %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%d%m%YT%H%M%SZ"
   date:
     month_names:
     - null
@@ -394,6 +395,7 @@ it:
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
+      for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -658,6 +660,9 @@ it:
     has_likes:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
+    cannot_permanently_delete:
+      many_posts: "Non è possibile eliminare definitivamente questo argomento perché ci sono altri messaggi."
+      wait_or_different_admin: "Devi aspettare %{time_left} per poter eliminare definitivamente questo messaggio, oppure dovrà farlo un diverso amministratore."
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "Hai eseguito questa operazione troppe volte. Attendi %{time_left} prima di riprovare."
@@ -882,19 +887,10 @@ it:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
   user_activity:
-    no_default:
-      self: "Non hai ancora nessuna attività."
-      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto messaggi nei segnalibri. I segnalibri ti consentono di accedere velocemente a specifici messaggi."
       search: "Nessun segnalibro trovato con la query di ricerca fornita."
       others: "Nessun segnalibro."
-    no_likes_given:
-      self: "Non hai messo \"Mi piace\" ad alcun messaggio."
-      others: "Nessun messaggio con \"Mi piace\"."
-    no_replies:
-      self: "Non hai risposto a nessun messaggio."
-      others: "Nessuna risposta."
     no_drafts:
       self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
   email_settings:
@@ -957,7 +953,7 @@ it:
         remove: "Questo argomento non è più un banner. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Preferenze email aggiornate!"
-    description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
+    description: "Le impostazioni email per <b>%{email}</b> sono state aggiornate. Per modificarle <a href='%{url}'>visita le preferenze utente</a>."
     topic_description: "Per iscriverti di nuovo a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
     private_topic_description: "Per iscriverti di nuovo, usa il controllo notifica in fondo o sulla destra dell'argomento."
   uploads:
@@ -1924,6 +1920,7 @@ it:
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, impostare l'opzione vuota per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
+    disable_category_edit_notifications: "Disabilita le notifiche di modifica delle categorie negli argomenti."
     notification_consolidation_threshold: "Il numero di notifiche per richieste di adesione o di \"Mi piace\" ricevuti prima che le notifiche vengano raccolte in una sola. Impostare il valore a 0 per disabilitare l'opzione."
     likes_notification_consolidation_window_mins: "Durata in minuti del periodo in cui le notifiche dei \"mi piace\" sono raccolte in un'unica notifica una volta raggiunta la soglia definita. La soglia può essere configurata tramite l'impostazione `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Spunta automaticamente gli argomenti quando l'utente arriva in fondo."
@@ -1985,6 +1982,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
+    enable_fast_edit: "Abilita la modifica in linea della breve selezione del testo di un messaggio."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -3140,6 +3138,26 @@ it:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Messaggio utente"
       subject_template: "[%{email_prefix}]%{topic_title}"
@@ -3414,12 +3432,15 @@ it:
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
+      too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
+      too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"
+      too_large_humanized: "(immagine più grandi di %{max_size})"
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
@@ -4050,21 +4071,17 @@ it:
     missing_version: "Devi fornire un parametro versione"
     conflict: "C'è stato un conflitto di aggiornamento che ti impedisce di compiere questa azione."
     reasons:
-      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi 'approve_post_count'."
-      trust_level: "Le risposte degli utenti con un basso livello di attendibilità devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Gli Argomenti di utenti con basso livello di attendibilità devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
-      fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
-      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione `auto_silence_first_post_regex`."
-      watched_word: "Questo messaggio include una parola osservata. Guarda il tuo <a href='%{base_url}/admin/customize/watched_words'>elenco di parole osservate</a> ."
-      staged: "Nuovi argomenti e messaggi per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
-      category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
-      must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."
-      invite_only: "Tutti i nuovi utenti dovrebbero essere invitati. Vedi `invite_only`."
+      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi %{link}"
+      trust_level: "Le risposte degli utenti con un basso livello di fiducia devono essere approvate dallo staff. Vedi %{link}"
+      new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di fiducia devono essere approvati dallo staff. Vedi %{link}"
+      fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
+      watched_word: "Questo post includeva una parola osservata. Vedi il tuo %{link}."
       email_auth_res_enqueue: "Questa email ha fallito un controllo DMARC, molto probabilmente non arriva da chi sembra provenire. Controlla le intestazioni email non elaborate per ulteriori informazioni."
-      email_spam: "Questa email è stata contrassegnata come spam dall'intestazione definita in `email_in_spam_header`."
-      suspect_user: "Questo nuovo utente ha inserito le informazioni del profilo senza leggere alcun argomento o messaggio, il che suggerisce fortemente che potrebbe essere uno spammer. Vedi `approve_suspect_users`."
-      contains_media: "Questo post include i contenuti multimediali incorporati. Vedi `review_media_unless_trust_level`."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
+      links:
+        watched_word: lista delle parole osservate
+        category: impostazioni della categoria
     actions:
       agree:
         title: "Acconsenti..."
@@ -4159,6 +4176,7 @@ it:
       other: "%{topic_title} (Parti %{count})"
     post_raw: "La discussione prosegue da %{parent_url}.\n\nDiscussioni precedenti:\n\n%{previous_topics}"
     small_action_post_raw: "Continua la discussione su %{new_title}."
+  fallback_username: "utente"
   activemodel:
     errors:
       <<: *errors

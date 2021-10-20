@@ -18,15 +18,26 @@ lt:
         many: "balsų iš viso"
         other: "balsų iš viso"
       average_rating: "Vidutinis reitingas: <strong>%{average}</strong>."
+      results:
+        groups:
+          title: "Jūs turite būti %{groups} narys, norėdami balsuoti šioje apklausoje."
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
       show-results:
         title: "Rodyti balsavimo rezultatus"
         label: "Rodyti rezultatus"
+      remove-vote:
+        title: "Pašalinti savo balsą"
+        label: "Pašalinti balsą"
       hide-results:
         title: "Grįžti į balsavimus"
+        label: "Rodyti balsavimą"
+      group-results:
+        title: "Grupuoti balsus pagal vartotojo lauką"
+        label: "Rodyti suskirstymą"
       export-results:
+        title: "Eksportuokite apklausos rezultatus"
         label: "Eksportuoti"
       open:
         title: "Atidaryti balsavimą"
@@ -37,7 +48,48 @@ lt:
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
       breakdown:
+        title: "Apklausos rezultatai"
+        votes: "%{count} balsų"
+        percentage: "Procentas"
         count: "Skaičiuoti"
+      error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
+      error_while_fetching_voters: "Atsiprašome, rodant rinkėjus įvyko klaida."
+      error_while_exporting_results: "Apgailestaujame, eksportuojant apklausos rezultatus įvyko klaida."
       ui_builder:
+        title: Kurti apklausą
+        insert: Įterpti apklausą
+        help:
+          options_min_count: Įveskite bent 1 parinktį.
+          options_max_count: Įveskite daugiausia %{count} parinkčių.
+          invalid_min_value: Minimali vertė turi būti bent 1.
+          invalid_max_value: Didžiausia vertė turi būti bent 1, bet mažesnė arba lygi parinkčių skaičiui.
+          invalid_values: Minimali vertė turi būti mažesnė už didžiausią vertę.
         poll_type:
           label: Tipas
+          regular: Vienas pasirinkimas
+          multiple: Keli pasirinkimai
+        poll_result:
+          label: Rodyti rezultatus...
+          always: Visada matomas
+          vote: Tik po balsavimo
+          closed: Kai apklausa uždaryta
+          staff: Tik personalui
+        poll_groups:
+          label: Balsavimo apribojimas šioms grupėms
+        poll_chart_type:
+          label: Rezultatų diagrama
+        poll_config:
+          max: Maksimalūs pasirinkimai
+          min: Minimalūs pasirinkimai
+          step: Žingsnis
+        poll_public:
+          label: Rodyti, kas balsavo
+        poll_title:
+          label: Pavadinimas (neprivaloma)
+        poll_options:
+          label: Parinktys (po vieną eilutėje)
+          add: Pridėti parinktį
+        automatic_close:
+          label: Automatiškai uždaryti apklausą
+        show_advanced: "Rodyti išplėstines parinktis"
+        hide_advanced: "Slėpti išplėstines parinktis"

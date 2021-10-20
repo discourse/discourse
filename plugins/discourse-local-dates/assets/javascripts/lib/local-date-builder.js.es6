@@ -1,9 +1,15 @@
 import DateWithZoneHelper from "./date-with-zone-helper";
 import I18n from "I18n";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
-const TIME_FORMAT = "LLL";
+const DATETIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";
+const FULL_DATETIME_FORMAT = "LLLL";
+const TIME_FORMAT = "h:mm A";
+const DAY_OF_THE_WEEK_FORMAT = "dddd";
 const RANGE_SEPARATOR = "→";
+const TIME_ICON = "clock";
+const SHORT_FORMAT_DAYS_PERIOD = 1;
 
 export default class LocalDateBuilder {
   constructor(params = {}, localTimezone) {
@@ -17,8 +23,9 @@ export default class LocalDateBuilder {
     this.calendar =
       typeof params.calendar === "undefined" ? true : params.calendar;
     this.displayedTimezone = params.displayedTimezone;
-    this.format = params.format || (this.time ? TIME_FORMAT : DATE_FORMAT);
+    this.format = params.format || (this.time ? DATETIME_FORMAT : DATE_FORMAT);
     this.countdown = params.countdown;
+    this.duration = params.duration;
     this.localTimezone = localTimezone;
   }
 
@@ -95,7 +102,8 @@ export default class LocalDateBuilder {
           localDate.timezone,
           this.localTimezone
         ),
-        this.time
+        this.time,
+        this.duration
       ),
     });
 
@@ -126,7 +134,8 @@ export default class LocalDateBuilder {
             localDate.timezone,
             timezone
           ),
-          this.time
+          this.time,
+          this.duration
         ),
       });
     });
@@ -148,19 +157,56 @@ export default class LocalDateBuilder {
     );
   }
 
-  _createDateTimeRange(startRange, time) {
+  _createDateTimeRange(startRange, time, duration) {
+    const [startDate, endDate] = this._calculateDatesForRange(
+      startRange,
+      time,
+      duration
+    );
+    let formatElements = [
+      startDate.format(`${DAY_OF_THE_WEEK_FORMAT}, ${DATE_FORMAT}`),
+      this._optionalTimeIcon(startDate, endDate),
+      startDate.format(TIME_FORMAT),
+    ];
+    if (endDate) {
+      formatElements = formatElements.concat([
+        RANGE_SEPARATOR,
+        endDate.format(this._endDateFormat(startDate, endDate)),
+      ]);
+    }
+    return formatElements.filter(Boolean).join(" ");
+  }
+
+  _shortFormat(startDate, endDate) {
+    return (
+      endDate.datetime.diff(startDate.datetime, "days") <
+      SHORT_FORMAT_DAYS_PERIOD
+    );
+  }
+
+  _optionalTimeIcon(startDate, endDate) {
+    if (!endDate || this._shortFormat(startDate, endDate)) {
+      return `<br />${renderIcon("string", TIME_ICON)}`;
+    }
+  }
+
+  _endDateFormat(startDate, endDate) {
+    return this._shortFormat(startDate, endDate)
+      ? TIME_FORMAT
+      : FULL_DATETIME_FORMAT;
+  }
+
+  _calculateDatesForRange(date, time, duration) {
     // if a time has been given we do not attempt to automatically create a range
     // instead we show only one date with a format showing the time
-    if (time) {
-      return startRange.format(TIME_FORMAT);
-    } else {
-      const endRange = startRange.add(24, "hours");
-      return [
-        startRange.format("LLLL"),
-        RANGE_SEPARATOR,
-        endRange.format("LLLL"),
-      ].join(" ");
+    if (time && !duration) {
+      return [date];
     }
+    const dates = [
+      date,
+      duration ? date.add(duration, "minutes") : date.add(24, "hours"),
+    ];
+    return duration < 0 ? dates.reverse() : dates;
   }
 
   _applyFormatting(localDate, displayedTimezone) {

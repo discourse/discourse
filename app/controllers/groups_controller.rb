@@ -736,6 +736,8 @@ class GroupsController < ApplicationController
       end
     end
 
+    permitted_params = permitted_params | DiscoursePluginRegistry.group_params
+
     params.require(:group).permit(*permitted_params)
   end
 

@@ -16,16 +16,14 @@ import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 
+export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
+
 export default Mixin.create({
   uploading: false,
   uploadProgress: 0,
   _uppyInstance: null,
   autoStartUploads: true,
   id: null,
-
-  // TODO (martin): this is only used in one place, consider just using
-  // form data/meta instead uploadUrlParams: "&for_site_setting=true",
-  uploadUrlParams: "",
 
   // TODO (martin): currently used for backups to turn on auto upload and PUT/XML requests
   // and for emojis to do sequential uploads, when we get to replacing those
@@ -81,7 +79,11 @@ export default Mixin.create({
 
       // need to use upload_type because uppy overrides type with the
       // actual file type
-      meta: deepMerge({ upload_type: this.type }, this.data || {}),
+      meta: deepMerge(
+        { upload_type: this.type },
+        this.additionalParams || {},
+        this.data || {}
+      ),
 
       onBeforeFileAdded: (currentFile) => {
         const validationOpts = deepMerge(
@@ -158,7 +160,6 @@ export default Mixin.create({
       this._reset();
     });
 
-    // hidden setting like enable_experimental_image_uploader
     if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3Uploads();
     } else {
@@ -222,8 +223,7 @@ export default Mixin.create({
     return (
       getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
       ".json?client_id=" +
-      (this.messageBus && this.messageBus.clientId) +
-      this.uploadUrlParams
+      this.messageBus?.clientId
     );
   },
 
@@ -250,9 +250,10 @@ export default Mixin.create({
   _completeExternalUpload(file) {
     return ajax(getUrl("/uploads/complete-external-upload"), {
       type: "POST",
-      data: {
-        unique_identifier: file.meta.uniqueUploadIdentifier,
-      },
+      data: deepMerge(
+        { unique_identifier: file.meta.uniqueUploadIdentifier },
+        this.additionalParams || {}
+      ),
     });
   },
 

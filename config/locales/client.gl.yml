@@ -115,6 +115,7 @@ gl:
       previous_month: "Mes anterior"
       next_month: "Mes seguinte"
       placeholder: data
+      to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación #%{postNumber}"
@@ -303,6 +304,9 @@ gl:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_categories:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -1838,7 +1842,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      title: "Ou prema Ctrl+Intro"
       users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
@@ -2028,8 +2031,8 @@ gl:
       result_count:
         one: "<span>%{count} resultado de</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados de</span><span class='term'>%{term}</span>"
-      title: "buscar temas, publicacións, usuarios ou categorías"
-      full_page_title: "buscar temas ou publicacións"
+      title: "Buscar"
+      full_page_title: "Buscar"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
       post_format: "#%{post_number} de %{username}"
@@ -2041,6 +2044,11 @@ gl:
       search_google: "Probe a buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
+      categories: "Categorías"
+      tags: "Etiquetas"
+      type:
+        users: "Usuarios"
+        categories: "Categorías"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -2048,7 +2056,6 @@ gl:
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
       advanced:
-        title: Busca avanzada
         posted_by:
           label: Publicado por
         in_category:
@@ -2101,7 +2108,6 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir a outra lista de temas ou categoría"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
@@ -2259,6 +2265,7 @@ gl:
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
+        duration: "Duración"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2576,6 +2583,7 @@ gl:
           other: "Seleccionou <b>%{count}</b> publicacións."
     post:
       quote_reply: "Cita"
+      quote_edit: "Editar"
       quote_share: "Compartir"
       edit_reason: "Razón: "
       post_number: "publicación %{number}"
@@ -2666,6 +2674,7 @@ gl:
             other: "Si, e as %{count} respostas"
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
+        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -3235,6 +3244,8 @@ gl:
           name: Outro
         posting:
           name: Publicación
+    download_calendar:
+      download: "Descargar"
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
@@ -3370,6 +3381,10 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
+    user_activity:
+      no_activity_others: "Sen actividade."
+      no_replies_others: "Sen respostas."
+      no_likes_others: "Ningún Gústame en publicacións."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

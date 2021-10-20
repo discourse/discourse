@@ -3,7 +3,10 @@
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
 
+  {{plugin-outlet name="discovery-list-controls-above"}}
+
   <div class="list-controls">
+    {{plugin-outlet name="discovery-navigation-bar-above" tagName=""}}
     <div class="container">
       <section class="navigation-container tag-navigation">
         {{d-navigation
@@ -40,6 +43,8 @@
   {{topic-dismiss-buttons position="top" selectedTopics=selected
     model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
+  {{plugin-outlet name="discovery-above"}}
+
   <div class="container list-container">
     <div class="row">
       <div class="full-width">
@@ -58,11 +63,6 @@
                   {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
                 </div>
               {{/if}}
-              {{bulk-select-button
-                selected=selected
-                action=(action "refresh")
-                category=category
-              }}
 
               {{#if list.topics}}
                 {{topic-list
@@ -70,8 +70,10 @@
                   canBulkSelect=canBulkSelect
                   toggleBulkSelect=(action "toggleBulkSelect")
                   bulkSelectEnabled=bulkSelectEnabled
+                  bulkSelectAction=(action "refresh")
                   updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
                   selected=selected
+                  category=category
                   showPosters=true
                   order=order
                   ascending=ascending

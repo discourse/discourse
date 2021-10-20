@@ -39,7 +39,7 @@ export default Mixin.create({
   isFixed: false,
   isDocked: false,
 
-  _show(username, target) {
+  _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
@@ -54,8 +54,11 @@ export default Mixin.create({
       return false;
     }
 
+    this.appEvents.trigger("card:show", username, target, event);
+
     const currentUsername = this.username;
-    if (username === currentUsername && this.loading === username) {
+    if (username === currentUsername || this.loading === username) {
+      this._positionCard($(target));
       return;
     }
 
@@ -152,11 +155,10 @@ export default Mixin.create({
 
       event.preventDefault();
       event.stopPropagation();
-      return this._show(transformText(matchingEl), matchingEl);
+      return this._show(transformText(matchingEl), matchingEl, event);
     }
-    {
-      return false;
-    }
+
+    return false;
   },
 
   _topicHeaderTrigger(username, $target) {
@@ -314,6 +316,7 @@ export default Mixin.create({
     }
 
     this._hide();
+    this.appEvents.trigger("card:hide");
   },
 
   willDestroyElement() {

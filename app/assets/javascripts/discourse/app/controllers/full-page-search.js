@@ -15,6 +15,10 @@ import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
+import { Promise } from "rsvp";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import showModal from "discourse/lib/show-modal";
+import userSearch from "discourse/lib/user-search";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -23,6 +27,11 @@ const SortOrders = [
   { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
   { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
 ];
+
+export const SEARCH_TYPE_DEFAULT = "topics_posts";
+export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
+export const SEARCH_TYPE_USERS = "users";
+
 const PAGE_LIMIT = 10;
 
 export default Controller.extend({
@@ -31,11 +40,17 @@ export default Controller.extend({
   bulkSelectEnabled: null,
 
   loading: false,
-  queryParams: ["q", "expanded", "context_id", "context", "skip_context"],
-  q: null,
-  selected: [],
-  expanded: false,
+  queryParams: [
+    "q",
+    "expanded",
+    "context_id",
+    "context",
+    "skip_context",
+    "search_type",
+  ],
+  q: undefined,
   context_id: null,
+  search_type: SEARCH_TYPE_DEFAULT,
   context: null,
   searching: false,
   sortOrder: 0,
@@ -43,10 +58,32 @@ export default Controller.extend({
   invalidSearch: false,
   page: 1,
   resultCount: null,
+  searchTypes: null,
+
+  init() {
+    this._super(...arguments);
+
+    this.set("searchTypes", [
+      { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
+      {
+        name: this.siteSettings.tagging_enabled
+          ? I18n.t("search.type.categories_and_tags")
+          : I18n.t("search.type.categories"),
+        id: SEARCH_TYPE_CATS_TAGS,
+      },
+      { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
+    ]);
+    this.selected = [];
+  },
 
   @discourseComputed("resultCount")
   hasResults(resultCount) {
     return (resultCount || 0) > 0;
+  },
+
+  @discourseComputed("expanded")
+  expandFilters(expanded) {
+    return expanded === "true";
   },
 
   @discourseComputed("q")
@@ -138,6 +175,14 @@ export default Controller.extend({
     }
   },
 
+  @observes("search_type")
+  triggerSearchOnTypeChange() {
+    if (this.searchActive) {
+      this.set("page", 1);
+      this._search();
+    }
+  },
+
   @observes("model")
   modelChanged() {
     if (this.searchTerm !== this.q) {
@@ -182,9 +227,19 @@ export default Controller.extend({
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.posts.length")
+  @observes("model.[posts,categories,tags,users].length")
   resultCountChanged() {
-    this.set("resultCount", this.get("model.posts.length"));
+    if (!this.model.posts) {
+      return 0;
+    }
+
+    this.set(
+      "resultCount",
+      this.model.posts.length +
+        this.model.categories.length +
+        this.model.tags.length +
+        this.model.users.length
+    );
   },
 
   @discourseComputed("hasResults")
@@ -200,6 +255,18 @@ export default Controller.extend({
   @discourseComputed("page")
   isLastPage(page) {
     return page === PAGE_LIMIT;
+  },
+
+  @discourseComputed("search_type")
+  usingDefaultSearchType(searchType) {
+    return searchType === SEARCH_TYPE_DEFAULT;
+  },
+
+  @discourseComputed("bulkSelectEnabled")
+  searchInfoClassNames(bulkSelectEnabled) {
+    return bulkSelectEnabled
+      ? "search-info bulk-select-visible"
+      : "search-info";
   },
 
   searchButtonDisabled: or("searching", "loading"),
@@ -244,33 +311,71 @@ export default Controller.extend({
 
     const searchKey = getSearchKey(args);
 
-    ajax("/search", { data: args })
-      .then(async (results) => {
-        const model = (await translateResults(results)) || {};
+    switch (this.search_type) {
+      case SEARCH_TYPE_CATS_TAGS:
+        const categoryTagSearch = searchCategoryTag(
+          searchTerm,
+          this.siteSettings
+        );
+        Promise.resolve(categoryTagSearch)
+          .then(async (results) => {
+            const categories = results.filter((c) => Boolean(c.model));
+            const tags = results.filter((c) => !Boolean(c.model));
+            const model = (await translateResults({ categories, tags })) || {};
+            this.set("model", model);
+          })
+          .finally(() => {
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
+          });
+        break;
+      case SEARCH_TYPE_USERS:
+        userSearch({ term: searchTerm, limit: 20 })
+          .then(async (results) => {
+            const model = (await translateResults({ users: results })) || {};
+            this.set("model", model);
+          })
+          .finally(() => {
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
+          });
+        break;
+      default:
+        ajax("/search", { data: args })
+          .then(async (results) => {
+            const model = (await translateResults(results)) || {};
 
-        if (results.grouped_search_result) {
-          this.set("q", results.grouped_search_result.term);
-        }
+            if (results.grouped_search_result) {
+              this.set("q", results.grouped_search_result.term);
+            }
 
-        if (args.page > 1) {
-          if (model) {
-            this.model.posts.pushObjects(model.posts);
-            this.model.topics.pushObjects(model.topics);
-            this.model.set(
-              "grouped_search_result",
-              results.grouped_search_result
-            );
-          }
-        } else {
-          setTransient("lastSearch", { searchKey, model }, 5);
-          model.grouped_search_result = results.grouped_search_result;
-          this.set("model", model);
-        }
-      })
-      .finally(() => {
-        this.set("searching", false);
-        this.set("loading", false);
-      });
+            if (args.page > 1) {
+              if (model) {
+                this.model.posts.pushObjects(model.posts);
+                this.model.topics.pushObjects(model.topics);
+                this.model.set(
+                  "grouped_search_result",
+                  results.grouped_search_result
+                );
+              }
+            } else {
+              setTransient("lastSearch", { searchKey, model }, 5);
+              model.grouped_search_result = results.grouped_search_result;
+              this.set("model", model);
+            }
+          })
+          .finally(() => {
+            this.setProperties({
+              searching: false,
+              loading: false,
+            });
+          });
+        break;
+    }
   },
 
   actions: {
@@ -309,16 +414,25 @@ export default Controller.extend({
       this.selected.clear();
     },
 
-    search() {
-      this.set("page", 1);
-      this._search();
-      if (this.site.mobileView) {
-        this.set("expanded", false);
-      }
+    showBulkActions() {
+      const modalController = showModal("topic-bulk-actions", {
+        model: {
+          topics: this.selected,
+        },
+        title: "topics.bulk.actions",
+      });
+
+      modalController.set("refreshClosure", () => this._search());
     },
 
-    toggleAdvancedSearch() {
-      this.toggleProperty("expanded");
+    search(options = {}) {
+      if (options.collapseFilters) {
+        document
+          .querySelector("details.advanced-filters")
+          ?.removeAttribute("open");
+      }
+      this.set("page", 1);
+      this._search();
     },
 
     loadMore() {

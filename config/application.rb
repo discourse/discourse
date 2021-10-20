@@ -99,6 +99,9 @@ module Discourse
     config.skip_multisite_middleware = true
     config.skip_rails_failover_active_record_middleware = true
 
+    multisite_config_path = ENV['DISCOURSE_MULTISITE_CONFIG_PATH'] || GlobalSetting.multisite_config_path
+    config.multisite_config_path = File.absolute_path(multisite_config_path, Rails.root)
+
     # Disable so this is only run manually
     # we may want to change this later on
     # issue is image_optim crashes on missing dependencies

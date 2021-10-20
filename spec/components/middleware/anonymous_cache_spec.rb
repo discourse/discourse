@@ -186,7 +186,7 @@ describe Middleware::AnonymousCache do
 
       app = Middleware::AnonymousCache.new(
         lambda do |env|
-          is_anon = env["HTTP_COOKIE"].nil?
+          is_anon = env["HTTP_COOKIE"].nil? && env["HTTP_DISCOURSE_LOGGED_IN"].nil?
           [200, {}, ["ok"]]
         end
       )
@@ -196,6 +196,7 @@ describe Middleware::AnonymousCache do
 
       env = {
         "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HTTP_DISCOURSE_LOGGED_IN" => "true",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",
         "REQUEST_URI" => "/somewhere/rainbow",

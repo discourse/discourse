@@ -66,11 +66,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_topic_draft,
              :can_review,
              :draft_count,
+             :default_calendar,
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
-    object.visible_groups.pluck(:id, :name).map do |id, name|
-      group = { id: id, name: name }
+    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
+      group = { id: id, name: name, has_messages: has_messages }
       group[:owner] = true if owned_group_ids.include?(id)
       group
     end
@@ -138,6 +139,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def timezone
     object.user_option.timezone
+  end
+
+  def default_calendar
+    object.user_option.default_calendar
   end
 
   def can_send_private_email_messages

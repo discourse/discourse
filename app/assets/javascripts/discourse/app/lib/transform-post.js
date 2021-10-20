@@ -39,7 +39,6 @@ export function transformBasicPost(post) {
     bookmarked: post.bookmarked,
     bookmarkReminderAt: post.bookmark_reminder_at,
     bookmarkName: post.bookmark_name,
-    bookmarkReminderType: post.bookmark_reminder_type,
     yours: post.yours,
     shareUrl: post.get("shareUrl"),
     staff: post.staff,
@@ -53,6 +52,7 @@ export function transformBasicPost(post) {
     created_at: post.created_at,
     updated_at: post.updated_at,
     canDelete: post.can_delete,
+    canPermanentlyDelete: post.can_permanently_delete,
     showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
@@ -262,6 +262,7 @@ export default function transformPost(
     postAtts.canRecoverTopic = postAtts.isDeleted && details.can_recover;
     postAtts.canDeleteTopic = !postAtts.isDeleted && details.can_delete;
     postAtts.expandablePost = topic.expandable_first_post;
+    postAtts.canPermanentlyDeleteTopic = details.can_permanently_delete;
 
     // Show a "Flag to delete" message if not staff and you can't
     // otherwise delete it.

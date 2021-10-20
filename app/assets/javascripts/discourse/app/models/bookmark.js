@@ -125,43 +125,20 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
-  @discourseComputed("linked_post_number", "fancy_title", "topic_id")
-  topicLink(linked_post_number, fancy_title, id) {
-    return Topic.create({ id, fancy_title, linked_post_number });
-  },
+  @discourseComputed()
+  topicForList() {
+    // for topic level bookmarks we want to jump to the last unread post URL,
+    // which the topic-link helper does by default if no linked post number is
+    // provided
+    const linkedPostNumber = this.for_topic ? null : this.linked_post_number;
 
-  loadItems(params) {
-    let url = `/u/${this.user.username}/bookmarks.json`;
-
-    if (params) {
-      url += "?" + $.param(params);
-    }
-
-    return ajax(url);
-  },
-
-  loadMore(additionalParams) {
-    if (!this.more_bookmarks_url) {
-      return Promise.resolve();
-    }
-
-    let moreUrl = this.more_bookmarks_url;
-    if (moreUrl) {
-      let [url, params] = moreUrl.split("?");
-      moreUrl = url;
-      if (params) {
-        moreUrl += "?" + params;
-      }
-      if (additionalParams) {
-        if (moreUrl.includes("?")) {
-          moreUrl += "&" + $.param(additionalParams);
-        } else {
-          moreUrl += "?" + $.param(additionalParams);
-        }
-      }
-    }
-
-    return ajax({ url: moreUrl });
+    return Topic.create({
+      id: this.topic_id,
+      fancy_title: this.fancy_title,
+      linked_post_number: linkedPostNumber,
+      last_read_post_number: this.last_read_post_number,
+      highest_post_number: this.highest_post_number,
+    });
   },
 
   @discourseComputed(

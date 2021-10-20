@@ -17,9 +17,11 @@ export default class MediaOptimizationWorkerService extends Service {
   }
 
   stopWorker() {
-    this.logIfDebug("Stopping media-optimization-worker...");
-    this.worker.terminate();
-    this.worker = null;
+    if (this.worker) {
+      this.logIfDebug("Stopping media-optimization-worker...");
+      this.worker.terminate();
+      this.worker = null;
+    }
   }
 
   ensureAvailiableWorker() {

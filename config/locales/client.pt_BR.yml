@@ -116,6 +116,7 @@ pt_BR:
       previous_month: "Mês anterior"
       next_month: "Próximo mês"
       placeholder: data
+      to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber}"
@@ -312,6 +313,9 @@ pt_BR:
         confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_categories:
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -969,7 +973,9 @@ pt_BR:
       use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste(a) usuário(a) está oculto."
       expand_profile: "Expandir"
+      sr_expand_profile: "Expandir detalhes do perfil"
       collapse_profile: "Recolher"
+      sr_collapse_profile: "Recolher detalhes do perfil"
       bookmarks: "Favoritos"
       bio: "Sobre mim"
       timezone: "Fuso horário"
@@ -1906,7 +1912,6 @@ pt_BR:
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
-      title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
@@ -2102,8 +2107,8 @@ pt_BR:
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "pesquisar tópicos, postagens, usuários ou categorias"
-      full_page_title: "pesquisar tópicos ou postagens"
+      title: "Pesquisar"
+      full_page_title: "Pesquisar"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
       post_format: "#%{post_number} por %{username}"
@@ -2115,6 +2120,11 @@ pt_BR:
       search_google: "Tente pesquisar com o Google:"
       search_google_button: "Google"
       search_button: "Pesquisar"
+      categories: "Categorias"
+      tags: "Etiquetas"
+      type:
+        users: "Usuários"
+        categories: "Categorias"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
@@ -2122,7 +2132,6 @@ pt_BR:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
-        title: Pesquisa avançada
         posted_by:
           label: Postado por
         in_category:
@@ -2175,7 +2184,6 @@ pt_BR:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -2207,9 +2215,11 @@ pt_BR:
           other: "Descartar novos(as) (%{count})"
         toggle: "alternar seleção de tópicos em massa"
         actions: "Ações em massa"
+        change_category: "Definir categoria..."
         close_topics: "Fechar tópicos"
         archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para caixa de entrada"
+        notification_level: "Notificações..."
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -2348,6 +2358,7 @@ pt_BR:
         time_frame_required: "Selecione um intervalo de tempo"
         min_duration: "A duração deve ser maior do que 0"
         max_duration: "A duração deve ser menor do que 20 anos"
+        duration: "Duração"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         now: "Agora"
@@ -2680,6 +2691,7 @@ pt_BR:
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
     post:
       quote_reply: "Citação"
+      quote_edit: "Editar"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -2771,6 +2783,7 @@ pt_BR:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta postagem"
         admin: "ações administrativas da postagem"
+        permanently_delete: "Excluir permanentemente"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar cor da equipe"
@@ -3141,6 +3154,7 @@ pt_BR:
       other: "usuários(as)"
     category_title: "Categoria"
     history_capped_revisions: "Histórico, últimas 100 revisões"
+    history: "Histórico"
     changed_by: "de %{author}"
     raw_email:
       title: "E-mails recebidos"
@@ -3348,6 +3362,8 @@ pt_BR:
       favorite_max_reached: "Não é possível adicionar mais emblemas aos favoritos."
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
+    download_calendar:
+      download: "Download"
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
@@ -3498,6 +3514,10 @@ pt_BR:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
+    user_activity:
+      no_activity_others: "Nenhuma atividade."
+      no_replies_others: "Sem respostas."
+      no_likes_others: "Nenhuma postagem curtida."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

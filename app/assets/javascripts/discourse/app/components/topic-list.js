@@ -1,16 +1,19 @@
-import { alias, reads } from "@ember/object/computed";
+import { alias, and, reads } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
   classNames: ["topic-list"],
+  classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  canDoBulkActions: and("currentUser.staff", "selected.length"),
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
@@ -162,6 +165,10 @@ export default Component.extend(LoadMore, {
     );
   },
 
+  updateAutoAddTopicsToBulkSelect(newVal) {
+    this.set("autoAddTopicsToBulkSelect", newVal);
+  },
+
   click(e) {
     let self = this;
     let onClick = function (sel, callback) {
@@ -190,6 +197,21 @@ export default Component.extend(LoadMore, {
     onClick("th.sortable", function (e2) {
       this.changeSort(e2.data("sort-order"));
       this.rerender();
+    });
+
+    onClick("button.bulk-select-actions", function () {
+      const controller = showModal("topic-bulk-actions", {
+        model: {
+          topics: this.selected,
+          category: this.category,
+        },
+        title: "topics.bulk.actions",
+      });
+
+      const action = this.bulkSelectAction;
+      if (action) {
+        controller.set("refreshClosure", () => action());
+      }
     });
   },
 

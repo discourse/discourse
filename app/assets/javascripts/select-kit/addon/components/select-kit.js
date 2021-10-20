@@ -139,12 +139,6 @@ export default Component.extend(
       );
     },
 
-    click(event) {
-      if (this.selectKit.options.preventsClickPropagation) {
-        event.stopPropagation();
-      }
-    },
-
     _modifyComponentForRowWrapper(collection, item) {
       let component = this.modifyComponentForRow(collection, item);
       return component || "select-kit/select-kit-row";
@@ -196,10 +190,9 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
-    didInsertElement() {
-      this._super(...arguments);
-
-      this.element.addEventListener("toggle", this.selectKit.toggle);
+    click(event) {
+      event.preventDefault();
+      event.stopPropagation();
     },
 
     willDestroyElement() {
@@ -211,8 +204,6 @@ export default Component.extend(
         this.popper.destroy();
         this.popper = null;
       }
-
-      this.element.removeEventListener("toggle", this.selectKit.toggle);
     },
 
     didReceiveAttrs() {
@@ -295,7 +286,6 @@ export default Component.extend(
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
       castInteger: false,
-      preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
       autofocus: false,
@@ -454,11 +444,8 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (
-            this.selectKit.options.closeOnChange &&
-            this.selectKit.mainElement()
-          ) {
-            this.selectKit.mainElement().open = false;
+          if (this.selectKit.options.closeOnChange) {
+            this.selectKit.close(event);
           }
 
           if (this.selectKit.options.focusAfterOnChange) {
@@ -711,9 +698,16 @@ export default Component.extend(
 
     _scrollToRow(rowItem, preventScroll = true) {
       const value = this.getValue(rowItem);
-      const rowContainer = this.element.querySelector(
-        `.select-kit-row[data-value="${value}"]`
-      );
+
+      let rowContainer;
+      if (isPresent(value)) {
+        rowContainer = this.element.querySelector(
+          `.select-kit-row[data-value="${value}"]`
+        );
+      } else {
+        rowContainer = this.element.querySelector(".select-kit-row.is-none");
+      }
+
       rowContainer && rowContainer.focus({ preventScroll });
     },
 
@@ -783,14 +777,7 @@ export default Component.extend(
 
     select(value, item) {
       if (!isPresent(value)) {
-        if (!this.validateSelect(this.selectKit.highlighted)) {
-          return;
-        }
-
-        this.selectKit.change(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
+        this._onClearSelection();
       } else {
         const existingItem = this.findValue(this.mainCollection, item);
         if (existingItem) {
@@ -835,6 +822,8 @@ export default Component.extend(
         return;
       }
 
+      this.selectKit.mainElement().open = false;
+
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
@@ -855,6 +844,8 @@ export default Component.extend(
       if (this.selectKit.isExpanded) {
         return;
       }
+
+      this.selectKit.mainElement().open = true;
 
       this.clearErrors();
 
@@ -1014,6 +1005,10 @@ export default Component.extend(
         const input = this.getFilterInput();
         if (!forceHeader && input) {
           input.focus({ preventScroll: true });
+
+          if (typeof input.selectionStart === "number") {
+            input.selectionStart = input.selectionEnd = input.value.length;
+          }
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });

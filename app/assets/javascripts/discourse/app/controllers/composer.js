@@ -1,5 +1,4 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import { warn } from "@ember/debug";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -241,13 +240,22 @@ export default Controller.extend({
     return SAVE_ICONS[modelAction];
   },
 
+  // Note we update when some other attributes like tag/category change to allow
+  // text customizations to use those.
   @discourseComputed(
     "model.action",
     "isWhispering",
     "model.editConflict",
-    "model.privateMessage"
+    "model.privateMessage",
+    "model.tags",
+    "model.category"
   )
   saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+    let result = this.model.customizationFor("saveLabel");
+    if (result) {
+      return result;
+    }
+
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {
@@ -285,20 +293,18 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed("model.isEncrypted")
-  composerComponent(isEncrypted) {
+  @discourseComputed()
+  composerComponent() {
     const defaultComposer = "composer-editor";
     if (this.siteSettings.enable_experimental_composer_uploader) {
-      if (isEncrypted) {
-        warn(
-          "Uppy cannot be used for composer uploads until upload handlers are developed, falling back to composer-editor.",
-          { id: "composer" }
-        );
-        return defaultComposer;
-      }
       return "composer-editor-uppy";
     }
     return defaultComposer;
+  },
+
+  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
   },
 
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
@@ -316,6 +322,28 @@ export default Controller.extend({
           };
         })
       );
+
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
 
       options.push(
         this._setupPopupMenuOption(() => {
@@ -677,6 +705,17 @@ export default Controller.extend({
           body,
         });
       });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
     },
   },
 

@@ -38,7 +38,6 @@ export const ButtonClass = {
     }
 
     if (title) {
-      attributes["aria-label"] = title;
       attributes.title = title;
     }
 
