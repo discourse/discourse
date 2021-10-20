@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { action } from "@ember/object";
 import bootbox from "bootbox";
-import showModal from "discourse/lib/show-modal";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
 
 export default Component.extend({
   classNames: ["bookmark-list-wrapper"],
@@ -51,17 +51,14 @@ export default Component.extend({
 
   @action
   editBookmark(bookmark) {
-    let controller = showModal("bookmark", {
-      model: {
-        postId: bookmark.post_id,
-        id: bookmark.id,
-        reminderAt: bookmark.reminder_at,
-        name: bookmark.name,
+    openBookmarkModal(bookmark, {
+      onAfterSave: () => {
+        this.reload();
       },
-      title: "post.bookmarks.edit",
-      modalClass: "bookmark-with-reminder",
+      onAfterDelete: () => {
+        this.reload();
+      },
     });
-    controller.set("afterSave", this.reload);
   },
 
   @action
