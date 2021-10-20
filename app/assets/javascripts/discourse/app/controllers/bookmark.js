@@ -13,6 +13,14 @@ export function openBookmarkModal(
   }
 ) {
   return new Promise((resolve) => {
+    const modalTitle = () => {
+      if (bookmark.for_topic) {
+        return bookmark.id
+          ? "post.bookmarks.edit_for_topic"
+          : "post.bookmarks.create_for_topic";
+      }
+      return bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create";
+    };
     let modalController = showModal("bookmark", {
       model: {
         postId: bookmark.post_id,
@@ -22,7 +30,7 @@ export function openBookmarkModal(
         name: bookmark.name,
         forTopic: bookmark.for_topic,
       },
-      title: bookmark.modalTitle(),
+      title: modalTitle(),
       modalClass: "bookmark-with-reminder",
     });
     modalController.setProperties({
