@@ -698,9 +698,16 @@ export default Component.extend(
 
     _scrollToRow(rowItem, preventScroll = true) {
       const value = this.getValue(rowItem);
-      const rowContainer = this.element.querySelector(
-        `.select-kit-row[data-value="${value}"]`
-      );
+
+      let rowContainer;
+      if (isPresent(value)) {
+        rowContainer = this.element.querySelector(
+          `.select-kit-row[data-value="${value}"]`
+        );
+      } else {
+        rowContainer = this.element.querySelector(".select-kit-row.is-none");
+      }
+
       rowContainer && rowContainer.focus({ preventScroll });
     },
 
