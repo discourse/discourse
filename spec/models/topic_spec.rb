@@ -1040,6 +1040,15 @@ describe Topic do
             expect(topic.allowed_users.include?(extra_user2)).to eq(false)
             expect(other_topic.allowed_users.include?(extra_user1)).to eq(true)
           end
+
+          it "does not remove the OP from topic_allowed_users if they are part of an added group" do
+            admins = Group[:admins]
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+            admins.add(topic.user)
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+            expect(topic.allowed_users.include?(topic.user)).to eq(true)
+          end
         end
       end
     end
