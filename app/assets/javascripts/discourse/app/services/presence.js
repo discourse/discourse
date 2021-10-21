@@ -2,7 +2,15 @@ import Service from "@ember/service";
 import EmberObject, { computed, defineProperty } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import { cancel, debounce, later, next, once, throttle } from "@ember/runloop";
+import {
+  cancel,
+  debounce,
+  later,
+  next,
+  once,
+  run,
+  throttle,
+} from "@ember/runloop";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
@@ -137,9 +145,8 @@ class PresenceChannelState extends EmberObject {
 
     this.lastSeenId = initialData.last_message_id;
 
-    let callback = (data, global_id, message_id) => {
-      this._processMessage(data, global_id, message_id);
-    };
+    let callback = (data, global_id, message_id) =>
+      run(() => this._processMessage(data, global_id, message_id));
     this.presenceService.messageBus.subscribe(
       `/presence${this.name}`,
       callback,

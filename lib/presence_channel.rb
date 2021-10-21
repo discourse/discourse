@@ -61,7 +61,7 @@ class PresenceChannel
   end
 
   DEFAULT_TIMEOUT ||= 60
-  CONFIG_CACHE_SECONDS ||= 120
+  CONFIG_CACHE_SECONDS ||= 10
   GC_SECONDS ||= 24.hours.to_i
   MUTEX_TIMEOUT_SECONDS ||= 10
   MUTEX_LOCKED_ERROR ||= "PresenceChannel mutex is locked"
@@ -281,7 +281,7 @@ class PresenceChannel
   # should not exist, the block should return `nil`. If the channel should exist,
   # the block should return a PresenceChannel::Config object.
   #
-  # Return values may be cached for up to 2 minutes.
+  # Return values may be cached for up to 10 seconds.
   #
   # Plugins should use the {Plugin::Instance.register_presence_channel_prefix} API instead
   def self.register_prefix(prefix, &block)
