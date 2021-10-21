@@ -621,8 +621,8 @@ describe Auth::DefaultCurrentUserProvider do
       end
 
       it "rate limits api usage" do
-        limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
-        limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
+        limiter1 = RateLimiter.new(nil, "user_api_day_#{ApiKey.hash_key(api_key.key)}", 10, 60)
+        limiter2 = RateLimiter.new(nil, "user_api_min_#{ApiKey.hash_key(api_key.key)}", 10, 60)
         limiter1.clear!
         limiter2.clear!
 
