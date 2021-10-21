@@ -5,7 +5,9 @@ class Admin::ApiController < Admin::AdminController
   # If we used "api_key", then our user provider would try to use the value for authentication
 
   def index
-    keys = ApiKey.where(hidden: false)
+    keys = ApiKey
+      .where(hidden: false)
+      .includes(:user, :api_key_scopes)
 
     # Put active keys first
     # Sort active keys by created_at, sort revoked keys by revoked_at
