@@ -93,7 +93,6 @@ class Search
         end
 
         data = data.join(' ')
-
       else
         data.squish!
       end
@@ -990,7 +989,7 @@ class Search
             .push(@search_context.id)
 
           posts.where("topics.category_id in (?)", category_ids)
-        elsif @search_context.is_a?(Topic)
+        elsif is_topic_search
           posts.where("topics.id = #{@search_context.id}")
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         elsif @search_context.is_a?(Tag)
@@ -1028,7 +1027,7 @@ class Search
       else
         posts = posts.order("posts.like_count DESC")
       end
-    else
+    elsif !is_topic_search
       rank = <<~SQL
       TS_RANK_CD(
         post_search_data.search_data,
