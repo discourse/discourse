@@ -24,6 +24,7 @@ export function openBookmarkModal(
     let modalController = showModal("bookmark", {
       model: {
         postId: bookmark.post_id,
+        topicId: bookmark.topic_id,
         id: bookmark.id,
         reminderAt: bookmark.reminder_at,
         autoDeletePreference: bookmark.auto_delete_preference,

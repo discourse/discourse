@@ -36,6 +36,13 @@ const Bookmark = RestModel.extend({
     });
   },
 
+  attachedTo() {
+    if (this.for_topic) {
+      return { target: "topic", targetId: this.topic_id };
+    }
+    return { target: "post", targetId: this.post_id };
+  },
+
   togglePin() {
     if (this.newBookmark) {
       return Promise.resolve();

@@ -19,6 +19,11 @@ export default Component.extend({
         bookmark
           .destroy()
           .then(() => {
+            this.appEvents.trigger(
+              "bookmarks:changed",
+              null,
+              bookmark.attachedTo()
+            );
             this._removeBookmarkFromList(bookmark);
             resolve(true);
           })
@@ -52,7 +57,12 @@ export default Component.extend({
   @action
   editBookmark(bookmark) {
     openBookmarkModal(bookmark, {
-      onAfterSave: () => {
+      onAfterSave: (savedData) => {
+        this.appEvents.trigger(
+          "bookmarks:changed",
+          savedData,
+          bookmark.attachedTo()
+        );
         this.reload();
       },
       onAfterDelete: () => {

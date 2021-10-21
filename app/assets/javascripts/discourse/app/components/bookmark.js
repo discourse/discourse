@@ -201,6 +201,7 @@ export default Component.extend({
       post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
+      topic_id: this.model.topicId,
     });
   },
 
