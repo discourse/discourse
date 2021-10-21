@@ -267,10 +267,6 @@ basic:
     client: true
     default: true
     hidden: true
-  enable_experimental_image_uploader:
-    client: true
-    default: false
-    hidden: true
   enable_experimental_composer_uploader:
     client: true
     default: false
