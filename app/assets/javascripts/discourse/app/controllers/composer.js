@@ -633,7 +633,7 @@ export default Controller.extend({
 
     save(ignore, event) {
       this.save(false, {
-        jump: !(event && event.shiftKey) && !this.skipJumpOnSave,
+        jump: !event?.shiftKey && !this.skipJumpOnSave,
       });
     },
 
