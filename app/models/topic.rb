@@ -971,10 +971,10 @@ class Topic < ActiveRecord::Base
   end
 
   def invite_group(user, group)
-    TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
-    allowed_groups.reload
+    TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
+    self.allowed_groups.reload
 
-    last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
+    last_post = self.posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
       Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
@@ -985,7 +985,7 @@ class Topic < ActiveRecord::Base
     # we cannot strip the topic_allowed_user record since it will be more
     # complicated to recover the topic_allowed_user record for the OP if the
     # group is removed.
-    allowed_user_usernames_to_remove = DB.query_single(<<~SQL, group_id: group.id, topic_id: id, op_user_id: first_post.user_id)
+    allowed_user_usernames_to_remove = DB.query_single(<<~SQL, group_id: group.id, topic_id: self.id, op_user_id: self.user_id)
       SELECT DISTINCT users.username
       FROM topic_allowed_users
       INNER JOIN group_users ON group_users.user_id = topic_allowed_users.user_id
