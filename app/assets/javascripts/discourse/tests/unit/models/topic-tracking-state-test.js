@@ -745,20 +745,9 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("subscribe to category", function (assert) {
-    const store = createStore();
-    const darth = store.createRecord("category", { id: 1, slug: "darth" }),
-      luke = store.createRecord("category", {
-        id: 2,
-        slug: "luke",
-        parentCategory: darth,
-      }),
-      categoryList = [darth, luke];
-
-    sinon.stub(Category, "list").returns(categoryList);
-
     const trackingState = TopicTrackingState.create();
 
-    trackingState.trackIncoming("c/darth/1/l/latest");
+    trackingState.trackIncoming("c/feature/2/l/latest");
 
     trackingState.notifyIncoming({
       message_type: "new_topic",
@@ -773,7 +762,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
-      payload: { category_id: 1 },
+      payload: { category_id: 26 },
     });
 
     assert.equal(
@@ -783,7 +772,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
 
     trackingState.resetTracking();
-    trackingState.trackIncoming("c/darth/luke/2/l/latest");
+    trackingState.trackIncoming("c/feature/spec/26/l/latest");
 
     trackingState.notifyIncoming({
       message_type: "new_topic",
@@ -795,16 +784,38 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       topic_id: 2,
       payload: { category_id: 3 },
     });
+
+    assert.equal(
+      trackingState.get("incomingCount"),
+      0,
+      "parent or other category doesn't affect subcategory"
+    );
+
     trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
-      payload: { category_id: 1 },
+      payload: { category_id: 26 },
     });
 
     assert.equal(
       trackingState.get("incomingCount"),
       1,
       "expect to properly track incoming for subcategory"
+    );
+
+    trackingState.resetTracking();
+    trackingState.trackIncoming("c/feature/spec/26/none/l/latest");
+
+    trackingState.notifyIncoming({
+      message_type: "new_topic",
+      topic_id: 3,
+      payload: { category_id: 26 },
+    });
+
+    assert.equal(
+      trackingState.get("incomingCount"),
+      1,
+      "expect to properly track incoming for subcategory using none tags route"
     );
   });
 
