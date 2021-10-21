@@ -40,9 +40,9 @@ module("Unit | Utility | oneboxer", function () {
     await loadOnebox(element);
 
     assert.ok(
-      localCache["http://somegoodurl.com"]
-        .prop("outerHTML")
-        .indexOf("Yet another collaboration tool") !== -1,
+      localCache["http://somegoodurl.com"].outerHTML.indexOf(
+        "Yet another collaboration tool"
+      ) !== -1,
       "stores the html of the onebox in a local cache"
     );
     assert.ok(
