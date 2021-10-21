@@ -632,7 +632,9 @@ export default Controller.extend({
     },
 
     save(ignore, event) {
-      this.save(false, { jump: !(event && event.shiftKey) });
+      this.save(false, {
+        jump: !event?.shiftKey && !this.skipJumpOnSave,
+      });
     },
 
     displayEditReason() {
@@ -956,6 +958,7 @@ export default Controller.extend({
       @param {Number} [opts.prioritizedCategoryId]
       @param {String} [opts.draftSequence]
       @param {Boolean} [opts.skipDraftCheck]
+      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
   open(opts) {
     opts = opts || {};
@@ -981,6 +984,8 @@ export default Controller.extend({
       prioritizedCategoryId: null,
       skipAutoSave: true,
     });
+
+    this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
