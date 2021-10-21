@@ -442,31 +442,30 @@ createWidget("search-menu-assistant", {
           attrs.results.length === 1 &&
           this.router.currentRouteName.startsWith("topic.")
         ) {
-          attrs.results.forEach((user) => {
-            content.push(
-              this.attach("search-menu-assistant-item", {
-                prefix,
-                user,
-                setTopicContext: true,
-                slug: `${prefix}@${user.username}`,
-                suffix: h(
-                  "span.label-suffix",
-                  ` ${I18n.t("search.in_this_topic")}`
-                ),
-              })
-            );
-            content.push(
-              this.attach("search-menu-assistant-item", {
-                prefix,
-                user,
-                slug: `${prefix}@${user.username}`,
-                suffix: h(
-                  "span.label-suffix",
-                  ` ${I18n.t("search.in_topics_posts")}`
-                ),
-              })
-            );
-          });
+          const user = attrs.results[0];
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix,
+              user,
+              setTopicContext: true,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_this_topic")}`
+              ),
+            })
+          );
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix,
+              user,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_topics_posts")}`
+              ),
+            })
+          );
         } else {
           attrs.results.forEach((user) => {
             content.push(
