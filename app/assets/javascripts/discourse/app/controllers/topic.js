@@ -1238,7 +1238,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.appEvents.trigger(
           "bookmarks:changed",
           savedData,
-          bookmark.attatchedTo()
+          bookmark.attachedTo()
         );
 
         // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.

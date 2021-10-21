@@ -391,7 +391,7 @@ const Topic = RestModel.extend({
           this.appEvents.trigger(
             "bookmarks:changed",
             null,
-            bookmark.attatchedTo()
+            bookmark.attachedTo()
           );
         }
 

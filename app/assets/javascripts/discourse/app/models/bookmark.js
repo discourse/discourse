@@ -36,7 +36,7 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  attatchedTo() {
+  attachedTo() {
     if (this.for_topic) {
       return { target: "topic", targetId: this.topic_id };
     }

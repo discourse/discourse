@@ -22,7 +22,7 @@ export default Component.extend({
             this.appEvents.trigger(
               "bookmarks:changed",
               null,
-              bookmark.attatchedTo()
+              bookmark.attachedTo()
             );
             this._removeBookmarkFromList(bookmark);
             resolve(true);
@@ -61,7 +61,7 @@ export default Component.extend({
         this.appEvents.trigger(
           "bookmarks:changed",
           savedData,
-          bookmark.attatchedTo()
+          bookmark.attachedTo()
         );
         this.reload();
       },
