@@ -388,7 +388,7 @@ class TopicView
 
   def bookmarks
     @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
-      :id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference
+      :id, :post_id, "topics.id AS topic_id", :for_topic, :reminder_at, :name, :auto_delete_preference
     )
   end
 

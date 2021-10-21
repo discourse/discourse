@@ -314,6 +314,11 @@ const Post = RestModel.extend({
       bookmark_id: data.id,
     });
     this.topic.incrementProperty("bookmarksWereChanged");
+    this.appEvents.trigger("bookmarks:changed", data, {
+      target: "post",
+      targetId: this.id,
+    });
+    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
     this.appEvents.trigger("page:bookmark-post-toggled", this);
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   },
@@ -321,8 +326,6 @@ const Post = RestModel.extend({
   deleteBookmark(bookmarked) {
     this.set("topic.bookmarked", bookmarked);
     this.clearBookmark();
-    this.topic.incrementProperty("bookmarksWereChanged");
-    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   clearBookmark() {
@@ -334,6 +337,12 @@ const Post = RestModel.extend({
       bookmark_auto_delete_preference: null,
     });
     this.topic.incrementProperty("bookmarksWereChanged");
+    this.appEvents.trigger("bookmarks:changed", null, {
+      target: "post",
+      targetId: this.id,
+    });
+    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   updateActionsSummary(json) {
