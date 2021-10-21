@@ -1133,11 +1133,21 @@ describe Search do
 
       SiteSetting.default_locale = 'zh_TW'
       SiteSetting.min_search_term_length = 1
-      topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
+
+      topic = Fabricate(:topic, title: 'My Title Discourse 社區指南')
       post = Fabricate(:post, topic: topic)
 
       expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
       expect(Search.execute('指南').posts.first.id).to eq(post.id)
+
+      # The `白名单` term becomes `名单 白名单` after it is processed by
+      # cppjieba. However, `白名单` is not tokenized as such by cppjieba when it
+      # appears in a string of text. The workaround we took here is to match on
+      # either `名单` or `白名单` when terms are processed by cppjieba
+      topic = Fabricate(:topic, title: "Some topic title 白名单")
+      post = Fabricate(:post, topic: topic)
+
+      expect(Search.execute('白名单').posts.first.id).to eq(post.id)
     end
 
     it 'finds chinese topic based on title if tokenization is forced' do

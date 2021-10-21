@@ -93,7 +93,6 @@ class Search
         end
 
         data = data.join(' ')
-
       else
         data.squish!
       end
@@ -953,7 +952,8 @@ class Search
         # D is for cooked
         weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        joiner = Search.segment_cjk? ? "|" : nil
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights, joiner: joiner)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1135,10 +1135,10 @@ class Search
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
-  def ts_query(ts_config = nil, weight_filter: nil)
+  def ts_query(ts_config = nil, weight_filter: nil, joiner: nil)
     @ts_query_cache ||= {}
     @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
-      Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
+      Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter, joiner: joiner)
   end
 
   def wrap_rows(query)
