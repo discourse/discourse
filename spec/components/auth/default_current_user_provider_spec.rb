@@ -40,7 +40,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
 
       api_key.reload
       expect(api_key.last_used_at).to eq(nil)
@@ -50,7 +50,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => "INCORRECT" }
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess, /API username or key is invalid/)
+      }.to raise_error(described_class::InvalidApiKey, /API username or key is invalid/)
     end
 
     it "finds a user for a correct per-user api key" do
@@ -71,13 +71,13 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
 
       user.update_columns(active: true, suspended_till: 1.day.from_now)
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     it "raises for a user pretending" do
@@ -87,7 +87,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     it "raises for a user with a mismatching ip" do
@@ -100,7 +100,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     it "allows a user with a matching ip" do
@@ -136,7 +136,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_username=#{user.username.downcase}", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     it "finds a user for a correct system api key with external id" do
@@ -152,7 +152,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_user_external_id=abc", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     it "finds a user for a correct system api key with id" do
@@ -166,7 +166,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_user_id=#{user.id}", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     describe "when readonly mode is enabled due to postgres" do
@@ -438,12 +438,12 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider('/', env).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::TooManyBadCookieAttempts)
 
       expect {
         env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
         provider("/", env).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::TooManyBadCookieAttempts)
 
       env["REMOTE_ADDR"] = "10.0.0.2"
 
@@ -582,13 +582,13 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params.merge("REQUEST_METHOD" => "POST")).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
 
       user.update_columns(suspended_till: 1.year.from_now)
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(Discourse::InvalidAccess)
+      }.to raise_error(described_class::InvalidApiKey)
     end
 
     describe "when readonly mode is enabled due to postgres" do

@@ -7,7 +7,10 @@ module CurrentUser
   end
 
   def self.lookup_from_env(env)
-    Discourse.current_user_provider.new(env).current_user
+    provider = Discourse.current_user_provider.new(env)
+    provider.current_user
+    provider.validate_api_key_usage!
+    provider.current_user
   end
 
   # can be used to pretend current user does no exist, for CSRF attacks
@@ -43,7 +46,9 @@ module CurrentUser
   private
 
   def current_user_provider
-    @current_user_provider ||= Discourse.current_user_provider.new(request.env)
+    return @current_user_provider if @current_user_provider
+    @current_user_provider = request.env[Middleware::RequestTracker::CURRENT_USER_PROVIDER_KEY] || Discourse.current_user_provider.new(request.env)
+    @current_user_provider
   end
 
 end

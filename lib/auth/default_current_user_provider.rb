@@ -15,10 +15,16 @@ class Auth::DefaultCurrentUserProvider
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
   USER_API_KEY_ENV ||= "_DISCOURSE_USER_API"
+  USER_API_KEY_OBJ ||= "_DISCOURSE_USER_API_OBJ"
+  SHARED_SESSION_ENV ||= "_DISCOURSE_SHARED_SESSION"
+  API_KEY_VIA_PARAM ||= "_DISCOURSE_API_KEY_VIA_PARAM"
   TOKEN_COOKIE ||= ENV['DISCOURSE_TOKEN_COOKIE'] || "_t"
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
+
+  class TooManyBadCookieAttempts < StandardError; end
+  class InvalidApiKey < StandardError; end
 
   PARAMETER_API_PATTERNS ||= [
     RouteMatcher.new(
@@ -70,26 +76,30 @@ class Auth::DefaultCurrentUserProvider
         user = User.find_by(id: uid.to_i)
       end
       @env[CURRENT_USER_KEY] = user
+      @env[SHARED_SESSION_ENV] = true
       return user
     end
 
+    current_user = nil
     request = @request
 
-    user_api_key = @env[USER_API_KEY]
     api_key = @env[HEADER_API_KEY]
-
-    if !@env.blank? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
-      user_api_key ||= request[PARAMETER_USER_API_KEY]
+    if !@env.blank? && request[API_KEY] && !api_key
+      api_key = request[API_KEY]
+      @env[API_KEY_VIA_PARAM] = true
     end
 
-    if !@env.blank? && request[API_KEY] && api_parameter_allowed?
-      api_key ||= request[API_KEY]
+    if !api_key
+      user_api_key = @env[USER_API_KEY]
+      if !@env.blank? && request[PARAMETER_USER_API_KEY] && !user_api_key
+        user_api_key = request[PARAMETER_USER_API_KEY]
+        # pass the key in env so we can rate limit it later
+        @env[USER_API_KEY] = user_api_key
+        @env[API_KEY_VIA_PARAM] = true
+      end
     end
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
-
-    current_user = nil
-
     if auth_token && auth_token.length == 32
       limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
 
@@ -114,11 +124,7 @@ class Auth::DefaultCurrentUserProvider
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
-          raise Discourse::InvalidAccess.new(
-            'Invalid Access',
-            nil,
-            delete_cookie: TOKEN_COOKIE
-          )
+          raise TooManyBadCookieAttempts.new
         end
       end
     elsif @env['HTTP_DISCOURSE_LOGGED_IN']
@@ -128,34 +134,16 @@ class Auth::DefaultCurrentUserProvider
     # possible we have an api call, impersonate
     if api_key
       current_user = lookup_api_user(api_key, request)
-      raise Discourse::InvalidAccess.new(I18n.t('invalid_api_credentials'), nil, custom_message: "invalid_api_credentials") unless current_user
-      raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
+      raise InvalidApiKey.new(I18n.t('invalid_api_credentials')) unless current_user
+      raise InvalidApiKey.new if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
-      rate_limit_admin_api_requests!
     end
 
     # user api key handling
     if user_api_key
-
-      hashed_user_api_key = ApiKey.hash_key(user_api_key)
-      limiter_min = RateLimiter.new(nil, "user_api_min_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
-      limiter_day = RateLimiter.new(nil, "user_api_day_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
-
-      unless limiter_day.can_perform?
-        limiter_day.performed!
-      end
-
-      unless  limiter_min.can_perform?
-        limiter_min.performed!
-      end
-
-      current_user = lookup_user_api_user_and_update_key(user_api_key, @env[USER_API_CLIENT_ID])
-      raise Discourse::InvalidAccess unless current_user
-      raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
-
-      limiter_min.performed!
-      limiter_day.performed!
-
+      current_user = lookup_user_api_key(user_api_key)
+      raise InvalidApiKey.new unless current_user
+      raise InvalidApiKey.new if current_user.suspended? || !current_user.active
       @env[USER_API_KEY_ENV] = true
     end
 
@@ -297,7 +285,7 @@ class Auth::DefaultCurrentUserProvider
   def should_update_last_seen?
     return false unless can_write?
 
-    api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
+    api = !!@env[API_KEY_ENV] || !!@env[USER_API_KEY_ENV]
 
     if @request.xhr? || api
       @env["HTTP_DISCOURSE_PRESENT"] == "true"
@@ -306,29 +294,26 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
+  def validate_api_key_usage!
+    return if !is_api? && !is_user_api?
+
+    if @env[API_KEY_VIA_PARAM] && !api_parameter_allowed?
+      raise InvalidApiKey.new
+    end
+
+    user_api_key = @env[USER_API_KEY_OBJ]
+    return if !user_api_key
+
+    user_api_key.ensure_allowed!(@env)
+    client_id = @env[USER_API_CLIENT_ID]
+    user_api_key.update_last_used!(client_id)
+  end
+
   protected
 
-  def lookup_user_api_user_and_update_key(user_api_key, client_id)
+  def lookup_user_api_key(user_api_key)
     if api_key = UserApiKey.active.with_key(user_api_key).includes(:user, :scopes).first
-      unless api_key.allow?(@env)
-        raise Discourse::InvalidAccess
-      end
-
-      if can_write?
-        api_key.update_columns(last_used_at: Time.zone.now)
-
-        if client_id.present? && client_id != api_key.client_id
-
-          # invalidate old dupe api key for client if needed
-          UserApiKey
-            .where(client_id: client_id, user_id: api_key.user_id)
-            .where('id <> ?', api_key.id)
-            .destroy_all
-
-          api_key.update_columns(client_id: client_id)
-        end
-      end
-
+      @env[USER_API_KEY_OBJ] = api_key
       api_key.user
     end
   end
@@ -376,25 +361,6 @@ class Auth::DefaultCurrentUserProvider
 
   def header_api_key?
     !!@env[HEADER_API_KEY]
-  end
-
-  def rate_limit_admin_api_requests!
-    return if Rails.env == "profile"
-
-    limit = GlobalSetting.max_admin_api_reqs_per_minute.to_i
-    if GlobalSetting.respond_to?(:max_admin_api_reqs_per_key_per_minute)
-      Discourse.deprecate("DISCOURSE_MAX_ADMIN_API_REQS_PER_KEY_PER_MINUTE is deprecated. Please use DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE", drop_from: '2.9.0')
-      limit = [ GlobalSetting.max_admin_api_reqs_per_key_per_minute.to_i, limit].max
-    end
-
-    global_limit = RateLimiter.new(
-      nil,
-      "admin_api_min",
-      limit,
-      60
-    )
-
-    global_limit.performed!
   end
 
   def can_write?

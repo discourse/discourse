@@ -55,7 +55,7 @@ class RateLimiter
     rate_unlimited? || is_under_limit?
   end
 
-  def seconds_to_wait(now)
+  def seconds_to_wait(now = Time.now.to_i)
     @secs - age_of_oldest(now)
   end
 

@@ -8,10 +8,13 @@ class HomePageConstraint
   def matches?(request)
     return @filter == 'finish_installation' if SiteSetting.has_login_hint?
 
-    provider = Discourse.current_user_provider.new(request.env)
-    homepage = provider&.current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user = CurrentUser.lookup_from_env(request.env)
+    homepage = current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
     homepage == @filter
-  rescue Discourse::InvalidAccess, Discourse::ReadOnly
+  rescue Discourse::InvalidAccess,
+    Discourse::ReadOnly,
+    Auth::DefaultCurrentUserProvider::InvalidApiKey,
+    Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
     false
   end
 end

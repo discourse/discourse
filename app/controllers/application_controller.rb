@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :validate_api_key_usage!
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -941,5 +942,11 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  def validate_api_key_usage!
+    current_user_provider.validate_api_key_usage!
+  rescue Auth::DefaultCurrentUserProvider::InvalidApiKey
+    clear_current_user
   end
 end

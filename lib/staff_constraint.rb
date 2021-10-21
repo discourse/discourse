@@ -3,11 +3,12 @@
 class StaffConstraint
 
   def matches?(request)
-    provider = Discourse.current_user_provider.new(request.env)
-    provider.current_user &&
-      provider.current_user.staff? &&
-      custom_staff_check(request)
-  rescue Discourse::InvalidAccess, Discourse::ReadOnly
+    current_user = CurrentUser.lookup_from_env(request.env)
+    current_user&.staff? && custom_staff_check(request)
+  rescue Discourse::InvalidAccess,
+    Discourse::ReadOnly,
+    Auth::DefaultCurrentUserProvider::InvalidApiKey,
+    Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
     false
   end
 
