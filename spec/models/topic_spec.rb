@@ -1021,6 +1021,51 @@ describe Topic do
               .to eq(Notification.types[:group_message_summary])
 
           end
+
+          it "removes users in topic_allowed_users who are part of the added group" do
+            admins = Group[:admins]
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+            # clear up the state so we can be more explicit with the test
+            TopicAllowedUser.where(topic: topic).delete_all
+            user0 = topic.user
+            user1 = Fabricate(:user)
+            user2 = Fabricate(:user)
+            user3 = Fabricate(:user)
+            Fabricate(:topic_allowed_user, topic: topic, user: user0)
+            Fabricate(:topic_allowed_user, topic: topic, user: user1)
+            Fabricate(:topic_allowed_user, topic: topic, user: user2)
+            Fabricate(:topic_allowed_user, topic: topic, user: user3)
+
+            admins.add(user1)
+            admins.add(user2)
+
+            other_topic = Fabricate(:topic)
+            Fabricate(:topic_allowed_user, user: user1, topic: other_topic)
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+            expect(topic.posts.last.action_code).to eq("removed_user")
+            expect(topic.allowed_users).to match_array([user0, user3, Discourse.system_user])
+            expect(other_topic.allowed_users).to match_array([user1])
+          end
+
+          it "does not remove the OP from topic_allowed_users if they are part of an added group" do
+            admins = Group[:admins]
+            admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+
+            # clear up the state so we can be more explicit with the test
+            TopicAllowedUser.where(topic: topic).delete_all
+            user0 = topic.user
+            user1 = Fabricate(:user)
+            Fabricate(:topic_allowed_user, topic: topic, user: user0)
+            Fabricate(:topic_allowed_user, topic: topic, user: user1)
+
+            admins.add(topic.user)
+            admins.add(user1)
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+            expect(topic.allowed_users).to match_array([topic.user, Discourse.system_user])
+          end
         end
       end
     end

@@ -351,12 +351,11 @@ export default Component.extend({
     if (this.isInviteeGroup) {
       return this.inviteModel
         .createGroupInvite(this.invitee.trim())
-        .then((data) => {
+        .then(() => {
           model.setProperties({ saving: false, finished: true });
-          this.get("inviteModel.details.allowed_groups").pushObject(
-            EmberObject.create(data.group)
-          );
-          this.appEvents.trigger("post-stream:refresh");
+          this.inviteModel.reload().then(() => {
+            this.appEvents.trigger("post-stream:refresh");
+          });
         })
         .catch(onerror);
     } else {

@@ -971,14 +971,36 @@ class Topic < ActiveRecord::Base
   end
 
   def invite_group(user, group)
-    TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
-    allowed_groups.reload
+    TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
+    self.allowed_groups.reload
 
-    last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
+    last_post = self.posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
       Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
       Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
+    end
+
+    # If the group invited includes the OP of the topic as one of is members,
+    # we cannot strip the topic_allowed_user record since it will be more
+    # complicated to recover the topic_allowed_user record for the OP if the
+    # group is removed.
+    allowed_user_where_clause = <<~SQL
+      users.id IN (
+        SELECT topic_allowed_users.user_id
+        FROM topic_allowed_users
+        INNER JOIN group_users ON group_users.user_id = topic_allowed_users.user_id
+        INNER JOIN topic_allowed_groups ON topic_allowed_groups.group_id = group_users.group_id
+        WHERE topic_allowed_groups.group_id = :group_id AND
+              topic_allowed_users.topic_id = :topic_id AND
+              topic_allowed_users.user_id != :op_user_id
+      )
+    SQL
+    User.where([
+      allowed_user_where_clause,
+      { group_id: group.id, topic_id: self.id, op_user_id: self.user_id }
+    ]).find_each do |allowed_user|
+      remove_allowed_user(Discourse.system_user, allowed_user)
     end
 
     true

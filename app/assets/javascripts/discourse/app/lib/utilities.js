@@ -224,24 +224,7 @@ export function caretRowCol(el) {
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  let r, rc, re;
-  if (el.selectionStart) {
-    return el.selectionStart;
-  }
-  if (document.selection) {
-    el.focus();
-    r = document.selection.createRange();
-    if (!r) {
-      return 0;
-    }
-
-    re = el.createTextRange();
-    rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint("EndToStart", re);
-    return rc.text.length;
-  }
-  return 0;
+  return el?.selectionStart || 0;
 }
 
 // Set the caret's position
