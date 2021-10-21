@@ -4555,11 +4555,11 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "</head>"
-            title: "HTML that will be inserted before the </head> tag"
+            text: "Head"
+            title: "HTML that will be inserted before the head tag"
           body_tag:
-            text: "</body>"
-            title: "HTML that will be inserted before the </body> tag"
+            text: "Body"
+            title: "HTML that will be inserted before the body tag"
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"

@@ -204,4 +204,12 @@ describe SiteSetting do
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo|bar/)
     end
   end
+
+  it 'sanitizes the client settings when they are overridden' do
+    xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
+
+    SiteSetting.global_notice = xss
+
+    expect(SiteSetting.global_notice).to eq("<b>click me!</b>alert('TEST');")
+  end
 end
