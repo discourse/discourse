@@ -4,6 +4,10 @@
 require "thor"
 
 class DiscourseCLI < Thor
+  def self.exit_on_failure?
+    true
+  end
+
   desc "remap [--global,--regex] FROM TO", "Remap a string sequence across all tables"
   long_desc <<-LONGDESC
     Replace a string sequence FROM with TO across all tables.
