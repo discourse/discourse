@@ -48,7 +48,14 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 export function cleanUpComposerUploadHandler() {
-  uploadHandlers = [];
+  // we cannot set this to uploadHandlers = [] because that messes with
+  // the references to the original array that the component has. this only
+  // really affects tests, but without doing this you could addComposerUploadHandler
+  // in a beforeEach function in a test but then it's not adding to the
+  // existing reference that the component has, because an earlier test ran
+  // cleanUpComposerUploadHandler and lost it. setting the length to 0 empties
+  // the array but keeps the reference
+  uploadHandlers.length = 0;
 }
 
 let uploadProcessorQueue = [];
@@ -686,6 +693,14 @@ export default Component.extend(ComposerUpload, {
     } else {
       return false;
     }
+  },
+
+  _findMatchingUploadHandler(fileName) {
+    return this.uploadHandlers.find((handler) => {
+      const ext = handler.extensions.join("|");
+      const regex = new RegExp(`\\.(${ext})$`, "i");
+      return regex.test(fileName);
+    });
   },
 
   actions: {
