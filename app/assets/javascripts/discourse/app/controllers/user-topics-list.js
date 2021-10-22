@@ -70,7 +70,7 @@ export default Controller.extend(BulkTopicSelection, {
     Topic.pmResetNew(opts).then((result) => {
       if (result && result.topic_ids.length > 0) {
         this.pmTopicTrackingState.removeTopics(result.topic_ids);
-        this.send("refresh");
+        this.send("triggerRefresh");
       }
     });
   },
