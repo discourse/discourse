@@ -106,7 +106,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this._topicBottomObserver && this._topicBottomObserver.disconnect();
+    this._destroyObserver();
 
     this.appEvents
       .off("composer:will-open", this, this._composerEvent)
@@ -168,8 +168,8 @@ export default Component.extend({
             const wrapper = document.querySelector("#topic-progress-wrapper");
             if (composerH === 0) {
               const filteredPostsHeight =
-                document.querySelector(".posts-filtered-notice").clientHeight ||
-                0;
+                document.querySelector(".posts-filtered-notice")
+                  ?.clientHeight || 0;
               filteredPostsHeight === 0
                 ? wrapper.style.removeProperty("bottom")
                 : wrapper.style.setProperty(
@@ -187,9 +187,14 @@ export default Component.extend({
   },
 
   _composerEvent() {
-    this._topicBottomObserver && this._topicBottomObserver.disconnect();
+    if ("IntersectionObserver" in window) {
+      this._destroyObserver();
+      this._startObserver();
+    }
+  },
 
-    this._startObserver();
+  _destroyObserver() {
+    this._topicBottomObserver && this._topicBottomObserver.disconnect();
   },
 
   click(e) {
