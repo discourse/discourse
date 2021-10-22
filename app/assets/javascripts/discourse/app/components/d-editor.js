@@ -395,7 +395,7 @@ export default Component.extend(TextareaTextManipulation, {
         cookedElement.innerHTML = cooked;
 
         linkSeenHashtags($(cookedElement));
-        linkSeenMentions($(cookedElement), this.siteSettings);
+        linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,
