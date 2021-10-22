@@ -165,7 +165,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       this.toggleProperty("showInfo");
     },
 
-    refresh() {
+    triggerRefresh() {
       return this.store
         .findFiltered("topicList", {
           filter: this.get("list.filter"),
