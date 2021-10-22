@@ -31,26 +31,6 @@
   top: -100%; // above parent container + some extra space
 }
 
-#topic-progress-wrapper {
-  position: fixed;
-  right: 10px; // match 10px padding on .wrap
-  bottom: 0;
-  z-index: z("timeline");
-  &:not(.docked) {
-    margin-bottom: env(safe-area-inset-bottom);
-  }
-  html.rtl & {
-    /**
-     * This should be the other way around, but it has to be "wrong" here
-     * because our RTL CSS is generated using the `rtlit` gem which flips
-     * left to right and right to left, so this will be corrected when it
-     * goes through rtlit.
-     */
-    left: unset;
-    right: 1em;
-  }
-}
-
 #topic-progress-expanded {
   border: 1px solid var(--primary-low);
   padding: 5px;
@@ -149,14 +129,6 @@
     margin-left: auto;
     margin-right: auto;
   }
-}
-
-#topic-progress-wrapper.docked {
-  position: absolute;
-}
-
-.topic-post:last-of-type {
-  padding-bottom: 40px;
 }
 
 sup sup,

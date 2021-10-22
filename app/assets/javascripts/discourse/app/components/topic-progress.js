@@ -89,10 +89,9 @@ export default Component.extend({
     this._super(...arguments);
 
     this.appEvents
-      .on("composer:will-open", this, this._dock)
-      .on("composer:resized", this, this._dock)
-      .on("composer:closed", this, this._dock)
-      .on("topic:scrolled", this, this._dock)
+      .on("composer:will-open", this, this._composerEvent)
+      .on("composer:resized", this, this._composerEvent)
+      .on("composer:closed", this, this._composerEvent)
       .on("topic:current-post-scrolled", this, this._topicScrolled);
 
     const prevEvent = this.prevEvent;
@@ -101,16 +100,18 @@ export default Component.extend({
     } else {
       scheduleOnce("afterRender", this, this._updateProgressBar);
     }
-    scheduleOnce("afterRender", this, this._dock);
+    scheduleOnce("afterRender", this, this._startObserver);
   },
 
   willDestroyElement() {
     this._super(...arguments);
+
+    this._topicBottomObserver && this._topicBottomObserver.disconnect();
+
     this.appEvents
-      .off("composer:will-open", this, this._dock)
-      .off("composer:resized", this, this._dock)
-      .off("composer:closed", this, this._dock)
-      .off("topic:scrolled", this, this._dock)
+      .off("composer:will-open", this, this._composerEvent)
+      .off("composer:resized", this, this._composerEvent)
+      .off("composer:closed", this, this._composerEvent)
       .off("topic:current-post-scrolled", this, this._topicScrolled);
   },
 
@@ -143,53 +144,51 @@ export default Component.extend({
     }
   },
 
-  _dock() {
-    const $wrapper = $(this.element);
-    if (!$wrapper || $wrapper.length === 0) {
-      return;
+  _startObserver() {
+    if ("IntersectionObserver" in window) {
+      this._topicBottomObserver = this._setupObserver();
+      this._topicBottomObserver.observe(
+        document.querySelector("#topic-bottom")
+      );
     }
+  },
 
-    const $html = $("html");
-    const offset = window.pageYOffset || $html.scrollTop();
-    const maximumOffset = $("#topic-bottom").offset().top;
-    const windowHeight = $(window).height();
-    let composerHeight = $("#reply-control").height() || 0;
-    const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
-    let bottom = $("body").height() - maximumOffset;
+  _setupObserver() {
+    const composerH =
+      document.querySelector("#reply-control")?.clientHeight || 0;
 
-    const $iPadFooterNav = $(".footer-nav-ipad .footer-nav");
-    if ($iPadFooterNav && $iPadFooterNav.length > 0) {
-      bottom += $iPadFooterNav.outerHeight();
-    }
-
-    const draftComposerHeight = 40;
-
-    if (composerHeight > 0) {
-      const $iPhoneFooterNav = $(".footer-nav-visible .footer-nav");
-      const $replyDraft = $("#reply-control.draft");
-      if ($iPhoneFooterNav.outerHeight() && $replyDraft.outerHeight()) {
-        composerHeight =
-          $replyDraft.outerHeight() + $iPhoneFooterNav.outerHeight();
-      }
-      $wrapper.css("bottom", isDocked ? bottom : composerHeight);
-    } else {
-      $wrapper.css("bottom", isDocked ? bottom : "");
-    }
-
-    this.set("docked", isDocked);
-
-    $wrapper.css(
-      "margin-bottom",
-      !isDocked && composerHeight > draftComposerHeight ? "0px" : ""
+    return new IntersectionObserver(
+      function (entries) {
+        const el = document.querySelector("#topic-progress-wrapper");
+        if (entries[0].isIntersecting === true) {
+          el.classList.add("docked");
+        } else {
+          if (entries[0].boundingClientRect.top > 0) {
+            el.classList.remove("docked");
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: `0px 0px -${composerH}px 0px` }
     );
-    this.appEvents.trigger("topic-progress:docked-status-changed", {
-      docked: isDocked,
-      element: this.element,
-    });
+  },
+
+  _composerEvent() {
+    this._topicBottomObserver && this._topicBottomObserver.disconnect();
+
+    this._startObserver();
+
+    const wrapper = document.querySelector("#topic-progress-wrapper");
+    const composerH =
+      document.querySelector("#reply-control")?.clientHeight || 0;
+    if (composerH === 0) {
+      wrapper.style.removeProperty("bottom");
+    } else {
+      wrapper.style.setProperty("bottom", `${composerH}px`);
+    }
   },
 
   click(e) {
-    if ($(e.target).closest("#topic-progress").length) {
+    if (e.target.closest("#topic-progress")) {
       this.send("toggleExpansion");
     }
   },
