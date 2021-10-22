@@ -7,7 +7,7 @@ import {
   setFailedCache,
   setLocalCache,
 } from "pretty-text/oneboxer-cache";
-import { cancel, later } from "@ember/runloop";
+import { later } from "@ember/runloop";
 
 let timeout;
 const loadingQueue = [];
@@ -15,7 +15,6 @@ const loadingQueue = [];
 export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
-  cancel(timeout);
   loadingQueue.clear();
   resetLocalCache();
   resetFailedCache();
