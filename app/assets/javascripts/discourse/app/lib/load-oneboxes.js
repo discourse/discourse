@@ -21,7 +21,7 @@ export function loadOneboxes(
   ).length;
 
   container
-    .querySelectorAll(`a.onebox, a.inline-onebox-loading`)
+    .querySelectorAll("a.onebox, a.inline-onebox-loading")
     .forEach((link) => {
       const isInline = link.classList.contains("inline-onebox-loading");
 
