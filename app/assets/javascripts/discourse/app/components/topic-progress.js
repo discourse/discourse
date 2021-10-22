@@ -154,17 +154,16 @@ export default Component.extend({
   },
 
   _setupObserver() {
-    const composerH =
-      document.querySelector("#reply-control")?.clientHeight || 0;
+    const self = this,
+      composerH = document.querySelector("#reply-control")?.clientHeight || 0;
 
     return new IntersectionObserver(
       function (entries) {
-        const el = document.querySelector("#topic-progress-wrapper");
         if (entries[0].isIntersecting === true) {
-          el.classList.add("docked");
+          self.set("docked", true);
         } else {
           if (entries[0].boundingClientRect.top > 0) {
-            el.classList.remove("docked");
+            self.set("docked", false);
 
             const wrapper = document.querySelector("#topic-progress-wrapper");
             if (composerH === 0) {
