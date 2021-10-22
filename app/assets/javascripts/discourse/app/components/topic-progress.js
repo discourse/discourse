@@ -165,6 +165,21 @@ export default Component.extend({
         } else {
           if (entries[0].boundingClientRect.top > 0) {
             el.classList.remove("docked");
+
+            const wrapper = document.querySelector("#topic-progress-wrapper");
+            if (composerH === 0) {
+              const filteredPostsHeight =
+                document.querySelector(".posts-filtered-notice").clientHeight ||
+                0;
+              filteredPostsHeight === 0
+                ? wrapper.style.removeProperty("bottom")
+                : wrapper.style.setProperty(
+                    "bottom",
+                    `${filteredPostsHeight}px`
+                  );
+            } else {
+              wrapper.style.setProperty("bottom", `${composerH}px`);
+            }
           }
         }
       },
@@ -176,15 +191,6 @@ export default Component.extend({
     this._topicBottomObserver && this._topicBottomObserver.disconnect();
 
     this._startObserver();
-
-    const wrapper = document.querySelector("#topic-progress-wrapper");
-    const composerH =
-      document.querySelector("#reply-control")?.clientHeight || 0;
-    if (composerH === 0) {
-      wrapper.style.removeProperty("bottom");
-    } else {
-      wrapper.style.setProperty("bottom", `${composerH}px`);
-    }
   },
 
   click(e) {
