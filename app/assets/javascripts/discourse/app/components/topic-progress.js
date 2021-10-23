@@ -1,7 +1,4 @@
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
@@ -71,21 +68,23 @@ export default Component.extend({
     return readPos < stream.length - 1 && readPos > position;
   },
 
-  @observes("postStream.stream.[]")
-  _updateBar() {
-    scheduleOnce("afterRender", this, this._updateProgressBar);
-  },
-
   _topicScrolled(event) {
     if (this.docked) {
-      this.set("progressPosition", this.get("postStream.filteredPostsCount"));
-      this._streamPercentage = 100;
+      this.setProperties({
+        progressPosition: this.get("postStream.filteredPostsCount"),
+        _streamPercentage: 100,
+      });
     } else {
-      this.set("progressPosition", event.postIndex);
-      this._streamPercentage = (event.percent * 100).toFixed(2);
+      this.setProperties({
+        progressPosition: event.postIndex,
+        _streamPercentage: (event.percent * 100).toFixed(2),
+      });
     }
+  },
 
-    this._updateBar();
+  @discourseComputed("_streamPercentage")
+  progressStyle(_streamPercentage) {
+    return `--progress-bg-width: ${_streamPercentage || 0}%`;
   },
 
   didInsertElement() {
@@ -95,11 +94,8 @@ export default Component.extend({
       .on("composer:resized", this, this._composerEvent)
       .on("topic:current-post-scrolled", this, this._topicScrolled);
 
-    const prevEvent = this.prevEvent;
-    if (prevEvent) {
-      scheduleOnce("afterRender", this, this._topicScrolled, prevEvent);
-    } else {
-      scheduleOnce("afterRender", this, this._updateProgressBar);
+    if (this.prevEvent) {
+      scheduleOnce("afterRender", this, this._topicScrolled, this.prevEvent);
     }
     scheduleOnce("afterRender", this, this._startObserver);
   },
@@ -110,14 +106,6 @@ export default Component.extend({
     this.appEvents
       .off("composer:resized", this, this._composerEvent)
       .off("topic:current-post-scrolled", this, this._topicScrolled);
-  },
-
-  _updateProgressBar() {
-    if (this.isDestroyed || this.isDestroying) {
-      return;
-    }
-
-    this.element.style = `--progress-bg-width: ${this._streamPercentage || 0}%`;
   },
 
   _startObserver() {
