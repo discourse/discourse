@@ -1,4 +1,7 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
@@ -89,9 +92,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.appEvents
-      .on("composer:will-open", this, this._composerEvent)
       .on("composer:resized", this, this._composerEvent)
-      .on("composer:closed", this, this._composerEvent)
       .on("topic:current-post-scrolled", this, this._topicScrolled);
 
     const prevEvent = this.prevEvent;
@@ -105,13 +106,9 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-
-    this._destroyObserver();
-
+    this._topicBottomObserver?.disconnect();
     this.appEvents
-      .off("composer:will-open", this, this._composerEvent)
       .off("composer:resized", this, this._composerEvent)
-      .off("composer:closed", this, this._composerEvent)
       .off("topic:current-post-scrolled", this, this._topicScrolled);
   },
 
@@ -120,10 +117,10 @@ export default Component.extend({
       return;
     }
 
-    const $topicProgress = $(this.element.querySelector("#topic-progress"));
+    const topicProgress = this.element.querySelector("#topic-progress");
     // speeds up stuff, bypass jquery slowness and extra checks
     if (!this._totalWidth) {
-      this._totalWidth = $topicProgress[0].offsetWidth;
+      this._totalWidth = topicProgress.offsetWidth;
     }
 
     // Only show percentage once we have one
@@ -131,16 +128,17 @@ export default Component.extend({
       return;
     }
 
-    const totalWidth = this._totalWidth;
-    const progressWidth = (this._streamPercentage || 0) * totalWidth;
-    const borderSize = progressWidth === totalWidth ? "0px" : "1px";
+    const progressWidth = (this._streamPercentage || 0) * this._totalWidth;
 
-    const $bg = $topicProgress.find(".bg");
-    if ($bg.length === 0) {
-      const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
-      $topicProgress.append(`<div class='bg' style="${style}">&nbsp;</div>`);
+    let bg = topicProgress.querySelector(".bg");
+    if (bg) {
+      bg.style.width = `${progressWidth - 2}px`;
     } else {
-      $bg.css("border-right-width", borderSize).width(progressWidth - 2);
+      bg = document.createElement("div");
+      bg.classList.add("bg");
+      bg.innerHTML = "&nbsp;";
+      bg.style.width = `${progressWidth}px`;
+      topicProgress.appendChild(bg);
     }
   },
 
@@ -154,47 +152,43 @@ export default Component.extend({
   },
 
   _setupObserver() {
-    const self = this,
-      composerH = document.querySelector("#reply-control")?.clientHeight || 0;
+    const composerH =
+      document.querySelector("#reply-control")?.clientHeight || 0;
 
-    return new IntersectionObserver(
-      function (entries) {
-        if (entries[0].isIntersecting === true) {
-          self.set("docked", true);
+    return new IntersectionObserver(this._intersectionHandler, {
+      threshold: 0.1,
+      rootMargin: `0px 0px -${composerH}px 0px`,
+    });
+  },
+
+  @bind
+  _intersectionHandler(entries) {
+    if (entries[0].isIntersecting === true) {
+      this.set("docked", true);
+    } else {
+      if (entries[0].boundingClientRect.top > 0) {
+        this.set("docked", false);
+        const wrapper = document.querySelector("#topic-progress-wrapper");
+        const composerH =
+          document.querySelector("#reply-control")?.clientHeight || 0;
+        if (composerH === 0) {
+          const filteredPostsHeight =
+            document.querySelector(".posts-filtered-notice")?.clientHeight || 0;
+          filteredPostsHeight === 0
+            ? wrapper.style.removeProperty("bottom")
+            : wrapper.style.setProperty("bottom", `${filteredPostsHeight}px`);
         } else {
-          if (entries[0].boundingClientRect.top > 0) {
-            self.set("docked", false);
-
-            const wrapper = document.querySelector("#topic-progress-wrapper");
-            if (composerH === 0) {
-              const filteredPostsHeight =
-                document.querySelector(".posts-filtered-notice")
-                  ?.clientHeight || 0;
-              filteredPostsHeight === 0
-                ? wrapper.style.removeProperty("bottom")
-                : wrapper.style.setProperty(
-                    "bottom",
-                    `${filteredPostsHeight}px`
-                  );
-            } else {
-              wrapper.style.setProperty("bottom", `${composerH}px`);
-            }
-          }
+          wrapper.style.setProperty("bottom", `${composerH}px`);
         }
-      },
-      { threshold: 0.1, rootMargin: `0px 0px -${composerH}px 0px` }
-    );
+      }
+    }
   },
 
   _composerEvent() {
     if ("IntersectionObserver" in window) {
-      this._destroyObserver();
+      this._topicBottomObserver?.disconnect();
       this._startObserver();
     }
-  },
-
-  _destroyObserver() {
-    this._topicBottomObserver && this._topicBottomObserver.disconnect();
   },
 
   click(e) {

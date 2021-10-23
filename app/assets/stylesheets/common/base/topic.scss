@@ -117,7 +117,6 @@
 
   &.docked {
     position: initial;
-    margin-top: 0.5em;
     .topic-admin-popup-menu.right-side {
       bottom: -150px; // Prevents menu from being too high when a topic is very short
     }
@@ -129,6 +128,11 @@
 
   body:not(.footer-nav-visible) & {
     bottom: env(safe-area-inset-bottom);
+  }
+
+  @media screen and (min-width: 1475px) {
+    right: 50%;
+    margin-right: -722px; // pin to right side of composer
   }
 }
 
