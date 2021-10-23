@@ -79,10 +79,10 @@ export default Component.extend({
   _topicScrolled(event) {
     if (this.docked) {
       this.set("progressPosition", this.get("postStream.filteredPostsCount"));
-      this._streamPercentage = 1.0;
+      this._streamPercentage = 100;
     } else {
       this.set("progressPosition", event.postIndex);
-      this._streamPercentage = event.percent;
+      this._streamPercentage = (event.percent * 100).toFixed(2);
     }
 
     this._updateBar();
@@ -117,29 +117,7 @@ export default Component.extend({
       return;
     }
 
-    const topicProgress = this.element.querySelector("#topic-progress");
-    // speeds up stuff, bypass extra checks
-    if (!this._totalWidth) {
-      this._totalWidth = topicProgress.offsetWidth;
-    }
-
-    // Only show percentage once we have one
-    if (!this._streamPercentage) {
-      return;
-    }
-
-    const progressWidth = (this._streamPercentage || 0) * this._totalWidth;
-
-    let bg = topicProgress.querySelector(".bg");
-    if (bg) {
-      bg.style.width = `${progressWidth - 2}px`;
-    } else {
-      bg = document.createElement("div");
-      bg.classList.add("bg");
-      bg.innerHTML = "&nbsp;";
-      bg.style.width = `${progressWidth}px`;
-      topicProgress.appendChild(bg);
-    }
+    this.element.style = `--progress-bg-width: ${this._streamPercentage || 0}%`;
   },
 
   _startObserver() {

@@ -103,9 +103,6 @@
 #topic-progress {
   position: relative;
   left: 340px;
-  &.hidden {
-    display: none;
-  }
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
@@ -141,8 +138,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 0;
-    max-width: 145px;
+    width: var(--progress-bg-width, 0);
     background-color: var(--tertiary-low);
     transition: width 0.75s;
   }
