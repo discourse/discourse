@@ -136,6 +136,45 @@
   }
 }
 
+#topic-progress {
+  position: relative;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
+  width: 145px;
+  height: 42px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
+  .nums {
+    position: relative;
+    top: 12px;
+    width: 100%;
+    text-align: center;
+    z-index: z("base");
+  }
+  h4 {
+    display: inline;
+    font-size: $font-up-2;
+    line-height: $line-height-small;
+  }
+  .d-icon {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: z("base");
+  }
+  .bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--progress-bg-width, 0);
+    background-color: var(--tertiary-low);
+    transition: width 0.75s;
+  }
+}
+
 .topic-status-info,
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);

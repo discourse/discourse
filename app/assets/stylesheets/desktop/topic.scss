@@ -100,50 +100,6 @@
   }
 }
 
-#topic-progress {
-  position: relative;
-  left: 340px;
-  background-color: var(--secondary);
-  color: var(--tertiary);
-  border: 1px solid var(--tertiary-low);
-  border-bottom: none;
-  width: 145px;
-  height: 34px;
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
-
-  &:hover {
-    cursor: pointer;
-  }
-  .nums {
-    position: relative;
-    top: 9px;
-    width: 100%;
-    text-align: center;
-    z-index: z("base");
-  }
-  .d-icon {
-    position: absolute;
-    right: 8px;
-    bottom: 9px;
-    z-index: z("base");
-  }
-  h4 {
-    display: inline;
-    font-size: $font-up-2;
-    line-height: $line-height-small;
-  }
-  .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: var(--progress-bg-width, 0);
-    background-color: var(--tertiary-low);
-    transition: width 0.75s;
-  }
-}
-
 #topic-filter {
   background-color: var(--highlight-medium);
   padding: 8px;
@@ -152,6 +108,10 @@
   width: 100%;
   font-size: $font-0;
   z-index: z("dropdown");
+}
+
+#topic-progress:hover {
+  cursor: pointer;
 }
 
 #topic-progress,
