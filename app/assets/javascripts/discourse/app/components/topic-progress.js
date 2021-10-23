@@ -118,7 +118,7 @@ export default Component.extend({
     }
 
     const topicProgress = this.element.querySelector("#topic-progress");
-    // speeds up stuff, bypass jquery slowness and extra checks
+    // speeds up stuff, bypass extra checks
     if (!this._totalWidth) {
       this._totalWidth = topicProgress.offsetWidth;
     }
