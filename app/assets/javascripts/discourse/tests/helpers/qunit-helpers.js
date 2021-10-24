@@ -52,6 +52,7 @@ import {
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
+import { clearAuthMethods } from "discourse/models/login-method";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -295,6 +296,8 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
       resetLastEditNotificationClick();
+      clearAuthMethods();
+
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
           initializer.teardown(this.container);
