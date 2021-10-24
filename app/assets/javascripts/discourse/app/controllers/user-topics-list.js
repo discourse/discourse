@@ -86,4 +86,9 @@ export default Controller.extend(BulkTopicSelection, {
     this.pmTopicTrackingState.resetIncomingTracking();
     return false;
   },
+
+  @action
+  refresh() {
+    this.send("triggerRefresh");
+  },
 });
