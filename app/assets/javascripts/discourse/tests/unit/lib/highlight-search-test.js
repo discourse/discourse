@@ -4,17 +4,15 @@ import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | highlight-search", function () {
   test("highlighting text", function (assert) {
-    fixture().html(
-      `
+    fixture().innerHTML = `
       <p>This is some text to highlight</p>
-      `
-    );
+      `;
 
-    highlightSearch(fixture()[0], "some text");
+    highlightSearch(fixture(), "some text");
 
     const terms = [];
 
-    fixture(`.${CLASS_NAME}`).each((_, elem) => {
+    fixture(`.${CLASS_NAME}`).forEach((elem) => {
       terms.push(elem.textContent);
     });
 
@@ -26,17 +24,15 @@ module("Unit | Utility | highlight-search", function () {
   });
 
   test("highlighting unicode text", function (assert) {
-    fixture().html(
-      `
+    fixture().innerHTML = `
       <p>This is some தமிழ் & русский text to highlight</p>
-      `
-    );
+      `;
 
-    highlightSearch(fixture()[0], "தமிழ் & русский");
+    highlightSearch(fixture(), "தமிழ் & русский");
 
     const terms = [];
 
-    fixture(`.${CLASS_NAME}`).each((_, elem) => {
+    fixture(`.${CLASS_NAME}`).forEach((elem) => {
       terms.push(elem.textContent);
     });
 

@@ -385,9 +385,9 @@ export function controllerFor(controller, model) {
 
 export function fixture(selector) {
   if (selector) {
-    return $("#qunit-fixture").find(selector);
+    return document.querySelector(`#qunit-fixture ${selector}`);
   }
-  return $("#qunit-fixture");
+  return document.querySelector("#qunit-fixture");
 }
 
 QUnit.assert.not = function (actual, message) {
