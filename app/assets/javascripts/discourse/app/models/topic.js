@@ -386,7 +386,13 @@ const Topic = RestModel.extend({
       "bookmarks",
       this.bookmarks.filter((bookmark) => {
         if (bookmark.id === id && bookmark.for_topic) {
+          // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
           this.appEvents.trigger("topic:bookmark-toggled");
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            null,
+            bookmark.attachedTo()
+          );
         }
 
         return bookmark.id !== id;

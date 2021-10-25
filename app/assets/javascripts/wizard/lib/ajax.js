@@ -7,7 +7,7 @@ let token;
 
 export function getToken() {
   if (!token) {
-    token = $('meta[name="csrf-token"]').attr("content");
+    token = document.querySelector('meta[name="csrf-token"]')?.content;
   }
 
   return token;

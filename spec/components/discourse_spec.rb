@@ -104,6 +104,7 @@ describe Discourse do
     after do
       Discourse.plugins.delete plugin1
       Discourse.plugins.delete plugin2
+      DiscoursePluginRegistry.reset!
     end
 
     before do

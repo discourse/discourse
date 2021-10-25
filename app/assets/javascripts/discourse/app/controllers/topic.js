@@ -755,7 +755,11 @@ export default Controller.extend(bufferedProperty("model"), {
           (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
         );
         return this._modifyPostBookmark(
-          bookmarkForPost || { post_id: post.id, for_topic: false },
+          bookmarkForPost || {
+            post_id: post.id,
+            topic_id: post.topic_id,
+            for_topic: false,
+          },
           post
         );
       } else {
@@ -1231,6 +1235,13 @@ export default Controller.extend(bufferedProperty("model"), {
         this.model.set("bookmarking", false);
         this.model.set("bookmarked", true);
         this.model.incrementProperty("bookmarksWereChanged");
+        this.appEvents.trigger(
+          "bookmarks:changed",
+          savedData,
+          bookmark.attachedTo()
+        );
+
+        // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
         this.appEvents.trigger("topic:bookmark-toggled");
       },
       onAfterDelete: (topicBookmarked, bookmarkId) => {
@@ -1300,6 +1311,7 @@ export default Controller.extend(bufferedProperty("model"), {
       const firstPost = await this.model.firstPost();
       return this._modifyTopicBookmark({
         post_id: firstPost.id,
+        topic_id: this.model.id,
         for_topic: true,
       });
     }

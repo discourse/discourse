@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyHeader
+  include VaryHeader
 
   attr_reader :theme_id
 
@@ -46,6 +47,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
+  after_action  :ensure_vary_header
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'

@@ -10,6 +10,13 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 import { test } from "qunit";
 
+function stringToDOMNode(string) {
+  let template = document.createElement("template");
+  string = string.trim();
+  template.innerHTML = string;
+  return template.content.firstChild;
+}
+
 function formatMins(mins, opts = {}) {
   let dt = new Date(new Date() - mins * 60 * 1000);
   return relativeAge(dt, {
@@ -37,7 +44,7 @@ function shortDateTester(format) {
 }
 
 function strip(html) {
-  return $(html).text();
+  return stringToDOMNode(html).innerText;
 }
 
 discourseModule("Unit | Utility | formatter", function (hooks) {
@@ -108,10 +115,15 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     );
 
     assert.equal(
-      $(formatDays(0, { format: "medium" })).attr("title"),
+      stringToDOMNode(formatDays(0, { format: "medium" })).title,
       longDate(new Date())
     );
-    assert.equal($(formatDays(0, { format: "medium" })).attr("class"), "date");
+
+    assert.ok(
+      stringToDOMNode(formatDays(0, { format: "medium" })).classList.contains(
+        "date"
+      )
+    );
 
     this.clock.restore();
     this.clock = sinon.useFakeTimers(new Date(2012, 0, 9, 12, 0).getTime()); // Jan 9, 2012
@@ -205,49 +217,52 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
   test("autoUpdatingRelativeAge", function (assert) {
     let d = moment().subtract(1, "day").toDate();
 
-    let $elem = $(autoUpdatingRelativeAge(d));
-    assert.equal($elem.data("format"), "tiny");
-    assert.equal($elem.data("time"), d.getTime());
-    assert.equal($elem.attr("title"), undefined);
+    let elem = stringToDOMNode(autoUpdatingRelativeAge(d));
+    assert.equal(elem.dataset.format, "tiny");
+    assert.equal(elem.dataset.time, d.getTime());
+    assert.equal(elem.title, "");
 
-    $elem = $(autoUpdatingRelativeAge(d, { title: true }));
-    assert.equal($elem.attr("title"), longDate(d));
+    elem = stringToDOMNode(autoUpdatingRelativeAge(d, { title: true }));
+    assert.equal(elem.title, longDate(d));
 
-    $elem = $(
+    elem = stringToDOMNode(
       autoUpdatingRelativeAge(d, {
         format: "medium",
         title: true,
         leaveAgo: true,
       })
     );
-    assert.equal($elem.data("format"), "medium-with-ago");
-    assert.equal($elem.data("time"), d.getTime());
-    assert.equal($elem.attr("title"), longDate(d));
-    assert.equal($elem.html(), "1 day ago");
 
-    $elem = $(autoUpdatingRelativeAge(d, { format: "medium" }));
-    assert.equal($elem.data("format"), "medium");
-    assert.equal($elem.data("time"), d.getTime());
-    assert.equal($elem.attr("title"), undefined);
-    assert.equal($elem.html(), "1 day");
+    assert.equal(elem.dataset.format, "medium-with-ago");
+    assert.equal(elem.dataset.time, d.getTime());
+    assert.equal(elem.title, longDate(d));
+    assert.equal(elem.innerHTML, "1 day ago");
+
+    elem = stringToDOMNode(autoUpdatingRelativeAge(d, { format: "medium" }));
+    assert.equal(elem.dataset.format, "medium");
+    assert.equal(elem.dataset.time, d.getTime());
+    assert.equal(elem.title, "");
+    assert.equal(elem.innerHTML, "1 day");
   });
 
   test("updateRelativeAge", function (assert) {
     let d = new Date();
-    let $elem = $(autoUpdatingRelativeAge(d));
-    $elem.data("time", d.getTime() - 2 * 60 * 1000);
+    let elem = stringToDOMNode(autoUpdatingRelativeAge(d));
+    elem.dataset.time = d.getTime() - 2 * 60 * 1000;
 
-    updateRelativeAge($elem);
+    updateRelativeAge(elem);
 
-    assert.equal($elem.html(), "2m");
+    assert.equal(elem.innerHTML, "2m");
 
     d = new Date();
-    $elem = $(autoUpdatingRelativeAge(d, { format: "medium", leaveAgo: true }));
-    $elem.data("time", d.getTime() - 2 * 60 * 1000);
+    elem = stringToDOMNode(
+      autoUpdatingRelativeAge(d, { format: "medium", leaveAgo: true })
+    );
+    elem.dataset.time = d.getTime() - 2 * 60 * 1000;
 
-    updateRelativeAge($elem);
+    updateRelativeAge(elem);
 
-    assert.equal($elem.html(), "2 mins ago");
+    assert.equal(elem.innerHTML, "2 mins ago");
   });
 
   test("number", function (assert) {
