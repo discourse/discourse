@@ -903,7 +903,7 @@ class Search
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
+    if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -913,7 +913,7 @@ class Search
       unless @guardian.is_admin?
         posts = posts.private_posts_for_user(@guardian.user)
       end
-    elsif type_filter === "all_topics"
+    elsif type_filter == "all_topics"
       private_posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -976,7 +976,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if type_filter === "private_messages"
+          if type_filter == "private_messages"
             if @guardian.is_admin? && !@search_all_pms
               posts.private_posts_for_user(@search_context)
             else
