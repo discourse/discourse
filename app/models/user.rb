@@ -1042,7 +1042,7 @@ class User < ActiveRecord::Base
 
   def activate # TODO: is this duplicated?
     email_token = self.email_tokens.create!(email: self.email, scope: EmailToken.scopes[:signup])
-    EmailToken.confirm(email_token.token, scope: :signup, skip_reviewable: true)
+    EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup], skip_reviewable: true)
     self.update!(active: true)
     create_reviewable
   end

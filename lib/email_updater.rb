@@ -82,7 +82,7 @@ class EmailUpdater
     confirm_result = nil
 
     User.transaction do
-      email_token = EmailToken.confirmable(token, scope: :email_update)
+      email_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_update])
       if email_token.blank?
         errors.add(:base, I18n.t('change_email.already_done'))
         confirm_result = :error

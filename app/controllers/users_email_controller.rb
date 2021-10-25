@@ -200,7 +200,7 @@ class UsersEmailController < ApplicationController
   def load_change_request(type)
     expires_now
 
-    token = EmailToken.confirmable(params[:token], scope: :email_update)
+    token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:email_update])
 
     if token
       if type == :old

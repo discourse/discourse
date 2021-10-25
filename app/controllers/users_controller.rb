@@ -858,7 +858,7 @@ class UsersController < ApplicationController
 
   def confirm_email_token
     expires_now
-    EmailToken.confirm(params[:token], scope: :signup)
+    EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
     render json: success_json
   end
 
@@ -985,7 +985,7 @@ class UsersController < ApplicationController
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
 
-    if @user = EmailToken.confirm(params[:token], scope: :signup)
+    if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -1619,9 +1619,9 @@ class UsersController < ApplicationController
 
   def password_reset_find_user(token, committing_change:)
     @user = if committing_change
-      EmailToken.confirm(token, scope: :password_reset)
+      EmailToken.confirm(token, scope: EmailToken.scopes[:password_reset])
     else
-      EmailToken.confirmable(token, scope: :password_reset)&.user
+      EmailToken.confirmable(token, scope: EmailToken.scopes[:password_reset])&.user
     end
 
     if @user

@@ -86,8 +86,7 @@ class EmailToken < ActiveRecord::Base
     if !scope
       relation.first
     else
-      relation.where(scope: EmailToken.scopes[scope]).first ||
-      relation.where(scope: nil).first
+      relation.where(scope: scope).first || relation.where(scope: nil).first
     end
   end
 
