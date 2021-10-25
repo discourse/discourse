@@ -10,11 +10,7 @@ module("Unit | Utility | highlight-search", function () {
 
     highlightSearch(fixture(), "some text");
 
-    const terms = [];
-
-    fixture(`.${CLASS_NAME}`).forEach((elem) => {
-      terms.push(elem.textContent);
-    });
+    const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
     assert.equal(
       terms.join(" "),
@@ -30,11 +26,7 @@ module("Unit | Utility | highlight-search", function () {
 
     highlightSearch(fixture(), "தமிழ் & русский");
 
-    const terms = [];
-
-    fixture(`.${CLASS_NAME}`).forEach((elem) => {
-      terms.push(elem.textContent);
-    });
+    const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
     assert.equal(
       terms.join(" "),
