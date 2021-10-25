@@ -30,7 +30,7 @@ export default UserTopicListRoute.extend({
   },
 
   @action
-  triggerRefresh() {
+  refresh() {
     this.refresh();
   },
 });

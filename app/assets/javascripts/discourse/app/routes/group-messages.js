@@ -20,7 +20,7 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
-    triggerRefresh() {
+    refresh() {
       this.refresh();
     },
   },

@@ -60,7 +60,7 @@ export default Mixin.create({
 
         this.send("closeModal");
         this.send(
-          "triggerRefresh",
+          "refresh",
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
         );
       });

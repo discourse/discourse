@@ -52,7 +52,7 @@
           {{#unless loading}}
             {{#discovery-topics-list
               model=list
-              refresh=(action "triggerRefresh")
+              refresh=(action "refresh")
               autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
               bulkSelectEnabled=bulkSelectEnabled
               addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
@@ -70,7 +70,7 @@
                   canBulkSelect=canBulkSelect
                   toggleBulkSelect=(action "toggleBulkSelect")
                   bulkSelectEnabled=bulkSelectEnabled
-                  bulkSelectAction=(action "triggerRefresh")
+                  bulkSelectAction=(action "refresh")
                   updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
                   selected=selected
                   category=category

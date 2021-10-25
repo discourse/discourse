@@ -61,7 +61,7 @@ const controllerOpts = {
       return false;
     },
 
-    triggerRefresh(options = { skipResettingParams: [] }) {
+    refresh(options = { skipResettingParams: [] }) {
       const filter = this.get("model.filter");
       this.send("resetParams", options.skipResettingParams);
 
