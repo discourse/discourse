@@ -138,7 +138,7 @@ export default {
         const openPopupBtn = document.createElement("button");
         openPopupBtn.classList.add(
           "open-popup-link",
-          "button-default",
+          "btn-default",
           "btn",
           "btn-icon-text"
         );
@@ -157,12 +157,10 @@ export default {
       }
 
       function generateModal(event) {
-        if (event.target.classList.contains("open-popup-link")) {
-          const table = event.target.parentNode.querySelector("table");
-          const tempTable = table.cloneNode(true);
+        const table = event.target.parentNode.querySelector("table");
+        const tempTable = table.cloneNode(true);
 
-          showModal("fullscreen-table").set("tableHtml", tempTable);
-        }
+        showModal("fullscreen-table").set("tableHtml", tempTable);
       }
 
       function generatePopups(tables) {
