@@ -252,7 +252,7 @@ function createImage(name, url, width, height) {
       original_filename: name,
       thumbnail_width: width,
       thumbnail_height: height,
-      url: url,
+      url,
     },
   };
 }
@@ -284,7 +284,6 @@ acceptance("Composer Attachment - Upload Handler", function (needs) {
       "This is an upload handler test for handlertest.png",
       "it should show the bootbox triggered by the upload handler"
     );
-    await click(".modal-footer .btn");
   });
 });
 

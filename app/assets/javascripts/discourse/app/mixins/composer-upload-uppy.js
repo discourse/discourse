@@ -67,6 +67,12 @@ export default Mixin.create(ExtendableUploader, {
     }
   },
 
+  _abortAndReset() {
+    this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
+    this._reset();
+    return false;
+  },
+
   _bindUploadTarget() {
     this.placeholders = {};
     this._inProgressUploads = 0;
@@ -118,12 +124,6 @@ export default Mixin.create(ExtendableUploader, {
         const fileCount = Object.keys(files).length;
         const maxFiles = this.siteSettings.simultaneous_uploads;
 
-        const abortAndReset = () => {
-          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
-          this._reset();
-          return false;
-        };
-
         // Look for a matching file upload handler contributed from a plugin.
         // It is not ideal that this only works for single file uploads, but
         // at this time it is all we need. In future we may want to devise a
@@ -134,7 +134,7 @@ export default Mixin.create(ExtendableUploader, {
           const file = Object.values(files)[0];
           const matchingHandler = this._findMatchingUploadHandler(file.name);
           if (matchingHandler && !matchingHandler.method(file.data, this)) {
-            return abortAndReset();
+            return this._abortAndReset();
           }
         }
 
@@ -145,7 +145,7 @@ export default Mixin.create(ExtendableUploader, {
               count: maxFiles,
             })
           );
-          return abortAndReset();
+          return this._abortAndReset();
         }
       },
     });
