@@ -1,5 +1,6 @@
+import { helperContext, makeArray } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
 import I18n from "I18n";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -49,15 +50,22 @@ export function longDateNoYear(dt) {
 }
 
 export function updateRelativeAge(elems) {
-  // jQuery .each
-  elems.each(function () {
-    const $this = $(this);
-    $this.html(
-      relativeAge(new Date($this.data("time")), {
-        format: $this.data("format"),
-        wrapInSpan: false,
-      })
-    );
+  if (elems instanceof jQuery) {
+    elems = elems.toArray();
+    deprecated("updateRelativeAge now expects a DOM NodeList", {
+      since: "2.8.0.beta7",
+    });
+  }
+
+  if (!NodeList.prototype.isPrototypeOf(elems)) {
+    elems = makeArray(elems);
+  }
+
+  elems.forEach((elem) => {
+    elem.innerHTML = relativeAge(new Date(parseInt(elem.dataset.time, 10)), {
+      format: elem.dataset.format,
+      wrapInSpan: false,
+    });
   });
 }
 
