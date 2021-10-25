@@ -503,7 +503,7 @@ export default Component.extend(ComposerUpload, {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
-      linkSeenMentions($preview, this.siteSettings);
+      linkSeenMentions($preview[0], this.siteSettings);
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
     });
@@ -734,7 +734,7 @@ export default Component.extend(ComposerUpload, {
 
     previewUpdated($preview) {
       // Paint mentions
-      const unseenMentions = linkSeenMentions($preview, this.siteSettings);
+      const unseenMentions = linkSeenMentions($preview[0], this.siteSettings);
       if (unseenMentions.length) {
         discourseDebounce(
           this,
