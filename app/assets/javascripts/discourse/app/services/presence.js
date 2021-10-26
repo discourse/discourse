@@ -262,6 +262,7 @@ export default class PresenceService extends Service {
     if (this._initialDataAjax) {
       // try again next runloop
       next(this, () => once(this, this._makeInitialDataRequest));
+      return;
     }
 
     if (Object.keys(this._initialDataRequests).length === 0) {
