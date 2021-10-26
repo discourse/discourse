@@ -42,7 +42,6 @@ export default Component.extend(PanEvents, {
     }
 
     let info = this.info;
-    console.log(info.get("topicProgressExpanded"));
 
     if (info.get("topicProgressExpanded")) {
       info.set("renderTimeline", true);
