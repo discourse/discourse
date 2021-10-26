@@ -227,9 +227,14 @@ export default class PresenceService extends Service {
     this._presentProxies = {};
     this._subscribedProxies = {};
     this._initialDataRequests = {};
-    window.addEventListener("beforeunload", () => {
-      this._beaconLeaveAll();
-    });
+
+    this._beforeUnloadCallback = () => this._beaconLeaveAll();
+    window.addEventListener("beforeunload", this._beforeUnloadCallback);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beforeUnloadCallback);
   }
 
   // Get a PresenceChannel object representing a single channel
