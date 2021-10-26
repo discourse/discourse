@@ -108,10 +108,10 @@ $quote-share-maxwidth: 150px;
       }
     }
 
-    .discourse-no-touch a.anchor:hover,
+    // show when hovering where icon should be
+    // show when hovering header
+    .discourse-no-touch & a.anchor:hover,
     .discourse-no-touch &:hover a.anchor {
-      // show when hovering where icon should be
-      // show when hovering header
       opacity: 1;
     }
   }
