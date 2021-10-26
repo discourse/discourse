@@ -5,6 +5,7 @@ import PanEvents, {
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { alias } from "@ember/object/computed";
 import { later, next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
@@ -13,11 +14,13 @@ const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
+  classNameBindings: ["topicProgressExpanded"],
   composerOpen: null,
   info: null,
   isPanning: false,
   canRender: true,
   _lastTopicId: null,
+  topicProgressExpanded: alias("info.topicProgressExpanded"),
 
   init() {
     this._super(...arguments);
@@ -39,6 +42,7 @@ export default Component.extend(PanEvents, {
     }
 
     let info = this.info;
+    console.log(info.get("topicProgressExpanded"));
 
     if (info.get("topicProgressExpanded")) {
       info.set("renderTimeline", true);

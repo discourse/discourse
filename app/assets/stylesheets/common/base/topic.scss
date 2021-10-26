@@ -49,6 +49,9 @@
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");
+      &.topic-progress-expanded {
+        z-index: z("fullscreen");
+      }
     }
   }
 
@@ -120,10 +123,6 @@
     .topic-admin-popup-menu.right-side {
       bottom: -150px; // Prevents menu from being too high when a topic is very short
     }
-  }
-
-  html.rtl & {
-    justify-content: flex-start;
   }
 
   body:not(.footer-nav-visible) & {
