@@ -40,7 +40,7 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to eq_time(time)
+          expect(subject.updated_at).to be_within_one_second_of(time)
         end
       end
 
@@ -56,7 +56,7 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to eq_time(time)
+          expect(subject.updated_at).to be_within_one_second_of(time)
         end
       end
     end
