@@ -1,8 +1,9 @@
-import { visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import {
   acceptance,
+  controllerFor,
   count,
   exists,
   publishToMessageBus,
@@ -10,6 +11,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import selectKit from "../helpers/select-kit-helper";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -723,3 +725,129 @@ acceptance("User Private Messages - user with no messages", function (needs) {
     assert.ok(exists("div.empty-state"));
   });
 });
+
+acceptance(
+  "User Private Messages - composer with tags - Desktop",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.post("/posts", () => {
+        return helper.response({
+          action: "create_post",
+          post: {
+            id: 323,
+            name: "Robin Ward",
+            username: "eviltrout",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/j/b77776/{size}.png",
+            created_at: "2021-10-26T11:47:54.253Z",
+            cooked: "<p>Testing private messages with tags</p>",
+            post_number: 1,
+            post_type: 1,
+            updated_at: "2021-10-26T11:47:54.253Z",
+            yours: true,
+            topic_id: 161,
+            topic_slug: "testing-private-messages-with-tags",
+            raw: "This is a test for private messages with tags",
+            user_id: 29,
+          },
+          success: true,
+        });
+      });
+
+      server.get("/t/161.json", () => {
+        return helper.response(200, {});
+      });
+
+      server.get("/u/search/users", () => {
+        return helper.response({
+          users: [
+            {
+              username: "eviltrout",
+              name: "Robin Ward",
+              avatar_template:
+                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            },
+            {
+              username: "r_ocelot",
+              name: "Revolver Ocelot",
+              avatar_template:
+                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            },
+          ],
+        });
+      });
+    });
+
+    needs.site({
+      can_tag_pms: true,
+      can_tag_topics: true,
+    });
+
+    test("tags are present on private messages - Desktop mode", async function (assert) {
+      const controller = controllerFor("user");
+      controller.set("publicUserFieldsLinkified", []);
+
+      await visit("/u/eviltrout/messages");
+      await click(".new-private-message");
+
+      assert.ok(exists("#reply-control .mini-tag-chooser"));
+
+      await fillIn("#reply-title", "Sending a message with tags");
+      await fillIn(
+        "#reply-control .d-editor-input",
+        "This is a message to test tags"
+      );
+
+      const users = selectKit("#reply-control .user-chooser");
+
+      await users.expand();
+      await fillIn(
+        "#private-message-users-body input.filter-input",
+        "eviltrout"
+      );
+      await users.selectRowByValue("eviltrout");
+
+      await fillIn(
+        "#private-message-users-body input.filter-input",
+        "r_ocelot"
+      );
+      await users.selectRowByValue("r_ocelot");
+
+      const tags = selectKit("#reply-control .mini-tag-chooser");
+      await tags.expand();
+      await tags.selectRowByValue("monkey");
+      await tags.selectRowByValue("gazelle");
+
+      await click("#reply-control .save-or-cancel button");
+
+      assert.equal(
+        currentURL(),
+        "/t/testing-private-messages-with-tags/161",
+        "it creates the private message"
+      );
+    });
+  }
+);
+
+acceptance(
+  "User Private Messages - composer with tags - Mobile",
+  function (needs) {
+    needs.mobileView();
+    needs.user();
+
+    needs.site({
+      can_tag_pms: true,
+      can_tag_topics: true,
+    });
+
+    test("tags are not present on private messages - Mobile mode", async function (assert) {
+      const controller = controllerFor("user");
+      controller.set("publicUserFieldsLinkified", []);
+
+      await visit("/u/eviltrout/messages");
+      await click(".new-private-message");
+      assert.ok(!exists("#reply-control .mini-tag-chooser"));
+    });
+  }
+);
