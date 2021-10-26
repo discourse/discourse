@@ -24,6 +24,13 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
+### Latest Updates
+
+Make sure you have the latest updates.
+
+    apt-get update
+    apt-get upgrade
+
 
 ### Install Discourse
 
