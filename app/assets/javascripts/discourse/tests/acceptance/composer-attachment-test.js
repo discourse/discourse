@@ -284,6 +284,7 @@ acceptance("Composer Attachment - Upload Handler", function (needs) {
       "This is an upload handler test for handlertest.png",
       "it should show the bootbox triggered by the upload handler"
     );
+    await click(".modal-footer .btn");
   });
 });
 
