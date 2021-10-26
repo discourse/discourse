@@ -18,7 +18,7 @@ import User from "discourse/models/user";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
-const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 5000;
+const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
 
