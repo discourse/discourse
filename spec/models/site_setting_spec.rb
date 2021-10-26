@@ -212,4 +212,14 @@ describe SiteSetting do
 
     expect(SiteSetting.global_notice).to eq("<b>click me!</b>alert('TEST');")
   end
+
+  it "doesn't corrupt site settings with special characters" do
+    value = 'OX5y3Oljb+Qt9Bu809vsBQ==<>!%{}*&!@#$%..._-A'
+    settings = new_settings(SiteSettings::LocalProcessProvider.new)
+    settings.setting(:test_setting, '', client: true)
+
+    settings.test_setting = value
+
+    expect(settings.test_setting).to eq(value)
+  end
 end
