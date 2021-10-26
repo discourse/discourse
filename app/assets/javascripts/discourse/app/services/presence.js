@@ -389,6 +389,10 @@ export default class PresenceService extends Service {
   }
 
   async _subscribe(channelProxy, initialData = null) {
+    if (this.siteSettings.login_required && !this.currentUser) {
+      throw "Presence is only available to authenticated users on login-required sites";
+    }
+
     this._addSubscribed(channelProxy);
     const channelName = channelProxy.name;
     let state = this._presenceChannelStates[channelName];
