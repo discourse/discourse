@@ -31,7 +31,6 @@ Make sure you have the latest updates.
     apt-get update
     apt-get upgrade
 
-
 ### Install Discourse
 
 Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
@@ -65,6 +64,8 @@ You will need to be root through the rest of the setup and bootstrap process.
 - No domain name? Get one! We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
 
 - Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
+
+- If you are using [Cloudfare](https://www.cloudflare.com/) for DNS, make sure your `A` record is set to DNS Only. On default, it goes to `Proxied` and Discourse won't compile below.
 
 ### Edit Discourse Configuration
 
