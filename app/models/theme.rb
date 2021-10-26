@@ -201,6 +201,18 @@ class Theme < ActiveRecord::Base
     expire_site_cache!
   end
 
+  def self.allowed_remote_theme_ids
+    return nil if GlobalSetting.allowed_theme_repos.blank?
+
+    @allowed_remote_theme_ids ||= begin
+      urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
+    end
+  end
+
   def self.transform_ids(id)
     return [] if id.blank?
     id = id.to_i

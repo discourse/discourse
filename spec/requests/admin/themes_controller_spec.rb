@@ -102,12 +102,7 @@ describe Admin::ThemesController do
 
     context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it "allows allowlisted imports" do
@@ -311,12 +306,7 @@ describe Admin::ThemesController do
 
     context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it 'unconditionally bans theme_fields from updating' do
