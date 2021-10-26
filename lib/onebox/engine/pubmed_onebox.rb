@@ -12,7 +12,7 @@ module Onebox
 
       def xml
         return @xml if defined?(@xml)
-        doc = Nokogiri::XML(URI.parse(URI.join(@url, "?report=xml&format=text").open))
+        doc = Nokogiri::XML(URI.join(@url, "?report=xml&format=text").open)
         pre = doc.xpath("//pre")
         @xml = Nokogiri::XML("<root>" + pre.text + "</root>")
       end
