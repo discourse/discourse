@@ -415,9 +415,14 @@ export default class PresenceService extends Service {
       .filter((e) => e.type === "leave")
       .map((e) => e.channel);
 
+    channelsToLeave.push(...this._presentChannels);
+
+    if (channelsToLeave.length === 0) {
+      return;
+    }
+
     const data = new FormData();
     data.append("client_id", this.messageBus.clientId);
-    this._presentChannels.forEach((ch) => data.append("leave_channels[]", ch));
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));
