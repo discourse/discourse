@@ -267,19 +267,25 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  PRIVATE_MESSAGES_SQL = <<~SQL
+  PRIVATE_MESSAGES_SQL_USER = <<~SQL
     SELECT topic_id
     FROM topic_allowed_users
     WHERE user_id = :user_id
-    UNION ALL
+  SQL
+
+  PRIVATE_MESSAGES_SQL_GROUP = <<~SQL
     SELECT tg.topic_id
     FROM topic_allowed_groups tg
     JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
   SQL
 
-  scope :private_messages_for_user, ->(user) {
-    private_messages.where("topics.id IN (#{PRIVATE_MESSAGES_SQL})", user_id: user.id)
-  }
+  scope :private_messages_for_user, ->(user) do
+    private_messages.where(
+      "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
+      user_id: user.id
+    )
+  end
 
   scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
