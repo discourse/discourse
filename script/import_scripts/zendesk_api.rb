@@ -333,7 +333,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
       attempts = 0
 
       begin
-        open("#{$1}") do |image|
+        URI.parse(image_url).open do |image|
           # IMAGE_DOWNLOAD_PATH is whatever image, it will be replaced with the downloaded image
           File.open(IMAGE_DOWNLOAD_PATH, "wb") do |file|
             file.write(image.read)

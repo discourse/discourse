@@ -83,9 +83,9 @@ module DiscourseUpdates
     end
 
     ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
-      eval "define_method :#{name}= do |arg|
-        Discourse.redis.set #{name}_key, arg
-      end"
+      define_method("#{name}=") do |arg|
+        Discourse.redis.set "#{name}_key", arg
+      end
     end
 
     def missing_versions=(versions)

@@ -132,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(url, allow_redirections: :safe).read
+      html = URI.parse(url).open(allow_redirections: :safe).read
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
@@ -255,10 +255,6 @@ class TopicEmbed < ActiveRecord::Base
       body << TopicEmbed.imported_from_html(url)
       body
     end
-  end
-
-  def self.open(uri, **kwargs)
-    URI.open(uri, **kwargs)
   end
 end
 
