@@ -3458,6 +3458,8 @@ nb_NO:
       no_activity_others: "Ingen aktivitet."
       no_replies_others: "Ingen svar."
       no_likes_others: "Ingen likte innlegg. "
+    fullscreen_table:
+      expand_btn: "Utvid tabell"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
