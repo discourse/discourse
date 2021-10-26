@@ -25,7 +25,7 @@ class ImportScripts::Phorum < ImportScripts::Base
     import_users
     import_categories
     import_posts
-	  import_attachments
+    import_attachments
   end
 
   def import_users
@@ -209,7 +209,7 @@ class ImportScripts::Phorum < ImportScripts::Base
     s.gsub!(/\[\/color\]/i, "")
 
     s.gsub!(/\[hr\]/i, "<hr>")
-	
+
     # remove trailing <br>
     s = s.chomp("<br>")
 
@@ -229,12 +229,12 @@ class ImportScripts::Phorum < ImportScripts::Base
       where message_id > 0
       order by file_id
     SQL
-	
+
     current_count = 0
     total_count = uploads.count
 
     uploads.each do |upload|
-	
+
       # puts "*** processing file #{upload['file_id']}"
 
       post_id = post_id_from_imported_post_id(upload['message_id'])
@@ -256,8 +256,8 @@ class ImportScripts::Phorum < ImportScripts::Base
       }
 
       upl_obj = create_upload(post.user.id, filename, real_filename)
-	  
-	    # puts "discourse post #{post['id']} and upload #{upl_obj['id']}"
+
+      # puts "discourse post #{post['id']} and upload #{upl_obj['id']}"
 
       if upl_obj&.persisted?
         html = html_for_upload(upl_obj, real_filename)
@@ -282,7 +282,7 @@ class ImportScripts::Phorum < ImportScripts::Base
       print_status(current_count, total_count)
     end
   end
-    
+
 end
 
 ImportScripts::Phorum.new.perform
