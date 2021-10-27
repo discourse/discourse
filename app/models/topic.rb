@@ -1028,6 +1028,12 @@ class Topic < ActiveRecord::Base
           .where('NOT admin AND NOT moderator')
           .exists?
         raise NotAllowed.new(I18n.t("topic_invite.muted_invitee"))
+      elsif IgnoredUser
+          .where(user: target_user, ignored_user: invited_by)
+          .joins(:ignored_user)
+          .where('NOT admin AND NOT moderator')
+          .exists?
+        raise NotAllowed.new(I18n.t("topic_invite.ignored_invitee"))
       end
 
       if TopicUser
