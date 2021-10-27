@@ -2,6 +2,7 @@
 
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
+  include HasSanitizableFields
 
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
@@ -362,8 +363,12 @@ module SiteSettingExtension
   def add_override!(name, val)
     old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
-    provider.save(name, val, type)
-    current[name] = type_supervisor.to_rb_value(name, val)
+
+    sanitize_override = val.is_a?(String) && client_settings.include?(name)
+
+    sanitized_val = sanitize_override ? sanitize_field(val) : val
+    provider.save(name, sanitized_val, type)
+    current[name] = type_supervisor.to_rb_value(name, sanitized_val)
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
