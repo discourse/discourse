@@ -52,6 +52,18 @@
   </div>
 {{/unless}}
 
+{{#if showPushNotificationsDisabled}}
+  <div class="control-group push-notifications-disabled">
+    <label class="control-label">{{i18n "user.push_notifications_disabled.title"}}</label>
+
+    <div class="controls">
+      {{preference-checkbox
+          labelKey="user.push_notifications_disabled.label"
+          checked=model.user_option.push_notifications_disabled}}
+    </div>
+  </div>
+{{/if}}
+
 {{user-notification-schedule model=model}}
 
 {{#if siteSettings.enable_personal_messages}}

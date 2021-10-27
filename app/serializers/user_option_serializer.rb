@@ -34,6 +34,7 @@ class UserOptionSerializer < ApplicationSerializer
              :timezone,
              :skip_new_user_tips,
              :default_calendar,
+             :push_notifications_disabled
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
@@ -51,4 +52,8 @@ class UserOptionSerializer < ApplicationSerializer
     object.theme_ids.presence || [SiteSetting.default_theme_id]
   end
 
+  def include_push_notifications_disabled?
+    user = object.user
+    user.push_subscriptions.any? || user.active_hub_client_ids.any?
+  end
 end

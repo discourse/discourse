@@ -35,22 +35,14 @@ class PostAlerter
   end
 
   def self.push_notification(user, payload)
-    return if user.do_not_disturb?
+    return if user.do_not_disturb? || user.user_option.push_notifications_disabled
 
     if user.push_subscriptions.exists?
       Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
     end
 
-    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
-      clients = user.user_api_keys
-        .joins(:scopes)
-        .where("user_api_key_scopes.name IN ('push', 'notifications')")
-        .where("push_url IS NOT NULL AND push_url <> ''")
-        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
-        .where("revoked_at IS NULL")
-        .order(client_id: :asc)
-        .pluck(:client_id, :push_url)
-
+    if SiteSetting.push_notifications_to_hub_supported?
+      clients = user.active_hub_client_ids
       if clients.length > 0
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end

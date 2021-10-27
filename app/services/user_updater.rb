@@ -47,7 +47,8 @@ class UserUpdater
     :title_count_mode,
     :timezone,
     :skip_new_user_tips,
-    :default_calendar
+    :default_calendar,
+    :push_notifications_disabled
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {

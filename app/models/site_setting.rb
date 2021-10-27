@@ -98,6 +98,10 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
+  def self.push_notifications_to_hub_supported?
+    allow_user_api_key_scopes.split("|").include?("push") && allowed_user_api_push_urls.present?
+  end
+
   WATCHED_SETTINGS ||= [
     :default_locale,
     :blocked_attachment_content_types,

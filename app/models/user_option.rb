@@ -85,6 +85,8 @@ class UserOption < ActiveRecord::Base
 
     self.title_count_mode = SiteSetting.default_title_count_mode
 
+    self.push_notifications_disabled = false
+
     true
   end
 
