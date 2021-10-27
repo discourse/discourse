@@ -331,6 +331,9 @@ export default class PresenceService extends Service {
   _removeSubscribed(channelProxy) {
     let subscribed = this._subscribedProxies[channelProxy.name];
     subscribed?.delete(channelProxy);
+    if (subscribed?.size === 0) {
+      delete this._subscribedProxies[channelProxy.name];
+    }
     return subscribed?.size || 0;
   }
 
