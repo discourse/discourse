@@ -1215,7 +1215,7 @@ describe UploadsController do
         # all the functionality for ExternalUploadManager is already tested along
         # with stubs to S3 in its own test, we can just stub the response here
         upload = Fabricate(:upload)
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).returns(upload)
+        ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
 
         post "/uploads/complete-multipart.json", params: {
           unique_identifier: external_upload_stub.unique_identifier,
@@ -1383,39 +1383,39 @@ describe UploadsController do
       end
 
       it "handles ChecksumMismatchError" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::ChecksumMismatchError)
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(ExternalUploadManager::ChecksumMismatchError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles SizeMismatchError" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::SizeMismatchError.new("expected: 10, actual: 1000"))
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(ExternalUploadManager::SizeMismatchError.new("expected: 10, actual: 1000"))
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles CannotPromoteError" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::CannotPromoteError)
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(ExternalUploadManager::CannotPromoteError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(ExternalUploadManager::DownloadFailedError)
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(ExternalUploadManager::DownloadFailedError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(Aws::S3::Errors::NotFound.new("error", "not found"))
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(Aws::S3::Errors::NotFound.new("error", "not found"))
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
       end
 
       it "handles a generic upload failure" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).raises(StandardError)
+        ExternalUploadManager.any_instance.stubs(:transform!).raises(StandardError)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
@@ -1423,14 +1423,14 @@ describe UploadsController do
 
       it "handles validation errors on the upload" do
         upload.errors.add(:base, "test error")
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).returns(upload)
+        ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["test error"])
       end
 
       it "deletes the stub and returns the serialized upload when complete" do
-        ExternalUploadManager.any_instance.stubs(:promote_to_upload!).returns(upload)
+        ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
         post "/uploads/complete-external-upload.json", params: { unique_identifier: external_upload_stub.unique_identifier }
         expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
         expect(response.status).to eq(200)

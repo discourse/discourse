@@ -45,7 +45,7 @@ module BackupRestore
       raise BackupFileExists.new if obj.exists?
 
       ensure_cors!
-      presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
+      presigned_url(obj.key, method: :put, expires_in: UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
       raise StorageError.new(e.message.presence || e.class.name)
@@ -65,6 +65,80 @@ module BackupRestore
         })
         legacy_s3_helper.delete_object(legacy_key)
       end
+    end
+
+    def temporary_upload_path(file_name)
+      folder_prefix = @s3_helper.s3_bucket_folder_path.nil? ? "" : @s3_helper.s3_bucket_folder_path
+
+      # We don't want to use the original file name as it can contain special
+      # characters, which can interfere with external providers operations and
+      # introduce other unexpected behaviour.
+      file_name_random = "#{SecureRandom.hex}#{File.extname(file_name)}"
+      File.join(
+        FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX,
+        folder_prefix,
+        SecureRandom.hex,
+        file_name_random # this 1, no upload_path
+      )
+    end
+
+    def create_multipart(file_name, content_type, metadata: {})
+      key = temporary_upload_path(file_name)
+      response = @s3_helper.s3_client.create_multipart_upload(
+        acl: "private",
+        bucket: @s3_helper.s3_bucket_name, # this 1
+        key: key,
+        content_type: content_type,
+        metadata: metadata
+      )
+      { upload_id: response.upload_id, key: key }
+    end
+
+    def presign_multipart_part(upload_id:, key:, part_number:)
+      presigned_url(
+        key,
+        method: :upload_part,
+        expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+        opts: {
+          part_number: part_number,
+          upload_id: upload_id
+        }
+      )
+    end
+
+    def list_multipart_parts(upload_id:, key:)
+      @s3_helper.s3_client.list_parts(
+        bucket: @s3_helper.s3_bucket_name,
+        key: key,
+        upload_id: upload_id
+      )
+    end
+
+    def complete_multipart(upload_id:, key:, parts:)
+      @s3_helper.s3_client.complete_multipart_upload(
+        bucket: @s3_helper.s3_bucket_name, # this 1
+        key: key,
+        upload_id: upload_id,
+        multipart_upload: {
+          parts: parts
+        }
+      )
+    end
+
+    # changed from upload as param
+    def move_existing_stored_upload(existing_external_upload_key, original_filename, secure, content_type = nil)
+      @s3_helper.copy(
+        existing_external_upload_key,
+        File.join(@s3_helper.s3_bucket_folder_path, original_filename),
+        options: { acl: "private", apply_metadata_to_destination: true }
+      )
+      delete_file_by_path(existing_external_upload_key)
+    end
+
+    def delete_file_by_path(path)
+      # delete the object outright without moving to tombstone,
+      # not recommended for most use cases
+      @s3_helper.delete_object(path)
     end
 
     private
@@ -96,6 +170,23 @@ module BackupRestore
 
     def presigned_url(obj, method, expires_in_seconds)
       obj.presigned_url(method, expires_in: expires_in_seconds)
+    end
+
+    def presigned_url(
+      key,
+      method:,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      opts: {}
+    )
+      signer = Aws::S3::Presigner.new(client: @s3_helper.s3_client)
+      signer.presigned_url(
+        method,
+        {
+          bucket: @s3_helper.s3_bucket_name,
+          key: key,
+          expires_in: expires_in,
+        }.merge(opts)
+      )
     end
 
     def ensure_cors!

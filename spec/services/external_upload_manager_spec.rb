@@ -47,7 +47,7 @@ RSpec.describe ExternalUploadManager do
     end
   end
 
-  describe "#promote_to_upload!" do
+  describe "#transform!" do
     context "when stubbed upload is < DOWNLOAD_LIMIT (small enough to download + generate sha)" do
       let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user, filesize: object_size) }
       let(:object_size) { 1.megabyte }
@@ -59,7 +59,7 @@ RSpec.describe ExternalUploadManager do
         end
 
         it "raises an error" do
-          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::DownloadFailedError)
+          expect { subject.transform! }.to raise_error(ExternalUploadManager::DownloadFailedError)
         end
       end
 
@@ -68,13 +68,13 @@ RSpec.describe ExternalUploadManager do
           external_upload_stub.update!(status: ExternalUploadStub.statuses[:uploaded])
         end
         it "raises an error" do
-          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::CannotPromoteError)
+          expect { subject.transform! }.to raise_error(ExternalUploadManager::CannotPromoteError)
         end
       end
 
       context "when the upload does not get changed in UploadCreator (resized etc.)" do
         it "copies the stubbed upload on S3 to its new destination and deletes it" do
-          upload = subject.promote_to_upload!
+          upload = subject.transform!
           expect(WebMock).to have_requested(
             :put,
             "#{upload_base_url}/original/1X/#{upload.sha1}.png",
@@ -87,7 +87,7 @@ RSpec.describe ExternalUploadManager do
 
         it "errors if the image upload is too big" do
           SiteSetting.max_image_size_kb = 1
-          upload = subject.promote_to_upload!
+          upload = subject.transform!
           expect(upload.errors.full_messages).to include(
             "Filesize " + I18n.t("upload.images.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_image_size_kb.kilobytes))
           )
@@ -95,7 +95,7 @@ RSpec.describe ExternalUploadManager do
 
         it "errors if the extension is not supported" do
           SiteSetting.authorized_extensions = ""
-          upload = subject.promote_to_upload!
+          upload = subject.transform!
           expect(upload.errors.full_messages).to include(
             "Original filename " + I18n.t("upload.unauthorized", authorized_extensions: "")
           )
@@ -106,7 +106,7 @@ RSpec.describe ExternalUploadManager do
         let(:file) { file_from_fixtures("should_be_jpeg.heic", "images") }
 
         it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
-          upload = subject.promote_to_upload!
+          upload = subject.transform!
           expect(WebMock).to have_requested(
             :put,
             "#{upload_base_url}/original/1X/#{upload.sha1}.png"
@@ -124,13 +124,13 @@ RSpec.describe ExternalUploadManager do
           let(:client_sha1) { "blahblah" }
 
           it "raises an error, deletes the stub" do
-            expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+            expect { subject.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
             expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
           end
 
           it "does not delete the stub if enable_upload_debug_mode" do
             SiteSetting.enable_upload_debug_mode = true
-            expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+            expect { subject.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
             external_stub = ExternalUploadStub.find(external_upload_stub.id)
             expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
           end
@@ -145,7 +145,7 @@ RSpec.describe ExternalUploadManager do
         after { Discourse.redis.flushdb }
 
         it "raises an error, deletes the file immediately, and prevents the user from uploading external files for a few minutes" do
-          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
+          expect { subject.transform! }.to raise_error(ExternalUploadManager::SizeMismatchError)
           expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
           expect(Discourse.redis.get("#{ExternalUploadManager::BAN_USER_REDIS_PREFIX}#{external_upload_stub.created_by_id}")).to eq("1")
           expect(WebMock).to have_requested(
@@ -156,7 +156,7 @@ RSpec.describe ExternalUploadManager do
 
         it "does not delete the stub if enable_upload_debug_mode" do
           SiteSetting.enable_upload_debug_mode = true
-          expect { subject.promote_to_upload! }.to raise_error(ExternalUploadManager::SizeMismatchError)
+          expect { subject.transform! }.to raise_error(ExternalUploadManager::SizeMismatchError)
           external_stub = ExternalUploadStub.find(external_upload_stub.id)
           expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
         end
@@ -174,23 +174,23 @@ RSpec.describe ExternalUploadManager do
 
       it "does not try and download the file" do
         FileHelper.expects(:download).never
-        subject.promote_to_upload!
+        subject.transform!
       end
 
       it "generates a fake sha for the upload record" do
-        upload = subject.promote_to_upload!
+        upload = subject.transform!
         expect(upload.sha1).not_to eq(sha1)
         expect(upload.original_sha1).to eq(nil)
         expect(upload.filesize).to eq(object_size)
       end
 
       it "marks the stub as uploaded" do
-        subject.promote_to_upload!
+        subject.transform!
         expect(external_upload_stub.reload.status).to eq(ExternalUploadStub.statuses[:uploaded])
       end
 
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
-        upload = subject.promote_to_upload!
+        upload = subject.transform!
         expect(WebMock).to have_requested(
           :put,
           "#{upload_base_url}/original/1X/#{upload.sha1}.pdf"
