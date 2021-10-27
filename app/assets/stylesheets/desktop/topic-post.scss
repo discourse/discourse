@@ -769,6 +769,14 @@ span.highlighted {
   transition: visibility 1s, opacity ease-out 1s;
 }
 
+.topic-post.sticky-avatar {
+  .topic-avatar {
+    position: sticky;
+    top: calc(var(--header-offset) - 0.25em);
+    margin-bottom: 25px;
+  }
+}
+
 /* Tablet (portrait) ----------- */
 
 @media all and (max-width: 790px) {
