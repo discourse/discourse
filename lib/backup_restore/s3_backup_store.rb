@@ -51,22 +51,6 @@ module BackupRestore
       raise StorageError.new(e.message.presence || e.class.name)
     end
 
-    def vacate_legacy_prefix
-      legacy_s3_helper = S3Helper.new(s3_bucket_name_with_legacy_prefix, '', @s3_options.clone)
-      bucket, prefix = s3_bucket_name_with_prefix.split('/', 2)
-      legacy_keys = legacy_s3_helper.list
-        .reject { |o| o.key.starts_with? prefix }
-        .map { |o| o.key }
-      legacy_keys.each do |legacy_key|
-        @s3_helper.s3_client.copy_object({
-          copy_source: File.join(bucket, legacy_key),
-          bucket: bucket,
-          key: File.join(prefix, legacy_key.split('/').last)
-        })
-        legacy_s3_helper.delete_object(legacy_key)
-      end
-    end
-
     private
 
     def unsorted_files
@@ -115,14 +99,6 @@ module BackupRestore
 
     def s3_bucket_name_with_prefix
       File.join(SiteSetting.s3_backup_bucket, RailsMultisite::ConnectionManagement.current_db)
-    end
-
-    def s3_bucket_name_with_legacy_prefix
-      if Rails.configuration.multisite
-        File.join(SiteSetting.s3_backup_bucket, "backups", RailsMultisite::ConnectionManagement.current_db)
-      else
-        SiteSetting.s3_backup_bucket
-      end
     end
 
     def file_regex
