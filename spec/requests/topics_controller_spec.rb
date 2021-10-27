@@ -1358,6 +1358,37 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
+        context 'when using SiteSetting.disable_category_edit_notifications' do
+          it "doesn't bump the topic if the setting is enabled" do
+            SiteSetting.disable_category_edit_notifications = true
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                category_id: category.id
+              }
+            end.to change { topic.reload.category_id }.to(category.id)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
+          end
+
+          it "bumps the topic if the setting is disabled" do
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                category_id: category.id
+              }
+            end.to change { topic.reload.category_id }.to(category.id)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
+          end
+        end
+
         describe "when first post is locked" do
           it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
             SiteSetting.trusted_users_can_edit_others = true
