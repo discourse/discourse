@@ -32,6 +32,8 @@ function findAllMatches(text, matchers) {
 }
 
 export function setup(helper) {
+  const opts = helper.getOptions();
+
   helper.registerPlugin((md) => {
     const matchers = [];
 
@@ -139,6 +141,9 @@ export function setup(helper) {
                 if (htmlLinkLevel === 0 && state.md.validateLink(url)) {
                   token = new state.Token("link_open", "a", 1);
                   token.attrs = [["href", url]];
+                  if (opts.discourse.previewing) {
+                    token.attrs.push(["data-word", ""]);
+                  }
                   token.level = level++;
                   token.markup = "linkify";
                   token.info = "auto";

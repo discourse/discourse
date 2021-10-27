@@ -505,6 +505,11 @@ export default Controller.extend({
       $links.each((idx, l) => {
         const href = l.href;
         if (href && href.length) {
+          // skip links added by watched words
+          if (l.dataset.word !== undefined) {
+            return true;
+          }
+
           // skip links in quotes and oneboxes
           for (let element = l; element; element = element.parentElement) {
             if (
