@@ -14,11 +14,10 @@ export default Component.extend({
     "model.replyingToTopic",
     "model.editingPost",
     "model.whisper",
-    "model.composerOpened",
-    "isDestroying"
+    "model.composerOpened"
   )
-  state(replyingToTopic, editingPost, whisper, composerOpen, isDestroying) {
-    if (!composerOpen || isDestroying) {
+  state(replyingToTopic, editingPost, whisper, composerOpen) {
+    if (!composerOpen) {
       return;
     } else if (editingPost) {
       return "edit";
@@ -73,6 +72,12 @@ export default Component.extend({
     this._setupChannel("editChannel", this.editChannelName);
   },
 
+  _cleanupChannels() {
+    this._setupChannel("replyChannel", null);
+    this._setupChannel("whisperChannel", null);
+    this._setupChannel("editChannel", null);
+  },
+
   replyingUsers: union("replyChannel.users", "whisperChannel.users"),
   editingUsers: readOnly("editChannel.users"),
 
@@ -102,7 +107,7 @@ export default Component.extend({
 
   @on("willDestroyElement")
   closeComposer() {
-    this._setupChannels();
+    this._cleanupChannels();
     this.composerPresenceManager.leave();
   },
 });
