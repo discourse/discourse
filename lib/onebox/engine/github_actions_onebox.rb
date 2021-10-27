@@ -71,7 +71,7 @@ module Onebox
           raw["head_commit"]["message"].lines.first
         elsif type == :pr_run
           pr_url = "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/pulls/#{match[:pr_id]}"
-          ::MultiJson.load(URI.open(pr_url, read_timeout: timeout))["title"]
+          ::MultiJson.load(URI.parse(pr_url).open(read_timeout: timeout))["title"]
         end
 
         {

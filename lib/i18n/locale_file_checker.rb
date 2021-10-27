@@ -165,7 +165,7 @@ class LocaleFileChecker
 
   def plural_keys
     @plural_keys ||= begin
-      eval(File.read("#{Rails.root}/#{PLURALS_FILE}")).map do |locale, value|
+      eval(File.read("#{Rails.root}/#{PLURALS_FILE}")).map do |locale, value| # rubocop:disable Security/Eval
         [locale.to_s, value[:i18n][:plural][:keys].map(&:to_s)]
       end.to_h
     end

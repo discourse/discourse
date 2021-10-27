@@ -180,7 +180,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
     if is_external
       # download external image
       begin
-        string_io = open(picture, read_timeout: 5)
+        string_io = uri.open(read_timeout: 5)
       rescue Net::ReadTimeout
         puts "timeout downloading avatar for user #{imported_user.id}"
         return nil
@@ -246,7 +246,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     if is_external
       begin
-        string_io = open(picture, read_timeout: 5)
+        string_io = uri.open(read_timeout: 5)
       rescue Net::ReadTimeout
         return nil
       end
