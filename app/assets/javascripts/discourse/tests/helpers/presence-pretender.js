@@ -48,7 +48,7 @@ export function joinChannel(name, user) {
     publishToMessageBus(
       `/presence${name}`,
       {
-        entering_users: [user],
+        entering_users: [Object.assign({}, user)],
       },
       0,
       channel.last_message_id
