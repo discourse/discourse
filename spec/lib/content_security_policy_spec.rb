@@ -234,6 +234,7 @@ describe ContentSecurityPolicy do
       expect(parse(policy)['manifest-src']).to_not include('https://manifest-src.com')
 
       Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
     end
 
     it 'can extend frame_ancestors' do
@@ -251,6 +252,7 @@ describe ContentSecurityPolicy do
       expect(parse(policy)['frame-ancestors']).to_not include('https://frame-ancestors-plugin.ext')
 
       Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
     end
   end
 

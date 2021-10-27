@@ -225,10 +225,11 @@ createWidget("timeline-scrollarea", {
 
     let showButton = false;
     const hasBackPosition =
+      position.lastRead &&
       position.lastRead > 3 &&
+      position.lastRead > position.current &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      position.lastRead &&
       position.lastRead !== position.total;
 
     if (hasBackPosition) {
@@ -555,7 +556,7 @@ export default createWidget("topic-timeline", {
     if (!attrs.mobileView) {
       const streamLength = attrs.topic.get("postStream.stream.length");
 
-      if (streamLength < 2) {
+      if (streamLength === 1) {
         const postsWrapper = document.querySelector(".posts-wrapper");
         if (postsWrapper && postsWrapper.offsetHeight < 1000) {
           displayTimeLineScrollArea = false;

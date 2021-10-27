@@ -243,6 +243,7 @@ describe SvgSprite do
 
       after do
         Discourse.plugins.delete plugin1
+        DiscoursePluginRegistry.reset!
       end
 
       it "includes custom icons from plugins" do

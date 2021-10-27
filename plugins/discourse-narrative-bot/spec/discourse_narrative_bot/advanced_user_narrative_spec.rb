@@ -26,6 +26,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end

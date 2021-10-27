@@ -283,6 +283,7 @@ sv:
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
       not_bookmarked: "bokmärk detta inlägg"
+      remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
       remove: "Ta bort bokmärke"
       delete: "Radera bokmärke"
@@ -1821,7 +1822,7 @@ sv:
       shift: "Skift"
       ctrl: "Ctrl"
       alt: "Alt"
-      enter: "Ange"
+      enter: "Retur"
     conditional_loading_section:
       loading: Laddar...
     category_row:
@@ -1943,6 +1944,7 @@ sv:
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
+      title: "Eller tryck på %{modifier}Enter"
       users_placeholder: "Lägg till en användare"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
@@ -2159,7 +2161,9 @@ sv:
       tags: "Taggar"
       in: "i"
       in_this_topic: "i detta ämne"
+      in_this_topic_tooltip: "växla till att söka i alla ämnen"
       in_topics_posts: "i alla ämnen och inlägg"
+      enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
       type:
         default: "Ämnen/inlägg"
@@ -2419,6 +2423,7 @@ sv:
         time_frame_required: "Välj en tidsram"
         min_duration: "Varaktigheten måste vara större än 0"
         max_duration: "Varaktigheten måste vara kortare än 20 år"
+        duration: "Varaktighet"
       auto_update_input:
         none: "Välj en tidsram"
         now: "Nu"
@@ -2848,6 +2853,8 @@ sv:
             other: "Ja, och alla %{count} svaren"
           just_the_post: "Nej, bara det här inlägget"
         admin: "administratörsåtgärder för inlägg"
+        permanently_delete: "Radera permanent"
+        permanently_delete_confirmation: "Är du säker på att du permanent vill ta bort det här inlägget? Du kommer inte att kunna återställa den."
         wiki: "Skapa wiki"
         unwiki: "Ta bort wiki"
         convert_to_moderator: "Lägg till personalfärg"

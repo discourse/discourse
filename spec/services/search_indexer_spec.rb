@@ -225,7 +225,6 @@ describe SearchIndexer do
 
     it 'should not include lightbox in search' do
       Jobs.run_immediately!
-      SiteSetting.crawl_images = true
       SiteSetting.max_image_width = 1
 
       stub_request(:get, "https://meta.discourse.org/some.png")

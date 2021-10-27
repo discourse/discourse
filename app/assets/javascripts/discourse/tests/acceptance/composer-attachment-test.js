@@ -4,7 +4,9 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { click, fillIn, visit } from "@ember/test-helpers";
+import bootbox from "bootbox";
 import { test } from "qunit";
 
 function pretender(server, helper) {
@@ -239,20 +241,51 @@ acceptance("Composer Attachment - Upload Placeholder", function (needs) {
       "![ima++ge|300x400](/images/avatar.png?4)\n"
     );
   });
+});
 
-  function createImage(name, url, width, height) {
-    const file = new Blob([""], { type: "image/png" });
-    file.name = name;
-    return {
-      files: [file],
-      result: {
-        original_filename: name,
-        thumbnail_width: width,
-        thumbnail_height: height,
-        url: url,
-      },
-    };
-  }
+function createImage(name, url, width, height) {
+  const file = new Blob([""], { type: "image/png" });
+  file.name = name;
+  return {
+    files: [file],
+    result: {
+      original_filename: name,
+      thumbnail_width: width,
+      thumbnail_height: height,
+      url,
+    },
+  };
+}
+
+acceptance("Composer Attachment - Upload Handler", function (needs) {
+  needs.user();
+  needs.hooks.beforeEach(() => {
+    withPluginApi("0.8.14", (api) => {
+      api.addComposerUploadHandler(["png"], (file) => {
+        bootbox.alert(`This is an upload handler test for ${file.name}`);
+      });
+    });
+  });
+
+  test("should handle a single file being uploaded with the extension handler", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const image = createImage(
+      "handlertest.png",
+      "/images/avatar.png?1",
+      200,
+      300
+    );
+    await fillIn(".d-editor-input", "This is a handler test.");
+
+    await queryAll(".wmd-controls").trigger("fileuploadsubmit", image);
+    assert.equal(
+      queryAll(".bootbox .modal-body").html(),
+      "This is an upload handler test for handlertest.png",
+      "it should show the bootbox triggered by the upload handler"
+    );
+    await click(".modal-footer .btn");
+  });
 });
 
 acceptance("Composer Attachment - File input", function (needs) {

@@ -8,7 +8,7 @@ import sinon from "sinon";
 const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
-  return $.Event("click", { currentTarget: fixture(selector).first() });
+  return $.Event("click", { currentTarget: fixture(selector) });
 }
 
 module("Unit | Utility | click-track-profile-page", function (hooks) {
@@ -24,8 +24,7 @@ module("Unit | Utility | click-track-profile-page", function (hooks) {
 
     sessionStorage.clear();
 
-    fixture().html(
-      `<p class="excerpt first" data-post-id="42" data-topic-id="1337" data-user-id="3141">
+    fixture().innerHTML = `<p class="excerpt first" data-post-id="42" data-topic-id="1337" data-user-id="3141">
         <a href="http://www.google.com">google.com</a>
         <a class="lightbox back" href="http://www.google.com">google.com</a>
         <div class="onebox-result">
@@ -48,8 +47,7 @@ module("Unit | Utility | click-track-profile-page", function (hooks) {
         <a id="same-site" href="http://discuss.domain.com">forum</a>
         <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
         <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
-      </p>`
-    );
+      </p>`;
   });
 
   skip("tracks internal URLs", async function (assert) {

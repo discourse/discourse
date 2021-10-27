@@ -312,6 +312,7 @@ en:
     bookmarks:
       created: "You've bookmarked this post. %{name}"
       not_bookmarked: "bookmark this post"
+      remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
@@ -1218,7 +1219,7 @@ en:
         tags: "Tags"
         warnings: "Official Warnings"
         read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
-        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/message'>personal messages</a>."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages'>personal messages</a>."
 
         read_more_group_pm_MF: "There {
           UNREAD, plural,
@@ -1248,7 +1249,7 @@ en:
           =0 {}
           one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
           other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
-          } remaining, or browse other <a href='{basePath}/u/{username}/message'>personal messages</a>"
+          } remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
@@ -2365,7 +2366,9 @@ en:
       tags: "Tags"
       in: "in"
       in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
       in_topics_posts: "in all topics and posts"
+      enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
 
       type:
@@ -3934,6 +3937,9 @@ en:
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
 
     no_group_messages_title: "No group messages found"
+
+    fullscreen_table:
+      expand_btn: "Expand Table"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

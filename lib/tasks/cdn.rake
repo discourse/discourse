@@ -20,7 +20,7 @@ task 'assets:prestage' => :environment do |t|
   puts "pre staging: #{assets.join(' ')}"
 
   # makes testing simpler leaving this here
-  config = YAML::load(File.open("#{Rails.root}/config/cdn.yml"))
+  config = YAML::safe_load(File.open("#{Rails.root}/config/cdn.yml"))
 
   start = Time.now
 

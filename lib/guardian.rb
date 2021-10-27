@@ -353,7 +353,7 @@ class Guardian
   end
 
   def can_see_invite_details?(user)
-    is_me?(user)
+    is_staff? || is_me?(user)
   end
 
   def can_see_invite_emails?(user)

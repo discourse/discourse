@@ -90,9 +90,10 @@ import {
   addSearchSuggestion,
 } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
+import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.6";
+const PLUGIN_API_VERSION = "0.13.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -309,12 +310,10 @@ class PluginApi {
     if (!opts.onlyStream) {
       decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
       decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
-      decorate(
-        this.container.factoryFor("component:user-stream").class,
-        "didInsertElement",
-        callback,
-        opts.id
-      );
+      ["didInsertElement", "user-stream:new-item-inserted"].forEach((event) => {
+        const klass = this.container.factoryFor("component:user-stream").class;
+        decorate(klass, event, callback, opts.id);
+      });
     }
   }
 
@@ -1424,6 +1423,23 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+  }
+
+  /**
+   * Download calendar modal which allow to pick between ICS and Google Calendar
+   *
+   * ```
+   * api.downloadCalendar("title of the event", [
+   * {
+        startsAt: "2021-10-12T15:00:00.000Z",
+        endsAt: "2021-10-12T16:00:00.000Z",
+      },
+   * ]);
+   * ```
+   *
+   */
+  downloadCalendar(title, dates) {
+    downloadCalendar(title, dates);
   }
 
   /**

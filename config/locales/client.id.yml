@@ -1432,6 +1432,7 @@ id:
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"
+        duration: "Durasi"
       auto_update_input:
         later_today: "Nanti hari ini"
         tomorrow: "Besok"

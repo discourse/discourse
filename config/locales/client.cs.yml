@@ -1915,6 +1915,7 @@ cs:
         publish_to: "Publikovat v:"
         when: "Když:"
         time_frame_required: "Vyberte prosím časové období"
+        duration: "Doba trvání"
       auto_update_input:
         none: "Vyberte časové období"
         later_today: "Později během dnešního dne"

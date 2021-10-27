@@ -13,8 +13,13 @@ module Jobs
       require "aws-sdk-sns"
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
-      # confirm subscription by visiting the URL
-      open(subscribe_url)
+      uri = begin
+        URI.parse(subscribe_url)
+      rescue URI::Error
+        return
+      end
+
+      Net::HTTP.get(uri)
     end
 
   end

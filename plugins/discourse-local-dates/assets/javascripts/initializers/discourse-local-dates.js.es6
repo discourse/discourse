@@ -172,54 +172,55 @@ function buildHtmlPreview(element, siteSettings) {
   previewsNode.classList.add("locale-dates-previews");
   htmlPreviews.forEach((htmlPreview) => previewsNode.appendChild(htmlPreview));
 
-  previewsNode.appendChild(_downloadCalendarNode(element));
+  const calendarNode = _downloadCalendarNode(element);
+  if (calendarNode) {
+    previewsNode.appendChild(calendarNode);
+  }
 
   return previewsNode.outerHTML;
 }
 
+function calculateStartAndEndDate(startDataset, endDataset) {
+  let startDate, endDate;
+  startDate = moment.tz(
+    `${startDataset.date} ${startDataset.time || ""}`.trim(),
+    startDataset.timezone
+  );
+  if (endDataset) {
+    endDate = moment.tz(
+      `${endDataset.date} ${endDataset.time || ""}`.trim(),
+      endDataset.timezone
+    );
+  }
+  return [startDate, endDate];
+}
+
 function _downloadCalendarNode(element) {
+  const [startDataset, endDataset] = _rangeElements(element).map(
+    (dateElement) => dateElement.dataset
+  );
+  const [startDate, endDate] = calculateStartAndEndDate(
+    startDataset,
+    endDataset
+  );
+
+  if (startDate < moment().tz(startDataset.timezone)) {
+    return false;
+  }
+
   const node = document.createElement("div");
   node.classList.add("download-calendar");
   node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
     "download_calendar.add_to_calendar"
   )}`;
-  const [startDataset, endDataset] = _rangeElements(element).map(
-    (dateElement) => dateElement.dataset
-  );
-  node.setAttribute(
-    "data-starts-at",
-    moment
-      .tz(
-        `${startDataset.date} ${startDataset.time || ""}`.trim(),
-        startDataset.timezone
-      )
-      .toISOString()
-  );
+  node.setAttribute("data-starts-at", startDate.toISOString());
   if (endDataset) {
-    node.setAttribute(
-      "data-ends-at",
-      moment
-        .tz(
-          `${endDataset.date} ${endDataset.time || ""}`.trim(),
-          endDataset.timezone
-        )
-        .toISOString()
-    );
+    node.setAttribute("data-ends-at", endDate.toISOString());
   }
   if (!startDataset.time && !endDataset) {
-    node.setAttribute(
-      "data-ends-at",
-      moment
-        .tz(`${startDataset.date}`, startDataset.timezone)
-        .add(24, "hours")
-        .toISOString()
-    );
+    node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
   }
   node.setAttribute("data-title", startDataset.title);
-  node.setAttribute(
-    "data-post-id",
-    element.closest("article")?.dataset?.postId
-  );
   return node;
 }
 
@@ -260,7 +261,7 @@ export default {
     } else if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
       hidePopover(event);
-      downloadCalendar(dataset.postId, dataset.title, [
+      downloadCalendar(dataset.title, [
         {
           startsAt: dataset.startsAt,
           endsAt: dataset.endsAt,

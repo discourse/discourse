@@ -24,12 +24,12 @@ export function applyInlineOneboxes(inline, ajax, opts) {
     result["inline-oneboxes"].forEach((onebox) => {
       if (onebox.title) {
         _cache[onebox.url] = onebox;
+
         let links = inline[onebox.url] || [];
         links.forEach((link) => {
-          $(link)
-            .text(onebox.title)
-            .addClass("inline-onebox")
-            .removeClass("inline-onebox-loading");
+          link.innerText = onebox.title;
+          link.classList.add("inline-onebox");
+          link.classList.remove("inline-onebox-loading");
         });
       }
     });

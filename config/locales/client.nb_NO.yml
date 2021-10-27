@@ -2306,6 +2306,7 @@ nb_NO:
         time_frame_required: "Vennligst velg et tidsrom"
         min_duration: "Varigheten må være større enn 0"
         max_duration: "Varigheten må være under 20 år"
+        duration: "Varighet"
       auto_update_input:
         none: "Velg et tidsrom"
         now: "Nå"

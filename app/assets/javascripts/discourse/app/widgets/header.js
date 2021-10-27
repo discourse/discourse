@@ -4,7 +4,6 @@ import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
-import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -321,8 +320,6 @@ createWidget("header-cloak", {
   scheduleRerender() {},
 });
 
-const forceContextEnabled = ["category", "user", "private_messages", "tag"];
-
 let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
@@ -339,6 +336,7 @@ export default createWidget("header", {
       hamburgerVisible: false,
       userVisible: false,
       ringBackdrop: true,
+      inTopicContext: false,
     };
 
     if (this.site.mobileView) {
@@ -349,6 +347,12 @@ export default createWidget("header", {
   },
 
   html(attrs, state) {
+    let inTopicRoute = false;
+
+    if (this.state.inTopicContext) {
+      inTopicRoute = this.router.currentRouteName.startsWith("topic.");
+    }
+
     let contents = () => {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
@@ -366,21 +370,10 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        const contextType = this.searchContextType();
-
-        if (state.searchContextType !== contextType) {
-          state.contextEnabled = undefined;
-          state.searchContextType = contextType;
-        }
-
-        if (state.contextEnabled === undefined) {
-          if (forceContextEnabled.includes(contextType)) {
-            state.contextEnabled = true;
-          }
-        }
-
         panels.push(
-          this.attach("search-menu", { contextEnabled: state.contextEnabled })
+          this.attach("search-menu", {
+            inTopicContext: state.inTopicContext && inTopicRoute,
+          })
         );
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
@@ -462,9 +455,7 @@ export default createWidget("header", {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
-      const currentPath = this.router.get("_router.currentPath");
-
-      if (currentPath === "full-page-search") {
+      if (this.router.currentRouteName === "full-page-search") {
         scrollTop();
         $(".full-page-search").focus();
         return false;
@@ -477,11 +468,9 @@ export default createWidget("header", {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      schedule("afterRender", () => {
-        const searchInput = document.querySelector("#search-term");
-        searchInput.focus();
-        searchInput.select();
-      });
+      this.focusSearchInput();
+    } else {
+      this.state.inTopicContext = false;
     }
   },
 
@@ -537,19 +526,12 @@ export default createWidget("header", {
 
   togglePageSearch() {
     const { state } = this;
+    state.inTopicContext = false;
 
-    state.contextEnabled = false;
-
-    const currentPath = this.router.get("_router.currentPath");
-    const blocklist = [/^discovery\.categories/];
-    const allowlist = [/^topic\./];
-    const check = function (regex) {
-      return !!currentPath.match(regex);
-    };
-    let showSearch = allowlist.any(check) && !blocklist.any(check);
+    let showSearch = this.router.currentRouteName.startsWith("topic.");
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
-    if (showSearch && currentPath.match(/^topic\./)) {
+    if (showSearch) {
       const controller = this.register.lookup("controller:topic");
       const total = controller.get("model.postStream.stream.length") || 0;
       const chunkSize = controller.get("model.chunk_size") || 0;
@@ -565,19 +547,12 @@ export default createWidget("header", {
     }
 
     if (showSearch) {
-      state.contextEnabled = true;
+      state.inTopicContext = true;
       this.toggleSearchMenu();
       return false;
     }
 
     return true;
-  },
-
-  searchMenuContextChanged(value) {
-    this.state.contextType = this.register
-      .lookup("search-service:main")
-      .get("contextType");
-    this.state.contextEnabled = value;
   },
 
   domClean() {
@@ -637,10 +612,6 @@ export default createWidget("header", {
         this.toggleHamburger();
         break;
       case "page-search":
-        let contextType = this.searchContextType();
-        if (contextType === "topic") {
-          this.state.searchContextType = contextType;
-        }
         if (!this.togglePageSearch()) {
           msg.event.preventDefault();
           msg.event.stopPropagation();
@@ -649,13 +620,23 @@ export default createWidget("header", {
     }
   },
 
-  searchContextType() {
-    const service = this.register.lookup("search-service:main");
-    if (service) {
-      const ctx = service.get("searchContext");
-      if (ctx) {
-        return get(ctx, "type");
-      }
+  focusSearchInput() {
+    if (this.state.searchVisible) {
+      schedule("afterRender", () => {
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
+      });
     }
+  },
+
+  setTopicContext() {
+    this.state.inTopicContext = true;
+    this.focusSearchInput();
+  },
+
+  clearContext() {
+    this.state.inTopicContext = false;
+    this.focusSearchInput();
   },
 });

@@ -27,6 +27,18 @@ acceptance("Search - Anonymous", function (needs) {
       }
       return helper.response(searchFixtures["search/query"]);
     });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "admin",
+            name: "admin",
+            avatar_template: "/images/avatar.png",
+          },
+        ],
+      });
+    });
   });
 
   test("search", async function (assert) {
@@ -53,7 +65,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.equal(
       query(
-        ".search-menu .results ul.search-menu-initial-options li:first-child"
+        ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
       ).innerText.trim(),
       `dev ${I18n.t("search.in_topics_posts")}`,
       "shows topic search as first dropdown item"
@@ -117,6 +129,13 @@ acceptance("Search - Anonymous", function (needs) {
 
     await visit("/tag/important");
     await click("#search-button");
+
+    assert.equal(
+      query(firstResult).textContent.trim(),
+      `${I18n.t("search.in")} test`,
+      "contenxtual tag search is first available option with no term"
+    );
+
     await fillIn("#search-term", "smth");
 
     assert.equal(
@@ -132,6 +151,11 @@ acceptance("Search - Anonymous", function (needs) {
       query(firstResult).textContent.trim(),
       `smth ${I18n.t("search.in")} bug`,
       "category-scoped search is first available option"
+    );
+
+    assert.ok(
+      exists(`${firstResult} span.badge-wrapper`),
+      "category badge is a span (i.e. not a link)"
     );
 
     await visit("/t/internationalization-localization/280");
@@ -159,6 +183,16 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/t/internationalization-localization/280/1");
 
     await click("#search-button");
+
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
+
+    assert.equal(
+      query(firstResult).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "contenxtual topic search is first available option"
+    );
+
     await fillIn("#search-term", "a proper");
     await focus("input#search-term");
     await triggerKeyEvent(".search-menu", "keydown", 40);
@@ -175,8 +209,63 @@ acceptance("Search - Anonymous", function (needs) {
       "highlights the post correctly"
     );
 
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
     await click(".clear-search");
     assert.equal(query("#search-term").value, "", "clear button works");
+
+    await click(".search-context");
+
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "search context indicator is no longer visible"
+    );
+
+    await fillIn("#search-term", "dev");
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+
+    await fillIn("#search-term", "");
+    await focus("input#search-term");
+    await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
+
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "backspace resets search context"
+    );
+  });
+
+  test("topic search scope - special case when matching a single user", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+
+    await click("#search-button");
+    await fillIn("#search-term", "@admin");
+
+    assert.equal(count(".search-menu-assistant-item"), 2);
+
+    assert.equal(
+      query(
+        ".search-menu-assistant-item:first-child .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "first result hints in this topic search"
+    );
+
+    assert.equal(
+      query(
+        ".search-menu-assistant-item:nth-child(2) .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_topics_posts"),
+      "second result hints global search"
+    );
   });
 
   test("Right filters are shown in full page search", async function (assert) {

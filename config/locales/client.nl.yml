@@ -2295,6 +2295,7 @@ nl:
         time_frame_required: "Selecteer een tijdsbestek"
         min_duration: "Tijdsduur moet langer zijn dan 0"
         max_duration: "Tijdsduur moet minder dan 20 jaar zijn"
+        duration: "Tijdsduur"
       auto_update_input:
         none: "Selecteer een tijdsbestek"
         now: "Nu"
@@ -2711,6 +2712,7 @@ nl:
             other: "Ja, en alle %{count} de antwoorden"
           just_the_post: "Nee, alleen dit bericht"
         admin: "beheeracties voor bericht"
+        permanently_delete: "Definitief verwijderen"
         wiki: "Wiki maken"
         unwiki: "Wiki verwijderen"
         convert_to_moderator: "Stafkleur toevoegen"

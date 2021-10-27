@@ -326,8 +326,8 @@ class Plugin::Instance
   # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_allowlister do |user|
-        plugin.enabled? ? block.call(user) : []
+      ::TopicView.add_post_custom_fields_allowlister do |user, topic|
+        plugin.enabled? ? block.call(user, topic) : []
       end
     end
   end

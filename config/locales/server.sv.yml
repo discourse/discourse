@@ -643,6 +643,9 @@ sv:
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
+    cannot_permanently_delete:
+      many_posts: "Du kan inte ta bort detta ämne permanent eftersom det finns andra inlägg."
+      wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
     too_many_requests: "Du har utfört den här åtgärden för många gånger. Vänta %{time_left} innan du försöker igen."
@@ -1903,6 +1906,7 @@ sv:
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
+    disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -4150,8 +4154,24 @@ sv:
     missing_version: "Du måste ange en versionsparameter"
     conflict: "Det uppstod en uppdateringskonflikt som hindrade dig från att göra det."
     reasons:
+      post_count: "De första inläggen från varje användare måste godkännas av personal. Se %{link}."
+      trust_level: "Användare på låga förtroendenivåer måste ha svar godkända av personal. Se %{link}."
+      new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
+      fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
+      auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
+      watched_word: "Detta inlägg innehöll ett bevakat ord. Se ditt %{link}."
+      staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
+      category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."
+      must_approve_users: "Alla nya användare måste godkännas av personal. Se %{link}."
+      invite_only: "Alla nya användare ska bjudas in. Se %{link}."
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
+      email_spam: "Det här e -postmeddelandet flaggades som skräppost av rubriken som definierats i %{link}."
+      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se %{link}."
+      contains_media: "Detta inlägg innehåller inbäddade media. Se %{link}."
       queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
+      links:
+        watched_word: lista över bevakade ord
+        category: kategori inställningar
     actions:
       agree:
         title: "Godkänn..."

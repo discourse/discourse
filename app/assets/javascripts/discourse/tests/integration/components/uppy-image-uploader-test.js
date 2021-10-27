@@ -40,7 +40,7 @@ discourseModule(
         await click(".image-uploader-lightbox-btn");
 
         assert.equal(
-          $(".mfp-container").length,
+          document.querySelectorAll(".mfp-container").length,
           1,
           "it displays the image lightbox"
         );

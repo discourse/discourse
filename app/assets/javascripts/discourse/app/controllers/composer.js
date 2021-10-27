@@ -192,10 +192,13 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
+    if (creatingPrivateMessage && this.site.mobileView) {
+      return false;
+    }
+
     return (
       this.site.can_tag_topics &&
       canEditTitle &&
-      !creatingPrivateMessage &&
       (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
     );
   },
@@ -302,6 +305,11 @@ export default Controller.extend({
     return defaultComposer;
   },
 
+  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
+  },
+
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
@@ -317,6 +325,28 @@ export default Controller.extend({
           };
         })
       );
+
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
 
       options.push(
         this._setupPopupMenuOption(() => {
@@ -605,7 +635,9 @@ export default Controller.extend({
     },
 
     save(ignore, event) {
-      this.save(false, { jump: !(event && event.shiftKey) });
+      this.save(false, {
+        jump: !event?.shiftKey && !this.skipJumpOnSave,
+      });
     },
 
     displayEditReason() {
@@ -678,6 +710,17 @@ export default Controller.extend({
           body,
         });
       });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
     },
   },
 
@@ -918,6 +961,7 @@ export default Controller.extend({
       @param {Number} [opts.prioritizedCategoryId]
       @param {String} [opts.draftSequence]
       @param {Boolean} [opts.skipDraftCheck]
+      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
   open(opts) {
     opts = opts || {};
@@ -943,6 +987,8 @@ export default Controller.extend({
       prioritizedCategoryId: null,
       skipAutoSave: true,
     });
+
+    this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {

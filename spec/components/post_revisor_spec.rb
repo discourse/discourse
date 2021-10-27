@@ -1185,6 +1185,7 @@ describe PostRevisor do
         end
 
         it "updates the upload secure status, which is secure by default from the composer. set to false for a public topic" do
+          stub_image_size
           subject.revise!(user, raw: <<~RAW)
               This is a post with a secure upload
               ![image5](#{image5.short_url})
@@ -1196,6 +1197,7 @@ describe PostRevisor do
 
         it "does not update the upload secure status, which is secure by default from the composer for a private" do
           post.topic.update(category: Fabricate(:private_category,  group: Fabricate(:group)))
+          stub_image_size
           subject.revise!(user, raw: <<~RAW)
               This is a post with a secure upload
               ![image5](#{image5.short_url})

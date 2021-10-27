@@ -1,2 +1,8 @@
-{{site-settings-image-uploader imageUrl=value placeholderUrl=setting.placeholder type="site_setting"}}
+{{uppy-image-uploader
+  imageUrl=value
+  placeholderUrl=setting.placeholder
+  additionalParams=(hash for_site_setting=true)
+  type="site_setting"
+  id=(concat "site-setting-image-uploader-" setting.setting)
+}}
 <div class="desc">{{html-safe setting.description}}</div>

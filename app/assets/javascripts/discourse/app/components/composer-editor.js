@@ -48,7 +48,14 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 export function cleanUpComposerUploadHandler() {
-  uploadHandlers = [];
+  // we cannot set this to uploadHandlers = [] because that messes with
+  // the references to the original array that the component has. this only
+  // really affects tests, but without doing this you could addComposerUploadHandler
+  // in a beforeEach function in a test but then it's not adding to the
+  // existing reference that the component has, because an earlier test ran
+  // cleanUpComposerUploadHandler and lost it. setting the length to 0 empties
+  // the array but keeps the reference
+  uploadHandlers.length = 0;
 }
 
 let uploadProcessorQueue = [];
@@ -122,11 +129,6 @@ export default Component.extend(ComposerUpload, {
     return (
       this.currentUser && this.currentUser.get("link_posting_access") !== "none"
     );
-  },
-
-  @discourseComputed("composer.requiredCategoryMissing", "composer.replyLength")
-  disableTextarea(requiredCategoryMissing, replyLength) {
-    return requiredCategoryMissing && replyLength === 0;
   },
 
   @observes("focusTarget")
@@ -508,7 +510,7 @@ export default Component.extend(ComposerUpload, {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
-      linkSeenMentions($preview, this.siteSettings);
+      linkSeenMentions($preview[0], this.siteSettings);
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
     });
@@ -693,6 +695,14 @@ export default Component.extend(ComposerUpload, {
     }
   },
 
+  _findMatchingUploadHandler(fileName) {
+    return this.uploadHandlers.find((handler) => {
+      const ext = handler.extensions.join("|");
+      const regex = new RegExp(`\\.(${ext})$`, "i");
+      return regex.test(fileName);
+    });
+  },
+
   actions: {
     importQuote(toolbarEvent) {
       this.importQuote(toolbarEvent);
@@ -739,7 +749,7 @@ export default Component.extend(ComposerUpload, {
 
     previewUpdated($preview) {
       // Paint mentions
-      const unseenMentions = linkSeenMentions($preview, this.siteSettings);
+      const unseenMentions = linkSeenMentions($preview[0], this.siteSettings);
       if (unseenMentions.length) {
         discourseDebounce(
           this,

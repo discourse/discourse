@@ -100,23 +100,18 @@ export default RestModel.extend({
   canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
   canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
-  @discourseComputed("hasLoadedData", "firstPostId", "posts.[]")
-  firstPostPresent(hasLoadedData, firstPostId) {
+  @discourseComputed("hasLoadedData", "posts.[]")
+  firstPostPresent(hasLoadedData) {
     if (!hasLoadedData) {
       return false;
     }
-    return !!this.posts.findBy("id", firstPostId);
+
+    return !!this.posts.findBy("post_number", 1);
   },
 
   firstPostNotLoaded: not("firstPostPresent"),
 
-  firstId: null,
   lastId: null,
-
-  @discourseComputed("isMegaTopic", "stream.firstObject", "firstId")
-  firstPostId(isMegaTopic, streamFirstId, firstId) {
-    return isMegaTopic ? firstId : streamFirstId;
-  },
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {

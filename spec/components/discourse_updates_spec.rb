@@ -3,12 +3,16 @@
 require 'rails_helper'
 
 describe DiscourseUpdates do
+  let(:latest_version_key) { DiscourseUpdates.send(:latest_version_key) }
+  let(:missing_versions_count_key) { DiscourseUpdates.send(:missing_versions_count_key) }
+  let(:critical_updates_available_key) { DiscourseUpdates.send(:critical_updates_available_key) }
+  let(:updated_at_key) { DiscourseUpdates.send(:updated_at_key) }
 
   def stub_data(latest, missing, critical, updated_at)
-    DiscourseUpdates.stubs(:latest_version).returns(latest)
-    DiscourseUpdates.stubs(:missing_versions_count).returns(missing)
-    DiscourseUpdates.stubs(:critical_updates_available?).returns(critical)
-    DiscourseUpdates.stubs(:updated_at).returns(updated_at)
+    Discourse.redis.set(latest_version_key, latest)
+    Discourse.redis.set(missing_versions_count_key, missing)
+    Discourse.redis.set(critical_updates_available_key, critical)
+    Discourse.redis.set(updated_at_key, updated_at)
   end
 
   before do
@@ -36,7 +40,7 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to eq_time(time)
+          expect(subject.updated_at).to be_within_one_second_of(time)
         end
       end
 
@@ -52,7 +56,7 @@ describe DiscourseUpdates do
         end
 
         it 'returns the timestamp of the last version check' do
-          expect(subject.updated_at).to eq_time(time)
+          expect(subject.updated_at).to be_within_one_second_of(time)
         end
       end
     end

@@ -35,7 +35,7 @@ module Onebox
     private
 
     def check
-      res = URI.open(@url, read_timeout: (@options.timeout || Onebox.options.timeout))
+      res = URI.parse(@url).open(read_timeout: (@options.timeout || Onebox.options.timeout))
       @status = res.status.first.to_i
     rescue OpenURI::HTTPError => e
       @status = e.io.status.first.to_i

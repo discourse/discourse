@@ -1901,6 +1901,7 @@ ro:
         publish_to: "Publică la:"
         when: "Când:"
         time_frame_required: "Te rog selectează un interval de timp"
+        duration: "Durată"
       auto_update_input:
         none: "Alege un interval de timp"
         later_today: "Mai târziu azi"
