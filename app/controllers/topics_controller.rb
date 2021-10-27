@@ -387,8 +387,11 @@ class TopicsController < ApplicationController
     success = true
 
     if changes.length > 0
+
+      bypass_bump = changes[:category_id].present? && SiteSetting.disable_category_edit_notifications
+
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
+      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false, bypass_bump: bypass_bump)
 
       if !success && topic.errors.blank?
         topic.errors.add(:base, :unable_to_update)
