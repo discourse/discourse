@@ -339,13 +339,7 @@ class UploadsController < ApplicationController
     end
 
     metadata = parse_allowed_metadata(params[:metadata])
-    store = \
-      if upload_type == "backup"
-        raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
-        BackupRestore::BackupStore.create
-      else
-        Discourse.store
-      end
+    store = multipart_store(upload_type)
 
     begin
       multipart_upload = store.create_multipart(
@@ -396,11 +390,7 @@ class UploadsController < ApplicationController
       return render_404
     end
 
-    store = if external_upload_stub.upload_type == "backup"
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
+    store = multipart_store(external_upload_stub.upload_type)
 
     presigned_urls = {}
     part_numbers.each do |part_number|
@@ -425,12 +415,7 @@ class UploadsController < ApplicationController
   end
 
   def multipart_upload_exists?(external_upload_stub)
-    store = if external_upload_stub.upload_type == "backup"
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
-
+    store = multipart_store(external_upload_stub.upload_type)
     begin
       store.list_multipart_parts(
         upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
@@ -447,11 +432,6 @@ class UploadsController < ApplicationController
     external_upload_stub = ExternalUploadStub.find_by(
       external_upload_identifier: external_upload_identifier
     )
-    store = if external_upload_stub.upload_type == "backup"
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
 
     # The stub could have already been deleted by an earlier error via
     # ExternalUploadManager, so we consider this a great success if the
@@ -459,6 +439,7 @@ class UploadsController < ApplicationController
     return render json: success_json if external_upload_stub.blank?
 
     return render_404 if external_upload_stub.created_by_id != current_user.id
+    store = multipart_store(external_upload_stub.upload_type)
 
     begin
       store.abort_multipart(
@@ -494,12 +475,7 @@ class UploadsController < ApplicationController
       return render_404
     end
 
-    store = if external_upload_stub.upload_type == "backup"
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
-
+    store = multipart_store(external_upload_stub.upload_type)
     parts = parts.map do |part|
       part_number = part[:part_number]
       etag = part[:etag]
@@ -530,6 +506,15 @@ class UploadsController < ApplicationController
     end
 
     complete_external_upload_via_manager(external_upload_stub)
+  end
+
+  def multipart_store(upload_type)
+    if upload_type == "backup"
+      raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
+      BackupRestore::BackupStore.create
+    else
+      Discourse.store
+    end
   end
 
   protected
