@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module PostStreamSerializerMixin
+  mattr_accessor(:preloaded_post_custom_fields) { Set.new }
+
   def self.included(klass)
     klass.attributes :post_stream
     klass.attributes :timeline_lookup
@@ -43,7 +45,13 @@ module PostStreamSerializerMixin
 
   def posts
     @posts ||= begin
-      (object.posts || []).map do |post|
+      posts = object.posts.to_a
+
+      if preloaded_post_custom_fields.present?
+        Post.preload_custom_fields(posts, preloaded_post_custom_fields)
+      end
+
+      posts.map do |post|
         post.topic = object.topic
 
         serializer = PostSerializer.new(post, scope: scope, root: false)
@@ -54,5 +62,4 @@ module PostStreamSerializerMixin
       end
     end
   end
-
 end
