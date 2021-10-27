@@ -2936,4 +2936,34 @@ describe Topic do
       end
     end
   end
+
+  describe "#cannot_permanently_delete_reason" do
+    fab!(:post) { Fabricate(:post) }
+    let!(:topic) { post.topic }
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      freeze_time
+    end
+
+    it 'returns error message if topic has more posts' do
+      post_2 = PostCreator.create!(Fabricate(:user), topic_id: topic.id, raw: 'some post content')
+
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(I18n.t('post.cannot_permanently_delete.many_posts'))
+
+      PostDestroyer.new(admin, post_2).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+
+    it 'returns error message if same admin and time did not pass' do
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i)))
+    end
+
+    it 'returns nothing if different admin' do
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+  end
 end

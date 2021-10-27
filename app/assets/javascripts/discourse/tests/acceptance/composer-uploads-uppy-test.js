@@ -3,6 +3,8 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -220,5 +222,41 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
+  });
+});
+
+acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
+  needs.user();
+  needs.pretender(pretender);
+  needs.settings({
+    enable_experimental_composer_uploader: true,
+    simultaneous_uploads: 2,
+  });
+  needs.hooks.beforeEach(() => {
+    withPluginApi("0.8.14", (api) => {
+      api.addComposerUploadHandler(["png"], (file) => {
+        bootbox.alert(`This is an upload handler test for ${file.name}`);
+      });
+    });
+  });
+
+  test("should use upload handler if the matching extension is used and a single file is uploaded", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const image = createFile("handlertest.png");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:uploads-aborted", async () => {
+      assert.equal(
+        queryAll(".bootbox .modal-body").html(),
+        "This is an upload handler test for handlertest.png",
+        "it should show the bootbox triggered by the upload handler"
+      );
+      await click(".modal-footer .btn");
+      done();
+    });
+
+    appEvents.trigger("composer:add-files", [image]);
   });
 });
