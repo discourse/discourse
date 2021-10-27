@@ -1,10 +1,8 @@
 import { and, gt } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { escape } from "pretty-text/sanitizer";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { isTesting } from "discourse-common/config/environment";
-import { schedule } from "@ember/runloop";
 
 const MAX_COMPONENTS = 4;
 
@@ -19,36 +17,6 @@ export default Component.extend({
   click(e) {
     if (!$(e.target).hasClass("others-count")) {
       this.navigateToTheme();
-    }
-  },
-
-  init() {
-    this._super(...arguments);
-    this.scheduleAnimation();
-  },
-
-  @observes("theme.selected")
-  triggerAnimation() {
-    this.animate();
-  },
-
-  scheduleAnimation() {
-    schedule("afterRender", () => {
-      this.animate(true);
-    });
-  },
-
-  animate(isInitial) {
-    const $container = $(this.element);
-    const $list = $(this.element.querySelector(".components-list"));
-    if ($list.length === 0 || isTesting()) {
-      return;
-    }
-    const duration = 300;
-    if (this.get("theme.selected")) {
-      this.collapseComponentsList($container, $list, duration);
-    } else if (!isInitial) {
-      this.expandComponentsList($container, $list, duration);
     }
   },
 
@@ -89,54 +57,6 @@ export default Component.extend({
       return 0;
     }
     return childrenCount - MAX_COMPONENTS;
-  },
-
-  expandComponentsList($container, $list, duration) {
-    $container.css("height", `${$container.height()}px`);
-    $list.css("display", "");
-    $container.animate(
-      {
-        height: `${$container.height() + $list.outerHeight(true)}px`,
-      },
-      {
-        duration,
-        done: () => {
-          $list.css("display", "");
-          $container.css("height", "");
-        },
-      }
-    );
-    $list.animate(
-      {
-        opacity: 1,
-      },
-      {
-        duration,
-      }
-    );
-  },
-
-  collapseComponentsList($container, $list, duration) {
-    $container.animate(
-      {
-        height: `${$container.height() - $list.outerHeight(true)}px`,
-      },
-      {
-        duration,
-        done: () => {
-          $list.css("display", "none");
-          $container.css("height", "");
-        },
-      }
-    );
-    $list.animate(
-      {
-        opacity: 0,
-      },
-      {
-        duration,
-      }
-    );
   },
 
   actions: {
