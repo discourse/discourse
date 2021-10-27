@@ -1089,7 +1089,6 @@ zh_CN:
         tags: "标签"
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
-        read_more: "想阅读更多？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>中浏览其他消息。"
       preferences_nav:
         account: "帐户"
         security: "安全性"

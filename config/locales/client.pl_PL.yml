@@ -1247,7 +1247,7 @@ pl_PL:
         tags: "Tagi"
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
-        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/message'>wiadomościach prywatnych</a>."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
