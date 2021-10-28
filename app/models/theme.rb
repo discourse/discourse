@@ -183,6 +183,18 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def self.allowed_remote_theme_ids
+    return nil if GlobalSetting.allowed_theme_repos.blank?
+
+    get_set_cache "allowed_remote_theme_ids" do
+      urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
+    end
+  end
+
   def self.components_for(theme_id)
     get_set_cache "theme_components_for_#{theme_id}" do
       ChildTheme.where(parent_theme_id: theme_id).pluck(:child_theme_id)
@@ -199,18 +211,6 @@ class Theme < ActiveRecord::Base
   def self.clear_default!
     SiteSetting.default_theme_id = -1
     expire_site_cache!
-  end
-
-  def self.allowed_remote_theme_ids
-    return nil if GlobalSetting.allowed_theme_repos.blank?
-
-    @allowed_remote_theme_ids ||= begin
-      urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
-      Theme
-        .joins(:remote_theme)
-        .where('remote_themes.remote_url in (?)', urls)
-        .pluck(:id)
-    end
   end
 
   def self.transform_ids(id)
