@@ -267,6 +267,72 @@ class S3Helper
     get_path_for_s3_upload(path)
   end
 
+  def abort_multipart(key:, upload_id:)
+    s3_client.abort_multipart_upload(
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id
+    )
+  end
+
+  def create_multipart(key, content_type, metadata: {})
+    response = s3_client.create_multipart_upload(
+      acl: "private",
+      bucket: s3_bucket_name,
+      key: key,
+      content_type: content_type,
+      metadata: metadata
+    )
+    { upload_id: response.upload_id, key: key }
+  end
+
+  def presign_multipart_part(upload_id:, key:, part_number:)
+    presigned_url(
+      key,
+      method: :upload_part,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      opts: {
+        part_number: part_number,
+        upload_id: upload_id
+      }
+    )
+  end
+
+  def list_multipart_parts(upload_id:, key:)
+    s3_client.list_parts(
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id
+    )
+  end
+
+  def complete_multipart(upload_id:, key:, parts:)
+    s3_client.complete_multipart_upload(
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id,
+      multipart_upload: {
+        parts: parts
+      }
+    )
+  end
+
+  def presigned_url(
+    key,
+    method:,
+    expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+    opts: {}
+  )
+    Aws::S3::Presigner.new(client: s3_client).presigned_url(
+      method,
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+      }.merge(opts)
+    )
+  end
+
   private
 
   def default_s3_options
