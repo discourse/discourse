@@ -5,8 +5,15 @@ export default {
   name: "click-interceptor",
   initialize() {
     $("#main").on("click.discourse", "a", interceptClick);
-    $(window).on("hashchange", () =>
-      DiscourseURL.routeTo(document.location.hash)
-    );
+    window.addEventListener("hashchange", this.hashChanged);
+  },
+
+  hashChanged() {
+    DiscourseURL.routeTo(document.location.hash);
+  },
+
+  teardown() {
+    $("#main").off("click.discourse", "a", interceptClick);
+    window.removeEventListener("hashchange", this.hashChanged);
   },
 };

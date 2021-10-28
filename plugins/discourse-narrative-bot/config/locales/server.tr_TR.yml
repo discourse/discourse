@@ -151,13 +151,13 @@ tr_TR:
       hello:
         title: "Selamlar!"
         message: |-
-          %{title} başlığına katıldığınız için teşekkür ederiz!
+          %{title} topluluğuna katıldığın için teşekkür ederiz!
 
-          - Ben sadece bir robotum, ama [cana yakın personelimiz](%{base_uri}/about) bir kişiye ulaşmanız gerektiğinde size yardımcı olmak için burada.
+          - Ben sadece bir robotum, ama gerçek birine ulaşmak istersen [cana yakın personelimiz](%{base_uri}/about) sana yardımcı olmak için her zaman burada.
 
-          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Sizi tanıdıkça [yeni yetenekler] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [badges](%{base_uri}/badges)) kazanacaksınız.
+          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Seni tanıdıkça [yeni yetenekler](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [rozetler](%{base_uri}/badges)) edinmeni sağlayacağız.
 
-          - Her zaman [medeni topluluk davranışına] (%{base_uri}/guidelines) inanıyoruz.
+          - Her ne olursa olsun doğru yöntemin [medeni topluluk davranışları](%{base_uri}/guidelines) sergilemek olduğuna inanıyoruz.
       onebox:
         instructions: |-
           Sonrasında bu bağlantılardan birini benimle paylaşabilir misiniz? **herhangi bir bağlantıyı tek başına** yanıtladığınızda, kutucuk açıklama ekleyebilmeniz için otomatik olarak genişler.
@@ -231,7 +231,7 @@ tr_TR:
           Yazımdaki herhangi bir metni seçtiğinizde <kbd>**Alıntı**</kbd> butonu görünür veya seçilen herhangi bir metinle **Yanıtla** tuşuna da basabilirsiniz! Tekrar dener misin?
       bookmark:
         instructions: |-
-          Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
+          Daha fazla bilgi edinmek istiyorsanız aşağıdan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ikonuna tıklayın ve **bu özel iletiyi yer imlerine <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ekleyin**. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
         reply: |-
           Mükemmel! Artık istediğiniz zaman doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) özel sohbetimize geri dönüş yolunu kolayca bulabilirsiniz. Sağ üstteki &#8599; profil resminizi seçmeniz yeterli
         not_found: |-

@@ -283,6 +283,7 @@ es:
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "guarda esta publicación en marcadores"
+      remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Eliminar marcador"
@@ -1142,7 +1143,6 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
-        read_more: "¿Quieres leer más? Echa un vistazo a otros mensajes dentro de tus <a href='%{basePath}/u/%{username}/message'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -2158,6 +2158,7 @@ es:
       tags: "Etiquetas"
       in: "en"
       in_this_topic: "en este tema"
+      in_this_topic_tooltip: "cambiar a buscar en todos los temas"
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"

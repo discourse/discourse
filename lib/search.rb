@@ -895,12 +895,15 @@ class Search
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
-      .joins("LEFT JOIN categories ON categories.id = topics.category_id")
+
+    if type_filter != "private_messages"
+      posts = posts.joins("LEFT JOIN categories ON categories.id = topics.category_id")
+    end
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
+    if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -910,7 +913,7 @@ class Search
       unless @guardian.is_admin?
         posts = posts.private_posts_for_user(@guardian.user)
       end
-    elsif type_filter === "all_topics"
+    elsif type_filter == "all_topics"
       private_posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -973,7 +976,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if type_filter === "private_messages"
+          if type_filter == "private_messages"
             if @guardian.is_admin? && !@search_all_pms
               posts.private_posts_for_user(@search_context)
             else
@@ -1036,57 +1039,61 @@ class Search
       )
       SQL
 
-      category_search_priority = <<~SQL
-      (
-        CASE categories.search_priority
-        WHEN #{Searchable::PRIORITIES[:very_high]}
-        THEN 3
-        WHEN #{Searchable::PRIORITIES[:very_low]}
-        THEN 1
-        ELSE 2
-        END
-      )
-      SQL
-
-      category_priority_weights = <<~SQL
-      (
-        CASE categories.search_priority
-        WHEN #{Searchable::PRIORITIES[:low]}
-        THEN #{SiteSetting.category_search_priority_low_weight}
-        WHEN #{Searchable::PRIORITIES[:high]}
-        THEN #{SiteSetting.category_search_priority_high_weight}
-        ELSE
-          CASE WHEN topics.closed
-          THEN 0.9
-          ELSE 1
+      if type_filter != "private_messages"
+        category_search_priority = <<~SQL
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:very_high]}
+          THEN 3
+          WHEN #{Searchable::PRIORITIES[:very_low]}
+          THEN 1
+          ELSE 2
           END
-        END
-      )
-      SQL
+        )
+        SQL
 
-      data_ranking =
-        if @term.blank?
-          "(#{category_priority_weights})"
-        else
-          "(#{rank} * #{category_priority_weights})"
-        end
+        category_priority_weights = <<~SQL
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:low]}
+          THEN #{SiteSetting.category_search_priority_low_weight}
+          WHEN #{Searchable::PRIORITIES[:high]}
+          THEN #{SiteSetting.category_search_priority_high_weight}
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
+          END
+        )
+        SQL
 
-      posts =
-        if aggregate_search
-          posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
-        else
-          posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
-        end
+        data_ranking =
+          if @term.blank?
+            "(#{category_priority_weights})"
+          else
+            "(#{rank} * #{category_priority_weights})"
+          end
+
+        posts =
+          if aggregate_search
+            posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
+          else
+            posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
+          end
+      end
 
       posts = posts.order("topics.bumped_at DESC")
     end
 
-    posts =
-      if secure_category_ids.present?
-        posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
-      else
-        posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
-      end
+    if type_filter != "private_messages"
+      posts =
+        if secure_category_ids.present?
+          posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
+        else
+          posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+        end
+    end
 
     if @order
       advanced_order = Search.advanced_orders&.fetch(@order, nil)

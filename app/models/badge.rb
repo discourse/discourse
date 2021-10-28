@@ -5,6 +5,7 @@ class Badge < ActiveRecord::Base
   self.ignored_columns = %w{image}
 
   include GlobalPath
+  include HasSanitizableFields
 
   # NOTE: These badge ids are not in order! They are grouped logically.
   #       When picking an id, *search* for it.
@@ -116,6 +117,7 @@ class Badge < ActiveRecord::Base
   scope :enabled, -> { where(enabled: true) }
 
   before_create :ensure_not_system
+  before_save :sanitize_description
 
   after_commit do
     SvgSprite.expire_cache
@@ -313,6 +315,12 @@ class Badge < ActiveRecord::Base
 
   def ensure_not_system
     self.id = [Badge.maximum(:id) + 1, 100].max unless id
+  end
+
+  def sanitize_description
+    if description_changed?
+      self.description = sanitize_field(self.description)
+    end
   end
 end
 

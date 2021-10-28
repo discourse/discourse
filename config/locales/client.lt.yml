@@ -3377,6 +3377,8 @@ lt:
       no_topics_title: "Dar nepradėjote jokių temų"
       no_read_topics_title: "Dar neskaitėte jokių temų"
     no_group_messages_title: "Grupės pranešimų nerasta"
+    fullscreen_table:
+      expand_btn: "Išskleisti lentelę"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

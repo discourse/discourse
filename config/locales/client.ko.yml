@@ -81,7 +81,7 @@ ko:
         x_days:
           other: "%{count}일 전"
         x_months:
-          other: "%{count}달 전"
+          other: "%{count}개월 전"
         x_years:
           other: "%{count}년 전"
       later:
@@ -257,6 +257,7 @@ ko:
     bookmarks:
       created: "이 글을 북마크했습니다. %{name}"
       not_bookmarked: "이 글을 북마크"
+      remove_reminder_keep_bookmark: "알림 제거 및 북마크 유지"
       created_with_reminder: "알림 %{date}으로 이 글을 북마크했습니다. %{name}"
       remove: "북마크 삭제"
       delete: "북마크 삭제"
@@ -2713,6 +2714,7 @@ ko:
           just_the_post: "아니오, 글만 삭제합니다."
         admin: "관리자 기능"
         permanently_delete: "영구적으로 삭제"
+        permanently_delete_confirmation: "이 게시물을 영구적으로 삭제하시겠습니까? 복구할 수 없습니다."
         wiki: "위키 만들기"
         unwiki: "위키 제거하기"
         convert_to_moderator: "스태프 색상 추가하기"

@@ -267,19 +267,25 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  PRIVATE_MESSAGES_SQL = <<~SQL
+  PRIVATE_MESSAGES_SQL_USER = <<~SQL
     SELECT topic_id
     FROM topic_allowed_users
     WHERE user_id = :user_id
-    UNION ALL
+  SQL
+
+  PRIVATE_MESSAGES_SQL_GROUP = <<~SQL
     SELECT tg.topic_id
     FROM topic_allowed_groups tg
     JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
   SQL
 
-  scope :private_messages_for_user, ->(user) {
-    private_messages.where("topics.id IN (#{PRIVATE_MESSAGES_SQL})", user_id: user.id)
-  }
+  scope :private_messages_for_user, ->(user) do
+    private_messages.where(
+      "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
+      user_id: user.id
+    )
+  end
 
   scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
@@ -1749,6 +1755,15 @@ class Topic < ActiveRecord::Base
     ).performed!
   end
 
+  def cannot_permanently_delete_reason(user)
+    if self.posts_count > 0
+      I18n.t('post.cannot_permanently_delete.many_posts')
+    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1808,15 +1823,6 @@ class Topic < ActiveRecord::Base
 
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
-  end
-
-  def cannot_permanently_delete_reason(user)
-    if self.posts_count > 1
-      I18n.t('post.cannot_permanently_delete.many_posts')
-    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
-      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
-      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
-    end
   end
 end
 

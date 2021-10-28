@@ -1244,7 +1244,7 @@ he:
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
-        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/message'>הודעות הפרטיות</a>."
+        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -3900,6 +3900,8 @@ he:
       no_topics_title: "עדיין לא פתחת אף נושא"
       no_read_topics_title: "טרם קראת נושאים"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
+    fullscreen_table:
+      expand_btn: "הרחבת טבלה"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

@@ -65,6 +65,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     }
   },
 
+  _abortAndReset() {
+    this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
+    this._reset();
+    return false;
+  },
+
   _bindUploadTarget() {
     this.placeholders = {};
     this._inProgressUploads = 0;
@@ -116,6 +122,20 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         const fileCount = Object.keys(files).length;
         const maxFiles = this.siteSettings.simultaneous_uploads;
 
+        // Look for a matching file upload handler contributed from a plugin.
+        // It is not ideal that this only works for single file uploads, but
+        // at this time it is all we need. In future we may want to devise a
+        // nicer way of doing this. Uppy plugins are out of the question because
+        // there is no way to define which uploader plugin handles which file
+        // extensions at this time.
+        if (fileCount === 1) {
+          const file = Object.values(files)[0];
+          const matchingHandler = this._findMatchingUploadHandler(file.name);
+          if (matchingHandler && !matchingHandler.method(file.data, this)) {
+            return this._abortAndReset();
+          }
+        }
+
         // Limit the number of simultaneous uploads
         if (maxFiles > 0 && fileCount > maxFiles) {
           bootbox.alert(
@@ -123,9 +143,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
               count: maxFiles,
             })
           );
-          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
-          this._reset();
-          return false;
+          return this._abortAndReset();
         }
       },
     });

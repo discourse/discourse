@@ -115,6 +115,16 @@ describe TranslationOverride do
     expect(ovr.value).to eq('some value')
   end
 
+  it 'sanitizes values before upsert' do
+    xss = "<a href='%{url}' data-auto-route='true'>setup wizard</a> ✨<script>alert('TEST');</script>"
+
+    TranslationOverride.upsert!('en', 'js.wizard_required', xss)
+
+    ovr = TranslationOverride.where(locale: 'en', translation_key: 'js.wizard_required').first
+    expect(ovr).to be_present
+    expect(ovr.value).to eq("<a href=\"%{url}\" data-auto-route=\"true\">setup wizard</a> ✨alert('TEST');")
+  end
+
   it "stores js for a message format key" do
     TranslationOverride.upsert!('ru', 'some.key_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
 

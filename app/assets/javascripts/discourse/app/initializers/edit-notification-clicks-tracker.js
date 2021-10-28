@@ -4,13 +4,15 @@ export default {
   name: "edit-notification-clicks-tracker",
 
   initialize(container) {
-    container
-      .lookup("service:app-events")
-      .on(
-        "edit-notification:clicked",
-        ({ topicId, postNumber, revisionNumber }) => {
-          setLastEditNotificationClick(topicId, postNumber, revisionNumber);
-        }
-      );
+    this.appEvents = container.lookup("service:app-events");
+    this.appEvents.on("edit-notification:clicked", this, this.handleClick);
+  },
+
+  handleClick({ topicId, postNumber, revisionNumber }) {
+    setLastEditNotificationClick(topicId, postNumber, revisionNumber);
+  },
+
+  teardown() {
+    this.appEvents.off("edit-notification:clicked", this, this.handleClick);
   },
 };

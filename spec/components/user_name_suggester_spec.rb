@@ -160,14 +160,6 @@ describe UserNameSuggester do
         expect(UserNameSuggester.suggest('য়া')).to eq('য়া11')
       end
 
-      it "does not skip ove allowed names" do
-        Fabricate(:user, username: 'sam')
-        Fabricate(:user, username: 'saM1')
-        Fabricate(:user, username: 'sam2')
-
-        expect(UserNameSuggester.suggest('SaM', 'Sam1')).to eq('Sam1')
-      end
-
       it "normalizes usernames" do
         actual = 'Löwe'    # NFD, "Lo\u0308we"
         expected = 'Löwe'  # NFC, "L\u00F6we"

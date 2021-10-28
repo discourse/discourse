@@ -558,7 +558,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     def read_smf_settings
       settings = File.join(self.smfroot, 'Settings.php')
-      IO.readlines(settings).each do |line|
+      File.readlines(settings).each do |line|
         next unless m = /\$([a-z_]+)\s*=\s*['"](.+?)['"]\s*;\s*((#|\/\/).*)?$/.match(line)
         case m[1]
         when 'db_server' then self.host ||= m[2]

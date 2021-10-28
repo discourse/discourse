@@ -25,6 +25,7 @@ class ImportScripts::Phorum < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    import_attachments
   end
 
   def import_users
@@ -34,7 +35,7 @@ class ImportScripts::Phorum < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT user_id id, username, email, real_name name, date_added created_at,
+        "SELECT user_id id, username, TRIM(email) AS email, username name, date_added created_at,
                 date_last_active last_seen_at, admin
          FROM #{TABLE_PREFIX}users
          WHERE #{TABLE_PREFIX}users.active = 1
@@ -209,12 +210,79 @@ class ImportScripts::Phorum < ImportScripts::Base
 
     s.gsub!(/\[hr\]/i, "<hr>")
 
+    # remove trailing <br>
+    s = s.chomp("<br>")
+
     s
   end
 
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
   end
+
+  def import_attachments
+    puts '', 'importing attachments...'
+
+    uploads = mysql_query <<-SQL
+      SELECT message_id, filename, FROM_BASE64(file_data) AS file_data, file_id
+      FROM #{TABLE_PREFIX}files
+      where message_id > 0
+      order by file_id
+    SQL
+
+    current_count = 0
+    total_count = uploads.count
+
+    uploads.each do |upload|
+
+      # puts "*** processing file #{upload['file_id']}"
+
+      post_id = post_id_from_imported_post_id(upload['message_id'])
+
+      if post_id.nil?
+        puts "Post #{upload['message_id']} for attachment #{upload['file_id']} not found"
+        next
+      end
+
+      post = Post.find(post_id)
+
+      real_filename = upload['filename']
+      real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
+
+      tmpfile = 'attach_' + upload['file_id'].to_s
+      filename = File.join('/tmp/', tmpfile)
+      File.open(filename, 'wb') { |f|
+        f.write(upload['file_data'])
+      }
+
+      upl_obj = create_upload(post.user.id, filename, real_filename)
+
+      # puts "discourse post #{post['id']} and upload #{upl_obj['id']}"
+
+      if upl_obj&.persisted?
+        html = html_for_upload(upl_obj, real_filename)
+        if !post.raw[html]
+          post.raw += "\n\n#{html}\n\n"
+          post.save!
+          if PostUpload.where(post: post, upload: upl_obj).exists?
+            puts "skipping creating uploaded for previously uploaded file #{upload['file_id']}"
+          else
+            PostUpload.create!(post: post, upload: upl_obj)
+          end
+          # PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
+        else
+          puts "Skipping attachment #{upload['file_id']}"
+        end
+      else
+        puts "Failed to upload attachment #{upload['file_id']}"
+        exit
+      end
+
+      current_count += 1
+      print_status(current_count, total_count)
+    end
+  end
+
 end
 
 ImportScripts::Phorum.new.perform

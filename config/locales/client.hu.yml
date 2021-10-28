@@ -1140,9 +1140,7 @@ hu:
         tags: "Címkék"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
-        read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/message'>személyes üzenetekben</a>."
         read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{és} false{} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen } other { {BOTH, select, true{és} false{Böngésszen} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen} } más üzeneteket ebben a csoportban: {groupLink}"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># olvasatlan</a> } other {<a href='{basePath}/u/{username}/messages/unread'># olvasatlan</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{és} false{} other{}} <a href='{basePath}/u/{username}/messages/new'># új</a> üzenet van hátra, vagy böngésszen } other { {BOTH, select, true{és} false{Böngésszen} other{}} <a href='{basePath}/u/{username}/messages/new'># új</a> üzenet van hátra, vagy böngésszen} } más <a href='{basePath}/u/{username}/message'>személyes üzeneteket</a>"
       preferences_nav:
         account: "Fiók"
         security: "Biztonság"
@@ -1281,6 +1279,7 @@ hu:
         auth_override_instructions: "Az e-mail-címet a hitelesítésszolgáltató tudja frissíteni."
         no_secondary: "Nincsenek másodlagos e-mail-címek"
         instructions: "Sosem jelenik meg nyilvánosan."
+        admin_note: "Megjegyzés: Ha egy rendszergazda felhasználó megváltoztatja egy nem rendszergazda felhasználó e-mail-címét, az azt jelzi, hogy a felhasználó elveszítette az eredeti e-mail-fiókját, ezért jelszó-visszaállítási e-mail lesz küldve az új címére. A felhasználó e-mail-címe addig nem változik meg, míg be nem fejezi a jelszó-visszaállítási folyamatot."
         ok: "E-mailt fogunk küldeni a megerősítéshez"
         required: "Adjon meg egy e-mail-címet"
         invalid: "Adjon meg egy érvényes e-mail-címet"
@@ -1297,10 +1296,15 @@ hu:
         revoke: "Visszavonás"
         cancel: "Mégse"
         not_connected: "(nincs csatlakoztatva)"
+        confirm_modal_title: "%{provider}-fiók összekapcsolása"
+        confirm_description:
+          disconnect: "A meglévő „%{account_description}” %{provider}-fiókja le lesz választva."
+          account_specific: "Az Ön „%{account_description}” %{provider}-fiókja lesz használva a hitelesítéshez."
       name:
         title: "Név"
         instructions: "a teljes neve (nem kötelező)"
         instructions_required: "Az Ön teljes neve"
+        required: "Adjon meg egy nevet"
         too_short: "A neve túl rövid"
         ok: "A neve megfelelő."
       username:
@@ -1314,6 +1318,8 @@ hu:
         too_long: "A felhasználóneve túl hosszú"
         checking: "A felhasználónév elérhetőségének ellenőrzése…"
         prefilled: "Az e-mail-cím megfelel ennek a regisztrált felhasználónévnek"
+        required: "Adjon meg egy felhasználónevet"
+        edit: "Felhasználónév szerkesztése"
       locale:
         title: "A felület nyelve"
         instructions: "A felhasználói felület nyelve. A lap frissítése után fog módosulni."
@@ -1482,6 +1488,10 @@ hu:
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
+          instructions: |
+            <p>Hívjon meg gyorsan felhasználókat egy listáról, hogy gyorsan összeállítsa a közösséget. Készítsen egy <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV-fájlt</a> amely legalább sort tartalmaz a meghívandó felhasználók e-mail-címével. A következő vesszővel elválasztott információk adhatók meg, ha csoportokhoz is szeretné rendelni az embereket, vagy egy konkrét témához akarja őket küldeni az első bejelentkezésükkor.</p>
+            <pre>email@example.com,első_csoport_neve;második_csoport_neve;témaazonosító</pre>
+            <p>Minden a feltöltött CSV-fájlban lévő e-mail-címre egy meghívó lesz küldve, és ezeket majd később kezelheti.</p>
           progress: "%{progress}% feltöltve…"
           success: "A fájl sikeresen feltöltve. Értesítést fog kapni., ha a folyamat befejeződött."
           error: "Sajnáljuk, a fájlnak CSV formátumúnak kell lennie."
@@ -1493,6 +1503,7 @@ hu:
         same_as_email: "A jelszava megegyezik az e-mail-címével."
         ok: "A jelszava megfelelőnek tűnik."
         instructions: "legalább %{count} karakter"
+        required: "Adjon meg egy jelszót"
       summary:
         title: "Összefoglaló"
         stats: "Statisztikák"
@@ -1547,11 +1558,16 @@ hu:
       avatar:
         title: "Profilkép"
         header_title: "profil, üzenetek, könyvjelzők és beállítások"
+        name_and_description: "%{name} – %{description}"
+        edit: "Profilkép szerkesztése"
       title:
         title: "Cím"
         none: "(egyik sem)"
+        instructions: "a felhasználónév után jelenik meg"
       flair:
+        title: "Színesítő"
         none: "(egyik sem)"
+        instructions: "a profilkép mellett megjelenített ikon"
       primary_group:
         title: "Elsődleges csoport"
         none: "(egyik sem)"
@@ -1584,7 +1600,9 @@ hu:
         fixed: "Oldal betöltése"
     modal:
       close: "bezárás"
+      dismiss_error: "Hiba elvetése"
     close: "Bezárás"
+    assets_changed_confirm: "Ez az oldal most kapott egy szoftverfrissítést. Beszerzi most a legújabb verziót?"
     logout: "Kijelentkezett."
     refresh: "Frissítés"
     home: "Kezdőlap"
@@ -1592,14 +1610,27 @@ hu:
       enabled: "Az oldal írásvédett módban van. Nyugodtan folytathatja a böngészést, de a válasz, kedvelés és egyéb műveletek egyelőre le vannak tiltva."
       login_disabled: "A belépés le van tiltva, amíg az oldal írásvédett módban van."
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
+    too_few_topics_and_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
+    too_few_topics_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} legyen. Csak a stáb láthatja ezt az üzenetet.
+    too_few_posts_notice_MF: >-
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
     learn_more: "tudjon meg többet…"
     first_post: Első bejegyzés
     mute: Némítás
     unmute: Némítás feloldása
     last_post: Közzétett
+    local_time: "Helyi idő"
     time_read: Olvasott
     time_read_recently: "%{time_read} mostanában"
     time_read_tooltip: "%{time_read} olvasással töltött idő"
+    time_read_recently_tooltip: "%{time_read} olvasással töltött idő (%{recent_time_read} az elmúlt 60 napban)"
     last_reply_lowercase: utolsó válasz
     replies_lowercase:
       one: válasz
@@ -1608,6 +1639,7 @@ hu:
       sign_up: "Regisztráció"
       hide_session: "Emlékeztessen holnap"
       hide_forever: "nem, köszönöm"
+      hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
       intro: "Szia! Úgy tűnik, tetszik neked a fórumunk, de még nem regisztráltál fiókot."
       value_prop: "Onnantól, hogy létrehozol egy fiókot, a rendszer emlékezni fog arra, hogy mit olvastál, így mindig oda térhetsz vissza, ahol korábban abbahagytad. Értesítéseket is kapsz, itt is és e-mailben is, valahányszor valaki válaszol neked. A bejegyzéseket pedig kedvelheted is. :heartpulse:"
     summary:
@@ -2005,6 +2037,13 @@ hu:
         category: "Keresés a(z) #%{category} kategóriában"
         topic: "Keresés ebben a témában"
         private_messages: "Üzenetek keresése"
+      tips:
+        category_tag: "szűrés kategória vagy címke szerint"
+        author: "szűrés a bejegyzés szerzője szerint"
+        in: "szűrés metaadat szerint (pl.: in:title, in:personal, in:pinned)"
+        status: "szűrés a téma állapota szerint"
+        full_search: "teljes oldalas keresés indítása"
+        full_search_key: "%{modifier} + Enter"
       advanced:
         posted_by:
           label: 'Szerző:'
