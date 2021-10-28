@@ -47,7 +47,7 @@ class ExternalUploadManager
       raise SizeMismatchError.new("expected: #{external_upload_stub.filesize}, actual: #{external_size}")
     end
 
-    if UPLOAD_TYPES_EXCLUDED_FROM_UPLOAD_PROMOTION.include?(external_size.upload_type)
+    if UPLOAD_TYPES_EXCLUDED_FROM_UPLOAD_PROMOTION.include?(external_upload_stub.upload_type)
       move_to_final_destination
     else
       promote_to_upload
@@ -57,7 +57,7 @@ class ExternalUploadManager
       # We don't need to do anything special to abort multipart uploads here,
       # because at this point (calling promote_to_upload!), the multipart
       # upload would already be complete.
-      Discourse.store.delete_file(external_upload_stub.key)
+      store.delete_file(external_upload_stub.key)
       external_upload_stub.destroy!
     else
       external_upload_stub.update(status: ExternalUploadStub.statuses[:failed])
@@ -104,20 +104,22 @@ class ExternalUploadManager
 
   def move_to_final_destination
     content_type = MiniMime.lookup_by_filename(external_upload_stub.original_filename).content_type
-    store = \
-      if external_upload_stub.upload_type == "backup"
-        BackupRestore::BackupStore.create
-      else
-        Discourse.store
-      end
     store.move_existing_stored_upload(
       external_upload_stub.key, external_upload_stub.original_filename, true, content_type
     )
     Struct.new(:errors).new([])
   end
 
+  def store
+    if external_upload_stub.upload_type == "backup"
+      BackupRestore::BackupStore.create
+    else
+      Discourse.store
+    end
+  end
+
   def external_stub_object
-    @external_stub_object ||= Discourse.store.object_from_path(external_upload_stub.key)
+    @external_stub_object ||= store.object_from_path(external_upload_stub.key)
   end
 
   def external_etag
@@ -133,7 +135,7 @@ class ExternalUploadManager
   end
 
   def download(key, type)
-    url = Discourse.store.signed_url_for_path(external_upload_stub.key)
+    url = store.signed_url_for_path(external_upload_stub.key)
     FileHelper.download(
       url,
       max_file_size: DOWNLOAD_LIMIT,
