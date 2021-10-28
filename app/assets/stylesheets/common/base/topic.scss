@@ -1,3 +1,5 @@
+$topic-progress-height: 42px;
+
 @keyframes button-jump-up {
   0% {
     margin-bottom: -60px;
@@ -52,6 +54,8 @@
     &:not(.render-timeline) {
       // span all columns of grid layout so RTL can go as far left as possible
       grid-column: 1/-1;
+      // save the space to avoid jumping when child gets fixed-positioned
+      min-height: $topic-progress-height;
     }
     &.topic-progress-expanded {
       z-index: z("fullscreen");
@@ -123,10 +127,10 @@
   }
 
   &:not(.docked) {
-    @media screen and (min-width: 1475px) {
+    @media screen and (min-width: $reply-area-max-width) {
       // position to right side of composer
       right: 50%;
-      margin-right: calc(1475px / 2 * -1);
+      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
     }
   }
 }
@@ -137,7 +141,7 @@
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
   width: 145px;
-  height: 42px;
+  height: $topic-progress-height;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
