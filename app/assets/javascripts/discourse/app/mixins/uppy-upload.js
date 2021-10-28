@@ -26,13 +26,6 @@ export default Mixin.create(UppyS3Multipart, {
   autoStartUploads: true,
   id: null,
 
-  // TODO (martin): currently used for backups to turn on auto upload and PUT/XML requests
-  // and for emojis to do sequential uploads, when we get to replacing those
-  // with uppy make sure this is used when initializing uppy
-  uploadOptions() {
-    return {};
-  },
-
   uploadDone() {
     warn("You should implement `uploadDone`", {
       id: "discourse.upload.missing-upload-done",
