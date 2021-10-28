@@ -4,8 +4,6 @@ require 'method_profiler'
 require 'middleware/anonymous_cache'
 
 class Middleware::RequestTracker
-  CURRENT_USER_PROVIDER_KEY = "_DISCOURSE_CURRENT_USER_PROVIDER"
-
   @@detailed_request_loggers = nil
   @@ip_skipper = nil
 
@@ -177,34 +175,22 @@ class Middleware::RequestTracker
     # accurate counter
     ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
 
-    current_user_provider = Discourse.current_user_provider.new(env)
-    env[CURRENT_USER_PROVIDER_KEY] = current_user_provider
-    user = nil
-    begin
-      user = current_user_provider.current_user
-    rescue Auth::DefaultCurrentUserProvider::InvalidApiKey => ex
-      message = ex.message.presence
-      message ||= I18n.t("invalid_access")
-      error_json = {
-        errors: [message],
-        error_type: "invalid_access"
-      }.to_json
-      return [
-        403,
-        { "Content-Type" => "application/json; charset=utf-8" },
-        [error_json]
-      ]
-    rescue Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
-      # delete auth cookie
-      cookie = "#{Auth::DefaultCurrentUserProvider::TOKEN_COOKIE}=;"
-      cookie += "path=#{Discourse.base_path.presence || "/"};"
-      cookie += "expires=Thu, 01 Jan 1970 00:00:00 GMT;"
-      cookie += "HttpOnly;"
-      return [403, { "Set-Cookie" => cookie }, ["Error: too many auth attempts with bad cookie."]]
+    request = Rack::Request.new(env)
+    cookie_string = request.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE].presence
+    if cookie_string
+      begin
+        cookie = DiscourseAuthCookie.parse(cookie_string)
+        cookie.validate!
+      rescue DiscourseAuthCookie::InvalidCookie
+        cookie = nil
+      end
     end
 
-    request = Rack::Request.new(env)
-    limiter = RequestsRateLimiter.new(user, request)
+    limiter = RequestsRateLimiter.new(
+      user_id: cookie&.user_id,
+      trust_level: cookie&.trust_level,
+      request: request
+    )
     limiter.apply_limits! do
       env["discourse.request_tracker"] = self
 

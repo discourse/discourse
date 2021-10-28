@@ -36,19 +36,17 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def update_last_used!(client_id)
-    if !Discourse.pg_readonly_mode?
-      update_args = { last_used_at: Time.zone.now }
-      if client_id.present? && client_id != self.client_id
-        # invalidate old dupe api key for client if needed
-        UserApiKey
-          .where(client_id: client_id, user_id: self.user_id)
-          .where('id <> ?', self.id)
-          .destroy_all
+    update_args = { last_used_at: Time.zone.now }
+    if client_id.present? && client_id != self.client_id
+      # invalidate old dupe api key for client if needed
+      UserApiKey
+        .where(client_id: client_id, user_id: self.user_id)
+        .where('id <> ?', self.id)
+        .destroy_all
 
-        update_args.merge!(client_id: client_id)
-      end
-      self.update_columns(**update_args)
+      update_args.merge!(client_id: client_id)
     end
+    self.update_columns(**update_args)
   end
 
   # Scopes allowed to be requested by external services

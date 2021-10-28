@@ -10,10 +10,7 @@ class AdminConstraint
     return false if @require_master && RailsMultisite::ConnectionManagement.current_db != "default"
     current_user = CurrentUser.lookup_from_env(request.env)
     current_user&.admin? && custom_admin_check(request)
-  rescue Discourse::InvalidAccess,
-    Discourse::ReadOnly,
-    Auth::DefaultCurrentUserProvider::InvalidApiKey,
-    Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
+  rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end
 

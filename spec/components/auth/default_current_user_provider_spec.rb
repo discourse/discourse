@@ -40,7 +40,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
 
       api_key.reload
       expect(api_key.last_used_at).to eq(nil)
@@ -50,7 +50,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => "INCORRECT" }
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey, /API username or key is invalid/)
+      }.to raise_error(Discourse::InvalidAccess, /API username or key is invalid/)
     end
 
     it "finds a user for a correct per-user api key" do
@@ -71,13 +71,13 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
 
       user.update_columns(active: true, suspended_till: 1.day.from_now)
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "raises for a user pretending" do
@@ -87,7 +87,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "raises for a user with a mismatching ip" do
@@ -100,7 +100,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "allows a user with a matching ip" do
@@ -136,7 +136,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_username=#{user.username.downcase}", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "finds a user for a correct system api key with external id" do
@@ -152,7 +152,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_user_external_id=abc", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     it "finds a user for a correct system api key with id" do
@@ -166,7 +166,7 @@ describe Auth::DefaultCurrentUserProvider do
       params = { "HTTP_API_KEY" => api_key.key }
       expect {
         provider("/?api_user_id=#{user.id}", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     describe "when readonly mode is enabled due to postgres" do
@@ -234,11 +234,15 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#current_user" do
-    let(:unhashed_token) do
+    let(:cookie) do
       new_provider = provider('/')
       cookies = {}
       new_provider.log_on_user(user, {}, cookies)
       cookies["_t"][:value]
+    end
+
+    let(:unhashed_token) do
+      DiscourseAuthCookie.parse(cookie).token
     end
 
     before do
@@ -251,7 +255,7 @@ describe Auth::DefaultCurrentUserProvider do
     end
 
     it "should not update last seen for suspended users" do
-      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
       u.reload
       expect(u.last_seen_at).to eq_time(Time.zone.now)
@@ -264,7 +268,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       u.clear_last_seen_cache!
 
-      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       expect(provider2.current_user).to eq(nil)
 
       u.reload
@@ -281,7 +285,7 @@ describe Auth::DefaultCurrentUserProvider do
       end
 
       it "should not update User#last_seen_at" do
-        provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+        provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
         u = provider2.current_user
         u.reload
         expect(u.last_seen_at).to eq(nil)
@@ -330,13 +334,22 @@ describe Auth::DefaultCurrentUserProvider do
     expect(cookies["_t"][:expires]).to eq(nil)
   end
 
+  it "v0 of auth cookie is still acceptable" do
+    token = UserAuthToken.generate!(user_id: user.id).unhashed_auth_token
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{token}", "REMOTE_ADDR" => ip }
+    cookies = {}
+    expect(provider('/', env).current_user.id).to eq(user.id)
+  end
+
   it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
     @provider = provider('/')
     cookies = {}
     @provider.log_on_user(user, {}, cookies)
 
-    unhashed_token = cookies["_t"][:value]
+    cookie = cookies["_t"][:value]
+    unhashed_token = DiscourseAuthCookie.parse(cookie).token
 
     token = UserAuthToken.find_by(user_id: user.id)
 
@@ -347,7 +360,7 @@ describe Auth::DefaultCurrentUserProvider do
     # at this point we are going to try to rotate token
     freeze_time 20.minutes.from_now
 
-    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
     provider2.current_user
 
     token.reload
@@ -355,7 +368,12 @@ describe Auth::DefaultCurrentUserProvider do
 
     cookies = {}
     provider2.refresh_session(user, {}, cookies)
-    expect(cookies["_t"][:value]).not_to eq(unhashed_token)
+    expect(
+      DiscourseAuthCookie.parse(cookies["_t"][:value]).token
+    ).not_to eq(unhashed_token)
+    expect(
+      DiscourseAuthCookie.parse(cookies["_t"][:value]).token.size
+    ).to eq(32)
 
     token.reload
     expect(token.auth_token_seen).to eq(false)
@@ -366,7 +384,7 @@ describe Auth::DefaultCurrentUserProvider do
     unverified_token = token.auth_token
 
     # old token should still work
-    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
     expect(provider2.current_user.id).to eq(user.id)
 
     provider2.refresh_session(user, {}, cookies)
@@ -396,9 +414,10 @@ describe Auth::DefaultCurrentUserProvider do
       @provider = provider('/')
       cookies = {}
       @provider.log_on_user(user, {}, cookies)
-      unhashed_token = cookies["_t"][:value]
+      cookie = cookies["_t"][:value]
+      unhashed_token = DiscourseAuthCookie.parse(cookie)
       freeze_time 20.minutes.from_now
-      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, {})
       expect(@refreshes).to eq(1)
     end
@@ -407,9 +426,10 @@ describe Auth::DefaultCurrentUserProvider do
       @provider = provider('/')
       cookies = {}
       @provider.log_on_user(user, {}, cookies)
-      unhashed_token = cookies["_t"][:value]
+      cookie = cookies["_t"][:value]
+      unhashed_token = DiscourseAuthCookie.parse(cookie)
       freeze_time 2.minutes.from_now
-      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+      provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, {})
       expect(@refreshes).to eq(0)
     end
@@ -423,6 +443,13 @@ describe Auth::DefaultCurrentUserProvider do
 
     it "can only try 10 bad cookies a minute" do
       token = UserAuthToken.generate!(user_id: user.id)
+      cookie = DiscourseAuthCookie.new(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        valid_for: 100.days,
+        timestamp: 3.hours.ago
+      ).to_text(Rails.application.secret_key_base)
 
       provider('/').log_on_user(user, {}, {})
 
@@ -430,7 +457,15 @@ describe Auth::DefaultCurrentUserProvider do
       RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
 
       ip = "10.0.0.1"
-      env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
+      bad_cookie = DiscourseAuthCookie.new(
+        token: SecureRandom.hex,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        valid_for: 100.days,
+        timestamp: 3.hours.ago
+      ).to_text(Rails.application.secret_key_base)
+
+      env = { "HTTP_COOKIE" => "_t=#{bad_cookie}", "REMOTE_ADDR" => ip }
 
       10.times do
         provider('/', env).current_user
@@ -438,12 +473,12 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider('/', env).current_user
-      }.to raise_error(described_class::TooManyBadCookieAttempts)
+      }.to raise_error(Discourse::InvalidAccess)
 
       expect {
-        env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
+        env["HTTP_COOKIE"] = "_t=#{cookie}"
         provider("/", env).current_user
-      }.to raise_error(described_class::TooManyBadCookieAttempts)
+      }.to raise_error(Discourse::InvalidAccess)
 
       env["REMOTE_ADDR"] = "10.0.0.2"
 
@@ -454,7 +489,14 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "correctly removes invalid cookies" do
-    cookies = { "_t" => SecureRandom.hex }
+    bad_cookie = DiscourseAuthCookie.new(
+      token: SecureRandom.hex,
+      user_id: 1,
+      trust_level: 4,
+      valid_for: 100.days,
+      timestamp: 3.hours.ago
+    ).to_text(Rails.application.secret_key_base)
+    cookies = { "_t" => bad_cookie }
     provider('/').refresh_session(nil, {}, cookies)
     expect(cookies.key?("_t")).to eq(false)
   end
@@ -515,13 +557,20 @@ describe Auth::DefaultCurrentUserProvider do
   it "correctly expires session" do
     SiteSetting.maximum_session_age = 2
     token = UserAuthToken.generate!(user_id: user.id)
+    cookie = DiscourseAuthCookie.new(
+      token: token.unhashed_auth_token,
+      user_id: user.id,
+      trust_level: user.trust_level,
+      valid_for: 100.days,
+      timestamp: 3.hours.ago
+    ).to_text(Rails.application.secret_key_base)
 
     provider('/').log_on_user(user, {}, {})
 
-    expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user.id).to eq(user.id)
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{cookie}").current_user.id).to eq(user.id)
 
     freeze_time 3.hours.from_now
-    expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user).to eq(nil)
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{cookie}").current_user).to eq(nil)
   end
 
   it "always unstage users" do
@@ -582,13 +631,13 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params.merge("REQUEST_METHOD" => "POST")).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
 
       user.update_columns(suspended_till: 1.year.from_now)
 
       expect {
         provider("/", params).current_user
-      }.to raise_error(described_class::InvalidApiKey)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     describe "when readonly mode is enabled due to postgres" do
@@ -657,5 +706,18 @@ describe Auth::DefaultCurrentUserProvider do
         }.to raise_error(RateLimiter::LimitExceeded)
       end
     end
+  end
+
+  it "ignores a valid auth cookie that has been tampered with" do
+    cookies = {}
+    provider('/').log_on_user(user, {}, cookies)
+
+    cookie = cookies["_t"][:value]
+    # attempt to modify the trust level in the cookie
+    cookie[cookie.index("tl:") + 3] = "4"
+
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
+    expect(provider('/', env).current_user).to eq(nil)
   end
 end

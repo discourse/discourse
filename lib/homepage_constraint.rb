@@ -11,10 +11,7 @@ class HomePageConstraint
     current_user = CurrentUser.lookup_from_env(request.env)
     homepage = current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
     homepage == @filter
-  rescue Discourse::InvalidAccess,
-    Discourse::ReadOnly,
-    Auth::DefaultCurrentUserProvider::InvalidApiKey,
-    Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
+  rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end
 end

@@ -29,7 +29,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  before_action :validate_api_key_usage!
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -189,13 +188,23 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers.merge!(
+        'Discourse-Rate-Limit-Error-Code': e.error_code
+      )
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end
@@ -942,11 +951,5 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
-  end
-
-  def validate_api_key_usage!
-    current_user_provider.validate_api_key_usage!
-  rescue Auth::DefaultCurrentUserProvider::InvalidApiKey
-    clear_current_user
   end
 end

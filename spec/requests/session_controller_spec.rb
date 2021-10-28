@@ -1454,7 +1454,8 @@ RSpec.describe SessionController do
 
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
-          expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
+          unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+          expect(UserAuthToken.hash_token(unhashed_token)).to eq(user.user_auth_tokens.first.auth_token)
         end
 
         context "when timezone param is provided" do
@@ -1640,7 +1641,8 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
-              expect(UserAuthToken.hash_token(cookies[:_t]))
+              unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+              expect(UserAuthToken.hash_token(unhashed_token))
                 .to eq(user.user_auth_tokens.first.auth_token)
             end
           end
@@ -1658,7 +1660,8 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
-              expect(UserAuthToken.hash_token(cookies[:_t]))
+              unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+              expect(UserAuthToken.hash_token(unhashed_token))
                 .to eq(user.user_auth_tokens.first.auth_token)
             end
           end

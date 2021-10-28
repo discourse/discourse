@@ -3,7 +3,7 @@
 # A redis backed rate limiter.
 class RateLimiter
 
-  attr_reader :max, :secs, :user, :key
+  attr_reader :max, :secs, :user, :key, :error_code
 
   def self.key_prefix
     "l-rate-limit3:"
@@ -37,7 +37,7 @@ class RateLimiter
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
-  def initialize(user, type, max, secs, global: false, aggressive: false)
+  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil)
     @user = user
     @type = type
     @key = build_key(type)
@@ -45,6 +45,7 @@ class RateLimiter
     @secs = secs
     @global = global
     @aggressive = aggressive
+    @error_code = error_code
   end
 
   def clear!
@@ -116,7 +117,7 @@ class RateLimiter
     now = Time.now.to_i
 
     if ((max || 0) <= 0) || rate_limiter_allowed?(now)
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type) if raise_error
+      raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type, @error_code) if raise_error
       false
     else
       true

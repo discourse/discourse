@@ -42,10 +42,6 @@ def setup_message_bus_env(env)
       if e.opts[:delete_cookie].present?
         extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       end
-    rescue Auth::DefaultCurrentUserProvider::InvalidApiKey
-      # dont care, they'll be anon user
-    rescue Auth::DefaultCurrentUserProvider::TooManyBadCookieAttempts
-      extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
     rescue => e
       Discourse.warn_exception(e, message: "Unexpected error in Message Bus", env: env)
     end

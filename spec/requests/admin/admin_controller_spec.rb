@@ -12,7 +12,7 @@ RSpec.describe Admin::AdminController do
     it "should return the right response if user isn't a staff" do
       sign_in(Fabricate(:user))
       get "/admin", params: { api_key: 'asdiasiduga' }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
 
       get "/admin"
       expect(response.status).to eq(404)
