@@ -31,6 +31,14 @@ function findAllMatches(text, matchers) {
   return matches.sort((a, b) => a.index - b.index);
 }
 
+// We need this to load after mentions and hashtags which are priority 0
+export const priority = 1;
+
+const NONE = 0;
+const MENTION = 1;
+const HASHTAG_LINK = 2;
+const HASHTAG_SPAN = 3;
+
 export function setup(helper) {
   const opts = helper.getOptions();
 
@@ -77,6 +85,39 @@ export function setup(helper) {
 
         let htmlLinkLevel = 0;
 
+        // We scan once to mark tokens that must be skipped because they are
+        // mentions or hashtags
+        let lastType = NONE;
+        for (let i = 0; i < tokens.length; ++i) {
+          const currentToken = tokens[i];
+
+          if (currentToken.type === "mention_open") {
+            lastType = MENTION;
+          } else if (
+            (currentToken.type === "link_open" ||
+              currentToken.type === "span_open") &&
+            currentToken.attrs &&
+            currentToken.attrs.some(
+              (attr) => attr[0] === "class" && attr[1] === "hashtag"
+            )
+          ) {
+            lastType =
+              currentToken.type === "link_open" ? HASHTAG_LINK : HASHTAG_SPAN;
+          }
+
+          if (lastType !== NONE) {
+            currentToken.skipReplace = true;
+          }
+
+          if (
+            (lastType === MENTION && currentToken.type === "mention_close") ||
+            (lastType === HASHTAG_LINK && currentToken.type === "link_close") ||
+            (lastType === HASHTAG_SPAN && currentToken.type === "span_close")
+          ) {
+            lastType = NONE;
+          }
+        }
+
         // We scan from the end, to keep position when new tags added.
         // Use reversed logic in links start/end match
         for (let i = tokens.length - 1; i >= 0; i--) {
@@ -105,6 +146,11 @@ export function setup(helper) {
             }
           }
 
+          // Skip content of mentions or hashtags
+          if (currentToken.skipReplace) {
+            continue;
+          }
+
           if (currentToken.type === "text") {
             const text = currentToken.content;
             const matches = (cache[text] =
@@ -118,14 +164,6 @@ export function setup(helper) {
             let token;
             for (let ln = 0; ln < matches.length; ln++) {
               if (matches[ln].index < lastPos) {
-                continue;
-              }
-
-              if (
-                matches[ln].index > 0 &&
-                (text[matches[ln].index - 1] === "@" ||
-                  text[matches[ln].index - 1] === "#")
-              ) {
                 continue;
               }
 
