@@ -51,7 +51,7 @@ module BackupRestore
       raise BackupFileExists.new if obj.exists?
 
       ensure_cors!
-      presigned_url(obj.key, method: :put, expires_in: UPLOAD_URL_EXPIRES_AFTER_SECONDS)
+      presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
       raise StorageError.new(e.message.presence || e.class.name)
@@ -72,7 +72,7 @@ module BackupRestore
     end
 
     def create_multipart(file_name, content_type, metadata: {})
-      obj = s3_helper.object(file_name)
+      obj = object_from_path(file_name)
       raise BackupFileExists.new if obj.exists?
       key = temporary_upload_path(file_name)
       s3_helper.create_multipart(key, content_type, metadata: metadata)
@@ -85,6 +85,10 @@ module BackupRestore
         options: { acl: "private", apply_metadata_to_destination: true }
       )
       s3_helper.delete_object(existing_external_upload_key)
+    end
+
+    def object_from_path(path)
+      s3_helper.object(path)
     end
 
     private

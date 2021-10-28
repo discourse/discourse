@@ -150,7 +150,7 @@ export default Mixin.create(UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
-      displayErrorForUpload(response, this.siteSettings, file.name);
+      displayErrorForUpload(response || error, this.siteSettings, file.name);
       this._reset();
     });
 
