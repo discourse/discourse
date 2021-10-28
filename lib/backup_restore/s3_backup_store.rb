@@ -2,7 +2,7 @@
 
 module BackupRestore
   class S3BackupStore < BackupStore
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21_600 # 6 hours
+    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 6.hours.to_i
 
     delegate :abort_multipart, :presign_multipart_part, :list_multipart_parts,
       :complete_multipart, to: :s3_helper
@@ -94,20 +94,13 @@ module BackupRestore
       s3_helper.create_multipart(key, content_type, metadata: metadata)
     end
 
-    # changed from upload as param
     def move_existing_stored_upload(existing_external_upload_key, original_filename, secure, content_type = nil)
       s3_helper.copy(
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
         options: { acl: "private", apply_metadata_to_destination: true }
       )
-      delete_file_by_path(existing_external_upload_key)
-    end
-
-    def delete_file_by_path(path)
-      # delete the object outright without moving to tombstone,
-      # not recommended for most use cases
-      s3_helper.delete_object(path)
+      s3_helper.delete_object(existing_external_upload_key)
     end
 
     private
