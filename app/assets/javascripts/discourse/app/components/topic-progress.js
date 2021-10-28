@@ -127,6 +127,16 @@ export default Component.extend({
     });
   },
 
+  _composerEvent() {
+    // reinitializing needed to account for composer height
+    // might be no longer necessary if IntersectionObserver API supports dynamic rootMargin
+    // see https://github.com/w3c/IntersectionObserver/issues/428
+    if ("IntersectionObserver" in window) {
+      this._topicBottomObserver?.disconnect();
+      this._startObserver();
+    }
+  },
+
   @bind
   _intersectionHandler(entries) {
     if (entries[0].isIntersecting === true) {
@@ -147,13 +157,6 @@ export default Component.extend({
           wrapper.style.setProperty("bottom", `${composerH}px`);
         }
       }
-    }
-  },
-
-  _composerEvent() {
-    if ("IntersectionObserver" in window) {
-      this._topicBottomObserver?.disconnect();
-      this._startObserver();
     }
   },
 

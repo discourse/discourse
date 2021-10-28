@@ -40,38 +40,31 @@
   }
 
   // timeline
-  @media screen and (min-width: 925px) {
-    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
-    .topic-navigation {
+  .topic-navigation {
+    &.render-timeline {
       grid-area: timeline;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");
-      &.topic-progress-expanded {
-        z-index: z("fullscreen");
-      }
+    }
+    &:not(.render-timeline) {
+      // span all columns of grid layout so RTL can go as far left as possible
+      grid-column: 1/-1;
+    }
+    &.topic-progress-expanded {
+      z-index: z("fullscreen");
     }
   }
 
   // progress bar
   @media screen and (max-width: 924px) {
-    // at 924px viewport width and below the progress bar is visible (see topic-navigation.js)
-    grid-template-areas: "posts posts";
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
     }
-    .timeline-container {
-      .timeline-scroller-content {
-        position: relative;
-      }
-    }
-
-    .topic-navigation {
-      // span all columns of grid layout
-      // so RTL can go as far left as possible
-      grid-column: 1/-1;
+    .timeline-container .timeline-scroller-content {
+      position: relative;
     }
   }
 }
@@ -129,9 +122,12 @@
     bottom: env(safe-area-inset-bottom);
   }
 
-  @media screen and (min-width: 1475px) {
-    right: 50%;
-    margin-right: -722px; // pin to right side of composer
+  &:not(.docked) {
+    @media screen and (min-width: 1475px) {
+      // position to right side of composer
+      right: 50%;
+      margin-right: calc(1475px / 2 * -1);
+    }
   }
 }
 
