@@ -68,18 +68,26 @@ module BackupRestore
     end
 
     def temporary_upload_path(file_name)
-      folder_prefix = @s3_helper.s3_bucket_folder_path.nil? ? "" : @s3_helper.s3_bucket_folder_path
-
       # We don't want to use the original file name as it can contain special
       # characters, which can interfere with external providers operations and
       # introduce other unexpected behaviour.
       file_name_random = "#{SecureRandom.hex}#{File.extname(file_name)}"
       File.join(
         FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX,
-        folder_prefix,
+        temporary_folder_prefix,
         SecureRandom.hex,
         file_name_random # this 1, no upload_path
       )
+    end
+
+    def temporary_folder_prefix
+      folder_prefix = @s3_helper.s3_bucket_folder_path.nil? ? "" : @s3_helper.s3_bucket_folder_path
+
+      if Rails.env.test?
+        folder_prefix = File.join(folder_prefix, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
+      end
+
+      folder_prefix
     end
 
     def create_multipart(file_name, content_type, metadata: {})

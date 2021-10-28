@@ -264,13 +264,6 @@ class UploadsController < ApplicationController
       begin
         upload = external_upload_manager.transform!
 
-        # TODO (martin) Make sure that upload can be returned as a regular
-        # hash as well from handle_backup, maybe somehow allow for errors?
-        # Could possibly return an upload-like object inheriting ActiveModel
-        #
-        # Does the backup controller return anything particularly interesting when
-        # upload complete...no because we upload direct to S3 there and do nothing
-        # when done.
         if upload.errors.empty?
           response_serialized = external_upload_stub.upload_type != "backup" ? UploadsController.serialize_upload(upload) : {}
           external_upload_stub.destroy!
@@ -509,7 +502,10 @@ class UploadsController < ApplicationController
 
   def multipart_store(upload_type)
     if upload_type == "backup"
-      raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
+      ensure_staff
+      if SiteSetting.backup_location != BackupLocationSiteSetting::S3 || !SiteSetting.enable_backups?
+        raise Discourse::InvalidAccess.new
+      end
       BackupRestore::BackupStore.create
     else
       Discourse.store
