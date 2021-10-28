@@ -140,6 +140,12 @@ describe TopicCreator do
           expect(topic.tags.length).to eq(2)
         end
 
+        it "minimum_required_tags is satisfying for new tags if user can create" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: ["new tag", "another tag"], category: category.id))
+          expect(topic).to be_valid
+          expect(topic.tags.length).to eq(2)
+        end
+
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
           SiteSetting.min_trust_level_to_tag_topics = 1
           new_user = Fabricate(:newuser)
