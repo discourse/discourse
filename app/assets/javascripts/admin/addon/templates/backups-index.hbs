@@ -9,7 +9,7 @@
       class="btn-default"}}
   {{else}}
     {{#if enableExperimentalBackupUploader}}
-      {{uppy-backup-uploader done=(route-action "remoteUploadSuccess") type="backup"}}
+      {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
     {{else}}
       {{backup-uploader done=(route-action "remoteUploadSuccess")}}
     {{/if}}

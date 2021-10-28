@@ -318,24 +318,16 @@ class UploadsController < ApplicationController
     upload_type = params.require(:upload_type)
     content_type = MiniMime.lookup_by_filename(file_name)&.content_type
 
-    # TODO (martin) If upload_type == "backup" maybe do some different stuff?
-    # we don't need the attachment too large error, for example
-    #
-    # - backup file needs to be .tar.gz
-    # - has to be a valid filename (see BackupsController#valid_filename?). why do
-    #   we care about this tho? we just generate a random one here...
-    # - need to make sure backups are enabled as well
-    #
-    # Restoring is done using  the filename /admin/backups/filename/restore, I
-    # guess this is why we care about it.
-    #
-    # Restoring is done via the spawn_backup_restore script, through BackupRestore.restore!
-
-    if file_size_too_big?(file_name, file_size)
-      return render_json_error(
-        I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
-        status: 422
-      )
+    if upload_type == "backup"
+      return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_backup_extension?(file_name)
+      return render_json_error(I18n.t("backup.invalid_filename")) unless valid_backup_filename?(file_name)
+    else
+      if file_size_too_big?(file_name, file_size)
+        return render_json_error(
+          I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
+          status: 422
+        )
+      end
     end
 
     metadata = parse_allowed_metadata(params[:metadata])
@@ -346,6 +338,13 @@ class UploadsController < ApplicationController
         file_name, content_type, metadata: metadata
       )
     rescue Aws::S3::Errors::ServiceError => err
+      return render_json_error(
+        debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
+        status: 422
+      )
+    rescue BackupRestore::BackupStore::BackupFileExists
+      return render_json_error(I18n.t("backup.file_exists"), status: 422)
+    rescue BackupRestore::BackupStore::StorageError => err
       return render_json_error(
         debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
         status: 422
@@ -639,5 +638,13 @@ class UploadsController < ApplicationController
   def parse_allowed_metadata(metadata)
     return if metadata.blank?
     metadata.permit("sha1-checksum").to_h
+  end
+
+  def valid_backup_extension?(filename)
+    /\.(tar\.gz|t?gz)$/i =~ filename
+  end
+
+  def valid_backup_filename?(filename)
+    !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
   end
 end

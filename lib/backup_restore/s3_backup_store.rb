@@ -83,6 +83,8 @@ module BackupRestore
     end
 
     def create_multipart(file_name, content_type, metadata: {})
+      obj = @s3_helper.object(file_name)
+      raise BackupFileExists.new if obj.exists?
       key = temporary_upload_path(file_name)
       response = @s3_helper.s3_client.create_multipart_upload(
         acl: "private",
