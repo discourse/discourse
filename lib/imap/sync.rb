@@ -141,7 +141,7 @@ module Imap
             message_id: Email.message_id_clean(email['ENVELOPE'].message_id),
             imap_uid: nil,
             imap_uid_validity: nil
-          ).where("to_addresses LIKE '%#{@group.email_username}%'").first
+          ).where("to_addresses LIKE ?", "%#{@group.email_username}%").first
 
           if incoming_email
             incoming_email.update(
