@@ -1770,6 +1770,8 @@ id:
           enable: "Aktifkan"
           disable: "Nonaktifkan"
           add: "Menambahkan"
+          body_tag:
+            text: "Konten"
         colors:
           undo: "batalkan perintah"
           revert: "dibalik"

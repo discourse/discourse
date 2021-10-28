@@ -3109,12 +3109,8 @@ ro:
             text: "Subsol"
           embedded_scss:
             text: "CSS încorporat"
-          head_tag:
-            text: "1"
-            title: "HTML care va fi inserat înainte de 1 tag"
           body_tag:
-            text: "1"
-            title: "HTML care va fi inserat înaintea de tag-ul </body>"
+            text: "Corp"
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"

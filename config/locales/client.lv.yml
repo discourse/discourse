@@ -3134,6 +3134,8 @@ lv:
           add: "Pievienot"
           scss:
             text: "CSS"
+          body_tag:
+            text: "Ķermenis"
         colors:
           undo: "atsaukt"
           revert: "atgriezt"

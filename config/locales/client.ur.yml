@@ -3556,12 +3556,8 @@ ur:
           embedded_scss:
             text: "اَیمبَیڈ کیا ہوا CSS"
             title: "تبصرے کے اَیمبَیڈ شدہ ورژن کے ساتھ فراہم کیے جانے والا اپنی مرضی کا CSS درج کریں"
-          head_tag:
-            text: "</head>"
-            title: "HTML جو </head> ٹیگ سے پہلے داخل کی جائے گی"
           body_tag:
-            text: "</‎body>"
-            title: "HTML جو </body> ٹیگ سے پہلے داخل کی جائے گی"
+            text: "متن"
           yaml:
             text: "YAML"
             title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"

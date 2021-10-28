@@ -3947,12 +3947,8 @@ ja:
               %{example}
 
               プラグインやコアとの競合を避けるには、プロパティ名に接頭辞を付けることを強くお勧めします。
-          head_tag:
-            text: "</head>"
-            title: "</head> タグの前に挿入される HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> タグの前に挿入される HTML"
+            text: "本文"
           yaml:
             text: "YAML"
             title: "YAML 形式でテーマ設定を定義してください"

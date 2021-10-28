@@ -4115,12 +4115,8 @@ pt_BR:
               %{example}
 
               É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plug-ins e/ou núcleo.
-          head_tag:
-            text: "</head>"
-            title: "O HTML que será inserido antes da</head> etiqueta"
           body_tag:
-            text: "</body>"
-            title: "O HTML que será inserido antes da</body> etiqueta"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"

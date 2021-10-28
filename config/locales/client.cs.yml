@@ -3215,12 +3215,8 @@ cs:
           embedded_scss:
             text: "Vloženo CSS"
             title: "Zadat vlastní CSS k doručení s vloženou verzí kometářů"
-          head_tag:
-            text: "</head>"
-            title: "HTML které bude vloženo před</head> štítkem"
           body_tag:
-            text: "</body>"
-            title: "HTML, který bude vložený před </body>štítek"
+            text: "Tělo"
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
