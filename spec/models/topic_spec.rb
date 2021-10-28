@@ -711,12 +711,23 @@ describe Topic do
         end
 
         context "from a muted user" do
-          before { MutedUser.create!(user: another_user, muted_user: user) }
+          before { Fabricate(:muted_user, user: another_user, muted_user: user) }
 
-          it 'fails with an error message' do
+          it 'fails with an error' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
-              .with_message(I18n.t("topic_invite.muted_invitee"))
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
+        end
+
+        context "from a ignored user" do
+          before { Fabricate(:ignored_user, user: another_user, ignored_user: user) }
+
+          it 'fails with an error' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank

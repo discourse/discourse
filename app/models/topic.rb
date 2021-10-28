@@ -1022,13 +1022,7 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      if MutedUser
-          .where(user: target_user, muted_user: invited_by)
-          .joins(:muted_user)
-          .where('NOT admin AND NOT moderator')
-          .exists?
-        raise NotAllowed.new(I18n.t("topic_invite.muted_invitee"))
-      end
+      ensure_can_invite!(target_user, invited_by)
 
       if TopicUser
           .where(topic: self,
@@ -1063,6 +1057,22 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
+    end
+  end
+
+  def ensure_can_invite!(target_user, invited_by)
+    if MutedUser
+        .where(user: target_user, muted_user: invited_by)
+        .joins(:muted_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
+    elsif IgnoredUser
+        .where(user: target_user, ignored_user: invited_by)
+        .joins(:ignored_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
     end
   end
 
@@ -1733,6 +1743,9 @@ class Topic < ActiveRecord::Base
   end
 
   def create_invite_notification!(target_user, notification_type, username)
+    invited_by = User.find_by_username(username)
+    ensure_can_invite!(target_user, invited_by)
+
     target_user.notifications.create!(
       notification_type: notification_type,
       topic_id: self.id,
