@@ -1647,8 +1647,11 @@ hu:
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
+      description_time_MF: "{replyCount, plural, one {is <b>#</b> válasz} other {are <b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
       enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
+      short_label: "Összefoglalás"
+      short_title: "A téma összefoglalásának megjelenítése: a legérdekesebb bejegyzéseket a közösség határozta meg"
     deleted_filter:
       enabled_description: "Ez a téma törölt bejegyzéseket is tartalmaz, melyek el lettek rejtve."
       disabled_description: "A téma törölt bejegyzései is megjelennek."
@@ -1676,6 +1679,7 @@ hu:
       disclaimer: "Csak akkor regisztráljon, ha elfogadja az <a href='%{privacy_link}' target='blank'>adatvédelmi szabályzatot</a> és a <a href='%{tos_link}' target='blank'>szolgáltatási feltételeket</a>."
       title: "Regisztráció"
       failed: "Valami hiba történt, talán ez az e-mail cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
+      associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
@@ -1705,13 +1709,23 @@ hu:
       logging_in_as: Bejelentkezés mint %{email}
       confirm_button: Bejelentkezés befejezése
     login:
+      header_title: "Üdvözlünk újra"
       subheader_title: "Jelentkezzen be a fiókjába"
+      title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
       second_factor_title: "Kétfaktoros hitelesítés"
       second_factor_description: "Írja be a hitelesítési kódot az alkalmazásából:"
+      second_factor_backup: "Bejelentkezés biztonsági kóddal"
+      second_factor_backup_title: "Kétfaktoros biztonsági kód"
       second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
+      second_factor: "Bejelentkezés hitelesítő alkalmazással"
+      security_key_description: "Ha előkészítette a fizikai biztonsági kulcsot, nyomja meg a lenti „Hitelesítés biztonsági kulccsal” gombot."
+      security_key_alternative: "Próbálkozás más módon"
+      security_key_authenticate: "Hitelesítés biztonsági kulccsal"
+      security_key_not_allowed_error: "A biztonsági hardverkulcsos hitelesítési folyamata során időtúllépés történt, vagy megszakították."
       security_key_no_matching_credential_error: "A megadott biztonsági kulcsban nem található megfelelő hitelesítő adat."
+      security_key_support_missing_error: "Jelenlegi eszköze vagy böngészője nem támogatja a biztonsági kulcsok használatát. Használjon más módszert."
       email_placeholder: "E-mail/felhasználónév"
       caps_lock_warning: "A Caps Lock be van kapcsolva"
       error: "Ismeretlen hiba"
@@ -1746,17 +1760,26 @@ hu:
       twitter:
         name: "Twitter"
         title: "Twitterrel"
+        sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
         title: "Instagrammal"
+        sr_title: "Bejelentkezés az Instagrammal"
       facebook:
         name: "Facebook"
         title: "Facebookkal"
+        sr_title: "Bejelentkezés a Facebookkal"
       github:
         name: "GitHub"
         title: "GitHubbal"
+        sr_title: "Bejelentkezés a GitHubbal"
       discord:
         name: "Discord"
+        title: "Discorddal"
+        sr_title: "Bejelentkezés a Discorddal"
+      second_factor_toggle:
+        totp: "Helyette hitelesítő alkalmazás használata"
+        backup_code: "Helyette biztonsági kód használata"
     invites:
       accept_title: "Meghívás"
       emoji: "boríték emodzsi"
@@ -1788,18 +1811,28 @@ hu:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: Betöltés…
     category_row:
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
+      plus_subcategories_title:
+        one: "%{name} és egy alkategória"
+        other: "%{name} és %{count} alkategória"
+      plus_subcategories:
+        one: "+ %{count} alkategória"
+        other: "+ %{count} alkategória"
     select_kit:
       delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
       select_to_filter: "Válaszd ki a szűrni kívánt értéket"
       default_header_text: Kiválasztás…
       no_content: Nem található egyezés
+      results_count:
+        one: "%{count} találat"
+        other: "%{count} találat"
       filter_placeholder: Keresés…
       filter_placeholder_with_any: Keresés vagy létrehozás…
       create: "Létrehozás: „%{content}”"
@@ -1852,6 +1885,7 @@ hu:
       saved_local_draft_tip: "helyben mentett"
       similar_topics: "A témaköröd hasonlít a..."
       drafts_offline: "vázlatok offline"
+      edit_conflict: "szerkesztési ütközés"
       group_mentioned:
         one: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
         other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
@@ -3333,10 +3367,8 @@ hu:
             text: "Lábléc"
           embedded_scss:
             text: "Ágyazott CSS"
-          head_tag:
-            text: "</head>"
           body_tag:
-            text: "</body>"
+            text: "Törzs"
           yaml:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"

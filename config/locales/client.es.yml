@@ -4216,12 +4216,8 @@ es:
               %{example}
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
-          head_tag:
-            text: "</head>"
-            title: "HTML a insertar antes de la etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML a insertar antes de la etiqueta </body>"
+            text: "Cuerpo"
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"

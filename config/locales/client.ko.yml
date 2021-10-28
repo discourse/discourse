@@ -4026,12 +4026,8 @@ ko:
               %{example}
 
               플러그인 및/또는 코어와의 충돌을 피하기 위해 속성 이름 앞에 붙이는 것이 좋습니다.
-          head_tag:
-            text: "</head>"
-            title: "</head> 태그 전에 들어갈 HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> 태그 전에 들어갈 HTML"
+            text: "바디"
           yaml:
             text: "YAML"
             title: "YAML 형식으로 테마 설정 정의"

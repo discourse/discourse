@@ -1096,15 +1096,15 @@ he:
       notifications: "התראות"
       statistics: "סטטיסטיקות"
       desktop_notifications:
-        label: "התראות"
+        label: "התראות חיות"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
         perm_default: "הפעלת התראות"
         perm_denied_btn: "הרשאות נדחו"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
-        disable: "כבוי התראות"
-        enable: "אפשר התראות"
+        disable: "השבתת התראות"
+        enable: "הפעלת התראות"
         each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שבו אתה משתמש. כל ההודעות יושבתו במצב "אל תפריע", ללא קשר להגדרה זו.'
-        consent_prompt: "האם ברצונך לקבל התראות כשאנשים מגיבים לפוסטים שלך?"
+        consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "דחה"
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
@@ -1182,7 +1182,7 @@ he:
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
-      muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
+      muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר שנוגע לנושאים בקטגוריות האלו."
       regular_categories: "רגילות"
       regular_categories_instructions: "הקטגוריות האלו תופענה תחת רשימות הנושאים „אחרונים” ו־„מובילים”."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מושבתת."
@@ -4512,11 +4512,11 @@ he:
 
               מומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה.
           head_tag:
-            text: "</‎head>"
-            title: "HTML שיוכנס לפני התג </‎head>"
+            text: "Head"
+            title: "HTML שיתווסף לפני התגית ‎head"
           body_tag:
-            text: "</‎body>"
-            title: "HTML שיוכנס לפני התג </‎body>"
+            text: "Body"
+            title: "HTML שיתווסף לפני התגית body"
           yaml:
             text: "YAML"
             title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"

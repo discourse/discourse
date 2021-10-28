@@ -3231,12 +3231,8 @@ zh_TW:
           embedded_scss:
             text: "嵌入的 CSS"
             title: "輸入用於嵌入回應的自定義 CSS 樣式"
-          head_tag:
-            text: "</head>"
-            title: "會在</head>標籤前被插入的 HTML"
           body_tag:
-            text: "</body>"
-            title: "會在</body>標籤前被插入的 HTML"
+            text: "內容"
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"

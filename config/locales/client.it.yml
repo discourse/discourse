@@ -4172,11 +4172,11 @@ it:
 
               Si consiglia di assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
           head_tag:
-            text: "</head>"
-            title: "HTML che sarà inserito prima del tag </head> "
+            text: "Intestazione"
+            title: "L'HTML sarà inserito prima dell'etichetta di intestazione"
           body_tag:
-            text: "</body>"
-            title: "HTML che deve essere inserito prima del tag </body>"
+            text: "Corpo"
+            title: "HTML che sarà inserito prima dell'etichetta del corpo"
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"

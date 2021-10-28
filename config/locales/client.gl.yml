@@ -3970,12 +3970,8 @@ gl:
               }
 
               Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
-          head_tag:
-            text: "</head>"
-            title: "HTML que se inserirá antes da etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que se inserirá antes da etiqueta </body>"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"

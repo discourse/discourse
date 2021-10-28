@@ -4015,12 +4015,8 @@ zh_CN:
               %{example}
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
-          head_tag:
-            text: "</head>"
-            title: "将在 </head> 标记前插入的 HTML"
           body_tag:
-            text: "</body>"
-            title: "将在 </body> 标记前插入的 HTML"
+            text: "正文"
           yaml:
             text: "YAML"
             title: "使用 YAML 格式定义主题设置"

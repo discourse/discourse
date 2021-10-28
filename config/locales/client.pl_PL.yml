@@ -4538,12 +4538,8 @@ pl_PL:
               %{example}
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
-          head_tag:
-            text: "</head>"
-            title: "HTML, który zostanie umieszczony przed tagiem </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML, który zostanie umieszczony przed tagiem </body>"
+            text: "Body"
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
