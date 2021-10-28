@@ -716,7 +716,6 @@ describe Topic do
           it 'fails with an error message' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
-              .with_message(I18n.t("topic_invite.muted_invitee"))
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
