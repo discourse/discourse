@@ -7,6 +7,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
+import Site from "discourse/models/site";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
@@ -22,6 +23,14 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
+
+  if (
+    actionCode === "public_topic" &&
+    Site.currentProp("siteSettings").login_required
+  ) {
+    actionCode = "open_topic";
+  }
+
   return I18n.t(`action_codes.${actionCode}`, { who, when }).htmlSafe();
 }
 
