@@ -83,14 +83,7 @@ module BackupRestore
     end
 
     def ensure_cors!
-      rule = {
-        allowed_headers: ["*"],
-        allowed_methods: ["PUT"],
-        allowed_origins: [Discourse.base_url_no_prefix],
-        max_age_seconds: 3000
-      }
-
-      @s3_helper.ensure_cors!([rule])
+      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
     end
 
     def cleanup_allowed?

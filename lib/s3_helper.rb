@@ -140,12 +140,7 @@ class S3Helper
     end
 
     unless rule
-      rules = [{
-        allowed_headers: ["Authorization"],
-        allowed_methods: ["GET", "HEAD"],
-        allowed_origins: ["*"],
-        max_age_seconds: 3000
-      }] if rules.nil?
+      rules = [S3CorsRulesets::ASSETS] if rules.nil?
 
       s3_resource.client.put_bucket_cors(
         bucket: @s3_bucket_name,
