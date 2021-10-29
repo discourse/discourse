@@ -78,7 +78,7 @@ module DiscourseUpdates
     end
 
     def missing_versions_count=(arg)
-      Discourse.redis.set(missing_versions_count, arg)
+      Discourse.redis.set(missing_versions_count_key, arg)
     end
 
     def critical_updates_available?
@@ -86,7 +86,7 @@ module DiscourseUpdates
     end
 
     def critical_updates_available=(arg)
-      Discourse.redis.set(critical_updates_available, arg)
+      Discourse.redis.set(critical_updates_available_key, arg)
     end
 
     def updated_at
