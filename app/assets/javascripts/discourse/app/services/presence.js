@@ -228,13 +228,18 @@ export default class PresenceService extends Service {
     this._subscribedProxies = {};
     this._initialDataRequests = {};
 
-    this._beforeUnloadCallback = () => this._beaconLeaveAll();
-    window.addEventListener("beforeunload", this._beforeUnloadCallback);
+    if (!isTesting()) {
+      this._beforeUnloadCallback = () => this._beaconLeaveAll();
+      window.addEventListener("beforeunload", this._beaconLeaveAll);
+    }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    window.removeEventListener("beforeunload", this._beforeUnloadCallback);
+
+    if (!isTesting()) {
+      window.removeEventListener("beforeunload", this._beaconLeaveAll);
+    }
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -420,9 +425,6 @@ export default class PresenceService extends Service {
   }
 
   _beaconLeaveAll() {
-    if (isTesting()) {
-      return;
-    }
     this._dedupQueue();
     const channelsToLeave = this._queuedEvents
       .filter((e) => e.type === "leave")

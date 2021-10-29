@@ -58,6 +58,9 @@ export default Component.extend({
   @on("willDestroyElement")
   _destroyed() {
     this.replyChannel?.unsubscribe();
+    this.set("replyChannel", null);
+
     this.whisperChannel?.unsubscribe();
+    this.set("whisperChannel", null);
   },
 });
