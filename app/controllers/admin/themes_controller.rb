@@ -282,7 +282,7 @@ class Admin::ThemesController < Admin::AdminController
   private
 
   def ban_in_allowlist_mode!
-    raise Discourse::InvalidAccess if !GlobalSetting.allowed_theme_ids.nil?
+    raise Discourse::InvalidAccess if !Theme.allowed_remote_theme_ids.nil?
   end
 
   def ban_for_remote_theme!
