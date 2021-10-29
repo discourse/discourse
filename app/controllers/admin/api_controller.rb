@@ -5,18 +5,29 @@ class Admin::ApiController < Admin::AdminController
   # If we used "api_key", then our user provider would try to use the value for authentication
 
   def index
-    keys = ApiKey
-      .where(hidden: false)
+    offset = (params[:offset] || 0).to_i
+    limit = (params[:limit] || 50).to_i.clamp(1, 50)
+
+    keys = ApiKey.where(hidden: false)
+    count = keys.count
+
+    keys = keys
       .includes(:user, :api_key_scopes)
+      # Put active keys first
+      # Sort active keys by created_at, sort revoked keys by revoked_at
+      .order(<<~SQL)
+        CASE WHEN revoked_at IS NULL THEN 0 ELSE 1 END,
+        COALESCE(revoked_at, created_at) DESC
+      SQL
+      .offset(offset)
+      .limit(limit)
 
-    # Put active keys first
-    # Sort active keys by created_at, sort revoked keys by revoked_at
-    keys = keys.order(<<~SQL)
-      CASE WHEN revoked_at IS NULL THEN 0 ELSE 1 END,
-      COALESCE(revoked_at, created_at) DESC
-    SQL
-
-    render_serialized(keys.to_a, ApiKeySerializer, root: 'keys')
+    render_json_dump(
+      keys: serialize_data(keys, ApiKeySerializer),
+      total_count: count,
+      offset: offset,
+      limit: limit
+    )
   end
 
   def show
