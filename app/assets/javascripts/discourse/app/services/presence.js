@@ -230,7 +230,7 @@ export default class PresenceService extends Service {
 
     if (!isTesting()) {
       this._beforeUnloadCallback = () => this._beaconLeaveAll();
-      window.addEventListener("beforeunload", this._beaconLeaveAll);
+      window.addEventListener("beforeunload", this._beforeUnloadCallback);
     }
   }
 
@@ -238,7 +238,7 @@ export default class PresenceService extends Service {
     super.willDestroy(...arguments);
 
     if (!isTesting()) {
-      window.removeEventListener("beforeunload", this._beaconLeaveAll);
+      window.removeEventListener("beforeunload", this._beforeUnloadCallback);
     }
   }
 
