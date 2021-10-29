@@ -239,7 +239,7 @@ class FinalDestination
       @content_type = response.headers['Content-Type'] if response.headers.has_key?('Content-Type')
       @status = :resolved
       return @uri
-    when 400, 405, 406, 409, 500, 501
+    when 103, 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
 
       if response_status == 200
