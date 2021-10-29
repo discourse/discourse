@@ -1479,6 +1479,22 @@ HTML
       HTML
     end
 
+    it "does not replace hashtags and mentions when watched words are regular expressions" do
+      SiteSetting.watched_words_regular_expressions = true
+
+      Fabricate(:user, username: "test")
+      category = Fabricate(:category, slug: "test")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "es", replacement: "discourse")
+
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
+        <p>
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          tdiscourset
+        </p>
+      HTML
+    end
+
     it "supports overlapping words" do
       Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "meta", replacement: "https://meta.discourse.org")
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "iz", replacement: "is")
