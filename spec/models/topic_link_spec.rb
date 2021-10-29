@@ -472,6 +472,22 @@ describe TopicLink do
 
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
       end
+
+      it 'secures internal links correctly' do
+        other_topic = Fabricate(:topic)
+        other_user = Fabricate(:user)
+
+        url = "http://#{test_uri.host}/t/topic-slug/#{other_topic.id}"
+        post = Fabricate(:post, raw: "hello test topic #{url}")
+        TopicLink.extract_from(post)
+        TopicLinkClick.create!(topic_link: post.topic.topic_links.first, ip_address: '192.168.1.1')
+
+        expect(TopicLink.counts_for(Guardian.new(other_user), post.topic, [post]).length).to eq(1)
+
+        TopicUser.change(other_user.id, other_topic.id, notification_level: TopicUser.notification_levels[:muted])
+
+        expect(TopicLink.counts_for(Guardian.new(other_user), post.topic, [post]).length).to eq(0)
+      end
     end
 
     describe ".duplicate_lookup" do
