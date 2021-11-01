@@ -126,8 +126,9 @@ class ApplicationController < ActionController::Base
     send_ember_cli_bootstrap
   end
 
-  rescue_from WebMock::NetConnectNotAllowedError do |err|
-    if Rails.env.test?
+  if Rails.env.test?
+    require 'webmock/rspec'
+    rescue_from WebMock::NetConnectNotAllowedError do |err|
       Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
     end
   end
