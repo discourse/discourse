@@ -193,5 +193,30 @@ describe "S3Helper" do
       )
       s3_helper.ensure_cors!([new_rule])
     end
+
+    it "returns the cached cors data from the S3 bucket, and does not get it if the rule change is a noop" do
+      Discourse.redis.setex("test-bucket_bucket_cors", 1.hour, [S3CorsRulesets::ASSETS].to_json)
+      s3_helper.s3_client.expects(:get_bucket_cors).never
+      s3_helper.ensure_cors!([
+        S3CorsRulesets::ASSETS
+      ])
+    end
+
+    it "returns the cached cors data from the S3 bucket, and breaks the cache and re-fetches if the rule change is not a noop" do
+      Discourse.redis.setex("test-bucket_bucket_cors", 1.hour, [S3CorsRulesets::ASSETS].to_json)
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.ensure_cors!([
+        S3CorsRulesets::DIRECT_UPLOAD
+      ])
+      expect(JSON.parse(Discourse.redis.get("test-bucket_bucket_cors"), symbolize_names: true)).to eq(
+        [S3CorsRulesets::ASSETS, S3CorsRulesets::DIRECT_UPLOAD]
+      )
+    end
+
+    after do
+      Discourse.redis.flushdb
+    end
   end
 end

@@ -23,6 +23,12 @@ class S3Helper
   # * presigned put_object URLs for direct S3 uploads
   UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 10.minutes.to_i
 
+  ##
+  # It takes ~1s to fetch bucket CORS rules from S3, so instead of having
+  # to take that hit every time in ensure_cors! we cache the rules for a
+  # day, and break the cache when a new rule is added.
+  BUCKET_CORS_RULE_CACHE_SECONDS ||= 1.day.to_i
+
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
     @s3_options = default_s3_options.merge(options)
@@ -38,6 +44,7 @@ class S3Helper
       else
         tombstone_prefix
       end
+    @cors_rule_cache_key = "#{@s3_bucket_name}_bucket_cors"
   end
 
   def self.get_bucket_and_folder_path(s3_bucket_name)
@@ -142,24 +149,38 @@ class S3Helper
     rules = [S3CorsRulesets::ASSETS] if rules.nil?
     rules = [rules] if !rules.is_a?(Array)
     existing_rules = []
+    cached_rules = Discourse.redis.get(@cors_rule_cache_key)
 
-    begin
-      existing_rules = s3_resource.client.get_bucket_cors(
-        bucket: @s3_bucket_name
-      ).cors_rules&.map(&:to_h) || []
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
+    if cached_rules.blank?
+      existing_rules = fetch_bucket_cors_rules
+      retrieved_rules_from_cache = false
+    else
+      existing_rules = JSON.parse(cached_rules, symbolize_names: true)
+      retrieved_rules_from_cache = true
     end
 
     new_rules = rules - existing_rules
+    if new_rules.empty?
+      cache_bucket_cors_rules(existing_rules) if !retrieved_rules_from_cache
+      return
+    end
+
+    # we want to make sure we aren't stepping on any toes if there
+    # are new rules but we had retrieved the existing ones from cache
+    if retrieved_rules_from_cache
+      existing_rules = fetch_bucket_cors_rules
+    end
+    new_rules = rules - existing_rules
     return if new_rules.empty?
 
+    final_rules = existing_rules + new_rules
     s3_resource.client.put_bucket_cors(
       bucket: @s3_bucket_name,
       cors_configuration: {
-        cors_rules: existing_rules + new_rules
+        cors_rules: final_rules
       }
     )
+    cache_bucket_cors_rules(final_rules)
   end
 
   def update_lifecycle(id, days, prefix: nil, tag: nil)
@@ -274,6 +295,22 @@ class S3Helper
   end
 
   private
+
+  def fetch_bucket_cors_rules
+    begin
+      s3_resource.client.get_bucket_cors(
+        bucket: @s3_bucket_name
+      ).cors_rules&.map(&:to_h) || []
+    rescue Aws::S3::Errors::NoSuchCORSConfiguration
+      # no rule
+      []
+    end
+  end
+
+  def cache_bucket_cors_rules(rules)
+    Rails.logger.debug("Caching bucket cors rules for #{@s3_bucket_name}. Rules: #{rules}")
+    Discourse.redis.setex(@cors_rule_cache_key, BUCKET_CORS_RULE_CACHE_SECONDS, rules.to_json)
+  end
 
   def default_s3_options
     if SiteSetting.enable_s3_uploads?
