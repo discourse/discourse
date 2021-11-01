@@ -267,6 +267,12 @@ shared_examples "remote backup store" do
         expect(url).to match(upload_url_regex("default", filename, multisite: false))
       end
 
+      it "ensures the CORS rules for backup uploads exist" do
+        store.instance_variable_get(:@s3_helper).expects(:ensure_cors!).with([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+        filename = "foo.tar.gz"
+        url = store.generate_upload_url(filename)
+      end
+
       it "raises an exception when a file with same filename exists" do
         expect { store.generate_upload_url(backup1.filename) }
           .to raise_exception(BackupRestore::BackupStore::BackupFileExists)

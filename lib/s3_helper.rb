@@ -124,31 +124,42 @@ class S3Helper
     [destination, response.copy_object_result.etag.gsub('"', '')]
   end
 
-  # make sure we have a cors config for assets
-  # otherwise we will have no fonts
+  # Several places in the application need to ensure that certain CORS
+  # rules exist inside an S3 bucket so requests to the bucket can be made
+  # directly from the browser.
+  #
+  # 1. The S3CorsRulesets::ASSETS rule is added by default,
+  #    otherwise we will have no fonts. This is called by the
+  #    s3:upload_assets rake task.
+  # 2. When uploading backups to S3, the S3CorsRulesets::BACKUP_DIRECT_UPLOAD
+  #    rule is added to allow us to upload to a presigned URL in the backup
+  #    bucket.
+  # 3. When using direct and multipart S3 uploads for the composer and elsewhere
+  #    the S3CorsRulesets::DIRECT_UPLOAD rules are added to allow us to upload
+  #    to a presigned URL in the main upload bucket.
   def ensure_cors!(rules = nil)
     return unless SiteSetting.s3_install_cors_rule
-
-    rule = nil
+    rules = [S3CorsRulesets::ASSETS] if rules.nil?
+    rules = [rules] if !rules.is_a?(Array)
+    existing_rules = []
 
     begin
-      rule = s3_resource.client.get_bucket_cors(
+      existing_rules = s3_resource.client.get_bucket_cors(
         bucket: @s3_bucket_name
-      ).cors_rules&.first
+      ).cors_rules&.map(&:to_h) || []
     rescue Aws::S3::Errors::NoSuchCORSConfiguration
       # no rule
     end
 
-    unless rule
-      rules = [S3CorsRulesets::ASSETS] if rules.nil?
+    new_rules = rules - existing_rules
+    return if new_rules.empty?
 
-      s3_resource.client.put_bucket_cors(
-        bucket: @s3_bucket_name,
-        cors_configuration: {
-          cors_rules: rules
-        }
-      )
-    end
+    s3_resource.client.put_bucket_cors(
+      bucket: @s3_bucket_name,
+      cors_configuration: {
+        cors_rules: existing_rules + new_rules
+      }
+    )
   end
 
   def update_lifecycle(id, days, prefix: nil, tag: nil)

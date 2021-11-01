@@ -224,22 +224,15 @@ class UploadsController < ApplicationController
       )
     end
 
-    metadata = parse_allowed_metadata(params[:metadata])
-
-    url = Discourse.store.signed_url_for_temporary_upload(
-      file_name, metadata: metadata
-    )
-    key = Discourse.store.path_from_url(url)
-
-    upload_stub = ExternalUploadStub.create!(
-      key: key,
-      created_by: current_user,
-      original_filename: file_name,
+    external_upload_data = ExternalUploadManager.create_direct_upload(
+      current_user: current_user,
+      file_name: file_name,
+      file_size: file_size,
       upload_type: type,
-      filesize: file_size
+      metadata: parse_allowed_metadata(params[:metadata])
     )
 
-    render json: { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+    render json: external_upload_data
   end
 
   def complete_external_upload
@@ -307,7 +300,6 @@ class UploadsController < ApplicationController
     file_name = params.require(:file_name)
     file_size = params.require(:file_size).to_i
     upload_type = params.require(:upload_type)
-    content_type = MiniMime.lookup_by_filename(file_name)&.content_type
 
     if file_size_too_big?(file_name, file_size)
       return render_json_error(
@@ -316,11 +308,13 @@ class UploadsController < ApplicationController
       )
     end
 
-    metadata = parse_allowed_metadata(params[:metadata])
-
     begin
-      multipart_upload = Discourse.store.create_multipart(
-        file_name, content_type, metadata: metadata
+      external_upload_data = ExternalUploadManager.create_direct_multipart_upload(
+        current_user: current_user,
+        file_name: file_name,
+        file_size: file_size,
+        upload_type: upload_type,
+        metadata: parse_allowed_metadata(params[:metadata])
       )
     rescue Aws::S3::Errors::ServiceError => err
       return render_json_error(
@@ -329,21 +323,7 @@ class UploadsController < ApplicationController
       )
     end
 
-    upload_stub = ExternalUploadStub.create!(
-      key: multipart_upload[:key],
-      created_by: current_user,
-      original_filename: file_name,
-      upload_type: upload_type,
-      external_upload_identifier: multipart_upload[:upload_id],
-      multipart: true,
-      filesize: file_size
-    )
-
-    render json: {
-      external_upload_identifier: upload_stub.external_upload_identifier,
-      key: upload_stub.key,
-      unique_identifier: upload_stub.unique_identifier
-    }
+    render json: external_upload_data
   end
 
   def batch_presign_multipart_parts

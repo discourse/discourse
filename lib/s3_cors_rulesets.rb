@@ -14,4 +14,12 @@ class S3CorsRulesets
     allowed_origins: [Discourse.base_url_no_prefix],
     max_age_seconds: 3000
   }.freeze
+
+  DIRECT_UPLOAD = {
+    allowed_headers: ["Authorization", "Content-Disposition", "Content-Type"],
+    expose_headers: ["ETag"],
+    allowed_methods: ["GET", "HEAD", "PUT"],
+    allowed_origins: ["*"],
+    max_age_seconds: 3000
+  }
 end

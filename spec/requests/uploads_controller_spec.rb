@@ -711,6 +711,7 @@ describe UploadsController do
         sign_in(user)
         SiteSetting.enable_direct_s3_uploads = true
         setup_s3
+        stub_bucket_cors_requests
       end
 
       it "errors if the correct params are not provided" do
@@ -792,6 +793,7 @@ describe UploadsController do
         sign_in(user)
         SiteSetting.enable_direct_s3_uploads = true
         setup_s3
+        stub_bucket_cors_requests
         FileStore::S3Store.any_instance.stubs(:temporary_upload_path).returns(
           "uploads/default/test_0/temp/28fccf8259bbe75b873a2bd2564b778c/test.png"
         )
@@ -1074,6 +1076,22 @@ describe UploadsController do
         expect(response.status).to eq(404)
       end
     end
+  end
+
+  def stub_bucket_cors_requests
+    cors_response = <<~BODY
+          <?xml version="1.0" encoding="UTF-8"?>
+          <CORSConfiguration>
+          </CORSConfiguration>
+    BODY
+    stub_request(
+      :get,
+      "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/?cors"
+    ).to_return({ status: 200, body: "" })
+    stub_request(
+      :put,
+      "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/?cors"
+    ).to_return({ status: 200 })
   end
 
   describe "#complete_multipart" do
