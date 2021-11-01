@@ -116,7 +116,7 @@
 
     span.badge-category {
       color: var(--primary-high);
-      padding: 1px 3px;
+      padding-left: 4px;
       overflow: hidden;
       text-overflow: ellipsis;
 
@@ -127,9 +127,9 @@
 
     .badge-category-parent-bg,
     .badge-category-bg {
-      // Subcategories
       display: inline-block;
-      padding: 0 1px;
+      padding-left: 1px;
+      padding-right: 1px;
 
       &:before {
         content: "\a0";
