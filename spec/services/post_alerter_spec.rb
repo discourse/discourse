@@ -721,10 +721,43 @@ describe PostAlerter do
   describe "push_notification" do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
     let(:topic) { mention_post.topic }
+    before do
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+    end
+
+    describe "DiscoursePluginRegistry#push_notification_filters" do
+      it "sends push notifications when all filters pass" do
+        Plugin::Instance.new.register_push_notification_filter do |user, payload|
+          true
+        end
+        2.times do |i|
+          UserApiKey.create!(user_id: evil_trout.id,
+                             client_id: "xxx#{i}",
+                             application_name: "iPhone#{i}",
+                             scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                             push_url: "https://site2.com/push")
+        end
+
+        expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+      end
+
+      it "does not send push notifications when a filters returns false" do
+        Plugin::Instance.new.register_push_notification_filter do |user, payload|
+          false
+        end
+        2.times do |i|
+          UserApiKey.create!(user_id: evil_trout.id,
+                             client_id: "xxx#{i}",
+                             application_name: "iPhone#{i}",
+                             scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                             push_url: "https://site2.com/push")
+        end
+
+        expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+      end
+    end
 
     it "pushes nothing to suspended users" do
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
       evil_trout.update_columns(suspended_till: 1.year.from_now)
 
       2.times do |i|
@@ -739,7 +772,6 @@ describe PostAlerter do
     end
 
     it "pushes nothing when the user is in 'do not disturb'" do
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
@@ -755,8 +787,6 @@ describe PostAlerter do
 
     it "correctly pushes notifications if configured correctly" do
       Jobs.run_immediately!
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",

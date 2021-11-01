@@ -37,6 +37,10 @@ class PostAlerter
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
 
+    return unless DiscoursePluginRegistry.push_notification_filters.all? do |filter|
+      filter.call(user, payload)
+    end
+
     if user.push_subscriptions.exists?
       Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
     end
