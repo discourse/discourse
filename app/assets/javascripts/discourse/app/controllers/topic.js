@@ -755,11 +755,12 @@ export default Controller.extend(bufferedProperty("model"), {
           (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
         );
         return this._modifyPostBookmark(
-          bookmarkForPost || {
-            post_id: post.id,
-            topic_id: post.topic_id,
-            for_topic: false,
-          },
+          bookmarkForPost ||
+            Bookmark.create({
+              post_id: post.id,
+              topic_id: post.topic_id,
+              for_topic: false,
+            }),
           post
         );
       } else {
@@ -1228,7 +1229,6 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyTopicBookmark(bookmark) {
-    bookmark = Bookmark.create(bookmark);
     return openBookmarkModal(bookmark, {
       onAfterSave: (savedData) => {
         this._syncBookmarks(savedData);
@@ -1251,7 +1251,6 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyPostBookmark(bookmark, post) {
-    bookmark = Bookmark.create(bookmark);
     return openBookmarkModal(bookmark, {
       onCloseWithoutSaving: () => {
         post.appEvents.trigger("post-stream:refresh", {
@@ -1279,7 +1278,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     const bookmark = this.model.bookmarks.findBy("id", data.id);
     if (!bookmark) {
-      this.model.bookmarks.pushObject(data);
+      this.model.bookmarks.pushObject(Bookmark.create(data));
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;
@@ -1309,11 +1308,13 @@ export default Controller.extend(bufferedProperty("model"), {
 
     if (this.model.bookmarkCount === 0) {
       const firstPost = await this.model.firstPost();
-      return this._modifyTopicBookmark({
-        post_id: firstPost.id,
-        topic_id: this.model.id,
-        for_topic: true,
-      });
+      return this._modifyTopicBookmark(
+        Bookmark.create({
+          post_id: firstPost.id,
+          topic_id: this.model.id,
+          for_topic: true,
+        })
+      );
     }
   },
 
