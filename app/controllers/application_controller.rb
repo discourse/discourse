@@ -126,6 +126,12 @@ class ApplicationController < ActionController::Base
     send_ember_cli_bootstrap
   end
 
+  rescue_from WebMock::NetConnectNotAllowedError do |err|
+    if Rails.env.test?
+      Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
+    end
+  end
+
   rescue_from RenderEmpty do
     catch_ember_cli_hijack do
       with_resolved_locale { render 'default/empty' }
