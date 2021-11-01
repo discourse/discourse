@@ -723,19 +723,19 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
     before do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+      2.times do |i|
+        UserApiKey.create!(user_id: evil_trout.id,
+                           client_id: "xxx#{i}",
+                           application_name: "iPhone#{i}",
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                           push_url: "https://site2.com/push")
+      end
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
       it "sends push notifications when all filters pass" do
         Plugin::Instance.new.register_push_notification_filter do |user, payload|
           true
-        end
-        2.times do |i|
-          UserApiKey.create!(user_id: evil_trout.id,
-                             client_id: "xxx#{i}",
-                             application_name: "iPhone#{i}",
-                             scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                             push_url: "https://site2.com/push")
         end
 
         expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
@@ -745,41 +745,16 @@ describe PostAlerter do
         Plugin::Instance.new.register_push_notification_filter do |user, payload|
           false
         end
-        2.times do |i|
-          UserApiKey.create!(user_id: evil_trout.id,
-                             client_id: "xxx#{i}",
-                             application_name: "iPhone#{i}",
-                             scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                             push_url: "https://site2.com/push")
-        end
-
         expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
       end
     end
 
     it "pushes nothing to suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
-
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                           push_url: "https://site2.com/push")
-      end
-
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
 
     it "pushes nothing when the user is in 'do not disturb'" do
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                           push_url: "https://site2.com/push")
-      end
-
       Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
@@ -787,14 +762,6 @@ describe PostAlerter do
 
     it "correctly pushes notifications if configured correctly" do
       Jobs.run_immediately!
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                           push_url: "https://site2.com/push")
-      end
-
       body = nil
       headers = nil
 
