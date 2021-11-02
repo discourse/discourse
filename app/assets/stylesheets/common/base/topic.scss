@@ -54,8 +54,6 @@ $topic-progress-height: 42px;
     &:not(.render-timeline) {
       // span all columns of grid layout so RTL can go as far left as possible
       grid-column: 1/-1;
-      // save the space to avoid jumping when child gets fixed-positioned
-      min-height: $topic-progress-height;
     }
     &.topic-progress-expanded {
       z-index: z("fullscreen");

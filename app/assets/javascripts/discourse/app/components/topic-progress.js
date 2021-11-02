@@ -131,12 +131,15 @@ export default Component.extend({
   },
 
   _setupObserver() {
-    const composerH =
-      document.querySelector("#reply-control")?.clientHeight || 0;
+    // minimum 50px here ensures element is not docked when
+    // scrolling down quickly, it causes post stream refresh loop
+    // on Android
+    const bottomIntersectionMargin =
+      document.querySelector("#reply-control")?.clientHeight || 50;
 
     return new IntersectionObserver(this._intersectionHandler, {
-      threshold: 0.1,
-      rootMargin: `0px 0px -${composerH}px 0px`,
+      threshold: 1,
+      rootMargin: `0px 0px -${bottomIntersectionMargin}px 0px`,
     });
   },
 
