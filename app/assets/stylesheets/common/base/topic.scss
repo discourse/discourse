@@ -42,26 +42,31 @@ $topic-progress-height: 42px;
   }
 
   // timeline
-  .topic-navigation {
-    &.render-timeline {
+  @media screen and (min-width: 925px) {
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
+    .topic-navigation {
       grid-area: timeline;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");
-    }
-    &:not(.render-timeline) {
-      // span all columns of grid layout so RTL can go as far left as possible
-      grid-column: 1/-1;
-    }
-    &.topic-progress-expanded {
-      z-index: z("fullscreen");
+
+      &.topic-progress-expanded {
+        z-index: z("fullscreen");
+      }
     }
   }
-
   // progress bar
   @media screen and (max-width: 924px) {
+    grid-template-areas: "posts";
+    grid-template-columns: auto;
+    .topic-navigation {
+      grid-area: posts;
+      grid-row: 2;
+      width: auto;
+    }
+
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
     }

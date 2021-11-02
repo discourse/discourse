@@ -613,8 +613,7 @@ blockquote {
   box-sizing: border-box;
 }
 
-.topic-area > .loading-container,
-.topic-navigation:not(.render-timeline) {
+.topic-area > .loading-container {
   // loader needs to be same width as posts
   width: calc(
     #{$topic-avatar-width} + #{$topic-body-width} +
