@@ -249,7 +249,6 @@ fi:
   topic_invite:
     failed_to_invite: "Käyttäjää ei voi kutsua ketjuun, jollei hän ole jonkun näistä ryhmistä jäsen: %{group_names}."
     user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
-    muted_invitee: "Valitettavasti tämä käyttäjä on vaimentanut sinut."
     muted_topic: "Valitettavasti käyttäjä on vaimentanut tämän ketjun."
     receiver_does_not_allow_pm: "Tämä käyttäjä ei salli sinun lähettää hänelle yksityisviestejä."
     sender_does_not_allow_pm: "Et salli tämän käyttäjän lähettää sinulle yksityisviestejä."

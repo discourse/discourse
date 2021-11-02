@@ -249,7 +249,6 @@ pt_BR:
   topic_invite:
     failed_to_invite: "O(a) usuário(a) não pode ser convidado(a) para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Desculpe, este(a) usuário(a) já foi convidado(a). Você pode convidar um(a) usuário(a) para um tópico apenas uma vez."
-    muted_invitee: "Desculpe, você foi silenciado(a) por este(a) usuário(a)."
     muted_topic: "Desculpe, este(a) usuário(a) silenciou este tópico."
     receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você envie mensagens privadas."
     sender_does_not_allow_pm: "Desculpe, você não permite que o(a) usuário(a) envie mensagens privadas."
