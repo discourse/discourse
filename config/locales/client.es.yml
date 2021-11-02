@@ -2186,7 +2186,7 @@ es:
           label: Publicado por
           aria_label: Filtrar por autor
         in_category:
-          label: Categorizado
+          label: Categoría
         in_group:
           label: En el grupo
         with_badge:
@@ -3619,6 +3619,8 @@ es:
       no_read_topics_title: "Todavía no has leído ningún tema"
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
+    fullscreen_table:
+      expand_btn: "Expandir tabla"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -4216,6 +4218,8 @@ es:
               %{example}
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
+          head_tag:
+            text: "Cabecera"
           body_tag:
             text: "Cuerpo"
           yaml:

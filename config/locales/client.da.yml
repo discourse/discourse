@@ -4576,7 +4576,7 @@ da:
             title: "Fremskridt med sletning af indlæg"
             description: "Sletter indlæg ..."
           confirmation:
-            cancel: "Afbryd"
+            cancel: "Annuller"
         merge:
           button: "Flet"
           prompt:
@@ -4587,7 +4587,7 @@ da:
               <p>Alle emner, indlæg, beskeder og andet indhold oprettet af <b>@%{username}</b> overføres.</p>
             target_username_placeholder: "Brugernavn på ny ejer"
             transfer_and_delete: "Overfør & Slet @%{username}"
-            cancel: "Afbryd"
+            cancel: "Annuller"
           progress:
             title: "Flet fremgang"
           confirmation:
@@ -4600,7 +4600,7 @@ da:
               <p>For at fortsætte skriv: <code>%{text}</code></p>
             text: "overfør @%{username} til @%{targetUsername}"
             transfer_and_delete: "Overfør & Slet @%{username}"
-            cancel: "Afbryd"
+            cancel: "Annuller"
         merging_user: "Fletter bruger..."
         merge_failed: "Der opstod en fejl under sammenfletning af brugere."
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
@@ -4706,7 +4706,7 @@ da:
         save: "Gem"
         edit: "Ret"
         delete: "Slet"
-        cancel: "Afbryd"
+        cancel: "Annuller"
         delete_confirm: "Er du sikker på at du vil slette det brugerfelt?"
         options: "Indstillinger"
         required:

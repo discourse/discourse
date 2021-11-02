@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 id:
+  site_settings:
+    discourse_local_dates_default_timezones: "Daftar zona waktu default, harus berupa <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> yang valid"
+    discourse_local_dates_email_format: "Format yang digunakan untuk menampilkan tanggal dalam email."

@@ -4210,8 +4210,12 @@ tr_TR:
               %{example}
 
               Eklentiler ve/veya ana kod ile çakışmaları önlemek için özellik adlarının önüne önek eklenmesi şiddetle tavsiye edilir.
+          head_tag:
+            text: "Head"
+            title: "Head etiketinden önce eklenecek HTML"
           body_tag:
             text: "İçerik"
+            title: "Body etiketinden önce eklenecek HTML"
           yaml:
             text: "YAML"
             title: "Tema ayarlarını YAML formatında tanımla"

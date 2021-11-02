@@ -241,7 +241,6 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
-    muted_invitee: "抱歉，该用户已将您设为免打扰。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
     sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"

@@ -1086,6 +1086,7 @@ ko:
         failed_to_move: "선택한 메시지를 이동하지 못했습니다. (네트워크가 다운되었을 수 있음)"
         tags: "태그"
         warnings: "공식 경고"
+        read_more_in_group: "더 읽을거리가 필요하신가요? %{groupLink}에서 다른 메시지를 찾아보십시오."
       preferences_nav:
         account: "계정"
         security: "보안"
@@ -1242,6 +1243,7 @@ ko:
         not_connected: "(연결되지 않음)"
         confirm_modal_title: "%{provider} 계정 연결"
         confirm_description:
+          disconnect: "기존 %{provider} 계정 '%{account_description}' 연결이 해제됩니다."
           account_specific: "사용자님의 %{provider} 계정 '%{account_description}'이 인증에 사용됩니다."
           generic: "%{provider} 계정이 인증에 사용됩니다."
       name:
@@ -1583,6 +1585,7 @@ ko:
       enable: "이 글 요약"
       disable: "모든 글 표시"
       short_label: "요약하기"
+      short_title: "이 글의 요약: 커뮤니티의 인기 게시물"
     deleted_filter:
       enabled_description: "이 글에는 숨겨진 삭제 된 게시물이 있습니다."
       disabled_description: "글에 삭제 된 게시물이 표시됩니다."
@@ -1853,6 +1856,7 @@ ko:
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 만들기"
       edit_shared_draft: "공유 초안 편집"
+      title: "또는 %{modifier}Enter 키를 누릅니다."
       users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요."
@@ -2060,6 +2064,7 @@ ko:
       categories: "카테고리"
       tags: "태그"
       in_this_topic: "이 글에서"
+      in_this_topic_tooltip: "모든 글 검색으로 전환"
       in_topics_posts: "모든 글과 댓글에서"
       enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
@@ -3429,12 +3434,15 @@ ko:
       no_replies_title: "아직 어떤 글에도 댓글을 달지 않았습니다."
       no_replies_others: "답글이 없습니다."
       no_drafts_title: "초안을 시작하지 않았습니다."
+      no_drafts_body: "아직 글을 작성할 준비가 되지 않았습니까? 글, 댓글 또는 개인 메시지 작성을 시작할 때마다 새 초안을 자동으로 저장하고 여기에 나열합니다. 취소 버튼을 클릭해 삭제하거나 나중에 계속하려면 초안을 저장하세요."
       no_likes_title: "아직 어떤 글에도 좋아요를 클릭하지 않으셨습니다."
       no_likes_body: "참여와 기여를 시작하는 가장 좋은 방법은 다른 사용자의 글을 읽고 %{heartIcon} 을 클릭하는 것입니다!"
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
       no_topics_title: "아직 작성한 글이 없습니다."
       no_read_topics_title: "아직 읽은 글이 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다."
+    fullscreen_table:
+      expand_btn: "테이블 확장"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -4026,8 +4034,11 @@ ko:
               %{example}
 
               플러그인 및/또는 코어와의 충돌을 피하기 위해 속성 이름 앞에 붙이는 것이 좋습니다.
+          head_tag:
+            title: "헤드 태그 앞에 삽입될 HTML"
           body_tag:
             text: "바디"
+            title: "본문 태그 앞에 삽입될 HTML"
           yaml:
             text: "YAML"
             title: "YAML 형식으로 테마 설정 정의"
