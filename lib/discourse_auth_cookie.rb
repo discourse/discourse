@@ -1,6 +1,30 @@
 # frozen_string_literal: true
 
 class DiscourseAuthCookie
+  class Encryptor
+    def encrypt_and_sign(plain_cookie)
+      encryptor.encrypt_and_sign(plain_cookie)
+    end
+
+    def decrypt_and_verify(cipher_cookie)
+      encryptor.decrypt_and_verify(cipher_cookie)
+    end
+
+    private
+
+    def encryptor
+      @encryptor ||= begin
+        key = Rails.application.key_generator.generate_key("discourse-auth-cookie", 32)
+        ActiveSupport::MessageEncryptor.new(
+          key,
+          key,
+          cipher: "aes-256-cbc",
+          digest: "SHA256"
+        )
+      end
+    end
+  end
+
   class InvalidCookie < StandardError; end
 
   TOKEN_SIZE ||= 32
@@ -25,8 +49,9 @@ class DiscourseAuthCookie
     # backward compatibility so we don't wipe out existing sessions
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
-    data, sig = raw_cookie.split("|", 2)
-    validate_signature!(data, sig, secret)
+    data = Encryptor.new.decrypt_and_verify(raw_cookie)
+    # data, sig = raw_cookie.split("|", 2)
+    # validate_signature!(data, sig, secret)
 
     token = nil
     user_id = nil
@@ -79,7 +104,7 @@ class DiscourseAuthCookie
     @valid_for = valid_for.to_i if valid_for
   end
 
-  def to_text(secret)
+  def to_text
     parts = []
     parts << [TOKEN_KEY, token].join(":")
     parts << [ID_KEY, user_id].join(":")
@@ -87,7 +112,8 @@ class DiscourseAuthCookie
     parts << [TIME_KEY, timestamp].join(":")
     parts << [VALID_KEY, valid_for].join(":")
     data = parts.join(",")
-    [data, self.class.compute_signature(data, secret)].join("|")
+    Encryptor.new.encrypt_and_sign(data)
+    # [data, self.class.compute_signature(data, secret)].join("|")
   end
 
   def validate!(validate_age: true)
