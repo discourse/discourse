@@ -2210,6 +2210,9 @@ uncategorized:
   disable_category_edit_notifications:
     default: false
 
+  disable_tags_edit_notifications:
+    default: false
+
   notification_consolidation_threshold:
     default: 3
     min: 0
