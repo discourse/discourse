@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DiscourseAuthCookie
+  class InvalidCookie < StandardError; end
+
   class Encryptor
     def encrypt_and_sign(plain_cookie)
       encryptor.encrypt_and_sign(plain_cookie)
@@ -8,6 +10,8 @@ class DiscourseAuthCookie
 
     def decrypt_and_verify(cipher_cookie)
       encryptor.decrypt_and_verify(cipher_cookie)
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+      raise InvalidCookie.new
     end
 
     private
@@ -24,8 +28,6 @@ class DiscourseAuthCookie
       end
     end
   end
-
-  class InvalidCookie < StandardError; end
 
   TOKEN_SIZE ||= 32
 

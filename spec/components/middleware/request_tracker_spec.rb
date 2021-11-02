@@ -140,9 +140,16 @@ describe Middleware::RequestTracker do
       let(:logged_in_data) do
         user = Fabricate(:user, active: true)
         token = UserAuthToken.generate!(user_id: user.id)
+        cookie = DiscourseAuthCookie.new(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          timestamp: 1.day.ago,
+          valid_for: 100.hours
+        ).to_text
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
-          "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};"
+          "HTTP_COOKIE" => "_t=#{cookie};"
         ), ["200", { "Content-Type" => 'text/html' }], 0.1)
       end
 
@@ -470,7 +477,7 @@ describe Middleware::RequestTracker do
           trust_level: user.trust_level,
           timestamp: Time.zone.now,
           valid_for: 10.hours
-        ).to_text(Rails.application.secret_key_base)
+        ).to_text
         env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
       end
 

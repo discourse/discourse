@@ -23,8 +23,26 @@ describe Middleware::AnonymousCache do
         expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
       end
 
-      it "is false if it has an auth cookie" do
-        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
+      it "is false if it has a valid auth cookie" do
+        cookie = DiscourseAuthCookie.new(
+          token: SecureRandom.hex,
+          timestamp: 1.day.ago,
+          valid_for: 100.days
+        ).to_text
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(false)
+      end
+
+      it "is true if it has an invalid auth cookie" do
+        cookie = DiscourseAuthCookie.new(
+          token: SecureRandom.hex,
+          timestamp: 1.day.ago,
+          valid_for: 100.days
+        ).to_text.dup
+
+        swap1 = 0
+        swap2 = cookie.split("").find_index { |c| c != cookie[swap1] }
+        cookie[swap1], cookie[swap2] = cookie[swap2], cookie[swap1]
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
 
       it "is false for srv/status routes" do
@@ -142,8 +160,11 @@ describe Middleware::AnonymousCache do
 
       global_setting :background_requests_max_queue_length, "0.5"
 
+      cookie = DiscourseAuthCookie.new(
+        token: SecureRandom.hex
+      ).to_text
       env = {
-        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HTTP_COOKIE" => "_t=#{cookie}",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",
         "REQUEST_URI" => "/somewhere/rainbow",
@@ -194,8 +215,11 @@ describe Middleware::AnonymousCache do
       global_setting :force_anonymous_min_per_10_seconds, 2
       global_setting :force_anonymous_min_queue_seconds, 1
 
+      cookie = DiscourseAuthCookie.new(
+        token: SecureRandom.hex
+      ).to_text
       env = {
-        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HTTP_COOKIE" => "_t=#{cookie}",
         "HTTP_DISCOURSE_LOGGED_IN" => "true",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",

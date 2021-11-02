@@ -254,7 +254,7 @@ class Auth::DefaultCurrentUserProvider
       valid_for: SiteSetting.maximum_session_age.hours
     )
     hash = {
-      value: cookie.to_text(Rails.application.secret_key_base),
+      value: cookie.to_text,
       httponly: true,
       secure: SiteSetting.force_https
     }
@@ -325,7 +325,7 @@ class Auth::DefaultCurrentUserProvider
     cookie = DiscourseAuthCookie.parse(cookie_string)
     cookie.validate!
     true
-  rescue DiscourseAuthCookie::InvalidAccess
+  rescue DiscourseAuthCookie::InvalidCookie
     false
   end
 

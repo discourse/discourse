@@ -6,27 +6,31 @@ describe DiscourseAuthCookie do
   fab!(:user) { Fabricate(:user) }
 
   describe ".parse" do
-    it "does not validate signature for v0 cookie" do
+    it "does not attempt decryption or validations for v0 cookie" do
       token = SecureRandom.hex
       cookie = DiscourseAuthCookie.parse(token)
       expect(cookie.token).to eq(token)
     end
 
-    it "validates signature for cookies that are < 32 chars" do
+    it "decrypts/validates signature for cookies that are < 32 chars" do
       token = "asdad"
       expect {
         DiscourseAuthCookie.parse(token)
       }.to raise_error(DiscourseAuthCookie::InvalidCookie)
     end
 
-    it "validates signature for v1 cookies" do
+    it "decrypts/validates signature for v1 cookies" do
       cookie = DiscourseAuthCookie.new(
         token: SecureRandom.hex,
         user_id: user.id,
         trust_level: user.trust_level,
         timestamp: 4.hours.ago,
         valid_for: 100.days
-      ).to_text(SecureRandom.hex)
+      ).to_text.dup
+
+      swap1 = 0
+      swap2 = cookie.split("").find_index { |c| c != cookie[swap1] }
+      cookie[swap1], cookie[swap2] = cookie[swap2], cookie[swap1]
 
       expect {
         DiscourseAuthCookie.parse(cookie)
@@ -39,7 +43,7 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: 4.hours.ago,
         valid_for: 100.days
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -55,7 +59,7 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -75,7 +79,7 @@ describe DiscourseAuthCookie do
         trust_level: nil,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -95,14 +99,11 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
-      data, = cookie.split("|", 2)
+      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
       data = data.split(",").shuffle.join(",")
-      cookie = [
-        data,
-        DiscourseAuthCookie.compute_signature(data, Rails.application.secret_key_base)
-      ].join("|")
+      cookie = DiscourseAuthCookie::Encryptor.new.encrypt_and_sign(data)
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -114,7 +115,7 @@ describe DiscourseAuthCookie do
   end
 
   describe "#to_text" do
-    it "converts the instance to a string with a signature" do
+    it "converts the instance to an encrypted string and signature" do
       token = SecureRandom.hex
       timestamp = 4.hours.ago
       valid_for = 100.days
@@ -124,11 +125,10 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
-      data, sig = cookie.split("|", 2)
+      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
       parts = data.split(",")
-      expect(sig).to match(/\A\h{64}\Z/)
       expect(parts.size).to eq(5)
       expect(parts).to include("token:#{token}")
       expect(parts).to include("id:#{user.id}")
@@ -146,11 +146,10 @@ describe DiscourseAuthCookie do
         trust_level: nil,
         timestamp: timestamp,
         valid_for: nil
-      ).to_text(Rails.application.secret_key_base)
+      ).to_text
 
-      data, sig = cookie.split("|", 2)
+      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
       parts = data.split(",")
-      expect(sig).to eq(OpenSSL::HMAC.hexdigest("sha256", Rails.application.secret_key_base, data))
       expect(parts.size).to eq(5)
       expect(parts).to include("token:#{token}")
       expect(parts).to include("id:")
