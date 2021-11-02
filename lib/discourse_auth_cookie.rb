@@ -52,8 +52,6 @@ class DiscourseAuthCookie
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
     data = Encryptor.new.decrypt_and_verify(raw_cookie)
-    # data, sig = raw_cookie.split("|", 2)
-    # validate_signature!(data, sig, secret)
 
     token = nil
     user_id = nil
@@ -115,7 +113,6 @@ class DiscourseAuthCookie
     parts << [VALID_KEY, valid_for].join(":")
     data = parts.join(",")
     Encryptor.new.encrypt_and_sign(data)
-    # [data, self.class.compute_signature(data, secret)].join("|")
   end
 
   def validate!(validate_age: true)
