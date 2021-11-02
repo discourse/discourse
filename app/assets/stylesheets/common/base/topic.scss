@@ -92,7 +92,6 @@ $topic-progress-height: 42px;
 #topic-progress-wrapper {
   position: fixed;
   bottom: 0px;
-  transition: bottom 0.1s, margin-bottom 0.1s;
   right: 10px;
   margin: 0 auto;
   display: flex;
@@ -133,6 +132,14 @@ $topic-progress-height: 42px;
       margin-right: calc(#{$reply-area-max-width} / 2 * -1);
     }
   }
+
+  &.with-transitions {
+    transition: bottom 0.2s, margin-bottom 0.2s;
+
+    #topic-progress .bg {
+      transition: width 0.5s;
+    }
+  }
 }
 
 #topic-progress {
@@ -170,7 +177,6 @@ $topic-progress-height: 42px;
     bottom: 0;
     width: var(--progress-bg-width, 0);
     background-color: var(--tertiary-low);
-    transition: width 0.75s;
   }
 }
 
