@@ -48,7 +48,9 @@ class DiscourseAuthCookie
 
   def self.parse(raw_cookie, secret = Rails.application.secret_key_base)
     # v0 of the cookie was simply the auth token itself. we need this for
-    # backward compatibility so we don't wipe out existing sessions
+    # backward compatibility so we don't wipe out existing sessions.
+    # TODO: drop this line (and a test case in
+    # default_current_user_provider_spec.rb) in Nov 2023
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
     data = Encryptor.new.decrypt_and_verify(raw_cookie)
