@@ -2130,6 +2130,8 @@ en:
 
     disable_category_edit_notifications: "Disable category edit notifications on topics."
 
+    disable_tags_edit_notifications: "Disable tags edit notifications on topics."
+
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
