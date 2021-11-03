@@ -739,6 +739,7 @@ describe PostAlerter do
         end
 
         expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+        DiscoursePluginRegistry.reset!
       end
 
       it "does not send push notifications when a filters returns false" do
@@ -746,6 +747,7 @@ describe PostAlerter do
           false
         end
         expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+        DiscoursePluginRegistry.reset!
       end
     end
 
