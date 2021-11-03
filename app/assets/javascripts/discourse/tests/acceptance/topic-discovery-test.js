@@ -27,6 +27,12 @@ acceptance("Topic Discovery", function (needs) {
       "it shows user's full name in avatar title"
     );
 
+    assert.equal(
+      queryAll("a[data-user-card=eviltrout] img.avatar").attr("loading"),
+      "lazy",
+      "it adds loading=`lazy` to topic list avatars"
+    );
+
     await visit("/c/bug");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
