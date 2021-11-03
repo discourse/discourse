@@ -14,7 +14,7 @@ class S3CorsRulesets
     allowed_headers: ["*"],
     expose_headers: ["ETag"],
     allowed_methods: ["GET", "HEAD", "PUT"],
-    allowed_origins: [Discourse.base_url_no_prefix],
+    allowed_origins: ["*"],
     max_age_seconds: 3000
   }.freeze
 
