@@ -20,6 +20,7 @@ acceptance("Topic Discovery - Mobile", function (needs) {
     );
 
     await visit("/categories");
+
     assert.ok(exists(".category"), "has a list of categories");
   });
 });
