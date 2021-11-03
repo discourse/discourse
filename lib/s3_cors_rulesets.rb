@@ -35,8 +35,9 @@ class S3CorsRulesets
   # The use_db_s3_config param comes from ENV, and if the S3 client
   # is not provided it is initialized by the S3Helper.
   def self.sync(use_db_s3_config:, s3_client: nil)
-    return unless SiteSetting.s3_install_cors_rule && \
-      (GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads)
+    return if !SiteSetting.s3_install_cors_rule
+    return if !(GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads)
+
     assets_rules_applied = false
     backup_rules_applied = false
     direct_upload_rules_applied = false

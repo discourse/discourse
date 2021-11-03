@@ -147,7 +147,7 @@ describe "S3Helper" do
           cors_rules: [S3CorsRulesets::ASSETS]
         }
       )
-      s3_helper.ensure_cors!
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
     end
 
     it "does nothing if a rule already exists" do
@@ -155,14 +155,19 @@ describe "S3Helper" do
         cors_rules: [S3CorsRulesets::ASSETS]
       })
       s3_helper.s3_client.expects(:put_bucket_cors).never
-      s3_helper.ensure_cors!
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
     end
 
-    it "does not apply the passed in rules if a different rule already exists" do
+    it "applies the passed in rule if a different rule already exists" do
       s3_helper.s3_client.stub_responses(:get_bucket_cors, {
         cors_rules: [S3CorsRulesets::ASSETS]
       })
-      s3_helper.s3_client.expects(:put_bucket_cors).never
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      )
       s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
     end
   end

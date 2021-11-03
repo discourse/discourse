@@ -41,21 +41,18 @@ class S3Helper
   end
 
   def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
-    bucket, options =
-      if use_db_s3_config
-        [
-          for_backup ? SiteSetting.s3_backup_bucket.downcase : SiteSetting.s3_upload_bucket.downcase,
-          S3Helper.s3_options(SiteSetting)
-        ]
-      else
-        [
-          for_backup ? GlobalSetting.s3_backup_bucket.downcase : GlobalSetting.s3_bucket.downcase,
-          S3Helper.s3_options(GlobalSetting)
-        ]
-      end
+    setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
+    options = S3Helper.s3_options(setting_klass)
     options[:client] = s3_client if s3_client.present?
 
-    S3Helper.new(bucket, '', options)
+    bucket =
+      if for_backup
+        setting_klass.s3_backup_bucket
+      else
+        use_db_s3_config ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+      end
+
+    S3Helper.new(bucket.downcase, '', options)
   end
 
   def self.get_bucket_and_folder_path(s3_bucket_name)

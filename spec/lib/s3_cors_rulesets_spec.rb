@@ -24,7 +24,9 @@ RSpec.describe S3CorsRulesets do
 
       it "does nothing if !s3_install_cors_rule" do
         SiteSetting.s3_install_cors_rule = false
-        sync_rules
+        client.expects(:get_bucket_cors).never
+        result = sync_rules
+        expect(result).to eq(nil)
       end
 
       it "only tries to apply the ASSETS rules by default" do
@@ -37,7 +39,10 @@ RSpec.describe S3CorsRulesets do
             ]
           }
         )
-        sync_rules
+        result = sync_rules
+        expect(result[:assets_rules_applied]).to eq(true)
+        expect(result[:direct_upload_rules_applied]).to eq(false)
+        expect(result[:backup_rules_applied]).to eq(false)
       end
 
       it "does not apply the ASSETS rules if they already exist" do
@@ -45,7 +50,10 @@ RSpec.describe S3CorsRulesets do
           cors_rules: [S3CorsRulesets::ASSETS]
         })
         client.expects(:put_bucket_cors).never
-        sync_rules
+        result = sync_rules
+        expect(result[:assets_rules_applied]).to eq(false)
+        expect(result[:direct_upload_rules_applied]).to eq(false)
+        expect(result[:backup_rules_applied]).to eq(false)
       end
 
       it "applies the ASSETS rules and the BACKUP_DIRECT_UPLOAD rules if S3 backups are enabled" do
@@ -100,41 +108,6 @@ RSpec.describe S3CorsRulesets do
         expect(result[:backup_rules_applied]).to eq(false)
       end
 
-      it "applies all rules if everything is set up" do
-        SiteSetting.enable_direct_s3_uploads = true
-        setup_backups
-
-        client.stub_responses(:get_bucket_cors, {})
-        client.expects(:put_bucket_cors).with(
-          bucket: "s3-upload-bucket",
-          cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
-        )
-        client.expects(:put_bucket_cors).with(
-          bucket: "s3-upload-bucket",
-          cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::DIRECT_UPLOAD
-            ]
-          }
-        )
-        client.expects(:put_bucket_cors).with(
-          bucket: "s3-backup-upload-bucket",
-          cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::BACKUP_DIRECT_UPLOAD
-            ]
-          }
-        )
-        result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(true)
-        expect(result[:backup_rules_applied]).to eq(true)
-      end
-
       it "does no changes if all the rules already exist" do
         SiteSetting.enable_direct_s3_uploads = true
         setup_backups
@@ -164,11 +137,63 @@ RSpec.describe S3CorsRulesets do
         setup_s3
       end
 
-      it "applies all rules if everything is set up" do
-        SiteSetting.enable_direct_s3_uploads = true
+      it "only tries to apply the ASSETS rules by default" do
+        client.stub_responses(:get_bucket_cors, {})
+        client.expects(:put_bucket_cors).with(
+          bucket: "s3-upload-bucket",
+          cors_configuration: {
+            cors_rules: [
+              S3CorsRulesets::ASSETS
+            ]
+          }
+        )
+        result = sync_rules
+        expect(result[:assets_rules_applied]).to eq(true)
+        expect(result[:direct_upload_rules_applied]).to eq(false)
+        expect(result[:backup_rules_applied]).to eq(false)
+      end
+
+      it "does not apply the ASSETS rules if they already exist" do
+        client.stub_responses(:get_bucket_cors, {
+          cors_rules: [S3CorsRulesets::ASSETS]
+        })
+        client.expects(:put_bucket_cors).never
+        result = sync_rules
+        expect(result[:assets_rules_applied]).to eq(false)
+        expect(result[:direct_upload_rules_applied]).to eq(false)
+        expect(result[:backup_rules_applied]).to eq(false)
+      end
+
+      it "applies the ASSETS rules and the BACKUP_DIRECT_UPLOAD rules if S3 backups are enabled" do
         SiteSetting.enable_backups = true
         SiteSetting.s3_backup_bucket = "s3-backup-upload-bucket"
         SiteSetting.backup_location = BackupLocationSiteSetting::S3
+
+        client.stub_responses(:get_bucket_cors, {})
+        client.expects(:put_bucket_cors).with(
+          bucket: "s3-upload-bucket",
+          cors_configuration: {
+            cors_rules: [
+              S3CorsRulesets::ASSETS
+            ]
+          }
+        )
+        client.expects(:put_bucket_cors).with(
+          bucket: "s3-backup-upload-bucket",
+          cors_configuration: {
+            cors_rules: [
+              S3CorsRulesets::BACKUP_DIRECT_UPLOAD
+            ]
+          }
+        )
+        result = sync_rules
+        expect(result[:assets_rules_applied]).to eq(true)
+        expect(result[:direct_upload_rules_applied]).to eq(false)
+        expect(result[:backup_rules_applied]).to eq(true)
+      end
+
+      it "applies the ASSETS rules and the DIRECT_UPLOAD rules when S3 direct uploads are enabled" do
+        SiteSetting.enable_direct_s3_uploads = true
 
         client.stub_responses(:get_bucket_cors, {})
         client.expects(:put_bucket_cors).with(
@@ -187,18 +212,10 @@ RSpec.describe S3CorsRulesets do
             ]
           }
         )
-        client.expects(:put_bucket_cors).with(
-          bucket: "s3-backup-upload-bucket",
-          cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::BACKUP_DIRECT_UPLOAD
-            ]
-          }
-        )
         result = sync_rules
         expect(result[:assets_rules_applied]).to eq(true)
         expect(result[:direct_upload_rules_applied]).to eq(true)
-        expect(result[:backup_rules_applied]).to eq(true)
+        expect(result[:backup_rules_applied]).to eq(false)
       end
     end
   end
