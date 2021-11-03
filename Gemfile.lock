@@ -530,6 +530,7 @@ DEPENDENCIES
   image_optim
   json
   json_schemer
+  jwt
   listen
   lograge
   logstash-event

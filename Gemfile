@@ -69,7 +69,7 @@ gem 'discourse-ember-rails', '0.18.6', require: 'ember-rails'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'discourse-fonts'
-
+gem 'jwt'
 gem 'barber'
 
 gem 'message_bus'

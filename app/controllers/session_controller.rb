@@ -299,18 +299,38 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
-    return invalid_credentials if params[:password].length > User.max_password_length
+    return invalid_credentials if params[:password].length > 5000
 
-    user = User.find_by_username_or_email(normalized_login_param)
+    email_login = "#{normalized_login_param()}@vietcetera.com"
+
+    user = User.find_by_username_or_email(email_login)
+
     rate_limit_second_factor!(user)
 
     if user.present?
-
-      # If their password is correct
-      unless user.confirm_password?(params[:password])
+      begin
+        decoded_token = JWT.decode params.require(:password), GlobalSetting.secret, false, { algorithm: 'HS256' }
+        if (decoded_token && decoded_token[0]) 
+          id = decoded_token[0]['id']
+          if (!(id == user.email.split("@")[0]) ) 
+            invalid_credentials
+            return
+          end
+        else 
+          invalid_credentials
+          return
+        end
+      rescue JWT::DecodeError => e # Never do this!
+        Rails.logger.debug "Error decoding the JWT: "+ e.to_s
         invalid_credentials
         return
       end
+
+      # If their password is correct
+      #unless user.confirm_password?()
+      #  invalid_credentials
+      #  return
+      #end
 
       # If the site requires user approval and the user is not approved yet
       if login_not_approved_for?(user)
