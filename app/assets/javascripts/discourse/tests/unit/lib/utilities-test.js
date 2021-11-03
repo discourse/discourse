@@ -100,7 +100,7 @@ discourseModule("Unit | Utilities", function () {
     let avatarTemplate = "/path/to/avatar/{size}.png";
     assert.equal(
       avatarImg({ avatarTemplate: avatarTemplate, size: "tiny" }),
-      "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
+      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
       "it returns the avatar html"
     );
 
@@ -110,7 +110,7 @@ discourseModule("Unit | Utilities", function () {
         size: "tiny",
         title: "evilest trout",
       }),
-      "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
+      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
       "it adds a title if supplied"
     );
 
@@ -120,7 +120,7 @@ discourseModule("Unit | Utilities", function () {
         size: "tiny",
         extraClasses: "evil fish",
       }),
-      "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
+      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
       "it adds extra classes if supplied"
     );
 

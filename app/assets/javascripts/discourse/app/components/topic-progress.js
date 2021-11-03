@@ -2,12 +2,13 @@ import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
-import { scheduleOnce } from "@ember/runloop";
+import { later, scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
   elementId: "topic-progress-wrapper",
-  classNameBindings: ["docked"],
+  classNameBindings: ["docked", "withTransitions"],
   docked: false,
+  withTransitions: null,
   progressPosition: null,
   postStream: alias("topic.postStream"),
   _streamPercentage: null,
@@ -98,6 +99,10 @@ export default Component.extend({
       scheduleOnce("afterRender", this, this._topicScrolled, this.prevEvent);
     }
     scheduleOnce("afterRender", this, this._startObserver);
+
+    // start CSS transitions a tiny bit later
+    // to avoid jumpiness on initial topic load
+    later(this._addCssTransitions, 500);
   },
 
   willDestroyElement() {
@@ -106,6 +111,14 @@ export default Component.extend({
     this.appEvents
       .off("composer:resized", this, this._composerEvent)
       .off("topic:current-post-scrolled", this, this._topicScrolled);
+  },
+
+  @bind
+  _addCssTransitions() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+    this.set("withTransitions", true);
   },
 
   _startObserver() {
@@ -118,12 +131,15 @@ export default Component.extend({
   },
 
   _setupObserver() {
-    const composerH =
-      document.querySelector("#reply-control")?.clientHeight || 0;
+    // minimum 50px here ensures element is not docked when
+    // scrolling down quickly, it causes post stream refresh loop
+    // on Android
+    const bottomIntersectionMargin =
+      document.querySelector("#reply-control")?.clientHeight || 50;
 
     return new IntersectionObserver(this._intersectionHandler, {
-      threshold: 0.1,
-      rootMargin: `0px 0px -${composerH}px 0px`,
+      threshold: 1,
+      rootMargin: `0px 0px -${bottomIntersectionMargin}px 0px`,
     });
   },
 

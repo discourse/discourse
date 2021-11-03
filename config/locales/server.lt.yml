@@ -177,7 +177,6 @@ lt:
   topic_invite:
     failed_to_invite: "Vartotojas negali būti pakviestas į šią temą be grupės narystės vienoje iš šių grupių: %{group_names}."
     user_exists: "Atsiprašome, šis vartotojas jau buvo pakviestas. Galite pakviesti vartotoją į temą tik vieną kartą."
-    muted_invitee: "Atsiprašome, vartotojas jus nutildė."
     muted_topic: "Atsiprašome, kad vartotojas nutildė šią temą."
     receiver_does_not_allow_pm: "Atsiprašome, vartotojas neleidžia jums siųsti asmeninių pranešimų."
     sender_does_not_allow_pm: "Atsiprašome, jūs neleidžiate šiam vartotojui siųsti jums asmeninių pranešimų."

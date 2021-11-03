@@ -283,6 +283,7 @@ hu:
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       not_bookmarked: "bejegyzés könyvjelzőzése"
+      remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
       remove: "Könyvjelző eltávolítása"
       delete: "Könyvjelző törlése"
@@ -1085,6 +1086,7 @@ hu:
       watched_first_post_tags_instructions: "Csak az új témakörök legelső hozzászólásáról fog értesítést kapni ezekben a címkékben."
       muted_categories: "Némított"
       muted_categories_instructions: "Semmilyen értesítést nem fog kapni a kategória témaköreiről, és a kategóriák vagy a legújabbak között sem fog megjelenni."
+      muted_categories_instructions_dont_hide: "Nem fog értesítést kapni az új témákról ezekben a kategóriákban."
       regular_categories: "Átlagos"
       no_category_access: "Moderátorként korlátozott kategória-hozzáférése van, a mentés tiltott."
       delete_account: "Saját fiók törlése"
@@ -1886,6 +1888,9 @@ hu:
       similar_topics: "A témaköröd hasonlít a..."
       drafts_offline: "vázlatok offline"
       edit_conflict: "szerkesztési ütközés"
+      group_mentioned_limit:
+        one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
+        other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
       group_mentioned:
         one: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
         other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
@@ -1893,12 +1898,28 @@ hu:
         category: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a témához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Említetted %{username} de nem lesznek értesítve mivel képtelenek megnézni ezt a személyes üzenetet. Megkell hívnod őket ehez a személyes üzenethez"
       duplicate_link: "Úgy tűnik, hogy a <b>%{domain}</b> re mutató linkjét <b>@%{username}</b> már <a href='%{post_url}'>ban közzétette a témában, válasz: %{ago}</a> - Biztosan újra el akarja küldeni?"
+      reference_topic_title: "Válasz: %{title}"
       error:
-        title_missing: "A címet kötelező megadni"
-        category_missing: "Ki kéne választanod egy kategóriát"
+        title_missing: "A cím kötelező"
+        title_too_short:
+          one: "A címnek legalább %{count} karakteresnek kell lennie"
+          other: "A címnek legalább %{count} karakteresnek kell lennie"
+        title_too_long:
+          one: "A cím legfeljebb %{count} karakteres lehet"
+          other: "A cím legfeljebb %{count} karakteres lehet"
+        post_missing: "A bejegyzés nem lehet üres"
+        post_length:
+          one: "A bejegyzésnek legalább %{count} karakteresnek kell lennie"
+          other: "A bejegyzésnek legalább %{count} karakteresnek kell lennie"
+        try_like: "Próbálta már a %{heart} gombot?"
+        category_missing: "Választania kell egy kategóriát"
+        tags_missing:
+          one: "Választania kell legalább %{count} címkét"
+          other: "Választania kell legalább %{count} címkét"
+        topic_template_not_modified: "Adjon hozzá részleteket és konkrétumokat a témájához a témasablon szerkesztésével."
       save_edit: "Módosítások mentése"
-      overwrite_edit: "Módosítások mentése"
-      reply_original: "Válasz az eredeti témakörre"
+      overwrite_edit: "Módosítások felülírása"
+      reply_original: "Válasz az eredeti témára"
       reply_here: "Válasz ide"
       reply: "Válasz"
       cancel: "Mégse"
@@ -1907,13 +1928,14 @@ hu:
       create_whisper: "Suttogás"
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
+      title: "Vagy nyomjon %{modifier}Entert"
       users_placeholder: "Felhasználó hozzáadása"
-      title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
-      title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
-      edit_reason_placeholder: "miért szerkesztesz?"
-      topic_featured_link_placeholder: "Írja be a link címét!"
+      title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
+      title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
+      edit_reason_placeholder: "miért szerkeszt?"
+      topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
       remove_featured_link: "Hivatkozás eltávolítása a témából."
-      reply_placeholder: "Ide írhatsz. A feltöltéshez húzz- vagy illessz be képet! A formázáshoz használhatsz Markdown-, BBCode- vagy HTML kódokat is."
+      reply_placeholder: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot vagy HTML-t. Idehúzhat vagy beilleszthet képeket."
       reply_placeholder_no_images: "Ide írj. Használhatsz Markdown-t, BBCode-ot, vagy HTML-t a formázáshoz."
       reply_placeholder_choose_category: "Válassz egy kategóriát, mielőtt elkezdesz írni!"
       view_new_post: "Nézd meg az új bejegyzésedet."
@@ -1956,21 +1978,32 @@ hu:
         draft: Vázlat
         edit: Szerkesztés
         reply_to_post:
+          label: Válasz %{postUsername} bejegyzésére
           desc: Válasz egy adott bejegyzésre
         reply_as_new_topic:
           label: Válasz hivatkozott témaként
           desc: Egy új téma létrehozása ezzel a témával kapcsolatban
           confirm: Új témavázlatot mentett, amely automatikusan felül lesz írva, ha kapcsolt témát hoz létre.
+        reply_as_new_group_message:
+          label: Válasz új csoportos üzenetként
+          desc: Új üzenet létrehozása azonos címzettekkel
         reply_as_private_message:
           label: Új üzenet
           desc: Új személyes üzenet létrehozása
         reply_to_topic:
           label: Válasz a témára
+          desc: Válasz a témára, nem konkrét bejegyzésre
+        toggle_whisper:
+          label: Suttogás be/ki
+          desc: A suttogások csak a stáb tagjai számára láthatók
         create_topic:
           label: "Új téma"
         shared_draft:
           label: "Megosztott vázlat"
           desc: "Témavázlat készítése, amely csak az engedélyezett felhasználók számára látható"
+        toggle_topic_bump:
+          desc: "Válasz a legutóbbi válasz dátumának módosítása nélkül"
+      reload: "Újratöltés"
       ignore: "Letiltás"
     notifications:
       tooltip:
@@ -1980,6 +2013,9 @@ hu:
         message:
           one: "%{count} olvasatlan üzenet"
           other: "%{count} olvasatlan üzenet"
+        high_priority:
+          one: "%{count} olvasatlan, magas prioritású értesítés"
+          other: "%{count} olvasatlan, magas prioritású értesítés"
       title: "értesítések a @név megemlítésekről, a hozzászólásaira adott válaszokról, üzenetekről stb."
       none: "Jelenleg nem lehet betölteni az értesítéseket."
       empty: "Nem található értesítés."
@@ -2009,6 +2045,7 @@ hu:
       granted_badge: "Új jelvény: „%{description}”"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Új téma</span> %{description}"
+      membership_request_accepted: "Tagság elfogadva itt: „%{group_name}”"
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
@@ -3019,6 +3056,8 @@ hu:
       no_drafts_title: "Még nem kezdett el egyetlen vázlatot sem"
       no_drafts_body: "Még nem áll készen a bejegyzés létrehozására? Automatikusan mentve lesz egy új vázlat, és itt fel lesz sorolva, ha egy új témát, választ vagy személyes üzenetet kezd el írni. Válassza a Mégse gombot, hogy elvesse, vagy mentse a vázlatot a későbbi folytatáshoz."
       no_likes_others: "Nincsenek kedvelt bejegyzések."
+    fullscreen_table:
+      expand_btn: "Táblázat kibontása"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:
@@ -3367,8 +3406,12 @@ hu:
             text: "Lábléc"
           embedded_scss:
             text: "Ágyazott CSS"
+          head_tag:
+            text: "Fej"
+            title: "A „head” címke előtt beillesztendő HTML"
           body_tag:
             text: "Törzs"
+            title: "A „body” címke előtt beillesztendő HTML"
           yaml:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"
