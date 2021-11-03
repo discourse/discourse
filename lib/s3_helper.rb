@@ -40,6 +40,24 @@ class S3Helper
       end
   end
 
+  def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
+    bucket, options =
+      if use_db_s3_config
+        [
+          for_backup ? SiteSetting.s3_backup_bucket.downcase : SiteSetting.s3_upload_bucket.downcase,
+          S3Helper.s3_options(SiteSetting)
+        ]
+      else
+        [
+          for_backup ? GlobalSetting.s3_backup_bucket.downcase : GlobalSetting.s3_bucket.downcase,
+          S3Helper.s3_options(GlobalSetting)
+        ]
+      end
+    options[:client] = s3_client if s3_client.present?
+
+    S3Helper.new(bucket, '', options)
+  end
+
   def self.get_bucket_and_folder_path(s3_bucket_name)
     s3_bucket_name.downcase.split("/", 2)
   end
@@ -124,31 +142,27 @@ class S3Helper
     [destination, response.copy_object_result.etag.gsub('"', '')]
   end
 
-  # make sure we have a cors config for assets
-  # otherwise we will have no fonts
+  # Several places in the application need certain CORS rules to exist
+  # inside an S3 bucket so requests to the bucket can be made
+  # directly from the browser. The s3:ensure_cors_rules rake task
+  # is used to ensure these rules exist for assets, S3 backups, and
+  # direct S3 uploads, depending on configuration.
   def ensure_cors!(rules = nil)
     return unless SiteSetting.s3_install_cors_rule
+    rules = [rules] if !rules.is_a?(Array)
+    existing_rules = fetch_bucket_cors_rules
 
-    rule = nil
+    new_rules = rules - existing_rules
+    return false if new_rules.empty?
 
-    begin
-      rule = s3_resource.client.get_bucket_cors(
-        bucket: @s3_bucket_name
-      ).cors_rules&.first
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
-    end
-
-    unless rule
-      rules = [S3CorsRulesets::ASSETS] if rules.nil?
-
-      s3_resource.client.put_bucket_cors(
-        bucket: @s3_bucket_name,
-        cors_configuration: {
-          cors_rules: rules
-        }
-      )
-    end
+    final_rules = existing_rules + new_rules
+    s3_resource.client.put_bucket_cors(
+      bucket: @s3_bucket_name,
+      cors_configuration: {
+        cors_rules: final_rules
+      }
+    )
+    true
   end
 
   def update_lifecycle(id, days, prefix: nil, tag: nil)
@@ -263,6 +277,17 @@ class S3Helper
   end
 
   private
+
+  def fetch_bucket_cors_rules
+    begin
+      s3_resource.client.get_bucket_cors(
+        bucket: @s3_bucket_name
+      ).cors_rules&.map(&:to_h) || []
+    rescue Aws::S3::Errors::NoSuchCORSConfiguration
+      # no rule
+      []
+    end
+  end
 
   def default_s3_options
     if SiteSetting.enable_s3_uploads?
