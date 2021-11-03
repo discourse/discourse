@@ -192,7 +192,7 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && this.site.mobileView) {
+    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
       return false;
     }
 
