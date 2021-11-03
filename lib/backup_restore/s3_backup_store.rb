@@ -44,6 +44,11 @@ module BackupRestore
       obj = @s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
+      # TODO (martin) We can remove this at a later date when we move this
+      # ensure CORS for backups and direct uploads to a post-site-setting
+      # change event, so the rake task doesn't have to be run manually.
+      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
