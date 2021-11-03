@@ -126,6 +126,9 @@ registerButton("like", (attrs) => {
     icon: attrs.liked ? "d-liked" : "d-unliked",
     className,
     before: "like-count",
+    data: {
+      "post-id": attrs.id,
+    },
   };
 
   // If the user has already liked the post and doesn't have permission
@@ -671,9 +674,9 @@ export default createWidget("post-menu", {
     }
 
     const heart = document.querySelector(
-      `article[data-post-id="${attrs.id}"] .toggle-like .d-icon`
+      `.toggle-like[data-post-id="${attrs.id}"] .d-icon`
     );
-    heart.closest("button").classList.add("has-like");
+    heart.closest(".toggle-like").classList.add("has-like");
     heart.classList.add("has-animation");
 
     return new Promise((resolve) => {
