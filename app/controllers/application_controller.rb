@@ -928,8 +928,11 @@ class ApplicationController < ActionController::Base
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ',')
-    if params[key]
+    case params[key]
+    when String
       params[key].split(delimiter).map(&:to_i)
+    when Array
+      params[key].map(&:to_i)
     end
   end
 
