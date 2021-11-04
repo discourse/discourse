@@ -147,6 +147,7 @@ export default function transformPost(
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
+  postAtts.actionCodeHref = post.action_code_href || topic.url;
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;

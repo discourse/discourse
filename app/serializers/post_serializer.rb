@@ -79,6 +79,7 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
+             :action_code_href,
              :notice,
              :last_wiki_edit,
              :locked,
@@ -441,6 +442,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code_who?
     include_action_code? && action_code_who.present?
+  end
+
+  def action_code_href
+    post_custom_fields["action_code_href"]
+  end
+
+  def include_action_code_href?
+    include_action_code? && action_code_href.present?
   end
 
   def notice
