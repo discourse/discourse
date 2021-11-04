@@ -1,12 +1,12 @@
 import Component from "@ember/component";
-import UploadMixin from "discourse/mixins/upload";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { notEmpty } from "@ember/object/computed";
 
 const DEFAULT_GROUP = "default";
 
-export default Component.extend(UploadMixin, {
+export default Component.extend(UppyUploadMixin, {
   type: "emoji",
   uploadUrl: "/admin/customize/emojis",
   hasName: notEmpty("name"),
@@ -15,20 +15,16 @@ export default Component.extend(UploadMixin, {
   emojiGroups: null,
   newEmojiGroups: null,
   tagName: null,
+  preventDirectS3Uploads: true,
 
   didReceiveAttrs() {
     this._super(...arguments);
-
     this.set("newEmojiGroups", this.emojiGroups);
   },
 
   @discourseComputed("hasName", "uploading")
   addDisabled() {
     return !this.hasName || this.uploading;
-  },
-
-  uploadOptions() {
-    return { sequentialUploads: true };
   },
 
   @action
