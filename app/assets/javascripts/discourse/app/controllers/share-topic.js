@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import Sharing from "discourse/lib/sharing";
@@ -9,13 +9,32 @@ import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
+import Category from "discourse/models/category";
 
 export default Controller.extend(
   ModalFunctionality,
   bufferedProperty("invite"),
   {
+    topic: null,
+    restrictedGroups: null,
+
     onShow() {
       this.set("showNotifyUsers", false);
+    },
+
+    @observes("topic")
+    _restrictedGroups() {
+      if (this.topic.category && this.topic.category.read_restricted) {
+        Category.reloadBySlugPath(this.topic.category.slug).then((result) => {
+          this.setProperties({
+            restrictedGroups: result.category.group_permissions.map(
+              (g) => g.group_name
+            ),
+          });
+        });
+      } else {
+        this.setProperties({ restrictedGroups: null });
+      }
     },
 
     @discourseComputed("topic.shareUrl")
@@ -37,6 +56,21 @@ export default Controller.extend(
         this.siteSettings.share_links,
         privateContext
       );
+    },
+
+    @discourseComputed("restrictedGroups")
+    hasRestrictedGroups(groups) {
+      return !!groups;
+    },
+
+    @discourseComputed("restrictedGroups")
+    restrictedGroupsCount(groups) {
+      return groups.length;
+    },
+
+    @discourseComputed("restrictedGroups")
+    restrictedGroupsDisplayText(groups) {
+      return groups.join(", ");
     },
 
     @action
