@@ -35,7 +35,7 @@
       <label class="btn btn-default btn-primary {{if addDisabled "disabled"}}">
         {{#if uploading}}
           {{d-icon "spinner" class="loading-icon"}}
-          <span>{{i18n "admin.emoji.uploading"}}</span>
+          <span>{{i18n "admin.emoji.uploading"}} {{uploadProgress}}%</span>
         {{else}}
           {{d-icon "plus"}}
           <span>{{i18n "admin.emoji.add"}}</span>
@@ -44,6 +44,7 @@
           class="hidden-upload-field"
           disabled={{addDisabled}}
           type="file"
+          multiple="true"
           accept=".png,.gif">
       </label>
     </div>
