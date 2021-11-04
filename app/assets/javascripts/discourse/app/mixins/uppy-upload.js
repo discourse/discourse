@@ -287,5 +287,6 @@ export default Mixin.create({
       processing: false,
       uploadProgress: 0,
     });
+    this.fileInputEl.value = "";
   },
 });
