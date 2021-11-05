@@ -255,8 +255,8 @@ module("Unit | Model | post-stream", function () {
 
     assert.strictEqual(
       postStream.findPostIdForPostNumber(500),
-      null,
-      "it returns null when the post cannot be found"
+      undefined,
+      "it returns undefined when the post cannot be found"
     );
     assert.strictEqual(
       postStream.findPostIdForPostNumber(1),

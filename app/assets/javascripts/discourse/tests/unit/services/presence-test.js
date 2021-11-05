@@ -196,8 +196,8 @@ acceptance("Presence - Subscribing", function (needs) {
       false,
       "channelDup is not subscribed"
     );
-    assert.strictEqual(channelDup.count, null, "channelDup has no count");
-    assert.strictEqual(channelDup.users, null, "channelDup has users");
+    assert.strictEqual(channelDup.count, undefined, "channelDup has no count");
+    assert.strictEqual(channelDup.users, undefined, "channelDup has users");
 
     await channelDup.subscribe();
     assert.strictEqual(channelDup.subscribed, true, "channelDup can subscribe");
