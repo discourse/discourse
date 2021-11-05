@@ -300,12 +300,12 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.strictEqual(this.subject.header().value(), 1);
+        assert.strictEqual(this.subject.header().value(), "1");
 
         await this.subject.expand();
         await this.subject.selectRowByValue(0);
 
-        assert.strictEqual(this.subject.header().value(), 0);
+        assert.strictEqual(this.subject.header().value(), "0");
       },
     });
 

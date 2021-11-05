@@ -28,7 +28,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.strictEqual(this.subject.header().value(), 2);
+        assert.strictEqual(this.subject.header().value(), "2");
         assert.strictEqual(this.subject.header().label(), "feature");
       },
     });

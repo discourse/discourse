@@ -35,7 +35,7 @@ acceptance("New Topic - Authenticated", function (needs) {
     );
     assert.strictEqual(
       selectKit(".category-chooser").header().value(),
-      1,
+      "1",
       "it selects desired category"
     );
   });

@@ -173,7 +173,7 @@ acceptance("Admin - User Index", function (needs) {
     await groupChooser.selectRowByValue(42);
     assert.strictEqual(
       groupChooser.header().value(),
-      42,
+      "42",
       "group should be set"
     );
 

@@ -124,7 +124,7 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
 
     assert.ok(exists(".light-color-scheme"), "has regular dropdown");
-    assert.strictEqual(selectKit(".theme .select-kit").header().value(), 2);
+    assert.strictEqual(selectKit(".theme .select-kit").header().value(), "2");
 
     await selectKit(".light-color-scheme .select-kit").expand();
     assert.strictEqual(

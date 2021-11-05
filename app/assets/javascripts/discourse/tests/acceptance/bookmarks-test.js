@@ -169,7 +169,7 @@ acceptance("Bookmarking", function (needs) {
     );
     assert.strictEqual(
       selectKit(".bookmark-option-selector").header().value(),
-      1
+      "1"
     );
   });
 

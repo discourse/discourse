@@ -123,7 +123,7 @@ acceptance("Dashboard", function (needs) {
 
     assert.strictEqual(
       groupFilter.header().value(),
-      88,
+      "88",
       "its set the value of the filter from the query params"
     );
   });
