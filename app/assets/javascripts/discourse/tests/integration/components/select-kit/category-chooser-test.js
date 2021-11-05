@@ -64,9 +64,9 @@ discourseModule(
         await this.subject.expand();
 
         assert.strictEqual(this.subject.rowByIndex(0).title(), "feature");
-        assert.strictEqual(this.subject.rowByIndex(0).value(), 2);
+        assert.strictEqual(this.subject.rowByIndex(0).value(), "2");
         assert.strictEqual(this.subject.rowByIndex(1).title(), "spec");
-        assert.strictEqual(this.subject.rowByIndex(1).value(), 26);
+        assert.strictEqual(this.subject.rowByIndex(1).value(), "26");
         assert.strictEqual(
           this.subject.rows().length,
           2,
@@ -97,13 +97,13 @@ discourseModule(
         await this.subject.expand();
 
         // The prioritized category
-        assert.strictEqual(this.subject.rowByIndex(0).value(), 5);
+        assert.strictEqual(this.subject.rowByIndex(0).value(), "5");
         // The prioritized category's child
-        assert.strictEqual(this.subject.rowByIndex(1).value(), 22);
+        assert.strictEqual(this.subject.rowByIndex(1).value(), "22");
         // Other categories in the default order
-        assert.strictEqual(this.subject.rowByIndex(2).value(), 6);
-        assert.strictEqual(this.subject.rowByIndex(3).value(), 21);
-        assert.strictEqual(this.subject.rowByIndex(4).value(), 1);
+        assert.strictEqual(this.subject.rowByIndex(2).value(), "6");
+        assert.strictEqual(this.subject.rowByIndex(3).value(), "21");
+        assert.strictEqual(this.subject.rowByIndex(4).value(), "1");
 
         assert.strictEqual(
           this.subject.rows().length,
@@ -258,13 +258,13 @@ discourseModule(
         await this.subject.expand();
         await this.subject.fillInFilter("bug");
 
-        assert.ok(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rows().length, 1);
         assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
 
         await this.subject.emptyFilter();
         await this.subject.fillInFilter("Bug");
 
-        assert.ok(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rows().length, 1);
         assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
       },
     });
@@ -286,9 +286,9 @@ discourseModule(
 
       async test(assert) {
         await this.subject.expand();
-        await this.subject.fillInFilter("hữ");
+        await this.subject.fillInFilter("gữ");
 
-        assert.ok(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rows().length, 1);
         assert.strictEqual(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
       },
     });

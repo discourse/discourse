@@ -128,9 +128,9 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.strictEqual(rowById(1).dataset.id, 1, "it creates rows");
-        assert.strictEqual(rowById(2).dataset.id, 2, "it creates rows");
-        assert.strictEqual(rowById(3).dataset.id, 3, "it creates rows");
+        assert.strictEqual(rowById(1).dataset.id, "1", "it creates rows");
+        assert.strictEqual(rowById(2).dataset.id, "2", "it creates rows");
+        assert.strictEqual(rowById(3).dataset.id, "3", "it creates rows");
       },
     });
 
@@ -159,7 +159,7 @@ discourseModule(
         await clickRowById(2);
         assert.strictEqual(
           queryAll("#test").text(),
-          2,
+          "2",
           "it calls the onChange actions"
         );
       },
@@ -363,11 +363,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.strictEqual(
-          rowById(1),
-          undefined,
-          "it does not display options"
-        );
+        assert.strictEqual(rowById(1), null, "it does not display options");
       },
     });
 

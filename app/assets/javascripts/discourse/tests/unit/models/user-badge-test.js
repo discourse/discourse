@@ -32,7 +32,7 @@ module("Unit | Model | user-badge", function () {
     assert.ok(Array.isArray(userBadges), "returns an array");
     assert.strictEqual(
       userBadges[0].get("granted_by"),
-      null,
+      undefined,
       "granted_by reference is not set when null"
     );
   });

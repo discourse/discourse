@@ -234,7 +234,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
 
     let elem = stringToDOMNode(autoUpdatingRelativeAge(d));
     assert.strictEqual(elem.dataset.format, "tiny");
-    assert.strictEqual(elem.dataset.time, d.getTime());
+    assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, "");
 
     elem = stringToDOMNode(autoUpdatingRelativeAge(d, { title: true }));
@@ -249,13 +249,13 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     );
 
     assert.strictEqual(elem.dataset.format, "medium-with-ago");
-    assert.strictEqual(elem.dataset.time, d.getTime());
+    assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, longDate(d));
     assert.strictEqual(elem.innerHTML, "1 day ago");
 
     elem = stringToDOMNode(autoUpdatingRelativeAge(d, { format: "medium" }));
     assert.strictEqual(elem.dataset.format, "medium");
-    assert.strictEqual(elem.dataset.time, d.getTime());
+    assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, "");
     assert.strictEqual(elem.innerHTML, "1 day");
   });

@@ -178,8 +178,8 @@ discourseModule(
         await this.subject.expand();
 
         const row = this.subject.rowByValue(this.category.id);
-        assert.strictEqual(row.value(), this.category.id);
-        assert.strictEqual(this.category.parent_category_id, null);
+        assert.strictEqual(row.value(), this.category.id.toString());
+        assert.strictEqual(this.category.parent_category_id, undefined);
       },
     });
 
@@ -339,7 +339,7 @@ discourseModule(
 
         assert.strictEqual(
           this.subject.rowByIndex(0).value(),
-          this.categories.firstObject.id,
+          this.categories.firstObject.id.toString(),
           "Shortcuts are not prepended when no category is selected"
         );
       },

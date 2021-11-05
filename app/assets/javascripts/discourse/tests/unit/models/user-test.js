@@ -105,7 +105,7 @@ module("Unit | Model | user", function () {
     let otherUser = User.create({ username: "howardhamlin", id: 999 });
     assert.strictEqual(
       otherUser.resolvedTimezone(user),
-      null,
+      undefined,
       "if the user has no timezone and the user is not the current user, do NOT guess with moment"
     );
     assert.not(

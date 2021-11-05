@@ -32,7 +32,7 @@ module("Unit | Model | user-stream", function () {
     assert.strictEqual(stream.get("filterParam"), "4,5");
 
     stream.set("filter", UserAction.TYPES.topics);
-    assert.strictEqual(stream.get("filterParam"), "4");
+    assert.strictEqual(stream.get("filterParam"), 4);
 
     stream.set("filter", UserAction.TYPES.likes_given);
     assert.strictEqual(stream.get("filterParam"), UserAction.TYPES.likes_given);

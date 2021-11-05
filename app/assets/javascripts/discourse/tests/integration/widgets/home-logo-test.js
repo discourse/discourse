@@ -54,7 +54,7 @@ discourseModule(
         assert.strictEqual(count("img.logo-small"), 1);
         assert.strictEqual(queryAll("img.logo-small").attr("src"), smallLogo);
         assert.strictEqual(queryAll("img.logo-small").attr("alt"), title);
-        assert.strictEqual(queryAll("img.logo-small").attr("width"), 36);
+        assert.strictEqual(queryAll("img.logo-small").attr("width"), "36");
       },
     });
 

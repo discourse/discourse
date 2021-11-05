@@ -489,7 +489,7 @@ module("Unit | Model | report", function () {
     computedFlagCountLabel = flagCountLabel.compute(row, {
       formatNumbers: false,
     });
-    assert.strictEqual(computedFlagCountLabel.formatedValue, 1876);
+    assert.strictEqual(computedFlagCountLabel.formatedValue, "1876");
 
     const timeReadLabel = computedLabels[2];
     assert.strictEqual(timeReadLabel.mainProperty, "time_read");

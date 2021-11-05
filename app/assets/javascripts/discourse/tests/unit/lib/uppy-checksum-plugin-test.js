@@ -134,7 +134,10 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
       assert.strictEqual(plugin.uppy.emitted[0].event, "preprocess-progress");
       assert.strictEqual(plugin.uppy.emitted[1].event, "preprocess-complete");
-      assert.strictEqual(plugin.uppy.getFile(fileId).meta.sha1_checksum, null);
+      assert.strictEqual(
+        plugin.uppy.getFile(fileId).meta.sha1_checksum,
+        undefined
+      );
       done();
     });
   });

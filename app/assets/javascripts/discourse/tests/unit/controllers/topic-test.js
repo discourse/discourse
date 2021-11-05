@@ -557,7 +557,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       controller.send("topVisibleChanged", {
         post: placeholder,
       }),
-      null,
+      undefined,
       "it should work with a post-placeholder"
     );
   });

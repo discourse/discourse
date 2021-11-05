@@ -55,7 +55,7 @@ discourseModule(
         );
         assert.strictEqual(
           content[0].id,
-          this.content.firstObject.id,
+          this.content.firstObject.id.toString(),
           "it has the correct value"
         );
         assert.strictEqual(

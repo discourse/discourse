@@ -57,6 +57,6 @@ module("Unit | Utility | search", function () {
       searchContextDescription("private_messages"),
       I18n.t("search.context.private_messages")
     );
-    assert.strictEqual(searchContextDescription("bad_type"), null);
+    assert.strictEqual(searchContextDescription("bad_type"), undefined);
   });
 });

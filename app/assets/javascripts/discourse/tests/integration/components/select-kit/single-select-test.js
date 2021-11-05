@@ -58,7 +58,7 @@ discourseModule(
         );
         assert.strictEqual(
           content[0].id,
-          this.content.firstObject.id,
+          this.content.firstObject.id.toString(),
           "it has the correct value"
         );
         assert.strictEqual(
@@ -87,7 +87,7 @@ discourseModule(
       test(assert) {
         assert.strictEqual(
           this.subject.header().value(this.content),
-          1,
+          "1",
           "it selects the correct content to display"
         );
       },

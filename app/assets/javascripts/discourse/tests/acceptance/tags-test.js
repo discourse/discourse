@@ -469,6 +469,6 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     let composer = this.owner.lookup("controller:composer");
-    assert.strictEqual(composer.get("model").tags, null);
+    assert.strictEqual(composer.get("model").tags, undefined);
   });
 });

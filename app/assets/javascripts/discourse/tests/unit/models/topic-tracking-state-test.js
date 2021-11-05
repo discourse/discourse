@@ -634,7 +634,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         publishToMessageBus("/new", newTopicPayload);
         assert.strictEqual(
           trackingState.findState(222),
-          null,
+          undefined,
           "the new topic is not in the state"
         );
       });
@@ -644,7 +644,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         publishToMessageBus("/new", newTopicPayload);
         assert.strictEqual(
           trackingState.findState(222),
-          null,
+          undefined,
           "the new topic is not in the state"
         );
       });

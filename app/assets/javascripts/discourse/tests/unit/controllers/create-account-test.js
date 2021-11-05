@@ -17,7 +17,7 @@ discourseModule("Unit | Controller | create-account", function () {
       );
     };
 
-    testInvalidUsername("", undefined);
+    testInvalidUsername("", null);
     testInvalidUsername("x", I18n.t("user.username.too_short"));
     testInvalidUsername(
       "123456789012345678901",
@@ -74,7 +74,7 @@ discourseModule("Unit | Controller | create-account", function () {
       );
     };
 
-    testInvalidPassword("", undefined);
+    testInvalidPassword("", null);
     testInvalidPassword("x", I18n.t("user.password.too_short"));
     testInvalidPassword("porkchops", I18n.t("user.password.same_as_username"));
     testInvalidPassword(

@@ -20,7 +20,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "mins");
-        assert.strictEqual(prefilledDuration, 5);
+        assert.strictEqual(prefilledDuration, "5");
       },
     });
 
@@ -30,7 +30,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "hours");
-        assert.strictEqual(prefilledDuration, 1.5);
+        assert.strictEqual(prefilledDuration, "1.5");
       },
     });
 
@@ -40,7 +40,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "days");
-        assert.strictEqual(prefilledDuration, 2);
+        assert.strictEqual(prefilledDuration, "2");
       },
     });
 
@@ -52,7 +52,7 @@ discourseModule(
         test(assert) {
           const prefilledDuration = query(".relative-time-duration").value;
           assert.strictEqual(this.subject.header().value(), "months");
-          assert.strictEqual(prefilledDuration, 3);
+          assert.strictEqual(prefilledDuration, "3");
         },
       }
     );
@@ -63,7 +63,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "years");
-        assert.strictEqual(prefilledDuration, 1);
+        assert.strictEqual(prefilledDuration, "1");
       },
     });
 
@@ -73,7 +73,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "hours");
-        assert.strictEqual(prefilledDuration, 5);
+        assert.strictEqual(prefilledDuration, "5");
       },
     });
 
@@ -83,7 +83,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "mins");
-        assert.strictEqual(prefilledDuration, 30);
+        assert.strictEqual(prefilledDuration, "30");
       },
     });
 
@@ -93,7 +93,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "days");
-        assert.strictEqual(prefilledDuration, 2);
+        assert.strictEqual(prefilledDuration, "2");
       },
     });
 
@@ -103,7 +103,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "months");
-        assert.strictEqual(prefilledDuration, 3);
+        assert.strictEqual(prefilledDuration, "3");
       },
     });
 
@@ -113,7 +113,7 @@ discourseModule(
       test(assert) {
         const prefilledDuration = query(".relative-time-duration").value;
         assert.strictEqual(this.subject.header().value(), "years");
-        assert.strictEqual(prefilledDuration, 2);
+        assert.strictEqual(prefilledDuration, "2");
       },
     });
   }

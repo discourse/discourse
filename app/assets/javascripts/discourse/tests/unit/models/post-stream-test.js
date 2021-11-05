@@ -189,7 +189,7 @@ module("Unit | Model | post-stream", function () {
     const postStream = buildStream(1231);
     postStream.set("timelineLookup", []);
 
-    assert.strictEqual(postStream.closestDaysAgoFor(1), null);
+    assert.strictEqual(postStream.closestDaysAgoFor(1), undefined);
   });
 
   test("updateFromJson", function (assert) {

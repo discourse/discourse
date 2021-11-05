@@ -55,7 +55,7 @@ acceptance("Composer Actions", function (needs) {
       composerActions.rowByIndex(4).value(),
       "toggle_topic_bump"
     );
-    assert.strictEqual(composerActions.rowByIndex(5).value(), undefined);
+    assert.strictEqual(composerActions.rowByIndex(5).value(), null);
   });
 
   test("replying to post - reply_as_private_message", async function (assert) {

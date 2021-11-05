@@ -37,12 +37,12 @@ acceptance("User Preferences - Interface", function (needs) {
     await textSize.selectRowByValue("largest");
     assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
-    assert.strictEqual(cookie("text_size"), null, "cookie is not set");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is not set");
 
     // Click save (by default this sets for all browsers, no cookie)
     await savePreferences();
 
-    assert.strictEqual(cookie("text_size"), null, "cookie is not set");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is not set");
 
     await textSize.expand();
     await textSize.selectRowByValue("larger");
@@ -56,7 +56,7 @@ acceptance("User Preferences - Interface", function (needs) {
     await textSize.selectRowByValue("largest");
 
     await savePreferences();
-    assert.strictEqual(cookie("text_size"), null, "cookie is removed");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is removed");
 
     removeCookie("text_size");
   });
@@ -250,7 +250,6 @@ acceptance(
       );
       assert.ok(
         !exists(".control-group.dark-mode"),
-        0,
         "it does not show disable dark mode checkbox"
       );
 
@@ -259,7 +258,11 @@ acceptance(
 
       await selectKit(".light-color-scheme .combobox").expand();
       await selectKit(".light-color-scheme .combobox").selectRowByValue(2);
-      assert.strictEqual(cookie("color_scheme_id"), null, "cookie is not set");
+      assert.strictEqual(
+        cookie("color_scheme_id"),
+        undefined,
+        "cookie is not set"
+      );
       assert.ok(
         exists(".color-scheme-checkbox input:checked"),
         "defaults to storing values in user options"
@@ -268,14 +271,14 @@ acceptance(
       await savePreferences();
       assert.strictEqual(
         cookie("color_scheme_id"),
-        null,
+        undefined,
         "cookie is unchanged"
       );
 
       // Switch to saving changes in cookies
       await click(".color-scheme-checkbox input[type=checkbox]");
       await savePreferences();
-      assert.strictEqual(cookie("color_scheme_id"), 2, "cookie is set");
+      assert.strictEqual(cookie("color_scheme_id"), "2", "cookie is set");
 
       // dark scheme
       await selectKit(".dark-color-scheme .combobox").expand();
@@ -287,12 +290,12 @@ acceptance(
       await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
       assert.strictEqual(
         cookie("dark_scheme_id"),
-        null,
+        undefined,
         "cookie is not set before saving"
       );
 
       await savePreferences();
-      assert.strictEqual(cookie("dark_scheme_id"), -1, "cookie is set");
+      assert.strictEqual(cookie("dark_scheme_id"), "-1", "cookie is set");
 
       await click("button.undo-preview");
       assert.strictEqual(
@@ -303,7 +306,7 @@ acceptance(
 
       assert.strictEqual(
         selectKit(".dark-color-scheme .combobox").header().value(),
-        session.userDarkSchemeId,
+        session.userDarkSchemeId.toString(),
         "resets dark scheme dropdown"
       );
     });
