@@ -4811,10 +4811,10 @@ en:
             label: "Your community’s name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your community in one short sentence"
+            label: "Describe your community in one short sentence (used in search results and social media)"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
           short_site_description:
-            label: "Describe your community in few words"
+            label: "Describe your community in few words (used for the homepage title)"
             placeholder: "Best community ever"
 
       introduction:
