@@ -14,7 +14,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
 
     test(assert) {
       const html = query(".post-body").innerHTML.trim();
-      assert.equal(html, "<p><em>foo</em></p>");
+      assert.strictEqual(html, "<p><em>foo</em></p>");
     },
   });
 
@@ -43,7 +43,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
 
     test(assert) {
       const html = query(".post-body").innerHTML.trim();
-      assert.equal(
+      assert.strictEqual(
         html,
         '<p><img src="/images/avatar.png" alt="an image"></p>'
       );

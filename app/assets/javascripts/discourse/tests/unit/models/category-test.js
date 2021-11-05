@@ -8,7 +8,7 @@ module("Unit | Model | category", function () {
     const store = createStore();
 
     const slugFor = function (cat, val, text) {
-      assert.equal(Category.slugFor(cat), val, text);
+      assert.strictEqual(Category.slugFor(cat), val, text);
     };
 
     slugFor(

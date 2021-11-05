@@ -99,14 +99,14 @@ acceptance("Group logs", function (needs) {
 
   test("Browsing group logs", async function (assert) {
     await visit("/g/snorlax/manage/logs");
-    assert.equal(
+    assert.strictEqual(
       count("tr.group-manage-logs-row"),
       2,
       "it should display the right number of logs"
     );
 
     await click(query(".group-manage-logs-row button"));
-    assert.equal(
+    assert.strictEqual(
       count("tr.group-manage-logs-row"),
       1,
       "it should display the right number of logs"

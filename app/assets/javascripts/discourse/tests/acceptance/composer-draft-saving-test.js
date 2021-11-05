@@ -34,7 +34,7 @@ acceptance("Composer - Draft saving", function (needs) {
     );
 
     await fillIn(".d-editor-input", "This won't be saved because of error");
-    assert.equal(
+    assert.strictEqual(
       query("div#draft-status span").innerText.trim(),
       I18n.t("composer.drafts_offline"),
       "the draft wasn't saved, a warning is rendered"

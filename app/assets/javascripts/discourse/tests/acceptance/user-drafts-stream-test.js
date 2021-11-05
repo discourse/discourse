@@ -14,13 +14,13 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.equal(count(".user-stream-item"), 3, "has drafts");
+    assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
 
     await click(".user-stream-item:last-child .remove-draft");
     assert.ok(visible(".bootbox"));
 
     await click(".bootbox .btn-primary");
-    assert.equal(
+    assert.strictEqual(
       count(".user-stream-item"),
       2,
       "draft removed, list length diminished by one"
@@ -32,7 +32,7 @@ acceptance("User Drafts", function (needs) {
     assert.ok(exists(".user-stream-item"), "has drafts");
 
     await click(".user-stream-item .resume-draft");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       "A fun new topic for testing drafts."
     );
@@ -41,11 +41,11 @@ acceptance("User Drafts", function (needs) {
   test("Stream - has excerpt", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(exists(".user-stream-item"), "has drafts");
-    assert.equal(
+    assert.strictEqual(
       query(".user-stream-item:nth-child(3) .category").textContent,
       "meta"
     );
-    assert.equal(
+    assert.strictEqual(
       query(".user-stream-item:nth-child(3) .excerpt").innerHTML.trim(),
       'here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=10" title=":slight_smile:" class="emoji" alt=":slight_smile:">'
     );

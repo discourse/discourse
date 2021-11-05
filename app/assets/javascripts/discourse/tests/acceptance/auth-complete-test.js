@@ -22,7 +22,7 @@ acceptance("Auth Complete", function (needs) {
   test("when login not required", async function (assert) {
     await visit("/");
 
-    assert.equal(
+    assert.strictEqual(
       currentRouteName(),
       "discovery.latest",
       "it stays on the homepage"
@@ -38,7 +38,11 @@ acceptance("Auth Complete", function (needs) {
     this.siteSettings.login_required = true;
     await visit("/");
 
-    assert.equal(currentRouteName(), "login", "it redirects to the login page");
+    assert.strictEqual(
+      currentRouteName(),
+      "login",
+      "it redirects to the login page"
+    );
 
     assert.ok(
       exists("#discourse-modal div.create-account-body"),

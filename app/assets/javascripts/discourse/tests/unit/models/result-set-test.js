@@ -5,8 +5,8 @@ import createStore from "discourse/tests/helpers/create-store";
 module("Unit | Model | result-set", function () {
   test("defaults", function (assert) {
     const resultSet = ResultSet.create({ content: [] });
-    assert.equal(resultSet.get("length"), 0);
-    assert.equal(resultSet.get("totalRows"), 0);
+    assert.strictEqual(resultSet.get("length"), 0);
+    assert.strictEqual(resultSet.get("totalRows"), 0);
     assert.ok(!resultSet.get("loadMoreUrl"));
     assert.ok(!resultSet.get("loading"));
     assert.ok(!resultSet.get("loadingMore"));
@@ -16,8 +16,8 @@ module("Unit | Model | result-set", function () {
   test("pagination support", async function (assert) {
     const store = createStore();
     const resultSet = await store.findAll("widget");
-    assert.equal(resultSet.get("length"), 2);
-    assert.equal(resultSet.get("totalRows"), 4);
+    assert.strictEqual(resultSet.get("length"), 2);
+    assert.strictEqual(resultSet.get("totalRows"), 4);
     assert.ok(resultSet.get("loadMoreUrl"), "has a url to load more");
     assert.ok(!resultSet.get("loadingMore"), "it is not loading more");
     assert.ok(resultSet.get("canLoadMore"));
@@ -27,7 +27,7 @@ module("Unit | Model | result-set", function () {
 
     await promise;
     assert.ok(!resultSet.get("loadingMore"), "it finished loading more");
-    assert.equal(resultSet.get("length"), 4);
+    assert.strictEqual(resultSet.get("length"), 4);
     assert.ok(!resultSet.get("loadMoreUrl"));
     assert.ok(!resultSet.get("canLoadMore"));
   });
@@ -35,7 +35,7 @@ module("Unit | Model | result-set", function () {
   test("refresh support", async function (assert) {
     const store = createStore();
     const resultSet = await store.findAll("widget");
-    assert.equal(
+    assert.strictEqual(
       resultSet.get("refreshUrl"),
       "/widgets?refresh=true",
       "it has the refresh url"

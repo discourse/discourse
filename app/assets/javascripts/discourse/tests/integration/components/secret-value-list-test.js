@@ -25,7 +25,7 @@ discourseModule(
         await fillIn(".new-value-input.key", "thirdKey");
         await click(".add-value-btn");
 
-        assert.equal(
+        assert.strictEqual(
           count(".values .value"),
           2,
           "it doesn't add the value to the list if secret is missing"
@@ -35,7 +35,7 @@ discourseModule(
         await fillIn(".new-value-input.secret", "thirdValue");
         await click(".add-value-btn");
 
-        assert.equal(
+        assert.strictEqual(
           count(".values .value"),
           2,
           "it doesn't add the value to the list if key is missing"
@@ -45,7 +45,7 @@ discourseModule(
         await fillIn(".new-value-input.secret", "thirdValue");
         await click(".add-value-btn");
 
-        assert.equal(
+        assert.strictEqual(
           count(".values .value"),
           3,
           "it adds the value to the list of values"
@@ -96,13 +96,13 @@ discourseModule(
 
         await click(".values .value[data-index='0'] .remove-value-btn");
 
-        assert.equal(
+        assert.strictEqual(
           count(".values .value"),
           1,
           "it removes the value from the list of values"
         );
 
-        assert.equal(
+        assert.strictEqual(
           this.values,
           "secondKey|secondValue",
           "it removes the expected value"

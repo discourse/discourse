@@ -10,7 +10,7 @@ discourseModule("Unit | Controller | create-account", function () {
 
       let validation = controller.basicUsernameValidation(username);
       assert.ok(validation.failed, "username should be invalid: " + username);
-      assert.equal(
+      assert.strictEqual(
         validation.reason,
         expectedReason,
         "username validation reason: " + username + ", " + expectedReason
@@ -32,7 +32,7 @@ discourseModule("Unit | Controller | create-account", function () {
 
     let validation = controller.basicUsernameValidation("porkchops");
     assert.ok(validation.ok, "Prefilled username is valid");
-    assert.equal(
+    assert.strictEqual(
       validation.reason,
       I18n.t("user.username.prefilled"),
       "Prefilled username is valid"
@@ -48,12 +48,12 @@ discourseModule("Unit | Controller | create-account", function () {
     controller.set("prefilledUsername", "porkchops");
     controller.set("accountPassword", "b4fcdae11f9167");
 
-    assert.equal(
+    assert.strictEqual(
       controller.get("passwordValidation.ok"),
       true,
       "Password is ok"
     );
-    assert.equal(
+    assert.strictEqual(
       controller.get("passwordValidation.reason"),
       I18n.t("user.password.ok"),
       "Password is valid"
@@ -62,12 +62,12 @@ discourseModule("Unit | Controller | create-account", function () {
     const testInvalidPassword = (password, expectedReason) => {
       controller.set("accountPassword", password);
 
-      assert.equal(
+      assert.strictEqual(
         controller.get("passwordValidation.failed"),
         true,
         "password should be invalid: " + password
       );
-      assert.equal(
+      assert.strictEqual(
         controller.get("passwordValidation.reason"),
         expectedReason,
         "password validation reason: " + password + ", " + expectedReason
@@ -86,13 +86,13 @@ discourseModule("Unit | Controller | create-account", function () {
   test("authProviderDisplayName", async function (assert) {
     const controller = this.owner.lookup("controller:create-account");
 
-    assert.equal(
+    assert.strictEqual(
       controller.authProviderDisplayName("facebook"),
       I18n.t("login.facebook.name"),
       "provider name is translated correctly"
     );
 
-    assert.equal(
+    assert.strictEqual(
       controller.authProviderDisplayName("idontexist"),
       "idontexist",
       "provider name falls back if not found"

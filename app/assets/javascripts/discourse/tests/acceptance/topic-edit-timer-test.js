@@ -133,8 +133,8 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.equal(categoryChooser.header().label(), "uncategorized");
-    assert.equal(categoryChooser.header().value(), null);
+    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue("7");
@@ -157,7 +157,7 @@ acceptance("Topic - Edit timer", function (needs) {
       }
     );
 
-    assert.equal(text, el.innerText);
+    assert.strictEqual(text, el.innerText);
   });
 
   test("schedule publish to category - visible for a private category", async function (assert) {
@@ -173,8 +173,8 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.equal(categoryChooser.header().label(), "uncategorized");
-    assert.equal(categoryChooser.header().value(), null);
+    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue("7");
@@ -197,7 +197,7 @@ acceptance("Topic - Edit timer", function (needs) {
       }
     );
 
-    assert.equal(text, el.innerText);
+    assert.strictEqual(text, el.innerText);
   });
 
   test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
@@ -217,8 +217,8 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.equal(categoryChooser.header().label(), "uncategorized");
-    assert.equal(categoryChooser.header().value(), null);
+    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue("7");
@@ -241,7 +241,7 @@ acceptance("Topic - Edit timer", function (needs) {
       }
     );
 
-    assert.equal(text, el.innerText);
+    assert.strictEqual(text, el.innerText);
   });
 
   test("schedule publish to category - last custom date and time", async function (assert) {
@@ -338,11 +338,11 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".edit-topic-timer-buttons button.btn-primary");
 
     const removeTimerButton = queryAll(".topic-timer-info .topic-timer-remove");
-    assert.equal(removeTimerButton.attr("title"), "remove timer");
+    assert.strictEqual(removeTimerButton.attr("title"), "remove timer");
 
     await click(".topic-timer-info .topic-timer-remove");
     const topicTimerInfo = queryAll(".topic-timer-info .topic-timer-remove");
-    assert.equal(topicTimerInfo.length, 0);
+    assert.strictEqual(topicTimerInfo.length, 0);
   });
 
   test("Shows correct time frame options", async function (assert) {

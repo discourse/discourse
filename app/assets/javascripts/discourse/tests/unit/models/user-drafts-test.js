@@ -9,7 +9,11 @@ module("Unit | Model | user-draft", function () {
     const user = User.create({ id: 1, username: "eviltrout" });
     const stream = user.userDraftsStream;
     assert.present(stream, "a user has a drafts stream by default");
-    assert.equal(stream.content.length, 0, "no items are loaded by default");
+    assert.strictEqual(
+      stream.content.length,
+      0,
+      "no items are loaded by default"
+    );
     assert.blank(stream.content, "no content by default");
   });
 
@@ -24,8 +28,8 @@ module("Unit | Model | user-draft", function () {
       }),
     ];
 
-    assert.equal(drafts.length, 2, "drafts count is right");
-    assert.equal(
+    assert.strictEqual(drafts.length, 2, "drafts count is right");
+    assert.strictEqual(
       drafts[1].draftType,
       I18n.t("drafts.new_topic"),
       "loads correct draftType label"

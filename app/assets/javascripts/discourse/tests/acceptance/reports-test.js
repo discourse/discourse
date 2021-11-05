@@ -8,13 +8,16 @@ acceptance("Reports", function (needs) {
   test("Visit reports page", async function (assert) {
     await visit("/admin/reports");
 
-    assert.equal($(".reports-list .report").length, 1);
+    assert.strictEqual($(".reports-list .report").length, 1);
 
     const $report = $(".reports-list .report:first-child");
 
-    assert.equal($report.find(".report-title").html().trim(), "My report");
+    assert.strictEqual(
+      $report.find(".report-title").html().trim(),
+      "My report"
+    );
 
-    assert.equal(
+    assert.strictEqual(
       $report.find(".report-description").html().trim(),
       "List of my activities"
     );

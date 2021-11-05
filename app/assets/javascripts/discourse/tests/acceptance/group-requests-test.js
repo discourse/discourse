@@ -89,23 +89,23 @@ acceptance("Group Requests", function (needs) {
   test("Group Requests", async function (assert) {
     await visit("/g/Macdonald/requests");
 
-    assert.equal(count(".group-members tr"), 2);
-    assert.equal(
+    assert.strictEqual(count(".group-members tr"), 2);
+    assert.strictEqual(
       queryAll(".group-members tr:first-child td:nth-child(1)")
         .text()
         .trim()
         .replace(/\s+/g, " "),
       "Robin Ward eviltrout"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-members tr:first-child td:nth-child(3)").text().trim(),
       "Please accept my membership request."
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-members tr:first-child .btn-primary").text().trim(),
       "Accept"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-members tr:first-child .btn-danger").text().trim(),
       "Deny"
     );
@@ -120,7 +120,7 @@ acceptance("Group Requests", function (needs) {
     assert.deepEqual(requests, [["19", "true"]]);
 
     await click(".group-members tr:last-child .btn-danger");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-members tr:last-child td:nth-child(4)").text().trim(),
       "denied"
     );

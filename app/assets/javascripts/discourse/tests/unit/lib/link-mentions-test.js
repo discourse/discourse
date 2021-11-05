@@ -59,12 +59,15 @@ module("Unit | Utility | link-mentions", function () {
       }, 500);
     });
 
-    assert.equal(root.querySelector("a").innerText, "@valid_user");
-    assert.equal(root.querySelectorAll("a")[1].innerText, "@valid_group");
-    assert.equal(
+    assert.strictEqual(root.querySelector("a").innerText, "@valid_user");
+    assert.strictEqual(root.querySelectorAll("a")[1].innerText, "@valid_group");
+    assert.strictEqual(
       root.querySelector("a.notify").innerText,
       "@mentionable_group"
     );
-    assert.equal(root.querySelector("span.mention").innerHTML, "@invalid");
+    assert.strictEqual(
+      root.querySelector("span.mention").innerHTML,
+      "@invalid"
+    );
   });
 });
