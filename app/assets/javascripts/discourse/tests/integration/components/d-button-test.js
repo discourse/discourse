@@ -189,7 +189,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     template: hbs`{{d-button ariaExpanded=ariaExpanded}}`,
 
     test(assert) {
-      assert.strictEqual(query("button").ariaExpanded, null);
+      assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
 
       this.set("ariaExpanded", true);
       assert.strictEqual(query("button").getAttribute("aria-expanded"), "true");
