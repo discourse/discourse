@@ -37,8 +37,8 @@ acceptance("Managing Group Membership", function (needs) {
     );
 
     assert.ok(
-      queryAll('label[for="automatic_membership_associated_groups"]').length ===
-        1,
+      count('label[for="automatic_membership_associated_groups"]'),
+      1,
       "it should display associated groups automatic membership label"
     );
 
