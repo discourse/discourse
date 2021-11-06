@@ -844,6 +844,121 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(response.body).to include(error_message)
         end
       end
+
+      context "groups are enabled" do
+        before do
+          SiteSetting.google_oauth2_hd_groups = 'mydomain.com'
+          @google_profile_scopes = ['email', 'profile']
+          @google_group_scopes = [Auth::GoogleOAuth2Authenticator::GROUPS_SCOPE]
+        end
+
+        def mock_omniauth_for_groups(domain: '')
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              email: user.email,
+              name: 'Some name',
+              nickname: 'Somenickname'
+            ),
+            credentials: {
+              token: "1245678",
+              expires: true,
+              expires_at: 1615183562,
+              refresh_token: "1/12346678",
+            },
+            extra: {
+              raw_info: OmniAuth::AuthHash.new(
+                email_verified: true,
+                email: user.email,
+                family_name: 'Huh',
+                given_name: user.name,
+                gender: 'male',
+                name: "#{user.name} Huh",
+                hd: domain
+              )
+            }
+          )
+
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        end
+
+        it "should redirect to secondary authorization if required" do
+          mock_omniauth_for_groups(domain: 'mydomain.com')
+
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: @google_profile_scopes.split(' ')
+          }
+
+          auth_result = controller.instance_variable_get("@auth_result")
+          expect(auth_result.secondary_authorization_url).to eq(
+            Auth::GoogleOAuth2Authenticator.new.secondary_authorization_url
+          )
+        end
+
+        it "should update associated groups" do
+          domain = 'mydomain.com'
+          mock_omniauth_for_groups(domain: domain)
+
+          stub_request(:get, "#{Auth::GoogleOAuth2Authenticator::GROUPS_URL}?userKey=12345").
+            with(
+              headers: {
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer 1245678',
+              }
+            ).to_return(
+              status: 200,
+              body: "{ \"groups\": [{ \"name\": \"group1\" }, { \"name\": \"group2\" }] }",
+            )
+
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: (@google_profile_scopes + @google_group_scopes).split(' '),
+            state: 'secondary',
+            code: 'abcde',
+            hd: domain
+          }
+
+          expect(response.status).to eq(302)
+
+          associated_groups = AssociatedGroup.where(
+            provider_name: 'google_oauth2',
+            provider_domain: domain,
+          )
+
+          expect(associated_groups.length).to eq(2)
+          expect(associated_groups.exists?(name: 'group1')).to eq(true)
+          expect(associated_groups.exists?(name: 'group2')).to eq(true)
+          expect(UserAssociatedGroup.where(user_id: user.id).length).to eq(2)
+        end
+
+        it "raises an exception with a descriptive message if user is not authorized to read groups" do
+          domain = 'mydomain.com'
+          error_message = "Not Authorized to access this resource/api"
+
+          mock_omniauth_for_groups(domain: domain)
+
+          stub_request(:get, "#{Auth::GoogleOAuth2Authenticator::GROUPS_URL}?userKey=12345").
+            with(
+              headers: {
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer 1245678',
+              }
+            ).to_return(
+              status: 403,
+              body: "{\n \"error\": {\n \"code\": 403,\n \"message\": \"#{error_message}\"\n }\n}\n"
+            )
+
+          get "/auth/google_oauth2/callback", params: {
+            scope: (@google_profile_scopes + @google_group_scopes).split(' '),
+            state: 'secondary',
+            code: 'abcde',
+            hd: domain
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(error_message)
+        end
+      end
     end
 
     context 'when attempting reconnect' do

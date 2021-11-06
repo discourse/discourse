@@ -44,6 +44,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       return render 'secondary_authorization'
     end
 
+    if @auth_result.secondary_authorization_url.present?
+      return render 'secondary_authorization'
+    end
+
     preferred_origin = request.env['omniauth.origin']
 
     if session[:destination_url].present?
