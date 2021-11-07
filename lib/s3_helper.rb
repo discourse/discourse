@@ -153,12 +153,21 @@ class S3Helper
     return false if new_rules.empty?
 
     final_rules = existing_rules + new_rules
-    s3_resource.client.put_bucket_cors(
-      bucket: @s3_bucket_name,
-      cors_configuration: {
-        cors_rules: final_rules
-      }
-    )
+
+    begin
+      s3_resource.client.put_bucket_cors(
+        bucket: @s3_bucket_name,
+        cors_configuration: {
+          cors_rules: final_rules
+        }
+      )
+    rescue Aws::S3::Errors::AccessDenied => err
+      # TODO (martin) Remove this warning log level once we are sure this new
+      # ensure_cors! rule is functioning correctly.
+      Discourse.warn_exception(err, message: "Could not PutBucketCors rules for #{@s3_bucket_name}, rules: #{final_rules}")
+      return false
+    end
+
     true
   end
 

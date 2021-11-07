@@ -170,5 +170,18 @@ describe "S3Helper" do
       )
       s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
     end
+
+    it "returns false if the CORS rules do not get applied from an error" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      ).raises(Aws::S3::Errors::AccessDenied.new("test", "test", {}))
+      expect(s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])).to eq(false)
+    end
   end
 end
