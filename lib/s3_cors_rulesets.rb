@@ -42,22 +42,22 @@ class S3CorsRulesets
     backup_rules_applied = false
     direct_upload_rules_applied = false
 
-    Rails.logger.info("Attempting to apply ASSETS S3 CORS ruleset.")
     s3_helper = S3Helper.build_from_config(
       s3_client: s3_client, use_db_s3_config: use_db_s3_config
     )
+    puts "Attempting to apply ASSETS S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
     assets_rules_applied = s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
 
     if SiteSetting.enable_backups? && SiteSetting.backup_location == BackupLocationSiteSetting::S3
-      Rails.logger.info("Attempting to apply BACKUP_DIRECT_UPLOAD S3 CORS ruleset.")
       backup_s3_helper = S3Helper.build_from_config(
         s3_client: s3_client, use_db_s3_config: use_db_s3_config, for_backup: true
       )
+      puts "Attempting to apply BACKUP_DIRECT_UPLOAD S3 CORS ruleset in bucket #{backup_s3_helper.s3_bucket_name}."
       backup_rules_applied = backup_s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
     end
 
     if SiteSetting.enable_direct_s3_uploads
-      Rails.logger.info("Attempting to apply DIRECT_UPLOAD S3 CORS ruleset.")
+      puts "Attempting to apply DIRECT_UPLOAD S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
       direct_upload_rules_applied = s3_helper.ensure_cors!([S3CorsRulesets::DIRECT_UPLOAD])
     end
 

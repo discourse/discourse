@@ -179,12 +179,18 @@ task 's3:ensure_cors_rules' => :environment do
 
   if result[:assets_rules_applied]
     puts "Assets rules did not exist and were applied."
+  else
+    puts "Assets rules already existed."
   end
   if result[:backup_rules_applied]
     puts "Backup rules did not exist and were applied."
+  else
+    puts "Backup rules already existed."
   end
   if result[:direct_upload_rules_applied]
     puts "Direct upload rules did not exist and were applied."
+  else
+    puts "Direct upload rules already existed."
   end
 end
 
