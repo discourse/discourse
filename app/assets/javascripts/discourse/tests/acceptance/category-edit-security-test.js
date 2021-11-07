@@ -19,8 +19,7 @@ acceptance("Category Edit - security", function (needs) {
     const badgeName = firstRow.find(".group-name-label").text();
     assert.strictEqual(badgeName, "everyone");
 
-    const permission = firstRow.find(".d-icon-check-square");
-    assert.strictEqual(permission.length, 3);
+    assert.strictEqual(count(".d-icon-check-square"), 3);
   });
 
   test("removing a permission", async function (assert) {
@@ -41,7 +40,7 @@ acceptance("Category Edit - security", function (needs) {
       availableGroups.rowByValue("everyone").exists(),
       "everyone has been removed and appears in the available groups"
     );
-    assert.ok(
+    assert.strictEqual(
       queryAll(".row-empty").text(),
       I18n.t("category.permissions.no_groups_selected"),
       "shows message when no groups are selected"

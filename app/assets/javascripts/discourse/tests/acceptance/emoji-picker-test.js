@@ -137,7 +137,6 @@ acceptance("EmojiPicker", function (needs) {
 
     assert.ok(
       exists(".emoji-picker button.diversity-scale.medium-dark .d-icon"),
-      true,
       "it stores diversity scale"
     );
   });
