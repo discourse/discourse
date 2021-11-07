@@ -1,3 +1,15 @@
+@keyframes heartBump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .wrap {
   max-width: $large-width;
 }
@@ -103,6 +115,9 @@ nav.post-controls {
           // Like button after I've liked
           .d-icon {
             color: var(--love);
+            &.has-animation {
+              animation: heartBump 0.4s;
+            }
           }
           &.d-hover {
             background: var(--primary-low);

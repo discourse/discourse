@@ -5437,7 +5437,7 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
         add: "Add New Emoji"
         uploading: "Uploading..."
         name: "Name"

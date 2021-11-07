@@ -241,7 +241,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       {{mount-widget widget="post-menu" args=args toggleLike=toggleLike}}
     `,
     beforeEach() {
-      const args = { showLike: true, canToggleLike: true };
+      const args = { showLike: true, canToggleLike: true, id: 5 };
       this.set("args", args);
       this.set("toggleLike", () => {
         args.liked = !args.liked;

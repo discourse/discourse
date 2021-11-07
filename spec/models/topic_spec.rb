@@ -2071,9 +2071,13 @@ describe Topic do
       it "doesn't return topics from suppressed categories" do
         user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
-        Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
 
         SiteSetting.digest_suppress_categories = "#{category.id}"
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+
+        Fabricate(:topic_user, user: user, topic: topic, notification_level: TopicUser.notification_levels[:regular])
 
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end

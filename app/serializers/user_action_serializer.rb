@@ -29,6 +29,7 @@ class UserActionSerializer < ApplicationSerializer
              :post_type,
              :action_code,
              :action_code_who,
+             :action_code_href,
              :edit_reason,
              :category_id,
              :closed,
@@ -88,6 +89,14 @@ class UserActionSerializer < ApplicationSerializer
 
   def action_code_who
     object.action_code_who
+  end
+
+  def include_action_code_href?
+    action_code_href.present?
+  end
+
+  def action_code_href
+    object.action_code_href
   end
 
 end
