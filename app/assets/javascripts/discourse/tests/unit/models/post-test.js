@@ -28,7 +28,7 @@ module("Unit | Model | post", function () {
     assert.ok(post.get("new_user"), "post is from a new user");
 
     post.set("trust_level", 1);
-    assert.ok(!post.get("new_user"), "post is no longer from a new user");
+    assert.notOk(post.get("new_user"), "post is no longer from a new user");
   });
 
   test("firstPost", function (assert) {
@@ -36,7 +36,7 @@ module("Unit | Model | post", function () {
     assert.ok(post.get("firstPost"), "it's the first post");
 
     post.set("post_number", 10);
-    assert.ok(!post.get("firstPost"), "post is no longer the first post");
+    assert.notOk(post.get("firstPost"), "post is no longer the first post");
   });
 
   test("updateFromPost", function (assert) {
@@ -89,8 +89,8 @@ module("Unit | Model | post", function () {
 
     await post.destroy(user);
 
-    assert.ok(
-      !post.get("can_delete"),
+    assert.notOk(
+      post.get("can_delete"),
       "the post can't be deleted again in this session"
     );
     assert.ok(

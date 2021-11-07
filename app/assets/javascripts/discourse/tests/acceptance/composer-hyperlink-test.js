@@ -15,8 +15,8 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".topic-post:first-child button.reply");
     await fillIn(".d-editor-input", "This is a link to ");
 
-    assert.ok(
-      !exists(".insert-link.modal-body"),
+    assert.notOk(
+      exists(".insert-link.modal-body"),
       "no hyperlink modal by default"
     );
 
@@ -33,8 +33,8 @@ acceptance("Composer - Hyperlink", function (needs) {
       "adds link with url and text, prepends 'https://'"
     );
 
-    assert.ok(
-      !exists(".insert-link.modal-body"),
+    assert.notOk(
+      exists(".insert-link.modal-body"),
       "modal dismissed after submitting link"
     );
 
@@ -51,8 +51,8 @@ acceptance("Composer - Hyperlink", function (needs) {
       "doesn’t insert anything after cancelling"
     );
 
-    assert.ok(
-      !exists(".insert-link.modal-body"),
+    assert.notOk(
+      exists(".insert-link.modal-body"),
       "modal dismissed after cancelling"
     );
 
@@ -75,8 +75,8 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".d-editor button.link");
     await fillIn(".modal-body .link-url", "http://google.com");
     await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
-    assert.ok(
-      !exists(".internal-link-results"),
+    assert.notOk(
+      exists(".internal-link-results"),
       "does not show internal links search dropdown when inputting a url"
     );
 
@@ -90,8 +90,8 @@ acceptance("Composer - Hyperlink", function (needs) {
     await triggerKeyEvent(".insert-link", "keydown", 40);
     await triggerKeyEvent(".insert-link", "keydown", 13);
 
-    assert.ok(
-      !exists(".internal-link-results"),
+    assert.notOk(
+      exists(".internal-link-results"),
       "search dropdown dismissed after selecting an internal link"
     );
 

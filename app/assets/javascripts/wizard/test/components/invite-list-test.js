@@ -52,7 +52,10 @@ componentTest("can add users", {
       "adds the email to the JSON"
     );
     assert.ok(val[0].role.length, "adds the role to the JSON");
-    assert.ok(!this.get("field.warning"), "no warning once the user is added");
+    assert.notOk(
+      this.get("field.warning"),
+      "no warning once the user is added"
+    );
 
     await fillIn(".invite-email", "eviltrout@example.com");
     await click(".add-user");

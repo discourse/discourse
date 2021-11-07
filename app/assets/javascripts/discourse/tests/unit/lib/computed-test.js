@@ -38,8 +38,8 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       "airplane",
       "it has the value of the site setting"
     );
-    assert.ok(
-      !t.get("missingProp"),
+    assert.notOk(
+      t.get("missingProp"),
       "it is falsy when the site setting is not defined"
     );
   });
@@ -54,7 +54,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
 
     assert.ok(t.get("same"), "it is true when the properties are the same");
     t.set("biscuits", 9);
-    assert.ok(!t.get("same"), "it isn't true when one property is different");
+    assert.notOk(t.get("same"), "it isn't true when one property is different");
   });
 
   test("propertyNotEqual", function (assert) {
@@ -65,7 +65,10 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       biscuits: 10,
     });
 
-    assert.ok(!t.get("diff"), "it isn't true when the properties are the same");
+    assert.notOk(
+      t.get("diff"),
+      "it isn't true when the properties are the same"
+    );
     t.set("biscuits", 9);
     assert.ok(t.get("diff"), "it is true when one property is different");
   });

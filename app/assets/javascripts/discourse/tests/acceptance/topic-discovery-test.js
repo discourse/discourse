@@ -36,7 +36,7 @@ acceptance("Topic Discovery", function (needs) {
     await visit("/c/bug");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
-    assert.ok(!exists(".category-list"), "doesn't render subcategories");
+    assert.notOk(exists(".category-list"), "doesn't render subcategories");
     assert.ok(
       $("body.category-bug").length,
       "has a custom css class for the category id on the body"
@@ -87,8 +87,8 @@ acceptance("Topic Discovery", function (needs) {
       "it expands pinned topics in a subcategory"
     );
     await visit("/");
-    assert.ok(
-      !exists('.topic-list-item[data-topic-id="11557"] .topic-excerpt'),
+    assert.notOk(
+      exists('.topic-list-item[data-topic-id="11557"] .topic-excerpt'),
       "it doesn't expand all pinned in the latest category"
     );
   });

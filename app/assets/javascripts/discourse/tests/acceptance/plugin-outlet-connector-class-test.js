@@ -75,8 +75,8 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       1,
       "it has class names"
     );
-    assert.ok(
-      !exists(".user-profile-primary-outlet.dont-render"),
+    assert.notOk(
+      exists(".user-profile-primary-outlet.dont-render"),
       "doesn't render"
     );
 

@@ -50,8 +50,8 @@ acceptance("Managing Group Profile", function (needs) {
 
     await visit("/g/discourse/manage/profile");
 
-    assert.ok(
-      !exists(".group-form-name"),
+    assert.notOk(
+      exists(".group-form-name"),
       "it should not display group name input"
     );
   });

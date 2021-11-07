@@ -119,7 +119,7 @@ acceptance("Composer", function (needs) {
     assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
 
     await click(".modal-footer a:nth-of-type(2)");
-    assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
+    assert.notOk(exists(".bootbox.modal"), "the confirmation can be cancelled");
   });
 
   test("Create a topic with server side errors", async function (assert) {
@@ -130,7 +130,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.ok(exists(".bootbox.modal"), "it pops up an error message");
     await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    assert.notOk(exists(".bootbox.modal"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -186,15 +186,15 @@ acceptance("Composer", function (needs) {
   test("Create a Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      !exists('article[data-post-id="12345"]'),
+    assert.notOk(
+      exists('article[data-post-id="12345"]'),
       "the post is not in the DOM"
     );
 
     await click("#topic-footer-buttons .btn.create");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
-    assert.ok(
-      !exists("#reply-title"),
+    assert.notOk(
+      exists("#reply-title"),
       "there is no title since this is a reply"
     );
 
@@ -291,12 +291,12 @@ acceptance("Composer", function (needs) {
   test("Create an enqueued Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(!exists(".pending-posts .reviewable-item"));
+    assert.notOk(exists(".pending-posts .reviewable-item"));
 
     await click("#topic-footer-buttons .btn.create");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
-    assert.ok(
-      !exists("#reply-title"),
+    assert.notOk(
+      exists("#reply-title"),
       "there is no title since this is a reply"
     );
 
@@ -318,8 +318,8 @@ acceptance("Composer", function (needs) {
   test("Edit the first post", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      !exists(".topic-post:nth-of-type(1) .post-info.edits"),
+    assert.notOk(
+      exists(".topic-post:nth-of-type(1) .post-info.edits"),
       "it has no edits icon at first"
     );
 
@@ -334,7 +334,7 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "This is the new text for the post");
     await fillIn("#reply-title", "This is the new text for the title");
     await click("#reply-control button.create");
-    assert.ok(!exists(".d-editor-input"), "it closes the composer");
+    assert.notOk(exists(".d-editor-input"), "it closes the composer");
     assert.ok(
       exists(".topic-post:nth-of-type(1) .post-info.edits"),
       "it has the edits icon"
@@ -399,7 +399,7 @@ acceptance("Composer", function (needs) {
       await fillIn("#reply-title", "This is the new text for the title");
       await click("#reply-control button.create");
 
-      assert.ok(!exists(".topic-post.staged"));
+      assert.notOk(exists(".topic-post.staged"));
       assert.strictEqual(
         find(".topic-post .cooked")[0].innerText,
         "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
@@ -486,8 +486,8 @@ acceptance("Composer", function (needs) {
     await menu.expand();
     await menu.selectRowByValue("toggleWhisper");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-far-eye-slash"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-far-eye-slash"),
       "it removes the whisper mode"
     );
 
@@ -567,8 +567,8 @@ acceptance("Composer", function (needs) {
     assert.ok(exists("#create-topic"), "the create topic button is visible");
 
     await click("#create-topic");
-    assert.ok(
-      !exists(".composer-fields .whisper .d-icon-far-eye-slash"),
+    assert.notOk(
+      exists(".composer-fields .whisper .d-icon-far-eye-slash"),
       "it should reset the state of the composer's model"
     );
 
@@ -587,8 +587,8 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.reply");
-    assert.ok(
-      !exists(".composer-fields .whisper"),
+    assert.notOk(
+      exists(".composer-fields .whisper"),
       "it should reset the state of the composer's model"
     );
   });
@@ -723,15 +723,15 @@ acceptance("Composer", function (needs) {
       await composerActions.expand();
       await composerActions.selectRowByValue("reply_as_private_message");
 
-      assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
+      assert.notOk(exists(".modal-body"), "abandon popup shouldn't come");
 
       assert.ok(
         queryAll(".d-editor-input").val().includes(longText),
         "entered text should still be there"
       );
 
-      assert.ok(
-        !exists(
+      assert.notOk(
+        exists(
           '.action-title a[href="/t/internationalization-localization/280"]'
         ),
         "mode should have changed"
@@ -962,8 +962,8 @@ acceptance("Composer", function (needs) {
     `
     );
 
-    assert.ok(
-      !exists("script"),
+    assert.notOk(
+      exists("script"),
       "it does not unescape script tags in code blocks"
     );
   });
@@ -985,10 +985,10 @@ acceptance("Composer", function (needs) {
     );
 
     await fillIn(".d-editor-input", "[](https://discourse.org)");
-    assert.ok(!exists(".composer-popup"));
+    assert.notOk(exists(".composer-popup"));
 
     await fillIn(".d-editor-input", "[quote][](https://github.com)[/quote]");
-    assert.ok(!exists(".composer-popup"));
+    assert.notOk(exists(".composer-popup"));
 
     await fillIn(".d-editor-input", "[](https://github.com)");
     assert.strictEqual(count(".composer-popup"), 1);

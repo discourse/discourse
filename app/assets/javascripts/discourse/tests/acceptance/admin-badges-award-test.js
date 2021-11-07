@@ -24,8 +24,8 @@ acceptance("Admin - Badges - Mass Award", function (needs) {
   test("when the badge can not be granted multiple times", async function (assert) {
     await visit("/admin/badges/award/new");
     await click('.admin-badge-list-item span[data-badge-name="Only icon"]');
-    assert.ok(
-      !exists(".grant-existing-holders"),
+    assert.notOk(
+      exists(".grant-existing-holders"),
       "checkbox for granting existing holders is not displayed"
     );
   });

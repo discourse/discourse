@@ -13,8 +13,8 @@ acceptance("Personal Message", function (needs) {
   test("footer edit button", async function (assert) {
     await visit("/t/pm-for-testing/12");
 
-    assert.ok(
-      !exists(".edit-message"),
+    assert.notOk(
+      exists(".edit-message"),
       "does not show edit first post button on footer by default"
     );
   });

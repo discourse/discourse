@@ -10,27 +10,27 @@ acceptance("Admin - Badges - Show", function (needs) {
   needs.user();
   test("new badge page", async function (assert) {
     await visit("/admin/badges/new");
-    assert.ok(
-      !query("input#badge-icon").checked,
+    assert.notOk(
+      query("input#badge-icon").checked,
       "radio button for selecting an icon is off initially"
     );
-    assert.ok(
-      !query("input#badge-image").checked,
+    assert.notOk(
+      query("input#badge-image").checked,
       "radio button for uploading an image is off initially"
     );
-    assert.ok(!exists(".icon-picker"), "icon picker is not visible");
-    assert.ok(!exists(".image-uploader"), "image uploader is not visible");
+    assert.notOk(exists(".icon-picker"), "icon picker is not visible");
+    assert.notOk(exists(".image-uploader"), "image uploader is not visible");
 
     await click("input#badge-icon");
     assert.ok(
       exists(".icon-picker"),
       "icon picker is visible after clicking the select icon radio button"
     );
-    assert.ok(!exists(".image-uploader"), "image uploader remains hidden");
+    assert.notOk(exists(".image-uploader"), "image uploader remains hidden");
 
     await click("input#badge-image");
-    assert.ok(
-      !exists(".icon-picker"),
+    assert.notOk(
+      exists(".icon-picker"),
       "icon picker is hidden after clicking the upload image radio button"
     );
     assert.ok(
@@ -45,26 +45,26 @@ acceptance("Admin - Badges - Show", function (needs) {
       query("input#badge-icon").checked,
       "radio button for selecting an icon is on"
     );
-    assert.ok(
-      !query("input#badge-image").checked,
+    assert.notOk(
+      query("input#badge-image").checked,
       "radio button for uploading an image is off"
     );
     assert.ok(exists(".icon-picker"), "icon picker is visible");
-    assert.ok(!exists(".image-uploader"), "image uploader is not visible");
+    assert.notOk(exists(".image-uploader"), "image uploader is not visible");
     assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 
   test("existing badge that has an image URL", async function (assert) {
     await visit("/admin/badges/2");
-    assert.ok(
-      !query("input#badge-icon").checked,
+    assert.notOk(
+      query("input#badge-icon").checked,
       "radio button for selecting an icon is off"
     );
     assert.ok(
       query("input#badge-image").checked,
       "radio button for uploading an image is on"
     );
-    assert.ok(!exists(".icon-picker"), "icon picker is not visible");
+    assert.notOk(exists(".icon-picker"), "icon picker is not visible");
     assert.ok(exists(".image-uploader"), "image uploader is visible");
     assert.ok(
       query(".image-uploader a.lightbox").href.endsWith("/images/avatar.png?2"),
@@ -74,15 +74,15 @@ acceptance("Admin - Badges - Show", function (needs) {
 
   test("existing badge that has both an icon and image URL", async function (assert) {
     await visit("/admin/badges/3");
-    assert.ok(
-      !query("input#badge-icon").checked,
+    assert.notOk(
+      query("input#badge-icon").checked,
       "radio button for selecting an icon is off because image overrides icon"
     );
     assert.ok(
       query("input#badge-image").checked,
       "radio button for uploading an image is on because image overrides icon"
     );
-    assert.ok(!exists(".icon-picker"), "icon picker is not visible");
+    assert.notOk(exists(".icon-picker"), "icon picker is not visible");
     assert.ok(exists(".image-uploader"), "image uploader is visible");
     assert.ok(
       query(".image-uploader a.lightbox").href.endsWith("/images/avatar.png?3"),
@@ -91,7 +91,7 @@ acceptance("Admin - Badges - Show", function (needs) {
 
     await click("input#badge-icon");
     assert.ok(exists(".icon-picker"), "icon picker is becomes visible");
-    assert.ok(!exists(".image-uploader"), "image uploader becomes hidden");
+    assert.notOk(exists(".image-uploader"), "image uploader becomes hidden");
     assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 });

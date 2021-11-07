@@ -60,7 +60,7 @@ acceptance(
       await visit("/t/local-dates/281");
 
       await click(".discourse-local-date");
-      assert.ok(!exists(document.querySelector(".download-calendar")));
+      assert.notOk(exists(document.querySelector(".download-calendar")));
     });
   }
 );
@@ -96,7 +96,7 @@ acceptance(
 
       await click(".discourse-local-date");
       await click(document.querySelector(".download-calendar"));
-      assert.ok(!exists(document.querySelector("#discourse-modal-title")));
+      assert.notOk(exists(document.querySelector("#discourse-modal-title")));
       assert.ok(
         window.open.calledWith(
           `https://www.google.com/calendar/event?action=TEMPLATE&text=title%20to%20trim&dates=${startDate}T110000Z/${startDate}T120000Z`,

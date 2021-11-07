@@ -17,7 +17,7 @@ acceptance("Shared Drafts", function () {
     await click(".publish-shared-draft");
     await click(".bootbox .btn-primary");
 
-    assert.ok(!exists(".shared-draft-controls"));
+    assert.notOk(exists(".shared-draft-controls"));
   });
 
   test("Updating category", async function (assert) {

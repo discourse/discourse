@@ -14,7 +14,7 @@ acceptance("Admin - Users List", function (needs) {
     await visit("/admin/users/list/active");
 
     assert.ok(exists(".users-list .user"));
-    assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
+    assert.notOk(exists(".user:nth-of-type(1) .email small"), "escapes email");
   });
 
   test("sorts users", async function (assert) {

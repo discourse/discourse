@@ -23,7 +23,7 @@ module("Unit | Model | rest-model", function () {
     const store = createStore();
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.get("name"), "Trout Lure");
-    assert.ok(!widget.get("isSaving"), "it is not saving");
+    assert.notOk(widget.get("isSaving"), "it is not saving");
 
     const spyBeforeUpdate = sinon.spy(widget, "beforeUpdate");
     const spyAfterUpdate = sinon.spy(widget, "afterUpdate");
@@ -33,7 +33,7 @@ module("Unit | Model | rest-model", function () {
 
     const result = await promise;
     assert.ok(spyAfterUpdate.calledOn(widget));
-    assert.ok(!widget.get("isSaving"), "it is no longer saving");
+    assert.notOk(widget.get("isSaving"), "it is no longer saving");
     assert.strictEqual(widget.get("name"), "new name");
 
     assert.ok(result.target, "it has a reference to the record");
@@ -63,8 +63,8 @@ module("Unit | Model | rest-model", function () {
     const widget = store.createRecord("widget");
 
     assert.ok(widget.get("isNew"), "it is a new record");
-    assert.ok(!widget.get("isCreated"), "it is not created");
-    assert.ok(!widget.get("isSaving"), "it is not saving");
+    assert.notOk(widget.get("isCreated"), "it is not created");
+    assert.notOk(widget.get("isSaving"), "it is not saving");
 
     const spyBeforeCreate = sinon.spy(widget, "beforeCreate");
     const spyAfterCreate = sinon.spy(widget, "afterCreate");
@@ -74,11 +74,11 @@ module("Unit | Model | rest-model", function () {
 
     const result = await promise;
     assert.ok(spyAfterCreate.calledOn(widget));
-    assert.ok(!widget.get("isSaving"), "it is no longer saving");
+    assert.notOk(widget.get("isSaving"), "it is no longer saving");
     assert.ok(widget.get("id"), "it has an id");
     assert.ok(widget.get("name"), "Evil Widget");
     assert.ok(widget.get("isCreated"), "it is created");
-    assert.ok(!widget.get("isNew"), "it is no longer new");
+    assert.notOk(widget.get("isNew"), "it is no longer new");
 
     assert.ok(result.target, "it has a reference to the record");
     assert.strictEqual(result.target.name, widget.get("name"));

@@ -57,8 +57,8 @@ acceptance("Share and Invite modal - mobile", function (needs) {
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      !exists("#topic-footer-button-share-and-invite"),
+    assert.notOk(
+      exists("#topic-footer-button-share-and-invite"),
       "the button doesn’t exist"
     );
 

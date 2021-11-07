@@ -153,8 +153,8 @@ acceptance("Admin - User Index", function (needs) {
   test("hides the 'view Edits' button if the count is zero", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.ok(
-      !exists(".post-edits-count .controls .btn.btn-icon"),
+    assert.notOk(
+      exists(".post-edits-count .controls .btn.btn-icon"),
       "View Edits button not present"
     );
   });
@@ -185,8 +185,8 @@ acceptance("Admin - User Index", function (needs) {
       "the name should be correct"
     );
 
-    assert.ok(
-      !exists('.group-chooser span[title="Macdonald"]'),
+    assert.notOk(
+      exists('.group-chooser span[title="Macdonald"]'),
       "group should not be set"
     );
   });

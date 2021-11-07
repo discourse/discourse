@@ -66,8 +66,8 @@ discourseModule("Integration | Component | Widget | header", function (hooks) {
     test(assert) {
       assert.ok(exists("button.login-button"));
       assert.ok(exists("button.sign-up-button"));
-      assert.ok(!exists("#search-button"));
-      assert.ok(!exists("#toggle-hamburger-menu"));
+      assert.notOk(exists("#search-button"));
+      assert.notOk(exists("#toggle-hamburger-menu"));
     },
   });
 
@@ -89,8 +89,8 @@ discourseModule("Integration | Component | Widget | header", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(!exists("button.login-button"));
-      assert.ok(!exists("button.sign-up-button"));
+      assert.notOk(exists("button.login-button"));
+      assert.notOk(exists("button.sign-up-button"));
       assert.ok(exists("#search-button"));
       assert.ok(exists("#toggle-hamburger-menu"));
       assert.ok(exists("#current-user"));

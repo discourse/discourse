@@ -58,8 +58,8 @@ acceptance("Search - Anonymous", function (needs) {
 
     await fillIn("#search-term", "dev");
 
-    assert.ok(
-      !exists(".search-menu .results ul li.search-random-quick-tip"),
+    assert.notOk(
+      exists(".search-menu .results ul li.search-random-quick-tip"),
       "quick tip no longer shown"
     );
 
@@ -114,13 +114,13 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(exists(".search-menu"));
 
     await click(".d-header"); // click outside
-    assert.ok(!exists(".search-menu"));
+    assert.notOk(exists(".search-menu"));
 
     await click("#search-button");
     assert.ok(exists(".search-menu"));
 
     await click("#search-button"); // toggle same button
-    assert.ok(!exists(".search-menu"));
+    assert.notOk(exists(".search-menu"));
   });
 
   test("search scope", async function (assert) {
@@ -218,8 +218,8 @@ acceptance("Search - Anonymous", function (needs) {
 
     await click(".search-context");
 
-    assert.ok(
-      !exists(".search-menu .search-context"),
+    assert.notOk(
+      exists(".search-menu .search-context"),
       "search context indicator is no longer visible"
     );
 
@@ -237,8 +237,8 @@ acceptance("Search - Anonymous", function (needs) {
     await focus("input#search-term");
     await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
 
-    assert.ok(
-      !exists(".search-menu .search-context"),
+    assert.notOk(
+      exists(".search-menu .search-context"),
       "backspace resets search context"
     );
   });
@@ -415,7 +415,7 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     await triggerKeyEvent(".search-menu", "keydown", keyEsc);
-    assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
+    assert.notOk(exists(".search-menu:visible"), "Esc removes search dropdown");
 
     await click("#search-button");
     await triggerKeyEvent(".search-menu", "keydown", keyArrowDown);

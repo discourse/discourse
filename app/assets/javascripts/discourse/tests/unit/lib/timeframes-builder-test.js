@@ -48,8 +48,8 @@ module("Unit | Lib | timeframes-builder", function () {
     const timezone = moment.tz.guess();
     const clock = fakeTime("2100-06-13T08:00:00", timezone, true); // Sunday
 
-    assert.ok(
-      !buildTimeframes(buildOptions(moment())).mapBy("id").includes("next_week")
+    assert.notOk(
+      buildTimeframes(buildOptions(moment())).mapBy("id").includes("next_week")
     );
 
     clock.restore();
@@ -72,8 +72,8 @@ module("Unit | Lib | timeframes-builder", function () {
     const timezone = moment.tz.guess();
     const clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
 
-    assert.ok(
-      !buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
+    assert.notOk(
+      buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
         .mapBy("id")
         .includes("this_weekend")
     );
@@ -99,8 +99,8 @@ module("Unit | Lib | timeframes-builder", function () {
     const timezone = moment.tz.guess();
     const clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
 
-    assert.ok(
-      !buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
+    assert.notOk(
+      buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
         .mapBy("id")
         .includes("this_weekend")
     );

@@ -29,8 +29,8 @@ acceptance(
         "textarea is disabled"
       );
 
-      assert.ok(
-        !exists("button.toggle-fullscreen"),
+      assert.notOk(
+        exists("button.toggle-fullscreen"),
         "fullscreen button is not present"
       );
 
@@ -39,8 +39,8 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(2);
 
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
+      assert.notOk(
+        exists(".d-editor-textarea-wrapper.disabled"),
         "textarea is enabled"
       );
 
@@ -48,8 +48,8 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByIndex(0);
 
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
+      assert.notOk(
+        exists(".d-editor-textarea-wrapper.disabled"),
         "textarea is still enabled"
       );
 
@@ -96,8 +96,8 @@ acceptance(
         exists(".category-input .popup-tip.bad.hide"),
         "category errors are hidden by default"
       );
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
+      assert.notOk(
+        exists(".d-editor-textarea-wrapper.disabled"),
         "textarea is enabled"
       );
 
@@ -116,8 +116,8 @@ acceptance(
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(1);
 
-      assert.ok(
-        !exists(".category-input .popup-tip.bad"),
+      assert.notOk(
+        exists(".category-input .popup-tip.bad"),
         "category error removed after selecting category"
       );
     });

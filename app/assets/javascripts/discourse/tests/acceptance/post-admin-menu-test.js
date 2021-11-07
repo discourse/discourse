@@ -12,8 +12,8 @@ acceptance("Post - Admin Menu - Anonymous", function () {
       exists("#post_1 .post-controls .edit"),
       "The edit button was not rendered"
     );
-    assert.ok(
-      !exists(".show-post-admin-menu"),
+    assert.notOk(
+      exists(".show-post-admin-menu"),
       "The wrench button was not rendered"
     );
   });

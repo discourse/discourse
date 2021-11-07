@@ -11,7 +11,7 @@ module("Unit | Model | topic-details", function () {
   test("defaults", function (assert) {
     let details = buildDetails(1234);
     assert.present(details, "the details are present by default");
-    assert.ok(!details.get("loaded"), "details are not loaded by default");
+    assert.notOk(details.get("loaded"), "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {

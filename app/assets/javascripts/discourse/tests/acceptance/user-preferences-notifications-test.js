@@ -16,8 +16,8 @@ acceptance("User notification schedule", function (needs) {
   test("the schedule interface is hidden until enabled", async function (assert) {
     await visit("/u/eviltrout/preferences/notifications");
 
-    assert.ok(
-      !exists(".notification-schedule-table"),
+    assert.notOk(
+      exists(".notification-schedule-table"),
       "notification schedule is hidden"
     );
     await click(".control-group.notification-schedule input");
@@ -103,8 +103,8 @@ acceptance("User notification schedule", function (needs) {
     );
 
     await selectKit(".day.Tuesday .ends-at .combobox").expand();
-    assert.ok(
-      !selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
+    assert.notOk(
+      selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
       "End time options are limited to + 30 past start time"
     );
   });

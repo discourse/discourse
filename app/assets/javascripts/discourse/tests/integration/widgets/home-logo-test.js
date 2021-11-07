@@ -186,7 +186,7 @@ discourseModule(
       test(assert) {
         assert.strictEqual(count("img#site-logo.logo-big"), 1);
         assert.strictEqual(queryAll("#site-logo").attr("src"), bigLogo);
-        assert.ok(!exists("picture"), "does not include alternative logo");
+        assert.notOk(exists("picture"), "does not include alternative logo");
       },
     });
 
@@ -200,7 +200,7 @@ discourseModule(
       test(assert) {
         assert.strictEqual(count("img#site-logo.logo-big"), 1);
         assert.strictEqual(queryAll("#site-logo").attr("src"), bigLogo);
-        assert.ok(!exists("picture"), "does not include alternative logo");
+        assert.notOk(exists("picture"), "does not include alternative logo");
       },
     });
 
@@ -221,7 +221,7 @@ discourseModule(
           darkLogo,
           "uses dark logo"
         );
-        assert.ok(!exists("picture"), "does not add dark mode alternative");
+        assert.notOk(exists("picture"), "does not add dark mode alternative");
       },
     });
 

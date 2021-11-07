@@ -71,7 +71,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
 
-    assert.ok(!exists("tbody tr"), "does not show invite before saving");
+    assert.notOk(exists("tbody tr"), "does not show invite before saving");
 
     await click(".btn-primary");
 

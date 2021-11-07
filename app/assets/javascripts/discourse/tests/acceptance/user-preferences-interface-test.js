@@ -19,7 +19,7 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
 
     const savePreferences = async () => {
-      assert.ok(!exists(".saved"), "it hasn't been saved yet");
+      assert.notOk(exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
       queryAll(".saved").remove();
@@ -63,7 +63,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("does not show option to disable dark mode by default", async function (assert) {
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok(!exists(".control-group.dark-mode"), "option not visible");
+    assert.notOk(exists(".control-group.dark-mode"), "option not visible");
   });
 
   test("shows light/dark color scheme pickers", async function (assert) {
@@ -163,7 +163,7 @@ acceptance(
       site.set("user_color_schemes", []);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(!exists(".control-group.color-scheme"));
+      assert.notOk(exists(".control-group.color-scheme"));
     });
 
     test("light color scheme picker", async function (assert) {
@@ -172,8 +172,8 @@ acceptance(
 
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has regular picker dropdown");
-      assert.ok(
-        !exists(".dark-color-scheme"),
+      assert.notOk(
+        exists(".dark-color-scheme"),
         "does not have a dark color scheme picker"
       );
     });
@@ -234,7 +234,7 @@ acceptance(
       ]);
 
       const savePreferences = async () => {
-        assert.ok(!exists(".saved"), "it hasn't been saved yet");
+        assert.notOk(exists(".saved"), "it hasn't been saved yet");
         await click(".save-changes");
         assert.ok(exists(".saved"), "it displays the saved message");
         queryAll(".saved").remove();
@@ -248,8 +248,8 @@ acceptance(
         session.userDarkSchemeId,
         "sets site default as selected dark scheme"
       );
-      assert.ok(
-        !exists(".control-group.dark-mode"),
+      assert.notOk(
+        exists(".control-group.dark-mode"),
         "it does not show disable dark mode checkbox"
       );
 

@@ -23,7 +23,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
       await visit("/t/internationalization-localization/280");
       await selectText("#post_5 blockquote");
       assert.ok(exists(".insert-quote"), "it shows the quote button");
-      assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
+      assert.notOk(exists(".quote-sharing"), "it does not show quote sharing");
     }
   );
 
@@ -87,7 +87,10 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
         exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
         "it includes the email share button"
       );
-      assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+      assert.notOk(
+        exists(".insert-quote"),
+        "it does not show the quote button"
+      );
     }
   );
 
@@ -119,8 +122,11 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       await visit("/t/internationalization-localization/280");
       await selectText("#post_5 blockquote");
 
-      assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
-      assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+      assert.notOk(exists(".quote-sharing"), "it does not show quote sharing");
+      assert.notOk(
+        exists(".insert-quote"),
+        "it does not show the quote button"
+      );
     }
   );
 });

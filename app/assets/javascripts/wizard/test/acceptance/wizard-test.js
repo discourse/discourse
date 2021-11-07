@@ -31,7 +31,7 @@ test("Going back and forth in steps", async function (assert) {
     exists(".wizard-step-hello-world"),
     "it adds a class for the step id"
   );
-  assert.ok(!exists(".wizard-btn.finish"), "can’t finish on first step");
+  assert.notOk(exists(".wizard-btn.finish"), "can’t finish on first step");
   assert.ok(exists(".wizard-progress"));
   assert.ok(exists(".wizard-step-title"));
   assert.ok(exists(".wizard-step-description"));
@@ -40,8 +40,8 @@ test("Going back and forth in steps", async function (assert) {
     "don't show it as invalid until the user does something"
   );
   assert.ok(exists(".wizard-field .field-description"));
-  assert.ok(!exists(".wizard-btn.back"));
-  assert.ok(!exists(".wizard-field .field-error-description"));
+  assert.notOk(exists(".wizard-btn.back"));
+  assert.notOk(exists(".wizard-field .field-error-description"));
 
   // invalid data
   await click(".wizard-btn.next");
@@ -56,8 +56,8 @@ test("Going back and forth in steps", async function (assert) {
   // server validation ok
   await fillIn("input.field-full-name", "Evil Trout");
   await click(".wizard-btn.next");
-  assert.ok(!exists(".wizard-field .field-error-description"));
-  assert.ok(!exists(".wizard-step-description"));
+  assert.notOk(exists(".wizard-field .field-error-description"));
+  assert.notOk(exists(".wizard-step-description"));
   assert.ok(
     exists(".wizard-btn.finish"),
     "shows finish on an intermediate step"
@@ -68,11 +68,11 @@ test("Going back and forth in steps", async function (assert) {
   assert.ok(exists(".preview-area"), "renders the component field");
   assert.ok(exists(".wizard-btn.done"), "last step shows a done button");
   assert.ok(exists(".action-link.back"), "shows the back button");
-  assert.ok(!exists(".wizard-step-title"));
-  assert.ok(!exists(".wizard-btn.finish"), "can’t finish on last step");
+  assert.notOk(exists(".wizard-step-title"));
+  assert.notOk(exists(".wizard-btn.finish"), "can’t finish on last step");
 
   await click(".action-link.back");
   assert.ok(exists(".wizard-step-title"));
   assert.ok(exists(".wizard-btn.next"));
-  assert.ok(!exists(".wizard-prev"));
+  assert.notOk(exists(".wizard-prev"));
 });

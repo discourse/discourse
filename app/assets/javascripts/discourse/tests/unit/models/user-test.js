@@ -8,7 +8,7 @@ module("Unit | Model | user", function () {
   test("staff", function (assert) {
     let user = User.create({ id: 1, username: "eviltrout" });
 
-    assert.ok(!user.get("staff"), "user is not staff");
+    assert.notOk(user.get("staff"), "user is not staff");
 
     user.toggleProperty("moderator");
     assert.ok(user.get("staff"), "moderators are staff");

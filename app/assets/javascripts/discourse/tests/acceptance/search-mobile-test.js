@@ -21,7 +21,7 @@ acceptance("Search - Mobile", function (needs) {
       "it shows the full page search form"
     );
 
-    assert.ok(!exists(".search-results .fps-topic"), "no results by default");
+    assert.notOk(exists(".search-results .fps-topic"), "no results by default");
 
     await click(".advanced-filters summary");
 
@@ -35,8 +35,8 @@ acceptance("Search - Mobile", function (needs) {
 
     assert.strictEqual(count(".fps-topic"), 1, "has one post");
 
-    assert.ok(
-      !visible(".search-advanced-filters"),
+    assert.notOk(
+      visible(".search-advanced-filters"),
       "it should collapse advanced search filters"
     );
 

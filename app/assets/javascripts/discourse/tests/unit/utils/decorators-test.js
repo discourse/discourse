@@ -46,7 +46,7 @@ discourseModule("utils:decorators", function (hooks) {
 
       await this.clearRender();
 
-      assert.ok(!exists(document.querySelector(".foo-component")));
+      assert.notOk(exists(document.querySelector(".foo-component")));
       assert.strictEqual(this.baz, 1);
     },
   });

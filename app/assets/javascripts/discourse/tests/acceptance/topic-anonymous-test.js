@@ -7,8 +7,8 @@ acceptance("Topic - Anonymous", function () {
     await visit("/t/internationalization-localization/280/1");
     assert.ok(exists("#topic"), "The topic was rendered");
     assert.ok(exists("#topic .cooked"), "The topic has cooked posts");
-    assert.ok(
-      !exists(".shared-draft-notice"),
+    assert.notOk(
+      exists(".shared-draft-notice"),
       "no shared draft unless there's a dest category id"
     );
   });
@@ -20,19 +20,19 @@ acceptance("Topic - Anonymous", function () {
 
   test("Enter a 404 topic", async function (assert) {
     await visit("/t/not-found/404");
-    assert.ok(!exists("#topic"), "The topic was not rendered");
+    assert.notOk(exists("#topic"), "The topic was not rendered");
     assert.ok(exists(".topic-error"), "An error message is displayed");
   });
 
   test("Enter without access", async function (assert) {
     await visit("/t/i-dont-have-access/403");
-    assert.ok(!exists("#topic"), "The topic was not rendered");
+    assert.notOk(exists("#topic"), "The topic was not rendered");
     assert.ok(exists(".topic-error"), "An error message is displayed");
   });
 
   test("Enter with 500 errors", async function (assert) {
     await visit("/t/throws-error/500");
-    assert.ok(!exists("#topic"), "The topic was not rendered");
+    assert.notOk(exists("#topic"), "The topic was not rendered");
     assert.ok(exists(".topic-error"), "An error message is displayed");
   });
 });

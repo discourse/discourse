@@ -19,7 +19,10 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
+      assert.notOk(
+        exists(".slow-mode-heading"),
+        "it doesn't render the notice"
+      );
     },
   });
 
@@ -31,7 +34,10 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
+      assert.notOk(
+        exists(".slow-mode-heading"),
+        "it doesn't render the notice"
+      );
     },
   });
 

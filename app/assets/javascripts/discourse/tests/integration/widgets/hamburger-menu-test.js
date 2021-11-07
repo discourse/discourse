@@ -30,7 +30,7 @@ discourseModule(
 
       test(assert) {
         assert.ok(exists(".faq-priority"));
-        assert.ok(!exists(".faq-link"));
+        assert.notOk(exists(".faq-link"));
       },
     });
 
@@ -43,7 +43,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists(".faq-priority"));
+        assert.notOk(exists(".faq-priority"));
         assert.ok(exists(".faq-link"));
       },
     });
@@ -56,7 +56,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists(".admin-link"));
+        assert.notOk(exists(".admin-link"));
       },
     });
 
@@ -71,7 +71,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".admin-link"));
         assert.ok(exists(".review"));
-        assert.ok(!exists(".settings-link"));
+        assert.notOk(exists(".settings-link"));
       },
     });
 
@@ -101,10 +101,10 @@ discourseModule(
       anonymous: true,
 
       test(assert) {
-        assert.ok(!exists("li[class='']"));
+        assert.notOk(exists("li[class='']"));
         assert.ok(exists(".latest-topics-link"));
-        assert.ok(!exists(".new-topics-link"));
-        assert.ok(!exists(".unread-topics-link"));
+        assert.notOk(exists(".new-topics-link"));
+        assert.notOk(exists(".unread-topics-link"));
         assert.ok(exists(".top-topics-link"));
         assert.ok(exists(".badge-link"));
         assert.ok(exists(".category-link"));
@@ -239,7 +239,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists(".badge-link"));
+        assert.notOk(exists(".badge-link"));
       },
     });
 
@@ -267,7 +267,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists(".user-directory-link"));
+        assert.notOk(exists(".user-directory-link"));
       },
     });
   }

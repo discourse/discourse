@@ -112,8 +112,8 @@ acceptance("Composer Actions", function (needs) {
       "test replying as whisper to topic when initially not a whisper"
     );
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-far-eye-slash"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-far-eye-slash"),
       "whisper icon is not visible"
     );
     assert.strictEqual(
@@ -130,8 +130,8 @@ acceptance("Composer Actions", function (needs) {
       1,
       "whisper icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-share"),
       "reply icon is not visible"
     );
   });
@@ -173,7 +173,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.ok(!exists(".bootbox"));
+    assert.notOk(exists(".bootbox"));
   });
 
   test("reply_as_new_group_message", async function (assert) {
@@ -305,8 +305,8 @@ acceptance("Composer Actions", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-anchor"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-anchor"),
       "no-bump icon is not visible"
     );
     assert.strictEqual(
@@ -323,16 +323,16 @@ acceptance("Composer Actions", function (needs) {
       1,
       "no-bump icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-share"),
       "reply icon is not visible"
     );
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-anchor"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-anchor"),
       "no-bump icon is not visible"
     );
     assert.strictEqual(
@@ -348,12 +348,12 @@ acceptance("Composer Actions", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-far-eye-slash"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-far-eye-slash"),
       "whisper icon is not visible"
     );
-    assert.ok(
-      !exists(".composer-fields .whisper .d-icon-anchor"),
+    assert.notOk(
+      exists(".composer-fields .whisper .d-icon-anchor"),
       "no-bump icon is not visible"
     );
     assert.strictEqual(
@@ -377,8 +377,8 @@ acceptance("Composer Actions", function (needs) {
       1,
       "no-bump icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
+    assert.notOk(
+      exists(".composer-actions svg.d-icon-share"),
       "reply icon is not visible"
     );
   });

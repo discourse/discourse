@@ -36,7 +36,7 @@ discourseModule("Integration | Component | topic-list-item", function (hooks) {
     async test(assert) {
       const checkboxes = queryAll("input.bulk-select");
       assert.ok(checkboxes[0].checked);
-      assert.ok(!checkboxes[1].checked);
+      assert.notOk(checkboxes[1].checked);
     },
   });
 });

@@ -20,8 +20,8 @@ acceptance("Group Members - Anonymous", function () {
     );
     assert.ok(exists(".group-members tr"), "it lists group members");
 
-    assert.ok(
-      !exists(".group-member-dropdown"),
+    assert.notOk(
+      exists(".group-member-dropdown"),
       "it does not allow anon user to manage group members"
     );
 

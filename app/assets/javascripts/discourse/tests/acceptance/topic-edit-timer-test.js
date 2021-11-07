@@ -305,7 +305,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await timerType.expand();
 
-    assert.ok(!timerType.rowByValue("delete").exists());
+    assert.notOk(timerType.rowByValue("delete").exists());
   });
 
   test("auto delete", async function (assert) {

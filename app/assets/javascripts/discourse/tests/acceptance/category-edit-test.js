@@ -101,14 +101,14 @@ acceptance("Category Edit", function (needs) {
     );
 
     await click(".bootbox .btn-primary");
-    assert.ok(!visible(".bootbox"));
+    assert.notOk(visible(".bootbox"));
   });
 
   test("Subcategory list settings", async function (assert) {
     await visit("/c/bug/edit/settings");
 
-    assert.ok(
-      !visible(".subcategory-list-style-field"),
+    assert.notOk(
+      visible(".subcategory-list-style-field"),
       "subcategory list style isn't visible by default"
     );
 
@@ -129,12 +129,12 @@ acceptance("Category Edit", function (needs) {
 
     await visit("/c/bug/edit/settings");
 
-    assert.ok(
-      !visible(".show-subcategory-list-field"),
+    assert.notOk(
+      visible(".show-subcategory-list-field"),
       "show subcategory list isn't visible for child categories"
     );
-    assert.ok(
-      !visible(".subcategory-list-style-field"),
+    assert.notOk(
+      visible(".subcategory-list-style-field"),
       "subcategory list style isn't visible for child categories"
     );
   });

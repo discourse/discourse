@@ -80,7 +80,7 @@ acceptance("Invite accept", function (needs) {
       "shows social login hint"
     );
 
-    assert.ok(!exists("#new-account-email"), "hides the email input");
+    assert.notOk(exists("#new-account-email"), "hides the email input");
   });
 
   test("invite link", async function (assert) {
@@ -173,7 +173,7 @@ acceptance("Invite accept when local login is disabled", function (needs) {
     await visit("/invites/myvalidinvitetoken");
 
     assert.ok(exists(".btn-social.facebook"), "shows Facebook login button");
-    assert.ok(!exists("form"), "does not display the form");
+    assert.notOk(exists("form"), "does not display the form");
   });
 
   test("email invite link", async function (assert) {
@@ -181,7 +181,7 @@ acceptance("Invite accept when local login is disabled", function (needs) {
     await visit("/invites/myvalidinvitetoken");
 
     assert.ok(exists(".btn-social.facebook"), "shows Facebook login button");
-    assert.ok(!exists("form"), "does not display the form");
+    assert.notOk(exists("form"), "does not display the form");
   });
 });
 
@@ -198,13 +198,13 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.ok(
-        !exists(".btn-social.facebook"),
+      assert.notOk(
+        exists(".btn-social.facebook"),
         "does not show Facebook login button"
       );
-      assert.ok(!exists("form"), "does not display the form");
-      assert.ok(
-        !exists(".email-message"),
+      assert.notOk(exists("form"), "does not display the form");
+      assert.notOk(
+        exists(".email-message"),
         "does not show the email message with the prefilled email"
       );
       assert.ok(exists(".discourse-connect"), "shows the Continue button");
@@ -215,11 +215,11 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.ok(
-        !exists(".btn-social.facebook"),
+      assert.notOk(
+        exists(".btn-social.facebook"),
         "does not show Facebook login button"
       );
-      assert.ok(!exists("form"), "does not display the form");
+      assert.notOk(exists("form"), "does not display the form");
       assert.ok(
         exists(".email-message"),
         "shows the email message with the prefilled email"
@@ -244,7 +244,7 @@ acceptance(
       preloadInvite({ link: true });
 
       await visit("/invites/myvalidinvitetoken");
-      assert.ok(!exists("form"), "does not display the form");
+      assert.notOk(exists("form"), "does not display the form");
     });
   }
 );
@@ -265,12 +265,15 @@ acceptance("Invite link with authentication data", function (needs) {
 
     await visit("/invites/myvalidinvitetoken");
 
-    assert.ok(
-      !exists(".btn-social.facebook"),
+    assert.notOk(
+      exists(".btn-social.facebook"),
       "does not show Facebook login button"
     );
 
-    assert.ok(!exists("#new-account-password"), "does not show password field");
+    assert.notOk(
+      exists("#new-account-password"),
+      "does not show password field"
+    );
 
     assert.ok(
       exists("#new-account-email[disabled]"),
@@ -317,7 +320,7 @@ acceptance("Email Invite link with authentication data", function (needs) {
       I18n.t("user.email.invite_auth_email_invalid", { provider: "Facebook" })
     );
 
-    assert.ok(!exists("form"), "does not display the form");
+    assert.notOk(exists("form"), "does not display the form");
   });
 });
 
@@ -339,16 +342,16 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.ok(
-        !exists(".btn-social.facebook"),
+      assert.notOk(
+        exists(".btn-social.facebook"),
         "does not show Facebook login button"
       );
 
-      assert.ok(
-        !exists("#new-account-password"),
+      assert.notOk(
+        exists("#new-account-password"),
         "does not show password field"
       );
-      assert.ok(!exists("#new-account-email"), "does not show email field");
+      assert.notOk(exists("#new-account-email"), "does not show email field");
 
       assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),
@@ -414,7 +417,7 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.ok(!exists("#new-account-email"), "does not show email field");
+      assert.notOk(exists("#new-account-email"), "does not show email field");
 
       assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),
@@ -442,7 +445,7 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.ok(!exists("#new-account-email"), "does not show email field");
+      assert.notOk(exists("#new-account-email"), "does not show email field");
 
       assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),

@@ -73,7 +73,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
     async test(assert) {
       await fillIn(".tf-test", "hello");
-      assert.ok(!this.called);
+      assert.notOk(this.called);
       await fillIn(".tf-test", "new text");
       assert.ok(this.called);
       assert.strictEqual(this.newValue, "new text");
@@ -93,7 +93,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
     async test(assert) {
       await fillIn(".tf-test", "old");
-      assert.ok(!this.called);
+      assert.notOk(this.called);
       await fillIn(".tf-test", "no longer old");
       assert.ok(this.called);
       assert.strictEqual(this.newValue, "no longer old");

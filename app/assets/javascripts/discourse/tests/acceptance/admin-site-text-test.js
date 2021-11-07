@@ -30,7 +30,7 @@ acceptance("Admin - Site Texts", function (needs) {
       "/admin/customize/site_texts?overridden=true&q=Test"
     );
 
-    assert.ok(!exists(".site-text:not(.overridden)"));
+    assert.notOk(exists(".site-text:not(.overridden)"));
     assert.ok(exists(".site-text.overridden"));
   });
 
@@ -38,8 +38,8 @@ acceptance("Admin - Site Texts", function (needs) {
     await visit("/admin/customize/site_texts/site.test?locale=en");
 
     assert.strictEqual(queryAll(".title h3").text(), "site.test");
-    assert.ok(!exists(".saved"));
-    assert.ok(!exists(".revert-site-text"));
+    assert.notOk(exists(".saved"));
+    assert.notOk(exists(".revert-site-text"));
 
     // Change the value
     await fillIn(".site-text-value", "New Test Value");
@@ -55,7 +55,7 @@ acceptance("Admin - Site Texts", function (needs) {
 
     await click(".bootbox.modal .btn-primary");
 
-    assert.ok(!exists(".saved"));
-    assert.ok(!exists(".revert-site-text"));
+    assert.notOk(exists(".saved"));
+    assert.notOk(exists(".revert-site-text"));
   });
 });

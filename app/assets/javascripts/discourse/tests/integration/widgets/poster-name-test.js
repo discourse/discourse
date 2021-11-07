@@ -63,7 +63,7 @@ discourseModule(
         this.set("args", { username: "eviltrout", name: "Robin Ward" });
       },
       test(assert) {
-        assert.ok(!exists(".full-name"));
+        assert.notOk(exists(".full-name"));
       },
     });
 
@@ -75,7 +75,7 @@ discourseModule(
         this.set("args", { username: "eviltrout", name: "evil-trout" });
       },
       test(assert) {
-        assert.ok(!exists(".second"));
+        assert.notOk(exists(".second"));
       },
     });
   }

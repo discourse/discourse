@@ -199,7 +199,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       assert.strictEqual(count("button.like-count"), 1);
-      assert.ok(!exists(".who-liked"));
+      assert.notOk(exists(".who-liked"));
 
       // toggle it on
       await click("button.like-count");
@@ -208,8 +208,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
 
       // toggle it off
       await click("button.like-count");
-      assert.ok(!exists(".who-liked"));
-      assert.ok(!exists(".who-liked a.trigger-user-card"));
+      assert.notOk(exists(".who-liked"));
+      assert.notOk(exists(".who-liked a.trigger-user-card"));
     },
   });
 
@@ -219,7 +219,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { likeCount: 0 });
     },
     test(assert) {
-      assert.ok(!exists("button.like-count"));
+      assert.notOk(exists("button.like-count"));
     },
   });
 
@@ -250,17 +250,17 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       assert.ok(exists(".actions button.like"));
-      assert.ok(!exists(".actions button.like-count"));
+      assert.notOk(exists(".actions button.like-count"));
 
       await click(".actions button.like");
-      assert.ok(!exists(".actions button.like"));
+      assert.notOk(exists(".actions button.like"));
       assert.ok(exists(".actions button.has-like"));
       assert.strictEqual(count(".actions button.like-count"), 1);
 
       await click(".actions button.has-like");
       assert.ok(exists(".actions button.like"));
-      assert.ok(!exists(".actions button.has-like"));
-      assert.ok(!exists(".actions button.like-count"));
+      assert.notOk(exists(".actions button.has-like"));
+      assert.notOk(exists(".actions button.like-count"));
     },
   });
 
@@ -276,7 +276,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       assert.ok(exists(".actions button.like"));
-      assert.ok(!exists(".actions button.like-count"));
+      assert.notOk(exists(".actions button.like-count"));
 
       assert.strictEqual(
         queryAll("button.like").attr("title"),
@@ -309,7 +309,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canEdit: false });
     },
     test(assert) {
-      assert.ok(!exists("button.edit"), "button is not displayed");
+      assert.notOk(exists("button.edit"), "button is not displayed");
     },
   });
 
@@ -347,7 +347,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canDeleteTopic: false });
     },
     test(assert) {
-      assert.ok(!exists("button.delete"), `button is not displayed`);
+      assert.notOk(exists("button.delete"), `button is not displayed`);
     },
   });
 
@@ -401,7 +401,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canRecoverTopic: false });
     },
     test(assert) {
-      assert.ok(!exists("button.recover"), `button is not displayed`);
+      assert.notOk(exists("button.recover"), `button is not displayed`);
     },
   });
 
@@ -426,7 +426,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canDelete: false });
     },
     test(assert) {
-      assert.ok(!exists("button.delete"), `button is not displayed`);
+      assert.notOk(exists("button.delete"), `button is not displayed`);
     },
   });
 
@@ -440,8 +440,11 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.ok(!exists("button.delete"), `delete button is not displayed`);
-      assert.ok(!exists("button.create-flag"), `flag button is not displayed`);
+      assert.notOk(exists("button.delete"), `delete button is not displayed`);
+      assert.notOk(
+        exists("button.create-flag"),
+        `flag button is not displayed`
+      );
     },
   });
 
@@ -465,7 +468,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canRecover: false });
     },
     test(assert) {
-      assert.ok(!exists("button.recover"), `button is not displayed`);
+      assert.notOk(exists("button.recover"), `button is not displayed`);
     },
   });
 
@@ -491,7 +494,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canFlag: false });
     },
     test(assert) {
-      assert.ok(!exists("button.create-flag"));
+      assert.notOk(exists("button.create-flag"));
     },
   });
 
@@ -501,7 +504,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canFlag: true, hidden: true });
     },
     test(assert) {
-      assert.ok(!exists("button.create-flag"));
+      assert.notOk(exists("button.create-flag"));
     },
   });
 
@@ -535,8 +538,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.ok(!exists("a.reply-to-tab"), "hides the tab");
-      assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
+      assert.notOk(exists("a.reply-to-tab"), "hides the tab");
+      assert.notOk(exists(".avoid-tab"), "doesn't have the avoid tab class");
     },
   });
 
@@ -595,7 +598,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       await click(".topic-body .expand-post");
-      assert.ok(!exists(".expand-post"), "button is gone");
+      assert.notOk(exists(".expand-post"), "button is gone");
     },
   });
 
@@ -605,8 +608,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canBookmark: false });
     },
     test(assert) {
-      assert.ok(!exists("button.bookmark"));
-      assert.ok(!exists("button.bookmarked"));
+      assert.notOk(exists("button.bookmark"));
+      assert.notOk(exists("button.bookmarked"));
     },
   });
 
@@ -622,7 +625,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       assert.strictEqual(count(".post-menu-area .bookmark"), 1);
-      assert.ok(!exists("button.bookmarked"));
+      assert.notOk(exists("button.bookmarked"));
     },
   });
 
@@ -632,7 +635,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canManage: false });
     },
     test(assert) {
-      assert.ok(!exists(".post-menu-area .show-post-admin-menu"));
+      assert.notOk(exists(".post-menu-area .show-post-admin-menu"));
     },
   });
 
@@ -642,7 +645,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canManage: true });
     },
     async test(assert) {
-      assert.ok(!exists(".post-admin-menu"));
+      assert.notOk(exists(".post-admin-menu"));
       await click(".post-menu-area .show-post-admin-menu");
       assert.strictEqual(count(".post-admin-menu"), 1, "it shows the popup");
       await click(".post-menu-area");
@@ -663,7 +666,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .permanently-delete");
       assert.ok(this.deleted);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -679,7 +682,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .permanently-delete");
       assert.ok(this.deleted);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -697,7 +700,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-admin-menu .toggle-post-type");
 
       assert.ok(this.toggled);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
   componentTest("toggle moderator post", {
@@ -714,7 +717,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-admin-menu .toggle-post-type");
 
       assert.ok(this.toggled);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -730,7 +733,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .rebuild-html");
       assert.ok(this.baked);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -747,7 +750,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .unhide-post");
       assert.ok(this.unhidden);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -764,7 +767,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".post-menu-area .show-post-admin-menu");
       await click(".post-admin-menu .change-owner");
       assert.ok(this.owned);
-      assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+      assert.notOk(exists(".post-admin-menu"), "also hides the menu");
     },
   });
 
@@ -788,7 +791,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { canCreatePost: false });
     },
     test(assert) {
-      assert.ok(!exists(".post-controls .create"));
+      assert.notOk(exists(".post-controls .create"));
     },
   });
 
@@ -798,7 +801,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 0 });
     },
     test(assert) {
-      assert.ok(!exists("button.show-replies"));
+      assert.notOk(exists("button.show-replies"));
     },
   });
 
@@ -820,7 +823,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 1, replyDirectlyBelow: true });
     },
     test(assert) {
-      assert.ok(!exists("button.show-replies"));
+      assert.notOk(exists("button.show-replies"));
     },
   });
 
@@ -843,7 +846,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { showTopicMap: false });
     },
     test(assert) {
-      assert.ok(!exists(".topic-map"));
+      assert.notOk(exists(".topic-map"));
     },
   });
 
@@ -894,7 +897,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       );
 
       await click("nav.buttons button");
-      assert.ok(!exists("li.avatars a.poster"));
+      assert.notOk(exists("li.avatars a.poster"));
       assert.strictEqual(
         count(".topic-map-expanded a.poster"),
         4,
@@ -922,10 +925,10 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     async test(assert) {
       assert.strictEqual(count(".topic-map"), 1);
       assert.strictEqual(count(".map.map-collapsed"), 1);
-      assert.ok(!exists(".topic-map-expanded"));
+      assert.notOk(exists(".topic-map-expanded"));
 
       await click("nav.buttons button");
-      assert.ok(!exists(".map.map-collapsed"));
+      assert.notOk(exists(".map.map-collapsed"));
       assert.strictEqual(count(".topic-map .d-icon-chevron-up"), 1);
       assert.strictEqual(count(".topic-map-expanded"), 1);
       assert.strictEqual(
@@ -949,7 +952,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { showTopicMap: true });
     },
     test(assert) {
-      assert.ok(!exists(".toggle-summary"));
+      assert.notOk(exists(".toggle-summary"));
     },
   });
 

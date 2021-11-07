@@ -17,7 +17,7 @@ acceptance("Click Track", function (needs) {
 
   test("Do not track mentions", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    assert.ok(!exists(".user-card.show"), "card should not appear");
+    assert.notOk(exists(".user-card.show"), "card should not appear");
 
     await click('article[data-post-id="3651"] a.mention');
     assert.strictEqual(count(".user-card.show"), 1, "card appear");
@@ -25,6 +25,6 @@ acceptance("Click Track", function (needs) {
       currentURL(),
       "/t/internationalization-localization/280"
     );
-    assert.ok(!tracked);
+    assert.notOk(tracked);
   });
 });

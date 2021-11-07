@@ -12,8 +12,8 @@ acceptance("New Group - Anonymous", function () {
   test("As an anon user", async function (assert) {
     await visit("/g");
 
-    assert.ok(
-      !exists(".groups-header-new"),
+    assert.notOk(
+      exists(".groups-header-new"),
       "it should not display the button to create a group"
     );
   });
@@ -74,8 +74,8 @@ acceptance("New Group - Authenticated", function (needs) {
 
     await click(".group-form-public-admission");
 
-    assert.ok(
-      !exists("groups-new-allow-membership-requests"),
+    assert.notOk(
+      exists("groups-new-allow-membership-requests"),
       "it should disable the membership requests checkbox"
     );
 

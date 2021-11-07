@@ -126,7 +126,7 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".perform-silence");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    assert.notOk(exists(".bootbox.modal:visible"));
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
@@ -144,14 +144,14 @@ acceptance("flagging", function (needs) {
     assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-default");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    assert.notOk(exists(".bootbox.modal:visible"));
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
     assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-primary");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    assert.notOk(exists(".bootbox.modal:visible"));
   });
 
   skip("CTRL + ENTER accepts the modal", async function (assert) {
@@ -167,7 +167,7 @@ acceptance("flagging", function (needs) {
 
     await click("#radio_inappropriate"); // this enables the accept button
     pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.notOk(exists("#discourse-modal:visible"), "The modal was closed");
   });
 
   skip("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
@@ -183,6 +183,6 @@ acceptance("flagging", function (needs) {
 
     await click("#radio_inappropriate"); // this enables the accept button
     pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.notOk(exists("#discourse-modal:visible"), "The modal was closed");
   });
 });

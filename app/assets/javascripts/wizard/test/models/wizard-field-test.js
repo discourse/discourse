@@ -7,8 +7,8 @@ moduleFor("model:wizard-field");
 test("basic state", function (assert) {
   const w = WizardField.create({ type: "text" });
   assert.ok(w.get("unchecked"));
-  assert.ok(!w.get("valid"));
-  assert.ok(!w.get("invalid"));
+  assert.notOk(w.get("valid"));
+  assert.notOk(w.get("invalid"));
 });
 
 test("text - required - validation", function (assert) {
@@ -16,15 +16,15 @@ test("text - required - validation", function (assert) {
   assert.ok(w.get("unchecked"));
 
   w.check();
-  assert.ok(!w.get("unchecked"));
-  assert.ok(!w.get("valid"));
+  assert.notOk(w.get("unchecked"));
+  assert.notOk(w.get("valid"));
   assert.ok(w.get("invalid"));
 
   w.set("value", "a value");
   w.check();
-  assert.ok(!w.get("unchecked"));
+  assert.notOk(w.get("unchecked"));
   assert.ok(w.get("valid"));
-  assert.ok(!w.get("invalid"));
+  assert.notOk(w.get("invalid"));
 });
 
 test("text - optional - validation", function (assert) {

@@ -74,9 +74,9 @@ module("Unit | Utility | pretty-text", function () {
         .emoji,
       "emoji enabled"
     );
-    assert.ok(
-      !buildOptions({ siteSettings: { enable_emoji: false } }).discourse
-        .features.emoji,
+    assert.notOk(
+      buildOptions({ siteSettings: { enable_emoji: false } }).discourse.features
+        .emoji,
       "emoji disabled"
     );
   });
@@ -773,8 +773,8 @@ eviltrout</p>
       return new PrettyText(defaultOpts).cook(input).match(regexp);
     }
 
-    assert.ok(
-      !matches(
+    assert.notOk(
+      matches(
         "- http://www.textfiles.com/bbs/MINDVOX/FORUMS/ethics\n\n- http://drupal.org",
         /class="onebox"/
       ),
@@ -789,17 +789,17 @@ eviltrout</p>
       matches("http://test.com\nhttp://test2.com", /onebox[\s\S]+onebox/m),
       "supports multiple links"
     );
-    assert.ok(
-      !matches("http://test.com bob", /onebox/),
+    assert.notOk(
+      matches("http://test.com bob", /onebox/),
       "doesn't onebox links that have trailing text"
     );
 
-    assert.ok(
-      !matches("[Tom Cruise](http://www.tomcruise.com/)", "onebox"),
+    assert.notOk(
+      matches("[Tom Cruise](http://www.tomcruise.com/)", "onebox"),
       "Markdown links with labels are not oneboxed"
     );
-    assert.ok(
-      !matches(
+    assert.notOk(
+      matches(
         "[http://www.tomcruise.com/](http://www.tomcruise.com/)",
         "onebox"
       ),

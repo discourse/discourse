@@ -39,7 +39,7 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".d-modal-cancel");
 
-    assert.ok(!exists(".suspend-user-modal:visible"));
+    assert.notOk(exists(".suspend-user-modal:visible"));
   });
 
   test("suspend a user - cancel with input", async function (assert) {
@@ -64,10 +64,10 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".d-modal-cancel");
     assert.strictEqual(count(".bootbox.modal:visible"), 1);
-    assert.ok(!exists(".suspend-user-modal:visible"));
+    assert.notOk(exists(".suspend-user-modal:visible"));
 
     await click(".modal-footer .btn-primary");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    assert.notOk(exists(".bootbox.modal:visible"));
   });
 
   test("suspend, then unsuspend a user", async function (assert) {
@@ -77,7 +77,7 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await visit("/admin/users/1234/regular");
 
-    assert.ok(!exists(".suspension-info"));
+    assert.notOk(exists(".suspension-info"));
 
     await click(".suspend-user");
 
@@ -93,16 +93,16 @@ acceptance("Admin - Suspend User", function (needs) {
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
-    assert.ok(!exists(".perform-suspend[disabled]"), "no longer disabled");
+    assert.notOk(exists(".perform-suspend[disabled]"), "no longer disabled");
 
     await click(".perform-suspend");
 
-    assert.ok(!exists(".suspend-user-modal:visible"));
+    assert.notOk(exists(".suspend-user-modal:visible"));
     assert.ok(exists(".suspension-info"));
 
     await click(".unsuspend-user");
 
-    assert.ok(!exists(".suspension-info"));
+    assert.notOk(exists(".suspension-info"));
   });
 });
 

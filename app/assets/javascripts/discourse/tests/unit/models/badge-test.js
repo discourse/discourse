@@ -6,7 +6,7 @@ module("Unit | Model | badge", function () {
     const badge1 = Badge.create({ name: "New Badge" }),
       badge2 = Badge.create({ id: 1, name: "Old Badge" });
     assert.ok(badge1.get("newBadge"), "badges without ids are new");
-    assert.ok(!badge2.get("newBadge"), "badges with ids are not new");
+    assert.notOk(badge2.get("newBadge"), "badges with ids are not new");
   });
 
   test("createFromJson array", function (assert) {
@@ -40,7 +40,7 @@ module("Unit | Model | badge", function () {
 
     const badge = Badge.createFromJson(badgeJson);
 
-    assert.ok(!Array.isArray(badge), "does not returns an array");
+    assert.notOk(Array.isArray(badge), "does not returns an array");
   });
 
   test("updateFromJson", function (assert) {

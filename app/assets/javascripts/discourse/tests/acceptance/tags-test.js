@@ -234,7 +234,7 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.notOk(exists("#create-topic:disabled"));
 
     await visit("/tag/staff-only-tag");
     assert.strictEqual(count("#create-topic:disabled"), 1);
@@ -242,10 +242,10 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.notOk(exists("#create-topic:disabled"));
 
     await visit("/tag/staff-only-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.notOk(exists("#create-topic:disabled"));
   });
 });
 
@@ -402,9 +402,9 @@ acceptance("Tag info", function (needs) {
       1,
       "show the category"
     );
-    assert.ok(!exists("#rename-tag"), "can't rename tag");
-    assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
-    assert.ok(!exists("#delete-tag"), "can't delete tag");
+    assert.notOk(exists("#rename-tag"), "can't rename tag");
+    assert.notOk(exists("#edit-synonyms"), "can't edit synonyms");
+    assert.notOk(exists("#delete-tag"), "can't delete tag");
   });
 
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {

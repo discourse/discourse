@@ -155,15 +155,15 @@ discourseModule("Unit | Model | composer", function () {
 
   test("replyDirty", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("replyDirty"), "by default it's false");
+    assert.notOk(composer.get("replyDirty"), "by default it's false");
 
     composer.setProperties({
       originalText: "hello",
       reply: "hello",
     });
 
-    assert.ok(
-      !composer.get("replyDirty"),
+    assert.notOk(
+      composer.get("replyDirty"),
       "it's false when the originalText is the same as the reply"
     );
     composer.set("reply", "hello world");
@@ -240,10 +240,13 @@ discourseModule("Unit | Model | composer", function () {
     const composer = createComposer();
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.notOk(
+      composer.get("titleLengthValid"),
+      "short titles are not valid"
+    );
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.notOk(composer.get("titleLengthValid"), "long titles are not valid");
 
     composer.set("title", "just right");
     assert.ok(composer.get("titleLengthValid"), "in the range is okay");
@@ -255,10 +258,13 @@ discourseModule("Unit | Model | composer", function () {
     const composer = createComposer({ action: PRIVATE_MESSAGE });
 
     composer.set("title", "asdf");
-    assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
+    assert.notOk(
+      composer.get("titleLengthValid"),
+      "short titles are not valid"
+    );
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.get("titleLengthValid"), "long titles are not valid");
+    assert.notOk(composer.get("titleLengthValid"), "long titles are not valid");
 
     composer.set("title", "just right");
     assert.ok(composer.get("titleLengthValid"), "in the range is okay");
@@ -274,12 +280,12 @@ discourseModule("Unit | Model | composer", function () {
 
   test("editingFirstPost", function (assert) {
     const composer = createComposer();
-    assert.ok(!composer.get("editingFirstPost"), "it's false by default");
+    assert.notOk(composer.get("editingFirstPost"), "it's false by default");
 
     const post = Post.create({ id: 123, post_number: 2 });
     composer.setProperties({ post: post, action: EDIT });
-    assert.ok(
-      !composer.get("editingFirstPost"),
+    assert.notOk(
+      composer.get("editingFirstPost"),
       "it's false when not editing the first post"
     );
 
@@ -313,7 +319,7 @@ discourseModule("Unit | Model | composer", function () {
       draftKey: "asfd",
       draftSequence: 1,
     });
-    assert.ok(!composer.get("categoryId"), "Uncategorized by default");
+    assert.notOk(composer.get("categoryId"), "Uncategorized by default");
   });
 
   test("initial category when uncategorized is not allowed", function (assert) {
@@ -323,8 +329,8 @@ discourseModule("Unit | Model | composer", function () {
       draftKey: "asfd",
       draftSequence: 1,
     });
-    assert.ok(
-      !composer.get("categoryId"),
+    assert.notOk(
+      composer.get("categoryId"),
       "Uncategorized by default. Must choose a category."
     );
   });
@@ -375,8 +381,8 @@ discourseModule("Unit | Model | composer", function () {
     assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 
     composer.set("title", "");
-    assert.ok(
-      !composer.get("titleLengthValid"),
+    assert.notOk(
+      composer.get("titleLengthValid"),
       "admins must set title to at least 1 character"
     );
   });

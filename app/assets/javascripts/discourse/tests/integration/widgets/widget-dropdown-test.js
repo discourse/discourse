@@ -174,14 +174,14 @@ discourseModule(
 
       async test(assert) {
         assert.ok(exists("#my-dropdown.closed"));
-        assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+        assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
         assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
         assert.ok(exists("#my-dropdown.opened"));
         assert.ok(exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
         assert.ok(exists("#my-dropdown.closed"));
-        assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+        assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
       },
     });
 

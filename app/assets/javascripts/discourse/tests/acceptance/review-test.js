@@ -111,14 +111,14 @@ acceptance("Review", function (needs) {
   test("Clicking the buttons triggers actions", async function (assert) {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
-    assert.ok(!exists(user), "it removes the reviewable on success");
+    assert.notOk(exists(user), "it removes the reviewable on success");
   });
 
   test("Editing a reviewable", async function (assert) {
     const topic = '.reviewable-item[data-reviewable-id="4321"]';
     await visit("/review");
     assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .category-name`));
+    assert.notOk(exists(`${topic} .category-name`));
     assert.strictEqual(
       queryAll(`${topic} .discourse-tag:nth-of-type(1)`).text(),
       "hello"
@@ -141,8 +141,8 @@ acceptance("Review", function (needs) {
     );
     await click(`${topic} .reviewable-action.edit`);
 
-    assert.ok(
-      !exists(`${topic} .reviewable-action.approve`),
+    assert.notOk(
+      exists(`${topic} .reviewable-action.approve`),
       "when editing actions are disabled"
     );
 
@@ -199,7 +199,7 @@ acceptance("Review", function (needs) {
       count(`[data-reviewable-id="1234"] .status .pending`),
       1
     );
-    assert.ok(!exists(".stale-help"));
+    assert.notOk(exists(".stale-help"));
 
     publishToMessageBus("/reviewable_counts", {
       review_count: 1,

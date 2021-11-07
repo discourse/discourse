@@ -29,8 +29,8 @@ acceptance("Group - Anonymous", function (needs) {
   test("Anonymous Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Messages']"),
+    assert.notOk(
+      exists(".nav-pills li a[title='Messages']"),
       "it does not show group messages navigation link"
     );
 
@@ -46,12 +46,12 @@ acceptance("Group - Anonymous", function (needs) {
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
     assert.ok(exists(".user-stream-item"), "it lists stream items");
-    assert.ok(
-      !exists(".nav-pills li a[title='Edit Group']"),
+    assert.notOk(
+      exists(".nav-pills li a[title='Edit Group']"),
       "it should not show messages tab if user is not admin"
     );
-    assert.ok(
-      !exists(".nav-pills li a[title='Logs']"),
+    assert.notOk(
+      exists(".nav-pills li a[title='Logs']"),
       "it should not show Logs tab if user is not admin"
     );
     assert.ok(exists(".user-stream-item"), "it lists stream items");
@@ -73,8 +73,8 @@ acceptance("Group - Anonymous", function (needs) {
 
     await groupDropdown.expand();
 
-    assert.ok(
-      !exists(".group-dropdown-filter"),
+    assert.notOk(
+      exists(".group-dropdown-filter"),
       "it should not display the default header"
     );
   });
@@ -82,8 +82,8 @@ acceptance("Group - Anonymous", function (needs) {
   test("Anonymous Viewing Automatic Group", async function (assert) {
     await visit("/g/moderators");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Manage']"),
+    assert.notOk(
+      exists(".nav-pills li a[title='Manage']"),
       "it does not show group messages navigation link"
     );
   });
@@ -220,7 +220,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it prefills the group name"
     );
 
-    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
+    assert.notOk(exists(".add-warning"), "groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {

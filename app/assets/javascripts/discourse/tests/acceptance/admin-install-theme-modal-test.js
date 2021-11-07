@@ -38,8 +38,8 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click("#remote");
     assert.strictEqual(query(urlInput).value, "", "url input is reset");
     assert.strictEqual(query(branchInput).value, "", "branch input is reset");
-    assert.ok(
-      !query(privateRepoCheckbox).checked,
+    assert.notOk(
+      query(privateRepoCheckbox).checked,
       "private repo checkbox unchecked"
     );
     assert.notOk(query(publicKey), "hide public key");

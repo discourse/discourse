@@ -10,8 +10,8 @@ acceptance("Topic - Admin Menu Anonymous Users", function () {
   test("Enter as a regular user", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
-    assert.ok(
-      !exists(".toggle-admin-menu"),
+    assert.notOk(
+      exists(".toggle-admin-menu"),
       "The admin menu button was not rendered"
     );
   });

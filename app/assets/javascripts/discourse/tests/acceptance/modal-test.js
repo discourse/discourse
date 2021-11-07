@@ -33,7 +33,7 @@ acceptance("Modal", function (needs) {
   skip("modal", async function (assert) {
     await visit("/");
 
-    assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
+    assert.notOk(exists(".d-modal:visible"), "there is no modal at first");
 
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
@@ -52,7 +52,7 @@ acceptance("Modal", function (needs) {
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
     await triggerKeyEvent("#main-outlet", "keyup", 27);
-    assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
+    assert.notOk(exists(".d-modal:visible"), "ESC should close the modal");
 
     Ember.TEMPLATES[
       "modal/not-dismissable"
@@ -120,8 +120,8 @@ acceptance("Modal", function (needs) {
     await click(".d-modal .close");
 
     run(() => showModal("test-title"));
-    assert.ok(
-      !exists(".d-modal .title"),
+    assert.notOk(
+      exists(".d-modal .title"),
       "it should not re-use the previous title"
     );
   });
@@ -151,14 +151,14 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     await triggerKeyEvent("#main-outlet", "keydown", 27);
 
-    assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
+    assert.notOk(exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
     await click(".d-editor-button-bar .btn.link");
     await triggerKeyEvent(".d-modal", "keydown", 13);
 
-    assert.ok(
-      !exists(".d-modal:visible"),
+    assert.notOk(
+      exists(".d-modal:visible"),
       "modal should disappear on hitting Enter"
     );
   });

@@ -61,7 +61,7 @@ discourseModule(
           ];
         });
 
-        assert.ok(!exists("li.read"));
+        assert.notOk(exists("li.read"));
 
         $(document).trigger(
           $.Event("mouseup", {

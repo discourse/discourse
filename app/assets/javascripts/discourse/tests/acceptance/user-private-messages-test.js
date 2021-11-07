@@ -30,8 +30,8 @@ acceptance(
         "displays the topic list"
       );
 
-      assert.ok(
-        !exists(".group-notifications-button"),
+      assert.notOk(
+        exists(".group-notifications-button"),
         "displays the group notifications button"
       );
     });
@@ -41,13 +41,13 @@ acceptance(
 
       await visit("/u/eviltrout/messages");
 
-      assert.ok(
-        !exists(".messages-nav li a.new"),
+      assert.notOk(
+        exists(".messages-nav li a.new"),
         "it does not display new filter"
       );
 
-      assert.ok(
-        !exists(".messages-nav li a.unread"),
+      assert.notOk(
+        exists(".messages-nav li a.unread"),
         "it does not display unread filter"
       );
     });
@@ -298,8 +298,8 @@ acceptance(
 
       await visit("/u/charlie/messages"); // wait for re-render
 
-      assert.ok(
-        !exists(".show-mores"),
+      assert.notOk(
+        exists(".show-mores"),
         `does not display the topic incoming info`
       );
     });
@@ -331,8 +331,8 @@ acceptance(
 
         await visit(url); // wait for re-render
 
-        assert.ok(
-          !exists(".show-mores"),
+        assert.notOk(
+          exists(".show-mores"),
           `${url} does not display the topic incoming info`
         );
       }
@@ -437,8 +437,8 @@ acceptance(
       await visit("/t/13"); // await re-render
       await visit("/u/charlie/messages");
 
-      assert.ok(
-        !exists(".show-mores"),
+      assert.notOk(
+        exists(".show-mores"),
         "does not display the topic incoming info"
       );
     });
@@ -844,7 +844,7 @@ acceptance(
     test("tags are not present on private messages - Mobile mode", async function (assert) {
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
-      assert.ok(!exists("#reply-control .mini-tag-chooser"));
+      assert.notOk(exists("#reply-control .mini-tag-chooser"));
     });
   }
 );

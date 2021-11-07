@@ -26,7 +26,7 @@ discourseModule(
           !exists("span.post-count"),
           "don't show count for only 1 post"
         );
-        assert.ok(!exists(".avatar-flair"), "no avatar flair");
+        assert.notOk(exists(".avatar-flair"), "no avatar flair");
       },
     });
 

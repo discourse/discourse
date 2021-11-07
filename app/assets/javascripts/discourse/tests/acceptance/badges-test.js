@@ -16,7 +16,7 @@ acceptance("Badges", function (needs) {
 
     assert.ok(exists(".badge-card"), "has the badge in the listing");
     assert.ok(exists(".user-info"), "has the list of users with that badge");
-    assert.ok(!exists(".badge-card:nth-of-type(1) script"));
+    assert.notOk(exists(".badge-card:nth-of-type(1) script"));
   });
 
   test("shows correct badge titles to choose from", async function (assert) {

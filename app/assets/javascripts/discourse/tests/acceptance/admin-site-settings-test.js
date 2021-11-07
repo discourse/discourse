@@ -69,12 +69,12 @@ acceptance("Admin - Site Settings", function (needs) {
       1,
       "filter returns 1 site setting"
     );
-    assert.ok(!exists(".row.setting.overridden"), "setting isn't overriden");
+    assert.notOk(exists(".row.setting.overridden"), "setting isn't overriden");
 
     await fillIn(".input-setting-string", "Test");
     await click("button.cancel");
-    assert.ok(
-      !exists(".row.setting.overridden"),
+    assert.notOk(
+      exists(".row.setting.overridden"),
       "canceling doesn't mark setting as overriden"
     );
 
@@ -86,8 +86,8 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     await click("button.undo");
-    assert.ok(
-      !exists(".row.setting.overridden"),
+    assert.notOk(
+      exists(".row.setting.overridden"),
       "setting isn't marked as overriden after undo"
     );
 
@@ -99,8 +99,8 @@ acceptance("Admin - Site Settings", function (needs) {
 
     await click("button.undo");
     await click("button.ok");
-    assert.ok(
-      !exists(".row.setting.overridden"),
+    assert.notOk(
+      exists(".row.setting.overridden"),
       "setting isn't marked as overriden after undo"
     );
 

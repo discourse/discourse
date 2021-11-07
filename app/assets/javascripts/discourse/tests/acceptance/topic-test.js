@@ -75,14 +75,14 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .d-icon-pencil-alt");
 
     assert.ok(exists("#edit-title"), "it shows the editing controls");
-    assert.ok(
-      !exists(".title-wrapper .remove-featured-link"),
+    assert.notOk(
+      exists(".title-wrapper .remove-featured-link"),
       "link to remove featured link is not shown"
     );
 
     await fillIn("#edit-title", "this is the new title");
     await click("#topic-title .cancel-edit");
-    assert.ok(!exists("#edit-title"), "it hides the editing controls");
+    assert.notOk(exists("#edit-title"), "it hides the editing controls");
   });
 
   test("Updating the topic title and category", async function (assert) {
@@ -111,7 +111,7 @@ acceptance("Topic", function (needs) {
   test("Marking a topic as wiki", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(!exists("a.wiki"), "it does not show the wiki icon");
+    assert.notOk(exists("a.wiki"), "it does not show the wiki icon");
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
@@ -212,8 +212,8 @@ acceptance("Topic", function (needs) {
     );
 
     await click(".delete-topic-confirm-modal .btn-primary");
-    assert.ok(
-      !visible(".delete-topic-confirm-modal"),
+    assert.notOk(
+      visible(".delete-topic-confirm-modal"),
       "it hides the delete confirmation modal"
     );
     await click(".widget-button.delete");
@@ -265,7 +265,7 @@ acceptance("Topic featured links", function (needs) {
     //
     //await click(".title-wrapper .remove-featured-link");
     //await click(".title-wrapper .submit-edit");
-    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
+    //assert.notOk(exists(".title-wrapper .topic-featured-link"), "link is gone");
   });
 
   test("Converting to a public topic", async function (assert) {
@@ -281,7 +281,7 @@ acceptance("Topic featured links", function (needs) {
     await categoryChooser.selectRowByValue(21);
 
     await click(".convert-to-public-topic .btn-primary");
-    assert.ok(!exists(".private_message"));
+    assert.notOk(exists(".private_message"));
   });
 
   test("Unpinning unlisted topic", async function (assert) {
@@ -344,7 +344,7 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".gap");
 
-    assert.ok(!exists(".gap"), "it hides gap");
+    assert.notOk(exists(".gap"), "it hides gap");
   });
 
   test("Quoting a quote keeps the original poster name", async function (assert) {
@@ -520,8 +520,8 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
       "it should show the 'Pin Topic' button"
     );
 
-    assert.ok(
-      !exists(".make-banner"),
+    assert.notOk(
+      exists(".make-banner"),
       "it should not show the 'Banner Topic' button"
     );
   });
@@ -540,8 +540,8 @@ acceptance("Topic last visit line", function (needs) {
 
     await visit("/t/-/9");
 
-    assert.ok(
-      !exists(".topic-post-visited-line"),
+    assert.notOk(
+      exists(".topic-post-visited-line"),
       "does not show last visited line if post is the last post"
     );
   });

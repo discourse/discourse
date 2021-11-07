@@ -90,7 +90,7 @@ acceptance("User Preferences", function (needs) {
     assert.ok(exists(".user-preferences"), "it shows the preferences");
 
     const savePreferences = async () => {
-      assert.ok(!exists(".saved"), "it hasn't been saved yet");
+      assert.notOk(exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
       queryAll(".saved").remove();
@@ -124,8 +124,8 @@ acceptance("User Preferences", function (needs) {
     await categorySelector.fillInFilter("faq");
     await savePreferences();
 
-    assert.ok(
-      !exists(".preferences-nav .nav-tags a"),
+    assert.notOk(
+      exists(".preferences-nav .nav-tags a"),
       "tags tab isn't there when tags are disabled"
     );
 
@@ -133,8 +133,8 @@ acceptance("User Preferences", function (needs) {
     await click(".control-group.other input[type=checkbox]:nth-of-type(1)");
     await savePreferences();
 
-    assert.ok(
-      !exists(".preferences-nav .nav-apps a"),
+    assert.notOk(
+      exists(".preferences-nav .nav-apps a"),
       "apps tab isn't there when you have no authorized apps"
     );
   });
@@ -352,12 +352,12 @@ acceptance(
     test("setting featured topic on profile", async function (assert) {
       await visit("/u/eviltrout/preferences/profile");
 
-      assert.ok(
-        !exists(".featured-topic-link"),
+      assert.notOk(
+        exists(".featured-topic-link"),
         "no featured topic link to present"
       );
-      assert.ok(
-        !exists(".clear-feature-topic-on-profile-btn"),
+      assert.notOk(
+        exists(".clear-feature-topic-on-profile-btn"),
         "clear button not present"
       );
 
@@ -461,8 +461,8 @@ acceptance("Ignored users", function (needs) {
     await visit(`/u/eviltrout/preferences/users`);
     await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
 
-    assert.ok(
-      !exists(".user-ignore"),
+    assert.notOk(
+      exists(".user-ignore"),
       "it does not show the list of ignored users"
     );
   });
@@ -550,13 +550,13 @@ acceptance(
       );
       assert.ok(exists(".user-preferences"), "it shows the preferences");
 
-      assert.ok(
-        !exists(".preferences-nav .nav-categories a"),
+      assert.notOk(
+        exists(".preferences-nav .nav-categories a"),
         "categories tab isn't there for staged users"
       );
 
-      assert.ok(
-        !exists(".preferences-nav .nav-tags a"),
+      assert.notOk(
+        exists(".preferences-nav .nav-tags a"),
         "tags tab isn't there for staged users"
       );
     });

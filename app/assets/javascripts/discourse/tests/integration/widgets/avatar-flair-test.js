@@ -42,7 +42,7 @@ discourseModule(
       },
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
-        assert.ok(!exists("svg"), "it does not have an svg icon");
+        assert.notOk(exists("svg"), "it does not have an svg icon");
       },
     });
   }

@@ -31,11 +31,11 @@ acceptance("Page Publishing", function (needs) {
     await click(".topic-post:nth-of-type(1) .publish-page");
 
     await fillIn(".publish-slug", "bad-slug");
-    assert.ok(!exists(".valid-slug"));
+    assert.notOk(exists(".valid-slug"));
     assert.ok(exists(".invalid-slug"));
     await fillIn(".publish-slug", "internationalization-localization");
     assert.ok(exists(".valid-slug"));
-    assert.ok(!exists(".invalid-slug"));
+    assert.notOk(exists(".invalid-slug"));
 
     await click(".publish-page");
     assert.ok(exists(".current-url"));

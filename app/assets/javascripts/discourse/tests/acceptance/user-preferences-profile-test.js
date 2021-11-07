@@ -10,8 +10,8 @@ acceptance(
     test("default calendar option is not visible", async function (assert) {
       await visit("/u/eviltrout/preferences/profile");
 
-      assert.ok(
-        !exists("#user-default-calendar"),
+      assert.notOk(
+        exists("#user-default-calendar"),
         "option to change default calendar is hidden"
       );
     });

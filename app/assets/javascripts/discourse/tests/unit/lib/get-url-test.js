@@ -13,8 +13,8 @@ module("Unit | Utility | get-url", function () {
   test("isAbsoluteURL", function (assert) {
     setupURL(null, "https://example.com", "/forum");
     assert.ok(isAbsoluteURL("https://example.com/test/thing"));
-    assert.ok(!isAbsoluteURL("http://example.com/test/thing"));
-    assert.ok(!isAbsoluteURL("https://discourse.org/test/thing"));
+    assert.notOk(isAbsoluteURL("http://example.com/test/thing"));
+    assert.notOk(isAbsoluteURL("https://discourse.org/test/thing"));
   });
 
   test("getAbsoluteURL", function (assert) {

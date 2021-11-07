@@ -73,8 +73,8 @@ acceptance("Managing Group Membership", function (needs) {
       "it should disable group public admission input"
     );
 
-    assert.ok(
-      !exists(".group-form-public-exit[disabled]"),
+    assert.notOk(
+      exists(".group-form-public-exit[disabled]"),
       "it should not disable group public exit input"
     );
 
@@ -99,23 +99,23 @@ acceptance("Managing Group Membership", function (needs) {
 
     await visit("/g/discourse/manage/membership");
 
-    assert.ok(
-      !exists('label[for="automatic_membership"]'),
+    assert.notOk(
+      exists('label[for="automatic_membership"]'),
       "it should not display automatic membership label"
     );
 
-    assert.ok(
-      !exists(".groups-form-automatic-membership-retroactive"),
+    assert.notOk(
+      exists(".groups-form-automatic-membership-retroactive"),
       "it should not display automatic membership retroactive checkbox"
     );
 
-    assert.ok(
-      !exists(".groups-form-primary-group"),
+    assert.notOk(
+      exists(".groups-form-primary-group"),
       "it should not display set as primary group checkbox"
     );
 
-    assert.ok(
-      !exists(".groups-form-grant-trust-level"),
+    assert.notOk(
+      exists(".groups-form-grant-trust-level"),
       "it should not display grant trust level selector"
     );
 

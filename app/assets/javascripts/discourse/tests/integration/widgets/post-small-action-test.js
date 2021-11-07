@@ -15,9 +15,9 @@ discourseModule(
         this.set("args", { id: 123 });
       },
       async test(assert) {
-        assert.ok(!exists(".small-action-desc > .small-action-delete"));
-        assert.ok(!exists(".small-action-desc > .small-action-recover"));
-        assert.ok(!exists(".small-action-desc > .small-action-edit"));
+        assert.notOk(exists(".small-action-desc > .small-action-delete"));
+        assert.notOk(exists(".small-action-desc > .small-action-recover"));
+        assert.notOk(exists(".small-action-desc > .small-action-edit"));
       },
     });
 

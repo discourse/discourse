@@ -176,7 +176,7 @@ discourseModule(
           I18n.t("poll.results.groups.title", { groups: "foo" })
         );
         assert.strictEqual(requests, 0);
-        assert.ok(!exists(".chosen"));
+        assert.notOk(exists(".chosen"));
       },
     });
   }

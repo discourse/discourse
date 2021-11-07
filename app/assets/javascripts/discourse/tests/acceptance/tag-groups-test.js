@@ -53,7 +53,7 @@ acceptance("Tag Groups", function (needs) {
 
     await tags.expand();
     await tags.deselectItemByValue("monkey");
-    assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
+    assert.notOk(query(".tag-group-content .btn.btn-danger").disabled);
   });
 
   test("tag groups can have multiple groups added to them", async function (assert) {
@@ -72,7 +72,7 @@ acceptance("Tag Groups", function (needs) {
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
 
-    assert.ok(!query(".tag-group-content .btn.btn-primary").disabled);
+    assert.notOk(query(".tag-group-content .btn.btn-primary").disabled);
 
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");

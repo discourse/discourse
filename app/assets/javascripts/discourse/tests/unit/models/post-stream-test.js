@@ -36,7 +36,7 @@ module("Unit | Model | post-stream", function () {
       postStream.get("posts"),
       "there are no posts in a stream by default"
     );
-    assert.ok(!postStream.get("loaded"), "it has never loaded");
+    assert.notOk(postStream.get("loaded"), "it has never loaded");
     assert.present(postStream.get("topic"));
   });
 
@@ -50,12 +50,15 @@ module("Unit | Model | post-stream", function () {
       "the last post id is 4"
     );
 
-    assert.ok(!postStream.get("hasPosts"), "there are no posts by default");
-    assert.ok(
-      !postStream.get("firstPostPresent"),
+    assert.notOk(postStream.get("hasPosts"), "there are no posts by default");
+    assert.notOk(
+      postStream.get("firstPostPresent"),
       "the first post is not loaded"
     );
-    assert.ok(!postStream.get("loadedAllPosts"), "the last post is not loaded");
+    assert.notOk(
+      postStream.get("loadedAllPosts"),
+      "the last post is not loaded"
+    );
     assert.strictEqual(
       postStream.get("posts.length"),
       0,
@@ -65,8 +68,8 @@ module("Unit | Model | post-stream", function () {
     postStream.appendPost(
       store.createRecord("post", { id: 2, post_number: 2 })
     );
-    assert.ok(
-      !postStream.get("firstPostPresent"),
+    assert.notOk(
+      postStream.get("firstPostPresent"),
       "the first post is still not loaded"
     );
     assert.strictEqual(
@@ -78,8 +81,8 @@ module("Unit | Model | post-stream", function () {
     postStream.appendPost(
       store.createRecord("post", { id: 4, post_number: 4 })
     );
-    assert.ok(
-      !postStream.get("firstPostPresent"),
+    assert.notOk(
+      postStream.get("firstPostPresent"),
       "the first post is still loaded"
     );
     assert.ok(postStream.get("loadedAllPosts"), "the last post is now loaded");
@@ -114,8 +117,8 @@ module("Unit | Model | post-stream", function () {
 
     // change the stream
     postStream.set("stream", [1, 2, 4]);
-    assert.ok(
-      !postStream.get("firstPostPresent"),
+    assert.notOk(
+      postStream.get("firstPostPresent"),
       "the first post no longer loaded since the stream changed."
     );
     assert.ok(
@@ -239,7 +242,7 @@ module("Unit | Model | post-stream", function () {
 
     postStream.set("summary", true);
     postStream.cancelFilter();
-    assert.ok(!postStream.get("summary"), "summary is cancelled");
+    assert.notOk(postStream.get("summary"), "summary is cancelled");
 
     postStream.filterParticipant(participant);
     postStream.cancelFilter();
@@ -397,7 +400,10 @@ module("Unit | Model | post-stream", function () {
       { filter: "summary" },
       "postFilters contains the summary flag"
     );
-    assert.ok(!postStream.get("hasNoFilters"), "now there are filters present");
+    assert.notOk(
+      postStream.get("hasNoFilters"),
+      "now there are filters present"
+    );
 
     postStream.filterParticipant(participant.username);
     assert.deepEqual(
@@ -429,7 +435,7 @@ module("Unit | Model | post-stream", function () {
 
   test("loading", function (assert) {
     let postStream = buildStream(1234);
-    assert.ok(!postStream.get("loading"), "we're not loading by default");
+    assert.notOk(postStream.get("loading"), "we're not loading by default");
 
     postStream.set("loadingAbove", true);
     assert.ok(postStream.get("loading"), "we're loading if loading above");
@@ -755,7 +761,7 @@ module("Unit | Model | post-stream", function () {
     // Undoing a created post (there was an error)
     postStream.undoPost(stagedPost);
 
-    assert.ok(!postStream.get("loading"), "it is no longer loading");
+    assert.notOk(postStream.get("loading"), "it is no longer loading");
     assert.strictEqual(
       topic.get("highest_post_number"),
       1,
@@ -771,8 +777,8 @@ module("Unit | Model | post-stream", function () {
       1,
       "it retains the filteredPostsCount"
     );
-    assert.ok(
-      !postStream.get("posts").includes(stagedPost),
+    assert.notOk(
+      postStream.get("posts").includes(stagedPost),
       "the post is removed from the stream"
     );
     assert.ok(
@@ -838,7 +844,7 @@ module("Unit | Model | post-stream", function () {
       postStream.get("posts").includes(stagedPost),
       "the post is still in the stream"
     );
-    assert.ok(!postStream.get("loading"), "it is no longer loading");
+    assert.notOk(postStream.get("loading"), "it is no longer loading");
 
     assert.strictEqual(
       postStream.get("filteredPostsCount"),
@@ -874,7 +880,10 @@ module("Unit | Model | post-stream", function () {
       store.createRecord("post", { id: 1, post_number: 1 })
     );
     postStream.appendPost(postWithoutId);
-    assert.ok(!postStream.get("loadedAllPosts"), "the last post is not loaded");
+    assert.notOk(
+      postStream.get("loadedAllPosts"),
+      "the last post is not loaded"
+    );
 
     postWithoutId.set("id", 2);
     assert.ok(
@@ -1049,8 +1058,8 @@ module("Unit | Model | post-stream", function () {
       "we immediately have a larger placeholder window"
     );
     assert.strictEqual(testProxy.get("length"), 8);
-    assert.ok(!!postsWithPlaceholders.nextObject(3, p3));
-    assert.ok(!!postsWithPlaceholders.objectAt(4));
+    assert.ok(postsWithPlaceholders.nextObject(3, p3));
+    assert.ok(postsWithPlaceholders.objectAt(4));
     assert.ok(postsWithPlaceholders.objectAt(3) !== p4);
     assert.ok(testProxy.objectAt(3) !== p4);
 

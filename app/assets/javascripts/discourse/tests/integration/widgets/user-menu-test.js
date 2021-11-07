@@ -114,7 +114,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists(".user-pms-link"));
+        assert.notOk(exists(".user-pms-link"));
       },
     });
 
@@ -213,7 +213,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(!exists(".enable-anonymous"));
+        assert.notOk(exists(".enable-anonymous"));
       },
     });
 

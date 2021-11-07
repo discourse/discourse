@@ -330,12 +330,12 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click(yesButton);
 
-    assert.ok(
-      !exists(".topic-post:first-child button.bookmark.bookmarked"),
+    assert.notOk(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
       "the first bookmark is deleted"
     );
-    assert.ok(
-      !exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
+    assert.notOk(
+      exists(".topic-post:nth-child(3) button.bookmark.bookmarked"),
       "the second bookmark is deleted"
     );
   });
@@ -420,8 +420,8 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click("a.btn-primary");
 
-    assert.ok(
-      !exists(".topic-post:first-child button.bookmark.bookmarked"),
+    assert.notOk(
+      exists(".topic-post:first-child button.bookmark.bookmarked"),
       "the first post bookmark is deleted"
     );
     assert.strictEqual(

@@ -6,7 +6,7 @@ module("Unit | Service | store", function () {
     const store = createStore();
     const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
-    assert.ok(!widget.get("isNew"), "it is not a new record");
+    assert.notOk(widget.get("isNew"), "it is not a new record");
     assert.strictEqual(widget.get("name"), "hello");
     assert.strictEqual(widget.get("id"), 111);
   });
@@ -16,7 +16,7 @@ module("Unit | Service | store", function () {
     const widget = store.createRecord("widget", { name: "hello" });
 
     assert.ok(widget.get("isNew"), "it is a new record");
-    assert.ok(!widget.get("id"), "there is no id");
+    assert.notOk(widget.get("id"), "there is no id");
   });
 
   test("createRecord doesn't modify the input `id` field", function (assert) {
@@ -35,7 +35,7 @@ module("Unit | Service | store", function () {
     const store = createStore();
     const widget = store.createRecord("widget");
 
-    assert.ok(!widget.get("id"), "there is no id");
+    assert.notOk(widget.get("id"), "there is no id");
     assert.ok(widget.get("isNew"), "it is a new record");
   });
 
@@ -53,7 +53,7 @@ module("Unit | Service | store", function () {
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.get("name"), "Trout Lure");
     assert.strictEqual(widget.get("id"), 123);
-    assert.ok(!widget.get("isNew"), "found records are not new");
+    assert.notOk(widget.get("isNew"), "found records are not new");
     assert.strictEqual(
       widget.get("extras.hello"),
       "world",
@@ -86,8 +86,8 @@ module("Unit | Service | store", function () {
     const store = createStore();
     const stale = store.findStale("widget", { name: "Trout Lure" });
 
-    assert.ok(!stale.hasResults, "there are no stale results");
-    assert.ok(!stale.results, "results are present");
+    assert.notOk(stale.hasResults, "there are no stale results");
+    assert.notOk(stale.results, "results are present");
     const widget = await stale.refresh();
     assert.strictEqual(
       widget.get("firstObject.id"),
@@ -115,7 +115,7 @@ module("Unit | Service | store", function () {
     assert.strictEqual(result.get("length"), 2);
 
     const widget = result.findBy("id", 124);
-    assert.ok(!widget.get("isNew"), "found records are not new");
+    assert.notOk(widget.get("isNew"), "found records are not new");
     assert.strictEqual(widget.get("name"), "Evil Repellant");
   });
 
@@ -150,7 +150,7 @@ module("Unit | Service | store", function () {
     fruit.set("farmer", { dummy: "object" });
 
     fruit = await store.find("fruit", 4);
-    assert.ok(!fruit.get("farmer"));
+    assert.notOk(fruit.get("farmer"));
   });
 
   test("meta types", async function (assert) {

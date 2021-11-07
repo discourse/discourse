@@ -198,8 +198,8 @@ acceptance(
         "An interesting article",
         "title is from the oneboxed article"
       );
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
+      assert.notOk(
+        exists(".d-editor-textarea-wrapper.disabled"),
         "textarea is enabled"
       );
     });

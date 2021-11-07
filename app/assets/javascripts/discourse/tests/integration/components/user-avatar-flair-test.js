@@ -163,7 +163,7 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+        assert.notOk(exists(".avatar-flair"), "it does not render a flair");
       },
     });
 
@@ -211,7 +211,7 @@ discourseModule(
         resetFlair();
       },
       test(assert) {
-        assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+        assert.notOk(exists(".avatar-flair"), "it does not render a flair");
       },
     });
   }

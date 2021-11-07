@@ -11,7 +11,7 @@ import { visit } from "@ember/test-helpers";
 acceptance("CustomHTML set", function () {
   test("has no custom HTML in the top", async function (assert) {
     await visit("/static/faq");
-    assert.ok(!exists("span.custom-html-test"), "it has no markup");
+    assert.notOk(exists("span.custom-html-test"), "it has no markup");
   });
 
   test("renders set HTML", async function (assert) {

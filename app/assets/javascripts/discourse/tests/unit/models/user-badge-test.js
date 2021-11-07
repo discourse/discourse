@@ -7,7 +7,7 @@ module("Unit | Model | user-badge", function () {
     const userBadge = UserBadge.createFromJson(
       JSON.parse(JSON.stringify(badgeFixtures["/user_badges"]))
     );
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.notOk(Array.isArray(userBadge), "does not return an array");
     assert.strictEqual(
       userBadge.get("badge.name"),
       "Badge 2",
@@ -49,7 +49,7 @@ module("Unit | Model | user-badge", function () {
 
   test("grant", async function (assert) {
     const userBadge = await UserBadge.grant(1, "username");
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.notOk(Array.isArray(userBadge), "does not return an array");
   });
 
   test("revoke", async function (assert) {

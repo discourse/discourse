@@ -21,7 +21,7 @@ module("Unit | Model | user-stream", function () {
     assert.blank(stream.get("content"), "no content by default");
     assert.blank(stream.get("filter"), "no filter by default");
 
-    assert.ok(!stream.get("loaded"), "the stream is not loaded by default");
+    assert.notOk(stream.get("loaded"), "the stream is not loaded by default");
   });
 
   test("filterParam", function (assert) {

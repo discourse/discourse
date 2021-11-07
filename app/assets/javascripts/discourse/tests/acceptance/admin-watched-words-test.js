@@ -13,15 +13,15 @@ acceptance("Admin - Watched Words", function (needs) {
   test("list words in groups", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
 
-    assert.ok(!exists(".admin-watched-words .alert-error"));
+    assert.notOk(exists(".admin-watched-words .alert-error"));
 
-    assert.ok(
-      !exists(".watched-words-list"),
+    assert.notOk(
+      exists(".watched-words-list"),
       "Don't show bad words by default."
     );
 
-    assert.ok(
-      !exists(".watched-words-list .watched-word"),
+    assert.notOk(
+      exists(".watched-words-list .watched-word"),
       "Don't show bad words by default."
     );
 
@@ -35,8 +35,8 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await fillIn(".admin-controls .controls input[type=text]", "");
 
-    assert.ok(
-      !exists(".watched-words-list .watched-word"),
+    assert.notOk(
+      exists(".watched-words-list .watched-word"),
       "Clearing the filter hides words again."
     );
 
@@ -50,7 +50,10 @@ acceptance("Admin - Watched Words", function (needs) {
     await click(".nav-stacked .censor a");
 
     assert.ok(exists(".watched-words-list"));
-    assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
+    assert.notOk(
+      exists(".watched-words-list .watched-word"),
+      "Empty word list."
+    );
   });
 
   test("add words", async function (assert) {

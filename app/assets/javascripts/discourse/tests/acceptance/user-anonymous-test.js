@@ -20,7 +20,7 @@ acceptance("User Anonymous", function () {
     assert.ok(exists(".user-stream .item"), "it has stream items");
 
     await visit("/u/eviltrout/activity/topics");
-    assert.ok(!exists(".user-stream .item"), "has no stream displayed");
+    assert.notOk(exists(".user-stream .item"), "has no stream displayed");
     assert.ok(exists(".topic-list tr"), "it has a topic list");
 
     await visit("/u/eviltrout/activity/replies");

@@ -63,8 +63,8 @@ acceptance("Do not disturb", function (needs) {
 
     await click(".do-not-disturb");
 
-    assert.ok(
-      !exists(".do-not-disturb-background"),
+    assert.notOk(
+      exists(".do-not-disturb-background"),
       "The active moon icons are removed"
     );
   });

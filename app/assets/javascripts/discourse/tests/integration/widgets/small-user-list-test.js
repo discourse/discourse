@@ -25,7 +25,7 @@ discourseModule(
       },
       async test(assert) {
         assert.strictEqual(count('[data-user-card="eviltrout"]'), 1);
-        assert.ok(!exists('[data-user-card="someone"]'));
+        assert.notOk(exists('[data-user-card="someone"]'));
         assert.ok(exists(".unknown"), "includes unknown user");
       },
     });

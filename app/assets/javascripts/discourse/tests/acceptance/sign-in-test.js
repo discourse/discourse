@@ -44,14 +44,14 @@ acceptance("Signing In", function () {
       queryAll(".modal-body b").text(),
       "<small>eviltrout@example.com</small>"
     );
-    assert.ok(!exists(".modal-body small"), "it escapes the email address");
+    assert.notOk(exists(".modal-body small"), "it escapes the email address");
 
     await click(".modal-footer button.resend");
     assert.strictEqual(
       queryAll(".modal-body b").text(),
       "<small>current@example.com</small>"
     );
-    assert.ok(!exists(".modal-body small"), "it escapes the email address");
+    assert.notOk(exists(".modal-body small"), "it escapes the email address");
   });
 
   test("sign in - not activated - edit email", async function (assert) {
@@ -73,7 +73,7 @@ acceptance("Signing In", function () {
       "must change email"
     );
     await fillIn(".activate-new-email", "different@example.com");
-    assert.ok(!exists(".modal-footer .btn-primary:disabled"));
+    assert.notOk(exists(".modal-footer .btn-primary:disabled"));
     await click(".modal-footer .btn-primary");
     assert.strictEqual(
       queryAll(".modal-body b").text(),

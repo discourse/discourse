@@ -17,7 +17,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!exists("button.edit-email"));
+        assert.notOk(exists("button.edit-email"));
       },
     });
   }

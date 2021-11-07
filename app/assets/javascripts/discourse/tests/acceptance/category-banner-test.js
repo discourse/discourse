@@ -44,9 +44,9 @@ acceptance("Category Banners", function (needs) {
     await visit("/c/test-read-only-without-banner");
 
     await click("#create-topic");
-    assert.ok(!visible(".bootbox.modal"), "it does not pop up a modal");
-    assert.ok(
-      !visible(".category-read-only-banner"),
+    assert.notOk(visible(".bootbox.modal"), "it does not pop up a modal");
+    assert.notOk(
+      visible(".category-read-only-banner"),
       "it does not show a banner"
     );
   });
@@ -58,7 +58,7 @@ acceptance("Category Banners", function (needs) {
     assert.ok(visible(".bootbox.modal"), "it pops up a modal");
 
     await click(".modal-footer>.btn-primary");
-    assert.ok(!visible(".bootbox.modal"), "it closes the modal");
+    assert.notOk(visible(".bootbox.modal"), "it closes the modal");
     assert.ok(visible(".category-read-only-banner"), "it shows a banner");
     assert.strictEqual(
       count(".category-read-only-banner .inner"),
@@ -91,8 +91,8 @@ acceptance("Anonymous Category Banners", function (needs) {
 
   test("Does not display category banners when set", async function (assert) {
     await visit("/c/test-read-only-with-banner");
-    assert.ok(
-      !visible(".category-read-only-banner"),
+    assert.notOk(
+      visible(".category-read-only-banner"),
       "it does not show a banner"
     );
   });

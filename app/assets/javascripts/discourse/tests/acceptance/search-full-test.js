@@ -99,12 +99,12 @@ acceptance("Search - Full Page", function (needs) {
     assert.ok($("body.search-page").length, "has body class");
     assert.ok(exists(".search-container"), "has container class");
     assert.ok(exists(".search-query"));
-    assert.ok(!exists(".fps-topic"));
+    assert.notOk(exists(".fps-topic"));
 
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(!exists(".fps-topic"), "has no results");
+    assert.notOk(exists(".fps-topic"), "has no results");
     assert.ok(exists(".no-results-suggestion"));
     assert.ok(exists(".google-search-form"));
 
@@ -493,7 +493,7 @@ acceptance("Search - Full Page", function (needs) {
     await tagSelector.expand();
     await tagSelector.selectRowByValue("monkey");
 
-    assert.ok(!visible("input.all-tags"), "all tags checkbox not visible");
+    assert.notOk(visible("input.all-tags"), "all tags checkbox not visible");
 
     await tagSelector.selectRowByValue("gazelle");
     assert.ok(visible("input.all-tags"), "all tags checkbox is visible");
@@ -505,12 +505,12 @@ acceptance("Search - Full Page", function (needs) {
     const typeSelector = selectKit(".search-bar .select-kit#search-type");
 
     await fillIn(".search-query", "admin");
-    assert.ok(!exists(".fps-user-item"), "has no user results");
+    assert.notOk(exists(".fps-user-item"), "has no user results");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
 
-    assert.ok(!exists(".search-filters"), "has no filters");
+    assert.notOk(exists(".search-filters"), "has no filters");
 
     await click(".search-cta");
 
@@ -523,7 +523,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-filters"),
       "returning to topic/posts shows filters"
     );
-    assert.ok(!exists(".fps-user-item"), "has no user results");
+    assert.notOk(exists(".fps-user-item"), "has no user results");
   });
 
   test("search for categories/tags", async function (assert) {
@@ -532,13 +532,13 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     const typeSelector = selectKit(".search-bar .select-kit#search-type");
 
-    assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
+    assert.notOk(exists(".fps-tag-item"), "has no category/tag results");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
     await click(".search-cta");
 
-    assert.ok(!exists(".search-filters"), "has no filters");
+    assert.notOk(exists(".search-filters"), "has no filters");
     assert.strictEqual(count(".fps-tag-item"), 2, "has two tag results");
 
     await typeSelector.expand();
@@ -548,7 +548,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-filters"),
       "returning to topic/posts shows filters"
     );
-    assert.ok(!exists(".fps-tag-item"), "has no tag results");
+    assert.notOk(exists(".fps-tag-item"), "has no tag results");
   });
 
   test("filters expand/collapse as expected", async function (assert) {
@@ -562,15 +562,15 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      visible(".search-advanced-options"),
       "launching a search collapses advanced filters"
     );
 
     await visit("/search");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      visible(".search-advanced-options"),
       "filters are collapsed when query param is not present"
     );
 

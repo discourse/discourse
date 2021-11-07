@@ -73,7 +73,7 @@ acceptance("Category Edit - security", function (needs) {
 
     await click(".row-body .remove-permission");
 
-    assert.ok(!exists(".row-body"), "removes the permission from the list");
+    assert.notOk(exists(".row-body"), "removes the permission from the list");
 
     await availableGroups.expand();
     await availableGroups.selectRowByValue("everyone");
