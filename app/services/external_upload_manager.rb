@@ -20,6 +20,48 @@ class ExternalUploadManager
     Discourse.redis.get("#{BAN_USER_REDIS_PREFIX}#{user.id}") == "1"
   end
 
+  def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
+    url = Discourse.store.signed_url_for_temporary_upload(
+      file_name, metadata: metadata
+    )
+    key = Discourse.store.path_from_url(url)
+
+    upload_stub = ExternalUploadStub.create!(
+      key: key,
+      created_by: current_user,
+      original_filename: file_name,
+      upload_type: upload_type,
+      filesize: file_size
+    )
+
+    { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+  end
+
+  def self.create_direct_multipart_upload(
+    current_user:, file_name:, file_size:, upload_type:, metadata: {}
+  )
+    content_type = MiniMime.lookup_by_filename(file_name)&.content_type
+    multipart_upload = Discourse.store.create_multipart(
+      file_name, content_type, metadata: metadata
+    )
+
+    upload_stub = ExternalUploadStub.create!(
+      key: multipart_upload[:key],
+      created_by: current_user,
+      original_filename: file_name,
+      upload_type: upload_type,
+      external_upload_identifier: multipart_upload[:upload_id],
+      multipart: true,
+      filesize: file_size
+    )
+
+    {
+      external_upload_identifier: upload_stub.external_upload_identifier,
+      key: upload_stub.key,
+      unique_identifier: upload_stub.unique_identifier
+    }
+  end
+
   def initialize(external_upload_stub, upload_create_opts = {})
     @external_upload_stub = external_upload_stub
     @upload_create_opts = upload_create_opts
