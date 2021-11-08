@@ -166,7 +166,7 @@ GEM
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
-    hashie (4.1.0)
+    hashie (5.0.0)
     highline (2.0.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
