@@ -531,9 +531,9 @@ class PostRevisor
 
     modifications.each_key do |field|
       if revision.modifications.has_key?(field)
-        old_value = revision.modifications[field][0].to_s
-        new_value = modifications[field][1].to_s
-        if old_value != new_value
+        old_value = revision.modifications[field][0]
+        new_value = modifications[field][1]
+        if old_value.to_s != new_value.to_s
           revision.modifications[field] = [old_value, new_value]
         else
           revision.modifications.delete(field)

@@ -703,6 +703,17 @@ describe PostRevisor do
       expect(post.revisions.first.modifications["archetype"][1]).to eq(new_archetype)
     end
 
+    it "revises and tracks changes of topic tags" do
+      subject.revise!(admin, tags: ['new-tag'])
+      expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag']])
+
+      subject.revise!(admin, tags: ['new-tag', 'new-tag-2'])
+      expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag', 'new-tag-2']])
+
+      subject.revise!(admin, tags: ['new-tag-3'])
+      expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag-3']])
+    end
+
     context "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
