@@ -12,8 +12,8 @@ import {
   click,
   currentURL,
   fillIn,
-  visit,
   triggerKeyEvent,
+  visit,
 } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import Draft from "discourse/models/draft";
