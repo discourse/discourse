@@ -46,9 +46,13 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
-    if self.class.where("lower(email) = ?", email).exists? || (SiteSetting.normalize_emails? && self.class.where("lower(normalized_email) = ?", normalized_email).exists?)
-      self.errors.add(:email, :taken)
+    email_exists = if SiteSetting.normalize_emails?
+      self.class.where("lower(email) = ? OR lower(normalized_email) = ?", email, normalized_email).exists?
+    else
+      self.class.where("lower(email) = ?", email).exists?
     end
+
+    self.errors.add(:email, :taken) if email_exists
   end
 
   def user_id_not_changed
