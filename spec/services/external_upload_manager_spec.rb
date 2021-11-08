@@ -25,6 +25,10 @@ RSpec.describe ExternalUploadManager do
     SiteSetting.max_attachment_size_kb = 210.megabytes / 1000
 
     setup_s3
+
+    SiteSetting.s3_backup_bucket = "s3-backup-bucket"
+    SiteSetting.backup_location = BackupLocationSiteSetting::S3
+
     stub_head_object
     stub_download_object_filehelper
     stub_copy_object
@@ -200,6 +204,67 @@ RSpec.describe ExternalUploadManager do
         )
       end
     end
+
+    context "when the upload type is backup" do
+      let(:upload_base_url) { "https://#{SiteSetting.s3_backup_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com" }
+      let(:object_size) { 200.megabytes }
+      let(:object_file) { file_from_fixtures("backup_since_v1.6.tar.gz", "backups") }
+      let!(:external_upload_stub) do
+        Fabricate(
+          :attachment_external_upload_stub,
+          created_by: user,
+          filesize: object_size,
+          upload_type: "backup",
+          original_filename: "backup_since_v1.6.tar.gz",
+          folder_prefix: RailsMultisite::ConnectionManagement.current_db
+        )
+      end
+
+      before do
+        stub_request(:head, "https://#{SiteSetting.s3_backup_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/")
+
+        # stub copy and delete object for backup, which copies the original filename to the root,
+        # and also uses current_db in the bucket name always
+        stub_request(
+          :put,
+          "#{upload_base_url}/#{RailsMultisite::ConnectionManagement.current_db}/backup_since_v1.6.tar.gz"
+        ).to_return(
+          status: 200,
+          headers: { "ETag" => etag },
+          body: copy_object_result
+        )
+      end
+
+      it "does not try and download the file" do
+        FileHelper.expects(:download).never
+        subject.transform!
+      end
+
+      it "raises an error when backups are disabled" do
+        SiteSetting.enable_backups = false
+        expect { subject.transform! }.to raise_error(Discourse::InvalidAccess)
+      end
+
+      it "raises an error when backups are local, not s3" do
+        SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
+        expect { subject.transform! }.to raise_error(Discourse::InvalidAccess)
+      end
+
+      it "does not create an upload record" do
+        expect { subject.transform! }.not_to change { Upload.count }
+      end
+
+      it "copies the stubbed upload on S3 to its new destination and deletes it" do
+        upload = subject.transform!
+        expect(WebMock).to have_requested(
+          :put,
+          "#{upload_base_url}/#{RailsMultisite::ConnectionManagement.current_db}/backup_since_v1.6.tar.gz",
+        ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_backup_bucket}/#{external_upload_stub.key}" })
+        expect(WebMock).to have_requested(
+          :delete, "#{upload_base_url}/#{external_upload_stub.key}"
+        )
+      end
+    end
   end
 
   def stub_head_object
@@ -226,8 +291,8 @@ RSpec.describe ExternalUploadManager do
     )
   end
 
-  def stub_copy_object
-    copy_object_result = <<~BODY
+  def copy_object_result
+    <<~BODY
     <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
     <CopyObjectResult
       xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
@@ -235,6 +300,9 @@ RSpec.describe ExternalUploadManager do
       <ETag>&quot;#{etag}&quot;</ETag>
     </CopyObjectResult>
     BODY
+  end
+
+  def stub_copy_object
     upload_pdf = Fabricate(:upload, sha1: "testbc60eb18e8f974cbfae8bb0f069c3a311024", original_filename: "test.pdf", extension: "pdf")
     upload_path = Discourse.store.get_path_for_upload(upload_pdf)
     upload_pdf.destroy!
