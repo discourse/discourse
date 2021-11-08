@@ -8,7 +8,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 
-export function actionDescriptionHtml(actionCode, createdAt, username, href) {
+export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, {
     format: "medium-with-ago-and-on",
@@ -22,7 +22,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username, href) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-  return I18n.t(`action_codes.${actionCode}`, { who, when, href }).htmlSafe();
+  return I18n.t(`action_codes.${actionCode}`, { who, when, path }).htmlSafe();
 }
 
 export function actionDescription(actionCode, createdAt, username) {
@@ -132,7 +132,7 @@ export default createWidget("post-small-action", {
       attrs.actionCode,
       new Date(attrs.created_at),
       attrs.actionCodeWho,
-      attrs.actionCodeHref
+      attrs.actionCodePath
     );
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));
 

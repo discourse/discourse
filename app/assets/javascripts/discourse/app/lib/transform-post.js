@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 
 const _additionalAttributes = [];
 
@@ -148,9 +148,7 @@ export default function transformPost(
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
-  postAtts.actionCodeHref = getAbsoluteURL(
-    post.action_code_href || `/t/${topic.id}`
-  );
+  postAtts.actionCodePath = getURL(post.action_code_path || `/t/${topic.id}`);
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;
