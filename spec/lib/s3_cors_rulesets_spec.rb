@@ -40,9 +40,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
 
       it "does not apply the ASSETS rules if they already exist" do
@@ -51,9 +51,9 @@ RSpec.describe S3CorsRulesets do
         })
         client.expects(:put_bucket_cors).never
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(false)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
 
       it "applies the ASSETS rules and the BACKUP_DIRECT_UPLOAD rules if S3 backups are enabled" do
@@ -77,9 +77,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(true)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
       end
 
       it "applies the ASSETS rules and the DIRECT_UPLOAD rules when S3 direct uploads are enabled" do
@@ -103,9 +103,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(true)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
 
       it "does no changes if all the rules already exist" do
@@ -117,9 +117,9 @@ RSpec.describe S3CorsRulesets do
         })
         client.expects(:put_bucket_cors).never
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(false)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
       end
 
       def setup_backups
@@ -148,9 +148,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
 
       it "does not apply the ASSETS rules if they already exist" do
@@ -159,9 +159,9 @@ RSpec.describe S3CorsRulesets do
         })
         client.expects(:put_bucket_cors).never
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(false)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
 
       it "applies the ASSETS rules and the BACKUP_DIRECT_UPLOAD rules if S3 backups are enabled" do
@@ -187,9 +187,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(false)
-        expect(result[:backup_rules_applied]).to eq(true)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
       end
 
       it "applies the ASSETS rules and the DIRECT_UPLOAD rules when S3 direct uploads are enabled" do
@@ -213,9 +213,9 @@ RSpec.describe S3CorsRulesets do
           }
         )
         result = sync_rules
-        expect(result[:assets_rules_applied]).to eq(true)
-        expect(result[:direct_upload_rules_applied]).to eq(true)
-        expect(result[:backup_rules_applied]).to eq(false)
+        expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:direct_upload_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
+        expect(result[:backup_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_SKIPPED)
       end
     end
   end
