@@ -90,11 +90,6 @@ class Auth::DefaultCurrentUserProvider
     if auth_cookie
       begin
         cookie = DiscourseAuthCookie.parse(auth_cookie)
-        # the age check here is not super accurate since the
-        # maximum_session_age site setting can change after the auth token has
-        # been created. skip the check here because a more accurate age check
-        # will be done in the SQL query when looking up the auth token record
-        cookie.validate!(validate_age: false)
       rescue  DiscourseAuthCookie::InvalidCookie
         cookie = nil
       end
@@ -248,8 +243,7 @@ class Auth::DefaultCurrentUserProvider
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      timestamp: Time.zone.now,
-      valid_for: SiteSetting.maximum_session_age.hours
+      valid_till: 5.minutes.from_now,
     )
     hash = {
       value: cookie.serialize,
@@ -320,8 +314,7 @@ class Auth::DefaultCurrentUserProvider
   def has_auth_cookie?
     cookie_string = @request.cookies[TOKEN_COOKIE]
     return false if cookie_string.blank?
-    cookie = DiscourseAuthCookie.parse(cookie_string)
-    cookie.validate!
+    DiscourseAuthCookie.parse(cookie_string)
     true
   rescue DiscourseAuthCookie::InvalidCookie
     false

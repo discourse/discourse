@@ -26,8 +26,7 @@ describe Middleware::AnonymousCache do
       it "is false if it has a valid auth cookie" do
         cookie = DiscourseAuthCookie.new(
           token: SecureRandom.hex,
-          timestamp: 1.day.ago,
-          valid_for: 100.days
+          valid_till: 5.minutes.from_now
         ).serialize
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(false)
       end
@@ -35,8 +34,7 @@ describe Middleware::AnonymousCache do
       it "is true if it has an invalid auth cookie" do
         cookie = DiscourseAuthCookie.new(
           token: SecureRandom.hex,
-          timestamp: 1.day.ago,
-          valid_for: 100.days
+          valid_till: 5.minutes.from_now
         ).serialize
 
         cookie = swap_2_different_characters(cookie)

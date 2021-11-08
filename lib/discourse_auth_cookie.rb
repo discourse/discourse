@@ -54,17 +54,15 @@ class DiscourseAuthCookie
   TOKEN_KEY = "token"
   USER_ID_KEY = "id"
   USER_TRUST_LEVEL_KEY = "tl"
-  TIME_KEY = "time"
-  VALID_KEY = "valid"
+  VALID_TILL_KEY = "valid_till"
   private_constant *%i[
     TOKEN_KEY
     USER_ID_KEY
     USER_TRUST_LEVEL_KEY
-    TIME_KEY
-    VALID_KEY
+    VALID_TILL_KEY
   ]
 
-  attr_reader :token, :user_id, :trust_level, :timestamp, :valid_for
+  attr_reader :token, :user_id, :trust_level, :valid_till
 
   def self.parse(raw_cookie)
     # v0 of the cookie was simply the auth token itself. we need
@@ -78,8 +76,7 @@ class DiscourseAuthCookie
     token = nil
     user_id = nil
     trust_level = nil
-    timestamp = nil
-    valid_for = nil
+    valid_till = nil
 
     data.split(",").each do |part|
       prefix, val = part.split(":", 2)
@@ -90,10 +87,8 @@ class DiscourseAuthCookie
         user_id = val
       elsif prefix == USER_TRUST_LEVEL_KEY
         trust_level = val
-      elsif prefix == TIME_KEY
-        timestamp = val
-      elsif prefix == VALID_KEY
-        valid_for = val
+      elsif prefix == VALID_TILL_KEY
+        valid_till = val
       end
     end
 
@@ -101,17 +96,16 @@ class DiscourseAuthCookie
       token: token,
       user_id: user_id,
       trust_level: trust_level,
-      timestamp: timestamp,
-      valid_for: valid_for,
+      valid_till: valid_till,
     )
   end
 
-  def initialize(token:, user_id: nil, trust_level: nil, timestamp: nil, valid_for: nil)
+  def initialize(token:, user_id: nil, trust_level: nil, valid_till: nil)
     @token = token
     @user_id = user_id.to_i if user_id
     @trust_level = trust_level.to_i if trust_level
-    @timestamp = timestamp.to_i if timestamp
-    @valid_for = valid_for.to_i if valid_for
+    @valid_till = valid_till.to_i if valid_till
+    validate!
   end
 
   def serialize
@@ -119,27 +113,18 @@ class DiscourseAuthCookie
     parts << "#{TOKEN_KEY}:#{token}"
     parts << "#{USER_ID_KEY}:#{user_id}"
     parts << "#{USER_TRUST_LEVEL_KEY}:#{trust_level}"
-    parts << "#{TIME_KEY}:#{timestamp}"
-    parts << "#{VALID_KEY}:#{valid_for}"
+    parts << "#{VALID_TILL_KEY}:#{valid_till}"
     data = parts.join(",")
     Encryptor.new.encrypt_and_sign(data)
   end
 
-  def validate!(validate_age: true)
-    validate_token!
-    validate_age! if validate_age
-  end
-
   private
+
+  def validate!
+    validate_token!
+  end
 
   def validate_token!
     raise InvalidCookie.new if token.blank? || token.size != TOKEN_SIZE
-  end
-
-  def validate_age!
-    return if !(valid_for && timestamp)
-    if timestamp + valid_for < Time.zone.now.to_i
-      raise InvalidCookie.new
-    end
   end
 end

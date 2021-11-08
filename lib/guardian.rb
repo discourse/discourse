@@ -532,7 +532,6 @@ class Guardian
     cookie_string = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE].presence
     if cookie_string
       cookie = DiscourseAuthCookie.parse(cookie_string)
-      cookie.validate!
       UserAuthToken.hash_token(cookie.token)
     end
   rescue DiscourseAuthCookie::InvalidCookie

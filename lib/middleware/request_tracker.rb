@@ -180,7 +180,9 @@ class Middleware::RequestTracker
     if cookie_string
       begin
         cookie = DiscourseAuthCookie.parse(cookie_string)
-        cookie.validate!
+        if cookie.valid_till && cookie.valid_till < Time.zone.now.to_i
+          cookie = nil
+        end
       rescue DiscourseAuthCookie::InvalidCookie
         cookie = nil
       end
