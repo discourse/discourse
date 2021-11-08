@@ -701,6 +701,16 @@ eviltrout</p>
     );
   });
 
+  test("Heading anchors are valid", function (assert) {
+    assert.cooked(
+      "# One\n\n# 1\n\n# $$",
+      '<h1><a name="one-1" class="anchor" href="#one-1"></a>One</h1>\n' +
+        '<h1><a name="h-1-2" class="anchor" href="#h-1-2"></a>1</h1>\n' +
+        '<h1><a name="h-3" class="anchor" href="#h-3"></a>$$</h1>',
+      "It will bold the heading"
+    );
+  });
+
   test("bold and italics", function (assert) {
     assert.cooked(
       'a "**hello**"',
