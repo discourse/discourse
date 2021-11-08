@@ -22,7 +22,7 @@ acceptance("Composer - Edit conflict", function (needs) {
       await click(".topic-post:nth-of-type(1) button.edit");
       await fillIn(".d-editor-input", "this will 409");
       await click("#reply-control button.create");
-      assert.equal(
+      assert.strictEqual(
         queryAll("#reply-control button.create").text().trim(),
         I18n.t("composer.overwrite_edit"),
         "it shows the overwrite button"

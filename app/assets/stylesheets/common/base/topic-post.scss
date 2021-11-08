@@ -274,6 +274,22 @@ $quote-share-maxwidth: 150px;
   }
 }
 
+@keyframes heartBump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.has-like .d-icon.heart-animation {
+  animation: heartBump 0.4s;
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;

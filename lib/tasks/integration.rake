@@ -19,7 +19,7 @@ task 'integration:create_fixtures' => :environment do
 
     filename = "#{Rails.root}/test/javascripts/fixtures/#{type}_fixtures.js"
 
-    content = "/*jshint maxlen:10000000 */\nexport default {\n"
+    content = "export default {\n"
     urls.each do |url|
 
       http_result = fake_xhr("http://localhost:3000#{url}")

@@ -19,12 +19,12 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".post-action .d-icon-far-trash-alt"),
           1,
           "it has the deleted icon"
         );
-        assert.equal(
+        assert.strictEqual(
           count(".avatar[title=eviltrout]"),
           1,
           "it has the deleted by avatar"

@@ -33,8 +33,8 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(dateInput().value, "2019-01-29");
-      assert.equal(timeInput().dataset.name, "14:45");
+      assert.strictEqual(dateInput().value, "2019-01-29");
+      assert.strictEqual(timeInput().dataset.name, "14:45");
     },
   });
 

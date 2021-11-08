@@ -484,9 +484,7 @@ export default createWidget("header", {
 
     // auto focus on first button in dropdown
     schedule("afterRender", () =>
-      document.querySelector(".user-menu button")?.focus({
-        preventScroll: true,
-      })
+      document.querySelector(".user-menu button")?.focus()
     );
   },
 
@@ -496,9 +494,7 @@ export default createWidget("header", {
 
     // auto focus on first link in dropdown
     schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus({
-        preventScroll: true,
-      });
+      document.querySelector(".hamburger-panel .menu-links a")?.focus();
     });
   },
 
@@ -628,9 +624,7 @@ export default createWidget("header", {
     if (this.state.searchVisible) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
-        searchInput.focus({
-          preventScroll: true,
-        });
+        searchInput.focus();
         searchInput.select();
       });
     }

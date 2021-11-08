@@ -37,12 +37,12 @@ acceptance("User Preferences - Interface", function (needs) {
     await textSize.selectRowByValue("largest");
     assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
-    assert.equal(cookie("text_size"), null, "cookie is not set");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is not set");
 
     // Click save (by default this sets for all browsers, no cookie)
     await savePreferences();
 
-    assert.equal(cookie("text_size"), null, "cookie is not set");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is not set");
 
     await textSize.expand();
     await textSize.selectRowByValue("larger");
@@ -50,13 +50,13 @@ acceptance("User Preferences - Interface", function (needs) {
 
     await savePreferences();
 
-    assert.equal(cookie("text_size"), "larger|1", "cookie is set");
+    assert.strictEqual(cookie("text_size"), "larger|1", "cookie is set");
     await click(".text-size input[type=checkbox]");
     await textSize.expand();
     await textSize.selectRowByValue("largest");
 
     await savePreferences();
-    assert.equal(cookie("text_size"), null, "cookie is removed");
+    assert.strictEqual(cookie("text_size"), undefined, "cookie is removed");
 
     removeCookie("text_size");
   });
@@ -89,11 +89,11 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
     assert.ok(exists(".light-color-scheme"), "has regular dropdown");
 
-    assert.equal(
+    assert.strictEqual(
       selectKit(".light-color-scheme .select-kit").header().value(),
       null
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".light-color-scheme .select-kit").header().label(),
       I18n.t("user.color_schemes.default_description")
     );
@@ -124,10 +124,13 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
 
     assert.ok(exists(".light-color-scheme"), "has regular dropdown");
-    assert.equal(selectKit(".theme .select-kit").header().value(), 2);
+    assert.strictEqual(selectKit(".theme .select-kit").header().value(), "2");
 
     await selectKit(".light-color-scheme .select-kit").expand();
-    assert.equal(count(".light-color-scheme .select-kit .select-kit-row"), 2);
+    assert.strictEqual(
+      count(".light-color-scheme .select-kit .select-kit-row"),
+      2
+    );
 
     document.querySelector("meta[name='discourse_theme_id']").remove();
   });
@@ -183,7 +186,7 @@ acceptance(
 
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
-      assert.equal(
+      assert.strictEqual(
         queryAll(".light-color-scheme .selected-name").data("value"),
         session.userColorSchemeId,
         "user's selected color scheme is selected value in light scheme dropdown"
@@ -207,14 +210,14 @@ acceptance(
 
       assert.ok(exists(".light-color-scheme"), "has regular dropdown");
       const dropdownObject = selectKit(".light-color-scheme .select-kit");
-      assert.equal(dropdownObject.header().value(), null);
-      assert.equal(
+      assert.strictEqual(dropdownObject.header().value(), null);
+      assert.strictEqual(
         dropdownObject.header().label(),
         I18n.t("user.color_schemes.default_description")
       );
 
       await dropdownObject.expand();
-      assert.equal(dropdownObject.rows().length, 1);
+      assert.strictEqual(dropdownObject.rows().length, 1);
 
       document.querySelector("meta[name='discourse_theme_id']").remove();
     });
@@ -240,14 +243,13 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has regular dropdown");
       assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
-      assert.equal(
+      assert.strictEqual(
         queryAll(".dark-color-scheme .selected-name").data("value"),
         session.userDarkSchemeId,
         "sets site default as selected dark scheme"
       );
       assert.ok(
         !exists(".control-group.dark-mode"),
-        0,
         "it does not show disable dark mode checkbox"
       );
 
@@ -256,19 +258,27 @@ acceptance(
 
       await selectKit(".light-color-scheme .combobox").expand();
       await selectKit(".light-color-scheme .combobox").selectRowByValue(2);
-      assert.equal(cookie("color_scheme_id"), null, "cookie is not set");
+      assert.strictEqual(
+        cookie("color_scheme_id"),
+        undefined,
+        "cookie is not set"
+      );
       assert.ok(
         exists(".color-scheme-checkbox input:checked"),
         "defaults to storing values in user options"
       );
 
       await savePreferences();
-      assert.equal(cookie("color_scheme_id"), null, "cookie is unchanged");
+      assert.strictEqual(
+        cookie("color_scheme_id"),
+        undefined,
+        "cookie is unchanged"
+      );
 
       // Switch to saving changes in cookies
       await click(".color-scheme-checkbox input[type=checkbox]");
       await savePreferences();
-      assert.equal(cookie("color_scheme_id"), 2, "cookie is set");
+      assert.strictEqual(cookie("color_scheme_id"), "2", "cookie is set");
 
       // dark scheme
       await selectKit(".dark-color-scheme .combobox").expand();
@@ -278,25 +288,25 @@ acceptance(
       );
 
       await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
-      assert.equal(
+      assert.strictEqual(
         cookie("dark_scheme_id"),
-        null,
+        undefined,
         "cookie is not set before saving"
       );
 
       await savePreferences();
-      assert.equal(cookie("dark_scheme_id"), -1, "cookie is set");
+      assert.strictEqual(cookie("dark_scheme_id"), "-1", "cookie is set");
 
       await click("button.undo-preview");
-      assert.equal(
+      assert.strictEqual(
         selectKit(".light-color-scheme .combobox").header().value(),
         null,
         "resets light scheme dropdown"
       );
 
-      assert.equal(
+      assert.strictEqual(
         selectKit(".dark-color-scheme .combobox").header().value(),
-        session.userDarkSchemeId,
+        session.userDarkSchemeId.toString(),
         "resets dark scheme dropdown"
       );
     });

@@ -27,7 +27,7 @@ discourseModule("Integration | Component | date-input", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(dateInput().value, "2019-01-29");
+      assert.strictEqual(dateInput().value, "2019-01-29");
     },
   });
 

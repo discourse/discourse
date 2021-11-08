@@ -56,7 +56,10 @@ module("Unit | Utility | click-track-profile-page", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(request.requestBody, "url=http%3A%2F%2Fdiscuss.domain.com");
+      assert.strictEqual(
+        request.requestBody,
+        "url=http%3A%2F%2Fdiscuss.domain.com"
+      );
       done();
     });
 
@@ -68,7 +71,7 @@ module("Unit | Utility | click-track-profile-page", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
@@ -83,7 +86,7 @@ module("Unit | Utility | click-track-profile-page", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331"
       );

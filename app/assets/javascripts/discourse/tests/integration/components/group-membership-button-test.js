@@ -55,7 +55,11 @@ discourseModule(
         );
 
         this.set("model.is_group_user", true);
-        assert.equal(count(".group-index-leave"), 1, "allowed to leave group");
+        assert.strictEqual(
+          count(".group-index-leave"),
+          1,
+          "allowed to leave group"
+        );
       },
     });
 

@@ -677,7 +677,7 @@ export default createWidget("post-menu", {
       `.toggle-like[data-post-id="${attrs.id}"] .d-icon`
     );
     heart.closest(".toggle-like").classList.add("has-like");
-    heart.classList.add("has-animation");
+    heart.classList.add("heart-animation");
 
     return new Promise((resolve) => {
       later(() => {

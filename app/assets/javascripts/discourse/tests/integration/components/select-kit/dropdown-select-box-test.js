@@ -87,7 +87,7 @@ discourseModule(
           "it hides the text of the selected item"
         );
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().el().attr("title"),
           "[en.test_none]",
           "it adds a title attribute to the button"

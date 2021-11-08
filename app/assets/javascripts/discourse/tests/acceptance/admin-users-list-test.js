@@ -48,7 +48,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click(".show-emails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".users-list .user:nth-child(1) .email").text(),
       "<small>eviltrout@example.com</small>",
       "shows the emails"
@@ -56,7 +56,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click(".hide-emails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".users-list .user:nth-child(1) .email").text(),
       "",
       "hides the emails"
@@ -71,7 +71,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.equal(queryAll(".admin-title h2").text(), activeTitle);
+    assert.strictEqual(queryAll(".admin-title h2").text(), activeTitle);
     assert.ok(
       queryAll(".users-list .user:nth-child(1) .username")
         .text()
@@ -80,7 +80,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.equal(queryAll(".admin-title h2").text(), suspectTitle);
+    assert.strictEqual(queryAll(".admin-title h2").text(), suspectTitle);
     assert.ok(
       queryAll(".users-list .user:nth-child(1) .username")
         .text()
@@ -89,7 +89,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.equal(queryAll(".admin-title h2").text(), suspectTitle);
+    assert.strictEqual(queryAll(".admin-title h2").text(), suspectTitle);
     assert.ok(
       queryAll(".users-list .user:nth-child(1) .username")
         .text()
@@ -98,7 +98,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.equal(queryAll(".admin-title h2").text(), activeTitle);
+    assert.strictEqual(queryAll(".admin-title h2").text(), activeTitle);
     assert.ok(
       queryAll(".users-list .user:nth-child(1) .username")
         .text()

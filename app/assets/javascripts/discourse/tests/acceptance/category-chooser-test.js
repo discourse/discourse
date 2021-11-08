@@ -22,6 +22,6 @@ acceptance("CategoryChooser", function (needs) {
   test("prefill category when category_id is set", async function (assert) {
     await visit("/new-topic?category_id=1");
 
-    assert.equal(selectKit(".category-chooser").header().value(), 1);
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
   });
 });

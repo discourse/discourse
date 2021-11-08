@@ -19,7 +19,7 @@ module("Unit | Utility | sharing", function (hooks) {
       id: "facebook",
     });
 
-    assert.equal(Sharing.activeSources(sharingSettings).length, 1);
+    assert.strictEqual(Sharing.activeSources(sharingSettings).length, 1);
   });
 
   test("addSharingId", function (assert) {
@@ -38,7 +38,7 @@ module("Unit | Utility | sharing", function (hooks) {
 
     Sharing.addSharingId("new-source");
 
-    assert.equal(
+    assert.strictEqual(
       Sharing.activeSources(sharingSettings).length,
       1,
       "it adds sharing id to existing sharing settings"
@@ -51,7 +51,7 @@ module("Unit | Utility | sharing", function (hooks) {
     });
     Sharing.addSharingId("another-source");
 
-    assert.equal(
+    assert.strictEqual(
       Sharing.activeSources(sharingSettings, privateContext).length,
       0,
       "it does not add a regular source to sources in a private context"
@@ -63,7 +63,7 @@ module("Unit | Utility | sharing", function (hooks) {
     });
     Sharing.addSharingId("a-private-friendly-source");
 
-    assert.equal(
+    assert.strictEqual(
       Sharing.activeSources(sharingSettings, privateContext).length,
       1,
       "it does not add a regular source to sources in a private context"

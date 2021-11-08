@@ -94,7 +94,7 @@ describe "discourse-presence" do
     it 'handles permissions for secure category topics' do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_topic.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(group.id)
+      expect(c.config.allowed_group_ids).to contain_exactly(group.id, Group::AUTO_GROUPS[:admins])
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 

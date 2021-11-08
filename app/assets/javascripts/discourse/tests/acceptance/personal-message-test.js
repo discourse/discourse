@@ -22,7 +22,7 @@ acceptance("Personal Message", function (needs) {
   test("suggested messages", async function (assert) {
     await visit("/t/pm-for-testing/12");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#suggested-topics .suggested-topics-title").text().trim(),
       I18n.t("suggested_topics.pm_title")
     );

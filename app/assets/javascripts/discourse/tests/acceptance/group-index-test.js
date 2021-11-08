@@ -25,7 +25,7 @@ acceptance("Group Members - Anonymous", function () {
       "it does not allow anon user to manage group members"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
       "it should display the right filter placeholder"
@@ -48,7 +48,7 @@ acceptance("Group Members", function (needs) {
     await visit("/g/discourse");
     await click(".group-members-add");
 
-    assert.equal(
+    assert.strictEqual(
       count(".user-chooser"),
       1,
       "it should display the add members modal"
@@ -63,7 +63,7 @@ acceptance("Group Members", function (needs) {
       "it allows admin user to manage group members"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
       "it should display the right filter placeholder"

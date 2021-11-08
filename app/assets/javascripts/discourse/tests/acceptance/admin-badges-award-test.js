@@ -14,7 +14,7 @@ acceptance("Admin - Badges - Mass Award", function (needs) {
     await click(
       '.admin-badge-list-item span[data-badge-name="Both image and icon"]'
     );
-    assert.equal(
+    assert.strictEqual(
       query("label.grant-existing-holders").textContent.trim(),
       I18n.t("admin.badges.mass_award.grant_existing_holders"),
       "checkbox for granting existing holders is displayed"

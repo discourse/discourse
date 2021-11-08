@@ -177,21 +177,9 @@ task 's3:ensure_cors_rules' => :environment do
   puts "Installing CORS rules..."
   result = S3CorsRulesets.sync(use_db_s3_config: use_db_s3_config)
 
-  if result[:assets_rules_applied]
-    puts "Assets rules did not exist and were applied."
-  else
-    puts "Assets rules already existed."
-  end
-  if result[:backup_rules_applied]
-    puts "Backup rules did not exist and were applied."
-  else
-    puts "Backup rules already existed."
-  end
-  if result[:direct_upload_rules_applied]
-    puts "Direct upload rules did not exist and were applied."
-  else
-    puts "Direct upload rules already existed."
-  end
+  puts "Assets rules status: #{result[:assets_rules_status]}."
+  puts "Backup rules status: #{result[:backup_rules_status]}."
+  puts "Direct upload rules status: #{result[:direct_upload_rules_status]}."
 end
 
 task 's3:upload_assets' => [:environment, 's3:ensure_cors_rules'] do

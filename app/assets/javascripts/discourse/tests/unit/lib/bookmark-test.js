@@ -16,7 +16,7 @@ module("Unit | Utility | bookmark", function (hooks) {
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")
       .format("H:mm a");
-    assert.equal(
+    assert.strictEqual(
       formattedReminderTime(reminderAt, "Australia/Brisbane"),
       "tomorrow at " + reminderAtDate
     );
@@ -27,7 +27,7 @@ module("Unit | Utility | bookmark", function (hooks) {
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")
       .format("H:mm a");
-    assert.equal(
+    assert.strictEqual(
       formattedReminderTime(reminderAt, "Australia/Brisbane"),
       "today at " + reminderAtDate
     );
@@ -38,7 +38,7 @@ module("Unit | Utility | bookmark", function (hooks) {
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")
       .format("H:mm a");
-    assert.equal(
+    assert.strictEqual(
       formattedReminderTime(reminderAt, "Australia/Brisbane"),
       "at Apr 15, 2020 " + reminderAtDate
     );

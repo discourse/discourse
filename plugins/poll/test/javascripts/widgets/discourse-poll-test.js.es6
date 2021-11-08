@@ -123,12 +123,12 @@ discourseModule(
         await click(
           "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']"
         );
-        assert.equal(requests, 1);
-        assert.equal(count(".chosen"), 1);
-        assert.equal(queryAll(".chosen").text(), "100%yes");
+        assert.strictEqual(requests, 1);
+        assert.strictEqual(count(".chosen"), 1);
+        assert.strictEqual(queryAll(".chosen").text(), "100%yes");
 
         await click(".toggle-results");
-        assert.equal(
+        assert.strictEqual(
           queryAll("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']")
             .length,
           1
@@ -171,11 +171,11 @@ discourseModule(
         await click(
           "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".poll-container .alert").text(),
           I18n.t("poll.results.groups.title", { groups: "foo" })
         );
-        assert.equal(requests, 0);
+        assert.strictEqual(requests, 0);
         assert.ok(!exists(".chosen"));
       },
     });

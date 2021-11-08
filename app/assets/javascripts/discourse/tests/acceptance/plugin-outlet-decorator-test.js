@@ -52,8 +52,8 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
     )[0];
 
     assert.ok(exists(fooConnector));
-    assert.equal(fooConnector.style.backgroundColor, "yellow");
-    assert.equal(barConnector.style.backgroundColor, "");
+    assert.strictEqual(fooConnector.style.backgroundColor, "yellow");
+    assert.strictEqual(barConnector.style.backgroundColor, "");
 
     await visit("/c/bug");
 

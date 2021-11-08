@@ -40,12 +40,12 @@ acceptance("Topic footer buttons mobile", function (needs) {
   test("default", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.equal(_test, null);
+    assert.strictEqual(_test, undefined);
 
     const subject = selectKit(".topic-footer-mobile-dropdown");
     await subject.expand();
     await subject.selectRowByValue("my-button");
 
-    assert.equal(_test, 2);
+    assert.strictEqual(_test, 2);
   });
 });

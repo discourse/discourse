@@ -26,7 +26,7 @@ test("#format", function (assert) {
     minute: 36,
     timezone: PARIS,
   });
-  assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
+  assert.strictEqual(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
 test("#unitRepetitionsBetweenDates", function (assert) {
@@ -39,7 +39,7 @@ test("#unitRepetitionsBetweenDates", function (assert) {
     minute: 36,
     timezone: PARIS,
   });
-  assert.equal(
+  assert.strictEqual(
     date.unitRepetitionsBetweenDates(
       "1.hour",
       moment.tz("2020-02-15 15:36", SYDNEY)
@@ -55,7 +55,7 @@ test("#unitRepetitionsBetweenDates", function (assert) {
     minute: 36,
     timezone: PARIS,
   });
-  assert.equal(
+  assert.strictEqual(
     date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:36", PARIS)
@@ -71,7 +71,7 @@ test("#unitRepetitionsBetweenDates", function (assert) {
     minute: 36,
     timezone: PARIS,
   });
-  assert.equal(
+  assert.strictEqual(
     date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:37", PARIS)
@@ -87,7 +87,7 @@ test("#unitRepetitionsBetweenDates", function (assert) {
     minute: 36,
     timezone: PARIS,
   });
-  assert.equal(
+  assert.strictEqual(
     date.unitRepetitionsBetweenDates(
       "2.minutes",
       moment.tz("2020-02-15 15:41", PARIS)
@@ -112,7 +112,7 @@ test("#add", function (assert) {
   assert.notOk(date.isDST());
   futureLocalDate = date.add(8, "months");
   assert.notOk(futureLocalDate.isDST());
-  assert.equal(
+  assert.strictEqual(
     futureLocalDate.format(),
     "2020-11-19T15:36:00.000+01:00",
     "it correctly adds from a !isDST date to a !isDST date"
@@ -128,7 +128,7 @@ test("#add", function (assert) {
   assert.ok(date.isDST());
   futureLocalDate = date.add(1, "year");
   assert.ok(futureLocalDate.isDST());
-  assert.equal(
+  assert.strictEqual(
     futureLocalDate.format(),
     "2021-04-25T15:36:00.000+02:00",
     "it correctly adds from a isDST date to a isDST date"
@@ -144,7 +144,7 @@ test("#add", function (assert) {
   assert.notOk(date.isDST());
   futureLocalDate = date.add(1, "week");
   assert.ok(futureLocalDate.isDST());
-  assert.equal(
+  assert.strictEqual(
     futureLocalDate.format(),
     "2020-04-01T15:36:00.000+02:00",
     "it correctly adds from a !isDST date to a isDST date"
@@ -161,7 +161,7 @@ test("#add", function (assert) {
   assert.ok(date.isDST());
   futureLocalDate = date.add(8, "months");
   assert.notOk(futureLocalDate.isDST());
-  assert.equal(
+  assert.strictEqual(
     futureLocalDate.format(),
     "2020-12-01T15:36:00.000+01:00",
     "it correctly adds from a isDST date to a !isDST date"

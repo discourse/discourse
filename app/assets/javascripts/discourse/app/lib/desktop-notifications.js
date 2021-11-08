@@ -177,18 +177,10 @@ function onNotification(data, siteSettings, user) {
       tag: notificationTag,
     });
 
-    function clickEventHandler() {
+    notification.onclick = () => {
       DiscourseURL.routeTo(data.post_url);
-      // Cannot delay this until the page renders
-      // due to trigger-based permissions
-      window.focus();
-    }
-
-    notification.addEventListener("click", clickEventHandler);
-    later(() => {
       notification.close();
-      notification.removeEventListener("click", clickEventHandler);
-    }, 10 * 1000);
+    };
   });
 }
 

@@ -60,7 +60,7 @@ acceptance("Category Banners", function (needs) {
     await click(".modal-footer>.btn-primary");
     assert.ok(!visible(".bootbox.modal"), "it closes the modal");
     assert.ok(visible(".category-read-only-banner"), "it shows a banner");
-    assert.equal(
+    assert.strictEqual(
       count(".category-read-only-banner .inner"),
       1,
       "it allows staff to embed html in the message"

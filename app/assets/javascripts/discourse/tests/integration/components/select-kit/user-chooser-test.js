@@ -22,7 +22,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().name(), "bob,martin");
+        assert.strictEqual(this.subject.header().name(), "bob,martin");
       },
     });
 
@@ -36,7 +36,7 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
         await this.subject.deselectItemByValue("bob");
-        assert.equal(this.subject.header().name(), "martin");
+        assert.strictEqual(this.subject.header().name(), "martin");
       },
     });
   }

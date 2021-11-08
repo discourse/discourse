@@ -56,7 +56,10 @@ acceptance("Do not disturb", function (needs) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
-    assert.equal(query(".do-not-disturb .relative-date").textContent, "1h");
+    assert.strictEqual(
+      query(".do-not-disturb .relative-date").textContent,
+      "1h"
+    );
 
     await click(".do-not-disturb");
 
