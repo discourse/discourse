@@ -2234,6 +2234,9 @@ en:
       reload: "Reload"
       ignore: "Ignore"
 
+      image_alt_text:
+        aria_label: Alt text for image
+
     notifications:
       tooltip:
         regular:

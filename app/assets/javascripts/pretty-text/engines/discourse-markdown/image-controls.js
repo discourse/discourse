@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 const SCALES = ["100", "75", "50"];
 
 function isUpload(token) {
@@ -68,7 +70,9 @@ function buildScaleButton(selectedScale, scale) {
 function buildImageAltTextButton(altText) {
   return `
 <span class="alt-text-readonly-container">
-  <span class="alt-text" aria-label="alt text">${altText}</span>
+  <span class="alt-text" aria-label="${I18n.t(
+    "composer.image_alt_text.aria_label"
+  )}">${altText}</span>
   <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use xlink:href="#pencil-alt"></use></svg></span>
   <input class="alt-text-input" hidden="true" type="text" value="${altText}" />
 </span>
