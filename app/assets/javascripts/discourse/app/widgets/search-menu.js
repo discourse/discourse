@@ -204,6 +204,12 @@ export default createWidget("search-menu", {
 
       query += `q=${encodeURIComponent(searchData.term)}`;
 
+      const searchContext = this.searchContext();
+
+      if (searchContext?.type === "topic") {
+        query += encodeURIComponent(` topic:${searchContext.id}`);
+      }
+
       if (query) {
         params.push(query);
       }

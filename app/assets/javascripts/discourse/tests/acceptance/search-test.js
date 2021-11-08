@@ -243,6 +243,44 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
+  test("topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+
+    await click("#search-button");
+
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "contenxtual topic search is first available option"
+    );
+
+    await fillIn("#search-term", "proper");
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+
+    await click(".show-advanced-search");
+
+    assert.strictEqual(
+      query(".full-page-search").value,
+      "proper topic:280",
+      "it goes to full search page and preserves search term + context"
+    );
+
+    assert.ok(
+      exists(".search-advanced-options"),
+      "advanced search is expanded"
+    );
+  });
+
   test("topic search scope - special case when matching a single user", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
 
