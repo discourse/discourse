@@ -243,7 +243,7 @@ class Auth::DefaultCurrentUserProvider
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      valid_till: 5.minutes.from_now,
+      valid_till: UserAuthToken::ROTATE_TIME.from_now
     )
     hash = {
       value: cookie.serialize,
