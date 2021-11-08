@@ -26,9 +26,9 @@ class S3CorsRulesets
     max_age_seconds: 3000
   }.freeze
 
-  RULE_STATUS_SKIPPED = "rules_skipped_from_settings".freeze
-  RULE_STATUS_EXISTED = "rules_already_existed".freeze
-  RULE_STATUS_APPLIED = "rules_applied".freeze
+  RULE_STATUS_SKIPPED = "rules_skipped_from_settings"
+  RULE_STATUS_EXISTED = "rules_already_existed"
+  RULE_STATUS_APPLIED = "rules_applied"
 
   ##
   # Used by the s3:ensure_cors_rules rake task to make sure the
