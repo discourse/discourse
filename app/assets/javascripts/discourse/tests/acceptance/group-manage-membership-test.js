@@ -7,6 +7,7 @@ import {
 import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import Site from "discourse/models/site";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
@@ -18,7 +19,6 @@ acceptance("Managing Group Membership", function (needs) {
             id: 123,
             name: "test-group",
             provider_name: "google_oauth2",
-            provider_domain: "my-domain.com",
           },
         ],
       })
@@ -112,19 +112,35 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.selectRowByValue("foo.com");
 
     assert.equal(emailDomains.header().value(), "foo.com");
+  });
+
+  test("As an admin on a site that can associate groups", async function (assert) {
+    let site = Site.current();
+    site.set("can_associate_groups", true);
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
 
     const associatedGroups = selectKit(
       ".group-form-automatic-membership-associated-groups"
     );
     await associatedGroups.expand();
-    await associatedGroups.selectRowByName(
-      "google_oauth2:my-domain.com:test-group"
-    );
+    await associatedGroups.selectRowByName("google_oauth2:test-group");
     await associatedGroups.keyboard("enter");
 
-    assert.equal(
-      associatedGroups.header().name(),
-      "google_oauth2:my-domain.com:test-group"
+    assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
+  });
+
+  test("As an admin on a site that cant associate groups", async function (assert) {
+    let site = Site.current();
+    site.set("can_associate_groups", false);
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    assert.ok(
+      !exists('label[for="automatic_membership_associated_groups"]'),
+      "it should not display associated groups automatic membership label"
     );
   });
 
