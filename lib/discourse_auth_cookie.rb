@@ -1,5 +1,25 @@
 # frozen_string_literal: true
 
+# You may have seen references to v0 and v1 of our auth cookie in the codebase
+# and you're not sure how they differ, so here is an explanation:
+#
+# From the very early days of Discourse, the auth cookie (_t) consisted only of
+# a 32 characters random string that Discourse used to identify/lookup the
+# current user. We didn't include any metadata with the cookie or encrypt/sign
+# it.
+#
+# That was v0 of the auth cookie until Nov 2021 when we merged a change that
+# required us to store additional metadata with the cookie so we could get more
+# information about current user early in the request lifecycle before we
+# performed database lookup. We also started encrypting and signing the cookie
+# to prevent tampering and obfuscate user information that we include in the
+# cookie. This is v1 of our auth cookie and we still use it to this date.
+#
+# We still accept v0 of the auth cookie to keep users logged in, but upon
+# cookie rotation (which happen every 10 minutes) they'll be switched over to
+# the v1 format.
+#
+# We'll drop support for v0 after Discourse 3.0 is released.
 class DiscourseAuthCookie
   class InvalidCookie < StandardError; end
 
