@@ -21,7 +21,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
         "composer.details_text"
@@ -38,7 +38,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t(
         "composer.details_title"
@@ -46,12 +46,12 @@ acceptance("Details Button", function (needs) {
       "it should contain the right selected output"
     );
 
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionStart,
       21,
       "it should start highlighting at the right position"
     );
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionEnd,
       37,
       "it should end highlighting at the right position"
@@ -65,7 +65,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       `Before \n[details="${I18n.t(
         "composer.details_title"
@@ -73,12 +73,12 @@ acceptance("Details Button", function (needs) {
       "it should contain the right output"
     );
 
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionStart,
       28,
       "it should start highlighting at the right position"
     );
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionEnd,
       48,
       "it should end highlighting at the right position"
@@ -92,7 +92,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       `Before \n\n[details="${I18n.t(
         "composer.details_title"
@@ -100,12 +100,12 @@ acceptance("Details Button", function (needs) {
       "it should contain the right output"
     );
 
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionStart,
       29,
       "it should start highlighting at the right position"
     );
-    assert.equal(
+    assert.strictEqual(
       textarea.selectionEnd,
       49,
       "it should end highlighting at the right position"
@@ -127,7 +127,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t(
         "composer.details_title"

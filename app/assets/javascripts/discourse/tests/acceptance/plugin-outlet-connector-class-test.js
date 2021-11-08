@@ -70,7 +70,7 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
 
   test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
-    assert.equal(
+    assert.strictEqual(
       count(".user-profile-primary-outlet.hello"),
       1,
       "it has class names"
@@ -81,14 +81,14 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
     );
 
     await click(".say-hello");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".hello-result").text(),
       "hello!",
       "actions delegate properly"
     );
 
     await click(".say-hi");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".hi-result").text(),
       "hi!",
       "actions delegate properly"

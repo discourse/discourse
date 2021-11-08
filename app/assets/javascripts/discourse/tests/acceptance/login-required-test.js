@@ -11,10 +11,14 @@ acceptance("Login Required", function (needs) {
 
   test("redirect", async function (assert) {
     await visit("/latest");
-    assert.equal(currentRouteName(), "login", "it redirects them to login");
+    assert.strictEqual(
+      currentRouteName(),
+      "login",
+      "it redirects them to login"
+    );
 
     await click("#site-logo");
-    assert.equal(
+    assert.strictEqual(
       currentRouteName(),
       "login",
       "clicking the logo keeps them on login"

@@ -71,7 +71,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:all-uploads-complete", () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val(),
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
       );
@@ -79,7 +79,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     });
 
     appEvents.on("composer:upload-started", () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val(),
         "The image:\n[Uploading: avatar.png...]()\n"
       );
@@ -98,7 +98,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image2 = createFile("avatar2.png");
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         I18n.t("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
@@ -122,7 +122,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
@@ -153,7 +153,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   //   const done = assert.async();
 
   //   appEvents.on("composer:uploads-cancelled", () => {
-  //     assert.equal(
+  //     assert.strictEqual(
   //       queryAll(".d-editor-input").val(),
   //       "The image:\n",
   //       "it should clear the cancelled placeholders"
@@ -166,7 +166,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   //     uploadStarted++;
 
   //     if (uploadStarted === 2) {
-  //       assert.equal(
+  //       assert.strictEqual(
   //         queryAll(".d-editor-input").val(),
   //         "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
   //         "it should show the upload placeholders when the upload starts"
@@ -209,7 +209,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
@@ -248,7 +248,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         "This is an upload handler test for handlertest.png",
         "it should show the bootbox triggered by the upload handler"

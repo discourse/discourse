@@ -20,15 +20,15 @@ discourseModule("Unit | Controller | preferences/account", function () {
       },
     });
 
-    assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+    assert.strictEqual(controller.get("canUpdateAssociatedAccounts"), false);
 
     controller.set("model.second_factor_enabled", false);
-    assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+    assert.strictEqual(controller.get("canUpdateAssociatedAccounts"), false);
 
     controller.set("model.is_anonymous", false);
-    assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+    assert.strictEqual(controller.get("canUpdateAssociatedAccounts"), false);
 
     controller.set("model.id", 1234);
-    assert.equal(controller.get("canUpdateAssociatedAccounts"), true);
+    assert.strictEqual(controller.get("canUpdateAssociatedAccounts"), true);
   });
 });

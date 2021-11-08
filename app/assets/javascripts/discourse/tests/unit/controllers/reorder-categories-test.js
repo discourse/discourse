@@ -17,7 +17,7 @@ discourseModule("Unit | Controller | reorder-categories", function () {
     controller.reorder();
 
     controller.get("categoriesOrdered").forEach((category, index) => {
-      assert.equal(category.get("position"), index);
+      assert.strictEqual(category.get("position"), index);
     });
   });
 

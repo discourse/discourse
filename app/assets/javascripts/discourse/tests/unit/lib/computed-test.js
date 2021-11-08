@@ -33,7 +33,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
     }).create();
 
     this.siteSettings.vehicle = "airplane";
-    assert.equal(
+    assert.strictEqual(
       t.get("vehicle"),
       "airplane",
       "it has the value of the site setting"
@@ -79,25 +79,25 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       mood: "happy",
     });
 
-    assert.equal(
+    assert.strictEqual(
       t.get("exclaimyUsername"),
       "!!! eviltrout !!!",
       "it inserts the string"
     );
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "eviltrout is happy",
       "it inserts multiple strings"
     );
 
     t.set("username", "codinghorror");
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "codinghorror is happy",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "codinghorror is ecstatic",
       "it supports changing another property"
@@ -113,25 +113,25 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       mood: "happy",
     });
 
-    assert.equal(
+    assert.strictEqual(
       t.get("exclaimyUsername"),
       "%@ translated: !!! eviltrout !!!",
       "it inserts the string and then translates"
     );
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "%@ translated: eviltrout is happy",
       "it inserts multiple strings and then translates"
     );
 
     t.set("username", "codinghorror");
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "%@ translated: codinghorror is happy",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
-    assert.equal(
+    assert.strictEqual(
       t.get("multiple"),
       "%@ translated: codinghorror is ecstatic",
       "it supports changing another property"
@@ -146,7 +146,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
     });
 
     t = testClass.create({ username: "eviltrout" });
-    assert.equal(
+    assert.strictEqual(
       t.get("userUrl"),
       "/u/eviltrout",
       "it supports urls without a prefix"
@@ -154,7 +154,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
 
     setPrefix("/prefixed");
     t = testClass.create({ username: "eviltrout" });
-    assert.equal(
+    assert.strictEqual(
       t.get("userUrl"),
       "/prefixed/u/eviltrout",
       "it supports urls with a prefix"
@@ -167,6 +167,6 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       desc: htmlSafe("cookies"),
     }).create({ cookies });
 
-    assert.equal(t.get("desc").string, cookies);
+    assert.strictEqual(t.get("desc").string, cookies);
   });
 });

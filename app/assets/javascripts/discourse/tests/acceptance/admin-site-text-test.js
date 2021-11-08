@@ -18,14 +18,14 @@ acceptance("Admin - Site Texts", function (needs) {
 
     await fillIn(".site-text-search", "Test");
 
-    assert.equal(currentURL(), "/admin/customize/site_texts?q=Test");
+    assert.strictEqual(currentURL(), "/admin/customize/site_texts?q=Test");
     assert.ok(exists(".site-text"));
     assert.ok(exists(".site-text:not(.overridden)"));
     assert.ok(exists(".site-text.overridden"));
 
     // Only show overridden
     await click(".search-area .filter-options input");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/admin/customize/site_texts?overridden=true&q=Test"
     );
@@ -37,7 +37,7 @@ acceptance("Admin - Site Texts", function (needs) {
   test("edit and revert a site text by key", async function (assert) {
     await visit("/admin/customize/site_texts/site.test?locale=en");
 
-    assert.equal(queryAll(".title h3").text(), "site.test");
+    assert.strictEqual(queryAll(".title h3").text(), "site.test");
     assert.ok(!exists(".saved"));
     assert.ok(!exists(".revert-site-text"));
 

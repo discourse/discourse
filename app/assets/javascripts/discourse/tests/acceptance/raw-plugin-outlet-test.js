@@ -28,7 +28,7 @@ acceptance("Raw Plugin Outlet", function (needs) {
   test("Renders the raw plugin outlet", async function (assert) {
     await visit("/");
     assert.ok(exists(".topic-lala"), "it renders the outlet");
-    assert.equal(
+    assert.strictEqual(
       query(".topic-lala:nth-of-type(1)").innerText,
       "11557",
       "it has the topic id"

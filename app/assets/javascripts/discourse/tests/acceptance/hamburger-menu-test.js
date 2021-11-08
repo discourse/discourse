@@ -19,7 +19,7 @@ acceptance(
       await visit("/");
       await click(".hamburger-dropdown");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".review .badge-notification.reviewables").text(),
         "3"
       );

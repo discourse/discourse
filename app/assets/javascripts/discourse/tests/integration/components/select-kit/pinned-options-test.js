@@ -33,12 +33,12 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().name(), "pinned");
+        assert.strictEqual(this.subject.header().name(), "pinned");
 
         await this.subject.expand();
         await this.subject.selectRowByValue("unpinned");
 
-        assert.equal(this.subject.header().name(), "unpinned");
+        assert.strictEqual(this.subject.header().name(), "unpinned");
       },
     });
 
@@ -51,12 +51,12 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().name(), "unpinned");
+        assert.strictEqual(this.subject.header().name(), "unpinned");
 
         await this.subject.expand();
         await this.subject.selectRowByValue("pinned");
 
-        assert.equal(this.subject.header().name(), "pinned");
+        assert.strictEqual(this.subject.header().name(), "pinned");
       },
     });
   }

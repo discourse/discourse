@@ -37,7 +37,7 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser");
     await click("#email-login-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-error").html(),
       I18n.t("email_login.complete_username_not_found", {
         username: "someuser",
@@ -48,7 +48,7 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser@gmail.com");
     await click("#email-login-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-error").html(),
       I18n.t("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
@@ -62,7 +62,7 @@ acceptance("Login with email", function (needs) {
 
     await click("#email-login-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-success").html().trim(),
       I18n.t("email_login.complete_username_found", { username: "someuser" }),
       "it should display a success message for a valid username"
@@ -73,7 +73,7 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser@gmail.com");
     await click("#email-login-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-success").html().trim(),
       I18n.t("email_login.complete_email_found", {
         email: "someuser@gmail.com",

@@ -38,7 +38,7 @@ acceptance("Create Account - User Fields", function (needs) {
     assert.ok(exists(".user-field"), "it has at least one user field");
 
     await click(".modal-footer .btn-primary");
-    assert.equal(
+    assert.strictEqual(
       query("#account-email-validation").innerText.trim(),
       "Please enter an email address"
     );

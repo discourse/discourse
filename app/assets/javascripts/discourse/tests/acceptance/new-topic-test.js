@@ -23,19 +23,19 @@ acceptance("New Topic - Authenticated", function (needs) {
     );
 
     assert.ok(exists(".composer-fields"), "it opens composer");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#reply-title").val().trim(),
       "topic title",
       "it pre-fills topic title"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       "topic body",
       "it pre-fills topic body"
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".category-chooser").header().value(),
-      1,
+      "1",
       "it selects desired category"
     );
   });

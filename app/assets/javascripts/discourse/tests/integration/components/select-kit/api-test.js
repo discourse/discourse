@@ -51,11 +51,11 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
     async test(assert) {
       await this.comboBox.expand();
 
-      assert.equal(this.comboBox.rows().length, 4);
+      assert.strictEqual(this.comboBox.rows().length, 4);
 
       const appendedRow = this.comboBox.rowByIndex(3);
       assert.ok(appendedRow.exists());
-      assert.equal(appendedRow.value(), "alpaca");
+      assert.strictEqual(appendedRow.value(), "alpaca");
 
       await this.comboBox.collapse();
 
@@ -86,11 +86,11 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
     async test(assert) {
       await this.comboBox.expand();
 
-      assert.equal(this.comboBox.rows().length, 4);
+      assert.strictEqual(this.comboBox.rows().length, 4);
 
       const prependedRow = this.comboBox.rowByIndex(0);
       assert.ok(prependedRow.exists());
-      assert.equal(prependedRow.value(), "alpaca");
+      assert.strictEqual(prependedRow.value(), "alpaca");
 
       await this.comboBox.collapse();
 
@@ -118,7 +118,7 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
       await this.comboBox.expand();
       await this.comboBox.selectRowByIndex(0);
 
-      assert.equal(queryAll("#test").text(), "foo");
+      assert.strictEqual(queryAll("#test").text(), "foo");
     },
   });
 });

@@ -17,22 +17,22 @@ acceptance("Category Edit", function (needs) {
     await visit("/c/bug");
 
     await click("button.edit-category");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
       "it jumps to the correct screen"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".category-breadcrumb .badge-category").text(),
       "bug"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".category-color-editor .badge-category").text(),
       "bug"
     );
     await fillIn("input.category-name", "testing");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".category-color-editor .badge-category").text(),
       "testing"
     );
@@ -43,7 +43,7 @@ acceptance("Category Edit", function (needs) {
     await fillIn(".d-editor-input", "this is the new topic template");
 
     await click("#save-category");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
       "it stays on the edit screen"
@@ -55,7 +55,7 @@ acceptance("Category Edit", function (needs) {
     await searchPriorityChooser.selectRowByValue(1);
 
     await click("#save-category");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
       "it stays on the edit screen"
@@ -72,7 +72,7 @@ acceptance("Category Edit", function (needs) {
 
   test("Index Route", async function (assert) {
     await visit("/c/bug/edit");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
       "it redirects to the general tab"
@@ -81,12 +81,12 @@ acceptance("Category Edit", function (needs) {
 
   test("Slugless Route", async function (assert) {
     await visit("/c/1-category/edit");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/1-category/edit/general",
       "it goes to the general tab"
     );
-    assert.equal(queryAll("input.category-name").val(), "bug");
+    assert.strictEqual(queryAll("input.category-name").val(), "bug");
   });
 
   test("Error Saving", async function (assert) {
@@ -95,7 +95,10 @@ acceptance("Category Edit", function (needs) {
     await click("#save-category");
 
     assert.ok(visible(".bootbox"));
-    assert.equal(queryAll(".bootbox .modal-body").html(), "duplicate email");
+    assert.strictEqual(
+      queryAll(".bootbox .modal-body").html(),
+      "duplicate email"
+    );
 
     await click(".bootbox .btn-primary");
     assert.ok(!visible(".bootbox"));
@@ -156,6 +159,6 @@ acceptance("Category Edit - no permission to edit", function (needs) {
 
   test("returns 404", async function (assert) {
     await visit("/c/bug/edit");
-    assert.equal(currentURL(), "/404");
+    assert.strictEqual(currentURL(), "/404");
   });
 });

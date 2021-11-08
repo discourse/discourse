@@ -30,7 +30,7 @@ acceptance(
 
       await click(".discourse-local-date");
       await click(document.querySelector(".download-calendar"));
-      assert.equal(
+      assert.strictEqual(
         query("#discourse-modal-title").textContent.trim(),
         I18n.t("download_calendar.title"),
         "it should display modal to select calendar"

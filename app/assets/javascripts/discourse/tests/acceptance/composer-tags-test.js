@@ -32,7 +32,7 @@ acceptance("Composer - Tags", function (needs) {
     await categoryChooser.selectRowByValue(2);
 
     await click("#reply-control button.create");
-    assert.notEqual(currentURL(), "/");
+    assert.notStrictEqual(currentURL(), "/");
   });
 
   test("users do not bypass tag validation rule", async function (assert) {
@@ -51,8 +51,8 @@ acceptance("Composer - Tags", function (needs) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await click("#reply-control button.create");
-    assert.equal(currentURL(), "/");
-    assert.equal(
+    assert.strictEqual(currentURL(), "/");
+    assert.strictEqual(
       queryAll(".popup-tip.bad").text().trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
@@ -63,7 +63,7 @@ acceptance("Composer - Tags", function (needs) {
     await tags.selectRowByValue("monkey");
 
     await click("#reply-control button.create");
-    assert.notEqual(currentURL(), "/");
+    assert.notStrictEqual(currentURL(), "/");
   });
 
   test("users do not bypass min required tags in tag group validation rule", async function (assert) {
@@ -85,8 +85,8 @@ acceptance("Composer - Tags", function (needs) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await click("#reply-control button.create");
-    assert.equal(currentURL(), "/");
-    assert.equal(
+    assert.strictEqual(currentURL(), "/");
+    assert.strictEqual(
       queryAll(".popup-tip.bad").text().trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
@@ -97,6 +97,6 @@ acceptance("Composer - Tags", function (needs) {
     await tags.selectRowByValue("monkey");
 
     await click("#reply-control button.create");
-    assert.notEqual(currentURL(), "/");
+    assert.notStrictEqual(currentURL(), "/");
   });
 });
