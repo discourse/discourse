@@ -13,7 +13,7 @@ describe CurrentUser do
       trust_level: user.trust_level,
       timestamp: 1.day.ago,
       valid_for: 100.hours
-    ).to_text
+    ).serialize
 
     env = Rack::MockRequest.env_for("/test", "HTTP_COOKIE" => "_t=#{cookie};")
     expect(CurrentUser.lookup_from_env(env)).to eq(user)

@@ -459,6 +459,21 @@ ensure
   Rails.logger = old_logger
 end
 
+# this takes a string and returns a copy where 2 different
+# characters are swapped.
+# e.g.
+#   swap_2_different_characters("abc") => "bac"
+#   swap_2_different_characters("aac") => "caa"
+def swap_2_different_characters(str)
+  swap1 = 0
+  swap2 = str.split("").find_index { |c| c != str[swap1] }
+  # if the string is made up of 1 character
+  return str if !swap2
+  str = str.dup
+  str[swap1], str[swap2] = str[swap2], str[swap1]
+  str
+end
+
 class SpecSecureRandom
   class << self
     attr_accessor :value

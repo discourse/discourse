@@ -58,7 +58,7 @@ describe Hijack do
         end
       end
 
-      env = { "rack.input" => StringIO.new }
+      env = {}
       middleware = Middleware::RequestTracker.new(app)
 
       middleware.call(env)

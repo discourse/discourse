@@ -449,7 +449,7 @@ describe Auth::DefaultCurrentUserProvider do
         trust_level: user.trust_level,
         valid_for: 100.days,
         timestamp: 3.hours.ago
-      ).to_text
+      ).serialize
 
       provider('/').log_on_user(user, {}, {})
 
@@ -463,7 +463,7 @@ describe Auth::DefaultCurrentUserProvider do
         trust_level: user.trust_level,
         valid_for: 100.days,
         timestamp: 3.hours.ago
-      ).to_text
+      ).serialize
 
       env = { "HTTP_COOKIE" => "_t=#{bad_cookie}", "REMOTE_ADDR" => ip }
 
@@ -495,7 +495,7 @@ describe Auth::DefaultCurrentUserProvider do
       trust_level: 4,
       valid_for: 100.days,
       timestamp: 3.hours.ago
-    ).to_text
+    ).serialize
     cookies = { "_t" => bad_cookie }
     provider('/').refresh_session(nil, {}, cookies)
     expect(cookies.key?("_t")).to eq(false)
@@ -563,7 +563,7 @@ describe Auth::DefaultCurrentUserProvider do
       trust_level: user.trust_level,
       valid_for: 100.days,
       timestamp: 3.hours.ago
-    ).to_text
+    ).serialize
 
     provider('/').log_on_user(user, {}, {})
 
@@ -712,11 +712,8 @@ describe Auth::DefaultCurrentUserProvider do
     cookies = {}
     provider('/').log_on_user(user, {}, cookies)
 
-    cookie = cookies["_t"][:value].dup
-    swap1 = 0
-    swap2 = cookie.split("").find_index { |c| c != cookie[swap1] }
-    # tamper with the cookie
-    cookie[swap1], cookie[swap2] = cookie[swap2], cookie[swap1]
+    cookie = cookies["_t"][:value]
+    cookie = swap_2_different_characters(cookie)
 
     ip = "10.0.0.1"
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }

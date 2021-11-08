@@ -12,7 +12,6 @@ class Auth::DefaultCurrentUserProvider
   HEADER_API_USER_ID ||= "HTTP_API_USER_ID"
   PARAMETER_USER_API_KEY ||= "user_api_key"
   USER_API_KEY ||= "HTTP_USER_API_KEY"
-  HASHED_USER_API_KEY ||= "_DISCOURSE_HASHED_USER_API_KEY"
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
   USER_API_KEY_ENV ||= "_DISCOURSE_USER_API"
@@ -155,12 +154,12 @@ class Auth::DefaultCurrentUserProvider
 
     # user api key handling
     if user_api_key
-      hashed_user_api_key = ApiKey.hash_key(user_api_key)
-      @env[HASHED_USER_API_KEY] = hashed_user_api_key
+      @hashed_user_api_key = ApiKey.hash_key(user_api_key)
 
       user_api_key_obj = UserApiKey
         .active
-        .with_key(user_api_key)
+        .joins(:user)
+        .where(key_hash: @hashed_user_api_key)
         .includes(:user, :scopes)
         .first
 
@@ -172,11 +171,10 @@ class Auth::DefaultCurrentUserProvider
       user_api_key_obj.ensure_allowed!(@env)
 
       current_user = user_api_key_obj.user
-      raise Discourse::InvalidAccess if !current_user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
 
       if can_write?
-        user_api_key_obj.update_last_used!(@env[USER_API_CLIENT_ID])
+        user_api_key_obj.update_last_used(@env[USER_API_CLIENT_ID])
       end
 
       @env[USER_API_KEY_ENV] = true
@@ -254,7 +252,7 @@ class Auth::DefaultCurrentUserProvider
       valid_for: SiteSetting.maximum_session_age.hours
     )
     hash = {
-      value: cookie.to_text,
+      value: cookie.serialize,
       httponly: true,
       secure: SiteSetting.force_https
     }
@@ -321,7 +319,7 @@ class Auth::DefaultCurrentUserProvider
 
   def has_auth_cookie?
     cookie_string = @request.cookies[TOKEN_COOKIE]
-    return false if cookie_string.nil?
+    return false if cookie_string.blank?
     cookie = DiscourseAuthCookie.parse(cookie_string)
     cookie.validate!
     true
@@ -413,12 +411,9 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def user_api_key_limiter_60_secs
-    return @user_api_key_limiter_60_secs if @user_api_key_limiter_60_secs
-
-    hashed_user_api_key = @env[HASHED_USER_API_KEY]
-    @user_api_key_limiter_60_secs = RateLimiter.new(
+    @user_api_key_limiter_60_secs ||= RateLimiter.new(
       nil,
-      "user_api_min_#{hashed_user_api_key}",
+      "user_api_min_#{@hashed_user_api_key}",
       GlobalSetting.max_user_api_reqs_per_minute,
       60,
       error_code: "user_api_key_limiter_60_secs"
@@ -426,12 +421,9 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def user_api_key_limiter_1_day
-    return @user_api_key_limiter_1_day if @user_api_key_limiter_1_day
-
-    hashed_user_api_key = @env[HASHED_USER_API_KEY]
-    @user_api_key_limiter_1_day = RateLimiter.new(
+    @user_api_key_limiter_1_day ||= RateLimiter.new(
       nil,
-      "user_api_day_#{hashed_user_api_key}",
+      "user_api_day_#{@hashed_user_api_key}",
       GlobalSetting.max_user_api_reqs_per_day,
       86400,
       error_code: "user_api_key_limiter_1_day"

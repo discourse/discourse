@@ -28,7 +28,7 @@ describe Middleware::AnonymousCache do
           token: SecureRandom.hex,
           timestamp: 1.day.ago,
           valid_for: 100.days
-        ).to_text
+        ).serialize
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(false)
       end
 
@@ -37,11 +37,9 @@ describe Middleware::AnonymousCache do
           token: SecureRandom.hex,
           timestamp: 1.day.ago,
           valid_for: 100.days
-        ).to_text.dup
+        ).serialize
 
-        swap1 = 0
-        swap2 = cookie.split("").find_index { |c| c != cookie[swap1] }
-        cookie[swap1], cookie[swap2] = cookie[swap2], cookie[swap1]
+        cookie = swap_2_different_characters(cookie)
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
 
@@ -162,7 +160,7 @@ describe Middleware::AnonymousCache do
 
       cookie = DiscourseAuthCookie.new(
         token: SecureRandom.hex
-      ).to_text
+      ).serialize
       env = {
         "HTTP_COOKIE" => "_t=#{cookie}",
         "HOST" => "site.com",
@@ -217,7 +215,7 @@ describe Middleware::AnonymousCache do
 
       cookie = DiscourseAuthCookie.new(
         token: SecureRandom.hex
-      ).to_text
+      ).serialize
       env = {
         "HTTP_COOKIE" => "_t=#{cookie}",
         "HTTP_DISCOURSE_LOGGED_IN" => "true",

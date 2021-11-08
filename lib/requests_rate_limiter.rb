@@ -74,8 +74,10 @@ class RequestsRateLimiter
   end
 
   def is_private_ip?(ip)
-    ip = IPAddr.new(ip) rescue nil
+    ip = IPAddr.new(ip)
     !!(ip && (ip.private? || ip.loopback?))
+  rescue IPAddr::AddressFamilyError, IPAddr::InvalidAddressError
+    false
   end
 
   def limiter_10_secs
@@ -127,9 +129,8 @@ class RequestsRateLimiter
   end
 
   def limit_on_user_id?
-    user_id &&
-      trust_level &&
-      trust_level >= GlobalSetting.skip_per_ip_rate_limit_trust_level
+    return false if !user_id || !trust_level
+    trust_level >= GlobalSetting.skip_per_ip_rate_limit_trust_level
   end
 
   def log_warning(limiter)
@@ -159,11 +160,11 @@ class RequestsRateLimiter
       "Discourse-Rate-Limit-Error-Code" => limiter.error_code,
       "Content-Type" => "text/plain; charset=utf-8"
     }
-    message = [
-      "Slow down, too many requests from this IP address.",
-      "Please retry again in #{wait_secs} seconds.",
-      "Error code: #{limiter.error_code}."
-    ].join("\n")
+    message = <<~TEXT
+      Slow down, too many requests from this IP address.
+      Please retry again in #{wait_secs} seconds.
+      Error code: #{limiter.error_code}.
+    TEXT
 
     [429, headers, [message]]
   end

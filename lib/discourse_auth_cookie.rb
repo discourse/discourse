@@ -29,28 +29,28 @@ class DiscourseAuthCookie
     end
   end
 
-  TOKEN_SIZE ||= 32
+  TOKEN_SIZE = 32
 
-  TOKEN_KEY ||= "token"
-  ID_KEY ||= "id"
-  TL_KEY ||= "tl"
-  TIME_KEY ||= "time"
-  VALID_KEY ||= "valid"
+  TOKEN_KEY = "token"
+  USER_ID_KEY = "id"
+  USER_TRUST_LEVEL_KEY = "tl"
+  TIME_KEY = "time"
+  VALID_KEY = "valid"
   private_constant *%i[
     TOKEN_KEY
-    ID_KEY
-    TL_KEY
+    USER_ID_KEY
+    USER_TRUST_LEVEL_KEY
     TIME_KEY
     VALID_KEY
   ]
 
-  attr_reader *%i[token user_id trust_level timestamp valid_for]
+  attr_reader :token, :user_id, :trust_level, :timestamp, :valid_for
 
-  def self.parse(raw_cookie, secret = Rails.application.secret_key_base)
-    # v0 of the cookie was simply the auth token itself. we need this for
-    # backward compatibility so we don't wipe out existing sessions.
-    # TODO: drop this line (and a test case in
-    # default_current_user_provider_spec.rb) in Nov 2023
+  def self.parse(raw_cookie)
+    # v0 of the cookie was simply the auth token itself. we need
+    # this for backward compatibility so we don't wipe out existing
+    # sessions.  TODO: drop this line (and a test case in
+    # default_current_user_provider_spec.rb) after the 3.0 release
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
     data = Encryptor.new.decrypt_and_verify(raw_cookie)
@@ -66,9 +66,9 @@ class DiscourseAuthCookie
       val = val.presence
       if prefix == TOKEN_KEY
         token = val
-      elsif prefix == ID_KEY
+      elsif prefix == USER_ID_KEY
         user_id = val
-      elsif prefix == TL_KEY
+      elsif prefix == USER_TRUST_LEVEL_KEY
         trust_level = val
       elsif prefix == TIME_KEY
         timestamp = val
@@ -86,18 +86,6 @@ class DiscourseAuthCookie
     )
   end
 
-  def self.validate_signature!(data, sig, secret)
-    data = data.to_s
-    sig = sig.to_s
-    if compute_signature(data, secret) != sig
-      raise InvalidCookie.new
-    end
-  end
-
-  def self.compute_signature(data, secret)
-    OpenSSL::HMAC.hexdigest("sha256", secret, data)
-  end
-
   def initialize(token:, user_id: nil, trust_level: nil, timestamp: nil, valid_for: nil)
     @token = token
     @user_id = user_id.to_i if user_id
@@ -106,13 +94,13 @@ class DiscourseAuthCookie
     @valid_for = valid_for.to_i if valid_for
   end
 
-  def to_text
+  def serialize
     parts = []
-    parts << [TOKEN_KEY, token].join(":")
-    parts << [ID_KEY, user_id].join(":")
-    parts << [TL_KEY, trust_level].join(":")
-    parts << [TIME_KEY, timestamp].join(":")
-    parts << [VALID_KEY, valid_for].join(":")
+    parts << "#{TOKEN_KEY}:#{token}"
+    parts << "#{USER_ID_KEY}:#{user_id}"
+    parts << "#{USER_TRUST_LEVEL_KEY}:#{trust_level}"
+    parts << "#{TIME_KEY}:#{timestamp}"
+    parts << "#{VALID_KEY}:#{valid_for}"
     data = parts.join(",")
     Encryptor.new.encrypt_and_sign(data)
   end

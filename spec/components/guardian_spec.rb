@@ -3852,7 +3852,7 @@ describe Guardian do
         trust_level: user.trust_level,
         timestamp: 1.day.ago,
         valid_for: 100.hours
-      ).to_text
+      ).serialize
       env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{cookie};")
 
       guardian = Guardian.new(user, Rack::Request.new(env))

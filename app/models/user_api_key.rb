@@ -35,7 +35,7 @@ class UserApiKey < ActiveRecord::Base
     raise Discourse::InvalidAccess.new if !allow?(env)
   end
 
-  def update_last_used!(client_id)
+  def update_last_used(client_id)
     update_args = { last_used_at: Time.zone.now }
     if client_id.present? && client_id != self.client_id
       # invalidate old dupe api key for client if needed
@@ -44,7 +44,7 @@ class UserApiKey < ActiveRecord::Base
         .where('id <> ?', self.id)
         .destroy_all
 
-      update_args.merge!(client_id: client_id)
+      update_args[:client_id] = client_id
     end
     self.update_columns(**update_args)
   end

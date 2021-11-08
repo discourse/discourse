@@ -193,9 +193,7 @@ class ApplicationController < ActionController::Base
     }
 
     if e&.error_code
-      response_headers.merge!(
-        'Discourse-Rate-Limit-Error-Code': e.error_code
-      )
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
     end
 
     with_resolved_locale do

@@ -26,11 +26,9 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: 4.hours.ago,
         valid_for: 100.days
-      ).to_text.dup
+      ).serialize
 
-      swap1 = 0
-      swap2 = cookie.split("").find_index { |c| c != cookie[swap1] }
-      cookie[swap1], cookie[swap2] = cookie[swap2], cookie[swap1]
+      cookie = swap_2_different_characters(cookie)
 
       expect {
         DiscourseAuthCookie.parse(cookie)
@@ -43,7 +41,7 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: 4.hours.ago,
         valid_for: 100.days
-      ).to_text
+      ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -59,7 +57,7 @@ describe DiscourseAuthCookie do
         trust_level: user.trust_level,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text
+      ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -79,7 +77,7 @@ describe DiscourseAuthCookie do
         trust_level: nil,
         timestamp: timestamp,
         valid_for: valid_for
-      ).to_text
+      ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
@@ -87,75 +85,6 @@ describe DiscourseAuthCookie do
       expect(parsed.trust_level).to eq(nil)
       expect(parsed.timestamp).to eq(timestamp.to_i)
       expect(parsed.valid_for).to eq(valid_for.to_i)
-    end
-
-    it "does not require cookie fields to be in any particular order" do
-      token = SecureRandom.hex
-      timestamp = 4.hours.ago
-      valid_for = 100.days
-      cookie = DiscourseAuthCookie.new(
-        token: token,
-        user_id: user.id,
-        trust_level: user.trust_level,
-        timestamp: timestamp,
-        valid_for: valid_for
-      ).to_text
-
-      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
-      data = data.split(",").shuffle.join(",")
-      cookie = DiscourseAuthCookie::Encryptor.new.encrypt_and_sign(data)
-
-      parsed = DiscourseAuthCookie.parse(cookie)
-      expect(parsed.token).to eq(token)
-      expect(parsed.user_id).to eq(user.id)
-      expect(parsed.trust_level).to eq(user.trust_level)
-      expect(parsed.timestamp).to eq(timestamp.to_i)
-      expect(parsed.valid_for).to eq(valid_for.to_i)
-    end
-  end
-
-  describe "#to_text" do
-    it "converts the instance to an encrypted string and signature" do
-      token = SecureRandom.hex
-      timestamp = 4.hours.ago
-      valid_for = 100.days
-      cookie = DiscourseAuthCookie.new(
-        token: token,
-        user_id: user.id,
-        trust_level: user.trust_level,
-        timestamp: timestamp,
-        valid_for: valid_for
-      ).to_text
-
-      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
-      parts = data.split(",")
-      expect(parts.size).to eq(5)
-      expect(parts).to include("token:#{token}")
-      expect(parts).to include("id:#{user.id}")
-      expect(parts).to include("tl:#{user.trust_level}")
-      expect(parts).to include("time:#{timestamp.to_i}")
-      expect(parts).to include("valid:#{valid_for.to_i}")
-    end
-
-    it "works when some fields are nil" do
-      token = SecureRandom.hex
-      timestamp = 4.hours.ago
-      cookie = DiscourseAuthCookie.new(
-        token: token,
-        user_id: nil,
-        trust_level: nil,
-        timestamp: timestamp,
-        valid_for: nil
-      ).to_text
-
-      data = DiscourseAuthCookie::Encryptor.new.decrypt_and_verify(cookie)
-      parts = data.split(",")
-      expect(parts.size).to eq(5)
-      expect(parts).to include("token:#{token}")
-      expect(parts).to include("id:")
-      expect(parts).to include("tl:")
-      expect(parts).to include("time:#{timestamp.to_i}")
-      expect(parts).to include("valid:")
     end
   end
 

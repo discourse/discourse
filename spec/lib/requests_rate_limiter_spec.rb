@@ -24,10 +24,10 @@ describe RequestsRateLimiter do
 
   fab!(:user) { Fabricate(:user, trust_level: 2) }
 
-  def instance(env = {}, u = nil)
+  def instance(env = {}, user = nil)
     RequestsRateLimiter.new(
-      user_id: u&.id,
-      trust_level: u&.trust_level,
+      user_id: user&.id,
+      trust_level: user&.trust_level,
       request: Rack::Request.new(env)
     )
   end
@@ -87,6 +87,35 @@ describe RequestsRateLimiter do
     end
   end
 
+  describe "#limit_on_user_id?" do
+    it "returns false if user id is nil" do
+      expect(instance.limit_on_user_id?).to eq(false)
+    end
+
+    it "returns false if trust_level is nil" do
+      expect(instance.limit_on_user_id?).to eq(false)
+    end
+
+    it "returns false if the user's trust level is lower than the " \
+    "skip_per_ip_rate_limit_trust_level global setting" do
+      global_setting :skip_per_ip_rate_limit_trust_level, 2
+
+      user.update!(trust_level: 1)
+      expect(instance({}, user).limit_on_user_id?).to eq(false)
+    end
+
+    it "returns true if the user's trust level is equal to or higher than " \
+    "skip_per_ip_rate_limit_trust_level global setting" do
+      global_setting :skip_per_ip_rate_limit_trust_level, 2
+
+      user.update!(trust_level: 2)
+      expect(instance({}, user).limit_on_user_id?).to eq(true)
+
+      user.update!(trust_level: 3)
+      expect(instance({}, user).limit_on_user_id?).to eq(true)
+    end
+  end
+
   describe "#apply_limits!" do
     it "rolls back assets rate limiter if the request is not an assets request" do
       ins = instance
@@ -112,39 +141,39 @@ describe RequestsRateLimiter do
 
     it "does not yield if a limit is reached and rate limit mode is block" do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
-      x = 0
+      called = 0
       ins = instance
 
       # 2nd iteration is rate limited
       2.times do
         ins.apply_limits! do
-          x += 1
+          called += 1
         end
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       expect(Rails.logger.warnings).to eq(0)
     end
 
     it "yields if rate limits are skipped" do
       global_setting :max_reqs_per_ip_mode, "none"
-      x = 0
+      called = 0
       instance.apply_limits! do
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
     end
 
     it "yields if a rate limit is reached and rate limit mode is warn" do
       global_setting :max_reqs_per_ip_mode, "warn"
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       ins = instance
-      x = 0
+      called = 0
       2.times do
         ins.apply_limits! do
-          x += 1
+          called += 1
         end
       end
-      expect(x).to eq(2)
+      expect(called).to eq(2)
       expect(Rails.logger.warnings).to eq(1)
     end
 
@@ -152,13 +181,13 @@ describe RequestsRateLimiter do
       global_setting :max_reqs_per_ip_mode, "warn+block"
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       ins = instance
-      x = 0
+      called = 0
       2.times do
         ins.apply_limits! do
-          x += 1
+          called += 1
         end
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       expect(Rails.logger.warnings).to eq(1)
     end
 
@@ -180,14 +209,14 @@ describe RequestsRateLimiter do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :skip_per_ip_rate_limit_trust_level, 2
       ins = instance({}, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "id_10_secs_limit")
     end
 
@@ -196,14 +225,14 @@ describe RequestsRateLimiter do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :skip_per_ip_rate_limit_trust_level, 3
       ins = instance({}, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "ip_10_secs_limit")
     end
 
@@ -212,14 +241,14 @@ describe RequestsRateLimiter do
       global_setting :max_reqs_per_ip_per_minute, 1
       global_setting :skip_per_ip_rate_limit_trust_level, 2
       ins = instance({}, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "id_60_secs_limit")
     end
 
@@ -228,14 +257,14 @@ describe RequestsRateLimiter do
       global_setting :max_reqs_per_ip_per_minute, 1
       global_setting :skip_per_ip_rate_limit_trust_level, 3
       ins = instance({}, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "ip_60_secs_limit")
     end
 
@@ -245,16 +274,16 @@ describe RequestsRateLimiter do
       global_setting :skip_per_ip_rate_limit_trust_level, 3
       env = {}
       ins = instance(env, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
         env["DISCOURSE_IS_ASSET_PATH"] = true
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
         env["DISCOURSE_IS_ASSET_PATH"] = true
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "ip_assets_10_secs_limit")
     end
 
@@ -264,16 +293,16 @@ describe RequestsRateLimiter do
       global_setting :skip_per_ip_rate_limit_trust_level, 2
       env = {}
       ins = instance(env, user)
-      x = 0
+      called = 0
       ins.apply_limits! do
         env["DISCOURSE_IS_ASSET_PATH"] = true
-        x += 1
+        called += 1
       end
       response = ins.apply_limits! do
         env["DISCOURSE_IS_ASSET_PATH"] = true
-        x += 1
+        called += 1
       end
-      expect(x).to eq(1)
+      expect(called).to eq(1)
       assert_rate_limit_response(response, "id_assets_10_secs_limit")
     end
   end
