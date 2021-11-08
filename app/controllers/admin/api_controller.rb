@@ -13,18 +13,13 @@ class Admin::ApiController < Admin::AdminController
 
     keys = keys
       .includes(:user, :api_key_scopes)
-      # Put active keys first
-      # Sort active keys by created_at, sort revoked keys by revoked_at
-      .order(<<~SQL)
-        CASE WHEN revoked_at IS NULL THEN 0 ELSE 1 END,
-        COALESCE(revoked_at, created_at) DESC
-      SQL
+      # Sort revoked keys by revoked_at and active keys by created_at
+      .order("revoked_at DESC NULLS FIRST, created_at DESC")
       .offset(offset)
       .limit(limit)
 
     render_json_dump(
       keys: serialize_data(keys, ApiKeySerializer),
-      total_count: count,
       offset: offset,
       limit: limit
     )
