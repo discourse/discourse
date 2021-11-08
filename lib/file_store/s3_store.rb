@@ -213,10 +213,6 @@ module FileStore
         upload.url
     end
 
-    def path_from_url(url)
-      URI.parse(url).path.delete_prefix("/")
-    end
-
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]

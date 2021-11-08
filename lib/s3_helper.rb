@@ -78,6 +78,10 @@ class S3Helper
     [path, etag.gsub('"', '')]
   end
 
+  def path_from_url(url)
+    URI.parse(url).path.delete_prefix("/")
+  end
+
   def remove(s3_filename, copy_to_tombstone = false)
     s3_filename = s3_filename.dup
 

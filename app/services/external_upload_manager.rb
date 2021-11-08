@@ -23,10 +23,11 @@ class ExternalUploadManager
   end
 
   def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
-    url = Discourse.store.signed_url_for_temporary_upload(
+    store = store_for_upload_type(upload_type)
+    url = store.signed_url_for_temporary_upload(
       file_name, metadata: metadata
     )
-    key = Discourse.store.path_from_url(url)
+    key = store.s3_helper.path_from_url(url)
 
     upload_stub = ExternalUploadStub.create!(
       key: key,
@@ -43,7 +44,8 @@ class ExternalUploadManager
     current_user:, file_name:, file_size:, upload_type:, metadata: {}
   )
     content_type = MiniMime.lookup_by_filename(file_name)&.content_type
-    multipart_upload = Discourse.store.create_multipart(
+    store = store_for_upload_type(upload_type)
+    multipart_upload = store.create_multipart(
       file_name, content_type, metadata: metadata
     )
 
@@ -64,9 +66,19 @@ class ExternalUploadManager
     }
   end
 
+  def self.store_for_upload_type(upload_type)
+    if upload_type == "backup"
+      raise Discourse::InvalidAccess.new unless SiteSetting.enable_backups?
+      BackupRestore::BackupStore.create
+    else
+      Discourse.store
+    end
+  end
+
   def initialize(external_upload_stub, upload_create_opts = {})
     @external_upload_stub = external_upload_stub
     @upload_create_opts = upload_create_opts
+    @store = ExternalUploadManager.store_for_upload_type(external_upload_stub.upload_type)
   end
 
   def can_promote?
@@ -99,7 +111,7 @@ class ExternalUploadManager
       # We don't need to do anything special to abort multipart uploads here,
       # because at this point (calling promote_to_upload!), the multipart
       # upload would already be complete.
-      store.delete_file(external_upload_stub.key)
+      @store.delete_file(external_upload_stub.key)
       external_upload_stub.destroy!
     else
       external_upload_stub.update(status: ExternalUploadStub.statuses[:failed])
@@ -146,22 +158,14 @@ class ExternalUploadManager
 
   def move_to_final_destination
     content_type = MiniMime.lookup_by_filename(external_upload_stub.original_filename).content_type
-    store.move_existing_stored_upload(
+    @store.move_existing_stored_upload(
       external_upload_stub.key, external_upload_stub.original_filename, true, content_type
     )
     Struct.new(:errors).new([])
   end
 
-  def store
-    if external_upload_stub.upload_type == "backup"
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
-  end
-
   def external_stub_object
-    @external_stub_object ||= store.object_from_path(external_upload_stub.key)
+    @external_stub_object ||= @store.object_from_path(external_upload_stub.key)
   end
 
   def external_etag
@@ -177,7 +181,7 @@ class ExternalUploadManager
   end
 
   def download(key, type)
-    url = store.signed_url_for_path(external_upload_stub.key)
+    url = @store.signed_url_for_path(external_upload_stub.key)
     FileHelper.download(
       url,
       max_file_size: DOWNLOAD_LIMIT,

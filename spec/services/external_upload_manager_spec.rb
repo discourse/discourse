@@ -77,7 +77,7 @@ RSpec.describe ExternalUploadManager do
           upload = subject.transform!
           expect(WebMock).to have_requested(
             :put,
-            "#{upload_base_url}/original/1X/#{upload.sha1}.png",
+            "#{upload_base_url}/#{Discourse.store.get_path_for_upload(upload)}",
           ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
           expect(WebMock).to have_requested(
             :delete,
@@ -109,7 +109,7 @@ RSpec.describe ExternalUploadManager do
           upload = subject.transform!
           expect(WebMock).to have_requested(
             :put,
-            "#{upload_base_url}/original/1X/#{upload.sha1}.png"
+            "#{upload_base_url}/#{Discourse.store.get_path_for_upload(upload)}",
           )
           expect(WebMock).to have_requested(
             :delete, "#{upload_base_url}/#{external_upload_stub.key}"
@@ -193,7 +193,7 @@ RSpec.describe ExternalUploadManager do
         upload = subject.transform!
         expect(WebMock).to have_requested(
           :put,
-          "#{upload_base_url}/original/1X/#{upload.sha1}.pdf"
+            "#{upload_base_url}/#{Discourse.store.get_path_for_upload(upload)}",
         ).with(headers: { 'X-Amz-Copy-Source' => "#{SiteSetting.s3_upload_bucket}/#{external_upload_stub.key}" })
         expect(WebMock).to have_requested(
           :delete, "#{upload_base_url}/#{external_upload_stub.key}"
@@ -235,17 +235,25 @@ RSpec.describe ExternalUploadManager do
       <ETag>&quot;#{etag}&quot;</ETag>
     </CopyObjectResult>
     BODY
+    upload_pdf = Fabricate(:upload, sha1: "testbc60eb18e8f974cbfae8bb0f069c3a311024", original_filename: "test.pdf", extension: "pdf")
+    upload_path = Discourse.store.get_path_for_upload(upload_pdf)
+    upload_pdf.destroy!
+
     stub_request(
       :put,
-      "#{upload_base_url}/original/1X/testbc60eb18e8f974cbfae8bb0f069c3a311024.pdf"
+      "#{upload_base_url}/#{upload_path}"
     ).to_return(
       status: 200,
       headers: { "ETag" => etag },
       body: copy_object_result
     )
+
+    upload_png = Fabricate(:upload, sha1: "bc975735dfc6409c1c2aa5ebf2239949bcbdbd65", original_filename: "test.png", extension: "png")
+    upload_path = Discourse.store.get_path_for_upload(upload_png)
+    upload_png.destroy!
     stub_request(
       :put,
-      "#{upload_base_url}/original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png"
+      "#{upload_base_url}/#{upload_path}"
     ).to_return(
       status: 200,
       headers: { "ETag" => etag },
