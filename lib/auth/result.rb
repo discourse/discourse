@@ -22,7 +22,6 @@ class Auth::Result
     :failed,
     :failed_reason,
     :failed_code,
-    :secondary_authorization_url,
     :associated_groups
   ]
 
@@ -38,7 +37,8 @@ class Auth::Result
     :name,
     :authenticator_name,
     :extra_data,
-    :skip_email_validation
+    :skip_email_validation,
+    :associated_groups
   ]
 
   def [](key)
@@ -104,9 +104,9 @@ class Auth::Result
       associated_groups.uniq.each do |associated_group|
         begin
           associated_group = AssociatedGroup.find_or_create_by(
-            name: associated_group,
-            provider_name: extra_data[:provider],
-            provider_domain: extra_data[:provider_domain]
+            name: associated_group[:name],
+            provider_id: associated_group[:id],
+            provider_name: extra_data[:provider]
           )
         rescue ActiveRecord::RecordNotUnique
           retry

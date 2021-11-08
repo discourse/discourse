@@ -3,6 +3,5 @@
 class AssociatedGroupSerializer < ApplicationSerializer
   attributes :id,
              :name,
-             :provider_name,
-             :provider_domain
+             :provider_name
 end

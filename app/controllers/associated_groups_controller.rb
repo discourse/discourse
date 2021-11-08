@@ -2,9 +2,9 @@
 
 class AssociatedGroupsController < ApplicationController
   requires_login
-  before_action :ensure_admin
 
   def index
+    guardian.ensure_can_associate_groups!
     render_serialized(AssociatedGroup.all, AssociatedGroupSerializer, root: 'associated_groups')
   end
 end

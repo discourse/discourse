@@ -35,23 +35,23 @@ class GroupActionLogger
     ))
   end
 
-  def log_add_user_to_group_automatically(target_user)
+  def log_add_user_to_group_automatically(target_user, subject)
     @acting_user.id == Discourse::SYSTEM_USER_ID
 
     GroupHistory.create!(default_params.merge(
-      action: GroupHistory.actions[:add_user_to_group],
+      action: GroupHistory.actions[:add_user_to_group,
       target_user: target_user,
-      subject: @opts[:subject]
+      subject: subject
     ))
   end
 
-  def log_remove_user_from_group_automatically(target_user)
+  def log_remove_user_from_group_automatically(target_user, subject)
     @acting_user.id == Discourse::SYSTEM_USER_ID
 
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:remove_user_from_group],
       target_user: target_user,
-      subject: @opts[:subject]
+      subject: subject
     ))
   end
 

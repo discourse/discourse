@@ -719,8 +719,7 @@ class GroupsController < ApplicationController
             :grant_trust_level,
             :automatic_membership_email_domains,
             :publish_read_state,
-            :allow_unknown_sender_topic_replies,
-            :associated_group_ids
+            :allow_unknown_sender_topic_replies
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
@@ -737,11 +736,11 @@ class GroupsController < ApplicationController
       end
     end
 
-    permitted_params = permitted_params | DiscoursePluginRegistry.group_params
-
-    if current_user.admin
-      permitted_params << { "associated_group_ids" => [] }
+    if guardian.can_associate_groups?
+      permitted_params << { associated_group_ids: [] }
     end
+
+    permitted_params = permitted_params | DiscoursePluginRegistry.group_params
 
     params.require(:group).permit(*permitted_params)
   end

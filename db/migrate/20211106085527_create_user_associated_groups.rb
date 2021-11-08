@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateUserAssociatedGroups < ActiveRecord::Migration[6.0]
+class CreateUserAssociatedGroups < ActiveRecord::Migration[6.1]
   def change
     create_table :user_associated_groups do |t|
       t.references :user, null: false

@@ -4,13 +4,16 @@ class UserAssociatedGroup < ActiveRecord::Base
   belongs_to :user
   belongs_to :associated_group
 
-  after_create do
+  after_commit :add_to_associated_groups, on: [:create, :update]
+  after_commit :remove_from_associated_groups, on: [:destroy]
+
+  def add_to_associated_groups
     associated_group.groups.each do |group|
       group.add_automatically(user, subject: associated_group.label)
     end
   end
 
-  after_destroy do
+  def remove_from_associated_groups
     associated_group.groups.each do |group|
       group.remove_automatically(user, subject: associated_group.label)
     end

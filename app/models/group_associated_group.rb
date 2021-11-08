@@ -3,7 +3,10 @@ class GroupAssociatedGroup < ActiveRecord::Base
   belongs_to :group
   belongs_to :associated_group
 
-  after_create do
+  after_commit :add_associated_users, on: [:create, :update]
+  after_commit :remove_associated_users, on: [:destroy]
+
+  def add_associated_users
     DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
       associated_group.users.in_batches do |users|
         users.each do |user|
@@ -13,7 +16,7 @@ class GroupAssociatedGroup < ActiveRecord::Base
     end
   end
 
-  after_destroy do
+  def remove_associated_users
     DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
       associated_group.users.in_batches do |users|
         users.each do |user|
