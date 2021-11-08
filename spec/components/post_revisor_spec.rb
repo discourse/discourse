@@ -148,6 +148,22 @@ describe PostRevisor do
 
     subject { PostRevisor.new(post) }
 
+    it 'destroys last revision if edit is undone' do
+      old_raw = post.raw
+
+      subject.revise!(admin, raw: 'new post body', tags: ['new-tag'])
+      expect(post.topic.reload.tags.map(&:name)).to contain_exactly('new-tag')
+      expect(post.post_revisions.reload.size).to eq(1)
+
+      subject.revise!(admin, raw: old_raw, tags: [])
+      expect(post.topic.reload.tags.map(&:name)).to be_empty
+      expect(post.post_revisions.reload.size).to eq(0)
+
+      subject.revise!(admin, raw: 'next post body', tags: ['new-tag'])
+      expect(post.topic.reload.tags.map(&:name)).to contain_exactly('new-tag')
+      expect(post.post_revisions.reload.size).to eq(1)
+    end
+
     describe 'with the same body' do
       it "doesn't change version" do
         expect {
