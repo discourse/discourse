@@ -493,7 +493,7 @@ class UploadsController < ApplicationController
 
   def check_backup_permission
     ensure_staff
-    if SiteSetting.backup_location != BackupLocationSiteSetting::S3 || !SiteSetting.enable_backups?
+    if !SiteSetting.enable_backups? || SiteSetting.backup_location != BackupLocationSiteSetting::S3
       raise Discourse::InvalidAccess.new
     end
   end

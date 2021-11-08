@@ -68,7 +68,7 @@ class ExternalUploadManager
 
   def self.store_for_upload_type(upload_type)
     if upload_type == "backup"
-      if SiteSetting.backup_location != BackupLocationSiteSetting::S3 || !SiteSetting.enable_backups?
+      if !SiteSetting.enable_backups? || SiteSetting.backup_location != BackupLocationSiteSetting::S3
         raise Discourse::InvalidAccess.new
       end
       BackupRestore::BackupStore.create
