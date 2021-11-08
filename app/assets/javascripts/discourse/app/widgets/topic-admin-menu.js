@@ -26,7 +26,7 @@ createWidget("admin-menu-button", {
 });
 
 createWidget("topic-admin-menu-button", {
-  tagName: "span",
+  tagName: "span.topic-admin-menu-button",
   buildKey: () => "topic-admin-menu-button",
 
   defaultState() {

@@ -86,8 +86,8 @@ class Post < ActiveRecord::Base
 
   scope :private_posts_for_user, ->(user) do
     where(
-      "posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
-      OR posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
+      "topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
       user_id: user.id
     )
   end

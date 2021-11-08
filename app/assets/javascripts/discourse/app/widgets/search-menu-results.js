@@ -457,6 +457,7 @@ createWidget("search-menu-assistant", {
           );
           content.push(
             this.attach("search-menu-assistant-item", {
+              extraHint: I18n.t("search.enter_hint"),
               prefix,
               user,
               slug: `${prefix}@${user.username}`,
@@ -650,9 +651,9 @@ createWidget("search-menu-assistant-item", {
       content.push(h("span.search-item-user", userResult));
     } else {
       content.push(h("span.search-item-slug", attrs.label || attrs.slug));
-      if (attrs.extraHint) {
-        content.push(h("span.extra-hint", attrs.extraHint));
-      }
+    }
+    if (attrs.extraHint) {
+      content.push(h("span.extra-hint", attrs.extraHint));
     }
     return h("a.widget-link.search-link", { attributes }, content);
   },

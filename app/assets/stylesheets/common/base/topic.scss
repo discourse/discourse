@@ -1,3 +1,5 @@
+$topic-progress-height: 42px;
+
 @keyframes button-jump-up {
   0% {
     margin-bottom: -60px;
@@ -49,28 +51,28 @@
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");
-    }
-  }
 
-  // progress bar
-  @media screen and (max-width: 924px) {
-    // at 924px viewport width and below the progress bar is visible (see topic-navigation.js)
-    grid-template-areas: "posts posts";
-    .timeline-container:not(.timeline-fullscreen) {
-      display: none; // hiding this because sometimes the JS switch lags and causes layout issues
-    }
-    .timeline-container {
-      .timeline-scroller-content {
-        position: relative;
+      &.topic-progress-expanded {
+        z-index: z("fullscreen");
       }
     }
   }
-}
+  // progress bar
+  @media screen and (max-width: 924px) {
+    grid-template-areas: "posts";
+    grid-template-columns: auto;
+    .topic-navigation {
+      grid-area: posts;
+      grid-row: 2;
+      width: auto;
+    }
 
-@media screen and (max-width: 924px) {
-  .post-stream {
-    // make space for the topic progress bar to dock
-    padding-bottom: 2em;
+    .timeline-container:not(.timeline-fullscreen) {
+      display: none; // hiding this because sometimes the JS switch lags and causes layout issues
+    }
+    .timeline-container .timeline-scroller-content {
+      position: relative;
+    }
   }
 }
 
@@ -91,8 +93,13 @@
 }
 
 #topic-progress-wrapper {
+  position: fixed;
+  bottom: 0px;
+  right: 10px;
+  margin: 0 auto;
   display: flex;
-  right: 9px; // 8px padding on #main-outlet + 1px right border
+  justify-content: flex-end;
+  z-index: z("timeline");
   .topic-admin-menu-button-container {
     display: flex;
     > span {
@@ -109,11 +116,70 @@
       0
     ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
   }
+
+  &.docked {
+    position: initial;
+    .topic-admin-popup-menu.right-side {
+      bottom: -150px; // Prevents menu from being too high when a topic is very short
+    }
+  }
+
+  body:not(.footer-nav-visible) & {
+    bottom: env(safe-area-inset-bottom);
+  }
+
+  &:not(.docked) {
+    @media screen and (min-width: $reply-area-max-width) {
+      // position to right side of composer
+      right: 50%;
+      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
+    }
+  }
+
+  &.with-transitions {
+    transition: bottom 0.2s, margin-bottom 0.2s;
+
+    #topic-progress .bg {
+      transition: width 0.5s;
+    }
+  }
 }
 
-#topic-progress-wrapper.docked {
-  .topic-admin-popup-menu.right-side {
-    bottom: -150px; // Prevents menu from being too high when a topic is very short
+#topic-progress {
+  position: relative;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
+  width: 145px;
+  height: $topic-progress-height;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
+  .nums {
+    position: relative;
+    top: 12px;
+    width: 100%;
+    text-align: center;
+    z-index: z("base");
+  }
+  h4 {
+    display: inline;
+    font-size: $font-up-2;
+    line-height: $line-height-small;
+  }
+  .d-icon {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: z("base");
+  }
+  .bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--progress-bg-width, 0);
+    background-color: var(--tertiary-low);
   }
 }
 

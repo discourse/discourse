@@ -3948,12 +3948,8 @@ nb_NO:
           embedded_scss:
             text: "Innebygd CSS"
             title: "Skriv inn egendefinert CSS for å levere med innebygde versjoner av kommentarer"
-          head_tag:
-            text: "</head>"
-            title: "HTML som har blitt smettet inn før </head>-taggen"
           body_tag:
-            text: "</body>"
-            title: "HTML som vil bli smettet inn før </body>-taggen"
+            text: "Body"
           yaml:
             text: "YAML"
             title: "Definer draktinnstillinger i YAML-format"

@@ -3,7 +3,6 @@ import { test } from "qunit";
 import I18n from "I18n";
 import {
   acceptance,
-  controllerFor,
   count,
   exists,
   publishToMessageBus,
@@ -785,9 +784,6 @@ acceptance(
     });
 
     test("tags are present on private messages - Desktop mode", async function (assert) {
-      const controller = controllerFor("user");
-      controller.set("publicUserFieldsLinkified", []);
-
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
 
@@ -842,9 +838,6 @@ acceptance(
     });
 
     test("tags are not present on private messages - Mobile mode", async function (assert) {
-      const controller = controllerFor("user");
-      controller.set("publicUserFieldsLinkified", []);
-
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
       assert.ok(!exists("#reply-control .mini-tag-chooser"));

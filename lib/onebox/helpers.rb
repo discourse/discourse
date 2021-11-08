@@ -234,6 +234,10 @@ module Onebox
       Addressable::URI.unencode(url)
     end
 
+    def self.image_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon image'></span></div>"
+    end
+
     def self.video_placeholder_html
       "<div class='onebox-placeholder-container'><span class='placeholder-icon video'></span></div>"
     end

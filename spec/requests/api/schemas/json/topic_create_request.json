@@ -33,10 +33,13 @@
     },
     "created_at": {
       "type": "string"
+    },
+    "embed_url": {
+      "type": "string",
+      "description": "Provide a URL from a remote system to associate a forum topic with that URL, typically for using Discourse as a comments system for an external blog."
     }
   },
   "required": [
     "raw"
   ]
 }
-

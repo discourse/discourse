@@ -3882,12 +3882,8 @@ pt:
               %{example}
 
               Prefixar os nomes das propriedades é altamente recomendado para evitar conflitos com plugins e/ou o core.
-          head_tag:
-            text: "</head>"
-            title: "HTML que será introduzido antes da tag </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que será introduzido antes da tag </body>"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Defina as configurações do tema no formato YAML"

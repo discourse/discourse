@@ -3379,12 +3379,8 @@ ca:
           embedded_scss:
             text: "CSS incrustat"
             title: "Introduïu el CSS personalitzat que es lliurarà amb la versió incrustada dels comentaris"
-          head_tag:
-            text: "</head>"
-            title: "HTML que s'inclourà abans de l'etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que s'inclourà abans de l'etiqueta </body>"
+            text: "Cos"
           yaml:
             text: "YAML"
             title: "Definiu la configuració de l'aparença en format YAML"

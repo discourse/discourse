@@ -428,6 +428,41 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
+  test("Deleting a topic_level bookmark with a reminder", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-bookmark");
+    await click("#save-bookmark");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.edit_bookmark"),
+      "A topic level bookmark button has a label 'Edit Bookmark'"
+    );
+
+    await click("#topic-footer-button-bookmark");
+    await fillIn("input#bookmark-name", "Test name");
+    await click("#tap_tile_tomorrow");
+
+    await click("#topic-footer-button-bookmark");
+    await click("#delete-bookmark");
+
+    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(
+      queryAll(".bootbox.modal")
+        .text()
+        .includes(I18n.t("bookmarks.confirm_delete")),
+      "it shows delete confirmation message"
+    );
+
+    await click(".bootbox.modal .btn-primary");
+
+    assert.equal(
+      query("#topic-footer-button-bookmark").innerText,
+      I18n.t("bookmarked.title"),
+      "A topic level bookmark button no longer says 'Edit Bookmark' after deletion"
+    );
+  });
+
   test("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(2);

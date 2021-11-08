@@ -4223,11 +4223,11 @@ de:
 
               Eigenschaften sollten mit einem Präfix versehen werden, um Konflikte mit Discourse und/oder Plug-ins zu vermeiden.
           head_tag:
-            text: "</head>"
-            title: "HTML, das vor dem </head>-Tag eingefügt wird"
+            text: "Kopf"
+            title: "HTML, das vor dem Head-Tag eingefügt wird"
           body_tag:
-            text: "</body>"
-            title: "HTML, das vor dem </body>-Tag eingefügt wird"
+            text: "Body"
+            title: "HTML, das vor dem Body-Tag eingefügt wird"
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"

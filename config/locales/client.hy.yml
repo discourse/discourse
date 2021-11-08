@@ -3420,12 +3420,8 @@ hy:
           embedded_scss:
             text: "Զետեղված CSS"
             title: "Մուտքագրեք մասնավոր CSS՝ մեկնաբանությունների զետեղված տարբերակի վրա կիրառելու համար"
-          head_tag:
-            text: "</head>"
-            title: "HTML, որը պետք է մուտք արվի մինչև </head> թեգը"
           body_tag:
-            text: "</body>"
-            title: "HTML, որը պետք է մուտք արվի մինչև </body> թեգը"
+            text: "Մարմին"
           yaml:
             text: "YAML"
             title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"

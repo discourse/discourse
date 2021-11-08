@@ -1261,7 +1261,7 @@ a.mention-group {
     }
     .topic-admin-menu-button-container {
       display: inline-flex;
-      > span {
+      .topic-admin-menu-button {
         display: flex; // to make this button match siblings behavior, all of its parents need to be flex
       }
     }

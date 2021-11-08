@@ -63,6 +63,13 @@ class CategoryList
     category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
 
     @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
+
+    if @guardian.authenticated?
+      @all_topics = @all_topics
+        .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}")
+        .where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
+    end
+
     @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
     @all_topics.each do |t|
       # hint for the serializer

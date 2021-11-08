@@ -3480,12 +3480,8 @@ fa_IR:
           embedded_scss:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
-          head_tag:
-            text: "</‎head>"
-            title: "کد HTML که قبل از برچسب </head> اضافه می‌شود"
           body_tag:
-            text: "</‎body>"
-            title: "کد HTML که قبل از برچسب </body> اضافه می‌شود"
+            text: "بدنه"
           yaml:
             text: "YAML"
         colors:

@@ -225,7 +225,7 @@ class FinalDestination
       end
 
       if @follow_canonical
-        next_url = uri(fetch_canonical_url(response.body))
+        next_url = fetch_canonical_url(response.body)
 
         if next_url.to_s.present? && next_url != @uri
           @follow_canonical = false
@@ -239,7 +239,7 @@ class FinalDestination
       @content_type = response.headers['Content-Type'] if response.headers.has_key?('Content-Type')
       @status = :resolved
       return @uri
-    when 400, 405, 406, 409, 500, 501
+    when 103, 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
 
       if response_status == 200
@@ -481,10 +481,17 @@ class FinalDestination
 
   def fetch_canonical_url(body)
     return if body.blank?
-    canonical_link = Nokogiri::HTML5(body).at("link[rel='canonical']")
 
-    return if canonical_link.nil?
+    canonical_element = Nokogiri::HTML5(body).at("link[rel='canonical']")
+    return if canonical_element.nil?
+    canonical_uri = uri(canonical_element['href'])
+    return if canonical_uri.blank?
 
-    canonical_link['href']
+    return canonical_uri if canonical_uri.host.present?
+    parts = [@uri.host, canonical_uri.to_s]
+    complete_url = canonical_uri.to_s.starts_with?('/') ? parts.join('') : parts.join('/')
+    complete_url = "#{@uri.scheme}://#{complete_url}" if @uri.scheme
+
+    uri(complete_url)
   end
 end

@@ -185,6 +185,8 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload = Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
           path = Discourse.store.get_path_for_upload(upload)
 
+          path = Discourse.store.get_path_for_upload(upload)
+
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with("#{upload_path}/#{path}").returns(s3_object).at_least_once
           s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
@@ -193,7 +195,6 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           expect(upload.url).to eq(
             "//some-really-cool-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/#{path}"
           )
-
           expect(store.url_for(upload)).not_to eq(upload.url)
         end
       end

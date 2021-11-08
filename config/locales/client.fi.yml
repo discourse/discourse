@@ -4098,12 +4098,8 @@ fi:
               %{example}
 
               Etuliitteen lisääminen CSS-kuvauksiin on erittäin suositeltavaa, jotta vältät ristiriidat lisäosien tai ydinsovelluksen kanssa.
-          head_tag:
-            text: "</head>"
-            title: "HTML, joka sijoitetaan ennen </head>-tunnistetta"
           body_tag:
-            text: "</body>"
-            title: "HTML, joka sijoitetaan ennen </body>-tunnistetta"
+            text: "Leipäteksti"
           yaml:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"

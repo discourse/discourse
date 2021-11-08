@@ -24,6 +24,7 @@ export default Mixin.create(UppyS3Multipart, {
   uploadProgress: 0,
   _uppyInstance: null,
   autoStartUploads: true,
+  _inProgressUploads: 0,
   id: null,
 
   uploadDone() {
@@ -131,21 +132,34 @@ export default Mixin.create(UppyS3Multipart, {
       this.set("uploadProgress", progress);
     });
 
+    this._uppyInstance.on("upload", (data) => {
+      this._inProgressUploads += data.fileIDs.length;
+    });
+
     this._uppyInstance.on("upload-success", (file, response) => {
+      this._inProgressUploads--;
+
       if (this.usingS3Uploads) {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
           .then((completeResponse) => {
             this.uploadDone(completeResponse);
-            this._reset();
+
+            if (this._inProgressUploads === 0) {
+              this._reset();
+            }
           })
           .catch((errResponse) => {
             displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            this._reset();
+            if (this._inProgressUploads === 0) {
+              this._reset();
+            }
           });
       } else {
         this.uploadDone(response.body);
-        this._reset();
+        if (this._inProgressUploads === 0) {
+          this._reset();
+        }
       }
     });
 
@@ -154,7 +168,16 @@ export default Mixin.create(UppyS3Multipart, {
       this._reset();
     });
 
-    if (this.siteSettings.enable_direct_s3_uploads) {
+    // TODO (martin) preventDirectS3Uploads is necessary because some of
+    // the current upload mixin components, for example the emoji uploader,
+    // send the upload to custom endpoints that do fancy things in the rails
+    // controller with the upload or create additional data or records. we
+    // need a nice way to do this on complete-external-upload before we can
+    // allow these other uploaders to go direct to S3.
+    if (
+      this.siteSettings.enable_direct_s3_uploads &&
+      !this.preventDirectS3Uploads
+    ) {
       if (this.useMultipartUploadsIfAvailable) {
         this._useS3MultipartUploads();
       } else {
@@ -262,5 +285,6 @@ export default Mixin.create(UppyS3Multipart, {
       processing: false,
       uploadProgress: 0,
     });
+    this.fileInputEl.value = "";
   },
 });

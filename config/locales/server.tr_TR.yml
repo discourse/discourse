@@ -250,7 +250,6 @@ tr_TR:
   topic_invite:
     failed_to_invite: "Kullanıcı, aşağıdaki gruplardan birinde grup üyeliği olmadan bu konuya davet edilemez: %{group_names}."
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
-    muted_invitee: "Üzgünüz, o kullanıcı sizi sessize aldı."
     muted_topic: "Üzgünüz, o kullanıcı bu konuyu sessize aldı."
     receiver_does_not_allow_pm: "Üzgünüz, bu kullanıcı onlara özel mesaj göndermenize izin vermiyor."
     sender_does_not_allow_pm: "Üzgünüz, o kullanıcının size özel mesaj göndermesine izin vermiyorsunuz."
