@@ -22,7 +22,7 @@ module("Unit | Model | user", function () {
 
     assert.deepEqual(
       user.get("searchContext"),
-      { type: "user", id: "eviltrout", user: user },
+      { type: "user", id: "eviltrout", user },
       "has a search context"
     );
   });

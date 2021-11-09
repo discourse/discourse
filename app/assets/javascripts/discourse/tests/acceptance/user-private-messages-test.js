@@ -123,7 +123,7 @@ acceptance(
 
           return helper.response({
             topic_list: {
-              topics: topics,
+              topics,
             },
           });
         });

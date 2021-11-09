@@ -63,7 +63,7 @@ export default Component.extend({
   },
 
   _addValue(value, secret) {
-    this.collection.addObject({ key: value, secret: secret });
+    this.collection.addObject({ key: value, secret });
     this._saveValues();
   },
 

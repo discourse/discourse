@@ -72,7 +72,7 @@ function renderAvatar(user, options) {
       size: options.imageSize,
       extraClasses: get(user, "extras") || options.extraClasses,
       title: title || displayName,
-      avatarTemplate: avatarTemplate,
+      avatarTemplate,
     });
   } else {
     return "";

@@ -32,7 +32,7 @@ function searchTags(term, categories, limit) {
         function () {
           oldSearch = $.ajax(getURL("/tags/filter/search"), {
             type: "GET",
-            data: { limit: limit, q },
+            data: { limit, q },
           });
 
           let returnVal = CANCELLED_STATUS;

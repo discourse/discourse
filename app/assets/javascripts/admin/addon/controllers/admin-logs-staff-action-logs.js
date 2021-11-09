@@ -121,7 +121,7 @@ export default Controller.extend({
     },
 
     filterBySubject(subject) {
-      this.changeFilters({ subject: subject });
+      this.changeFilters({ subject });
     },
 
     exportStaffActionLogs() {

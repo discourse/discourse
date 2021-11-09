@@ -549,7 +549,7 @@ export default RestModel.extend({
 
     post.setProperties({
       post_number: topic.get("highest_post_number"),
-      topic: topic,
+      topic,
       created_at: new Date(),
       id: -1,
     });
@@ -1063,7 +1063,7 @@ export default RestModel.extend({
     const url = `/t/${this.get("topic.id")}/posts.json`;
     let data = {
       post_number: postNumber,
-      asc: asc,
+      asc,
       include_suggested: includeSuggested,
     };
 
