@@ -39,8 +39,8 @@ export default Route.extend({
     });
 
     controller.setProperties({
-      model: model,
-      parentController: parentController,
+      model,
+      parentController,
       allThemes: parentController.get("model"),
       colorSchemeId: model.get("color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),

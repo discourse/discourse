@@ -102,7 +102,7 @@ discourseModule("Unit | Utilities", function () {
     setDevicePixelRatio(2);
 
     let avatarTemplate = "/path/to/avatar/{size}.png";
-    assert.equal(
+    assert.strictEqual(
       avatarImg({ avatarTemplate, size: "tiny" }),
       "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
       "it returns the avatar html"

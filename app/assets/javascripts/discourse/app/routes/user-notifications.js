@@ -24,7 +24,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
       this.get("currentUser.admin")
     ) {
       return this.store.find("notification", {
-        username: username,
+        username,
         filter: params.filter,
       });
     }

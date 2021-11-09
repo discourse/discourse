@@ -38,9 +38,9 @@ function preloadInvite({
       title: "team",
     },
     username: "invited",
-    email_verified_by_link: email_verified_by_link,
-    different_external_email: different_external_email,
-    hidden_email: hidden_email,
+    email_verified_by_link,
+    different_external_email,
+    hidden_email,
   };
 
   if (link) {

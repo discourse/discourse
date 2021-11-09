@@ -61,7 +61,7 @@ export default (inboxType, filter) => {
         .get("groups")
         .filterBy("name", groupName)[0];
 
-      this.setProperties({ groupName: groupName, group });
+      this.setProperties({ groupName, group });
     },
 
     setupController() {

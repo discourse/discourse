@@ -382,7 +382,7 @@ const User = RestModel.extend({
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
-      data: data,
+      data,
       type: "PUT",
     })
       .then((result) => {
@@ -1037,7 +1037,7 @@ User.reopenClass(Singleton, {
 
   // Find a `User` for a given username.
   findByUsername(username, options) {
-    const user = User.create({ username: username });
+    const user = User.create({ username });
     return user.findDetails(options);
   },
 

@@ -277,7 +277,7 @@ discourseModule("Unit | Model | composer", function () {
     assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
     const post = Post.create({ id: 123, post_number: 2 });
-    composer.setProperties({ post: post, action: EDIT });
+    composer.setProperties({ post, action: EDIT });
     assert.ok(
       !composer.get("editingFirstPost"),
       "it's false when not editing the first post"
@@ -337,7 +337,7 @@ discourseModule("Unit | Model | composer", function () {
         action: REPLY,
         draftKey: "asfd",
         draftSequence: 1,
-        quote: quote,
+        quote,
       });
     };
 
@@ -363,7 +363,7 @@ discourseModule("Unit | Model | composer", function () {
       post_number: 2,
       static_doc: true,
     });
-    composer.setProperties({ post: post, action: EDIT });
+    composer.setProperties({ post, action: EDIT });
 
     composer.set("title", "asdf");
     assert.ok(composer.get("titleLengthValid"), "admins can use short titles");

@@ -35,11 +35,11 @@ const Permalink = EmberObject.extend({
 
 Permalink.reopenClass({
   findAll: function (filter) {
-    return ajax("/admin/permalinks.json", { data: { filter: filter } }).then(
-      function (permalinks) {
-        return permalinks.map((p) => Permalink.create(p));
-      }
-    );
+    return ajax("/admin/permalinks.json", { data: { filter } }).then(function (
+      permalinks
+    ) {
+      return permalinks.map((p) => Permalink.create(p));
+    });
   },
 });
 

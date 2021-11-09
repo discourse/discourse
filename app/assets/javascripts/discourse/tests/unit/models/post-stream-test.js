@@ -889,7 +889,7 @@ module("Unit | Model | post-stream", function () {
 
     [1, 2, 3, 5].forEach((id) => {
       postStream.appendPost(
-        store.createRecord("post", { id: id, post_number: id })
+        store.createRecord("post", { id, post_number: id })
       );
     });
 
