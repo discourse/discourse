@@ -14,7 +14,7 @@ acceptance("CustomHTML template", function (needs) {
 
   test("renders custom template", async function (assert) {
     await visit("/static/faq");
-    assert.equal(
+    assert.strictEqual(
       queryAll("span.top-span").text(),
       "TOP",
       "it inserted the template"

@@ -56,13 +56,13 @@ discourseModule(
         const uiTexts = extractDescs(selectKit().rows());
         const descriptions = getTranslations();
 
-        assert.equal(
+        assert.strictEqual(
           uiTexts.length,
           descriptions.length,
           "it has the correct copy"
         );
         uiTexts.forEach((text, index) => {
-          assert.equal(
+          assert.strictEqual(
             text.trim(),
             descriptions[index].trim(),
             "it has the correct copy"
@@ -89,14 +89,14 @@ discourseModule(
         const uiTexts = extractDescs(selectKit().rows());
         const descriptions = getTranslations("_pm");
 
-        assert.equal(
+        assert.strictEqual(
           uiTexts.length,
           descriptions.length,
           "it has the correct copy"
         );
 
         uiTexts.forEach((text, index) => {
-          assert.equal(
+          assert.strictEqual(
             text.trim(),
             descriptions[index].trim(),
             "it has the correct copy"

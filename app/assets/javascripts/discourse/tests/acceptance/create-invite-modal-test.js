@@ -52,7 +52,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   test("basic functionality", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
-    assert.equal(
+    assert.strictEqual(
       find("input.invite-link")[0].value,
       "http://example.com/invites/52641ae8878790bc7b79916247cfe6ba",
       "shows an invite link when modal is opened"
@@ -75,7 +75,11 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
     await click(".btn-primary");
 
-    assert.equal(count("tbody tr"), 1, "adds invite to list after saving");
+    assert.strictEqual(
+      count("tbody tr"),
+      1,
+      "adds invite to list after saving"
+    );
 
     await click(".modal-close");
     assert.notOk(deleted, "does not delete invite on close");
@@ -97,7 +101,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
     await fillIn("#invite-email", "error");
     await click(".invite-link .btn");
-    assert.equal(
+    assert.strictEqual(
       find("#modal-alert").text(),
       "error isn't a valid email address."
     );

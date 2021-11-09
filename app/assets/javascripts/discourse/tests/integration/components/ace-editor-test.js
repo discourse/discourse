@@ -47,12 +47,12 @@ discourseModule("Integration | Component | ace-editor", function (hooks) {
       const $ace = queryAll(".ace_editor");
       assert.expect(3);
       assert.ok($ace.length, "it renders the ace editor");
-      assert.equal(
+      assert.strictEqual(
         $ace.parent().data().editor.getReadOnly(),
         true,
         "it sets ACE to read-only mode"
       );
-      assert.equal(
+      assert.strictEqual(
         $ace.parent().attr("data-disabled"),
         "true",
         "ACE wrapper has `data-disabled` attribute set to true"

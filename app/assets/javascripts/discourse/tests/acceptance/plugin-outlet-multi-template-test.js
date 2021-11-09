@@ -27,22 +27,22 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
 
   test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
-    assert.equal(
+    assert.strictEqual(
       count(".user-profile-primary-outlet.hello"),
       1,
       "it has class names"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".user-profile-primary-outlet.goodbye"),
       1,
       "it has class names"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".hello-span").text(),
       "Hello",
       "it renders into the outlet"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".bye-span").text(),
       "Goodbye",
       "it renders into the outlet"

@@ -21,7 +21,7 @@ function exists(selector) {
 test("Wizard starts", async function (assert) {
   await visit("/");
   assert.ok(exists(".wizard-column-contents"));
-  assert.equal(currentRouteName(), "step");
+  assert.strictEqual(currentRouteName(), "step");
 });
 
 test("Going back and forth in steps", async function (assert) {

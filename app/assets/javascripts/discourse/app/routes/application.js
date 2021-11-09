@@ -70,14 +70,14 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       });
     },
 
-    composePrivateMessage(user, topic) {
+    composePrivateMessage(user, post) {
       const recipients = user ? user.get("username") : "";
-      const reply = topic
-        ? `${window.location.protocol}//${window.location.host}${topic.url}`
+      const reply = post
+        ? `${window.location.protocol}//${window.location.host}${post.url}`
         : null;
-      const title = topic
+      const title = post
         ? I18n.t("composer.reference_topic_title", {
-            title: topic.title,
+            title: post.topic.title,
           })
         : null;
 
@@ -174,13 +174,14 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         if (controller) {
           this.appEvents.trigger("modal:closed", {
             name: controllerName,
-            controller: controller,
+            controller,
           });
 
           if (controller.onClose) {
             controller.onClose({
               initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
               initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+              initiatedByESC: initiatedBy === "initiatedByESC",
             });
           }
         }
@@ -283,7 +284,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor("login").send("externalLogin", methods[0], {
-        signup: signup,
+        signup,
       });
     } else {
       showModal(modal, { titleAriaElementId });

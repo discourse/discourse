@@ -31,7 +31,7 @@ discourseModule(
         });
       },
       async test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".actions .extra-buttons .hot-coffee"),
           1,
           "It renders extra button"

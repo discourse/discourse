@@ -22,7 +22,7 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "]".charCodeAt(0));
-    assert.equal(
+    assert.strictEqual(
       $("#added-element").length,
       1,
       "the keyboard shortcut callback fires successfully"

@@ -32,6 +32,10 @@ id:
     - November
     - Desember
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
   posts: "post"
@@ -704,8 +708,6 @@ id:
       reject:
         title: "Tolak"
   fallback_username: "pengguna"
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

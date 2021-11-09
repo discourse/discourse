@@ -250,7 +250,6 @@ es:
   topic_invite:
     failed_to_invite: "No se puede invitar al usuario a este tema sin ser miembro de un grupo en cualquiera de los siguientes grupos: %{group_names}."
     user_exists: "Lo sentimos, ese usuario ya fue invitado. Solo se puede invitar a un usuario a un tema una vez."
-    muted_invitee: "Lo sentimos, el usuario te ha silenciado."
     muted_topic: "Lo sentimos, el usuario ha silenciado este tema."
     receiver_does_not_allow_pm: "Lo sentimos, el usuario no permite que le envíes mensajes privados."
     sender_does_not_allow_pm: "Lo sentimos, no permites que el usuario te mande mensajes privados."
@@ -4365,10 +4364,8 @@ es:
             label: "El nombre de tu comunidad"
             placeholder: "Reunión de Juana"
           site_description:
-            label: "Describe tu comunidad en una frase corta"
             placeholder: "Un sitio para que Juana y sus amigos discutan cosas interesantes"
           short_site_description:
-            label: "Describe tu comunidad en pocas palabras"
             placeholder: "La mejor comunidad del mundo"
       introduction:
         title: "Introducción"

@@ -111,7 +111,7 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.equal(count(".fps-topic"), 1, "has one post");
+    assert.strictEqual(count(".fps-topic"), 1, "has one post");
   });
 
   test("search for personal messages", async function (assert) {
@@ -120,15 +120,15 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse in:personal");
     await click(".search-cta");
 
-    assert.equal(count(".fps-topic"), 1, "has one post");
+    assert.strictEqual(count(".fps-topic"), 1, "has one post");
 
-    assert.equal(
+    assert.strictEqual(
       count(".topic-status .personal_message"),
       1,
       "shows the right icon"
     );
 
-    assert.equal(count(".search-highlight"), 1, "search highlights work");
+    assert.strictEqual(count(".search-highlight"), 1, "search highlights work");
   });
 
   test("escape search term", async function (assert) {
@@ -174,7 +174,7 @@ acceptance("Search - Full Page", function (needs) {
         exists('.search-advanced-options span:contains("admin")'),
         'has "admin" pre-populated'
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".search-query").val(),
         "none @admin",
         'has updated search term to "none user:admin"'
@@ -199,7 +199,7 @@ acceptance("Search - Full Page", function (needs) {
       exists('.search-advanced-options .badge-category:contains("faq")'),
       'has "faq" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none #faq",
       'has updated search term to "none #faq"'
@@ -223,7 +223,7 @@ acceptance("Search - Full Page", function (needs) {
       exists('.search-advanced-options .badge-category:contains("快乐的")'),
       'has "快乐的" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none category:240",
       'has updated search term to "none category:240"'
@@ -239,7 +239,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-advanced-options .in-title:checked"),
       'has "in title" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:title",
       'has updated search term to "none in:title"'
@@ -262,7 +262,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-advanced-options .in-likes:checked"),
       'has "I liked" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:likes",
       'has updated search term to "none in:likes"'
@@ -279,7 +279,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "are in my messages" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:personal",
       'has updated search term to "none in:personal"'
@@ -303,7 +303,7 @@ acceptance("Search - Full Page", function (needs) {
       "it should check the right checkbox"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:seen",
       "it should update the search term"
@@ -326,12 +326,12 @@ acceptance("Search - Full Page", function (needs) {
     await inSelector.expand();
     await inSelector.selectRowByValue("bookmarks");
 
-    assert.equal(
+    assert.strictEqual(
       inSelector.header().label(),
       "I bookmarked",
       'has "I bookmarked" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:bookmarks",
       'has updated search term to "none in:bookmarks"'
@@ -349,12 +349,12 @@ acceptance("Search - Full Page", function (needs) {
     await statusSelector.expand();
     await statusSelector.selectRowByValue("closed");
 
-    assert.equal(
+    assert.strictEqual(
       statusSelector.header().label(),
       "are closed",
       'has "are closed" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none status:closed",
       'has updated search term to "none status:closed"'
@@ -370,7 +370,11 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "status:none");
 
-    assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
+    assert.strictEqual(
+      statusSelector.header().label(),
+      "any",
+      'has "any" populated'
+    );
   });
 
   test("doesn't update in filter header if wrong value entered through searchbox", async function (assert) {
@@ -380,13 +384,17 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "in:none");
 
-    assert.equal(inSelector.header().label(), "any", 'has "any" populated');
+    assert.strictEqual(
+      inSelector.header().label(),
+      "any",
+      'has "any" populated'
+    );
   });
 
   test("update post time through advanced search ui", async function (assert) {
     await visit("/search?expanded=true&q=after:2018-08-22");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "after:2018-08-22",
       "it should update the search term correctly"
@@ -403,13 +411,13 @@ acceptance("Search - Full Page", function (needs) {
     await postTimeSelector.expand();
     await postTimeSelector.selectRowByValue("after");
 
-    assert.equal(
+    assert.strictEqual(
       postTimeSelector.header().label(),
       "after",
       'has "after" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none after:2016-10-05",
       'has updated search term to "none after:2016-10-05"'
@@ -421,14 +429,14 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await fillIn("#search-min-post-count", "5");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(
         ".search-advanced-additional-options #search-min-post-count"
       ).val(),
       "5",
       'has "5" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none min_posts:5",
       'has updated search term to "none min_posts:5"'
@@ -440,14 +448,14 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await fillIn("#search-max-post-count", "5");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(
         ".search-advanced-additional-options #search-max-post-count"
       ).val(),
       "5",
       'has "5" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none max_posts:5",
       'has updated search term to "none max_posts:5"'
@@ -463,7 +471,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "I liked" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "in:likes",
       'has updated search term to "in:likes"'
@@ -506,7 +514,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await click(".search-cta");
 
-    assert.equal(count(".fps-user-item"), 1, "has one user result");
+    assert.strictEqual(count(".fps-user-item"), 1, "has one user result");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
@@ -531,7 +539,7 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert.ok(!exists(".search-filters"), "has no filters");
-    assert.equal(count(".fps-tag-item"), 2, "has two tag results");
+    assert.strictEqual(count(".fps-tag-item"), 2, "has two tag results");
 
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);

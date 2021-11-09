@@ -4934,7 +4934,6 @@ fi:
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"
-        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. (Vinkki: voit vetää ja pudottaa useita tiedostoja kerralla)"
         add: "Lisää uusi emoji"
         uploading: "Ladataan..."
         name: "Nimi"
@@ -4945,7 +4944,6 @@ fi:
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Käytä alla olevaa HTML-koodia sivustollasi, jotta voit luoda ja upottaa discourse-ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sen sivun kanonisella URL-osoitteella, jolle upotat."
         title: "Upottaminen"
         host: "Sallitut isännät"
         class_name: "Luokan nimi"

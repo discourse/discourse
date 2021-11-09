@@ -241,7 +241,6 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
-    muted_invitee: "抱歉，该用户已将您设为免打扰。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
     sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"
@@ -4270,10 +4269,8 @@ zh_CN:
             label: "您社区的名称"
             placeholder: "朱桦的环聊"
           site_description:
-            label: "用一句话描述您的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           short_site_description:
-            label: "用几个词描述您的社区"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"

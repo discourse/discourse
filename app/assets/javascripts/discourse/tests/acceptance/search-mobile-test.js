@@ -33,7 +33,7 @@ acceptance("Search - Mobile", function (needs) {
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.equal(count(".fps-topic"), 1, "has one post");
+    assert.strictEqual(count(".fps-topic"), 1, "has one post");
 
     assert.ok(
       !visible(".search-advanced-filters"),
@@ -42,7 +42,7 @@ acceptance("Search - Mobile", function (needs) {
 
     await click("#search-button");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("input.full-page-search").val(),
       "discourse",
       "it does not reset input when hitting search icon again"

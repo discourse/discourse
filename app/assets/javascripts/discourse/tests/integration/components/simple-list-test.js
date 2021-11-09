@@ -29,7 +29,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       await fillIn(".add-value-input", "penar");
       await click(".add-value-btn");
 
-      assert.equal(
+      assert.strictEqual(
         count(".values .value"),
         3,
         "it adds the value to the list of values"
@@ -43,7 +43,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       await fillIn(".add-value-input", "eviltrout");
       await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
 
-      assert.equal(
+      assert.strictEqual(
         count(".values .value"),
         4,
         "it adds the value when keying Enter"
@@ -61,7 +61,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
     async test(assert) {
       await click(".values .value[data-index='0'] .remove-value-btn");
 
-      assert.equal(
+      assert.strictEqual(
         count(".values .value"),
         1,
         "it removes the value from the list of values"
@@ -85,7 +85,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       await fillIn(".add-value-input", "eviltrout");
       await click(".add-value-btn");
 
-      assert.equal(
+      assert.strictEqual(
         count(".values .value"),
         3,
         "it adds the value to the list of values"

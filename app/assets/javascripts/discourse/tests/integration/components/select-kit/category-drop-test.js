@@ -72,7 +72,7 @@ discourseModule(
 
       async test(assert) {
         const text = this.subject.header().label();
-        assert.equal(
+        assert.strictEqual(
           text,
           I18n.t("category.all").toLowerCase(),
           "it uses the noneLabel"
@@ -178,8 +178,8 @@ discourseModule(
         await this.subject.expand();
 
         const row = this.subject.rowByValue(this.category.id);
-        assert.equal(row.value(), this.category.id);
-        assert.equal(this.category.parent_category_id, null);
+        assert.strictEqual(row.value(), this.category.id.toString());
+        assert.strictEqual(this.category.parent_category_id, undefined);
       },
     });
 
@@ -281,7 +281,7 @@ discourseModule(
         const row = this.subject.rowByValue(category.id);
         const topicCount = row.el().find(".topic-count").text().trim();
 
-        assert.equal(
+        assert.strictEqual(
           topicCount,
           "× 481",
           "it doesn't include the topic count of subcategories"
@@ -312,7 +312,7 @@ discourseModule(
         const row = this.subject.rowByValue(category.id);
         const topicCount = row.el().find(".topic-count").text().trim();
 
-        assert.equal(
+        assert.strictEqual(
           topicCount,
           "× 584",
           "it includes the topic count of subcategories"
@@ -337,9 +337,9 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.rowByIndex(0).value(),
-          this.categories.firstObject.id,
+          this.categories.firstObject.id.toString(),
           "Shortcuts are not prepended when no category is selected"
         );
       },
@@ -361,7 +361,10 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(this.subject.rowByIndex(0).value(), ALL_CATEGORIES_ID);
+        assert.strictEqual(
+          this.subject.rowByIndex(0).value(),
+          ALL_CATEGORIES_ID
+        );
       },
     });
 
@@ -384,7 +387,10 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(this.subject.rowByIndex(0).value(), NO_CATEGORIES_ID);
+        assert.strictEqual(
+          this.subject.rowByIndex(0).value(),
+          NO_CATEGORIES_ID
+        );
       },
     });
 
@@ -410,8 +416,14 @@ discourseModule(
         async test(assert) {
           await this.subject.expand();
 
-          assert.equal(this.subject.rowByIndex(0).value(), ALL_CATEGORIES_ID);
-          assert.equal(this.subject.rowByIndex(1).value(), NO_CATEGORIES_ID);
+          assert.strictEqual(
+            this.subject.rowByIndex(0).value(),
+            ALL_CATEGORIES_ID
+          );
+          assert.strictEqual(
+            this.subject.rowByIndex(1).value(),
+            NO_CATEGORIES_ID
+          );
         },
       }
     );

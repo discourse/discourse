@@ -44,7 +44,7 @@ discourseModule("Integration | Component | invite-panel", function (hooks) {
       await input.selectRowByValue("eviltrout@example.com");
       assert.ok(!exists(".send-invite:disabled"));
       await click(".generate-invite-link");
-      assert.equal(
+      assert.strictEqual(
         find(".invite-link-input")[0].value,
         "http://example.com/invites/92c297e886a0ca03089a109ccd6be155"
       );

@@ -4862,7 +4862,6 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        help: "添加可供所有人使用的新表情符号。（高级提示：一次拖放多个文件）"
         add: "添加新表情符号"
         uploading: "正在上传…"
         name: "名称"
@@ -4873,7 +4872,6 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
-        sample: "在您的站点中使用以下 HTML 代码来创建和嵌入 Discourse 话题。将 <b>REPLACE_ME</b> 替换为您嵌入它的页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"

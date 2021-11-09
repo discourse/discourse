@@ -141,14 +141,14 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-default");
     assert.ok(!exists(".bootbox.modal:visible"));
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-primary");
     assert.ok(!exists(".bootbox.modal:visible"));

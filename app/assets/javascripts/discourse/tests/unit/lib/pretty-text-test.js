@@ -701,6 +701,16 @@ eviltrout</p>
     );
   });
 
+  test("Heading anchors are valid", function (assert) {
+    assert.cooked(
+      "# One\n\n# 1\n\n# $$",
+      '<h1><a name="one-1" class="anchor" href="#one-1"></a>One</h1>\n' +
+        '<h1><a name="h-1-2" class="anchor" href="#h-1-2"></a>1</h1>\n' +
+        '<h1><a name="h-3" class="anchor" href="#h-3"></a>$$</h1>',
+      "It will bold the heading"
+    );
+  });
+
   test("bold and italics", function (assert) {
     assert.cooked(
       'a "**hello**"',
@@ -1268,7 +1278,7 @@ eviltrout</p>
     });
 
     function formatQuote(val, expected, text, opts) {
-      assert.equal(buildQuote(post, val, opts), expected, text);
+      assert.strictEqual(buildQuote(post, val, opts), expected, text);
     }
 
     formatQuote(undefined, "", "empty string for undefined content");
@@ -1334,7 +1344,7 @@ eviltrout</p>
       '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
     );
 
-    assert.equal(
+    assert.strictEqual(
       quote,
       '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
       "allows quoting a quote"
@@ -1447,7 +1457,7 @@ var bar = 'bar';
     const result = new PrettyText(defaultOpts).cook(
       '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
     );
-    assert.equal(
+    assert.strictEqual(
       result,
       `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">

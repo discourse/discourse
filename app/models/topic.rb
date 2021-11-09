@@ -511,7 +511,7 @@ class Topic < ActiveRecord::Base
     # Remove muted and shared draft categories
     remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
+      topics = topics.where("topics.category_id NOT IN (?)", SiteSetting.digest_suppress_categories.split("|").map(&:to_i))
     end
     if SiteSetting.shared_drafts_enabled?
       remove_category_ids << SiteSetting.shared_drafts_category

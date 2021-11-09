@@ -21,7 +21,7 @@ module("Unit | Model | topic-details", function () {
       allowed_users: [{ username: "eviltrout" }],
     });
 
-    assert.equal(
+    assert.strictEqual(
       details.get("allowed_users.length"),
       1,
       "it loaded the allowed users"

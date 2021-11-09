@@ -2234,6 +2234,9 @@ en:
       reload: "Reload"
       ignore: "Ignore"
 
+      image_alt_text:
+        aria_label: Alt text for image
+
     notifications:
       tooltip:
         regular:
@@ -5437,7 +5440,7 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
         add: "Add New Emoji"
         uploading: "Uploading..."
         name: "Name"
@@ -5449,7 +5452,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"

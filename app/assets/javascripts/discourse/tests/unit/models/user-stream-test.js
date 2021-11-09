@@ -7,13 +7,13 @@ module("Unit | Model | user-stream", function () {
     let user = User.create({ id: 1, username: "eviltrout" });
     let stream = user.get("stream");
     assert.present(stream, "a user has a stream by default");
-    assert.equal(
+    assert.strictEqual(
       stream.get("user"),
       user,
       "the stream points back to the user"
     );
 
-    assert.equal(
+    assert.strictEqual(
       stream.get("itemsLoaded"),
       0,
       "no items are loaded by default"
@@ -29,15 +29,15 @@ module("Unit | Model | user-stream", function () {
     let stream = user.get("stream");
 
     // defaults to posts/topics
-    assert.equal(stream.get("filterParam"), "4,5");
+    assert.strictEqual(stream.get("filterParam"), "4,5");
 
     stream.set("filter", UserAction.TYPES.topics);
-    assert.equal(stream.get("filterParam"), "4");
+    assert.strictEqual(stream.get("filterParam"), 4);
 
     stream.set("filter", UserAction.TYPES.likes_given);
-    assert.equal(stream.get("filterParam"), UserAction.TYPES.likes_given);
+    assert.strictEqual(stream.get("filterParam"), UserAction.TYPES.likes_given);
 
     stream.set("filter", UserAction.TYPES.replies);
-    assert.equal(stream.get("filterParam"), "6,9");
+    assert.strictEqual(stream.get("filterParam"), "6,9");
   });
 });

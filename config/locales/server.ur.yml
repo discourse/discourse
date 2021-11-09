@@ -3282,10 +3282,8 @@ ur:
             label: "آپ کی کمیونٹی کا نام"
             placeholder: "جمیلہ کے ٹھہرنے کی جگہ"
           site_description:
-            label: "اپنی کمیونٹی کو ایک مختصر جملہ میں بیان کریں"
             placeholder: "جمیلہ اور اس کی دوستوں کیلئے دلچسپ چیزوں پر بحث کرنے کی ایک جگہ"
           short_site_description:
-            label: "اپنی کمیونٹی کو چند الفاظ میں بیان کریں"
             placeholder: "ہمیشہ کی سب سے بہترین کمیونٹی"
       introduction:
         title: "تعارف"

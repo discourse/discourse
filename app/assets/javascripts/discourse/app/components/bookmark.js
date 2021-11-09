@@ -239,12 +239,14 @@ export default Component.extend({
     }
   },
 
-  _onModalClose(initiatedByCloseButton) {
+  _onModalClose(closeOpts) {
     // we want to close without saving if the user already saved
     // manually or deleted the bookmark, as well as when the modal
     // is just closed with the X button
     this._closeWithoutSaving =
-      this._closeWithoutSaving || initiatedByCloseButton;
+      this._closeWithoutSaving ||
+      closeOpts.initiatedByCloseButton ||
+      closeOpts.initiatedByESC;
 
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));

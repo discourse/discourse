@@ -58,7 +58,7 @@ acceptance("Dashboard", function (needs) {
       "new-contributors report"
     );
 
-    assert.equal(
+    assert.strictEqual(
       $(".section.dashboard-problems .problem-messages ul li:first-child")
         .html()
         .trim(),
@@ -80,7 +80,7 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".dashboard .reports-index.section .reports-list .report")
         .length,
       1
@@ -88,7 +88,7 @@ acceptance("Dashboard", function (needs) {
 
     await fillIn(".dashboard .filter-reports-input", "flags");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".dashboard .reports-index.section .reports-list .report")
         .length,
       0
@@ -97,7 +97,7 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.security .navigation-link");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".dashboard .reports-index.section .reports-list .report")
         .length,
       1,
@@ -106,7 +106,7 @@ acceptance("Dashboard", function (needs) {
 
     await fillIn(".dashboard .filter-reports-input", "activities");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".dashboard .reports-index.section .reports-list .report")
         .length,
       1,
@@ -121,9 +121,9 @@ acceptance("Dashboard", function (needs) {
 
     const groupFilter = selectKit(".group-filter .combo-box");
 
-    assert.equal(
+    assert.strictEqual(
       groupFilter.header().value(),
-      88,
+      "88",
       "its set the value of the filter from the query params"
     );
   });

@@ -43,7 +43,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(count(".slow-mode-heading"), 1);
+      assert.strictEqual(count(".slow-mode-heading"), 1);
     },
   });
 
@@ -58,7 +58,7 @@ discourseModule("Integration | Component | slow-mode-info", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(count(".slow-mode-remove"), 1);
+      assert.strictEqual(count(".slow-mode-remove"), 1);
     },
   });
 

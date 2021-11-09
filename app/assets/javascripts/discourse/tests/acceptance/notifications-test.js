@@ -36,7 +36,7 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 6);
+    assert.strictEqual(count("#quick-access-notifications li"), 6);
 
     // high priority, unread notification - should be first
 
@@ -80,8 +80,8 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 6);
-    assert.equal(
+    assert.strictEqual(count("#quick-access-notifications li"), 6);
+    assert.strictEqual(
       query("#quick-access-notifications li span[data-topic-id]").innerText,
       "First notification"
     );
@@ -129,8 +129,8 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 7);
-    assert.equal(
+    assert.strictEqual(count("#quick-access-notifications li"), 7);
+    assert.strictEqual(
       queryAll("#quick-access-notifications li span[data-topic-id]")[1]
         .innerText,
       "Second notification"
@@ -179,7 +179,7 @@ acceptance("User Notifications", function (needs) {
     });
 
     await visit("/"); // wait for re-render
-    assert.equal(count("#quick-access-notifications li"), 8);
+    assert.strictEqual(count("#quick-access-notifications li"), 8);
     const texts = [];
     queryAll("#quick-access-notifications li").each((_, el) =>
       texts.push(el.innerText.trim())

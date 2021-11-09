@@ -20,7 +20,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
 
     test(assert) {
       assert.expect(1);
-      assert.equal(count(".d-icon-check"), 1, "shows default theme icon");
+      assert.strictEqual(count(".d-icon-check"), 1, "shows default theme icon");
     },
   });
 
@@ -35,7 +35,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
 
     test(assert) {
       assert.expect(1);
-      assert.equal(count(".d-icon-sync"), 1, "shows pending update icon");
+      assert.strictEqual(count(".d-icon-sync"), 1, "shows pending update icon");
     },
   });
 
@@ -53,7 +53,7 @@ discourseModule("Integration | Component | themes-list-item", function (hooks) {
 
     test(assert) {
       assert.expect(1);
-      assert.equal(
+      assert.strictEqual(
         count(".d-icon-exclamation-circle"),
         1,
         "shows broken theme icon"

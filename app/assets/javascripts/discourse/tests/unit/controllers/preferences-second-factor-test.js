@@ -8,6 +8,6 @@ discourseModule("Unit | Controller | preferences/second-factor", function () {
         enable_google_oauth2_logins: true,
       },
     });
-    assert.equal(controller.get("displayOAuthWarning"), true);
+    assert.strictEqual(controller.get("displayOAuthWarning"), true);
   });
 });

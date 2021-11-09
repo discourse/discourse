@@ -39,17 +39,17 @@ module("Unit | Model | site", function () {
     site.get("sortedCategories");
 
     assert.present(categories, "The categories are present");
-    assert.equal(categories.length, 3, "it loaded all three categories");
+    assert.strictEqual(categories.length, 3, "it loaded all three categories");
 
     const parent = categories.findBy("id", 1234);
     assert.present(parent, "it loaded the parent category");
     assert.blank(parent.get("parentCategory"), "it has no parent category");
 
-    assert.equal(parent.get("subcategories").length, 1);
+    assert.strictEqual(parent.get("subcategories").length, 1);
 
     const subcategory = categories.findBy("id", 3456);
     assert.present(subcategory, "it loaded the subcategory");
-    assert.equal(
+    assert.strictEqual(
       subcategory.get("parentCategory"),
       parent,
       "it has associated the child with the parent"
@@ -59,12 +59,12 @@ module("Unit | Model | site", function () {
     categories.removeObject(categories[2]);
     categories.removeObject(categories[1]);
 
-    assert.equal(
+    assert.strictEqual(
       categories.length,
       site.get("categoriesByCount").length,
       "categories by count should change on removal"
     );
-    assert.equal(
+    assert.strictEqual(
       categories.length,
       site.get("sortedCategories").length,
       "sorted categories should change on removal"

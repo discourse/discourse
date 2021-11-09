@@ -170,6 +170,7 @@ class UserAction < ActiveRecord::Base
     action_type
     action_code
     action_code_who
+    action_code_path
     topic_closed
     topic_id
     topic_archived
@@ -218,6 +219,7 @@ class UserAction < ActiveRecord::Base
         p.post_type,
         p.action_code,
         pc.value AS action_code_who,
+        pc2.value AS action_code_path,
         p.edit_reason,
         t.category_id
       FROM user_actions as a
@@ -229,6 +231,7 @@ class UserAction < ActiveRecord::Base
       JOIN users au on au.id = a.user_id
       LEFT JOIN categories c on c.id = t.category_id
       LEFT JOIN post_custom_fields pc ON pc.post_id = a.target_post_id AND pc.name = 'action_code_who'
+      LEFT JOIN post_custom_fields pc2 ON pc2.post_id = a.target_post_id AND pc.name = 'action_code_path'
       /*where*/
       /*order_by*/
       /*offset*/

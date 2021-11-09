@@ -58,14 +58,14 @@ acceptance("Presence - Subscribing", function (needs) {
   test("subscribing and receiving updates", async function (assert) {
     let presenceService = this.container.lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
-    assert.equal(channel.name, "/test/ch1");
+    assert.strictEqual(channel.name, "/test/ch1");
 
     await channel.subscribe({
       users: usersFixture(),
       last_message_id: 1,
     });
 
-    assert.equal(channel.users.length, 3, "it starts with three users");
+    assert.strictEqual(channel.users.length, 3, "it starts with three users");
 
     publishToMessageBus(
       "/presence/test/ch1",
@@ -76,7 +76,7 @@ acceptance("Presence - Subscribing", function (needs) {
       2
     );
 
-    assert.equal(channel.users.length, 2, "one user is removed");
+    assert.strictEqual(channel.users.length, 2, "one user is removed");
 
     publishToMessageBus(
       "/presence/test/ch1",
@@ -87,7 +87,7 @@ acceptance("Presence - Subscribing", function (needs) {
       3
     );
 
-    assert.equal(channel.users.length, 3, "one user is added");
+    assert.strictEqual(channel.users.length, 3, "one user is added");
   });
 
   test("fetches data when no initial state", async function (assert) {
@@ -96,7 +96,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel.subscribe();
 
-    assert.equal(channel.users.length, 3, "loads initial state");
+    assert.strictEqual(channel.users.length, 3, "loads initial state");
 
     publishToMessageBus(
       "/presence/test/ch1",
@@ -107,7 +107,7 @@ acceptance("Presence - Subscribing", function (needs) {
       2
     );
 
-    assert.equal(
+    assert.strictEqual(
       channel.users.length,
       2,
       "updates following messagebus message"
@@ -124,7 +124,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel._presenceState._resubscribePromise;
 
-    assert.equal(
+    assert.strictEqual(
       channel.users.length,
       3,
       "detects missed messagebus message, fetches data from server"
@@ -148,9 +148,9 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel.subscribe();
 
-    assert.equal(channel.count, 3, "has the correct count");
-    assert.equal(channel.countOnly, true, "identifies as countOnly");
-    assert.equal(channel.users, null, "has null users list");
+    assert.strictEqual(channel.count, 3, "has the correct count");
+    assert.strictEqual(channel.countOnly, true, "identifies as countOnly");
+    assert.strictEqual(channel.users, null, "has null users list");
 
     publishToMessageBus(
       "/presence/countonly/ch1",
@@ -161,7 +161,7 @@ acceptance("Presence - Subscribing", function (needs) {
       2
     );
 
-    assert.equal(channel.count, 4, "updates the count via messagebus");
+    assert.strictEqual(channel.count, 4, "updates the count via messagebus");
 
     publishToMessageBus(
       "/presence/countonly/ch1",
@@ -174,7 +174,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel._presenceState._resubscribePromise;
 
-    assert.equal(
+    assert.strictEqual(
       channel.count,
       3,
       "resubscribes when receiving a non-count-only message"
@@ -187,37 +187,45 @@ acceptance("Presence - Subscribing", function (needs) {
     let channelDup = presenceService.getChannel("/test/ch1");
 
     await channel.subscribe();
-    assert.equal(channel.subscribed, true, "channel is subscribed");
-    assert.equal(channel.count, 3, "channel has the correct count");
-    assert.equal(channel.users.length, 3, "channel has users");
+    assert.strictEqual(channel.subscribed, true, "channel is subscribed");
+    assert.strictEqual(channel.count, 3, "channel has the correct count");
+    assert.strictEqual(channel.users.length, 3, "channel has users");
 
-    assert.equal(channelDup.subscribed, false, "channelDup is not subscribed");
-    assert.equal(channelDup.count, null, "channelDup has no count");
-    assert.equal(channelDup.users, null, "channelDup has users");
+    assert.strictEqual(
+      channelDup.subscribed,
+      false,
+      "channelDup is not subscribed"
+    );
+    assert.strictEqual(channelDup.count, undefined, "channelDup has no count");
+    assert.strictEqual(channelDup.users, undefined, "channelDup has users");
 
     await channelDup.subscribe();
-    assert.equal(channelDup.subscribed, true, "channelDup can subscribe");
+    assert.strictEqual(channelDup.subscribed, true, "channelDup can subscribe");
     assert.ok(
       channelDup._presenceState,
       "channelDup has a valid internal state"
     );
-    assert.equal(
+    assert.strictEqual(
       channelDup._presenceState,
       channel._presenceState,
       "internal state is shared"
     );
 
     await channel.unsubscribe();
-    assert.equal(channel.subscribed, false, "channel can unsubscribe");
-    assert.equal(
+    assert.strictEqual(channel.subscribed, false, "channel can unsubscribe");
+    assert.strictEqual(
       channelDup._presenceState,
       channel._presenceState,
       "state is maintained"
     );
 
     await channelDup.unsubscribe();
-    assert.equal(channel.subscribed, false, "channelDup can unsubscribe");
-    assert.equal(channelDup._presenceState, undefined, "state is cleared");
+    assert.strictEqual(channel.subscribed, false, "channelDup can unsubscribe");
+    assert.strictEqual(
+      channelDup._presenceState,
+      undefined,
+      "state is cleared"
+    );
   });
 });
 
@@ -250,7 +258,7 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     const channel = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
-    assert.equal(requests.length, 1, "updated the server for enter");
+    assert.strictEqual(requests.length, 1, "updated the server for enter");
     let presentChannels = requests.pop().getAll("present_channels[]");
     assert.deepEqual(
       presentChannels,
@@ -259,7 +267,7 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     );
 
     await channel.leave();
-    assert.equal(requests.length, 1, "updated the server for leave");
+    assert.strictEqual(requests.length, 1, "updated the server for leave");
     const request = requests.pop();
     presentChannels = request.getAll("present_channels[]");
     const leaveChannels = request.getAll("leave_channels[]");
@@ -287,32 +295,32 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     const channelDup = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
-    assert.equal(channel.present, true, "channel is present");
-    assert.equal(channelDup.present, false, "channelDup is absent");
+    assert.strictEqual(channel.present, true, "channel is present");
+    assert.strictEqual(channelDup.present, false, "channelDup is absent");
     assert.ok(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channelDup.enter();
-    assert.equal(channel.present, true, "channel is present");
-    assert.equal(channelDup.present, true, "channelDup is present");
+    assert.strictEqual(channel.present, true, "channel is present");
+    assert.strictEqual(channelDup.present, true, "channelDup is present");
     assert.ok(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channel.leave();
-    assert.equal(channel.present, false, "channel is absent");
-    assert.equal(channelDup.present, true, "channelDup is present");
+    assert.strictEqual(channel.present, false, "channel is absent");
+    assert.strictEqual(channelDup.present, true, "channelDup is present");
     assert.ok(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channelDup.leave();
-    assert.equal(channel.present, false, "channel is absent");
-    assert.equal(channel.present, false, "channelDup is absent");
+    assert.strictEqual(channel.present, false, "channel is absent");
+    assert.strictEqual(channel.present, false, "channelDup is absent");
     assert.notOk(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows absent"

@@ -3048,10 +3048,8 @@ zh_TW:
             label: "你社群的名字"
             placeholder: "小明的論壇"
           site_description:
-            label: "用一句簡短的話描述你的社群"
             placeholder: "小明和他的朋友討論酷東西的論壇"
           short_site_description:
-            label: "用幾句話描述你的社群"
             placeholder: "最佳社群"
       introduction:
         title: "介紹"
