@@ -44,8 +44,8 @@ jobs:
           bundle config --local without development
           bundle install --jobs 4
           bundle clean
-          bundle exec rake plugin:install_all_official
+          # bundle exec rake plugin:install_all_official
 
       - name: QUnit
-        run: QUNIT_EMBER_CLI=1 sudo -E -u discourse -H bin/rake plugin:qunit
+        run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit
         timeout-minutes: 60
