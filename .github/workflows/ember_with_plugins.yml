@@ -1,6 +1,9 @@
 name: (experimental) Ember CLI tests (plugins)
 
 on:
+  push:
+    branches:
+    - fix-ember-cli-plugin-tests
   schedule:
     - cron: "0 0 * * *"
 
