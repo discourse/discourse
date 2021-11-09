@@ -13,6 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 60
+    env:
+      RAILS_ENV: test
+      PGHOST: postgres
+      PGUSER: discourse
+      PGPASSWORD: discourse
+
+    strategy:
+      matrix:
+        postgres: ["13"]
+
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: discourse
+          POSTGRES_PASSWORD: discourse
+          POSTGRES_DB: discourse_test
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@master
@@ -23,6 +48,26 @@ jobs:
         run: |
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Bundler cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
@@ -37,14 +82,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Official Plugins Install
+      - name: Create database
         run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs 4
-          bundle clean
-          # bundle exec rake plugin:install_all_official
+          bin/rake db:create
+          bin/rake db:migrate
+
+      # - name: Official Plugins Install
+      #   run: |
+      #     bundle exec rake plugin:install_all_official
 
       - name: QUnit
         run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit
