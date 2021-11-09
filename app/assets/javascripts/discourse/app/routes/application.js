@@ -70,14 +70,14 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       });
     },
 
-    composePrivateMessage(user, topic) {
+    composePrivateMessage(user, post) {
       const recipients = user ? user.get("username") : "";
-      const reply = topic
-        ? `${window.location.protocol}//${window.location.host}${topic.url}`
+      const reply = post
+        ? `${window.location.protocol}//${window.location.host}${post.url}`
         : null;
-      const title = topic
+      const title = post
         ? I18n.t("composer.reference_topic_title", {
-            title: topic.title,
+            title: post.topic.title,
           })
         : null;
 
