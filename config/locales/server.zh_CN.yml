@@ -4269,10 +4269,8 @@ zh_CN:
             label: "您社区的名称"
             placeholder: "朱桦的环聊"
           site_description:
-            label: "用一句话描述您的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           short_site_description:
-            label: "用几个词描述您的社区"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"

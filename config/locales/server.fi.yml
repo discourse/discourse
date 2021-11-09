@@ -4259,10 +4259,8 @@ fi:
             label: "Yhteisön nimi"
             placeholder: "Jennin mesta"
           site_description:
-            label: "Kuvaile yhteisöä yhdellä lyhyellä lauseella"
             placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
           short_site_description:
-            label: "Kuvaile yhteisöä muutamalla sanalla lyhyesti"
             placeholder: "Paras yhteisö ikinä missään"
       introduction:
         title: "Johdanto"

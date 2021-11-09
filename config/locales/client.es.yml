@@ -5073,7 +5073,6 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"
@@ -5084,7 +5083,6 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde lo quieres incrustar."
         title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"
