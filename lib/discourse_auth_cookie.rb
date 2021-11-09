@@ -72,26 +72,13 @@ class DiscourseAuthCookie
     # TODO: drop this line after the 2.9 release
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
-    data = Encryptor.new.decrypt_and_verify(raw_cookie)
+    json = Encryptor.new.decrypt_and_verify(raw_cookie)
+    data = JSON.parse(json)
 
-    token = nil
-    user_id = nil
-    trust_level = nil
-    issued_at = nil
-
-    data.split(",").each do |part|
-      prefix, val = part.split(":", 2)
-      val = val.presence
-      if prefix == TOKEN_KEY
-        token = val
-      elsif prefix == USER_ID_KEY
-        user_id = val
-      elsif prefix == USER_TRUST_LEVEL_KEY
-        trust_level = val
-      elsif prefix == ISSUED_AT_KEY
-        issued_at = val
-      end
-    end
+    token = data[TOKEN_KEY]
+    user_id = data[USER_ID_KEY]
+    trust_level = data[USER_TRUST_LEVEL_KEY]
+    issued_at = data[ISSUED_AT_KEY]
 
     new(
       token: token,
@@ -110,13 +97,13 @@ class DiscourseAuthCookie
   end
 
   def serialize
-    parts = []
-    parts << "#{TOKEN_KEY}:#{token}"
-    parts << "#{USER_ID_KEY}:#{user_id}"
-    parts << "#{USER_TRUST_LEVEL_KEY}:#{trust_level}"
-    parts << "#{ISSUED_AT_KEY}:#{issued_at}"
-    data = parts.join(",")
-    Encryptor.new.encrypt_and_sign(data)
+    data = {
+      TOKEN_KEY => token,
+      USER_ID_KEY => user_id,
+      USER_TRUST_LEVEL_KEY => trust_level,
+      ISSUED_AT_KEY => issued_at
+    }
+    Encryptor.new.encrypt_and_sign(data.to_json)
   end
 
   private
