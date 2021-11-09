@@ -19,7 +19,8 @@
 # cookie rotation (which happen every 10 minutes) they'll be switched over to
 # the v1 format.
 #
-# We'll drop support for v0 after Discourse 3.0 is released.
+# We'll drop support for v0 after Discourse 2.9 is released.
+
 class DiscourseAuthCookie
   class InvalidCookie < StandardError; end
 
@@ -65,10 +66,9 @@ class DiscourseAuthCookie
   attr_reader :token, :user_id, :trust_level, :valid_till
 
   def self.parse(raw_cookie)
-    # v0 of the cookie was simply the auth token itself. we need
-    # this for backward compatibility so we don't wipe out existing
-    # sessions.  TODO: drop this line (and a test case in
-    # default_current_user_provider_spec.rb) after the 3.0 release
+    # v0 of the cookie was simply the auth token itself. we need this for
+    # backward compatibility so we don't wipe out existing sessions.
+    # TODO: drop this line after the 2.9 release
     return new(token: raw_cookie) if raw_cookie.size == TOKEN_SIZE
 
     data = Encryptor.new.decrypt_and_verify(raw_cookie)
