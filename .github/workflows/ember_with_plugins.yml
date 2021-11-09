@@ -47,6 +47,5 @@ jobs:
           bundle exec rake plugin:install_all_official
 
       - name: QUnit
-        working-directory: ./app/assets/javascripts/discourse
         run: QUNIT_EMBER_CLI=1 sudo -E -u discourse -H bin/rake plugin:qunit
         timeout-minutes: 60
