@@ -3,27 +3,18 @@
 require 'rails_helper'
 
 describe DiscourseUpdates do
-  let(:latest_version_key) { DiscourseUpdates.send(:latest_version_key) }
-  let(:missing_versions_count_key) { DiscourseUpdates.send(:missing_versions_count_key) }
-  let(:critical_updates_available_key) { DiscourseUpdates.send(:critical_updates_available_key) }
-  let(:updated_at_key) { DiscourseUpdates.send(:updated_at_key) }
-
   def stub_data(latest, missing, critical, updated_at)
-    Discourse.redis.set(latest_version_key, latest)
-    Discourse.redis.set(missing_versions_count_key, missing)
-    Discourse.redis.set(critical_updates_available_key, critical)
-    Discourse.redis.set(updated_at_key, updated_at)
-  end
-
-  before do
-    Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
+    DiscourseUpdates.latest_version = latest
+    DiscourseUpdates.missing_versions_count = missing
+    DiscourseUpdates.critical_updates_available = critical
+    DiscourseUpdates.updated_at = updated_at
   end
 
   subject { DiscourseUpdates.check_version }
 
   context 'version check was done at the current installed version' do
     before do
-      DiscourseUpdates.stubs(:last_installed_version).returns(Discourse::VERSION::STRING)
+      DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING
     end
 
     context 'a good version check request happened recently' do
@@ -119,7 +110,7 @@ describe DiscourseUpdates do
 
   context 'version check was done at a different installed version' do
     before do
-      DiscourseUpdates.stubs(:last_installed_version).returns('0.9.1')
+      DiscourseUpdates.last_installed_version = '0.9.1'
     end
 
     shared_examples "when last_installed_version is old" do
@@ -215,7 +206,7 @@ describe DiscourseUpdates do
       ]
 
       Discourse.redis.set('new_features', MultiJson.dump(features_with_versions))
-      DiscourseUpdates.stubs(:last_installed_version).returns("2.7.0.beta2")
+      DiscourseUpdates.last_installed_version = "2.7.0.beta2"
       result = DiscourseUpdates.new_features
 
       expect(result.length).to eq(3)
