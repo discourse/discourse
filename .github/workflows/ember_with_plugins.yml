@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 60
+
     env:
       RAILS_ENV: test
       PGHOST: postgres
