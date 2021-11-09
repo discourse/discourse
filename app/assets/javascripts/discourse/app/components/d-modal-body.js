@@ -10,7 +10,7 @@ export default Component.extend({
     this._super(...arguments);
     this._modalAlertElement = document.getElementById("modal-alert");
     if (this._modalAlertElement) {
-      this._modalAlertElement.innerHTML = "";
+      this._clearFlash();
     }
 
     let fixedParent = $(this.element).closest(".d-modal.fixed-modal");
