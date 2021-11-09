@@ -1,18 +1,15 @@
 // styles that apply to the "share" modal & popup when sharing a link to a post or topic
 
-.link-share-container {
+.link-share-container,
+.notify-user-input {
   display: flex;
-  button {
+  .btn {
     margin-left: 0.5em;
-    transition-property: background-color, color; // don't transition outline
   }
-  input {
+  input,
+  .select-kit {
     width: 100%;
-    font-size: var(--font-up-1);
     margin-bottom: 0;
-    &:focus + button {
-      outline: 1px solid var(--tertiary);
-    }
   }
 }
 
@@ -111,23 +108,6 @@
       margin-top: 0;
       margin-right: 0;
     }
-  }
-}
-
-.notify-user-input {
-  display: flex;
-  align-items: stretch;
-
-  .select-kit {
-    width: 100%;
-  }
-
-  .multi-select-header {
-    width: 100%;
-  }
-
-  .select-kit.multi-select .choices {
-    padding: 0;
   }
 }
 
