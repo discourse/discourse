@@ -347,12 +347,32 @@ module FileStore
       )
     end
 
-    def list_multipart_parts(upload_id:, key:)
-      s3_helper.s3_client.list_parts(
+    # Important note from the S3 documentation:
+    #
+    # This request returns a default and maximum of 1000 parts.
+    # You can restrict the number of parts returned by specifying the
+    # max_parts argument. If your multipart upload consists of more than 1,000
+    # parts, the response returns an IsTruncated field with the value of true,
+    # and a NextPartNumberMarker element.
+    #
+    # In subsequent ListParts requests you can include the part_number_marker arg
+    # using the NextPartNumberMarker the field value from the previous response to
+    # get more parts.
+    #
+    # See https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Client.html#list_parts-instance_method
+    def list_multipart_parts(upload_id:, key:, max_parts: 1000, start_from_part_number: nil)
+      options = {
         bucket: s3_bucket_name,
         key: key,
-        upload_id: upload_id
-      )
+        upload_id: upload_id,
+        max_parts: max_parts
+      }
+
+      if start_from_part_number.present?
+        options[:part_number_marker] = start_from_part_number
+      end
+
+      s3_helper.s3_client.list_parts(options)
     end
 
     def complete_multipart(upload_id:, key:, parts:)

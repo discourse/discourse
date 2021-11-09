@@ -372,7 +372,9 @@ class UploadsController < ApplicationController
   def multipart_upload_exists?(external_upload_stub)
     begin
       Discourse.store.list_multipart_parts(
-        upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: external_upload_stub.key,
+        max_parts: 1
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
       debug_upload_error(err, "upload.external_upload_not_found", { additional_detail: "path: #{external_upload_stub.key}" })
