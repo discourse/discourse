@@ -106,7 +106,9 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
       sleep 1
       retry unless elapsed() > 60
-      puts "Timed out. Can not connect to forked server!"
+      puts "Timed out. Can not connect to forked server at #{uri.to_s}!"
+      puts e.to_s
+      puts e.message
       exit 1
     end
     puts "Rails server is warmed up"
