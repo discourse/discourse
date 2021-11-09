@@ -73,7 +73,7 @@ function buildImageAltTextButton(altText) {
   <span class="alt-text" aria-label="${I18n.t(
     "composer.image_alt_text.aria_label"
   )}">${altText}</span>
-  <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use xlink:href="#pencil-alt"></use></svg></span>
+  <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg></span>
   <input class="alt-text-input" hidden="true" type="text" value="${altText}" />
 </span>
 `;
@@ -132,7 +132,7 @@ export function setup(helper) {
       "span.alt-text-readonly-container.alt-text",
       "span.alt-text-readonly-container.alt-text-edit-btn",
       "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
-      "use[xlink:href=#pencil-alt]",
+      "use[href=#pencil-alt]",
       "input[type=text]",
       "input[hidden=true]",
       "input[class=alt-text-input]",
