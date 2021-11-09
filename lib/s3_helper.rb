@@ -342,7 +342,7 @@ class S3Helper
       options[:part_number_marker] = start_from_part_number
     end
 
-    s3_helper.s3_client.list_parts(options)
+    s3_client.list_parts(options)
   end
 
   def complete_multipart(upload_id:, key:, parts:)

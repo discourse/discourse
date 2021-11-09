@@ -391,7 +391,7 @@ class UploadsController < ApplicationController
     begin
       store.list_multipart_parts(
         upload_id: external_upload_stub.external_upload_identifier,
-        key: external_upload_stub.key
+        key: external_upload_stub.key,
         max_parts: 1
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
