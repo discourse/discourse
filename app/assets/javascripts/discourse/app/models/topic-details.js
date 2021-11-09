@@ -49,7 +49,7 @@ const TopicDetails = RestModel.extend({
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-group", {
       type: "PUT",
-      data: { name: name },
+      data: { name },
     }).then(() => {
       groups.removeObject(groups.findBy("name", name));
     });
@@ -61,7 +61,7 @@ const TopicDetails = RestModel.extend({
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {
       type: "PUT",
-      data: { username: username },
+      data: { username },
     }).then(() => {
       users.removeObject(users.findBy("username", username));
     });

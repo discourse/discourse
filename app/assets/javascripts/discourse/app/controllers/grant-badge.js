@@ -48,8 +48,8 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
       UserBadge.findByUsername(this.get("post.username")),
     ]).then(([allBadges, userBadges]) => {
       this.setProperties({
-        allBadges: allBadges,
-        userBadges: userBadges,
+        allBadges,
+        userBadges,
         loading: false,
       });
     });

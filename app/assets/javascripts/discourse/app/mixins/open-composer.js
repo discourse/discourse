@@ -53,7 +53,7 @@ export default Mixin.create({
       topicBody,
       archetypeId: "private_message",
       draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
-      hasGroups: hasGroups,
+      hasGroups,
     });
   },
 });

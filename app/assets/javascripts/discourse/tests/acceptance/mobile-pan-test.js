@@ -24,7 +24,7 @@ async function triggerSwipeStart(touchTarget) {
   );
 
   const touchStart = {
-    touchTarget: touchTarget,
+    touchTarget,
     x:
       zoom *
       (touchTarget.getBoundingClientRect().x +

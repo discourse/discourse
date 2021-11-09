@@ -1492,10 +1492,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-discourse@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.8.tgz#c297831876811ea08203aa348d1ba2a963b2ae78"
-  integrity sha512-ZSQfhliiO5Cfa7WcKoMkN4wW/1rBJpecpMJpfjiFsElfgPj4EV4Pzksi5CvFnRbJDoZh6DYYrQfO+tW062VOUA==
+eslint-config-discourse@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.9.tgz#9a5ee6b3a4b986e5243f517e7945d1709c4e22df"
+  integrity sha512-a4KG+/9/7ZhYVV0URGK70K7QtxlydYKjie0ZssHEGxl2auOUTDcdRMBfZQBtIxQr9X8TF0+eeUUsScBXNU6xZw==
   dependencies:
     babel-eslint "^10.1.0"
     ember-template-lint "^2.11.0"

@@ -550,7 +550,7 @@ export default Component.extend(ComposerUpload, {
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
-              name: name,
+              name,
               user_count: $e.data("mentionable-user-count"),
               max_mentions: $e.data("max-mentions"),
             },

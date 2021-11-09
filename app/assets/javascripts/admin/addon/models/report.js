@@ -672,7 +672,7 @@ Report.reopenClass({
         Report.fillMissingDates(json.report);
       }
 
-      const model = Report.create({ type: type });
+      const model = Report.create({ type });
       model.setProperties(json.report);
 
       if (json.report.related_report) {

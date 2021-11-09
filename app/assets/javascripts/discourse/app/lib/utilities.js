@@ -99,9 +99,7 @@ export function avatarImg(options, customGetURL) {
 }
 
 export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(
-    deepMerge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
-  );
+  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -219,7 +217,7 @@ export function caretRowCol(el) {
       return sum + row.length + 1;
     }, 0);
 
-  return { rowNum: rowNum, colNum: colNum };
+  return { rowNum, colNum };
 }
 
 // Determine the position of the caret in an element

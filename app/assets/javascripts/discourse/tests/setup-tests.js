@@ -149,7 +149,7 @@ function writeSummaryLine(message) {
   if (window.Testem) {
     window.Testem.useCustomAdapter(function (socket) {
       socket.emit("test-metadata", "summary-line", {
-        message: message,
+        message,
       });
     });
   }

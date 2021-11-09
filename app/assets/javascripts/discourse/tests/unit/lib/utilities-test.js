@@ -103,14 +103,14 @@ discourseModule("Unit | Utilities", function () {
 
     let avatarTemplate = "/path/to/avatar/{size}.png";
     assert.strictEqual(
-      avatarImg({ avatarTemplate: avatarTemplate, size: "tiny" }),
+      avatarImg({ avatarTemplate, size: "tiny" }),
       "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
       "it returns the avatar html"
     );
 
     assert.strictEqual(
       avatarImg({
-        avatarTemplate: avatarTemplate,
+        avatarTemplate,
         size: "tiny",
         title: "evilest trout",
       }),
@@ -120,7 +120,7 @@ discourseModule("Unit | Utilities", function () {
 
     assert.strictEqual(
       avatarImg({
-        avatarTemplate: avatarTemplate,
+        avatarTemplate,
         size: "tiny",
         extraClasses: "evil fish",
       }),

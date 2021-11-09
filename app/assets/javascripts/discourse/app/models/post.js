@@ -219,7 +219,7 @@ const Post = RestModel.extend({
           : "post.deleted_by_author_simple";
       promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
-          cooked: cooked,
+          cooked,
           can_delete: false,
           can_permanently_delete: false,
           version: this.version + 1,

@@ -30,7 +30,7 @@ export default DiscourseRoute.extend(OpenComposer, {
       const period = User.currentProp("redirected_to_top.period") || "all";
       this.replaceWith("discovery.top", {
         queryParams: {
-          period: period,
+          period,
         },
       });
     } else if (url && (matches = url.match(/top\/(.*)$/))) {

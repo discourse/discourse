@@ -355,7 +355,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "enter",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();
@@ -384,7 +384,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "leave",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();

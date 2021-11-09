@@ -59,7 +59,7 @@ module("Unit | Model | post", function () {
 
   test("destroy by staff", async function (assert) {
     let user = User.create({ username: "staff", moderator: true });
-    let post = buildPost({ user: user });
+    let post = buildPost({ user });
 
     await post.destroy(user);
 
@@ -85,7 +85,7 @@ module("Unit | Model | post", function () {
   test("destroy by non-staff", async function (assert) {
     const originalCooked = "this is the original cooked value";
     const user = User.create({ username: "evil trout" });
-    const post = buildPost({ user: user, cooked: originalCooked });
+    const post = buildPost({ user, cooked: originalCooked });
 
     await post.destroy(user);
 
