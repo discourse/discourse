@@ -974,7 +974,7 @@ describe UploadsController do
            <StorageClass>STANDARD</StorageClass>
         </ListPartsResult>
         BODY
-        stub_request(:get, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}?uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
+        stub_request(:get, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
       end
 
       it "errors if the correct params are not provided" do
@@ -1118,7 +1118,7 @@ describe UploadsController do
            <StorageClass>STANDARD</StorageClass>
         </ListPartsResult>
         BODY
-        stub_request(:get, "#{upload_base_url}/#{external_upload_stub.key}?uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
+        stub_request(:get, "#{upload_base_url}/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
       end
 
       it "errors if the correct params are not provided" do
