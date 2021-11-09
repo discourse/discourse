@@ -4,12 +4,25 @@ module DiscourseAutomation
   class Scriptable
     attr_reader :fields, :name, :not_found, :forced_triggerable
 
+    @@plugin_triggerables ||= {}
+
+    class << self
+      def add_plugin_triggerable(triggerable, scriptable)
+        @@plugin_triggerables[scriptable.to_sym] ||= []
+        @@plugin_triggerables[scriptable.to_sym] << triggerable.to_sym
+      end
+
+      def plugin_triggerables
+        @@plugin_triggerables
+      end
+    end
+
     def initialize(name)
       @name = name
       @version = 0
       @fields = []
       @placeholders = [:site_title]
-      @triggerables = []
+      @triggerables = (@@plugin_triggerables[name.to_sym] || []) + []
       @script = proc {}
       @not_found = false
       @forced_triggerable = nil
@@ -69,7 +82,7 @@ module DiscourseAutomation
 
     def triggerables(*args)
       if args.present?
-        @triggerables, = args
+        @triggerables.push(*args[0])
       else
         forced_triggerable ? [forced_triggerable[:triggerable]] : @triggerables
       end
