@@ -40,10 +40,17 @@ class DiscourseAuthCookie
     def encryptor
       @encryptor ||= begin
         db_name = RailsMultisite::ConnectionManagement.current_db
-        key = Rails.application.key_generator.generate_key("discourse-auth-cookie-#{db_name}", 32)
+        encryption_key = Rails.application.key_generator.generate_key(
+          "discourse-auth-cookie-encryption-#{db_name}",
+          32
+        )
+        sign_key = Rails.application.key_generator.generate_key(
+          "discourse-auth-cookie-sign-#{db_name}",
+          32
+        )
         ActiveSupport::MessageEncryptor.new(
-          key,
-          key,
+          encryption_key,
+          sign_key,
           cipher: "aes-256-cbc",
           digest: "SHA256"
         )
