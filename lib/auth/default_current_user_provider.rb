@@ -90,6 +90,7 @@ class Auth::DefaultCurrentUserProvider
     if auth_cookie
       begin
         cookie = DiscourseAuthCookie.parse(auth_cookie)
+        cookie = nil if !fresh_cookie?(cookie)
       rescue  DiscourseAuthCookie::InvalidCookie
         cookie = nil
       end
@@ -243,7 +244,7 @@ class Auth::DefaultCurrentUserProvider
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      valid_till: UserAuthToken::ROTATE_TIME.from_now
+      issued_at: Time.zone.now
     )
     hash = {
       value: cookie.serialize,
@@ -314,8 +315,7 @@ class Auth::DefaultCurrentUserProvider
   def has_auth_cookie?
     cookie_string = @request.cookies[TOKEN_COOKIE]
     return false if cookie_string.blank?
-    DiscourseAuthCookie.parse(cookie_string)
-    true
+    fresh_cookie?(DiscourseAuthCookie.parse(cookie_string))
   rescue DiscourseAuthCookie::InvalidCookie
     false
   end
@@ -421,5 +421,10 @@ class Auth::DefaultCurrentUserProvider
       86400,
       error_code: "user_api_key_limiter_1_day"
     )
+  end
+
+  def fresh_cookie?(cookie)
+    return true if cookie.issued_at.blank?
+    cookie.issued_at >= SiteSetting.maximum_session_age.hours.ago.to_i
   end
 end

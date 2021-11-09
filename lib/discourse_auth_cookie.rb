@@ -56,15 +56,15 @@ class DiscourseAuthCookie
   TOKEN_KEY = "token"
   USER_ID_KEY = "id"
   USER_TRUST_LEVEL_KEY = "tl"
-  VALID_TILL_KEY = "valid_till"
+  ISSUED_AT_KEY = "issued_at"
   private_constant *%i[
     TOKEN_KEY
     USER_ID_KEY
     USER_TRUST_LEVEL_KEY
-    VALID_TILL_KEY
+    ISSUED_AT_KEY
   ]
 
-  attr_reader :token, :user_id, :trust_level, :valid_till
+  attr_reader :token, :user_id, :trust_level, :issued_at
 
   def self.parse(raw_cookie)
     # v0 of the cookie was simply the auth token itself. we need this for
@@ -77,7 +77,7 @@ class DiscourseAuthCookie
     token = nil
     user_id = nil
     trust_level = nil
-    valid_till = nil
+    issued_at = nil
 
     data.split(",").each do |part|
       prefix, val = part.split(":", 2)
@@ -88,8 +88,8 @@ class DiscourseAuthCookie
         user_id = val
       elsif prefix == USER_TRUST_LEVEL_KEY
         trust_level = val
-      elsif prefix == VALID_TILL_KEY
-        valid_till = val
+      elsif prefix == ISSUED_AT_KEY
+        issued_at = val
       end
     end
 
@@ -97,15 +97,15 @@ class DiscourseAuthCookie
       token: token,
       user_id: user_id,
       trust_level: trust_level,
-      valid_till: valid_till,
+      issued_at: issued_at
     )
   end
 
-  def initialize(token:, user_id: nil, trust_level: nil, valid_till: nil)
+  def initialize(token:, user_id: nil, trust_level: nil, issued_at: nil)
     @token = token
     @user_id = user_id.to_i if user_id
     @trust_level = trust_level.to_i if trust_level
-    @valid_till = valid_till.to_i if valid_till
+    @issued_at = issued_at.to_i if issued_at
     validate!
   end
 
@@ -114,7 +114,7 @@ class DiscourseAuthCookie
     parts << "#{TOKEN_KEY}:#{token}"
     parts << "#{USER_ID_KEY}:#{user_id}"
     parts << "#{USER_TRUST_LEVEL_KEY}:#{trust_level}"
-    parts << "#{VALID_TILL_KEY}:#{valid_till}"
+    parts << "#{ISSUED_AT_KEY}:#{issued_at}"
     data = parts.join(",")
     Encryptor.new.encrypt_and_sign(data)
   end

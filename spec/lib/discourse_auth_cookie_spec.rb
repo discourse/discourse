@@ -24,7 +24,7 @@ describe DiscourseAuthCookie do
         token: SecureRandom.hex,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: 5.minutes.from_now,
+        issued_at: 5.minutes.ago,
       ).serialize
 
       cookie = swap_2_different_characters(cookie)
@@ -38,7 +38,7 @@ describe DiscourseAuthCookie do
         token: token,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: 5.minutes.from_now,
+        issued_at: 5.minutes.ago,
       ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
@@ -47,36 +47,36 @@ describe DiscourseAuthCookie do
 
     it "correctly parses cookie fields" do
       token = SecureRandom.hex
-      valid_till = 5.minutes.from_now
+      issued_at = 5.minutes.ago
       cookie = DiscourseAuthCookie.new(
         token: token,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: valid_till,
+        issued_at: issued_at,
       ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
       expect(parsed.user_id).to eq(user.id)
       expect(parsed.trust_level).to eq(user.trust_level)
-      expect(parsed.valid_till).to eq(valid_till.to_i)
+      expect(Time.zone.at(parsed.issued_at)).to eq_time(Time.zone.at(issued_at.to_i))
     end
 
     it "works when there are missing fields in the cookie" do
       token = SecureRandom.hex
-      valid_till = 5.minutes.from_now
+      issued_at = 5.minutes.ago
       cookie = DiscourseAuthCookie.new(
         token: token,
         user_id: nil,
         trust_level: nil,
-        valid_till: valid_till
+        issued_at: issued_at
       ).serialize
 
       parsed = DiscourseAuthCookie.parse(cookie)
       expect(parsed.token).to eq(token)
       expect(parsed.user_id).to eq(nil)
       expect(parsed.trust_level).to eq(nil)
-      expect(parsed.valid_till).to eq(valid_till.to_i)
+      expect(Time.zone.at(parsed.issued_at)).to eq_time(Time.zone.at(issued_at.to_i))
     end
   end
 

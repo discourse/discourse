@@ -11,7 +11,7 @@ describe CurrentUser do
       token: token.unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      valid_till: 5.minutes.from_now
+      issued_at: 5.minutes.ago,
     ).serialize
 
     env = Rack::MockRequest.env_for("/test", "HTTP_COOKIE" => "_t=#{cookie};")

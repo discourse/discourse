@@ -447,7 +447,7 @@ describe Auth::DefaultCurrentUserProvider do
         token: token.unhashed_auth_token,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: 5.minutes.from_now
+        issued_at: 5.minutes.ago,
       ).serialize
 
       provider('/').log_on_user(user, {}, {})
@@ -460,7 +460,7 @@ describe Auth::DefaultCurrentUserProvider do
         token: SecureRandom.hex,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: 5.minutes.from_now
+        issued_at: 5.minutes.ago,
       ).serialize
 
       env = { "HTTP_COOKIE" => "_t=#{bad_cookie}", "REMOTE_ADDR" => ip }
@@ -491,7 +491,7 @@ describe Auth::DefaultCurrentUserProvider do
       token: SecureRandom.hex,
       user_id: 1,
       trust_level: 4,
-      valid_till: 5.minutes.from_now
+      issued_at: 5.minutes.ago,
     ).serialize
     cookies = { "_t" => bad_cookie }
     provider('/').refresh_session(nil, {}, cookies)
@@ -558,7 +558,7 @@ describe Auth::DefaultCurrentUserProvider do
       token: token.unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      valid_till: 5.minutes.from_now
+      issued_at: 5.minutes.ago,
     ).serialize
 
     provider('/').log_on_user(user, {}, {})

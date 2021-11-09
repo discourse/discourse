@@ -180,7 +180,7 @@ class Middleware::RequestTracker
     if cookie_string
       begin
         cookie = DiscourseAuthCookie.parse(cookie_string)
-        if cookie.valid_till && cookie.valid_till < Time.zone.now.to_i
+        if cookie.issued_at && cookie.issued_at < max_cookie_age.ago.to_i
           cookie = nil
         end
       rescue DiscourseAuthCookie::InvalidCookie
@@ -229,16 +229,15 @@ class Middleware::RequestTracker
     log_request_info(env, result, info) unless !log_request || env["discourse.request_tracker.skip"]
   end
 
-  def is_private_ip?(ip)
-    ip = IPAddr.new(ip) rescue nil
-    !!(ip && (ip.private? || ip.loopback?))
-  end
-
   def log_later(data)
     Scheduler::Defer.later("Track view") do
       unless Discourse.pg_readonly_mode?
         self.class.log_request(data)
       end
     end
+  end
+
+  def max_cookie_age
+    UserAuthToken::ROTATE_TIME + 1.minute
   end
 end

@@ -144,7 +144,7 @@ describe Middleware::RequestTracker do
           token: token.unhashed_auth_token,
           user_id: user.id,
           trust_level: user.trust_level,
-          valid_till: 5.minutes.from_now
+          issued_at: 5.minutes.ago,
         ).serialize
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
@@ -474,7 +474,7 @@ describe Middleware::RequestTracker do
           token: token.unhashed_auth_token,
           user_id: user.id,
           trust_level: user.trust_level,
-          valid_till: 5.minutes.from_now
+          issued_at: 5.minutes.ago,
         ).serialize
         env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
       end
@@ -511,7 +511,7 @@ describe Middleware::RequestTracker do
         token: token.unhashed_auth_token,
         user_id: user.id,
         trust_level: user.trust_level,
-        valid_till: 5.minutes.from_now
+        issued_at: Time.zone.now,
       ).serialize
       env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
 
@@ -520,7 +520,7 @@ describe Middleware::RequestTracker do
         called += 1
         [200, {}, ["OK"]]
       end
-      freeze_time(6.minutes.from_now) do
+      freeze_time(12.minutes.from_now) do
         middleware = Middleware::RequestTracker.new(app)
         status, = middleware.call(env)
         expect(status).to eq(200)
