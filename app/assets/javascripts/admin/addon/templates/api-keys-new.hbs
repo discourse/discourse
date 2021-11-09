@@ -36,11 +36,11 @@
       {{/admin-form-row}}
     {{/if}}
 
-    {{#admin-form-row label="admin.api.use_global_key"}}
-      {{input type="checkbox" checked=useGlobalKey}}
+    {{#admin-form-row label="admin.api.scope_mode"}}
+      {{combo-box content=scopeModes value=scopeMode onChange=(action "changeScopeMode")}}
     {{/admin-form-row}}
 
-    {{#unless useGlobalKey}}
+    {{#if (eq scopeMode "granular")}}
       <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
       <p>{{i18n "admin.api.scopes.description"}}</p>
       <table class="scopes-table grid">
@@ -82,7 +82,7 @@
           {{/each-in}}
         </tbody>
       </table>
-    {{/unless}}
+    {{/if}}
 
     {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
   {{/if}}
