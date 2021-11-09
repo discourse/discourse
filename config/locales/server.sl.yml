@@ -2019,10 +2019,8 @@ sl:
             label: "Ime skupnosti"
             placeholder: "Mikijev klub"
           site_description:
-            label: "Opiši vašo skupnost v enem kratkem stavku"
             placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
           short_site_description:
-            label: "Opišite vašo skupnost v nekaj besedah"
             placeholder: "Najboljši klub"
       privacy:
         title: "Dostopnost"

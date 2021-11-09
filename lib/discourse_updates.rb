@@ -62,7 +62,7 @@ module DiscourseUpdates
     end
 
     def last_installed_version=(arg)
-      Discourse.redis.set(last_installed_version, arg)
+      Discourse.redis.set(last_installed_version_key, arg)
     end
 
     def latest_version
@@ -70,7 +70,7 @@ module DiscourseUpdates
     end
 
     def latest_version=(arg)
-      Discourse.redis.set(latest_version, arg)
+      Discourse.redis.set(latest_version_key, arg)
     end
 
     def missing_versions_count

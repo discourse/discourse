@@ -4418,10 +4418,8 @@ ar:
             label: "اسم مجتمعك"
             placeholder: "استراحة جين"
           site_description:
-            label: "صِف مجتمعك في جملة واحدة قصيرة"
             placeholder: "مكان لجين وأصدقائها لمناقشة أشياء رائعة"
           short_site_description:
-            label: "صِف مجتمعك في بضع كلمات"
             placeholder: "أفضل مجتمع على الإطلاق"
       introduction:
         title: "مقدمة"

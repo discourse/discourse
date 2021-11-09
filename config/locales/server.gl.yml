@@ -4091,10 +4091,8 @@ gl:
             label: "O nome da súa comunidade"
             placeholder: "Reunión de Helena"
           site_description:
-            label: "Describa a súa comunidade cunha frase curta"
             placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
           short_site_description:
-            label: "Describa a súa comunidade nunhas poucas palabras"
             placeholder: "A mellor comunidade do mundo"
       introduction:
         title: "Introdución"

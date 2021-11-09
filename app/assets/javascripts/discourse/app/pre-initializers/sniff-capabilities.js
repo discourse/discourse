@@ -43,11 +43,6 @@ export default {
         (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
         !window.MSStream;
 
-      caps.isIOS15Safari =
-        caps.isIOS &&
-        /Version\/15/.test(navigator.userAgent) &&
-        !/DiscourseHub/.test(navigator.userAgent);
-
       caps.hasContactPicker =
         "contacts" in navigator && "ContactsManager" in window;
 

@@ -397,7 +397,7 @@ class Guardian
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin? && !SiteSetting.enable_discourse_connect
+    user.admin?
   end
 
   def can_resend_all_invites?(user)

@@ -656,7 +656,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
   componentTest("permanently delete topic", {
     template: hbs`{{mount-widget widget="post" args=args permanentlyDeletePost=permanentlyDeletePost}}`,
     beforeEach() {
-      this.set("args", { canManage: true, canPermanentlyDeleteTopic: true });
+      this.set("args", { canManage: true, canPermanentlyDelete: true });
       this.set("permanentlyDeletePost", () => (this.deleted = true));
     },
     async test(assert) {

@@ -4174,10 +4174,8 @@ ja:
             label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
-            label: "コミュニティについて簡単な一文で説明してください"
             placeholder: "純子と純子の仲間がワイワイする場所"
           short_site_description:
-            label: "コミュニティについて短い言葉で説明してください"
             placeholder: "史上最高のコミュニティ"
       introduction:
         title: "紹介"

@@ -4299,7 +4299,6 @@ bs_BA:
           badge_query_examples_title: "Primjeri upita za oznaku"
       emoji:
         title: "Emoji"
-        help: "Dodajte novi emotikon koji će biti dostupan svima. (PROTIP: povlačenje i ispuštanje više datoteka odjednom)"
         add: "Dodaj novi emoji"
         uploading: "Učitava se..."
         name: "Ime"

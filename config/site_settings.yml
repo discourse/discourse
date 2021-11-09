@@ -1680,6 +1680,7 @@ security:
     hidden: true
   can_permanently_delete:
     default: false
+    client: true
     hidden: true
 
 onebox:

@@ -4270,10 +4270,8 @@ fr:
             label: "Nom de votre communauté"
             placeholder: "Le repaire de Jeanne"
           site_description:
-            label: "Décrivez votre communauté en une courte phrase"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
           short_site_description:
-            label: "Décrivez votre communauté en quelques mots"
             placeholder: "Meilleure communauté de tous les temps"
       introduction:
         title: "Introduction"

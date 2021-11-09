@@ -177,6 +177,11 @@ task 's3:ensure_cors_rules' => :environment do
   puts "Installing CORS rules..."
   result = S3CorsRulesets.sync(use_db_s3_config: use_db_s3_config)
 
+  if !result
+    puts "skipping"
+    return
+  end
+
   puts "Assets rules status: #{result[:assets_rules_status]}."
   puts "Backup rules status: #{result[:backup_rules_status]}."
   puts "Direct upload rules status: #{result[:direct_upload_rules_status]}."

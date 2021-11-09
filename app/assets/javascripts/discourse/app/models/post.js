@@ -208,6 +208,8 @@ const Post = RestModel.extend({
         deleted_at: new Date(),
         deleted_by: deletedBy,
         can_delete: false,
+        can_permanently_delete:
+          this.siteSettings.can_permanently_delete && deletedBy.admin,
         can_recover: true,
       });
     } else {
@@ -217,8 +219,9 @@ const Post = RestModel.extend({
           : "post.deleted_by_author_simple";
       promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
-          cooked: cooked,
+          cooked,
           can_delete: false,
+          can_permanently_delete: false,
           version: this.version + 1,
           can_recover: true,
           can_edit: false,

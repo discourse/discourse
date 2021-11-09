@@ -4106,10 +4106,8 @@ ko:
             label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
-            label: "당신의 커뮤니티를 짧은 문장으로 축약하여 설명해보세요"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           short_site_description:
-            label: "몇 마디로 커뮤니티를 설명하십시오"
             placeholder: "최고의 커뮤니티"
       introduction:
         title: "소개"

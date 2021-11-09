@@ -451,6 +451,8 @@ const Topic = RestModel.extend({
           deleted_by,
           "details.can_delete": false,
           "details.can_recover": true,
+          "details.can_permanently_delete":
+            this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (!deleted_by.staff) {
           DiscourseURL.redirectTo("/");
