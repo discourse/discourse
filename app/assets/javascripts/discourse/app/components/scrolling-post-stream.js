@@ -81,7 +81,7 @@ export default MountWidget.extend({
     if (
       isWorkaroundActive() ||
       document.webkitFullscreenElement ||
-      document.mozFullScreenElement
+      document.fullscreenElement
     ) {
       return;
     }
