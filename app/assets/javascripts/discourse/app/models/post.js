@@ -355,6 +355,32 @@ const Post = RestModel.extend({
     }
   },
 
+  updateLikeCount(count) {
+    let current_actions_summary = this.get("actions_summary");
+
+    if (!this.actions_summary.find((entry) => entry.id === 2)) {
+      let json = Post.munge({
+        id: this.id,
+        actions_summary: [
+          {
+            id: 2,
+            count: count,
+          },
+        ],
+      });
+      this.set(
+        "actions_summary",
+        Object.assign(current_actions_summary, json.actions_summary)
+      );
+      this.set("actionByName", json.actionByName);
+      this.set("likeAction", json.likeAction);
+    } else {
+      this.actions_summary.find((entry) => entry.id === 2).count = count;
+      this.actionByName["like"] = count;
+      this.likeAction.count = count;
+    }
+  },
+
   revertToRevision(version) {
     return ajax(`/posts/${this.id}/revisions/${version}/revert`, {
       type: "PUT",

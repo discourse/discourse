@@ -847,6 +847,18 @@ export default RestModel.extend({
     return resolved;
   },
 
+  triggerLikedPost(postId, likesCount) {
+    const resolved = Promise.resolve();
+
+    const post = this.findLoadedPost(postId);
+    if (post) {
+      post.updateLikeCount(likesCount);
+      this.storePost(post);
+    }
+
+    return resolved;
+  },
+
   triggerReadPost(postId, readersCount) {
     const resolved = Promise.resolve();
     resolved.then(() => {

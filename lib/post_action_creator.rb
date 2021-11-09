@@ -156,13 +156,15 @@ private
   end
 
   def notify_subscribers
-    if self.class.notify_types.include?(@post_action_name)
+    if @post_action_name == :like
+      @post.publish_change_to_clients! :liked, { likes_count: @post.like_count + 1 }
+    elsif self.class.notify_types.include?(@post_action_name)
       @post.publish_change_to_clients! :acted
     end
   end
 
   def self.notify_types
-    @notify_types ||= ([:like] + PostActionType.notify_flag_types.keys)
+    @notify_types ||= PostActionType.notify_flag_types.keys
   end
 
   def enforce_rules
