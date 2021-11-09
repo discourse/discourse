@@ -2229,7 +2229,6 @@ fa_IR:
             label: "نام انجمن شما"
             placeholder: "انجمن آزموده"
           site_description:
-            label: "انجمن خود را در یک جمله کوتاه توضیح دهید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
       introduction:
         title: "مقدمه"

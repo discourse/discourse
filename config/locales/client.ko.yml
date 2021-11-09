@@ -4035,6 +4035,7 @@ ko:
 
               플러그인 및/또는 코어와의 충돌을 피하기 위해 속성 이름 앞에 붙이는 것이 좋습니다.
           head_tag:
+            text: "헤드"
             title: "헤드 태그 앞에 삽입될 HTML"
           body_tag:
             text: "바디"
@@ -4883,7 +4884,7 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.(PROTIP: 한 번에 여러 파일을 드래그 앤 드롭)"
+        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.이름을 입력하지 않고 여러 파일을 한 번에 끌어다 놓아 파일 이름을 사용하여 이모티콘을 만들 수 있습니다."
         add: "새 이모티콘 추가"
         uploading: "업로드 중..."
         name: "이름"
@@ -4894,7 +4895,6 @@ ko:
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 호스트 추가부터 하세요"
         confirm_delete: "정말로 host를 삭제할까요?"
-        sample: "Discourse 토픽을 웹사이트에 삽입(embed)하기 위해 다음 HTML코드를 이용하세요. <b>REPLACE_ME</b> 부분을 당신이 삽입하려는 웹사이트의 정식URL로 교체 하면 됩니다."
         title: "삽입(Embedding)"
         host: "허용 Host"
         class_name: "클래스 이름"

@@ -1906,6 +1906,7 @@ sv:
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
     disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
+    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -3990,10 +3991,10 @@ sv:
             label: "Ditt forums namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv ditt forum med en kort mening"
+            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
           short_site_description:
-            label: "Beskriv ditt forum med ett par ord"
+            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
             placeholder: "Bästa forumet någonsin"
       introduction:
         title: "Introduktion"

@@ -2197,7 +2197,6 @@ pt:
             label: "O nome da sua comunidade"
             placeholder: "Reduto da Joana"
           site_description:
-            label: "Descreva a sua comunidade numa frase curta"
             placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
       introduction:
         title: "Introdução"

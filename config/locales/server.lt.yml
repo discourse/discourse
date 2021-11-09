@@ -2242,10 +2242,8 @@ lt:
           title:
             label: "Jūsų bendruomenės pavadinimas"
           site_description:
-            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu"
             placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
           short_site_description:
-            label: "Apibūdinkite savo bendruomenę keliais žodžiais"
             placeholder: "Pati geriausia bendruomenė"
       introduction:
         title: "Prisistatymas"

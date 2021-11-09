@@ -3598,10 +3598,8 @@ da:
             label: "Dit fællesskabs navn"
             placeholder: "Janes Sted"
           site_description:
-            label: "Beskriv dit fællesskab med en kort sætning"
             placeholder: "Et sted hvor Jane og hendes venner kan diskutere fede emner"
           short_site_description:
-            label: "Beskriv dit fællesskab med nogle få ord"
             placeholder: "Bedste fællesskab nogensinde"
       introduction:
         title: "Introduktion"

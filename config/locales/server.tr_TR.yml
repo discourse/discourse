@@ -3813,10 +3813,8 @@ tr_TR:
             label: "Topluluğunuzun ismi"
             placeholder: "Ali'nin Yeri"
           site_description:
-            label: "Topluluğunuzu kısa bir cümle ile tanımlayın"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
           short_site_description:
-            label: "Topluluğunuzu birkaç kelimeyle açıklayın"
             placeholder: "Şimdiye kadarki en iyi topluluk"
       introduction:
         title: "Tanıtım"

@@ -4294,10 +4294,8 @@ pt_BR:
             label: "Nome de sua comunidade"
             placeholder: "Hangout de Jane"
           site_description:
-            label: "Descreva sua comunidade com uma frase curta."
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
           short_site_description:
-            label: "Descreva sua comunidade em poucas palavras"
             placeholder: "Melhor comunidade de todos os tempos"
       introduction:
         title: "Introdução"

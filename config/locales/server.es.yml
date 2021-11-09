@@ -4364,10 +4364,8 @@ es:
             label: "El nombre de tu comunidad"
             placeholder: "Reunión de Juana"
           site_description:
-            label: "Describe tu comunidad en una frase corta"
             placeholder: "Un sitio para que Juana y sus amigos discutan cosas interesantes"
           short_site_description:
-            label: "Describe tu comunidad en pocas palabras"
             placeholder: "La mejor comunidad del mundo"
       introduction:
         title: "Introducción"

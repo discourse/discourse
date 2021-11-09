@@ -4932,7 +4932,6 @@ fr:
           replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"
-        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glissez-déposez plusieurs fichiers en même temps)"
         add: "Ajouter un nouvel émoji"
         uploading: "Envoi en cours…"
         name: "Nom"
@@ -4943,7 +4942,6 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
         class_name: "Nom de classe"

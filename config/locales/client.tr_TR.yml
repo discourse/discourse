@@ -5067,7 +5067,6 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
-        help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"
         add: "Yeni Emoji Ekle"
         uploading: "Yükleniyor..."
         name: "İsim"
@@ -5078,7 +5077,6 @@ tr_TR:
       embedding:
         get_started: "Eğer Discourse'u başka bir web sitesine yerleştirmek istiyorsan bu sitenin sunucusunu ekleyerek başla."
         confirm_delete: "Bu sunucuyu silmek istediğine emin misin?"
-        sample: "Discourse konuları oluşturmak ve yerleştirmek için aşağıdaki HTML kodunu sitende kullan. <b>REPLACE_ME</b>'yi Discourse'u yerleştirdiğin sayfanın tam URL'i ile değiştir."
         title: "Yerleştirme"
         host: "İzin Verilen Sunucular"
         class_name: "Sınıf adı"

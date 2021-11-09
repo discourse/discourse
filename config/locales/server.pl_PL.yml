@@ -4519,10 +4519,8 @@ pl_PL:
             label: "Twoja pełna nazwa"
             placeholder: "Hangout Jane"
           site_description:
-            label: "Opisz swoja społeczność w jednym krótkim zdaniu."
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
           short_site_description:
-            label: "Opisz swoją społeczność w paru słowach"
             placeholder: "Najlepsza społeczność kiedykolwiek"
       introduction:
         title: "Wprowadzenie"
