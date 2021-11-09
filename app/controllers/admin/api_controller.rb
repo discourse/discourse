@@ -8,10 +8,8 @@ class Admin::ApiController < Admin::AdminController
     offset = (params[:offset] || 0).to_i
     limit = (params[:limit] || 50).to_i.clamp(1, 50)
 
-    keys = ApiKey.where(hidden: false)
-    count = keys.count
-
-    keys = keys
+    keys = ApiKey
+      .where(hidden: false)
       .includes(:user, :api_key_scopes)
       # Sort revoked keys by revoked_at and active keys by created_at
       .order("revoked_at DESC NULLS FIRST, created_at DESC")
