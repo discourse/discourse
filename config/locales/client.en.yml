@@ -4144,6 +4144,7 @@ en:
         no_description: (no description)
         all_api_keys: All API Keys
         user_mode: User Level
+        scope_mode: Scope
         impersonate_all_users: Impersonate any user
         single_user: "Single User"
         user_placeholder: Enter username
@@ -4154,12 +4155,15 @@ en:
         delete: Permanently Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
-        use_global_key: Global Key (allows all actions)
         scopes:
           description: |
             When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
+          granular: Granular
+          read_only: Read-only
+          global: Global
+          global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
@@ -4167,6 +4171,8 @@ en:
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
+            global:
+              read: Restrict API key to read-only endpoints.
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
