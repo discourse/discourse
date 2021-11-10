@@ -28,8 +28,6 @@ export default Controller.extend({
       { id: "global", name: I18n.t("admin.api.scopes.global") },
     ]);
 
-    this.set("scopeMode", "granular");
-
     this._loadScopes();
   },
 

@@ -38,10 +38,16 @@
 
     {{#admin-form-row label="admin.api.scope_mode"}}
       {{combo-box content=scopeModes value=scopeMode onChange=(action "changeScopeMode")}}
+
+      {{#if (eq scopeMode "read_only")}}
+        <p>{{i18n "admin.api.scopes.read_only_description"}}</p>
+      {{else if (eq scopeMode "global")}}
+        <p>{{i18n "admin.api.scopes.global_description"}}</p>
+      {{/if}}
     {{/admin-form-row}}
 
     {{#if (eq scopeMode "granular")}}
-      <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
+      <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>
       <p>{{i18n "admin.api.scopes.description"}}</p>
       <table class="scopes-table grid">
         <thead>
