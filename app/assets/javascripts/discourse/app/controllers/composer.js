@@ -719,6 +719,14 @@ export default Controller.extend({
       });
     },
 
+    hereMention(count) {
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        body: I18n.t("composer.here_mention", { count }),
+      });
+    },
+
     applyUnorderedList() {
       this.toolbarEvent.applyList("* ", "list_item");
     },
