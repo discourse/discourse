@@ -15,7 +15,7 @@ export default Component.extend({
   // Allow us to extend it
   layoutName: "components/topic-footer-buttons",
 
-  @discourseComputed("topic.isinlineActionablesPrivateMessage")
+  @discourseComputed("topic.isPrivateMessage")
   canArchive(isPM) {
     return this.siteSettings.enable_personal_messages && isPM;
   },
