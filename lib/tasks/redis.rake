@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 task 'redis:clean_up' => ['environment'] do
-  return unless Rails.configuration.multisite
+  next unless Rails.configuration.multisite
 
   dbs = RailsMultisite::ConnectionManagement.all_dbs
   dbs << Discourse::SIDEKIQ_NAMESPACE

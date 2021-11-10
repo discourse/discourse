@@ -179,7 +179,7 @@ task 's3:ensure_cors_rules' => :environment do
 
   if !result
     puts "skipping"
-    return
+    next
   end
 
   puts "Assets rules status: #{result[:assets_rules_status]}."
