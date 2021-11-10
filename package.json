@@ -23,7 +23,7 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^1.1.8",
+    "eslint-config-discourse": "^1.1.9",
     "handlebars": "^4.7.7",
     "jquery": "3.5.1",
     "jquery-color": "3.0.0-alpha.1",
