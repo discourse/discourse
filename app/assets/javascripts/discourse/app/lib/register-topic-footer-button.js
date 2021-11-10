@@ -1,13 +1,11 @@
 import I18n from "I18n";
 import { computed } from "@ember/object";
-import error from "@ember/error";
 
 let _topicFooterButtons = {};
 
 export function registerTopicFooterButton(button) {
   if (!button.id) {
-    error(`Attempted to register a topic button: ${button} with no id.`);
-    return;
+    throw new Error(`Attempted to register a topic button with no id.`);
   }
 
   if (_topicFooterButtons[button.id]) {
@@ -15,6 +13,8 @@ export function registerTopicFooterButton(button) {
   }
 
   const defaultButton = {
+    type: "inline-button",
+
     // id of the button, required
     id: null,
 
@@ -60,10 +60,9 @@ export function registerTopicFooterButton(button) {
     !normalizedButton.title &&
     !normalizedButton.translatedTitle
   ) {
-    error(
+    throw new Error(
       `Attempted to register a topic button: ${button.id} with no icon or title.`
     );
-    return;
   }
 
   _topicFooterButtons[normalizedButton.id] = normalizedButton;
@@ -97,6 +96,7 @@ export function getTopicFooterButtons() {
           const discourseComputedButon = {};
 
           discourseComputedButon.id = button.id;
+          discourseComputedButon.type = button.type;
 
           const label = _compute(button, "label");
           discourseComputedButon.label = label
@@ -134,9 +134,7 @@ export function getTopicFooterButtons() {
           }
 
           return discourseComputedButon;
-        })
-        .sortBy("priority")
-        .reverse();
+        });
     },
   });
 }
