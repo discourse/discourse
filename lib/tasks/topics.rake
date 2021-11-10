@@ -84,7 +84,7 @@ end
 task "topics:update_fancy_titles" => :environment do
   if !SiteSetting.title_fancy_entities?
     puts "fancy topic titles are disabled"
-    return
+    next
   end
 
   DB.exec("UPDATE topics SET fancy_title = NULL")
