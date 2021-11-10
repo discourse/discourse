@@ -367,7 +367,7 @@ const Post = RestModel.extend({
         actions_summary: [
           {
             id: likeActionID,
-            count: count,
+            count,
           },
         ],
       });
