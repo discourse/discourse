@@ -1598,6 +1598,12 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }
+          case "liked": {
+            postStream
+              .triggerLikedPost(data.id, data.likes_count)
+              .then(() => refresh({ id: data.id, refreshLikes: true }));
+            break;
+          }
           case "revised":
           case "rebaked": {
             postStream
