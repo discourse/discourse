@@ -357,13 +357,16 @@ const Post = RestModel.extend({
 
   updateLikeCount(count) {
     let current_actions_summary = this.get("actions_summary");
+    let likeActionID = Site.current().post_action_types.find(
+      (a) => a.name_key === "like"
+    ).id;
 
-    if (!this.actions_summary.find((entry) => entry.id === 2)) {
+    if (!this.actions_summary.find((entry) => entry.id === likeActionID)) {
       let json = Post.munge({
         id: this.id,
         actions_summary: [
           {
-            id: 2,
+            id: likeActionID,
             count: count,
           },
         ],
@@ -375,7 +378,9 @@ const Post = RestModel.extend({
       this.set("actionByName", json.actionByName);
       this.set("likeAction", json.likeAction);
     } else {
-      this.actions_summary.find((entry) => entry.id === 2).count = count;
+      this.actions_summary.find(
+        (entry) => entry.id === likeActionID
+      ).count = count;
       this.actionByName["like"] = count;
       this.likeAction.count = count;
     }
