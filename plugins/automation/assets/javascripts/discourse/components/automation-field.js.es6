@@ -95,6 +95,6 @@ export default Component.extend({
   @action
   copyPlaceholder(placeholder, event) {
     event.preventDefault();
-    clipboardCopy(placeholder);
+    clipboardCopy(`%%${placeholder.toUpperCase()}%%`);
   }
 });
