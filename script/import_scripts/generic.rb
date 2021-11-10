@@ -35,19 +35,25 @@ class ImportScripts::Generic < ImportScripts::Base
       next if all_records_exist?(:users, rows.map { |row| row["id"] })
 
       create_users(rows, total: total_count, offset: offset) do |row|
+        if row["sso_record"].present?
+          sso_record = JSON.parse(row["sso_record"])
+          sso_record[:last_payload] = ""
+        end
+
         {
           id: row["id"],
           username: row["username"],
           created_at: to_datetime(row["created_at"]),
           name: row["name"],
-          email: row["email"],
+          email: row["email"] || fake_email,
           last_seen_at: to_datetime(row[:"last_seen_at"]) || to_datetime(row["created_at"]),
           bio_raw: row["bio"],
           location: row["location"],
           admin: to_boolean(row["admin"]),
           moderator: to_boolean(row["moderator"]),
+          sso_record: sso_record,
           post_create_action: proc do |user|
-            create_avatar(user, row["avatar_path"])
+            create_avatar(user, row["avatar_path"], row["avatar_url"])
             suspend_user(user, row["suspension"])
           end
         }
@@ -55,14 +61,17 @@ class ImportScripts::Generic < ImportScripts::Base
     end
   end
 
-  def create_avatar(user, avatar_path)
-    return if avatar_path.blank?
-    avatar_path = File.join(AVATAR_DIRECTORY, avatar_path)
+  def create_avatar(user, avatar_path, avatar_url)
+    if avatar_path.present?
+      avatar_path = File.join(AVATAR_DIRECTORY, avatar_path)
 
-    if File.exist?(avatar_path)
-      @uploader.create_avatar(user, avatar_path)
-    else
-      STDERR.puts "Could not find avatar: #{avatar_path}"
+      if File.exist?(avatar_path)
+        @uploader.create_avatar(user, avatar_path)
+      else
+        STDERR.puts "Could not find avatar: #{avatar_path}"
+      end
+    elsif avatar_url.present?
+      UserAvatar.import_url_for_user(avatar_url, user, override_gravatar: true)
     end
   end
 
@@ -162,10 +171,13 @@ class ImportScripts::Generic < ImportScripts::Base
     SQL
 
     create_categories(rows) do |row|
-      # TODO Add more columns
       {
         id: row["id"],
         name: row["name"],
+        description: row["description"],
+        color: row["color"],
+        text_color: row["text_color"],
+        read_restricted: row["read_restricted"],
         parent_category_id: category_id_from_imported_category_id(row["parent_category_id"]),
         post_create_action: proc do |category|
           create_permalink(row["old_relative_url"], category_id: category.id)

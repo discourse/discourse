@@ -17,15 +17,15 @@ module ImportScripts
       tmp.unlink rescue nil
     end
 
-    def create_avatar(user, avatar_path)
+    def create_avatar(user, avatar_path, origin_url = nil)
       tempfile = copy_to_tempfile(avatar_path)
       filename = "avatar#{File.extname(avatar_path)}"
-      upload = UploadCreator.new(tempfile, filename, type: "avatar").create_for(user.id)
+      upload = UploadCreator.new(tempfile, filename, type: "avatar", origin: origin_url).create_for(user.id)
 
       if upload.present? && upload.persisted?
         user.create_user_avatar
-        user.user_avatar.update(custom_upload_id: upload.id)
-        user.update(uploaded_avatar_id: upload.id)
+        user.user_avatar.update!(custom_upload_id: upload.id)
+        user.update!(uploaded_avatar_id: upload.id)
       else
         STDERR.puts "Failed to upload avatar for user #{user.username}: #{avatar_path}"
         STDERR.puts upload.errors.inspect if upload

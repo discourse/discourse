@@ -304,8 +304,12 @@ class ImportScripts::Base
     opts.delete(:id)
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
+    sso_record = opts.delete(:sso_record)
 
-    existing = find_existing_user(opts[:email], opts[:username])
+    existing = find_existing_user(opts[:email], sso_record&.fetch("external_id"))
+    return existing if existing
+
+    existing = User.where(username: opts[:username]).first
     return existing if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
 
     bio_raw = opts.delete(:bio_raw)
@@ -391,14 +395,18 @@ class ImportScripts::Base
 
     end
 
+    u.create_single_sign_on_record!(sso_record) if sso_record
+
     post_create_action.try(:call, u) if u.persisted?
 
     u # If there was an error creating the user, u.errors has the messages
   end
 
-  def find_existing_user(email, username)
+  def find_existing_user(email, external_id)
     # Force the use of the index on the 'user_emails' table
-    UserEmail.where("lower(email) = ?", email.downcase).first&.user || User.where(username: username).first
+    user = UserEmail.where("lower(email) = ?", email.downcase).first&.user
+    user ||= SingleSignOnRecord.where(external_id: external_id).first&.user if external_id.present?
+    user
   end
 
   def create_group_members(results, opts = {})
