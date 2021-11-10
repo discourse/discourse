@@ -52,6 +52,8 @@ import {
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
+import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -291,6 +293,8 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
+      clearTopicFooterDropdowns();
+      clearTopicFooterButtons();
       resetLastEditNotificationClick();
       clearAuthMethods();
 

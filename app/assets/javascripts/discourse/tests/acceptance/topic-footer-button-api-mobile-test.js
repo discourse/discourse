@@ -1,6 +1,5 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -11,10 +10,6 @@ acceptance(
     needs.user();
 
     needs.mobileView();
-
-    needs.hooks.afterEach(() => {
-      clearTopicFooterButtons();
-    });
 
     test("adds topic footer button as a dropdown through API", async function (assert) {
       const done = assert.async();

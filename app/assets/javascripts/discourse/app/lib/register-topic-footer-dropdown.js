@@ -104,5 +104,5 @@ export function getTopicFooterDropdowns() {
 }
 
 export function clearTopicFooterDropdowns() {
-  _topicFooterDropdowns = [];
+  _topicFooterDropdowns = {};
 }
