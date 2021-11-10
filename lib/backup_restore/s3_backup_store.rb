@@ -97,7 +97,11 @@ module BackupRestore
       s3_helper.create_multipart(key, content_type, metadata: metadata)
     end
 
-    def move_existing_stored_upload(existing_external_upload_key, original_filename, secure, content_type = nil)
+    def move_existing_stored_upload(
+      existing_external_upload_key:,
+      original_filename: nil,
+      content_type: nil
+    )
       s3_helper.copy(
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),

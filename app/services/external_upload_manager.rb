@@ -161,7 +161,9 @@ class ExternalUploadManager
   def move_to_final_destination
     content_type = MiniMime.lookup_by_filename(external_upload_stub.original_filename).content_type
     @store.move_existing_stored_upload(
-      external_upload_stub.key, external_upload_stub.original_filename, true, content_type
+      existing_external_upload_key: external_upload_stub.key,
+      original_filename: external_upload_stub.original_filename,
+      content_type: content_type
     )
     Struct.new(:errors).new([])
   end

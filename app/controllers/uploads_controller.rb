@@ -304,7 +304,7 @@ class UploadsController < ApplicationController
     upload_type = params.require(:upload_type)
 
     if upload_type == "backup"
-      check_backup_permission
+      ensure_staff
       return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_backup_extension?(file_name)
       return render_json_error(I18n.t("backup.invalid_filename")) unless valid_backup_filename?(file_name)
     else
@@ -485,19 +485,8 @@ class UploadsController < ApplicationController
   protected
 
   def multipart_store(upload_type)
-    if upload_type == "backup"
-      check_backup_permission
-      BackupRestore::BackupStore.create
-    else
-      Discourse.store
-    end
-  end
-
-  def check_backup_permission
-    ensure_staff
-    if !SiteSetting.enable_backups? || SiteSetting.backup_location != BackupLocationSiteSetting::S3
-      raise Discourse::InvalidAccess.new
-    end
+    ensure_staff if upload_type == "backup"
+    ExternalUploadManager.store_for_upload_type(upload_type)
   end
 
   def force_download?

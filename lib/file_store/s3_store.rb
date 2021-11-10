@@ -38,7 +38,11 @@ module FileStore
       url
     end
 
-    def move_existing_stored_upload(existing_external_upload_key, upload, content_type = nil)
+    def move_existing_stored_upload(
+      existing_external_upload_key:,
+      upload: nil,
+      content_type: nil
+    )
       upload.url = nil
       path = get_path_for_upload(upload)
       url, upload.etag = store_file(
