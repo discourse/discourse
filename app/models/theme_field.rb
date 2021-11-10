@@ -216,8 +216,12 @@ class ThemeField < ActiveRecord::Base
     #       this would reduce the size of the payload, without affecting functionality
     data = {}
     fallback_data.each { |hash| data.merge!(hash) }
-    overrides = theme.translation_override_hash.deep_symbolize_keys
-    data.deep_merge!(overrides) if with_overrides
+
+    if with_overrides
+      overrides = theme.translation_override_hash.deep_symbolize_keys
+      data.deep_merge!(overrides)
+    end
+
     data
   end
 

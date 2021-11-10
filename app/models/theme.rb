@@ -50,6 +50,7 @@ class Theme < ActiveRecord::Base
       :locale_fields,
       :user,
       :color_scheme,
+      :theme_translation_overrides,
       theme_fields: :upload
     )
   }
