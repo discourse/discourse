@@ -2,9 +2,14 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 acceptance("Topic - Plugin API - registerTopicFooterButton", function (needs) {
   needs.user();
+
+  needs.hooks.afterEach(() => {
+    clearTopicFooterButtons();
+  });
 
   test("adds topic footer button through API", async function (assert) {
     const done = assert.async();
