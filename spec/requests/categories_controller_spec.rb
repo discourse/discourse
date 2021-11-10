@@ -633,5 +633,23 @@ describe CategoriesController do
       get "/categories_and_latest.json"
       expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
     end
+
+    describe 'Showing top topics from private categories' do
+      it 'returns the top topic from the private category when the user is a member' do
+        restricted_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: restricted_group)
+        private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
+        TopTopic.refresh!
+        restricted_group.add(user)
+        sign_in(user)
+
+        get "/categories_and_top.json"
+        parsed_topic = response.parsed_body.dig('topic_list', 'topics').detect do |t|
+          t.dig('id') == private_topic.id
+        end
+
+        expect(parsed_topic).to be_present
+      end
+    end
   end
 end
