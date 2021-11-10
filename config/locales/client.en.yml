@@ -4162,7 +4162,6 @@ en:
           title: Scopes
           granular: Granular
           read_only: Read-only
-          read_only_description: Restrict API key to read-only endpoints.
           global: Global
           global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
@@ -4172,6 +4171,8 @@ en:
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
+            global:
+              read: Restrict API key to read-only endpoints.
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
