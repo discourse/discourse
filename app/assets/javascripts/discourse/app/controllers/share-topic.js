@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import Sharing from "discourse/lib/sharing";
@@ -20,12 +20,9 @@ export default Controller.extend(
 
     onShow() {
       this.set("showNotifyUsers", false);
-    },
 
-    @observes("topic")
-    _restrictedGroups() {
-      if (this.topic.category && this.topic.category.read_restricted) {
-        Category.reloadBySlugPath(this.topic.category.slug).then((result) => {
+      if (this.model && this.model.read_restricted) {
+        Category.reloadBySlugPath(this.model.slug).then((result) => {
           this.setProperties({
             restrictedGroups: result.category.group_permissions.map(
               (g) => g.group_name
