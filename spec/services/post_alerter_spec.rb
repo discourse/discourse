@@ -343,6 +343,47 @@ describe PostAlerter do
     end
   end
 
+  context '@here' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", topic: topic) }
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does not notify unrelated users' do
+      expect { post }.to change(evil_trout.notifications, :count).by(0)
+    end
+
+    it 'does not work if user here exists' do
+      Fabricate(:user, username: PostAlerter::HERE_MENTION)
+      Fabricate(:topic_allowed_user, topic: topic, user: evil_trout)
+      expect { post }.to change(evil_trout.notifications, :count).by(0)
+    end
+
+    it 'notifies allowed users' do
+      Fabricate(:topic_allowed_user, topic: topic, user: evil_trout)
+      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    end
+
+    it 'notifies allowed groups' do
+      group = Fabricate(:group).tap { |g| g.add(evil_trout) }
+      Fabricate(:topic_allowed_group, topic: topic, group: group)
+      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    end
+
+    it 'notifies users that liked posts' do
+      other_post = Fabricate(:post, topic: topic)
+      PostActionCreator.like(evil_trout, other_post)
+      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    end
+
+    it 'notifies users that read the topic' do
+      Fabricate(:topic_user, topic: topic, user: evil_trout, total_msecs_viewed: 100)
+      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    end
+  end
+
   context '@group mentions' do
 
     fab!(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
