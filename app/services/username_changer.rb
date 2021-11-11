@@ -28,6 +28,8 @@ class UsernameChanger
   end
 
   def change(asynchronous: true, run_update_job: true)
+    return false if @user.username == @new_username
+
     @user.username = @new_username
 
     if @user.save

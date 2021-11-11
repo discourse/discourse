@@ -12,9 +12,10 @@ describe UsernameChanger do
 
     context 'success' do
       let!(:old_username) { user.username }
-      let(:new_username) { "#{user.username}1234" }
 
       it 'should change the username' do
+        new_username = "#{user.username}1234"
+
         events = DiscourseEvent.track_events {
           @result = UsernameChanger.change(user, new_username)
         }.last(2)
@@ -33,6 +34,17 @@ describe UsernameChanger do
         user.reload
         expect(user.username).to eq(new_username)
         expect(user.username_lower).to eq(new_username.downcase)
+      end
+
+      it 'do nothing if the new username is the same' do
+        new_username = user.username
+
+        events = DiscourseEvent.track_events {
+          @result = UsernameChanger.change(user, new_username)
+        }
+
+        expect(@result).to eq(false)
+        expect(events.count).to be_zero
       end
     end
 
