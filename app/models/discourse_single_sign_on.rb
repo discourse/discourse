@@ -323,7 +323,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if SiteSetting.auth_overrides_username? && username.present?
-      UsernameOverrider.override(user, username)
+      UsernameChanger.override(user, username)
     end
 
     if SiteSetting.auth_overrides_name && user.name != name && name.present?
