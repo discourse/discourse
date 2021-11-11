@@ -125,7 +125,7 @@ if SiteSetting.table_exists? && SiteSetting.where(name: ['enable_long_polling', 
   MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
   MessageBus.long_polling_interval = SiteSetting.long_polling_interval
 else
-  MessageBus.long_polling_enabled = GlobalSetting.enable_long_polling || true
+  MessageBus.long_polling_enabled = GlobalSetting.enable_long_polling.nil? ? true : GlobalSetting.enable_long_polling
   MessageBus.long_polling_interval = GlobalSetting.long_polling_interval || 25000
 end
 
