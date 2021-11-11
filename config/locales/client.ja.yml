@@ -2256,6 +2256,7 @@ ja:
         time_frame_required: "時間枠を選択してください"
         min_duration: "期間は 0 より大きくする必要があります"
         max_duration: "期間は 20 年未満である必要があります"
+        duration: "期間"
       auto_update_input:
         none: "時間枠を選択してください"
         now: "今"
@@ -2656,6 +2657,7 @@ ja:
             other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
+        permanently_delete: "永久に削除"
         wiki: "ウィキにする"
         unwiki: "ウィキから削除"
         convert_to_moderator: "スタッフの色を追加"
@@ -3945,12 +3947,8 @@ ja:
               %{example}
 
               プラグインやコアとの競合を避けるには、プロパティ名に接頭辞を付けることを強くお勧めします。
-          head_tag:
-            text: "</head>"
-            title: "</head> タグの前に挿入される HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> タグの前に挿入される HTML"
+            text: "本文"
           yaml:
             text: "YAML"
             title: "YAML 形式でテーマ設定を定義してください"
@@ -4785,7 +4783,6 @@ ja:
           grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
-        help: "みんなが利用できる新しい絵文字を追加します。(ヒント: 複数のファイルを一度にドラッグアンドドロップできます)"
         add: "新しい絵文字を追加"
         uploading: "アップロード中..."
         name: "名前"
@@ -4796,7 +4793,6 @@ ja:
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         confirm_delete: "このホストを削除してもよろしいですか？"
-        sample: "次の HTML コードをサイトに使用して、Discourse のトピックを作成して埋め込みます。<b>REPLACE_ME</b> を埋め込み先の正規 URL に置き換えてください。"
         title: "埋め込み"
         host: "許可されたホスト"
         class_name: "クラス名"

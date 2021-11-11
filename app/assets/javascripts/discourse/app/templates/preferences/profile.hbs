@@ -47,8 +47,11 @@
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n "user.change_profile_background.title"}}</label>
       <div class="controls">
-        {{image-uploader imageUrl=model.profile_background_upload_url
-          type="profile_background"}}
+        {{uppy-image-uploader
+          imageUrl=model.profile_background_upload_url
+          type="profile_background"
+          id="profile-background-uploader"
+        }}
       </div>
       <div class="instructions">
         {{i18n "user.change_profile_background.instructions"}}
@@ -59,15 +62,11 @@
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n "user.change_card_background.title"}}</label>
       <div class="controls">
-        {{#if experimentalUserCardImageUpload}}
-          {{uppy-image-uploader
-            imageUrl=model.card_background_upload_url
-            type="card_background"
-            id="profile-card-background"
-          }}
-        {{else}}
-          {{image-uploader imageUrl=model.card_background_upload_url type="card_background"}}
-        {{/if}}
+        {{uppy-image-uploader
+          imageUrl=model.card_background_upload_url
+          type="card_background"
+          id="profile-card-background-uploader"
+        }}
       </div>
       <div class="instructions">
         {{i18n "user.change_card_background.instructions"}}

@@ -27,7 +27,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await fillIn(".admin-controls .controls input[type=text]", "li");
 
-    assert.equal(
+    assert.strictEqual(
       count(".watched-words-list .watched-word"),
       1,
       "When filtering, show words even if checkbox is unchecked."
@@ -67,7 +67,7 @@ acceptance("Admin - Watched Words", function (needs) {
         found.push(true);
       }
     });
-    assert.equal(found.length, 1);
+    assert.strictEqual(found.length, 1);
   });
 
   test("remove words", async function (assert) {
@@ -84,23 +84,23 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await click(`#${$(word).attr("id")} .delete-word-record`);
 
-    assert.equal(count(".watched-words-list .watched-word"), 2);
+    assert.strictEqual(count(".watched-words-list .watched-word"), 2);
   });
 
   test("test modal - replace", async function (assert) {
     await visit("/admin/customize/watched_words/action/replace");
     await click(".watched-word-test");
     await fillIn(".modal-body textarea", "Hi there!");
-    assert.equal(find(".modal-body li .match").text(), "Hi");
-    assert.equal(find(".modal-body li .replacement").text(), "hello");
+    assert.strictEqual(find(".modal-body li .match").text(), "Hi");
+    assert.strictEqual(find(".modal-body li .replacement").text(), "hello");
   });
 
   test("test modal - tag", async function (assert) {
     await visit("/admin/customize/watched_words/action/tag");
     await click(".watched-word-test");
     await fillIn(".modal-body textarea", "Hello world!");
-    assert.equal(find(".modal-body li .match").text(), "Hello");
-    assert.equal(find(".modal-body li .tag").text(), "greeting");
+    assert.strictEqual(find(".modal-body li .match").text(), "Hello");
+    assert.strictEqual(find(".modal-body li .tag").text(), "greeting");
   });
 });
 
@@ -131,6 +131,6 @@ acceptance("Admin - Watched Words - Bad regular expressions", function (needs) {
 
   test("shows an error message if regex is invalid", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
-    assert.equal(count(".admin-watched-words .alert-error"), 1);
+    assert.strictEqual(count(".admin-watched-words .alert-error"), 1);
   });
 });

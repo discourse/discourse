@@ -312,6 +312,7 @@ en:
     bookmarks:
       created: "You've bookmarked this post. %{name}"
       not_bookmarked: "bookmark this post"
+      remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
@@ -1218,7 +1219,7 @@ en:
         tags: "Tags"
         warnings: "Official Warnings"
         read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
-        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/message'>personal messages</a>."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages'>personal messages</a>."
 
         read_more_group_pm_MF: "There {
           UNREAD, plural,
@@ -1248,7 +1249,7 @@ en:
           =0 {}
           one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
           other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
-          } remaining, or browse other <a href='{basePath}/u/{username}/message'>personal messages</a>"
+          } remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
@@ -2233,6 +2234,9 @@ en:
       reload: "Reload"
       ignore: "Ignore"
 
+      image_alt_text:
+        aria_label: Alt text for image
+
     notifications:
       tooltip:
         regular:
@@ -2365,6 +2369,7 @@ en:
       tags: "Tags"
       in: "in"
       in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
@@ -3936,6 +3941,9 @@ en:
 
     no_group_messages_title: "No group messages found"
 
+    fullscreen_table:
+      expand_btn: "Expand Table"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -4136,6 +4144,7 @@ en:
         no_description: (no description)
         all_api_keys: All API Keys
         user_mode: User Level
+        scope_mode: Scope
         impersonate_all_users: Impersonate any user
         single_user: "Single User"
         user_placeholder: Enter username
@@ -4146,12 +4155,15 @@ en:
         delete: Permanently Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
-        use_global_key: Global Key (allows all actions)
         scopes:
           description: |
             When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
+          granular: Granular
+          read_only: Read-only
+          global: Global
+          global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
@@ -4159,6 +4171,8 @@ en:
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
+            global:
+              read: Restrict API key to read-only endpoints.
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
@@ -4550,11 +4564,11 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "</head>"
-            title: "HTML that will be inserted before the </head> tag"
+            text: "Head"
+            title: "HTML that will be inserted before the head tag"
           body_tag:
-            text: "</body>"
-            title: "HTML that will be inserted before the </body> tag"
+            text: "Body"
+            title: "HTML that will be inserted before the body tag"
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"
@@ -5432,7 +5446,7 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
         add: "Add New Emoji"
         uploading: "Uploading..."
         name: "Name"
@@ -5444,7 +5458,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"

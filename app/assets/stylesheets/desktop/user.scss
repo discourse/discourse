@@ -272,6 +272,11 @@ table.user-invite-list {
   .show-mores {
     position: absolute;
   }
+
+  #reply-control .mini-tag-chooser {
+    width: 100%;
+    margin: 0;
+  }
 }
 
 .user-messages {

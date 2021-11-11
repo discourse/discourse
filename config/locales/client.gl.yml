@@ -2265,6 +2265,7 @@ gl:
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
+        duration: "Duración"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2673,6 +2674,7 @@ gl:
             other: "Si, e as %{count} respostas"
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
+        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -3968,12 +3970,8 @@ gl:
               }
 
               Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
-          head_tag:
-            text: "</head>"
-            title: "HTML que se inserirá antes da etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que se inserirá antes da etiqueta </body>"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
@@ -4782,7 +4780,6 @@ gl:
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"
-        help: "Engada un novo emoji que estará dispoñíbel para todos. (Suxestión: arrastre e solte múltiples ficheiros dunha vez)"
         add: "Engadir novo emoji"
         uploading: "Cargando..."
         name: "Nome"
@@ -4793,7 +4790,6 @@ gl:
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         confirm_delete: "Confirma a eliminación deste servidor?"
-        sample: "Utilice o seguinte código HTML no seu sitio para crear e incorporar temas do Discourse. Substitúa <b>REPLACE_ME</b> polo URL canónico da páxina na que o está a incorporar."
         title: "Incorporando"
         host: "Servidores permitidos"
         class_name: "Nome da clase"

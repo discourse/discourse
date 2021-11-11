@@ -44,7 +44,7 @@ export default RestModel.extend({
   },
 
   groupFinder(term) {
-    return Group.findAll({ term: term, ignore_automatic: false });
+    return Group.findAll({ term, ignore_automatic: false });
   },
 
   @discourseComputed("wildcard_web_hook", "web_hook_event_types.[]")

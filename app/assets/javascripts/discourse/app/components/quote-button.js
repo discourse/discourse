@@ -37,7 +37,9 @@ function getQuoteTitle(element) {
 }
 
 function fixQuotes(str) {
-  return str.replace(/„|“|«|»|”/g, '"').replace(/‘|’/g, "'");
+  // u+201c “
+  // u+201d ”
+  return str.replace(/[\u201C\u201D]/g, '"');
 }
 
 function regexSafeStr(str) {

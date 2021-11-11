@@ -76,7 +76,7 @@ acceptance("Poll breakdown", function (needs) {
 
     assert.ok(exists(".poll-breakdown-total-votes"), "displays the vote count");
 
-    assert.equal(
+    assert.strictEqual(
       count(".poll-breakdown-chart-container"),
       2,
       "renders a chart for each of the groups in group_results response"
@@ -92,7 +92,7 @@ acceptance("Poll breakdown", function (needs) {
     await visit("/t/-/topic_with_pie_chart_poll");
     await click(".poll-show-breakdown");
 
-    assert.equal(
+    assert.strictEqual(
       query(".poll-breakdown-option-count").textContent.trim(),
       "40.0%",
       "displays the correct vote percentage"
@@ -100,7 +100,7 @@ acceptance("Poll breakdown", function (needs) {
 
     await click(".modal-tabs .count");
 
-    assert.equal(
+    assert.strictEqual(
       query(".poll-breakdown-option-count").textContent.trim(),
       "2",
       "displays the correct vote count"
@@ -108,7 +108,7 @@ acceptance("Poll breakdown", function (needs) {
 
     await click(".modal-tabs .percentage");
 
-    assert.equal(
+    assert.strictEqual(
       query(".poll-breakdown-option-count").textContent.trim(),
       "40.0%",
       "displays the percentage again"

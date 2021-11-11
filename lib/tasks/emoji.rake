@@ -284,7 +284,7 @@ desc "update emoji images"
 task "emoji:update" do
   copy_emoji_db
 
-  json_db = open(File.join(GENERATED_PATH, "db.json")).read
+  json_db = File.read(File.join(GENERATED_PATH, "db.json"))
   db = JSON.parse(json_db)
 
   write_db_json(db["emojis"], db["translations"])
@@ -352,7 +352,7 @@ end
 def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
-  list = open(EMOJI_ORDERING_URL).read
+  list = URI.parse(EMOJI_ORDERING_URL).read
   doc = Nokogiri::HTML5(list)
   table = doc.css("table")[0]
 

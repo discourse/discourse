@@ -79,6 +79,7 @@ export default Component.extend({
       additionalOptionsToShow: this.additionalOptionsToShow || [],
       hiddenOptions: this.hiddenOptions || [],
       customOptions: this.customOptions || [],
+      customLabels: this.customLabels || {},
     });
 
     if (this.prefilledDatetime) {
@@ -170,9 +171,16 @@ export default Component.extend({
     "additionalOptionsToShow",
     "hiddenOptions",
     "customOptions",
+    "customLabels",
     "userTimezone"
   )
-  options(additionalOptionsToShow, hiddenOptions, customOptions, userTimezone) {
+  options(
+    additionalOptionsToShow,
+    hiddenOptions,
+    customOptions,
+    customLabels,
+    userTimezone
+  ) {
     this._loadLastUsedCustomDatetime();
 
     let options = defaultShortcutOptions(userTimezone);
@@ -225,6 +233,12 @@ export default Component.extend({
         }
       });
     }
+
+    options.forEach((option) => {
+      if (customLabels[option.id]) {
+        option.label = customLabels[option.id];
+      }
+    });
 
     return options;
   },

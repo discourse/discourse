@@ -68,10 +68,6 @@ export default Controller.extend({
     "model.can_upload_user_card_background"
   ),
 
-  experimentalUserCardImageUpload: readOnly(
-    "siteSettings.enable_experimental_image_uploader"
-  ),
-
   actions: {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {

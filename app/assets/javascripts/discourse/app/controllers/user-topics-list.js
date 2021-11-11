@@ -60,7 +60,7 @@ export default Controller.extend(BulkTopicSelection, {
 
     const opts = {
       inbox: this.inbox,
-      topicIds: topicIds,
+      topicIds,
     };
 
     if (this.group) {

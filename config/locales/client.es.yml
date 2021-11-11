@@ -283,6 +283,7 @@ es:
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "guarda esta publicación en marcadores"
+      remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Eliminar marcador"
@@ -2157,7 +2158,9 @@ es:
       tags: "Etiquetas"
       in: "en"
       in_this_topic: "en este tema"
+      in_this_topic_tooltip: "cambiar a buscar en todos los temas"
       in_topics_posts: "en todos los temas y publicaciones"
+      enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
       type:
         default: "Temas/respuestas"
@@ -2171,6 +2174,10 @@ es:
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
       tips:
+        category_tag: "filtra por categoría o etiqueta"
+        author: "filtra por el autor de la publicación"
+        in: "filtra según los metadatos (por ejemplo, in:title, in:personal, in:pinned)"
+        status: "filtra por el estado del tema"
         full_search: "lanza la página de búsqueda"
         full_search_key: "%{modifier} + Intro"
       advanced:
@@ -2179,7 +2186,7 @@ es:
           label: Publicado por
           aria_label: Filtrar por autor
         in_category:
-          label: Categorizado
+          label: Categoría
         in_group:
           label: En el grupo
         with_badge:
@@ -2413,6 +2420,7 @@ es:
         time_frame_required: "Selecciona un intervalo de tiempo"
         min_duration: "La duración debe ser mayor que 0"
         max_duration: "La duración debe ser inferior a 20 años"
+        duration: "Duración"
       auto_update_input:
         none: "Selecciona el plazo"
         now: "Ahora"
@@ -2747,7 +2755,9 @@ es:
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post:
       quote_reply: "Citar"
+      quote_reply_shortcut: "O pulsa q"
       quote_edit: "Editar"
+      quote_edit_shortcut: "O pulsa e"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"
@@ -2840,6 +2850,8 @@ es:
             other: "Sí, y todas las %{count} respuestas"
           just_the_post: "No, solo esta publicación"
         admin: "acciones de administrador para la publicación"
+        permanently_delete: "Eliminar permanentemente"
+        permanently_delete_confirmation: "¿Seguro que quieres eliminar para siempre esta publicación? No podrás recuperarla."
         wiki: "Transformar en formato wiki"
         unwiki: "Deshacer formato wiki"
         convert_to_moderator: "Añadir color del personal"
@@ -3437,6 +3449,7 @@ es:
       remember_explanation: "(puedes cambiar esto en tus preferencias)"
       download: "Descargar"
       default_calendar: "Calendario por defecto"
+      default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
       ics: "ICS"
@@ -3606,6 +3619,8 @@ es:
       no_read_topics_title: "Todavía no has leído ningún tema"
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
+    fullscreen_table:
+      expand_btn: "Expandir tabla"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -4204,11 +4219,9 @@ es:
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
           head_tag:
-            text: "</head>"
-            title: "HTML a insertar antes de la etiqueta </head>"
+            text: "Cabecera"
           body_tag:
-            text: "</body>"
-            title: "HTML a insertar antes de la etiqueta </body>"
+            text: "Cuerpo"
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
@@ -5060,7 +5073,6 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"
@@ -5071,7 +5083,6 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde lo quieres incrustar."
         title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"

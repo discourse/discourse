@@ -284,13 +284,15 @@ const TopicTrackingState = EmberObject.extend({
   trackIncoming(filter) {
     this.newIncoming = [];
 
-    const split = filter.split("/");
-    if (split.length >= 4) {
-      filter = split[split.length - 1];
-      let category = Category.findSingleBySlug(
-        split.splice(1, split.length - 4).join("/")
-      );
+    if (filter.startsWith("c/")) {
+      const categoryId = filter.match(/\/(\d*)\//);
+      const category = Category.findById(parseInt(categoryId[1], 10));
       this.set("filterCategory", category);
+
+      const split = filter.split("/");
+      if (split.length >= 4) {
+        filter = split[split.length - 1];
+      }
     } else {
       this.set("filterCategory", null);
     }

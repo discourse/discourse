@@ -267,11 +267,11 @@ basic:
     client: true
     default: true
     hidden: true
-  enable_experimental_image_uploader:
+  enable_experimental_composer_uploader:
     client: true
     default: false
     hidden: true
-  enable_experimental_composer_uploader:
+  enable_experimental_backup_uploader:
     client: true
     default: false
     hidden: true
@@ -453,19 +453,24 @@ login:
     client: true
   auth_immediately:
     default: true
+  auth_overrides_email:
+    default: false
+    validator: "SsoOverridesEmailValidator"
+    client: true
+  auth_overrides_username: false
+  auth_overrides_name: false
   enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
   discourse_connect_allows_all_return_paths: false
-  enable_discourse_connect_provider: false
   verbose_discourse_connect_logging: false
   verbose_upload_logging:
     hidden: true
     default: false
   verbose_auth_token_logging:
     hidden: true
-    default: true
+    default: false
   max_suspicious_distance_km:
     hidden: true
     default: 500
@@ -475,22 +480,8 @@ login:
   discourse_connect_secret:
     default: ""
     secret: true
-  discourse_connect_provider_secrets:
-    default: ""
-    type: list
-    list_type: secret
-    secret: true
-    placeholder:
-      key: "sso_provider.key_placeholder"
-      value: "sso_provider.value_placeholder"
   discourse_connect_overrides_groups: false
   discourse_connect_overrides_bio: false
-  auth_overrides_email:
-    default: false
-    validator: "SsoOverridesEmailValidator"
-    client: true
-  auth_overrides_username: false
-  auth_overrides_name: false
   discourse_connect_overrides_avatar:
     default: false
     client: true
@@ -502,6 +493,15 @@ login:
   discourse_connect_csrf_protection:
     default: true
     hidden: true
+  enable_discourse_connect_provider: false
+  discourse_connect_provider_secrets:
+    default: ""
+    type: list
+    list_type: secret
+    secret: true
+    placeholder:
+      key: "sso_provider.key_placeholder"
+      value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
     type: list
@@ -685,6 +685,9 @@ users:
   max_bookmarks_per_user:
     default: 2000
     hidden: true
+  use_email_for_username_and_name_suggestions:
+    hidden: true
+    default: false
 
 groups:
   enable_group_directory:
@@ -1290,8 +1293,6 @@ files:
     default: "1|1.5|2"
     type: list
     list_type: compact
-  crawl_images:
-    default: true
   max_image_width:
     client: true
     default: 690
@@ -1636,7 +1637,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com"
     type: list
     list_type: simple
     client: true
@@ -1679,6 +1680,7 @@ security:
     hidden: true
   can_permanently_delete:
     default: false
+    client: true
     hidden: true
 
 onebox:
@@ -2209,6 +2211,12 @@ uncategorized:
     default: false
 
   disable_system_edit_notifications: true
+
+  disable_category_edit_notifications:
+    default: false
+
+  disable_tags_edit_notifications:
+    default: false
 
   notification_consolidation_threshold:
     default: 3

@@ -37,7 +37,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (attrs.canPermanentlyDelete || attrs.canPermanentlyDeleteTopic) {
+  if (attrs.canPermanentlyDelete) {
     contents.push({
       icon: "trash-alt",
       className: "popup-menu-button permanently-delete",

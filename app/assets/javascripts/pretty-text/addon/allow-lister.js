@@ -139,6 +139,7 @@ export const DEFAULT_LIST = [
   `a.inline-onebox`,
   `a.inline-onebox-loading`,
   "a[data-bbcode]",
+  "a[data-word]",
   "a[name]",
   "a[rel=nofollow]",
   "a[rel=ugc]",

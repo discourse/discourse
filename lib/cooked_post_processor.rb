@@ -296,9 +296,6 @@ class CookedPostProcessor
 
     return unless is_valid_image_url?(absolute_url)
 
-    # we can *always* crawl our own images
-    return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
-
     @size_cache[url] = FastImage.size(absolute_url)
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.

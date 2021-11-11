@@ -21,7 +21,28 @@ $search-pad-horizontal: 0.5em;
 
   .search-input {
     position: relative;
-    padding: $search-pad-vertical 0.1em;
+    margin: 1px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--primary-medium);
+    input#search-term {
+      border-width: 0;
+      margin-bottom: 0;
+      width: auto;
+      flex-grow: 1;
+      padding-right: 50px;
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .btn.search-context {
+      margin: 2px;
+      margin-right: 0;
+    }
+    &:focus-within {
+      @include default-focus;
+    }
   }
 
   .heading {
@@ -32,8 +53,7 @@ $search-pad-horizontal: 0.5em;
   }
 
   input[type="text"] {
-    width: 100%;
-    margin-bottom: 0;
+    margin-right: 0px;
   }
 
   .results {
@@ -242,7 +262,7 @@ $search-pad-horizontal: 0.5em;
 
   .searching {
     position: absolute;
-    top: $search-pad-vertical + 0.4em;
+    top: $search-pad-vertical + 0.2em;
     right: $search-pad-horizontal;
     min-height: 20px;
 

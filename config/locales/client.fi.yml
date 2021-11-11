@@ -2349,6 +2349,7 @@ fi:
         time_frame_required: "Valitse ajanjakso"
         min_duration: "Keston on oltava suurempi kuin 0"
         max_duration: "Keston on oltava alle 20 vuotta"
+        duration: "Kesto"
       auto_update_input:
         none: "Valitse ajanjakso"
         now: "Nyt"
@@ -2772,6 +2773,7 @@ fi:
             other: "Kyllä, ja kaikki %{count} vastausta"
           just_the_post: "Ei, vain tämä viesti"
         admin: "viestin ylläpitotoimet"
+        permanently_delete: "Poista pysyvästi"
         wiki: "Tee wiki"
         unwiki: "Poista wiki"
         convert_to_moderator: "Lisää henkilökunnan taustaväri"
@@ -4096,12 +4098,8 @@ fi:
               %{example}
 
               Etuliitteen lisääminen CSS-kuvauksiin on erittäin suositeltavaa, jotta vältät ristiriidat lisäosien tai ydinsovelluksen kanssa.
-          head_tag:
-            text: "</head>"
-            title: "HTML, joka sijoitetaan ennen </head>-tunnistetta"
           body_tag:
-            text: "</body>"
-            title: "HTML, joka sijoitetaan ennen </body>-tunnistetta"
+            text: "Leipäteksti"
           yaml:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"
@@ -4936,7 +4934,6 @@ fi:
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
       emoji:
         title: "Emoji"
-        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. (Vinkki: voit vetää ja pudottaa useita tiedostoja kerralla)"
         add: "Lisää uusi emoji"
         uploading: "Ladataan..."
         name: "Nimi"
@@ -4947,7 +4944,6 @@ fi:
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Käytä alla olevaa HTML-koodia sivustollasi, jotta voit luoda ja upottaa discourse-ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sen sivun kanonisella URL-osoitteella, jolle upotat."
         title: "Upottaminen"
         host: "Sallitut isännät"
         class_name: "Luokan nimi"

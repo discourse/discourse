@@ -397,7 +397,7 @@ class Guardian
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin? && !SiteSetting.enable_discourse_connect
+    user.admin?
   end
 
   def can_resend_all_invites?(user)
@@ -494,7 +494,7 @@ class Guardian
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
-    if allowed_theme_ids = GlobalSetting.allowed_theme_ids
+    if allowed_theme_ids = Theme.allowed_remote_theme_ids
       if (theme_ids - allowed_theme_ids).present?
         return false
       end

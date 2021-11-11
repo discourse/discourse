@@ -224,22 +224,15 @@ class UploadsController < ApplicationController
       )
     end
 
-    metadata = parse_allowed_metadata(params[:metadata])
-
-    url = Discourse.store.signed_url_for_temporary_upload(
-      file_name, metadata: metadata
-    )
-    key = Discourse.store.path_from_url(url)
-
-    upload_stub = ExternalUploadStub.create!(
-      key: key,
-      created_by: current_user,
-      original_filename: file_name,
+    external_upload_data = ExternalUploadManager.create_direct_upload(
+      current_user: current_user,
+      file_name: file_name,
+      file_size: file_size,
       upload_type: type,
-      filesize: file_size
+      metadata: parse_allowed_metadata(params[:metadata])
     )
 
-    render json: { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+    render json: external_upload_data
   end
 
   def complete_external_upload
@@ -253,13 +246,21 @@ class UploadsController < ApplicationController
   end
 
   def complete_external_upload_via_manager(external_upload_stub)
-    external_upload_manager = ExternalUploadManager.new(external_upload_stub)
+    opts = {
+      for_private_message: params[:for_private_message]&.to_s == "true",
+      for_site_setting: params[:for_site_setting]&.to_s == "true",
+      pasted: params[:pasted]&.to_s == "true",
+    }
+
+    external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)
     hijack do
       begin
-        upload = external_upload_manager.promote_to_upload!
+        upload = external_upload_manager.transform!
+
         if upload.errors.empty?
+          response_serialized = external_upload_stub.upload_type != "backup" ? UploadsController.serialize_upload(upload) : {}
           external_upload_stub.destroy!
-          render json: UploadsController.serialize_upload(upload), status: 200
+          render json: response_serialized, status: 200
         else
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end
@@ -301,43 +302,43 @@ class UploadsController < ApplicationController
     file_name = params.require(:file_name)
     file_size = params.require(:file_size).to_i
     upload_type = params.require(:upload_type)
-    content_type = MiniMime.lookup_by_filename(file_name)&.content_type
 
-    if file_size_too_big?(file_name, file_size)
-      return render_json_error(
-        I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
-        status: 422
-      )
+    if upload_type == "backup"
+      ensure_staff
+      return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_backup_extension?(file_name)
+      return render_json_error(I18n.t("backup.invalid_filename")) unless valid_backup_filename?(file_name)
+    else
+      if file_size_too_big?(file_name, file_size)
+        return render_json_error(
+          I18n.t("upload.attachments.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)),
+          status: 422
+        )
+      end
     end
 
-    metadata = parse_allowed_metadata(params[:metadata])
-
     begin
-      multipart_upload = Discourse.store.create_multipart(
-        file_name, content_type, metadata: metadata
+      external_upload_data = ExternalUploadManager.create_direct_multipart_upload(
+        current_user: current_user,
+        file_name: file_name,
+        file_size: file_size,
+        upload_type: upload_type,
+        metadata: parse_allowed_metadata(params[:metadata])
       )
     rescue Aws::S3::Errors::ServiceError => err
       return render_json_error(
         debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
         status: 422
       )
+    rescue BackupRestore::BackupStore::BackupFileExists
+      return render_json_error(I18n.t("backup.file_exists"), status: 422)
+    rescue BackupRestore::BackupStore::StorageError => err
+      return render_json_error(
+        debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
+        status: 422
+      )
     end
 
-    upload_stub = ExternalUploadStub.create!(
-      key: multipart_upload[:key],
-      created_by: current_user,
-      original_filename: file_name,
-      upload_type: upload_type,
-      external_upload_identifier: multipart_upload[:upload_id],
-      multipart: true,
-      filesize: file_size
-    )
-
-    render json: {
-      external_upload_identifier: upload_stub.external_upload_identifier,
-      key: upload_stub.key,
-      unique_identifier: upload_stub.unique_identifier
-    }
+    render json: external_upload_data
   end
 
   def batch_presign_multipart_parts
@@ -361,9 +362,11 @@ class UploadsController < ApplicationController
       return render_404
     end
 
+    store = multipart_store(external_upload_stub.upload_type)
+
     presigned_urls = {}
     part_numbers.each do |part_number|
-      presigned_urls[part_number] = Discourse.store.presign_multipart_part(
+      presigned_urls[part_number] = store.presign_multipart_part(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         part_number: part_number
@@ -384,9 +387,12 @@ class UploadsController < ApplicationController
   end
 
   def multipart_upload_exists?(external_upload_stub)
+    store = multipart_store(external_upload_stub.upload_type)
     begin
-      Discourse.store.list_multipart_parts(
-        upload_id: external_upload_stub.external_upload_identifier, key: external_upload_stub.key
+      store.list_multipart_parts(
+        upload_id: external_upload_stub.external_upload_identifier,
+        key: external_upload_stub.key,
+        max_parts: 1
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
       debug_upload_error(err, "upload.external_upload_not_found", { additional_detail: "path: #{external_upload_stub.key}" })
@@ -407,9 +413,10 @@ class UploadsController < ApplicationController
     return render json: success_json if external_upload_stub.blank?
 
     return render_404 if external_upload_stub.created_by_id != current_user.id
+    store = multipart_store(external_upload_stub.upload_type)
 
     begin
-      Discourse.store.abort_multipart(
+      store.abort_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key
       )
@@ -442,6 +449,7 @@ class UploadsController < ApplicationController
       return render_404
     end
 
+    store = multipart_store(external_upload_stub.upload_type)
     parts = parts.map do |part|
       part_number = part[:part_number]
       etag = part[:etag]
@@ -459,7 +467,7 @@ class UploadsController < ApplicationController
     end
 
     begin
-      complete_response = Discourse.store.complete_multipart(
+      complete_response = store.complete_multipart(
         upload_id: external_upload_stub.external_upload_identifier,
         key: external_upload_stub.key,
         parts: parts
@@ -475,6 +483,11 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def multipart_store(upload_type)
+    ensure_staff if upload_type == "backup"
+    ExternalUploadManager.store_for_upload_type(upload_type)
+  end
 
   def force_download?
     params[:dl] == "1"
@@ -596,5 +609,13 @@ class UploadsController < ApplicationController
   def parse_allowed_metadata(metadata)
     return if metadata.blank?
     metadata.permit("sha1-checksum").to_h
+  end
+
+  def valid_backup_extension?(filename)
+    /\.(tar\.gz|t?gz)$/i =~ filename
+  end
+
+  def valid_backup_filename?(filename)
+    !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
   end
 end

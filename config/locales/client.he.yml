@@ -335,6 +335,7 @@ he:
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
+      remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       remove: "הסרה מהסימניות"
       delete: "מחיקת סימנייה"
@@ -1095,15 +1096,15 @@ he:
       notifications: "התראות"
       statistics: "סטטיסטיקות"
       desktop_notifications:
-        label: "התראות"
+        label: "התראות חיות"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
         perm_default: "הפעלת התראות"
         perm_denied_btn: "הרשאות נדחו"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
-        disable: "כבוי התראות"
-        enable: "אפשר התראות"
+        disable: "השבתת התראות"
+        enable: "הפעלת התראות"
         each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שבו אתה משתמש. כל ההודעות יושבתו במצב "אל תפריע", ללא קשר להגדרה זו.'
-        consent_prompt: "האם ברצונך לקבל התראות כשאנשים מגיבים לפוסטים שלך?"
+        consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "דחה"
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
@@ -1181,7 +1182,7 @@ he:
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
-      muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
+      muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר שנוגע לנושאים בקטגוריות האלו."
       regular_categories: "רגילות"
       regular_categories_instructions: "הקטגוריות האלו תופענה תחת רשימות הנושאים „אחרונים” ו־„מובילים”."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מושבתת."
@@ -1243,7 +1244,7 @@ he:
         tags: "תגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
-        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/message'>הודעות הפרטיות</a>."
+        read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -1403,7 +1404,7 @@ he:
           other: "נשלח לך הודעה בדוא״ל רק אם לא הופעת ב־%{count} הדקות האחרונות."
       associated_accounts:
         title: "חשבונות מקושרים"
-        connect: "התחבר"
+        connect: "התחברות"
         revoke: "בטל"
         cancel: "ביטול"
         not_connected: "(לא מחובר)"
@@ -1870,7 +1871,7 @@ he:
       awaiting_activation: "החשבון שלך ממתין להפעלה, נא להשתמש בקישור „שכחתי ססמה” כדי לשלוח הודעת הפעלה נוספת."
       awaiting_approval: "החשבון שלך טרם אושר על ידי חבר סגל. תישלח אליך הודעה בדוא״ל כשהוא יאושר."
       requires_invite: "סליחה, גישה לפורום הזה היא בהזמנה בלבד."
-      not_activated: "אינך יכול להתחבר עדיין. שלחנו לך דואר אלקטרוני להפעלת החשבון לכתובת: <b>%{sentTo}</b>. יש לעקוב אחר ההוראות בדואר כדי להפעיל את החשבון."
+      not_activated: "עוד אין לך אפשרות להיכנס. שלחנו אליך הודעת הפעלה בדוא״ל אל <b>%{sentTo}</b>. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
       not_allowed_from_ip_address: "הכניסה מכתובת IP זו אסורה."
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
@@ -2181,6 +2182,8 @@ he:
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
       reload: "רענון"
       ignore: "התעלמות"
+      image_alt_text:
+        aria_label: כיתוב חלופי לתמונה
     notifications:
       tooltip:
         regular:
@@ -2324,7 +2327,9 @@ he:
       tags: "תגיות"
       in: "בתוך"
       in_this_topic: "בנושא הזה"
+      in_this_topic_tooltip: "מעבר לחיפוש בכל הנושאים"
       in_topics_posts: "בכל הנושאים והפוסטים"
+      enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
       type:
         default: "נושאים/פוסטים"
@@ -2590,6 +2595,7 @@ he:
         time_frame_required: "נא לבחור מסגרת זמנים"
         min_duration: "משך הזמן חייב להיות גדול מ־0"
         max_duration: "משך הזמן חייב להיות פחות מ־20 שנה"
+        duration: "משך"
       auto_update_input:
         none: "נא לבחור טווח זמן"
         now: "כעת"
@@ -3067,6 +3073,8 @@ he:
             other: "כן, וכל %{count}התגובות."
           just_the_post: "לא, רק את הפוסט"
         admin: "פעולות ניהול של הפוסט"
+        permanently_delete: "למחוק לצמיתות"
+        permanently_delete_confirmation: "למחוק את הפוסט הזה לצמיתות? לא תהיה אפשרות לשחזר אותו."
         wiki: "יצירת wiki"
         unwiki: "הסרת ה-Wiki"
         convert_to_moderator: "הוספת צבע סגל"
@@ -3888,11 +3896,14 @@ he:
       no_replies_title: "עדיין לא הגבת לאף נושא"
       no_replies_others: "אין תגובות."
       no_drafts_title: "לא התחלת טיוטות"
+      no_drafts_body: "לא סיימת לכתוב את הפוסט? אנו נשמור טיוטה חדשה אוטומטית ונציג אותה כאן עם כל כתיבה של נושא, תגובה או הודעה פרטית חדשים. יש לבחור בכפתור הביטול כדי להתעלם או לשמור את הטיוטה שלך ולהמשיך אחר כך."
       no_likes_title: "עדיין לא סימנת אף נושא בלייק"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
       no_read_topics_title: "טרם קראת נושאים"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
+    fullscreen_table:
+      expand_btn: "הרחבת טבלה"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4503,11 +4514,11 @@ he:
 
               מומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה.
           head_tag:
-            text: "</‎head>"
-            title: "HTML שיוכנס לפני התג </‎head>"
+            text: "Head"
+            title: "HTML שיתווסף לפני התגית ‎head"
           body_tag:
-            text: "</‎body>"
-            title: "HTML שיוכנס לפני התג </‎body>"
+            text: "Body"
+            title: "HTML שיתווסף לפני התגית body"
           yaml:
             text: "YAML"
             title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"
@@ -5368,7 +5379,7 @@ he:
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:
         title: "אמוג׳י"
-        help: "הוספת אמוג׳י חדשים שיהיו זמינים לכולם. (עצה למקצוענים: עדיף לגרור לכאן כמה קבצים בבת אחת)"
+        help: "הוספת אמוג׳י חדש שיהיה זמין לכולם. אפשר לגרור ולשחרר לכאן מגוון קבצים בבת אחת ללא מילוי שם ליצירת אמוג׳ים לפי שמות הקבצים שלהם."
         add: "הוספת אמוג׳י חדש"
         uploading: "בהליכי העלאה..."
         name: "שם"
@@ -5379,7 +5390,7 @@ he:
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
-        sample: "יש להשתמש בקוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. עליך להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
+        sample: "יש להדביק את קוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. עליך להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
         class_name: "שם מחלקה"

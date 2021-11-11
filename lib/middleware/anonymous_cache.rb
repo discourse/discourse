@@ -29,7 +29,7 @@ module Middleware
         method << "|#{k}=#\{h.#{v}}"
       end
       method << "\"\nend"
-      eval(method)
+      eval(method) # rubocop:disable Security/Eval
       @@compiled = true
     end
 

@@ -239,7 +239,6 @@ ko:
   topic_invite:
     failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면이 주제에 사용자를 초대 할 수 없습니다."
     user_exists: "해당 사용자는 이미 초대를 받았습니다. 토픽 초대는 딱 한번만 할 수 있습니다."
-    muted_invitee: "죄송합니다. 해당 사용자는 사용자님을 관심없음으로 설정했습니다."
     muted_topic: "죄송합니다. 해당 사용자는 이 글을 관심없음으로 설정했습니다."
     receiver_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
     sender_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
@@ -636,6 +635,9 @@ ko:
       broken: "이미지를 표시할수없음"
     has_likes:
       other: "좋아요 %{count}"
+    cannot_permanently_delete:
+      many_posts: "다른 댓글이 있어 이 글을 영구적으로 삭제할 수 없습니다."
+      wait_or_different_admin: "이 게시물을 영구적으로 삭제하려면 %{time_left}을 기다리거나 다른 관리자가 삭제해야 합니다."
   rate_limiter:
     slow_down: "이 작업을 너무 많이 수행했습니다, 나중에 다시 시도하십시오."
     too_many_requests: "이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
@@ -1402,7 +1404,7 @@ ko:
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     summary_max_results: "&#39;이 주제 요약&#39;에서 반환 한 최대 게시물"
     summary_timeline_button: "타임라인에 '요약' 버튼 표시"
-    enable_personal_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
+    enable_personal_messages: "회원레벨1 사용자가 메시지를 작성하고 메시지에 답장할 수 있도록 허용합니다. 관리자는 언제든지 메시지를 보낼 수 있습니다."
     enable_system_message_replies: "개인 메시지가 비활성화 된 경우에도 사용자가 시스템 메시지에 회신 할 수 있습니다"
     enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "서버에서 청크 분할 인코딩 응답을 활성화합니다. 이 기능은 대부분의 설정에서 작동하지만 일부 프록시는 버퍼링되어 응답이 지연될 수 있습니다."
@@ -1729,7 +1731,6 @@ ko:
     topic_view_duration_hours: "N 시간마다 IP/User 별로 새 토픽 조회수를 셉니다."
     user_profile_view_duration_hours: "N 시간마다 IP/User 별로 새 프로필 조회수를 셉니다."
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
-    max_new_accounts_per_registration_ip: "(n) 회원등급의 0개의 계정(스태프도 tl2 이상도 아닌 계정만)이 이 IP에 있으면, 새로운 회원가입 방지."
     min_ban_entries_for_roll_up: "Roll up 버튼을 눌렀을 때, 적어도 (N)개의 엔트리가 있다면 새 subnet ban 엔트리를 만듭니다."
     max_age_unmatched_emails: "(N)일 뒤에 안 맞는 막힌 이메일 접근을 지웁니다."
     max_age_unmatched_ips: "(N)일 뒤에 안 맞는 막힌 IP 접근을 지웁니다."
@@ -1862,6 +1863,7 @@ ko:
     permalink_normalizations: "퍼마링크를 매칭하기 전에 다음 정규표현식을 적용. 예: /(topic.*)\\?.*/\\1 를 적용하면 토픽 루트에서 퀴리 스트링을 뽑아냅니다. 캡쳐된 값에 접근하려면 정규표현식+스트링 형식에 \\1 등을 사용하면 됩니다."
     global_notice: "모든 방문자에게 긴급, 긴급, 무시할 수없는 글로벌 배너 통지를 표시하고 숨기려면 공백으로 변경하십시오 (HTML 허용)."
     disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
+    disable_category_edit_notifications: "글의 카테고리 편집 알림을 비활성화합니다."
     notification_consolidation_threshold: "알림이 단일 알림으로 통합되기 전에 수신 된 좋아요 또는 회원 요청 알림 수 비활성화하려면 0으로 설정하십시오."
     likes_notification_consolidation_window_mins: "임계 값에 도달하면 선호 알림이 단일 알림으로 통합되는 시간 (분)입니다. 임계 값은`SiteSetting.notification_consolidation_threshold`를 통해 구성 할 수 있습니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
@@ -2410,6 +2412,17 @@ ko:
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"
+    text_body_template: |
+      [Discourse](https://www.discourse.org)의 새로운 버전이 출시되었습니다!
+
+      사용자의 현재 버전: %{installed_version}
+      새 버전: **%{new_version}**
+
+      - 간편한 **[원클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**
+
+      - [릴리스 노트]( https://meta.discourse.org/tag/release-notes) 또는 [GitHub 변경 로그](https://github.com/discourse/discourse/commits/main) 보기
+
+      - [meta.discourse.org](https:// meta.discourse.org)를 방문해 뉴스, 토론 및 Discourse 지원 확인
   new_version_mailer_with_notes:
     title: "노트가있는 새로운 버전 메일러"
     subject_template: "[%{email_prefix}] 업데이트 가능"
@@ -3770,6 +3783,7 @@ ko:
     mass_award:
       errors:
         invalid_csv: 라인 %{line_number}에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하십시오.
+        too_many_csv_entries: CSV 파일에 항목이 너무 많습니다. 항목이 %{count}개 이하인 CSV 파일을 제공하십시오.
         badge_disabled: 먼저 %{badge_name} 배지를 활성화하십시오.
         cant_grant_multiple_times: 단일 사용자에게 %{badge_name} 배지를 여러 번 부여할 수 없습니다.
     editor:
@@ -4092,10 +4106,8 @@ ko:
             label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
-            label: "당신의 커뮤니티를 짧은 문장으로 축약하여 설명해보세요"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           short_site_description:
-            label: "몇 마디로 커뮤니티를 설명하십시오"
             placeholder: "최고의 커뮤니티"
       introduction:
         title: "소개"
@@ -4255,9 +4267,13 @@ ko:
     conflict: "그렇게하지 못하는 업데이트 충돌이있었습니다."
     reasons:
       post_count: "모든 사용자의 처음 몇 개의 게시물은 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
+      auto_silence_regex: "%{link}의 설정과 일치하는 새 사용자입니다."
       watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. 다음 링크를 참조하십시오. %{link}"
+      category: "이 카테고리의 게시물은 관리자의 수동 승인이 필요합니다. 다음을 참조하십시오. %{link}"
       must_approve_users: "모든 신규 사용자는 관리자의 승인을 받아야 합니다. 다음을 참조하십시오. %{link}"
+      invite_only: "모든 신규 사용자를 초대해야 합니다. 다음 링크를 참조하십시오. %{link}"
       email_auth_res_enqueue: "이 이메일은 DMARC 확인에 실패했으며, 발신자가 아닌 것 같습니다. 자세한 내용은 원시 이메일 헤더를 확인하십시오."
+      suspect_user: "이 새로운 사용자는 글이나 댓글을 읽지 않고 프로필 정보를 입력했으며, 이는 스팸 발송자일 가능성이 큽니다. 다음을 참조하십시오. %{link}"
       contains_media: "이 게시물에는 미디어가 포함되어 있습니다. 다음을 참조하십시오. %{link}"
       queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."
       links:

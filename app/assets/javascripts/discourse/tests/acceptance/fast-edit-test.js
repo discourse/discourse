@@ -22,7 +22,7 @@ acceptance("Fast Edit", function (needs) {
     await click(".quote-button .quote-edit-label");
 
     assert.ok(exists("#fast-edit-input"), "fast editor is open");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#fast-edit-input").val(),
       "Any plans",
       "contains selected text"
@@ -43,7 +43,7 @@ acceptance("Fast Edit", function (needs) {
     await triggerKeyEvent(document, "keypress", "e".charCodeAt(0));
 
     assert.ok(exists("#fast-edit-input"), "fast editor is open");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#fast-edit-input").val(),
       "Any plans",
       "contains selected text"

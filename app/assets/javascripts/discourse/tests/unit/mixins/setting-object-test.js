@@ -10,8 +10,8 @@ module("Unit | Mixin | setting-object", function () {
       valid_values: ["foo", "bar"],
     });
 
-    assert.equal(fooSettingInstance.computedValueProperty, null);
-    assert.equal(fooSettingInstance.computedNameProperty, null);
+    assert.strictEqual(fooSettingInstance.computedValueProperty, null);
+    assert.strictEqual(fooSettingInstance.computedNameProperty, null);
   });
 
   test("object", function (assert) {
@@ -21,8 +21,8 @@ module("Unit | Mixin | setting-object", function () {
       valid_values: [{ value: "foo", name: "bar" }],
     });
 
-    assert.equal(fooSettingInstance.computedValueProperty, "value");
-    assert.equal(fooSettingInstance.computedNameProperty, "name");
+    assert.strictEqual(fooSettingInstance.computedValueProperty, "value");
+    assert.strictEqual(fooSettingInstance.computedNameProperty, "name");
   });
 
   test("no values", function (assert) {
@@ -32,8 +32,8 @@ module("Unit | Mixin | setting-object", function () {
       valid_values: [],
     });
 
-    assert.equal(fooSettingInstance.computedValueProperty, null);
-    assert.equal(fooSettingInstance.computedNameProperty, null);
+    assert.strictEqual(fooSettingInstance.computedValueProperty, null);
+    assert.strictEqual(fooSettingInstance.computedNameProperty, null);
   });
 
   test("value/name properties defined", function (assert) {
@@ -45,7 +45,7 @@ module("Unit | Mixin | setting-object", function () {
       valid_values: [],
     });
 
-    assert.equal(fooSettingInstance.computedValueProperty, "foo");
-    assert.equal(fooSettingInstance.computedNameProperty, "bar");
+    assert.strictEqual(fooSettingInstance.computedValueProperty, "foo");
+    assert.strictEqual(fooSettingInstance.computedNameProperty, "bar");
   });
 });

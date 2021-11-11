@@ -153,6 +153,8 @@ describe UserAnonymizer do
 
       topic = Fabricate(:topic, user: user)
       quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
+
+      stub_image_size
       post = create_post(raw: <<~RAW)
         Lorem ipsum
 

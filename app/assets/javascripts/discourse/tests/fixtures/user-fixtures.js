@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 export default {
   "/u/eviltrout.json": {
     user_badges: [

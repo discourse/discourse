@@ -40,12 +40,14 @@
         </label>
       </div>
       {{#if imageUploaderSelected}}
-        {{image-uploader
+        {{uppy-image-uploader
+          id="badge-image-uploader"
           imageUrl=buffered.image_url
+          type="badge_image"
           onUploadDone=(action "setImage")
           onUploadDeleted=(action "removeImage")
-          type="badge_image"
-          class="no-repeat contain-image"}}
+          class="no-repeat contain-image"
+        }}
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
         </div>

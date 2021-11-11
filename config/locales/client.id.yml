@@ -39,6 +39,7 @@ id:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} yang lalu"
+      wrap_on: "pada %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -92,6 +93,8 @@ id:
       previous_month: "Bulan Lalu"
       next_month: "Bulan Depan"
       placeholder: tanggal
+      from_placeholder: "dari tanggal"
+      to_placeholder: "sampai saat ini"
     share:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -156,6 +159,7 @@ id:
         cn_northwest_1: "Cina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "Uni Eropa (Milan)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "Eropa (London)"
         eu_west_3: "EU (Paris)"
@@ -166,6 +170,7 @@ id:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
+    clear_input: "Hapus masukan"
     edit: "Ubah judul dan kategori topik ini"
     expand: "Perluas"
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
@@ -1432,6 +1437,7 @@ id:
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"
+        duration: "Durasi"
       auto_update_input:
         later_today: "Nanti hari ini"
         tomorrow: "Besok"
@@ -1769,6 +1775,8 @@ id:
           enable: "Aktifkan"
           disable: "Nonaktifkan"
           add: "Menambahkan"
+          body_tag:
+            text: "Konten"
         colors:
           undo: "batalkan perintah"
           revert: "dibalik"

@@ -12,6 +12,9 @@ export default Controller.extend({
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),
   localBackupStorage: equal("backupLocation", "local"),
+  enableExperimentalBackupUploader: setting(
+    "enable_experimental_backup_uploader"
+  ),
 
   @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {

@@ -2179,6 +2179,7 @@ vi:
         publish_to: "Xuất bản tới:"
         when: "Khi:"
         time_frame_required: "Vui lòng chọn một khung thời gian"
+        duration: "Thời lượng"
       auto_update_input:
         none: "Chọn khung thời gian"
         now: "Bây giờ"
@@ -2554,6 +2555,7 @@ vi:
             other: "Có, và tất cả %{count} câu trả lời"
           just_the_post: "Không, chỉ xóa chủ đề"
         admin: "quản lý bài viết"
+        permanently_delete: "Xóa vĩnh viễn"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
         convert_to_moderator: "Thêm màu Nhân viên"
@@ -3782,12 +3784,8 @@ vi:
           color_definitions:
             text: "Màu sắc"
             title: "Nhập màu tùy chỉnh (chỉ dành cho người dùng nâng cao)"
-          head_tag:
-            text: "</head>"
-            title: "HTML sẻ thêm trước thẻ </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML sẽ thêm trước thẻ </body>"
+            text: "Thân"
           yaml:
             text: "YAML"
             title: "Xác định cài đặt chủ đề ở định dạng YAML"
@@ -4544,7 +4542,6 @@ vi:
           replace_owners: Xóa huy hiệu khỏi chủ sở hữu trước đó
       emoji:
         title: "Emoji"
-        help: "Thêm emoji mới có sẵn cho tất cả mọi người. (MẸO: kéo & thả nhiều file cùng lúc)"
         add: "Thêm emoji mới"
         uploading: "Đang tải lên..."
         name: "Tên"
@@ -4554,7 +4551,6 @@ vi:
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"
-        sample: "Sử dụng mã HTML sau vào website để tạo và nhúng các chủ đề. Thay thế <b>REPLACE_ME</b> với Canonical URL của trang bạn muốn nhúng."
         title: "Nhúng"
         host: "Cho phép Host"
         class_name: "Tên lớp"

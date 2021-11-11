@@ -156,7 +156,7 @@ module TopicGuardian
   def can_permanently_delete_topic?(topic)
     return false if !SiteSetting.can_permanently_delete
     return false if !topic
-    return false if topic.posts_count > 1
+    return false if topic.posts_count > 0
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
     return false if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago

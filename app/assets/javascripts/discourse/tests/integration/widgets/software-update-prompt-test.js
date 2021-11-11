@@ -30,7 +30,7 @@ discourseModule(
 
           const done = assert.async();
           later(() => {
-            assert.equal(
+            assert.strictEqual(
               count("div.software-update-prompt.require-software-refresh"),
               1,
               "it does have the class to show the prompt"

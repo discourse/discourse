@@ -35,8 +35,10 @@ export default function (helper) {
 }
 
 export function getChannelInfo(name) {
-  channels[name] ||= { count: 0, users: [], last_message_id: 0 };
-  return channels[name];
+  return (
+    channels[name] ||
+    (channels[name] = { count: 0, users: [], last_message_id: 0 })
+  );
 }
 
 export function joinChannel(name, user) {
@@ -48,7 +50,7 @@ export function joinChannel(name, user) {
     publishToMessageBus(
       `/presence${name}`,
       {
-        entering_users: [user],
+        entering_users: [Object.assign({}, user)],
       },
       0,
       channel.last_message_id

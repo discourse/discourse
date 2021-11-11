@@ -1089,7 +1089,6 @@ zh_CN:
         tags: "标签"
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
-        read_more: "想阅读更多？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人消息</a>中浏览其他消息。"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -2700,6 +2699,7 @@ zh_CN:
             other: "是，%{count} 个回复"
           just_the_post: "否，仅删除此帖子"
         admin: "帖子管理员操作"
+        permanently_delete: "永久删除"
         wiki: "设为 Wiki"
         unwiki: "移除 Wiki"
         convert_to_moderator: "添加管理人员颜色"
@@ -4015,12 +4015,8 @@ zh_CN:
               %{example}
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
-          head_tag:
-            text: "</head>"
-            title: "将在 </head> 标记前插入的 HTML"
           body_tag:
-            text: "</body>"
-            title: "将在 </body> 标记前插入的 HTML"
+            text: "正文"
           yaml:
             text: "YAML"
             title: "使用 YAML 格式定义主题设置"
@@ -4866,7 +4862,6 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        help: "添加可供所有人使用的新表情符号。（高级提示：一次拖放多个文件）"
         add: "添加新表情符号"
         uploading: "正在上传…"
         name: "名称"
@@ -4877,7 +4872,6 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
-        sample: "在您的站点中使用以下 HTML 代码来创建和嵌入 Discourse 话题。将 <b>REPLACE_ME</b> 替换为您嵌入它的页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"

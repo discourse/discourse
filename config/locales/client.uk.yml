@@ -335,6 +335,7 @@ uk:
     bookmarks:
       created: "Ви додали повідомлення в закладки. %{name}"
       not_bookmarked: "додати цей допис до закладок"
+      remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
       created_with_reminder: "Ви додали цей допис в закладку із нагадуванням %{date}. %{name}"
       remove: "Вилучити закладку"
       delete: "Видалити закладку"
@@ -751,6 +752,7 @@ uk:
           settings_required: "Усі налаштування є обов’язковими. Будь ласка, заповніть усі поля перед підтвердженням."
           smtp_settings_valid: "Настройки SMTP дійсні."
           smtp_title: "SMTP"
+          smtp_instructions: "Коли ви ввімкнете SMTP для групи, всі вихідні повідомлення електронної пошти, надіслані з групи, буде надіслано через вказані тут параметри SMTP, замість стандартного поштового сервера, налаштованого для інших листів."
           imap_title: "IMAP"
           imap_additional_settings: "Додаткові налаштування"
           imap_alpha_warning: "Попередження. Це функція на альфа-тестуванні. Офіційно підтримується лише Gmail. Використовуйте на свій страх і ризик!"
@@ -1241,7 +1243,6 @@ uk:
         warnings: "Офіційні попередження"
         read_more_in_group: "Бажаєте дізнатися більше? Перегляньте інші повідомлення в %{groupLink}."
         read_more_group_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нове</a> повідомлення} few { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень} other { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень} }, ви також можете продивитись інші повідомлення в групі {groupLink}"
-        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> } few { <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> } other { <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># нове</a> приватне повідомлення} few { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># нових</a> приватних повідомлень} other { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># нових</a> приватних повідомлень} }, ви також можете продивитись інші <a href='{basePath}/u/{username}/messages'> приватні повідомлення</a>"
       preferences_nav:
         account: "Обліковий запис"
         security: "Безпека"
@@ -2609,6 +2610,7 @@ uk:
         time_frame_required: "Будь ласка, виберіть період часу"
         min_duration: "Тривалість повинна бути більше 0"
         max_duration: "Тривалість повинна бути менше 20 років"
+        duration: "Тривалість"
       auto_update_input:
         none: "Вибір таймфрейма"
         now: "Зараз"
@@ -3084,6 +3086,7 @@ uk:
             other: "Так, та всі %{count} відповіді"
           just_the_post: "Ні, тільки цей допис"
         admin: "дії адміністратора над повідомленням"
+        permanently_delete: "Видалити назавжди"
         wiki: "Зробити вікі-повідомленням"
         unwiki: "Скасувати вікі-повідомлення"
         convert_to_moderator: "Додати колір модератора"
@@ -4528,11 +4531,10 @@ uk:
 
               Рекомендується вводити префікси до назв властивостей, щоб уникнути конфліктів з плагінами та / або ядром.
           head_tag:
-            text: "</head>"
-            title: "HTML-код, який буде вставлений перед міткою </head>"
+            title: "HTML-код, який буде вставлений перед тегом </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML-код, який буде вставлений перед міткою </body>"
+            text: "Тіло"
+            title: "HTML-код, який буде вставлений перед тегом </body>"
           yaml:
             text: "YAML"
             title: "Визначити налаштування теми в форматі YAML"
@@ -4867,6 +4869,7 @@ uk:
         clear_all: Скинути все
         clear_all_confirm: "Ви впевнені, що хочете видалити всі контрольні слова на %{action}?"
         invalid_regex: 'Контрольоване слово "%{word}" є недійсним регулярним виразом.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Контролюємі слова є регулярні вирази</a> і вони автоматично не включають межі слів. Якщо ви хочете, щоб регулярний вираз відповідав цілим словам, додайте <code>\b</code> на початку і в кінці вашого регулярного виразу.'
         actions:
           block: "Заблокувати"
           censor: "Цензура"
@@ -5395,7 +5398,7 @@ uk:
           grant_existing_holders: Надати додаткові нагороди існуючим власникам нагород
       emoji:
         title: "Іконки"
-        help: "Додати нові смайли-emoji, які будуть доступні всім. (Підказка: можна перетягувати кілька файлів за раз)"
+        help: "Додайте нові смайли, які будуть доступні для всіх. Перетягуйте декілька файлів одночасно, не вводячи назву, щоб створити емодзі, використовуючи їхні імена файлів."
         add: "Додати нову іконку"
         uploading: "Завантаження…"
         name: "Ім'я"
@@ -5406,7 +5409,7 @@ uk:
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         confirm_delete: "Ви впевнені, що хочете видалити цей хост?"
-        sample: "Використовуйте наступний HTML-код на своєму сайті, для можливості створення пов’язаних тем. Замініть <b>REPLACE_ME</b> канонічної посиланням сторінки, куди проводиться вбудовування."
+        sample: "Використовуйте наступний HTML-код на своєму сайті, для створення пов’язаних тем. Замініть <b>REPLACE_ME</b> канонічним посиланням сторінки, в яку проводиться вбудовування."
         title: "Взаємодія"
         host: "Дозволені Хости"
         class_name: "Назва класу"

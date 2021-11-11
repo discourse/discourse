@@ -1,117 +1,113 @@
-import {
-  CLOSED,
-  COMPOSER_TYPE,
-  EDITING,
-  KEEP_ALIVE_DURATION_SECONDS,
-  REPLYING,
-} from "discourse/plugins/discourse-presence/discourse/lib/presence";
-import { cancel, throttle } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { gt, readOnly } from "@ember/object/computed";
+import { equal, gt, readOnly, union } from "@ember/object/computed";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  // Passed in variables
-  presenceManager: service(),
-
-  @discourseComputed("model.topic.id")
-  users(topicId) {
-    return this.presenceManager.users(topicId);
-  },
-
-  @discourseComputed("model.topic.id")
-  editingUsers(topicId) {
-    return this.presenceManager.editingUsers(topicId);
-  },
-
-  isReply: readOnly("model.replyingToTopic"),
-  isEdit: readOnly("model.editingPost"),
-
-  @on("didInsertElement")
-  subscribe() {
-    this.presenceManager.subscribe(this.get("model.topic.id"), COMPOSER_TYPE);
-  },
+  presence: service(),
+  composerPresenceManager: service(),
 
   @discourseComputed(
-    "model.post.id",
-    "editingUsers.@each.last_seen",
-    "users.@each.last_seen",
-    "isReply",
-    "isEdit"
+    "model.replyingToTopic",
+    "model.editingPost",
+    "model.whisper",
+    "model.composerOpened"
   )
-  presenceUsers(postId, editingUsers, users, isReply, isEdit) {
-    if (isEdit) {
-      return editingUsers.filterBy("post_id", postId);
-    } else if (isReply) {
-      return users;
+  state(replyingToTopic, editingPost, whisper, composerOpen) {
+    if (!composerOpen) {
+      return;
+    } else if (editingPost) {
+      return "edit";
+    } else if (whisper) {
+      return "whisper";
+    } else if (replyingToTopic) {
+      return "reply";
     }
-    return [];
+  },
+
+  isReply: equal("state", "reply"),
+  isEdit: equal("state", "edit"),
+  isWhisper: equal("state", "whisper"),
+
+  @discourseComputed("model.topic.id", "isReply", "isWhisper")
+  replyChannelName(topicId, isReply, isWhisper) {
+    if (topicId && (isReply || isWhisper)) {
+      return `/discourse-presence/reply/${topicId}`;
+    }
+  },
+
+  @discourseComputed("model.topic.id", "isReply", "isWhisper")
+  whisperChannelName(topicId, isReply, isWhisper) {
+    if (topicId && this.currentUser.staff && (isReply || isWhisper)) {
+      return `/discourse-presence/whisper/${topicId}`;
+    }
+  },
+
+  @discourseComputed("isEdit", "model.post.id")
+  editChannelName(isEdit, postId) {
+    if (isEdit) {
+      return `/discourse-presence/edit/${postId}`;
+    }
+  },
+
+  _setupChannel(channelKey, name) {
+    if (this[channelKey]?.name !== name) {
+      this[channelKey]?.unsubscribe();
+      if (name) {
+        this.set(channelKey, this.presence.getChannel(name));
+        this[channelKey].subscribe();
+      } else if (this[channelKey]) {
+        this.set(channelKey, null);
+      }
+    }
+  },
+
+  @observes("replyChannelName", "whisperChannelName", "editChannelName")
+  _setupChannels() {
+    this._setupChannel("replyChannel", this.replyChannelName);
+    this._setupChannel("whisperChannel", this.whisperChannelName);
+    this._setupChannel("editChannel", this.editChannelName);
+  },
+
+  _cleanupChannels() {
+    this._setupChannel("replyChannel", null);
+    this._setupChannel("whisperChannel", null);
+    this._setupChannel("editChannel", null);
+  },
+
+  replyingUsers: union("replyChannel.users", "whisperChannel.users"),
+  editingUsers: readOnly("editChannel.users"),
+
+  @discourseComputed("isReply", "replyingUsers.[]", "editingUsers.[]")
+  presenceUsers(isReply, replyingUsers, editingUsers) {
+    const users = isReply ? replyingUsers : editingUsers;
+    return users
+      ?.filter((u) => u.id !== this.currentUser.id)
+      ?.slice(0, this.siteSettings.presence_max_users_shown);
   },
 
   shouldDisplay: gt("presenceUsers.length", 0),
 
-  @observes("model.reply", "model.title")
-  typing() {
-    throttle(this, this._typing, KEEP_ALIVE_DURATION_SECONDS * 1000);
+  @on("didInsertElement")
+  subscribe() {
+    this._setupChannels();
   },
 
-  _typing() {
-    if ((!this.isReply && !this.isEdit) || !this.get("model.composerOpened")) {
+  @observes("model.reply", "state", "model.post.id", "model.topic.id")
+  _contentChanged() {
+    if (this.model.reply === "") {
       return;
     }
-
-    let data = {
-      topicId: this.get("model.topic.id"),
-      state: this.isEdit ? EDITING : REPLYING,
-      whisper: this.get("model.whisper"),
-      postId: this.get("model.post.id"),
-      presenceStaffOnly: this.get("model._presenceStaffOnly"),
-    };
-
-    this._prevPublishData = data;
-
-    this._throttle = this.presenceManager.publish(
-      data.topicId,
-      data.state,
-      data.whisper,
-      data.postId,
-      data.presenceStaffOnly
-    );
-  },
-
-  @observes("model.whisper")
-  cancelThrottle() {
-    this._cancelThrottle();
-  },
-
-  @observes("model.action", "model.topic.id")
-  composerState() {
-    if (this._prevPublishData) {
-      this.presenceManager.publish(
-        this._prevPublishData.topicId,
-        CLOSED,
-        this._prevPublishData.whisper,
-        this._prevPublishData.postId
-      );
-      this._prevPublishData = null;
-    }
+    const entity = this.state === "edit" ? this.model?.post : this.model?.topic;
+    this.composerPresenceManager.notifyState(this.state, entity?.id);
   },
 
   @on("willDestroyElement")
   closeComposer() {
-    this._cancelThrottle();
-    this._prevPublishData = null;
-    this.presenceManager.cleanUpPresence(COMPOSER_TYPE);
-  },
-
-  _cancelThrottle() {
-    if (this._throttle) {
-      cancel(this._throttle);
-      this._throttle = null;
-    }
+    this._cleanupChannels();
+    this.composerPresenceManager.leave();
   },
 });

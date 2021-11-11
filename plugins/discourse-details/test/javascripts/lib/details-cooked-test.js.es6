@@ -16,7 +16,7 @@ const defaultOpts = buildOptions({
 
 test("details", function (assert) {
   const cooked = (input, expected, text) => {
-    assert.equal(
+    assert.strictEqual(
       new PrettyText(defaultOpts).cook(input),
       expected.replace(/\/>/g, ">"),
       text

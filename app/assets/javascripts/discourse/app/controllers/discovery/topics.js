@@ -74,6 +74,7 @@ const controllerOpts = {
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
       this.set("discovery.loading", true);
+      this.set("model.canLoadMore", true);
 
       this.topicTrackingState.resetTracking();
 

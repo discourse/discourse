@@ -1,17 +1,21 @@
-<div class="permalink-title">
-  <h2>{{i18n "admin.permalink.title"}}</h2>
-</div>
+<h1>{{i18n "admin.permalink.title"}}</h1>
+
 <div class="permalink-description">
   <span>{{i18n "admin.permalink.description"}}</span>
 </div>
-<div class="permalink-search">
-  {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
-</div>
 {{permalink-form action=(action "recordAdded")}}
-<br>
 
 {{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}
+    <div class="permalink-search">
+      {{text-field
+        value=filter
+        class="url-input"
+        placeholderKey="admin.permalink.form.filter"
+        autocorrect="off"
+        autocapitalize="off"
+      }}
+    </div>
     <table class="admin-logs-table permalinks grid">
       <thead class="heading-container">
         <th class="col heading first url">{{i18n "admin.permalink.url"}}</th>
@@ -21,7 +25,14 @@
       <tbody>
         {{#each model as |pl|}}
           <tr class="admin-list-item">
-            <td class="col first url">{{d-button title="admin.permalink.copy_to_clipboard" icon="far-clipboard" action=(action "copyUrl" pl)}} <span id="admin-permalink-{{pl.id}}" title={{pl.url}}>{{pl.url}}</span></td>
+            <td class="col first url">
+              {{flat-button
+                title="admin.permalink.copy_to_clipboard"
+                icon="far-clipboard"
+                action=(action "copyUrl" pl)
+              }}
+              <span id="admin-permalink-{{pl.id}}" title={{pl.url}}>{{pl.url}}</span>
+            </td>
             <td class="col destination">
               {{#if pl.topic_id}}
                 <a href={{pl.topic_url}}>{{pl.topic_title}}</a>

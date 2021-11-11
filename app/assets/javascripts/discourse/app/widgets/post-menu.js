@@ -1,38 +1,13 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { next, run } from "@ember/runloop";
+import { later, next } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
-import { isTesting } from "discourse-common/config/environment";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
-
-function animateHeart($elem, start, end, complete) {
-  if (isTesting()) {
-    return run(this, complete);
-  }
-
-  $elem
-    .stop()
-    .css("textIndent", start)
-    .animate(
-      { textIndent: end },
-      {
-        complete,
-        step(now) {
-          $(this)
-            .css("transform", "scale(" + now + ")")
-            .addClass("d-liked")
-            .removeClass("d-unliked");
-        },
-        duration: 150,
-      },
-      "linear"
-    );
-}
 
 const _builders = {};
 const _extraButtons = {};
@@ -151,6 +126,9 @@ registerButton("like", (attrs) => {
     icon: attrs.liked ? "d-liked" : "d-unliked",
     className,
     before: "like-count",
+    data: {
+      "post-id": attrs.id,
+    },
   };
 
   // If the user has already liked the post and doesn't have permission
@@ -284,7 +262,7 @@ registerButton("share", (attrs) => {
     action: "share",
     className: "share",
     title: "post.controls.share",
-    icon: "link",
+    icon: "d-post-share",
     data: {
       "share-url": attrs.shareUrl,
       "post-number": attrs.post_number,
@@ -695,16 +673,16 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("toggleLike");
     }
 
-    const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
-    $heart.closest("button").addClass("has-like");
+    const heart = document.querySelector(
+      `.toggle-like[data-post-id="${attrs.id}"] .d-icon`
+    );
+    heart.closest(".toggle-like").classList.add("has-like");
+    heart.classList.add("heart-animation");
 
-    const scale = [1.0, 1.5];
     return new Promise((resolve) => {
-      animateHeart($heart, scale[0], scale[1], () => {
-        animateHeart($heart, scale[1], scale[0], () => {
-          this.sendWidgetAction("toggleLike").then(() => resolve());
-        });
-      });
+      later(() => {
+        this.sendWidgetAction("toggleLike").then(() => resolve());
+      }, 400);
     });
   },
 

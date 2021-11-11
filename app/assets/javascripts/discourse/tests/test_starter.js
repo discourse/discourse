@@ -107,8 +107,8 @@ window.keyEvent = function (selector, contextOrType, typeOrKeyCode, keyCode) {
   let key = keyFromKeyCode[keyCode];
 
   return window.triggerEvent(selector, context, type, {
-    keyCode: keyCode,
+    keyCode,
     which: keyCode,
-    key: key,
+    key,
   });
 };

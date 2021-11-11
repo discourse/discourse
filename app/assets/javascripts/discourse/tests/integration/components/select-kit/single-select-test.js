@@ -50,18 +50,18 @@ discourseModule(
         await this.subject.expand();
 
         const content = this.subject.displayedContent();
-        assert.equal(content.length, 3, "it shows rows");
-        assert.equal(
+        assert.strictEqual(content.length, 3, "it shows rows");
+        assert.strictEqual(
           content[0].name,
           this.content.firstObject.name,
           "it has the correct name"
         );
-        assert.equal(
+        assert.strictEqual(
           content[0].id,
-          this.content.firstObject.id,
+          this.content.firstObject.id.toString(),
           "it has the correct value"
         );
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().value(),
           null,
           "it doesn't set a value from the content"
@@ -85,9 +85,9 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().value(this.content),
-          1,
+          "1",
           "it selects the correct content to display"
         );
       },
@@ -117,7 +117,7 @@ discourseModule(
 
         const filter = this.subject.displayedContent()[1].name;
         await this.subject.fillInFilter(filter);
-        assert.equal(
+        assert.strictEqual(
           this.subject.displayedContent()[0].name,
           filter,
           "it filters the list"
@@ -148,7 +148,7 @@ discourseModule(
         await this.subject.expand();
         await this.subject.fillInFilter("ba");
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.displayedContent().length,
           1,
           "it returns only 1 result"
@@ -181,7 +181,7 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(this.subject.selectedRow().value(), this.value);
+        assert.strictEqual(this.subject.selectedRow().value(), this.value);
       },
     });
 
@@ -208,8 +208,8 @@ discourseModule(
         await this.subject.expand();
 
         const noneRow = this.subject.rowByIndex(0);
-        assert.equal(noneRow.value(), null);
-        assert.equal(noneRow.name(), I18n.t("test.none"));
+        assert.strictEqual(noneRow.value(), null);
+        assert.strictEqual(noneRow.name(), I18n.t("test.none"));
       },
     });
 
@@ -235,8 +235,8 @@ discourseModule(
         await this.subject.expand();
 
         const noneRow = this.subject.rowByIndex(0);
-        assert.equal(noneRow.value(), null);
-        assert.equal(noneRow.name(), "(default)");
+        assert.strictEqual(noneRow.value(), null);
+        assert.strictEqual(noneRow.name(), "(default)");
       },
     });
 
@@ -268,13 +268,13 @@ discourseModule(
         await this.subject.expand();
 
         const noneRow = this.subject.rowByIndex(0);
-        assert.equal(noneRow.value(), I18n.t("test.none"));
-        assert.equal(noneRow.name(), I18n.t("test.none"));
-        assert.equal(this.value, "foo");
+        assert.strictEqual(noneRow.value(), I18n.t("test.none"));
+        assert.strictEqual(noneRow.name(), I18n.t("test.none"));
+        assert.strictEqual(this.value, "foo");
 
         await this.subject.selectRowByIndex(0);
 
-        assert.equal(this.value, null);
+        assert.strictEqual(this.value, null);
       },
     });
 
@@ -300,12 +300,12 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().value(), 1);
+        assert.strictEqual(this.subject.header().value(), "1");
 
         await this.subject.expand();
         await this.subject.selectRowByValue(0);
 
-        assert.equal(this.subject.header().value(), 0);
+        assert.strictEqual(this.subject.header().value(), "0");
       },
     });
 
@@ -329,9 +329,9 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.value, DEFAULT_VALUE);
+        assert.strictEqual(this.value, DEFAULT_VALUE);
         await this.subject.expand();
-        assert.equal(this.value, DEFAULT_VALUE);
+        assert.strictEqual(this.value, DEFAULT_VALUE);
       },
     });
 
@@ -352,13 +352,13 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().label(), "JACKSON");
+        assert.strictEqual(this.subject.header().label(), "JACKSON");
 
         await this.subject.expand();
 
         const row = this.subject.rowByValue(1);
 
-        assert.equal(row.label(), "JACKSON");
+        assert.strictEqual(row.label(), "JACKSON");
       },
     });
 
@@ -379,13 +379,13 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().title(), "JACKSON");
+        assert.strictEqual(this.subject.header().title(), "JACKSON");
 
         await this.subject.expand();
 
         const row = this.subject.rowByValue(1);
 
-        assert.equal(row.title(), "JACKSON");
+        assert.strictEqual(row.title(), "JACKSON");
       },
     });
 
@@ -400,7 +400,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().el()[0].querySelector(".selected-name").lang,
           ""
         );
@@ -408,11 +408,11 @@ discourseModule(
         await this.subject.expand();
 
         const row = this.subject.rowByValue(1);
-        assert.equal(row.el()[0].lang, "be");
+        assert.strictEqual(row.el()[0].lang, "be");
 
         await this.subject.selectRowByValue(1);
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().el()[0].querySelector(".selected-name").lang,
           "be"
         );
@@ -430,7 +430,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().el()[0].getAttribute("name"),
           I18n.t("select_kit.select_to_filter")
         );
@@ -438,7 +438,7 @@ discourseModule(
         await this.subject.expand();
         await this.subject.selectRowByValue(1);
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().el()[0].getAttribute("name"),
           I18n.t("select_kit.filter_by", {
             name: this.content.firstObject.name,

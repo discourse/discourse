@@ -44,7 +44,11 @@ class RspecErrorTracker
   def call(env)
     begin
       @app.call(env)
-    rescue => e
+
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # inherits from Exception instead of StandardError it does not get captured
+    # by the rescue => e shorthand :(
+    rescue WebMock::NetConnectNotAllowedError, StandardError => e
       RspecErrorTracker.last_exception = e
       raise e
     end
@@ -182,6 +186,7 @@ RSpec.configure do |config|
   config.include SidekiqHelpers
   config.include UploadsHelpers
   config.include OneboxHelpers
+  config.include FastImageHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!

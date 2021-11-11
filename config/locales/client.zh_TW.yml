@@ -278,6 +278,7 @@ zh_TW:
       new_private_message: "新個人訊息草稿"
       topic_reply: "回覆草稿"
       abandon:
+        confirm: "您有針對此主題的草稿。您想用它做什麼？"
         yes_value: "捨棄"
         no_value: "繼續編輯"
     topic_count_categories:
@@ -328,10 +329,15 @@ zh_TW:
         placeholder: "在這裡輸入訊息標題、網址或 ID"
     review:
       order_by: "排序按照"
+      date_filter: "發表於"
       in_reply_to: "回覆給"
       explain:
+        title: "可審閱的評分"
+        formula: "公式"
         subtotal: "小計"
         total: "總計"
+        trust_level_bonus:
+          name: "信任等級"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -391,6 +397,7 @@ zh_TW:
       edit: "編輯"
       save: "儲存"
       cancel: "取消"
+      new_topic: "核准此項目將會建立一個新主題"
       filters:
         all_categories: "(所有分類)"
         type:
@@ -402,9 +409,12 @@ zh_TW:
         category: "分類"
         orders:
           score: "分數"
+          score_asc: "分數 (反向)"
           created_at: "建立於"
+          created_at_asc: "建立於 (反向)"
         priority:
           title: "最小優先權"
+          any: "(任何)"
           low: "低"
           medium: "中間的"
           high: "高"
@@ -459,6 +469,7 @@ zh_TW:
         other: "月"
       years:
         other: "年"
+      relative: "相關的"
     time_shortcut:
       later_today: "今日稍晚"
       next_business_day: "下個工作日"
@@ -472,6 +483,8 @@ zh_TW:
       next_month: "下個月"
       six_months: "六個月"
       custom: "自定義日期和時間"
+      relative: "相對時間"
+      none: "不需要"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
@@ -504,10 +517,12 @@ zh_TW:
       days_visited_long: "到訪天數"
       posts_read: "已讀"
       posts_read_long: "已讀貼文"
+      last_updated: "最近更新時間："
       total_rows:
         other: "%{count} 個使用者"
       edit_columns:
         save: "儲存"
+        reset_to_default: "重設為預設值"
       group:
         all: "所有群組"
     group_histories:
@@ -521,8 +536,10 @@ zh_TW:
       member_added: "已新增"
       member_requested: "請求"
       add_members:
+        title: "將使用者加入 %{group_name}"
         usernames_placeholder: "使用者名稱"
         usernames_or_emails_placeholder: "使用者名稱或電子郵件"
+        notify_users: "通知使用者"
       requests:
         title: "請求"
         reason: "原因"
@@ -578,6 +595,7 @@ zh_TW:
           title: 分類
         tags:
           title: 標籤
+          long_title: "標記預設通知"
         logs:
           title: "日誌"
           when: "時間"
@@ -648,8 +666,10 @@ zh_TW:
         make_owner_description: "將 <b>%{username}</b> 設為這個群組的擁有者"
         remove_owner: "移除擁有者身份"
         remove_owner_description: "移除 <b>%{username}</b> 的擁有者身份"
+        make_primary: "設為主要"
         remove_members: "移除成員"
         remove_owners: "移除擁有者"
+        make_all_primary: "將全部設為主要"
         owner: "擁有者"
         primary: "主要"
       topics: "話題"
@@ -688,6 +708,9 @@ zh_TW:
       flair_color_placeholder: "（可選）十六進制色彩值"
       flair_preview_icon: "預覽圖示"
       flair_preview_image: "預覽圖片"
+      flair_type:
+        icon: "選擇圖示"
+        image: "上傳圖片"
       default_notifications:
         modal_title: "使用者預設通知"
         modal_yes: "是"
@@ -724,9 +747,13 @@ zh_TW:
       muted: "已靜音的分類"
       topic_sentence:
         other: "%{count} 個話題"
+      topic_stat:
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "週"
         month: "月"
+      topic_stat_all_time:
+        other: "總共 %{number}"
       topic_stat_sentence_week:
         other: "%{count}過去一週的新話題"
       topic_stat_sentence_month:
@@ -750,6 +777,7 @@ zh_TW:
       copied: "已複製"
     user_fields:
       none: "（選擇一個選項）"
+      required: '請輸入「%{name}」的值'
     user:
       said: "%{username}："
       profile: "個人檔案"
@@ -765,6 +793,7 @@ zh_TW:
       private_messages: "訊息"
       user_notifications:
         filters:
+          filter_by: "篩選依據"
           all: "全部"
           read: "已讀"
           unread: "未讀"
@@ -808,6 +837,7 @@ zh_TW:
         save: "儲存"
         clear:
           title: "清除"
+          warning: "您確定要清除您的精選主題？"
       use_current_timezone: "使用目前時區"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
       expand_profile: "展開"
@@ -940,7 +970,7 @@ zh_TW:
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標籤"
-        read_more: "想看更多？在<a href='%{basePath}/u/%{username}/message'>個人訊息</a>瀏覽其他訊息。"
+        read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
         security: "安全性"
@@ -1845,6 +1875,7 @@ zh_TW:
         publish_to: "發佈至："
         when: "當："
         time_frame_required: "請選擇一個有效時間範圍"
+        duration: "持續時間"
       auto_update_input:
         none: "選擇有效時間範圍"
         later_today: "今日稍晚"
@@ -3200,12 +3231,8 @@ zh_TW:
           embedded_scss:
             text: "嵌入的 CSS"
             title: "輸入用於嵌入回應的自定義 CSS 樣式"
-          head_tag:
-            text: "</head>"
-            title: "會在</head>標籤前被插入的 HTML"
           body_tag:
-            text: "</body>"
-            title: "會在</body>標籤前被插入的 HTML"
+            text: "內容"
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"
@@ -3887,7 +3914,6 @@ zh_TW:
           badge_query_examples_title: "查詢徽章範例"
       emoji:
         title: "Emoji"
-        help: "新增新的emoji供所有人使用。(提示：一次拖放多個檔案)"
         add: "新增emoji"
         uploading: "正在上傳..."
         name: "名稱"
@@ -3897,7 +3923,6 @@ zh_TW:
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         confirm_delete: "你確定要刪除此主機？"
-        sample: "使用下列 HTML 代碼至你的站點開啟和嵌入 Discourse 話題。把<b>REPLACE_ME</b> 替換成你將嵌入至的網址。"
         title: "嵌入"
         host: "允許的主機"
         class_name: "階級名稱"

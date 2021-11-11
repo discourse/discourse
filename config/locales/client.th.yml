@@ -1674,6 +1674,7 @@ th:
         publish_to: "เผยแพร่ไปยัง:"
         when: "เมื่อ:"
         time_frame_required: "กรุณาเลือกระยะเวลา"
+        duration: "ช่วงเวลา"
       auto_update_input:
         now: "ตอนนี้"
         later_today: "ภายหลังในวันนี้"
@@ -2664,10 +2665,6 @@ th:
             text: "Footer"
           embedded_scss:
             text: "Embedded CSS"
-          head_tag:
-            text: "</head>"
-          body_tag:
-            text: "</body>"
         colors:
           title: "สี"
           undo: "เลิกทำ"

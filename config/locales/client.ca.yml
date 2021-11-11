@@ -1938,6 +1938,7 @@ ca:
         publish_to: "Publica en:"
         when: "Quan:"
         time_frame_required: "Seleccioneu un període de temps"
+        duration: "Duració"
       auto_update_input:
         none: "Seleccioneu un període de temps"
         later_today: "Més tard avui"
@@ -3378,12 +3379,8 @@ ca:
           embedded_scss:
             text: "CSS incrustat"
             title: "Introduïu el CSS personalitzat que es lliurarà amb la versió incrustada dels comentaris"
-          head_tag:
-            text: "</head>"
-            title: "HTML que s'inclourà abans de l'etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que s'inclourà abans de l'etiqueta </body>"
+            text: "Cos"
           yaml:
             text: "YAML"
             title: "Definiu la configuració de l'aparença en format YAML"
@@ -4097,7 +4094,6 @@ ca:
           badge_query_examples_title: "Exemples de consulta d'insígnies"
       emoji:
         title: "Emoji"
-        help: "Afegeix un nou emoji que estarà disponible per a tothom. (CONSELL: arrossegueu i deixeu anar molts fitxers de cop)"
         add: "Afegeix emoji nou"
         uploading: "Carregant..."
         name: "Nom"
@@ -4107,7 +4103,6 @@ ca:
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
-        sample: "Feu servir el següent codi HTML en el vostre lloc web per a crear i incrustar temes de Discourse. Reemplaceu <b>REEMPLAÇA'M</b> amb l'URL canònic de la pàgina en la qual ho esteu incrustant."
         title: "Incrustant"
         host: "Amfitrions permesos"
         class_name: "Nom de la classe"

@@ -137,8 +137,9 @@ class Auth::DefaultCurrentUserProvider
     # user api key handling
     if user_api_key
 
-      limiter_min = RateLimiter.new(nil, "user_api_min_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
-      limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
+      hashed_user_api_key = ApiKey.hash_key(user_api_key)
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
         limiter_day.performed!

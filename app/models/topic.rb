@@ -267,19 +267,25 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  PRIVATE_MESSAGES_SQL = <<~SQL
+  PRIVATE_MESSAGES_SQL_USER = <<~SQL
     SELECT topic_id
     FROM topic_allowed_users
     WHERE user_id = :user_id
-    UNION ALL
+  SQL
+
+  PRIVATE_MESSAGES_SQL_GROUP = <<~SQL
     SELECT tg.topic_id
     FROM topic_allowed_groups tg
     JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
   SQL
 
-  scope :private_messages_for_user, ->(user) {
-    private_messages.where("topics.id IN (#{PRIVATE_MESSAGES_SQL})", user_id: user.id)
-  }
+  scope :private_messages_for_user, ->(user) do
+    private_messages.where(
+      "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
+      user_id: user.id
+    )
+  end
 
   scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
@@ -505,7 +511,7 @@ class Topic < ActiveRecord::Base
     # Remove muted and shared draft categories
     remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
+      topics = topics.where("topics.category_id NOT IN (?)", SiteSetting.digest_suppress_categories.split("|").map(&:to_i))
     end
     if SiteSetting.shared_drafts_enabled?
       remove_category_ids << SiteSetting.shared_drafts_category
@@ -844,7 +850,7 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if post = self.ordered_posts.first
+        if !SiteSetting.disable_category_edit_notifications && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
@@ -971,14 +977,36 @@ class Topic < ActiveRecord::Base
   end
 
   def invite_group(user, group)
-    TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
-    allowed_groups.reload
+    TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
+    self.allowed_groups.reload
 
-    last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
+    last_post = self.posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
       Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
       Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
+    end
+
+    # If the group invited includes the OP of the topic as one of is members,
+    # we cannot strip the topic_allowed_user record since it will be more
+    # complicated to recover the topic_allowed_user record for the OP if the
+    # group is removed.
+    allowed_user_where_clause = <<~SQL
+      users.id IN (
+        SELECT topic_allowed_users.user_id
+        FROM topic_allowed_users
+        INNER JOIN group_users ON group_users.user_id = topic_allowed_users.user_id
+        INNER JOIN topic_allowed_groups ON topic_allowed_groups.group_id = group_users.group_id
+        WHERE topic_allowed_groups.group_id = :group_id AND
+              topic_allowed_users.topic_id = :topic_id AND
+              topic_allowed_users.user_id != :op_user_id
+      )
+    SQL
+    User.where([
+      allowed_user_where_clause,
+      { group_id: group.id, topic_id: self.id, op_user_id: self.user_id }
+    ]).find_each do |allowed_user|
+      remove_allowed_user(Discourse.system_user, allowed_user)
     end
 
     true
@@ -994,13 +1022,7 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      if MutedUser
-          .where(user: target_user, muted_user: invited_by)
-          .joins(:muted_user)
-          .where('NOT admin AND NOT moderator')
-          .exists?
-        raise NotAllowed.new(I18n.t("topic_invite.muted_invitee"))
-      end
+      ensure_can_invite!(target_user, invited_by)
 
       if TopicUser
           .where(topic: self,
@@ -1035,6 +1057,22 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
+    end
+  end
+
+  def ensure_can_invite!(target_user, invited_by)
+    if MutedUser
+        .where(user: target_user, muted_user: invited_by)
+        .joins(:muted_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
+    elsif IgnoredUser
+        .where(user: target_user, ignored_user: invited_by)
+        .joins(:ignored_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
     end
   end
 
@@ -1705,6 +1743,9 @@ class Topic < ActiveRecord::Base
   end
 
   def create_invite_notification!(target_user, notification_type, username)
+    invited_by = User.find_by_username(username)
+    ensure_can_invite!(target_user, invited_by)
+
     target_user.notifications.create!(
       notification_type: notification_type,
       topic_id: self.id,
@@ -1725,6 +1766,15 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_topic_invitations_per_day,
       1.day.to_i
     ).performed!
+  end
+
+  def cannot_permanently_delete_reason(user)
+    if self.posts_count > 0
+      I18n.t('post.cannot_permanently_delete.many_posts')
+    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
   end
 
   private
@@ -1786,15 +1836,6 @@ class Topic < ActiveRecord::Base
 
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
-  end
-
-  def cannot_permanently_delete_reason(user)
-    if self.posts_count > 1
-      I18n.t('post.cannot_permanently_delete.many_posts')
-    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
-      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
-      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
-    end
   end
 end
 

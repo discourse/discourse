@@ -250,7 +250,6 @@ sv:
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
-    muted_invitee: "Tyvärr tystade den användaren dig."
     muted_topic: "Tyvärr tystade den användaren detta ämne."
     receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
     sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
@@ -643,6 +642,9 @@ sv:
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
+    cannot_permanently_delete:
+      many_posts: "Du kan inte ta bort detta ämne permanent eftersom det finns andra inlägg."
+      wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
     too_many_requests: "Du har utfört den här åtgärden för många gånger. Vänta %{time_left} innan du försöker igen."
@@ -1436,7 +1438,7 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
@@ -1767,7 +1769,7 @@ sv:
     topic_view_duration_hours: "Räkna en ny ämnesgranskning en gång per IP/Användare per N timmar"
     user_profile_view_duration_hours: "Räkna en ny användarprofilgranskning en gång per IP/Användare per N timmar"
     levenshtein_distance_spammer_emails: "Skillnad i antal tecken vid matchning av e-postadresser som används för skräppostutskick som fortfarande tillåter en suddig matchning."
-    max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre)."
+    max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre). Ange värde 0 för att inaktivera begränsningen."
     min_ban_entries_for_roll_up: "När upprullningsknappen klickas skapas en ny delnätspost om det finns minst (N) poster."
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
@@ -1903,6 +1905,8 @@ sv:
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
+    disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
+    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -2463,7 +2467,7 @@ sv:
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: "Hurra, det finns en ny version av [Discourse](http://www.discourse.org) tillgänglig!\n\nDin version: %{installed_version}\nNy version: **%{new_version}**\n\n- Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** \n\n- Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/main)\n\n- Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse\n"
+    text_body_template: "Hurra, det finns en ny version av [Discourse](http://www.discourse.org) tillgänglig!\n\nDin version: %{installed_version}\nNy version: **%{new_version}**\n\n- Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** \n\n- Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs obearbetade ändringslogg](https://github.com/discourse/discourse/commits/main)\n\n- Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse\n"
   new_version_mailer_with_notes:
     title: "E-post om ny version med anteckningar"
     subject_template: "[%{email_prefix}] Uppdatering tillgänglig"
@@ -2475,7 +2479,7 @@ sv:
 
       - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)**
 
-      - Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/main)
+      - Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs obearbetade ändringslogg](https://github.com/discourse/discourse/commits/main)
 
       - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse
 
@@ -3987,10 +3991,10 @@ sv:
             label: "Ditt forums namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv ditt forum med en kort mening"
+            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
           short_site_description:
-            label: "Beskriv ditt forum med ett par ord"
+            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
             placeholder: "Bästa forumet någonsin"
       introduction:
         title: "Introduktion"
@@ -4150,8 +4154,24 @@ sv:
     missing_version: "Du måste ange en versionsparameter"
     conflict: "Det uppstod en uppdateringskonflikt som hindrade dig från att göra det."
     reasons:
+      post_count: "De första inläggen från varje användare måste godkännas av personal. Se %{link}."
+      trust_level: "Användare på låga förtroendenivåer måste ha svar godkända av personal. Se %{link}."
+      new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
+      fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
+      auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
+      watched_word: "Detta inlägg innehöll ett bevakat ord. Se ditt %{link}."
+      staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
+      category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."
+      must_approve_users: "Alla nya användare måste godkännas av personal. Se %{link}."
+      invite_only: "Alla nya användare ska bjudas in. Se %{link}."
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
+      email_spam: "Det här e -postmeddelandet flaggades som skräppost av rubriken som definierats i %{link}."
+      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se %{link}."
+      contains_media: "Detta inlägg innehåller inbäddade media. Se %{link}."
       queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
+      links:
+        watched_word: lista över bevakade ord
+        category: kategori inställningar
     actions:
       agree:
         title: "Godkänn..."

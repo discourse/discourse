@@ -117,7 +117,7 @@ function translateGroupedSearchResults(results, opts) {
       const name = pair[1];
       if (results[name].length > 0) {
         const componentName =
-          opts.showPosts && type === "topic" ? "post" : type;
+          opts.searchContext && type === "topic" ? "post" : type;
 
         const result = {
           results: results[name],
@@ -143,7 +143,7 @@ export function searchForTerm(term, opts) {
   }
 
   // Only include the data we have
-  const data = { term: term };
+  const data = { term };
   if (opts.typeFilter) {
     data.type_filter = opts.typeFilter;
   }
@@ -154,8 +154,12 @@ export function searchForTerm(term, opts) {
     data.restrict_to_archetype = opts.restrictToArchetype;
   }
 
-  if (term.includes("topic:")) {
-    opts.showPosts = true;
+  if (opts.searchContext) {
+    data.search_context = {
+      type: opts.searchContext.type,
+      id: opts.searchContext.id,
+      name: opts.searchContext.name,
+    };
   }
 
   let ajaxPromise = ajax("/search/query", { data });

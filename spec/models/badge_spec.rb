@@ -51,6 +51,15 @@ describe Badge do
     expect(b.grant_count).to eq(1)
   end
 
+  it 'sanitizes the description' do
+    xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
+    badge = Fabricate(:badge)
+
+    badge.update!(description: xss)
+
+    expect(badge.description).to eq("<b>click me!</b>alert('TEST');")
+  end
+
   describe '#manually_grantable?' do
     fab!(:badge) { Fabricate(:badge, name: 'Test Badge') }
     subject { badge.manually_grantable? }

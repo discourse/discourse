@@ -346,7 +346,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def is_dark?
-    return if colors.empty?
+    return if colors.to_a.empty?
 
     primary_b = brightness(colors_by_name["primary"].hex)
     secondary_b = brightness(colors_by_name["secondary"].hex)

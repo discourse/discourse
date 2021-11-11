@@ -95,13 +95,11 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
+  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(
-    deepMerge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
-  );
+  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -219,29 +217,12 @@ export function caretRowCol(el) {
       return sum + row.length + 1;
     }, 0);
 
-  return { rowNum: rowNum, colNum: colNum };
+  return { rowNum, colNum };
 }
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  let r, rc, re;
-  if (el.selectionStart) {
-    return el.selectionStart;
-  }
-  if (document.selection) {
-    el.focus();
-    r = document.selection.createRange();
-    if (!r) {
-      return 0;
-    }
-
-    re = el.createTextRange();
-    rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint("EndToStart", re);
-    return rc.text.length;
-  }
-  return 0;
+  return el?.selectionStart || 0;
 }
 
 // Set the caret's position

@@ -204,4 +204,22 @@ describe SiteSetting do
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo|bar/)
     end
   end
+
+  it 'sanitizes the client settings when they are overridden' do
+    xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
+
+    SiteSetting.global_notice = xss
+
+    expect(SiteSetting.global_notice).to eq("<b>click me!</b>alert('TEST');")
+  end
+
+  it "doesn't corrupt site settings with special characters" do
+    value = 'OX5y3Oljb+Qt9Bu809vsBQ==<>!%{}*&!@#$%..._-A'
+    settings = new_settings(SiteSettings::LocalProcessProvider.new)
+    settings.setting(:test_setting, '', client: true)
+
+    settings.test_setting = value
+
+    expect(settings.test_setting).to eq(value)
+  end
 end

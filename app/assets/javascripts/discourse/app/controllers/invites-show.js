@@ -83,7 +83,7 @@ export default Controller.extend(
 
     @discourseComputed("email")
     yourEmailMessage(email) {
-      return I18n.t("invites.your_email", { email: email });
+      return I18n.t("invites.your_email", { email });
     },
 
     @discourseComputed

@@ -39,8 +39,9 @@ class PresenceController < ApplicationController
     client_id = params[:client_id]
     raise Discourse::InvalidParameters.new(:client_id) if !client_id.is_a?(String) || client_id.blank?
 
-    # JS client is designed to throttle to one request every 5 seconds
-    RateLimiter.new(nil, "update-presence-#{current_user.id}-#{client_id}}", 3, 10.seconds).performed!
+    # JS client is designed to throttle to one request per second
+    # When no changes are being made, it makes one request every 30 seconds
+    RateLimiter.new(nil, "update-presence-#{current_user.id}", 20, 10.seconds).performed!
 
     present_channels = params[:present_channels]
     if present_channels && !(present_channels.is_a?(Array) && present_channels.all? { |c| c.is_a? String })

@@ -201,6 +201,7 @@ export default Component.extend({
       post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
+      topic_id: this.model.topicId,
     });
   },
 
@@ -238,12 +239,14 @@ export default Component.extend({
     }
   },
 
-  _onModalClose(initiatedByCloseButton) {
+  _onModalClose(closeOpts) {
     // we want to close without saving if the user already saved
     // manually or deleted the bookmark, as well as when the modal
     // is just closed with the X button
     this._closeWithoutSaving =
-      this._closeWithoutSaving || initiatedByCloseButton;
+      this._closeWithoutSaving ||
+      closeOpts.initiatedByCloseButton ||
+      closeOpts.initiatedByESC;
 
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));
@@ -265,7 +268,7 @@ export default Component.extend({
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),
-  existingBookmarkHasReminder: and("model", "model.reminderAt"),
+  existingBookmarkHasReminder: and("model", "model.id", "model.reminderAt"),
 
   @discourseComputed("postDetectedLocalDate", "postDetectedLocalTime")
   showPostLocalDate(postDetectedLocalDate, postDetectedLocalTime) {
@@ -309,6 +312,32 @@ export default Component.extend({
     }
 
     return customOptions;
+  },
+
+  @discourseComputed("existingBookmarkHasReminder")
+  customTimeShortcutLabels(existingBookmarkHasReminder) {
+    const labels = {};
+    if (existingBookmarkHasReminder) {
+      labels[TIME_SHORTCUT_TYPES.NONE] =
+        "bookmarks.remove_reminder_keep_bookmark";
+    }
+    return labels;
+  },
+
+  @discourseComputed("editingExistingBookmark", "existingBookmarkHasReminder")
+  hiddenTimeShortcutOptions(
+    editingExistingBookmark,
+    existingBookmarkHasReminder
+  ) {
+    if (!editingExistingBookmark) {
+      return [];
+    }
+
+    if (!existingBookmarkHasReminder) {
+      return [TIME_SHORTCUT_TYPES.NONE];
+    }
+
+    return [];
   },
 
   @discourseComputed()

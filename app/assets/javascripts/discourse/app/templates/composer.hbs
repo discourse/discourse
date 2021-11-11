@@ -45,10 +45,12 @@
               </div>
             {{/unless}}
             {{composer-toggles
-              composeState=model.composeState showToolbar=showToolbar
+              composeState=model.composeState
+              showToolbar=showToolbar
               toggleComposer=(action "toggle")
               toggleToolbar=(action "toggleToolbar")
               toggleFullscreen=(action "fullscreenComposer")
+              disableTextarea=disableTextarea
             }}
           </div>
           {{#unless model.viewFullscreen}}
@@ -60,12 +62,12 @@
                     recipients=model.targetRecipients
                     hasGroups=model.hasTargetGroups
                     focusTarget=focusTarget
-                    class="users-input"
+                    class=(concat "users-input" (if showWarning " can-warn"))
                   }}
                   {{#if showWarning}}
                     <label class="add-warning">
                       {{input type="checkbox" checked=model.isWarning}}
-                      {{i18n "composer.add_warning"}}
+                      <span>{{i18n "composer.add_warning"}}</span>
                     </label>
                   {{/if}}
                 </div>
@@ -111,29 +113,31 @@
         </div>
 
         {{component composerComponent
-                          topic=topic
-                          composer=model
-                          lastValidatedAt=lastValidatedAt
-                          canWhisper=canWhisper
-                          storeToolbarState=(action "storeToolbarState")
-                          onPopupMenuAction=(action "onPopupMenuAction")
-                          showUploadModal=(route-action "showUploadSelector")
-                          popupMenuOptions=popupMenuOptions
-                          draftStatus=model.draftStatus
-                          isUploading=isUploading
-                          isProcessingUpload=isProcessingUpload
-                          allowUpload=allowUpload
-                          uploadIcon=uploadIcon
-                          isCancellable=isCancellable
-                          uploadProgress=uploadProgress
-                          groupsMentioned=(action "groupsMentioned")
-                          cannotSeeMention=(action "cannotSeeMention")
-                          importQuote=(action "importQuote")
-                          togglePreview=(action "togglePreview")
-                          processPreview=showPreview
-                          showToolbar=showToolbar
-                          afterRefresh=(action "afterRefresh")
-                          focusTarget=focusTarget}}
+          topic=topic
+          composer=model
+          lastValidatedAt=lastValidatedAt
+          canWhisper=canWhisper
+          storeToolbarState=(action "storeToolbarState")
+          onPopupMenuAction=(action "onPopupMenuAction")
+          showUploadModal=(route-action "showUploadSelector")
+          popupMenuOptions=popupMenuOptions
+          draftStatus=model.draftStatus
+          isUploading=isUploading
+          isProcessingUpload=isProcessingUpload
+          allowUpload=allowUpload
+          uploadIcon=uploadIcon
+          isCancellable=isCancellable
+          uploadProgress=uploadProgress
+          groupsMentioned=(action "groupsMentioned")
+          cannotSeeMention=(action "cannotSeeMention")
+          importQuote=(action "importQuote")
+          togglePreview=(action "togglePreview")
+          processPreview=showPreview
+          showToolbar=showToolbar
+          afterRefresh=(action "afterRefresh")
+          focusTarget=focusTarget
+          disableTextarea=disableTextarea
+        }}
 
         {{plugin-outlet name="composer-after-composer-editor" connectorTagName="" args=(hash model=model)}}
         <div class="submit-panel">
@@ -247,7 +251,8 @@
         {{/if}}
       </div>
 
-      {{composer-toggles composeState=model.composeState
+      {{composer-toggles
+        composeState=model.composeState
         toggleFullscreen=(action "openIfDraft")
         toggleComposer=(action "toggle")
         toggleToolbar=(action "toggleToolbar")

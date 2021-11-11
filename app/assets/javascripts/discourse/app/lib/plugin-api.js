@@ -1564,6 +1564,9 @@ function getPluginApi(version) {
       owner.registry.register("plugin-api:main", pluginApi, {
         instantiate: false,
       });
+    } else {
+      // If we are re-using an instance, make sure the container is correct
+      pluginApi.container = owner;
     }
 
     // We are recycling the compatible object, but let's update to the higher version

@@ -250,7 +250,6 @@ es:
   topic_invite:
     failed_to_invite: "No se puede invitar al usuario a este tema sin ser miembro de un grupo en cualquiera de los siguientes grupos: %{group_names}."
     user_exists: "Lo sentimos, ese usuario ya fue invitado. Solo se puede invitar a un usuario a un tema una vez."
-    muted_invitee: "Lo sentimos, el usuario te ha silenciado."
     muted_topic: "Lo sentimos, el usuario ha silenciado este tema."
     receiver_does_not_allow_pm: "Lo sentimos, el usuario no permite que le envíes mensajes privados."
     sender_does_not_allow_pm: "Lo sentimos, no permites que el usuario te mande mensajes privados."
@@ -662,6 +661,9 @@ es:
     has_likes:
       one: "%{count} me gusta"
       other: "%{count} Me gusta"
+    cannot_permanently_delete:
+      many_posts: "No puedes eliminar para siempre este tema porque tiene otras publicaciones."
+      wait_or_different_admin: "Debes esperar %{time_left} antes de eliminar para siempre esta publicación, pero otra persona con permisos de administrador puede eliminarla inmediatamente."
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces. Inténtalo de nuevo más tarde."
     too_many_requests: "Has realizado esta acción demasiadas veces. Espera %{time_left} antes de intentarlo de nuevo."
@@ -952,6 +954,7 @@ es:
         remove: "Este tema ya no funciona como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Preferencias de correo electrónico actualizadas!"
+    description: "Preferencias de correo para <b>%{email}</b> actualizadas. Para cambiar tus ajustes de correo <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, cambia los ajustes de notificación en la parte inferior o en la parte derecha del tema."
   uploads:
@@ -1454,7 +1457,6 @@ es:
     summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
     summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
     summary_timeline_button: "Mostrar un botón para «Resumir» en la línea de tiempo"
-    enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el personal siempre puede enviar mensajes pase lo que pase."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes personales están desactivados."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
@@ -1785,7 +1787,6 @@ es:
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
-    max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas con nivel de confianza 0 desde esta IP (y ninguna es de un miembro del equipo o de nivel de confianza 2 o superior), prohibir registros nuevos desde esa IP."
     min_ban_entries_for_roll_up: "Al hacer clic en el botón agrupar, se creará un nuevo rango de entradas prohibidas si hay al menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidos que no coincidan después de (N) días."
@@ -1921,6 +1922,7 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar un banner global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
+    disable_category_edit_notifications: "Desactivar que se manden notificaciones al cambiar la categoría de los temas."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
@@ -4362,10 +4364,8 @@ es:
             label: "El nombre de tu comunidad"
             placeholder: "Reunión de Juana"
           site_description:
-            label: "Describe tu comunidad en una frase corta"
             placeholder: "Un sitio para que Juana y sus amigos discutan cosas interesantes"
           short_site_description:
-            label: "Describe tu comunidad en pocas palabras"
             placeholder: "La mejor comunidad del mundo"
       introduction:
         title: "Introducción"
@@ -4526,10 +4526,22 @@ es:
     conflict: "Hubo un conflicto de actualización que no te permitió realizar esa acción."
     reasons:
       post_count: "Las primeras publicaciones de las cuentas recién registradas deben ser aprobadas por el personal. Ver %{link}."
+      trust_level: "Las respuestas de los usuarios con niveles de confianza bajos deben ser aprobadas por el personal. Ver %{link}."
+      new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
+      fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
+      auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
       watched_word: "Esta publicación incluía una palabra vigilada. Ver tu %{link}."
+      staged: "El personal debe aprobar los nuevos temas y publicaciones de usuarios temporales. Ver %{link}."
+      category: "El personal debe aprobar manualmente las publicaciones en esta categoría. Ver %{link}."
+      must_approve_users: "El personal debe aprobar todos los usuarios nuevos. Ver %{link}."
+      invite_only: "Todos los usuarios nuevos deben ser invitados. Ver %{link}."
       email_auth_res_enqueue: "Este correo electrónico no superó la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo electrónico para más información."
+      email_spam: "Esta dirección de correo electrónico ha sido marcada para revisar por ser posiblemente spam debido al encabezado definido en %{link}."
+      suspect_user: "Este usuario ha rellenado su información de perfil sin leer antes ningún tema o publicación, lo que crea indicios de que pueda ser un spammer. Ver %{link}."
+      contains_media: "Esta publicación incluye archivos multimedia incrustados. Ver %{link}."
       queued_by_staff: "Un miembro del equipo cree que esta publicación debe ser revisada. Se mantendrá oculta hasta entonces."
       links:
+        watched_word: lista de palabras vigiladas
         category: ajustes de la categoría
     actions:
       agree:

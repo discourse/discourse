@@ -53,9 +53,10 @@
             <%
               post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
               who_username = post_custom_fields["action_code_who"] || ""
+              small_action_href = post_custom_fields["action_code_path"] || ""
               if post.action_code
             %>
-              <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
+              <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
             <% end %>
           </span>
 

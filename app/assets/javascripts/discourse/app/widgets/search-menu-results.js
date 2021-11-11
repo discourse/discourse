@@ -11,10 +11,7 @@ import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
-import {
-  MODIFIER_REGEXP,
-  TOPIC_REPLACE_REGEXP,
-} from "discourse/widgets/search-menu";
+import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 
 const suggestionShortcuts = [
   "in:title",
@@ -79,9 +76,7 @@ resetQuickSearchRandomTips();
 class Highlighted extends RawHtml {
   constructor(html, term) {
     super({ html: `<span>${html}</span>` });
-    if (term) {
-      this.term = term.replace(TOPIC_REPLACE_REGEXP, "");
-    }
+    this.term = term;
   }
 
   decorate($html) {
@@ -296,9 +291,7 @@ createWidget("search-menu-results", {
     }
 
     if (!term) {
-      return this.attach("search-menu-initial-options", {
-        term,
-      });
+      return this.attach("search-menu-initial-options", { term });
     }
 
     const resultTypes = results.resultTypes || [];
@@ -387,6 +380,8 @@ createWidget("search-menu-results", {
 
 createWidget("search-menu-assistant", {
   tagName: "ul.search-menu-assistant",
+  buildKey: () => `search-menu-assistant`,
+  services: ["router"],
 
   html(attrs) {
     if (this.currentUser) {
@@ -441,15 +436,48 @@ createWidget("search-menu-assistant", {
         });
         break;
       case "@":
-        attrs.results.forEach((user) => {
+        // when only one user matches while in topic
+        // quick suggest user search in the topic or globally
+        if (
+          attrs.results.length === 1 &&
+          this.router.currentRouteName.startsWith("topic.")
+        ) {
+          const user = attrs.results[0];
           content.push(
             this.attach("search-menu-assistant-item", {
               prefix,
               user,
+              setTopicContext: true,
               slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_this_topic")}`
+              ),
             })
           );
-        });
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              extraHint: I18n.t("search.enter_hint"),
+              prefix,
+              user,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_topics_posts")}`
+              ),
+            })
+          );
+        } else {
+          attrs.results.forEach((user) => {
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                prefix,
+                user,
+                slug: `${prefix}@${user.username}`,
+              })
+            );
+          });
+        }
         break;
       default:
         suggestionShortcuts.forEach((item) => {
@@ -483,15 +511,15 @@ createWidget("search-menu-initial-options", {
 
     if (attrs.term || ctx) {
       if (ctx) {
-        const term = attrs.term ? `${attrs.term} ` : "";
-
+        const term = attrs.term || "";
         switch (ctx.type) {
           case "topic":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}topic:${ctx.id}`,
+                slug: term,
+                setTopicContext: true,
                 label: [
-                  h("span", term),
+                  h("span", `${term} `),
                   h("span.label-suffix", I18n.t("search.in_this_topic")),
                 ],
               })
@@ -501,7 +529,7 @@ createWidget("search-menu-initial-options", {
           case "private_messages":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}in:personal`,
+                slug: `${term} in:personal`,
               })
             );
             break;
@@ -513,7 +541,7 @@ createWidget("search-menu-initial-options", {
 
             content.push(
               this.attach("search-menu-assistant", {
-                term: `${term}${fullSlug}`,
+                term: `${term} ${fullSlug}`,
                 suggestionKeyword: "#",
                 results: [{ model: ctx.category }],
                 withInLabel: true,
@@ -524,7 +552,7 @@ createWidget("search-menu-initial-options", {
           case "tag":
             content.push(
               this.attach("search-menu-assistant", {
-                term: `${term}#${ctx.name}`,
+                term: `${term} #${ctx.name}`,
                 suggestionKeyword: "#",
                 results: [{ name: ctx.name }],
                 withInLabel: true,
@@ -534,9 +562,9 @@ createWidget("search-menu-initial-options", {
           case "user":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term}@${ctx.user.username}`,
+                slug: `${term} @${ctx.user.username}`,
                 label: [
-                  h("span", term),
+                  h("span", `${term} `),
                   h(
                     "span.label-suffix",
                     I18n.t("search.in_posts_by", {
@@ -618,13 +646,14 @@ createWidget("search-menu-assistant-item", {
           username: attrs.user.username,
         }),
         h("span.username", formatUsername(attrs.user.username)),
+        attrs.suffix,
       ];
       content.push(h("span.search-item-user", userResult));
     } else {
       content.push(h("span.search-item-slug", attrs.label || attrs.slug));
-      if (attrs.extraHint) {
-        content.push(h("span.extra-hint", attrs.extraHint));
-      }
+    }
+    if (attrs.extraHint) {
+      content.push(h("span.extra-hint", attrs.extraHint));
     }
     return h("a.widget-link.search-link", { attributes }, content);
   },
@@ -636,6 +665,7 @@ createWidget("search-menu-assistant-item", {
     this.sendWidgetAction("triggerAutocomplete", {
       value: this.attrs.slug,
       searchTopics: true,
+      setTopicContext: this.attrs.setTopicContext,
     });
     e.preventDefault();
     return false;

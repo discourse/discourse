@@ -2315,6 +2315,7 @@ pt:
         time_frame_required: "Por favor selecione um intervalo de tempo"
         min_duration: "A duração tem de ser maior que 0"
         max_duration: "A duração tem de ser inferior a 20 anos"
+        duration: "Duração"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         now: "Agora"
@@ -2728,6 +2729,7 @@ pt:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta mensagem"
         admin: "ações administrativas de publicação"
+        permanently_delete: "Excluir Permanentemente"
         wiki: "Fazer Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar Cor do Pessoal"
@@ -3880,12 +3882,8 @@ pt:
               %{example}
 
               Prefixar os nomes das propriedades é altamente recomendado para evitar conflitos com plugins e/ou o core.
-          head_tag:
-            text: "</head>"
-            title: "HTML que será introduzido antes da tag </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que será introduzido antes da tag </body>"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Defina as configurações do tema no formato YAML"
@@ -4514,7 +4512,6 @@ pt:
           badge_query_examples_title: "Exemplos de queries de crachás"
       emoji:
         title: "Emoji"
-        help: "Adicionar novo emoji que irá estar disponível para todos. (PROTIP: arraste múltiplos ficheiros de uma só vez)"
         add: "Adicionar Novo Emoji"
         uploading: "A carregar…"
         name: "Nome"
@@ -4524,7 +4521,6 @@ pt:
       embedding:
         get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
         confirm_delete: "Tem certeza que deseja eliminar este servidor?"
-        sample: "Utilize o seguinte código HTML no seu sítio para criar e incorporar tópicos do discourse. Substitua <b>REPLACE_ME</b> pelo URL canónico da página onde está a incorporá-los."
         title: "Incorporação"
         host: "Servidores Permitidos"
         edit: "editar"

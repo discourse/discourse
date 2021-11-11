@@ -28,6 +28,10 @@
     margin-right: 0.45em;
     transition: color 0.25s;
   }
+  .d-button-label + .d-icon {
+    margin-left: 0.45em;
+    margin-right: 0;
+  }
   &.no-text {
     .d-icon {
       margin-right: 0;

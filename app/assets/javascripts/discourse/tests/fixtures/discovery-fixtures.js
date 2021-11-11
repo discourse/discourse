@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 export default {
   "/latest.json": {
     users: [

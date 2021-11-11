@@ -29,12 +29,12 @@ acceptance("Topic", function (needs) {
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
       "it fills composer with the ring string"
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".category-chooser").header().value(),
       "2",
       "it fills category selector with the right category"
@@ -48,14 +48,14 @@ acceptance("Topic", function (needs) {
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
       "it fills composer with the ring string"
     );
 
     const privateMessageUsers = selectKit("#private-message-users");
-    assert.equal(
+    assert.strictEqual(
       privateMessageUsers.header().value(),
       "someguy,test,Group",
       "it fills up the composer correctly"
@@ -96,12 +96,12 @@ acceptance("Topic", function (needs) {
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#topic-title .badge-category").text(),
       "faq",
       "it displays the new category"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "this is the new title",
       "it displays the new title"
@@ -117,13 +117,13 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.equal(count("button.wiki"), 1, "it shows the wiki icon");
+    assert.strictEqual(count("button.wiki"), 1, "it shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {
     await visit("/t/12");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "PM for testing",
       "it routes to the right topic"
@@ -131,7 +131,7 @@ acceptance("Topic", function (needs) {
 
     await visit("/t/280/20");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "Internationalization / localization",
       "it routes to the right topic"
@@ -187,7 +187,7 @@ acceptance("Topic", function (needs) {
   test("Suggested topics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#suggested-topics .suggested-topics-title").text().trim(),
       I18n.t("suggested_topics.title")
     );
@@ -242,8 +242,8 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/-/299/1");
 
     const link = queryAll(".title-wrapper .topic-featured-link");
-    assert.equal(link.text(), " example.com");
-    assert.equal(link.attr("rel"), "ugc");
+    assert.strictEqual(link.text(), " example.com");
+    assert.strictEqual(link.attr("rel"), "ugc");
   });
 
   test("remove featured link", async function (assert) {

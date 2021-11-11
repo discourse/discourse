@@ -24,7 +24,7 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
   test("As an admin", async function (assert) {
     await visit("/g/discourse/manage/tags");
 
-    assert.equal(
+    assert.strictEqual(
       count(".groups-notifications-form .tag-chooser"),
       5,
       "it should display tag inputs"
@@ -36,7 +36,7 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
 
     await visit("/g/discourse/manage/tags");
 
-    assert.equal(
+    assert.strictEqual(
       count(".groups-notifications-form .tag-chooser"),
       5,
       "it should display tag inputs"

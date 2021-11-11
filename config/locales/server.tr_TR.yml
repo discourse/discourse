@@ -250,7 +250,6 @@ tr_TR:
   topic_invite:
     failed_to_invite: "Kullanıcı, aşağıdaki gruplardan birinde grup üyeliği olmadan bu konuya davet edilemez: %{group_names}."
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
-    muted_invitee: "Üzgünüz, o kullanıcı sizi sessize aldı."
     muted_topic: "Üzgünüz, o kullanıcı bu konuyu sessize aldı."
     receiver_does_not_allow_pm: "Üzgünüz, bu kullanıcı onlara özel mesaj göndermenize izin vermiyor."
     sender_does_not_allow_pm: "Üzgünüz, o kullanıcının size özel mesaj göndermesine izin vermiyorsunuz."
@@ -266,6 +265,7 @@ tr_TR:
   not_found: "İstenilen URL ya da kaynak bulunamadı."
   invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
   authenticator_not_found: "Kimlik doğrulama yöntemi mevcut değil veya devre dışı bırakıldı."
+  authenticator_no_connect: "Bu kimlik doğrulama sağlayıcısı varolan bir forum hesabına bağlanmaya izin vermez."
   invalid_api_credentials: "İstenilen kaynağı görüntülemenize izin verilmiyor. API kullanıcı adı veya parolası geçersiz."
   provider_not_enabled: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama kontrolü etkin değil."
   provider_not_found: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama sağlayıcısı mevcut değil."
@@ -367,7 +367,7 @@ tr_TR:
   read_full_topic: "Konunun tamamını okuyun"
   private_message_abbrev: "İlt"
   rss_description:
-    latest: "En son konular"
+    latest: "En Son Konular"
     top: "En iyi konular"
     top_all: "Tüm zamanlarda en iyi konular"
     top_yearly: "Yıllık en iyi konular"
@@ -477,6 +477,7 @@ tr_TR:
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
     dominating_topic: Birden fazla gönderdiniz %{percent}Burada cevapların% else orada herkesin duymak isteriz edilir?
+    get_a_room: '@%{reply_username} %{count} kez yanıt verdiniz, bunun yerine ona kişisel bir mesaj gönderebileceğinizi biliyor muydunuz?'
     too_many_replies: |
       ### Bu konu için cevap limitinizi doldurdunuz
 
@@ -654,6 +655,9 @@ tr_TR:
     has_likes:
       one: "%{count} Beğeni"
       other: "%{count} Beğeni"
+    cannot_permanently_delete:
+      many_posts: "Başka gönderiler olduğu için bu konuyu kalıcı olarak silemezsiniz."
+      wait_or_different_admin: "Bu gönderiyi kalıcı olarak silmeden önce %{time_left} beklemelisiniz veya farklı bir yönetici bunu yapmalıdır."
   rate_limiter:
     slow_down: "Bu işlemi çok fazla yaptınız, lütfen daha sonra tekrar deneyin."
     too_many_requests: "Bu işlemi çok defa yaptınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
@@ -1330,8 +1334,12 @@ tr_TR:
     queue_size_warning: "Kuyruğa eklenmiş işlerin sayısı fazla: %{queue_size}. Bu Sidekiq işlem(ler)indeki bir sorunu işaret ediyor olabilir, ya da daha fazla Sidekiq işçisi eklemeniz gerekiyor olabilir."
     memory_warning: "Sunucunuz toplam 1GB'tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir."
     google_oauth2_config_warning: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve oturum açmaya izin verecek şekilde yapılandırılmıştır, ancak istemci kimliği ve istemci gizli değerleri ayarlanmamıştır. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazlasını öğrenmek için bu kılavuza bakın</a>.'
+    facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulmasına ve giriş yapılmasına izin veriyor, fakat uygulama ID''si ve gizli uygulama değerleri henüz ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu kılavuza bakın</a>.'
+    twitter_config_warning: 'Sunucu Twitter (enable_twitter_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat anahtar ve gizli değerler henüz ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a>gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi için bu kılavuza bakın</a>.'
+    github_config_warning: 'Sunucu GitHub (enable_github_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat iclient ID ve client secret değerleri henüz ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi için bu kılavuza bakın</a>.'
     s3_config_warning: 'Sunucu s3''e dosya yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "S3''e resim yüklemeleri nasıl ayarlanır?" konulu gönderiye bakın</a>.'
     s3_backup_config_warning: 'Sunucu s3''e yedeklerin yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarlarına</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "S3''e resim yüklemeleri nasıl ayarlanır?" konulu gönderiye bakın</a>.'
+    s3_cdn_warning: 'Sunucu, dosyaları S3''e yükleyecek şekilde yapılandırılmış ancak yapılandırılmış bir S3 CDN''si yok. Bu, pahalı S3 maliyetlerine ve daha yavaş site performansına yol açabilir. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Daha fazla bilgi için bkz. "Yüklemeler için Nesne Depolamayı Kullanma"</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
@@ -1345,6 +1353,7 @@ tr_TR:
     force_https_warning: "Web siteniz SSL kullanıyor. Ancak site ayarlarınızda ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> henüz etkin değil."
     out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcuttur:"
     unreachable_themes: "Aşağıdaki temalar için güncellemeleri kontrol edemedik:"
+    watched_word_regexp_error: "İzlenen %{action} kelimeler için normal ifadeye geçersiz, Lütfen <a href='%{base_path}/admin/logs/watched_words'>İzlenen Kelime ayarlarınızı</a> kontrol edin veya 'izlenen kelimeler normal ifadeler' site ayarını devre dışı bırakın."
   site_settings:
     disabled: "devredışı"
     display_local_time_in_user_card: "Kullanıcı kartı açıkken yerel saati kullanıcının saat dilimine göre görüntüle."
@@ -1352,6 +1361,7 @@ tr_TR:
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
     default_locale: "Bu Söylem örneğinin varsayılan dili. <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Özelleştir / Metin</a>ile sistem tarafından oluşturulan kategorilerin ve konuların metnini değiştirebilirsiniz."
     allow_user_locale: "Kullanıcıların arayüz için kendi istedikleri dili seçmesine izin ver"
+    set_locale_from_accept_language_header: "anonim kullanıcılar için web tarayıcılarının dil başlıklarından arayüz dilini ayarlayın"
     support_mixed_text_direction: "Soldan sağa ve sağdan sola karışık metin yönlerini destekleyin."
     min_post_length: "Gönderide olması gereken en az karakter sayısı"
     min_first_post_length: "İlk gönderi için (konu içi) izin verilen en az karakter sayısı"
@@ -1359,6 +1369,7 @@ tr_TR:
     max_post_length: "Gönderide izin verilen en fazla karakter sayısı"
     topic_featured_link_enabled: "Konuları olan bir bağlantı yayınlamayı etkinleştir."
     show_topic_featured_link_in_digest: "Özetlenmiş e-postada konu özellikli bağlantıyı gösterin."
+    min_topic_views_for_delete_confirm: "Bir konunun silindiğinde bir onay açılır penceresinin görünmesi için sahip olması gereken minimum görüntüleme sayısı"
     min_topic_title_length: "Konuda olması gereken en az karakter sayısı"
     max_topic_title_length: "Konu başlığında izin verilen en fazla karakter sayısı"
     min_personal_message_title_length: "İleti başlıkları için izin verilen en az karakter sayısı"
@@ -1375,11 +1386,14 @@ tr_TR:
     category_search_priority_high_weight: "Yüksek kategori öncelikli arama için sıralamada uygulanan ağırlık."
     allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver. DİKKAT: Bu özelliği kapamadan önce kategorisiz tüm konuları kategorize etmeniz lazım."
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
+    allow_duplicate_topic_titles_category: "Farklı kategorilerde aynı başlıkla konu açılmasına izin ver. allow_duplicate_topic_titles devre dışı bırakılmalıdır."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
     title: "Sayfa başlığı etiketinde kullanılacak, bu sitenin ismi."
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
     short_site_description: "Ana sayfadaki başlık etiketinde kullanılan kısa açıklama."
+    contact_email: "Bu site için yöneticini e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
+    contact_url: "Bu site için iletişim URL'sidir. Acil konular için <a href='%{base_path}/about' target='_blank'>/ about</a> iletişim formunda kullanılır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
@@ -1406,6 +1420,7 @@ tr_TR:
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     blocked_onebox_domains: "Asla yayınlanmayacak alanların listesi."
     allowed_inline_onebox_domains: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
+    enable_inline_onebox_on_all_domains: "İnline_onebox_domain_whitelist site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
     max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
     facebook_app_access_token: "Facebook uygulama kimliğinizden ve gizli dizenizden bir token oluşturuldu. Instagram onebox'larını oluşturmak için kullanılır."
@@ -1418,6 +1433,7 @@ tr_TR:
     mobile_logo_dark: "'Mobil logo' ayarı için koyu şema alternatifi."
     large_icon: "Diğer meta veri simgeleri için temel olarak kullanılan resim. İdeal olarak 512 x 512 den büyük olmalıdır. Boş bırakılırsa logo_small kullanılacaktır."
     manifest_icon: "Android de logo/splash görüntüsü olarak kullanılan resim. Otomatik şekilde 512 × 512 olarak yeniden boyutlandırılır. Boş bırakılırsa, large_icon kullanılır."
+    manifest_screenshots: "Uygulama yükleme (PWA) sayfasında örnek özelliklerinizi ve işlevselliğinizi gösteren ekran görüntüleri. Tüm resimler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
     favicon: "Siteniz için bir simge, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>Https://en.wikipedia.org/wiki/Favicon</a> . Bir CDN üzerinde düzgün çalışmak için bir png olması gerekir. 32x32 olarak yeniden boyutlandırılacak. Boş bırakılırsa, large_icon kullanılır."
     apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 boyutuna getirilecek. Boş bırakılırsa, large_icon kullanılır."
     opengraph_image: "Sayfada başka uygun görüntü yoksa varsayılan açık grafik görüntüsü. Boş bırakılırsa, large_icon kullanılır"
@@ -1426,14 +1442,19 @@ tr_TR:
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu biçimi. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlantı verip vermediğini bilecektir."
+    enforce_second_factor: "Kullanıcıları ikinci faktör kimlik doğrulamasını etkinleştirmeye zorlar. Tüm kullanıcılara uygulamak için \"tümü\"; seçeneğini seçin. Yalnızca yetkili kullanıcılara uygulamak için \"yetkili\" seçin."
     force_https: "Sitenizi HTTPS kullanmaya zorlayın. DİKKAT: bu seçeneği HTTPS'nin her yerde doğru bir şekilde çalıştığından emin olmadan SEÇMEYİN. Sitenizde bulunan paylaşım siteleri bağlantılarını, CDN' adresinizi, dışsal bağlantısı olan görsellerinizi de kontrol ettiniz mi?"
+    same_site_cookies: "Aynı site çerezlerini kullanın, desteklenen tüm tarayıcılardaki Siteler Arası İstek Sahteciliği'ni (Lax veya Strict) ortadan kaldırırlar. Uyarı: Katı kurallı oturum, yalnızca giriş yapmaya ve TOA kullanmaya zorlayan sitelerde çalışır."
     summary_score_threshold: "Bir gönderinin 'Bu Konuyu Özetle' içinde yer alması için gereken en az skor."
+    summary_posts_required: "'Bu Konuyu Özetle' etkinleştirilmeden önce bir konudaki minimum gönderi sayısı. Bu ayarda yapılan değişiklikler bir hafta içinde geriye dönük olarak uygulanacaktır."
+    summary_likes_required: "'Bu Konuyu Özetle' etkinleştirilmeden önce bir konudaki minimum gönderi sayısı. Bu ayarda yapılan değişiklikler bir hafta içinde geriye dönük olarak uygulanacaktır."
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle' den dönen en fazla gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde 'Özetle' düğmesi göster"
-    enable_personal_messages: "Güven seviyesi 1'e(özel ileti göndermek için en az seviye ayarıyla belirlenebilir) sahip kullanıcıların ileti oluşturup cevaplamasına izin ver. Görevliler her durumda ileti gönderebilir."
+    enable_personal_messages: "Güven düzeyi 1 (mesaj göndermek için minimum güven seviyesi ile yapılandırılabilir) kullanıcıların mesaj oluşturmasına ve mesajları yanıtlamasına izin verin. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel mesajlar devre dışı bırakılsa bile kullanıcıların sistem mesajlarını yanıtlamasına izin verir"
     enable_long_polling: "Bildiri için kullanılan ileti yolu uzun sorgular yapabilir"
+    enable_chunked_encoding: "Sunucu tarafından yığınlanmış kodlama yanıtlarını etkinleştirin. Bu özellik çoğu kurulumda çalışır, ancak bazı proxy'ler arabelleğe alabilir ve yanıtların gecikmesine neden olabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa, bunu origin olarak ayarladığına emin ol) ör: http://origin.site.com"
     long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
@@ -1727,7 +1748,6 @@ tr_TR:
     topic_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni konu görüntülemesi say"
     user_profile_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni profil görüntülemesi say"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
-    max_new_accounts_per_registration_ip: "Eğer bu IP'den güven seviyesi 0 olan halihazırda (n) hesap varsa (hiçbiri görevli, GS2 ya da daha yüksek seviyede biri değilse), bu IP'den yeni kayıt kabul etme."
     min_ban_entries_for_roll_up: "Topla düğmesine tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
     max_age_unmatched_emails: "Taranmış e-posta kayıtlarından karşılığı olmayanları (N) gün sonunda sil."
     max_age_unmatched_ips: "Taranmış IP girişlerinden karşılığı olmayanları (N) gün sonunda sil."
@@ -1852,6 +1872,7 @@ tr_TR:
     permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygula, mesela: /(\\/topic.*)\\?.*/\\1 konu yönlendirmelerindeki sorgu dizelerini kaldırır. Formatlama regex+string, yakalamalara erişmek \\1 vs."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM, global olmayan banner uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_system_edit_notifications: "'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
+    disable_category_edit_notifications: "Konularda kategori düzenleme bildirimlerini devre dışı bırakın."
     notification_consolidation_threshold: "Bildirimler tek bir konsolide toplanmadan önce alınan beğeni veya üyelik talebi bildirimlerinin sayısı. Devre dışı bırakmak için 0 olarak ayarlayın."
     likes_notification_consolidation_window_mins: "Beğenilen bildirimlerin eşiğe ulaşıldığında tek bir bildirimde birleştirildiği dakika cinsinden süre. Eşik değeri 'SiteSetting.notification_consolidation_threshold' aracılığıyla yapılandırılabilir."
     automatically_unpin_topics: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
@@ -2834,7 +2855,7 @@ tr_TR:
 
         Tedbir olarak hesabınız sessize alındı. Bir görevli hesabınızı kontrol edene kadar konulara cevap yazamayacak veya yeni konu açamayacaksınız. Verdiğimiz rahatsızlıktan dolayı özür dileriz.
 
-        Ek bilgi için, başvurunuz [topluluk yönergelerine](%{base_url}/guidelines).
+        Ek bilgi için [topluluk yönergelerine](%{base_url}/guidelines) bakınız.
     too_many_tl3_flags:
       title: "Çok Fazla GS3 Raporu"
       subject_template: "Yeni hesap askıda"
@@ -2845,7 +2866,7 @@ tr_TR:
 
         Tedbir olarak hesabınız sessize alındı. Bir görevli hesabınızı kontrol edene kadar konulara cevap yazamayacak veya yeni konu açamayacaksınız. Verdiğimiz rahatsızlıktan dolayı özür dileriz.
 
-        Ek bilgi için, başvurunuz [topluluk yönergelerine](%{base_url}/guidelines).
+        Ek bilgi için [topluluk yönergelerine](%{base_url}/guidelines) bakınız.
     silenced_by_staff:
       title: "Görevli tarafından sessize alındı."
       subject_template: "Hesap geçiçi olarak askıda"
@@ -2856,7 +2877,7 @@ tr_TR:
 
         Lütfen gezmeye devam edin fakat bir [görevli](%{base_url}/about) son gönderilerinizi kontrol edene kadar konulara cevap yazamayacak veya konu açamayacaksınız. Verdiğimiz rahatsızlıktan dolayı özür dileriz.
 
-        Ek bilgi için, başvurunuz [topluluk yönergelerine](%{base_url}/guidelines).
+        Ek bilgi için [topluluk yönergelerine](%{base_url}/guidelines) bakınız.
     user_automatically_silenced:
       title: "Kullanıcı otomatik olarak sessize alındı"
       subject_template: "Topluluk raporlarından dolayı yeni kullanıcı %{username} sessize alındı"
@@ -3792,10 +3813,8 @@ tr_TR:
             label: "Topluluğunuzun ismi"
             placeholder: "Ali'nin Yeri"
           site_description:
-            label: "Topluluğunuzu kısa bir cümle ile tanımlayın"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
           short_site_description:
-            label: "Topluluğunuzu birkaç kelimeyle açıklayın"
             placeholder: "Şimdiye kadarki en iyi topluluk"
       introduction:
         title: "Tanıtım"

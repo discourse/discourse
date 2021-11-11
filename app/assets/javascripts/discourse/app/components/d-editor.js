@@ -64,7 +64,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { siteSettings } = opts;
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -129,29 +129,31 @@ class Toolbar {
       action: (...args) => this.context.send("formatCode", args),
     });
 
-    this.addButton({
-      id: "bullet",
-      group: "extras",
-      icon: "list-ul",
-      shortcut: "Shift+8",
-      title: "composer.ulist_title",
-      preventFocus: true,
-      perform: (e) => e.applyList("* ", "list_item"),
-    });
+    if (!site.mobileView) {
+      this.addButton({
+        id: "bullet",
+        group: "extras",
+        icon: "list-ul",
+        shortcut: "Shift+8",
+        title: "composer.ulist_title",
+        preventFocus: true,
+        perform: (e) => e.applyList("* ", "list_item"),
+      });
 
-    this.addButton({
-      id: "list",
-      group: "extras",
-      icon: "list-ol",
-      shortcut: "Shift+7",
-      title: "composer.olist_title",
-      preventFocus: true,
-      perform: (e) =>
-        e.applyList(
-          (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-          "list_item"
-        ),
-    });
+      this.addButton({
+        id: "list",
+        group: "extras",
+        icon: "list-ol",
+        shortcut: "Shift+7",
+        title: "composer.olist_title",
+        preventFocus: true,
+        perform: (e) =>
+          e.applyList(
+            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+            "list_item"
+          ),
+      });
+    }
 
     if (siteSettings.support_mixed_text_direction) {
       this.addButton({
@@ -339,6 +341,8 @@ export default Component.extend(TextareaTextManipulation, {
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
     }
+
+    this._cachedCookFunction = null;
   },
 
   @discourseComputed()
@@ -393,7 +397,7 @@ export default Component.extend(TextareaTextManipulation, {
         cookedElement.innerHTML = cooked;
 
         linkSeenHashtags($(cookedElement));
-        linkSeenMentions($(cookedElement), this.siteSettings);
+        linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,

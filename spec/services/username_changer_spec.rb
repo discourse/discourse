@@ -107,6 +107,7 @@ describe UsernameChanger do
       end
 
       def create_post_and_change_username(args = {}, &block)
+        stub_image_size
         post = create_post(args.merge(topic_id: topic.id))
 
         args.delete(:revisions)&.each do |revision|
@@ -366,7 +367,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -374,7 +375,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -382,7 +383,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -417,7 +418,7 @@ describe UsernameChanger do
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
               <div class="quote-controls"></div>
-              <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+              <img loading="lazy" alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
               <blockquote>
               <p>quoted</p>
               </blockquote>
@@ -459,7 +460,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -470,7 +471,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.topic.url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -489,7 +490,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -500,7 +501,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
                 <a href="#{protocol_relative_url(another_quoted_post.full_url)}">#{another_quoted_post.topic.title}</a>
               </div>
               <blockquote>

@@ -40,4 +40,12 @@ export default Component.extend({
       ? "discourse-compress"
       : "discourse-expand";
   },
+
+  @discourseComputed("disableTextarea")
+  showFullScreenButton(disableTextarea) {
+    if (this.site.mobileView) {
+      return false;
+    }
+    return !disableTextarea;
+  },
 });

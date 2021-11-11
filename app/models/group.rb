@@ -979,23 +979,26 @@ class Group < ActiveRecord::Base
         /*where*/
       SQL
 
-      builder = DB.build(sql)
-      builder.where(<<~SQL, id: id)
-        id IN (
-          SELECT user_id
-          FROM group_users
-          WHERE group_id = :id
-        )
-      SQL
+      [:primary_group_id, :flair_group_id].each do |column|
+        builder = DB.build(sql)
+        builder.where(<<~SQL, id: id)
+          id IN (
+            SELECT user_id
+            FROM group_users
+            WHERE group_id = :id
+          )
+        SQL
 
-      if primary_group
-        builder.set("primary_group_id = :id")
-      else
-        builder.set("primary_group_id = NULL")
-        builder.where("primary_group_id = :id")
+        if primary_group
+          builder.set("#{column} = :id")
+          builder.where("#{column} IS NULL") if column == :flair_group_id
+        else
+          builder.set("#{column} = NULL")
+          builder.where("#{column} = :id")
+        end
+
+        builder.exec
       end
-
-      builder.exec
     end
   end
 

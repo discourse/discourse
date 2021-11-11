@@ -9,7 +9,7 @@ import sinon from "sinon";
 const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
-  return $.Event("click", { currentTarget: fixture(selector).first() });
+  return $.Event("click", { currentTarget: fixture(selector) });
 }
 
 module("Unit | Utility | click-track-edit-history", function (hooks) {
@@ -25,8 +25,7 @@ module("Unit | Utility | click-track-edit-history", function (hooks) {
 
     sessionStorage.clear();
 
-    fixture().html(
-      `<div id="topic" data-topic-id="1337">
+    fixture().innerHTML = `<div id="topic" data-topic-id="1337">
        </div>
        <div id="revisions" data-post-id="42" class="">
          <div class="row">
@@ -55,8 +54,7 @@ module("Unit | Utility | click-track-edit-history", function (hooks) {
              <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
            </div>
          </div>
-       </div>`
-    );
+       </div>`;
   });
 
   skip("tracks internal URLs", async function (assert) {
@@ -65,7 +63,7 @@ module("Unit | Utility | click-track-edit-history", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
       );
@@ -80,7 +78,7 @@ module("Unit | Utility | click-track-edit-history", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
@@ -96,7 +94,7 @@ module("Unit | Utility | click-track-edit-history", function (hooks) {
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.equal(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );

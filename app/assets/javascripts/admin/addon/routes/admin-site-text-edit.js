@@ -24,7 +24,7 @@ export default Route.extend({
     controller.setProperties({
       siteText,
       saved: false,
-      localeFullName: localeFullName,
+      localeFullName,
     });
   },
 });

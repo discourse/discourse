@@ -221,7 +221,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
       if (categoryId) {
         options = $.extend({}, options, {
-          categoryId: categoryId,
+          categoryId,
           includeSubcategories: !controller.noSubcategories,
         });
       }

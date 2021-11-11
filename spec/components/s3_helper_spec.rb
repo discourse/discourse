@@ -129,4 +129,59 @@ describe "S3Helper" do
       expect(response.second).to eq("etag")
     end
   end
+
+  describe "#ensure_cors" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "does nothing if !s3_install_cors_rule" do
+      SiteSetting.s3_install_cors_rule = false
+      s3_helper.expects(:s3_resource).never
+      s3_helper.ensure_cors!
+    end
+
+    it "creates the assets rule if no rule exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, Aws::S3::Errors::NoSuchCORSConfiguration.new("", {}))
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS]
+        }
+      )
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
+    end
+
+    it "does nothing if a rule already exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).never
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
+    end
+
+    it "applies the passed in rule if a different rule already exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      )
+      s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+    end
+
+    it "returns false if the CORS rules do not get applied from an error" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      ).raises(Aws::S3::Errors::AccessDenied.new("test", "test", {}))
+      expect(s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])).to eq(false)
+    end
+  end
 end

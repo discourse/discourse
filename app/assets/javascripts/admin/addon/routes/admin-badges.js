@@ -32,7 +32,7 @@ export default DiscourseRoute.extend({
     });
 
     controller.setProperties({
-      badgeGroupings: badgeGroupings,
+      badgeGroupings,
       badgeTypes: json.badge_types,
       protectedSystemFields: json.admin_badges.protected_system_fields,
       badgeTriggers,

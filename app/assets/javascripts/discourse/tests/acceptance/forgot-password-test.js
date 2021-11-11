@@ -23,7 +23,7 @@ acceptance("Forgot password", function (needs) {
     await click("header .login-button");
     await click("#forgot-password-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".forgot-password-reset").attr("disabled"),
       "disabled",
       "it should disable the button until the field is filled"
@@ -32,7 +32,7 @@ acceptance("Forgot password", function (needs) {
     await fillIn("#username-or-email", "someuser");
     await click(".forgot-password-reset");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-error").html().trim(),
       I18n.t("forgot_password.complete_username_not_found", {
         username: "someuser",
@@ -43,7 +43,7 @@ acceptance("Forgot password", function (needs) {
     await fillIn("#username-or-email", "someuser@gmail.com");
     await click(".forgot-password-reset");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-error").html().trim(),
       I18n.t("forgot_password.complete_email_not_found", {
         email: "someuser@gmail.com",
@@ -62,7 +62,7 @@ acceptance("Forgot password", function (needs) {
       "it should remove the flash error when succeeding"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".modal-body").html().trim(),
       I18n.t("forgot_password.complete_username_found", {
         username: "someuser",
@@ -76,7 +76,7 @@ acceptance("Forgot password", function (needs) {
     await fillIn("#username-or-email", "someuser@gmail.com");
     await click(".forgot-password-reset");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".modal-body").html().trim(),
       I18n.t("forgot_password.complete_email_found", {
         email: "someuser@gmail.com",
@@ -100,7 +100,7 @@ acceptance(
       await click("header .login-button");
       await click("#forgot-password-link");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".forgot-password-reset").attr("disabled"),
         "disabled",
         "it should disable the button until the field is filled"
@@ -109,7 +109,7 @@ acceptance(
       await fillIn("#username-or-email", "someuser");
       await click(".forgot-password-reset");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".modal-body").html().trim(),
         I18n.t("forgot_password.complete_username", {
           username: "someuser",

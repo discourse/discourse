@@ -83,7 +83,7 @@ export default Component.extend({
           !topic.archived &&
           !topic.closed &&
           !topic.deleted,
-        topic: topic,
+        topic,
       });
     },
 

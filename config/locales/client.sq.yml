@@ -2180,12 +2180,8 @@ sq:
             text: "Fundi i faqes"
           embedded_scss:
             text: "CSS e ngjitur"
-          head_tag:
-            text: "</head>"
-            title: "HTML që do të vendoset para mbylles së tagut <head>"
           body_tag:
-            text: "</body>"
-            title: "HTML që do të vendoset para mbylljes së tagut <body>"
+            text: "Trupi"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -2704,7 +2700,6 @@ sq:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         uploading: "Duke ngarkuar..."
         name: "Emri"

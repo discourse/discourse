@@ -20,13 +20,13 @@ discourseModule(
     `,
 
       async test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".d-icon-far-image"),
           1,
           "it displays the upload icon"
         );
 
-        assert.equal(
+        assert.strictEqual(
           count(".d-icon-far-trash-alt"),
           1,
           "it displays the trash icon"
@@ -39,8 +39,8 @@ discourseModule(
 
         await click(".image-uploader-lightbox-btn");
 
-        assert.equal(
-          $(".mfp-container").length,
+        assert.strictEqual(
+          document.querySelectorAll(".mfp-container").length,
           1,
           "it displays the image lightbox"
         );
@@ -51,7 +51,7 @@ discourseModule(
       template: hbs`{{uppy-image-uploader id="test-uppy-image-uploader"}}`,
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".d-icon-far-image"),
           1,
           "it displays the upload icon"
@@ -73,7 +73,7 @@ discourseModule(
       template: hbs`{{uppy-image-uploader id="test-uppy-image-uploader" placeholderUrl='/images/avatar.png'}}`,
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".d-icon-far-image"),
           1,
           "it displays the upload icon"
@@ -89,7 +89,7 @@ discourseModule(
           "it does not display the button to open image lightbox"
         );
 
-        assert.equal(
+        assert.strictEqual(
           count(".placeholder-overlay"),
           1,
           "it displays the placeholder image"

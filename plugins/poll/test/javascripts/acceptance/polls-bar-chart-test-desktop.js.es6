@@ -46,15 +46,15 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
 
     const polls = queryAll(".poll");
 
-    assert.equal(polls.length, 2, "it should render the polls correctly");
+    assert.strictEqual(polls.length, 2, "it should render the polls correctly");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".info-number", polls[0]).text(),
       "2",
       "it should display the right number of votes"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".info-number", polls[1]).text(),
       "3",
       "it should display the right number of votes"
@@ -65,11 +65,11 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     await visit("/t/-/14");
 
     const polls = queryAll(".poll");
-    assert.equal(polls.length, 1, "it should render the poll correctly");
+    assert.strictEqual(polls.length, 1, "it should render the poll correctly");
 
     await click("button.toggle-results");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       25,
       "it should display the right number of voters"
@@ -77,7 +77,7 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
 
     await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       26,
       "it should display the right number of voters"
@@ -88,11 +88,11 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     await visit("/t/-/13");
 
     const polls = queryAll(".poll");
-    assert.equal(polls.length, 1, "it should render the poll correctly");
+    assert.strictEqual(polls.length, 1, "it should render the poll correctly");
 
     await click("button.toggle-results");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       25,
       "it should display the right number of voters"
@@ -105,7 +105,7 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
 
     await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       30,
       "it should display the right number of voters"

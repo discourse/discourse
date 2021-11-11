@@ -37,7 +37,8 @@
   &.disabled {
     cursor: not-allowed;
     .d-editor-button-bar {
-      visibility: hidden;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
@@ -176,23 +177,34 @@
       opacity: 1;
     }
   }
+
   .button-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5em;
+
     position: absolute;
     height: var(--resizer-height);
     bottom: 0;
     left: 0;
     opacity: 0;
-    display: flex;
-    align-items: center;
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
     width: 100%;
     background: var(--secondary); // for when images are wider than controls
 
+    .scale-btn-container,
+    .alt-text-readonly-container {
+      background: var(--secondary);
+      display: flex;
+      height: var(--resizer-height);
+      align-items: center;
+    }
+
     .scale-btn {
-      background: var(--secondary); // for when controls are wider than image
       color: var(--tertiary);
       padding: 0 1em;
+
       &:first-child,
       &:last-child {
         padding: 0;
@@ -206,6 +218,38 @@
       &:not(.active):hover {
         text-decoration: underline;
         cursor: pointer;
+      }
+    }
+
+    .alt-text-readonly-container {
+      max-width: 100%;
+      flex: 1 1;
+
+      .alt-text {
+        margin-right: 0.5em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .alt-text-edit-btn svg {
+        padding-right: 0.5em;
+        pointer-events: none;
+      }
+
+      .alt-text-input {
+        height: var(--resizer-height);
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        margin: 0;
+
+        &[hidden="true"] {
+          display: none;
+        }
       }
     }
   }
@@ -230,6 +274,9 @@
     display: inline-block;
     border-left: 1px solid var(--primary-low-mid);
     margin: 0 0.25em;
+    .mobile-view & {
+      display: none;
+    }
   }
 
   .btn:focus {
