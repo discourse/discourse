@@ -474,7 +474,7 @@ module("Unit | Model | report", function () {
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
       computedUsernameLabel.formatedValue,
-      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
 
