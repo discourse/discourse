@@ -6,7 +6,7 @@ describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    Rack::MockRequest.env_for("http://test.com/path?bla=1").merge(opts)
+    create_request_env(path: "http://test.com/path?bla=1").merge(opts)
   end
 
   describe Middleware::AnonymousCache::Helper do
@@ -24,19 +24,12 @@ describe Middleware::AnonymousCache do
       end
 
       it "is false if it has a valid auth cookie" do
-        cookie = DiscourseAuthCookie.new(
-          token: SecureRandom.hex,
-          issued_at: 5.minutes.ago,
-        ).serialize
+        cookie = create_auth_cookie(token: SecureRandom.hex)
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(false)
       end
 
       it "is true if it has an invalid auth cookie" do
-        cookie = DiscourseAuthCookie.new(
-          token: SecureRandom.hex,
-          issued_at: 5.minutes.ago,
-        ).serialize
-
+        cookie = create_auth_cookie(token: SecureRandom.hex, issued_at: 5.minutes.ago)
         cookie = swap_2_different_characters(cookie)
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
@@ -156,17 +149,15 @@ describe Middleware::AnonymousCache do
 
       global_setting :background_requests_max_queue_length, "0.5"
 
-      cookie = DiscourseAuthCookie.new(
-        token: SecureRandom.hex
-      ).serialize
-      env = {
+      cookie = create_auth_cookie(token: SecureRandom.hex)
+      env = create_request_env.merge(
         "HTTP_COOKIE" => "_t=#{cookie}",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",
         "REQUEST_URI" => "/somewhere/rainbow",
         "REQUEST_QUEUE_SECONDS" => 2.1,
         "rack.input" => StringIO.new
-      }
+      )
 
       # non background ... long request
       env["REQUEST_QUEUE_SECONDS"] = 2
@@ -211,10 +202,8 @@ describe Middleware::AnonymousCache do
       global_setting :force_anonymous_min_per_10_seconds, 2
       global_setting :force_anonymous_min_queue_seconds, 1
 
-      cookie = DiscourseAuthCookie.new(
-        token: SecureRandom.hex
-      ).serialize
-      env = {
+      cookie = create_auth_cookie(token: SecureRandom.hex)
+      env = create_request_env.merge(
         "HTTP_COOKIE" => "_t=#{cookie}",
         "HTTP_DISCOURSE_LOGGED_IN" => "true",
         "HOST" => "site.com",
@@ -222,7 +211,7 @@ describe Middleware::AnonymousCache do
         "REQUEST_URI" => "/somewhere/rainbow",
         "REQUEST_QUEUE_SECONDS" => 2.1,
         "rack.input" => StringIO.new
-      }
+      )
 
       is_anon = false
       app.call(env.dup)

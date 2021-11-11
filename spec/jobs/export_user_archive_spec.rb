@@ -42,10 +42,11 @@ describe Jobs::ExportUserArchive do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
       # force a UserAuthTokenLog entry
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, {})
 
       # force a nonstandard post action
       PostAction.new(user: user, post: post, post_action_type_id: 5).save
@@ -198,10 +199,11 @@ describe Jobs::ExportUserArchive do
     let(:component) { 'auth_tokens' }
 
     before do
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, {})
     end
 
     it 'properly includes session records' do

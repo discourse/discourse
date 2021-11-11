@@ -1,6 +1,27 @@
 # frozen_string_literal: true
 require_relative '../route_matcher'
 
+# You may have seen references to v0 and v1 of our auth cookie in the codebase
+# and you're not sure how they differ, so here is an explanation:
+#
+# From the very early days of Discourse, the auth cookie (_t) consisted only of
+# a 32 characters random string that Discourse used to identify/lookup the
+# current user. We didn't include any metadata with the cookie or encrypt/sign
+# it.
+#
+# That was v0 of the auth cookie until Nov 2021 when we merged a change that
+# required us to store additional metadata with the cookie so we could get more
+# information about current user early in the request lifecycle before we
+# performed database lookup. We also started encrypting and signing the cookie
+# to prevent tampering and obfuscate user information that we include in the
+# cookie. This is v1 of our auth cookie and we still use it to this date.
+#
+# We still accept v0 of the auth cookie to keep users logged in, but upon
+# cookie rotation (which happen every 10 minutes) they'll be switched over to
+# the v1 format.
+#
+# We'll drop support for v0 after Discourse 2.9 is released.
+
 class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
@@ -19,6 +40,8 @@ class Auth::DefaultCurrentUserProvider
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
+
+  TOKEN_SIZE = 32
 
   PARAMETER_API_PATTERNS ||= [
     RouteMatcher.new(
@@ -86,25 +109,16 @@ class Auth::DefaultCurrentUserProvider
       api_key ||= request[API_KEY]
     end
 
-    auth_cookie = request.cookies[TOKEN_COOKIE].presence unless user_api_key || api_key
-    if auth_cookie
-      begin
-        cookie = DiscourseAuthCookie.parse(auth_cookie)
-        cookie = nil if !fresh_cookie?(cookie)
-      rescue  DiscourseAuthCookie::InvalidCookie
-        cookie = nil
-      end
-    end
-
+    auth_token = find_auth_token
     current_user = nil
 
-    if cookie
+    if auth_token
       limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
 
       if limiter.can_perform?
         @user_token = begin
           UserAuthToken.lookup(
-            cookie.token,
+            auth_token,
             seen: true,
             user_agent: @env['HTTP_USER_AGENT'],
             path: @env['REQUEST_PATH'],
@@ -240,14 +254,15 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def cookie_hash(unhashed_auth_token, user)
-    cookie = DiscourseAuthCookie.new(
+    data = {
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      issued_at: Time.zone.now
-    )
-    hash = {
-      value: cookie.serialize,
+      issued_at: Time.zone.now.to_i
+    }
+    temp_request = ActionDispatch::Request.new(@env)
+    hash = temp_request.cookie_jar.encrypted[TOKEN_COOKIE] = {
+      value: data,
       httponly: true,
       secure: SiteSetting.force_https
     }
@@ -258,6 +273,8 @@ class Auth::DefaultCurrentUserProvider
 
     if SiteSetting.same_site_cookies != "Disabled"
       hash[:same_site] = SiteSetting.same_site_cookies
+    else
+      hash.delete(:same_site)
     end
 
     hash
@@ -313,11 +330,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def has_auth_cookie?
-    cookie_string = @request.cookies[TOKEN_COOKIE]
-    return false if cookie_string.blank?
-    fresh_cookie?(DiscourseAuthCookie.parse(cookie_string))
-  rescue DiscourseAuthCookie::InvalidCookie
-    false
+    find_auth_token.present?
   end
 
   def should_update_last_seen?
@@ -423,8 +436,24 @@ class Auth::DefaultCurrentUserProvider
     )
   end
 
-  def fresh_cookie?(cookie)
-    return true if cookie.issued_at.blank?
-    cookie.issued_at >= SiteSetting.maximum_session_age.hours.ago.to_i
+  def find_auth_token
+    return @auth_token if defined?(@auth_token)
+
+    @auth_token = begin
+      token = @request.cookies[TOKEN_COOKIE]
+
+      # backward compatibility for v0 of our auth cookie
+      return token if token&.size == TOKEN_SIZE
+
+      return if !token
+
+      req = ActionDispatch::Request.new(@env)
+      cookie = req.cookie_jar.encrypted[TOKEN_COOKIE]
+      if cookie && cookie[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
+        cookie[:token]
+      else
+        nil
+      end
+    end
   end
 end

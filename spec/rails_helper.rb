@@ -474,6 +474,29 @@ def swap_2_different_characters(str)
   str
 end
 
+def create_request_env(path: nil)
+  env = Rails.application.env_config.dup
+  env.merge!(Rack::MockRequest.env_for(path)) if path
+  env
+end
+
+def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.zone.now)
+  request = ActionDispatch::Request.new(create_request_env)
+  data = {
+    token: token,
+    user_id: user_id,
+    trust_level: trust_level,
+    issued_at: issued_at.to_i
+  }
+  cookie = request.cookie_jar.encrypted["_t"] = { value: data }
+  cookie[:value]
+end
+
+def decrypt_auth_cookie(cookie)
+  request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
+  request.cookie_jar.encrypted["_t"]
+end
+
 class SpecSecureRandom
   class << self
     attr_accessor :value

@@ -17,12 +17,12 @@ describe Auth::DefaultCurrentUserProvider do
 
   def provider(url, opts = nil)
     opts ||= { method: "GET" }
-    env = Rack::MockRequest.env_for(url, opts)
+    env = create_request_env(path: url).merge(opts)
     TestProvider.new(env)
   end
 
   it "can be used to pretend that a user doesn't exist" do
-    provider = TestProvider.new({})
+    provider = TestProvider.new(create_request_env(path: "/"))
     expect(provider.current_user).to eq(nil)
   end
 
@@ -241,10 +241,6 @@ describe Auth::DefaultCurrentUserProvider do
       cookies["_t"][:value]
     end
 
-    let(:unhashed_token) do
-      DiscourseAuthCookie.parse(cookie).token
-    end
-
     before do
       @orig = freeze_time
       user.clear_last_seen_cache!(@orig)
@@ -349,7 +345,7 @@ describe Auth::DefaultCurrentUserProvider do
     @provider.log_on_user(user, {}, cookies)
 
     cookie = cookies["_t"][:value]
-    unhashed_token = DiscourseAuthCookie.parse(cookie).token
+    unhashed_token = decrypt_auth_cookie(cookie)[:token]
 
     token = UserAuthToken.find_by(user_id: user.id)
 
@@ -369,10 +365,10 @@ describe Auth::DefaultCurrentUserProvider do
     cookies = {}
     provider2.refresh_session(user, {}, cookies)
     expect(
-      DiscourseAuthCookie.parse(cookies["_t"][:value]).token
+      decrypt_auth_cookie(cookies["_t"][:value])[:token]
     ).not_to eq(unhashed_token)
     expect(
-      DiscourseAuthCookie.parse(cookies["_t"][:value]).token.size
+      decrypt_auth_cookie(cookies["_t"][:value])[:token].size
     ).to eq(32)
 
     token.reload
@@ -415,7 +411,7 @@ describe Auth::DefaultCurrentUserProvider do
       cookies = {}
       @provider.log_on_user(user, {}, cookies)
       cookie = cookies["_t"][:value]
-      unhashed_token = DiscourseAuthCookie.parse(cookie)
+      unhashed_token = decrypt_auth_cookie(cookie)[:token]
       freeze_time 20.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, {})
@@ -427,7 +423,7 @@ describe Auth::DefaultCurrentUserProvider do
       cookies = {}
       @provider.log_on_user(user, {}, cookies)
       cookie = cookies["_t"][:value]
-      unhashed_token = DiscourseAuthCookie.parse(cookie)
+      unhashed_token = decrypt_auth_cookie(cookie)[:token]
       freeze_time 2.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, {})
@@ -443,12 +439,12 @@ describe Auth::DefaultCurrentUserProvider do
 
     it "can only try 10 bad cookies a minute" do
       token = UserAuthToken.generate!(user_id: user.id)
-      cookie = DiscourseAuthCookie.new(
+      cookie = create_auth_cookie(
         token: token.unhashed_auth_token,
         user_id: user.id,
         trust_level: user.trust_level,
-        issued_at: 5.minutes.ago,
-      ).serialize
+        issued_at: 5.minutes.ago
+      )
 
       provider('/').log_on_user(user, {}, {})
 
@@ -456,12 +452,12 @@ describe Auth::DefaultCurrentUserProvider do
       RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
 
       ip = "10.0.0.1"
-      bad_cookie = DiscourseAuthCookie.new(
+      bad_cookie = create_auth_cookie(
         token: SecureRandom.hex,
         user_id: user.id,
         trust_level: user.trust_level,
         issued_at: 5.minutes.ago,
-      ).serialize
+      )
 
       env = { "HTTP_COOKIE" => "_t=#{bad_cookie}", "REMOTE_ADDR" => ip }
 
@@ -487,12 +483,12 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "correctly removes invalid cookies" do
-    bad_cookie = DiscourseAuthCookie.new(
+    bad_cookie = create_auth_cookie(
       token: SecureRandom.hex,
       user_id: 1,
       trust_level: 4,
       issued_at: 5.minutes.ago,
-    ).serialize
+    )
     cookies = { "_t" => bad_cookie }
     provider('/').refresh_session(nil, {}, cookies)
     expect(cookies.key?("_t")).to eq(false)
@@ -554,12 +550,12 @@ describe Auth::DefaultCurrentUserProvider do
   it "correctly expires session" do
     SiteSetting.maximum_session_age = 2
     token = UserAuthToken.generate!(user_id: user.id)
-    cookie = DiscourseAuthCookie.new(
+    cookie = create_auth_cookie(
       token: token.unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
-      issued_at: 5.minutes.ago,
-    ).serialize
+      issued_at: 5.minutes.ago
+    )
 
     provider('/').log_on_user(user, {}, {})
 

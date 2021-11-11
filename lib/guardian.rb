@@ -529,13 +529,14 @@ class Guardian
   end
 
   def auth_token
-    cookie_string = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE].presence
+    cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
+    cookie_string = request&.cookies[cookie_name].presence
     if cookie_string
-      cookie = DiscourseAuthCookie.parse(cookie_string)
-      UserAuthToken.hash_token(cookie.token)
+      req = ActionDispatch::Request.new(request.env)
+      cookie = req.cookie_jar.encrypted[cookie_name]
+      return if !cookie
+      UserAuthToken.hash_token(cookie[:token])
     end
-  rescue DiscourseAuthCookie::InvalidCookie
-    nil
   end
 
   private

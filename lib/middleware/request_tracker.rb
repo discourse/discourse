@@ -176,21 +176,11 @@ class Middleware::RequestTracker
     ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
 
     request = Rack::Request.new(env)
-    cookie_string = request.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE].presence
-    if cookie_string
-      begin
-        cookie = DiscourseAuthCookie.parse(cookie_string)
-        if cookie.issued_at && cookie.issued_at < max_cookie_age.ago.to_i
-          cookie = nil
-        end
-      rescue DiscourseAuthCookie::InvalidCookie
-        cookie = nil
-      end
-    end
 
+    cookie = find_auth_cookie(env)
     limiter = RequestsRateLimiter.new(
-      user_id: cookie&.user_id,
-      trust_level: cookie&.trust_level,
+      user_id: cookie&.dig(:user_id),
+      trust_level: cookie&.dig(:trust_level),
       request: request
     )
     limiter.apply_limits! do
@@ -234,6 +224,17 @@ class Middleware::RequestTracker
       unless Discourse.pg_readonly_mode?
         self.class.log_request(data)
       end
+    end
+  end
+
+  def find_auth_cookie(env)
+    request = ActionDispatch::Request.new(env)
+    cookie = request.cookie_jar.encrypted[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
+
+    if cookie && cookie[:issued_at] >= max_cookie_age.ago.to_i
+      cookie
+    else
+      nil
     end
   end
 

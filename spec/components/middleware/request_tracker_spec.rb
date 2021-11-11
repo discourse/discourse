@@ -3,16 +3,15 @@
 require "rails_helper"
 
 describe Middleware::RequestTracker do
-
   def env(opts = {})
-    {
+    create_request_env.merge(
       "HTTP_HOST" => "http://test.com",
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
       "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      "rack.input" => ""
-    }.merge(opts)
+      "rack.input" => StringIO.new
+    ).merge(opts)
   end
 
   before do
@@ -140,12 +139,12 @@ describe Middleware::RequestTracker do
       let(:logged_in_data) do
         user = Fabricate(:user, active: true)
         token = UserAuthToken.generate!(user_id: user.id)
-        cookie = DiscourseAuthCookie.new(
+        cookie = create_auth_cookie(
           token: token.unhashed_auth_token,
           user_id: user.id,
           trust_level: user.trust_level,
-          issued_at: 5.minutes.ago,
-        ).serialize
+          issued_at: 5.minutes.ago
+        )
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
           "HTTP_COOKIE" => "_t=#{cookie};"
@@ -470,12 +469,12 @@ describe Middleware::RequestTracker do
       envs = 3.times.map do |n|
         user = Fabricate(:user, trust_level: 3)
         token = UserAuthToken.generate!(user_id: user.id)
-        cookie = DiscourseAuthCookie.new(
+        cookie = create_auth_cookie(
           token: token.unhashed_auth_token,
           user_id: user.id,
           trust_level: user.trust_level,
-          issued_at: 5.minutes.ago,
-        ).serialize
+          issued_at: 5.minutes.ago
+        )
         env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
       end
 
@@ -507,12 +506,12 @@ describe Middleware::RequestTracker do
       global_setting :skip_per_ip_rate_limit_trust_level, 3
       user = Fabricate(:user, trust_level: 3)
       token = UserAuthToken.generate!(user_id: user.id)
-      cookie = DiscourseAuthCookie.new(
+      cookie = create_auth_cookie(
         token: token.unhashed_auth_token,
         user_id: user.id,
         trust_level: user.trust_level,
-        issued_at: Time.zone.now,
-      ).serialize
+        issued_at: 5.minutes.ago
+      )
       env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
 
       called = 0
@@ -626,5 +625,4 @@ describe Middleware::RequestTracker do
       expect(headers["X-Runtime"].to_f).to be > 0
     end
   end
-
 end

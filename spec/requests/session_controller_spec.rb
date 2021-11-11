@@ -1454,7 +1454,7 @@ RSpec.describe SessionController do
 
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
-          unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+          unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
           expect(UserAuthToken.hash_token(unhashed_token)).to eq(user.user_auth_tokens.first.auth_token)
         end
 
@@ -1641,7 +1641,7 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
-              unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+              unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
               expect(UserAuthToken.hash_token(unhashed_token))
                 .to eq(user.user_auth_tokens.first.auth_token)
             end
@@ -1660,7 +1660,7 @@ RSpec.describe SessionController do
               expect(session[:current_user_id]).to eq(user.id)
               expect(user.user_auth_tokens.count).to eq(1)
 
-              unhashed_token = DiscourseAuthCookie.parse(cookies[:_t]).token
+              unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
               expect(UserAuthToken.hash_token(unhashed_token))
                 .to eq(user.user_auth_tokens.first.auth_token)
             end
