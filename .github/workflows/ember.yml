@@ -10,7 +10,7 @@ jobs:
   build:
     name: run
     runs-on: macos-11
-    container: discourse/discourse_test:release
+    # container: discourse/discourse_test:release
     timeout-minutes: 60
 
     strategy:
