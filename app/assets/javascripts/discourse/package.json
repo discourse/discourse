@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
+    "@discourse/itsatrap": "^2.0.10",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
@@ -60,8 +61,7 @@
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
     "sinon": "^9.2.0",
-    "virtual-dom": "^2.1.1",
-    "@discourse/itsatrap": "^2.0.10"
+    "virtual-dom": "^2.1.1"
   },
   "engines": {
     "node": ">= 12.*",
@@ -75,5 +75,8 @@
     "paths": [
       "lib/bootstrap-json"
     ]
+  },
+  "devDependencies": {
+    "ember-exam": "6.1.0"
   }
 }
