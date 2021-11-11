@@ -82,3 +82,54 @@ export class UploadPreProcessorPlugin extends UppyPluginBase {
     return this._emitAllComplete(file, true);
   }
 }
+
+export class UploaderPlugin extends UppyPluginBase {
+  static pluginType = "uploader";
+
+  constructor(uppy, opts) {
+    super(uppy, opts);
+    this.type = this.constructor.pluginType;
+  }
+
+  _install(fn) {
+    this.uppy.addUploader(fn);
+  }
+
+  _uninstall(fn) {
+    this.uppy.removeUploader(fn);
+  }
+
+  _emitProgress(file) {
+    this.uppy.emit("upload-progress", file, null, this.id);
+  }
+
+  _emitComplete(file, skipped = false) {
+    this.uppy.emit("upload-complete", file, skipped, this.id);
+    return Promise.resolve();
+  }
+
+  _emitAllComplete(fileIds, skipped = false) {
+    fileIds.forEach((fileId) => {
+      let file = this._getFile(fileId);
+      this._emitComplete(file, skipped);
+    });
+    return Promise.resolve();
+  }
+
+  _emitError(file, errorMessage) {
+    // the error message is stored twice; once to show in a displayErrorForUpload
+    // modal, and on the .message property to show in the uppy logs
+    this.uppy.emit("upload-error", file, {
+      errors: [errorMessage],
+      message: `[${this.id}] ${errorMessage}`,
+    });
+  }
+
+  _skip(file) {
+    return this._emitComplete(file, true);
+  }
+
+  _skipAll(file) {
+    return this._emitAllComplete(file, true);
+  }
+}

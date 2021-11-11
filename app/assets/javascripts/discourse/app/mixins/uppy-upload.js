@@ -14,6 +14,7 @@ import XHRUpload from "@uppy/xhr-upload";
 import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 
@@ -156,7 +157,7 @@ export default Mixin.create(UppyS3Multipart, {
             }
           });
       } else {
-        this.uploadDone(response.body);
+        this.uploadDone(response.body || { fileName: file.name });
         if (this._inProgressUploads === 0) {
           this._reset();
         }
@@ -178,10 +179,14 @@ export default Mixin.create(UppyS3Multipart, {
       this.siteSettings.enable_direct_s3_uploads &&
       !this.preventDirectS3Uploads
     ) {
-      if (this.useMultipartUploadsIfAvailable) {
-        this._useS3MultipartUploads();
+      if (this.useChunkedUploads) {
+        this._useChunkedUploads();
       } else {
-        this._useS3Uploads();
+        if (this.useMultipartUploadsIfAvailable) {
+          this._useS3MultipartUploads();
+        } else {
+          this._useS3Uploads();
+        }
       }
     } else {
       this._useXHRUploads();
@@ -191,6 +196,16 @@ export default Mixin.create(UppyS3Multipart, {
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
+      headers: {
+        "X-CSRF-Token": this.session.csrfToken,
+      },
+    });
+  },
+
+  _useChunkedUploads() {
+    this.set("usingChunkedUploads", true);
+    this._uppyInstance.use(UppyChunkedUploader, {
+      url: "/admin/backups/upload",
       headers: {
         "X-CSRF-Token": this.session.csrfToken,
       },

@@ -6,7 +6,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend(UppyUploadMixin, {
   tagName: "span",
   type: "backup",
-  useMultipartUploadsIfAvailable: true,
+  useChunkedUploads: true,
+  // useMultipartUploadsIfAvailable: true,
 
   @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {
@@ -19,7 +20,8 @@ export default Component.extend(UppyUploadMixin, {
     return { skipValidation: true };
   },
 
-  uploadDone() {
-    this.done();
+  // TODO (martin) THis is a bit weird, consistency of payload
+  uploadDone(responseData) {
+    this.done(responseData.fileName);
   },
 });

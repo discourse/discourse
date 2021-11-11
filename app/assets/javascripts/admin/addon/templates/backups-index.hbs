@@ -1,12 +1,13 @@
 <div class="backup-options">
   {{#if localBackupStorage}}
-    {{resumable-upload
+    {{!resumable-upload
       target="/admin/backups/upload"
       success=(route-action "uploadSuccess")
       error=(route-action "uploadError")
       uploadText=uploadLabel
       title="admin.backups.upload.title"
       class="btn-default"}}
+    {{uppy-backup-uploader done=(route-action "uploadSuccess")}}
   {{else}}
     {{#if enableExperimentalBackupUploader}}
       {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
