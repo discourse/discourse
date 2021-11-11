@@ -47,5 +47,5 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember test --launch "${{ matrix.browser }}"
+        run: yarn ember test --launch "${{ matrix.browser }}"
         timeout-minutes: 60
