@@ -27,10 +27,10 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
-  tap_failed_tests_only: process.env.CI,
+  // tap_failed_tests_only: process.env.CI,
   parallel: 1, // disable parallel tests for stability
   browser_start_timeout: 120,
-  browser_disconnect_timeout: 120,
+  browser_disconnect_timeout: 40,
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
@@ -42,7 +42,7 @@ module.exports = {
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      '--js-flags="--lite_mode"',
+      '--js-flags="--max_old_space_size=2048 --max_semi_space_size=1024 --predictable_gc_schedule"',
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
     "Headless Firefox": ["--width=1440", "--height=900"],

@@ -130,22 +130,25 @@ function setupToolbar() {
 }
 
 function reportMemoryUsageAfterTests() {
-  QUnit.done(() => {
-    const usageBytes = performance.memory?.usedJSHeapSize;
-    let result;
-    if (usageBytes) {
-      result = `${(usageBytes / Math.pow(2, 30)).toFixed(3)}GB`;
-    } else {
-      result = "(performance.memory api unavailable)";
-    }
+  // QUnit.done(() => {
+  const usageBytes = performance.memory?.usedJSHeapSize;
+  const totalBytes = performance.memory?.jsHeapSizeLimit;
+  let result;
+  if (usageBytes) {
+    result = `${(usageBytes / Math.pow(2, 30)).toFixed(3)}GB ${(
+      totalBytes / Math.pow(2, 30)
+    ).toFixed(3)}GB `;
+  } else {
+    result = "(performance.memory api unavailable)";
+  }
 
-    writeSummaryLine(`Used JS Heap Size: ${result}`);
-  });
+  writeSummaryLine(`Used JS Heap Size: ${result}`);
+  // });
 }
 
 function writeSummaryLine(message) {
   // eslint-disable-next-line no-console
-  console.log(`\n${message}\n`);
+  // console.log(`\n${message}\n`);
   if (window.Testem) {
     window.Testem.useCustomAdapter(function (socket) {
       socket.emit("test-metadata", "summary-line", {
@@ -227,10 +230,12 @@ function setupTestsCommon(application, container, config) {
     setupData = setupDataElement.dataset;
     setupDataElement.remove();
   }
+
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
+    reportMemoryUsageAfterTests();
 
     if (config) {
       // Ember CLI testing environment
