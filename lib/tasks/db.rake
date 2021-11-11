@@ -114,7 +114,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     raise "Multisite migrate is only supported in production"
   end
 
-  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
+  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 1200) do
     # TODO: Switch to processes for concurrent migrations because Rails migration
     # is not thread safe by default.
     concurrency = 1
