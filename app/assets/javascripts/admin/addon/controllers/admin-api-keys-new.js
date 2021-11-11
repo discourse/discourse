@@ -10,7 +10,8 @@ import { ajax } from "discourse/lib/ajax";
 
 export default Controller.extend({
   userModes: null,
-  useGlobalKey: false,
+  scopeModes: null,
+  globalScopes: null,
   scopes: null,
 
   init() {
@@ -20,6 +21,13 @@ export default Controller.extend({
       { id: "all", name: I18n.t("admin.api.all_users") },
       { id: "single", name: I18n.t("admin.api.single_user") },
     ]);
+
+    this.set("scopeModes", [
+      { id: "granular", name: I18n.t("admin.api.scopes.granular") },
+      { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
+      { id: "global", name: I18n.t("admin.api.scopes.global") },
+    ]);
+
     this._loadScopes();
   },
 
@@ -50,13 +58,22 @@ export default Controller.extend({
   },
 
   @action
+  changeScopeMode(scopeMode) {
+    this.set("scopeMode", scopeMode);
+  },
+
+  @action
   save() {
-    if (!this.useGlobalKey) {
+    if (this.scopeMode === "granular") {
       const selectedScopes = Object.values(this.scopes)
         .flat()
         .filterBy("selected");
 
       this.model.set("scopes", selectedScopes);
+    } else if (this.scopeMode === "read_only") {
+      this.model.set("scopes", [this.globalScopes.findBy("key", "read")]);
+    } else if (this.scopeMode === "all") {
+      this.model.set("scopes", null);
     }
 
     return this.model.save().catch(popupAjaxError);
@@ -78,6 +95,10 @@ export default Controller.extend({
   _loadScopes() {
     return ajax("/admin/api/keys/scopes.json")
       .then((data) => {
+        // remove global scopes because there is a different dropdown
+        this.set("globalScopes", data.scopes.global);
+        delete data.scopes.global;
+
         this.set("scopes", data.scopes);
       })
       .catch(popupAjaxError);

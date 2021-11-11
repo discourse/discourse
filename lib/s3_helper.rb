@@ -78,6 +78,10 @@ class S3Helper
     [path, etag.gsub('"', '')]
   end
 
+  def path_from_url(url)
+    URI.parse(url).path.delete_prefix("/")
+  end
+
   def remove(s3_filename, copy_to_tombstone = false)
     s3_filename = s3_filename.dup
 
@@ -280,6 +284,92 @@ class S3Helper
 
   def s3_inventory_path(path = 'inventory')
     get_path_for_s3_upload(path)
+  end
+
+  def abort_multipart(key:, upload_id:)
+    s3_client.abort_multipart_upload(
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id
+    )
+  end
+
+  def create_multipart(key, content_type, metadata: {})
+    response = s3_client.create_multipart_upload(
+      acl: "private",
+      bucket: s3_bucket_name,
+      key: key,
+      content_type: content_type,
+      metadata: metadata
+    )
+    { upload_id: response.upload_id, key: key }
+  end
+
+  def presign_multipart_part(upload_id:, key:, part_number:)
+    presigned_url(
+      key,
+      method: :upload_part,
+      expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+      opts: {
+        part_number: part_number,
+        upload_id: upload_id
+      }
+    )
+  end
+
+  # Important note from the S3 documentation:
+  #
+  # This request returns a default and maximum of 1000 parts.
+  # You can restrict the number of parts returned by specifying the
+  # max_parts argument. If your multipart upload consists of more than 1,000
+  # parts, the response returns an IsTruncated field with the value of true,
+  # and a NextPartNumberMarker element.
+  #
+  # In subsequent ListParts requests you can include the part_number_marker arg
+  # using the NextPartNumberMarker the field value from the previous response to
+  # get more parts.
+  #
+  # See https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Client.html#list_parts-instance_method
+  def list_multipart_parts(upload_id:, key:, max_parts: 1000, start_from_part_number: nil)
+    options = {
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id,
+      max_parts: max_parts
+    }
+
+    if start_from_part_number.present?
+      options[:part_number_marker] = start_from_part_number
+    end
+
+    s3_client.list_parts(options)
+  end
+
+  def complete_multipart(upload_id:, key:, parts:)
+    s3_client.complete_multipart_upload(
+      bucket: s3_bucket_name,
+      key: key,
+      upload_id: upload_id,
+      multipart_upload: {
+        parts: parts
+      }
+    )
+  end
+
+  def presigned_url(
+    key,
+    method:,
+    expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+    opts: {}
+  )
+    Aws::S3::Presigner.new(client: s3_client).presigned_url(
+      method,
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+      }.merge(opts)
+    )
   end
 
   private

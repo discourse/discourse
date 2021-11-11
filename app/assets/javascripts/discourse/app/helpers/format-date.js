@@ -25,9 +25,9 @@ registerUnbound("format-date", function (val, params) {
     let date = new Date(val);
     return htmlSafe(
       autoUpdatingRelativeAge(date, {
-        format: format,
-        title: title,
-        leaveAgo: leaveAgo,
+        format,
+        title,
+        leaveAgo,
       })
     );
   }

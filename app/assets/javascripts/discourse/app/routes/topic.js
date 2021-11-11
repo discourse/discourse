@@ -183,10 +183,32 @@ const TopicRoute = DiscourseRoute.extend({
       }
 
       const topic = this.modelFor("topic");
+
       if (topic && currentPost) {
-        let postUrl = topic.get("url");
+        let postUrl;
+
         if (currentPost > 1) {
-          postUrl += "/" + currentPost;
+          postUrl = topic.urlForPostNumber(currentPost);
+        } else {
+          postUrl = topic.url;
+        }
+
+        if (this._router.currentRoute.queryParams) {
+          let searchParams;
+
+          Object.entries(this._router.currentRoute.queryParams).map(
+            ([key, value]) => {
+              if (!searchParams) {
+                searchParams = new URLSearchParams();
+              }
+
+              searchParams.append(key, value);
+            }
+          );
+
+          if (searchParams) {
+            postUrl += `?${searchParams.toString()}`;
+          }
         }
 
         cancel(this.scheduledReplace);

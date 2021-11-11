@@ -8,7 +8,11 @@
       title="admin.backups.upload.title"
       class="btn-default"}}
   {{else}}
-    {{backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{#if enableExperimentalBackupUploader}}
+      {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{else}}
+      {{backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{/if}}
   {{/if}}
 
   {{#if site.isReadOnly}}

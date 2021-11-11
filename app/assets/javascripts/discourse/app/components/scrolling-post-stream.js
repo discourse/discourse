@@ -77,7 +77,12 @@ export default MountWidget.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if (isWorkaroundActive()) {
+
+    if (
+      isWorkaroundActive() ||
+      document.webkitFullscreenElement ||
+      document.fullscreenElement
+    ) {
       return;
     }
 

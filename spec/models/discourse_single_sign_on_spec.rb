@@ -544,7 +544,18 @@ describe DiscourseSingleSignOn do
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)
-      expect(sso.nonce_error).to eq("Nonce has expired")
+      expect(sso.nonce_error).to eq("Nonce is incorrect, was generated in a different browser session, or has expired")
+    end
+
+    it "generates correct error message when nonce is expired, and csrf protection disabled" do
+      SiteSetting.discourse_connect_csrf_protection = false
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      Discourse.cache.delete(sso.used_nonce_key)
+      expect(sso.nonce_error).to eq("Nonce is incorrect, or has expired")
     end
   end
 
