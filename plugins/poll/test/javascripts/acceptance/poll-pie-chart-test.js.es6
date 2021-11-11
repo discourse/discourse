@@ -18,25 +18,25 @@ acceptance("Rendering polls with pie charts", function (needs) {
 
     const poll = query(".poll");
 
-    assert.equal(
+    assert.strictEqual(
       query(".info-number", poll).innerHTML,
       "2",
       "it should display the right number of voters"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".info-number", poll)[1].innerHTML,
       "5",
       "it should display the right number of votes"
     );
 
-    assert.equal(
+    assert.strictEqual(
       poll.classList.contains("pie"),
       true,
       "pie class is present on poll div"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-results-chart", poll).length,
       1,
       "Renders the chart div instead of bar container"

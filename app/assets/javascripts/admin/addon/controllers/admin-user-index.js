@@ -592,7 +592,7 @@ export default Controller.extend(CanCheckEmails, {
                 (deletedPosts * 100) / user.get("post_count")
               );
               progressModal.setProperties({
-                deletedPercentage: deletedPercentage,
+                deletedPercentage,
               });
               performDelete(progressModal);
             }

@@ -567,11 +567,11 @@ acceptance("Poll results", function (needs) {
   test("can load more voters", async function (assert) {
     await visit("/t/-/load-more-poll-voters");
 
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(1) .poll-voters li").length,
       1
     );
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(2) .poll-voters li").length,
       0
     );
@@ -626,11 +626,11 @@ acceptance("Poll results", function (needs) {
     });
     await visit("/t/-/load-more-poll-voters");
 
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(1) .poll-voters li").length,
       1
     );
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(2) .poll-voters li").length,
       1
     );
@@ -638,11 +638,11 @@ acceptance("Poll results", function (needs) {
     await click(".poll-voters-toggle-expand a");
     await visit("/t/-/load-more-poll-voters");
 
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(1) .poll-voters li").length,
       2
     );
-    assert.equal(
+    assert.strictEqual(
       find(".poll-container .results li:nth-child(2) .poll-voters li").length,
       0
     );
@@ -652,13 +652,13 @@ acceptance("Poll results", function (needs) {
     await visit("/t/-/load-more-poll-voters");
     await click(".toggle-results");
 
-    assert.equal(count(".poll-container .d-icon-circle"), 1);
-    assert.equal(count(".poll-container .d-icon-far-circle"), 1);
+    assert.strictEqual(count(".poll-container .d-icon-circle"), 1);
+    assert.strictEqual(count(".poll-container .d-icon-far-circle"), 1);
 
     await click(".remove-vote");
 
-    assert.equal(count(".poll-container .d-icon-circle"), 0);
-    assert.equal(count(".poll-container .d-icon-far-circle"), 2);
+    assert.strictEqual(count(".poll-container .d-icon-circle"), 0);
+    assert.strictEqual(count(".poll-container .d-icon-far-circle"), 2);
   });
 });
 

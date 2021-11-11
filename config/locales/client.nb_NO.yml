@@ -3458,6 +3458,8 @@ nb_NO:
       no_activity_others: "Ingen aktivitet."
       no_replies_others: "Ingen svar."
       no_likes_others: "Ingen likte innlegg. "
+    fullscreen_table:
+      expand_btn: "Utvid tabell"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3946,12 +3948,8 @@ nb_NO:
           embedded_scss:
             text: "Innebygd CSS"
             title: "Skriv inn egendefinert CSS for å levere med innebygde versjoner av kommentarer"
-          head_tag:
-            text: "</head>"
-            title: "HTML som har blitt smettet inn før </head>-taggen"
           body_tag:
-            text: "</body>"
-            title: "HTML som vil bli smettet inn før </body>-taggen"
+            text: "Body"
           yaml:
             text: "YAML"
             title: "Definer draktinnstillinger i YAML-format"
@@ -4640,7 +4638,6 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Legg til en ny emoji som vil være tilgjengelig for alle. (PROFFTIPS: Dra og slipp flere filer samtidig)"
         add: "Legg til ny Emoji"
         uploading: "Laster opp…"
         name: "Navn"
@@ -4650,7 +4647,6 @@ nb_NO:
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
         confirm_delete: "Er du sikker på at du vil slette den verten?"
-        sample: "Bruk følgende HTML-kode på siden din for å bygge inn Discourse-emner. Erstatt <b>ERSTATT_MEG</b> med riktig nettadresse til siden du bygger den inn i."
         title: "Innbygging"
         host: "Tillatte verter"
         class_name: "Klassenavn"

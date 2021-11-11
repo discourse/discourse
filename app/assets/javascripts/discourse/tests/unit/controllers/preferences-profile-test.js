@@ -26,13 +26,17 @@ discourseModule("Unit | Controller | preferences/profile", function () {
       EmberObject.create({ value: [], field: { id: "field_3" } }),
     ]);
     controller.send("_updateUserFields");
-    assert.equal(
+    assert.strictEqual(
       controller.model.user_fields.field_1,
       "2",
       "updates string value"
     );
-    assert.equal(controller.model.user_fields.field_2, null, "updates null");
-    assert.equal(
+    assert.strictEqual(
+      controller.model.user_fields.field_2,
+      null,
+      "updates null"
+    );
+    assert.strictEqual(
       controller.model.user_fields.field_3,
       null,
       "updates empty array as null"

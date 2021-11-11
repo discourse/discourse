@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import Tag from "discourse/models/tag";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model() {
@@ -34,19 +35,20 @@ export default DiscourseRoute.extend({
     });
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("application").set("showFooter", true);
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("application").set("showFooter", true);
+    return true;
+  },
 
-    showTagGroups() {
-      this.transitionTo("tagGroups");
-      return true;
-    },
+  @action
+  showTagGroups() {
+    this.transitionTo("tagGroups");
+    return true;
+  },
 
-    refresh() {
-      this.refresh();
-    },
+  @action
+  triggerRefresh() {
+    this.refresh();
   },
 });

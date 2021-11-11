@@ -272,6 +272,7 @@ pt_BR:
       help:
         bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito neste tópico"
+        edit_bookmark_for_topic: "Clique para editar o favorito para este tópico"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
@@ -2122,16 +2123,25 @@ pt_BR:
       search_button: "Pesquisar"
       categories: "Categorias"
       tags: "Etiquetas"
+      in: "em"
+      in_this_topic: "neste tópico"
+      enter_hint: "ou pressione Enter"
+      in_posts_by: "em postagens por %{username}"
       type:
+        default: "Tópicos/postagens"
         users: "Usuários"
         categories: "Categorias"
+        categories_and_tags: "Categorias/etiquetas"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
         tag: "Pesquisar a etiqueta #%{tag}"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
+      tips:
+        full_search_key: "%{modifier} + Enter"
       advanced:
+        title: Filtros avançados
         posted_by:
           label: Postado por
         in_category:
@@ -2691,7 +2701,9 @@ pt_BR:
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
     post:
       quote_reply: "Citação"
+      quote_reply_shortcut: "Ou pressione q"
       quote_edit: "Editar"
+      quote_edit_shortcut: "Ou pressione e"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -2870,7 +2882,9 @@ pt_BR:
             button: "HTML"
       bookmarks:
         create: "Criar favorito"
+        create_for_topic: "Criar favorito para o tópico"
         edit: "Editar favorito"
+        edit_for_topic: "Editar favorito para o tópico"
         created: "Criado"
         updated: "Atualizado"
         name: "Nome"
@@ -4115,12 +4129,8 @@ pt_BR:
               %{example}
 
               É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plug-ins e/ou núcleo.
-          head_tag:
-            text: "</head>"
-            title: "O HTML que será inserido antes da</head> etiqueta"
           body_tag:
-            text: "</body>"
-            title: "O HTML que será inserido antes da</body> etiqueta"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"
@@ -4961,7 +4971,6 @@ pt_BR:
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
-        help: "Adicionar novo emoji que estará disponível para todos(as). (DICA: arraste e solte diversos arquivos de uma vez)"
         add: "Adicionar novo emoji"
         uploading: "Enviando..."
         name: "Nome"
@@ -4972,7 +4981,6 @@ pt_BR:
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         confirm_delete: "Você tem certeza que deseja excluir este host?"
-        sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Substitua <b>REPLACE_ME</b> pela URL canônica da página na qual você está incorporando."
         title: "Incorporar"
         host: "Hosts permitidos"
         class_name: "Nome da classe"

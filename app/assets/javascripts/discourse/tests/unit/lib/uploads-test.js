@@ -275,40 +275,40 @@ discourseModule("Unit | Utility | uploads", function () {
   }
 
   test("getUploadMarkdown", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("lolcat.gif"),
       "![lolcat|100x200](/uploads/123/abcdef.ext)"
     );
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("[foo|bar].png"),
       "![foobar|100x200](/uploads/123/abcdef.ext)"
     );
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("file name with space.png"),
       "![file name with space|100x200](/uploads/123/abcdef.ext)"
     );
 
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("image.file.name.with.dots.png"),
       "![image.file.name.with.dots|100x200](/uploads/123/abcdef.ext)"
     );
 
     const short_url = "uploads://asdaasd.ext";
 
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("important.txt", { short_url }),
       `[important.txt|attachment](${short_url}) (42 Bytes)`
     );
   });
 
   test("getUploadMarkdown - replaces GUID in image alt text on iOS", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
     );
 
     sinon.stub(Utilities, "isAppleDevice").returns(true);
-    assert.equal(
+    assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![image|100x200](/uploads/123/abcdef.ext)"
     );

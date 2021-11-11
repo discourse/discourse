@@ -194,6 +194,31 @@ describe FinalDestination do
         expect(final.status).to eq(:resolved)
       end
 
+      it 'resolves the canonical link when the URL is relative' do
+        host = "https://codinghorror.com"
+
+        canonical_follow("#{host}/blog", "/blog/canonical")
+        stub_request(:head, "#{host}/blog/canonical").to_return(doc_response)
+
+        final = FinalDestination.new("#{host}/blog", opts.merge(follow_canonical: true))
+
+        expect(final.resolve.to_s).to eq("#{host}/blog/canonical")
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+
+      it 'resolves the canonical link when the URL is relative and does not start with the / symbol' do
+        host = "https://codinghorror.com"
+        canonical_follow("#{host}/blog", "blog/canonical")
+        stub_request(:head, "#{host}/blog/canonical").to_return(doc_response)
+
+        final = FinalDestination.new("#{host}/blog", opts.merge(follow_canonical: true))
+
+        expect(final.resolve.to_s).to eq("#{host}/blog/canonical")
+        expect(final.redirected?).to eq(false)
+        expect(final.status).to eq(:resolved)
+      end
+
       it "does not follow the canonical link if it's the same as the current URL" do
         canonical_follow("https://eviltrout.com", "https://eviltrout.com")
 

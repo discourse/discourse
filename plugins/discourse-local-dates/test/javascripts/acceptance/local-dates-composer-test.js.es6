@@ -20,25 +20,29 @@ acceptance("Local Dates - composer", function (needs) {
       '[date=2017-10-23 time=01:30:00 displayedTimezone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone=" Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
     );
 
-    assert.equal(getAttr("date"), "2017-10-23", "it has the correct date");
-    assert.equal(getAttr("time"), "01:30:00", "it has the correct time");
-    assert.equal(
+    assert.strictEqual(
+      getAttr("date"),
+      "2017-10-23",
+      "it has the correct date"
+    );
+    assert.strictEqual(getAttr("time"), "01:30:00", "it has the correct time");
+    assert.strictEqual(
       getAttr("displayed-timezone"),
       "America/Chicago",
       "it has the correct displayed timezone"
     );
-    assert.equal(getAttr("format"), "LLLL", "it has the correct format");
-    assert.equal(
+    assert.strictEqual(getAttr("format"), "LLLL", "it has the correct format");
+    assert.strictEqual(
       getAttr("timezones"),
       "Europe/Paris|America/Los_Angeles",
       "it has the correct timezones"
     );
-    assert.equal(
+    assert.strictEqual(
       getAttr("recurring"),
       "1.weeks",
       "it has the correct recurring"
     );
-    assert.equal(
+    assert.strictEqual(
       getAttr("timezone"),
       "Asia/Calcutta",
       "it has the correct timezone"
@@ -49,7 +53,11 @@ acceptance("Local Dates - composer", function (needs) {
       '[date=2017-10-24 format="LL" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
     );
 
-    assert.equal(getAttr("date"), "2017-10-24", "it has the correct date");
+    assert.strictEqual(
+      getAttr("date"),
+      "2017-10-24",
+      "it has the correct date"
+    );
     assert.notOk(getAttr("time"), "it doesn’t have time");
   });
 });

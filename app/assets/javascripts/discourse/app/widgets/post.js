@@ -58,6 +58,7 @@ export function avatarImg(wanted, attrs) {
       src: getURLWithCDN(url),
       title,
       "aria-label": title,
+      loading: "lazy",
     },
     className,
   };

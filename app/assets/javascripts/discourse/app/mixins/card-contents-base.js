@@ -63,7 +63,7 @@ export default Mixin.create({
     }
 
     const closestArticle = target.closest("article");
-    const postId = closestArticle ? closestArticle.dataset["post-id"] : null;
+    const postId = closestArticle ? closestArticle.dataset.postId : null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
 

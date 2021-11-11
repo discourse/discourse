@@ -40,7 +40,7 @@ discourseModule("Integration | Component | badge-title", function (hooks) {
       await this.subject.expand();
       await this.subject.selectRowByValue(42);
       await click(".btn");
-      assert.equal(this.currentUser.title, "Test");
+      assert.strictEqual(this.currentUser.title, "Test");
     },
   });
 });

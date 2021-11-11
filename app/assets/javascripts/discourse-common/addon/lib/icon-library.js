@@ -20,6 +20,8 @@ const REPLACEMENTS = {
   "d-drop-collapsed": "caret-right",
   "d-unliked": "far-heart",
   "d-liked": "heart",
+  "d-post-share": "link",
+  "d-topic-share": "link",
   "notification.mentioned": "at",
   "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",

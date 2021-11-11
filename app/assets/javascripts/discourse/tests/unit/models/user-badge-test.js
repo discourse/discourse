@@ -8,17 +8,17 @@ module("Unit | Model | user-badge", function () {
       JSON.parse(JSON.stringify(badgeFixtures["/user_badges"]))
     );
     assert.ok(!Array.isArray(userBadge), "does not return an array");
-    assert.equal(
+    assert.strictEqual(
       userBadge.get("badge.name"),
       "Badge 2",
       "badge reference is set"
     );
-    assert.equal(
+    assert.strictEqual(
       userBadge.get("badge.badge_type.name"),
       "Silver 2",
       "badge.badge_type reference is set"
     );
-    assert.equal(
+    assert.strictEqual(
       userBadge.get("granted_by.username"),
       "anne3",
       "granted_by reference is set"
@@ -30,9 +30,9 @@ module("Unit | Model | user-badge", function () {
       JSON.parse(JSON.stringify(badgeFixtures["/user-badges/:username"]))
     );
     assert.ok(Array.isArray(userBadges), "returns an array");
-    assert.equal(
+    assert.strictEqual(
       userBadges[0].get("granted_by"),
-      null,
+      undefined,
       "granted_by reference is not set when null"
     );
   });

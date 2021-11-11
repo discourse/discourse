@@ -3721,12 +3721,6 @@ sl:
             text: "CSS"
           header:
             text: "Glava"
-          head_tag:
-            text: "</head>"
-            title: "HTML, ki bo vstavljen pred </head> oznako"
-          body_tag:
-            text: "</body>"
-            title: "HTML, ki bo vstavljen pred </body> oznako"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"
@@ -4275,7 +4269,6 @@ sl:
           badge_query_examples_title: "Primeri poizvedb SQL za značke"
       emoji:
         title: "Emoji"
-        help: "Dodaj nov emoji, ki bo na voljo vsem. (lahko prestavite in spustite več datotek naenkrat)"
         add: "Dodaj nov emoji"
         uploading: "Nalagam..."
         name: "Ime"

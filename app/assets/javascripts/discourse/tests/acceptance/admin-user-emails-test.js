@@ -4,13 +4,13 @@ import I18n from "I18n";
 import { test } from "qunit";
 
 function assertNoSecondary(assert) {
-  assert.equal(
+  assert.strictEqual(
     queryAll(".display-row.email .value a").text(),
     "eviltrout@example.com",
     "it should display the primary email"
   );
 
-  assert.equal(
+  assert.strictEqual(
     queryAll(".display-row.secondary-emails .value").text().trim(),
     I18n.t("user.email.no_secondary"),
     "it should not display secondary emails"
@@ -18,13 +18,13 @@ function assertNoSecondary(assert) {
 }
 
 function assertMultipleSecondary(assert, firstEmail, secondEmail) {
-  assert.equal(
+  assert.strictEqual(
     queryAll(".display-row.secondary-emails .value li:first-of-type a").text(),
     firstEmail,
     "it should display the first secondary email"
   );
 
-  assert.equal(
+  assert.strictEqual(
     queryAll(".display-row.secondary-emails .value li:last-of-type a").text(),
     secondEmail,
     "it should display the second secondary email"
@@ -43,7 +43,7 @@ acceptance("Admin - User Emails", function (needs) {
   test("viewing self with multiple secondary emails", async function (assert) {
     await visit("/admin/users/3/markvanlan");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".display-row.email .value a").text(),
       "markvanlan@example.com",
       "it should display the user's primary email"

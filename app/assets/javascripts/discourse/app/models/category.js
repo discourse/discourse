@@ -221,9 +221,10 @@ const Category = RestModel.extend({
             ? this.allowed_tag_groups
             : null,
         allow_global_tags: this.allow_global_tags,
-        required_tag_group_name: this.required_tag_groups
-          ? this.required_tag_groups[0]
-          : null,
+        required_tag_group_name:
+          this.required_tag_groups && this.required_tag_groups.length > 0
+            ? this.required_tag_groups[0]
+            : null,
         min_tags_from_required_group: this.min_tags_from_required_group,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,

@@ -192,10 +192,13 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
+    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
+      return false;
+    }
+
     return (
       this.site.can_tag_topics &&
       canEditTitle &&
-      !creatingPrivateMessage &&
       (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
     );
   },
@@ -502,6 +505,11 @@ export default Controller.extend({
       $links.each((idx, l) => {
         const href = l.href;
         if (href && href.length) {
+          // skip links added by watched words
+          if (l.dataset.word !== undefined) {
+            return true;
+          }
+
           // skip links in quotes and oneboxes
           for (let element = l; element; element = element.parentElement) {
             if (

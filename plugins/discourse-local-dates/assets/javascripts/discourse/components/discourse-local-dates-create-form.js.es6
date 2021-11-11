@@ -211,7 +211,7 @@ export default Component.extend({
   previewedFormats(formats) {
     return formats.map((format) => {
       return {
-        format: format,
+        format,
         preview: moment().format(format),
       };
     });

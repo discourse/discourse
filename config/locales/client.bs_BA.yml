@@ -3596,12 +3596,8 @@ bs_BA:
           embedded_scss:
             text: "Ugrađeni CSS"
             title: "Unesite prilagođeni CSS za isporuku s ugrađenom verzijom komentara"
-          head_tag:
-            text: "</head>"
-            title: "HTML koji će biti umetnut prije </head> tag"
           body_tag:
-            text: "</body>"
-            title: "HTML koji će biti umetnut prije </body> tag"
+            text: "Tijelo"
           yaml:
             text: "YAML"
             title: "Definirajte postavke teme u YAML formatu"
@@ -4303,7 +4299,6 @@ bs_BA:
           badge_query_examples_title: "Primjeri upita za oznaku"
       emoji:
         title: "Emoji"
-        help: "Dodajte novi emotikon koji će biti dostupan svima. (PROTIP: povlačenje i ispuštanje više datoteka odjednom)"
         add: "Dodaj novi emoji"
         uploading: "Učitava se..."
         name: "Ime"

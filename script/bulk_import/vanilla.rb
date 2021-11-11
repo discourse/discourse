@@ -5,6 +5,8 @@ require "mysql2"
 require "rake"
 require "htmlentities"
 
+# NOTE: this importer expects a MySQL DB to directly connect to
+
 class BulkImport::Vanilla < BulkImport::Base
 
   VANILLA_DB = "dbname"

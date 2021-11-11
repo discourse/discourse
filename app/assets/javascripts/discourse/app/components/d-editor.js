@@ -341,6 +341,8 @@ export default Component.extend(TextareaTextManipulation, {
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
     }
+
+    this._cachedCookFunction = null;
   },
 
   @discourseComputed()

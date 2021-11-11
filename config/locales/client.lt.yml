@@ -3377,6 +3377,8 @@ lt:
       no_topics_title: "Dar nepradėjote jokių temų"
       no_read_topics_title: "Dar neskaitėte jokių temų"
     no_group_messages_title: "Grupės pranešimų nerasta"
+    fullscreen_table:
+      expand_btn: "Išskleisti lentelę"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -3874,12 +3876,8 @@ lt:
             text: "Įterptas CSS"
           color_definitions:
             text: "Spalvų apibrėžimai"
-          head_tag:
-            text: "</head>"
-            title: "HTML, kuris bus įstatytas prieš </head> tag'ą"
           body_tag:
-            text: "</body>"
-            title: "HTML, kuris bus įstatytas prieš </body> tag'ą"
+            text: "Turinys"
           yaml:
             text: "YAML"
         colors:
@@ -4634,7 +4632,6 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
-        help: "Pridėti naują šypsenėlę, kurią galės matyti visi (patarimas: kelis failus kelk tuo pačiu metu)"
         add: "Pridėti Naują Šypsenėlę"
         uploading: "Įkeliama..."
         name: "Vardas"
@@ -4644,7 +4641,6 @@ lt:
       embedding:
         get_started: "Norėčiau pridėti Discourse prie kito puslapio. Pradėk tiesiog pridėdamas valdytoją."
         confirm_delete: "Ar tikrai nori ištrinti šį šeimininką?"
-        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Įterpimai"
         host: "Šeimininkai"
         class_name: "Klasės pavadinimas"

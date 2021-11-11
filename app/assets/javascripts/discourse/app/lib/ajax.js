@@ -110,7 +110,7 @@ export function ajax() {
       });
 
       if (args.returnXHR) {
-        data = { result: data, xhr: xhr };
+        data = { result: data, xhr };
       }
 
       run(null, resolve, data);
@@ -145,8 +145,8 @@ export function ajax() {
 
       run(null, reject, {
         jqXHR: xhr,
-        textStatus: textStatus,
-        errorThrown: errorThrown,
+        textStatus,
+        errorThrown,
       });
     };
 

@@ -155,9 +155,9 @@ UserBadge.reopenClass({
     return ajax("/user_badges", {
       type: "POST",
       data: {
-        username: username,
+        username,
         badge_id: badgeId,
-        reason: reason,
+        reason,
       },
     }).then(function (json) {
       return UserBadge.createFromJson(json);

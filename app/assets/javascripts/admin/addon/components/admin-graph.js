@@ -24,7 +24,7 @@ export default Component.extend({
 
     const config = {
       type: this.type,
-      data: data,
+      data,
       options: {
         responsive: true,
         plugins: {

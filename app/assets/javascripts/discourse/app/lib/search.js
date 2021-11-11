@@ -143,7 +143,7 @@ export function searchForTerm(term, opts) {
   }
 
   // Only include the data we have
-  const data = { term: term };
+  const data = { term };
   if (opts.typeFilter) {
     data.type_filter = opts.typeFilter;
   }

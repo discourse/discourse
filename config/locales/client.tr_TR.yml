@@ -1140,6 +1140,8 @@ tr_TR:
         tags: "Etiketler"
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misin? %{groupLink} bağlantısındaki diğer iletilere göz atın."
+        read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlar altında</a> diğer mesajlara göz atın."
+        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a>} other {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a> }} mesaj { NEW, plural, =0 {} one { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> mesaj} other { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> mesaj} } var, ya da<a href='{basePath}/u/{username}/messages'>kişisel mesajlara</a> göz atın"
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -2124,7 +2126,7 @@ tr_TR:
       sort_by: "Sırala"
       relevance: "Uygunluk"
       latest_post: "Son Gönderi"
-      latest_topic: "En son konu"
+      latest_topic: "En Son Konu"
       most_viewed: "En Çok Görüntülenen"
       most_liked: "En Çok Beğenilen"
       select_all: "Tümünü Seç"
@@ -2156,6 +2158,7 @@ tr_TR:
       in_this_topic: "bu konuda"
       in_this_topic_tooltip: "tüm konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
+      enter_hint: "veya Enter tuşuna basın"
       in_posts_by: "@%{username} kullancısına ait gönderilerde"
       type:
         default: "Konular/yazılar"
@@ -2370,7 +2373,7 @@ tr_TR:
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
-      read_more_MF: "{ UNREAD, plural, =0 {0 okunmamış mesaj} one {<a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } }ve{ NEW, plural, =0 {0 yeni mesaj} one { {BOTH, select, true{} false {} other{}}<a href='{basePath}/new'>1 yeni mesaj</a>} other { {BOTH, select, true{} false {} other{}} <a href='{basePath}/new'># yeni mesaj</a>}} var. {CATEGORY, select, true {{catLink} kategorisine göz atabilirsin.} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {0 okunmamış mesaj} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {0 yeni mesaj} one { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'>1 yeni mesaj</a>} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni mesaj</a>}} var. Ya da {CATEGORY, select, true {{catLink} kategorisine göz atabilirsin} false {{latestLink}} other {}}."
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Bütün kategorilere göz at
       browse_all_tags: Tüm etiketlere göz atın
@@ -3608,6 +3611,8 @@ tr_TR:
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
     no_group_messages_title: "Grup mesajı bulunamadı"
+    fullscreen_table:
+      expand_btn: "Tabloyu Genişlet"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -4206,11 +4211,11 @@ tr_TR:
 
               Eklentiler ve/veya ana kod ile çakışmaları önlemek için özellik adlarının önüne önek eklenmesi şiddetle tavsiye edilir.
           head_tag:
-            text: "</head>"
-            title: "</head> etiketinden önce eklenecek HTML"
+            text: "Head"
+            title: "Head etiketinden önce eklenecek HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> etiketinden önce eklenecek HTML"
+            text: "İçerik"
+            title: "Body etiketinden önce eklenecek HTML"
           yaml:
             text: "YAML"
             title: "Tema ayarlarını YAML formatında tanımla"
@@ -5062,7 +5067,6 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
-        help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"
         add: "Yeni Emoji Ekle"
         uploading: "Yükleniyor..."
         name: "İsim"
@@ -5073,7 +5077,6 @@ tr_TR:
       embedding:
         get_started: "Eğer Discourse'u başka bir web sitesine yerleştirmek istiyorsan bu sitenin sunucusunu ekleyerek başla."
         confirm_delete: "Bu sunucuyu silmek istediğine emin misin?"
-        sample: "Discourse konuları oluşturmak ve yerleştirmek için aşağıdaki HTML kodunu sitende kullan. <b>REPLACE_ME</b>'yi Discourse'u yerleştirdiğin sayfanın tam URL'i ile değiştir."
         title: "Yerleştirme"
         host: "İzin Verilen Sunucular"
         class_name: "Sınıf adı"

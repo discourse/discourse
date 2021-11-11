@@ -23,21 +23,21 @@ discourseModule("Unit | Controller | avatar-selector", function (hooks) {
     });
 
     user.set("avatar_template", "system");
-    assert.equal(
+    assert.strictEqual(
       avatarSelectorController.get("selectedUploadId"),
       1,
       "we are using system by default"
     );
 
     user.set("avatar_template", "gravatar");
-    assert.equal(
+    assert.strictEqual(
       avatarSelectorController.get("selectedUploadId"),
       2,
       "we are using gravatar when set"
     );
 
     user.set("avatar_template", "avatar");
-    assert.equal(
+    assert.strictEqual(
       avatarSelectorController.get("selectedUploadId"),
       3,
       "we are using custom when set"

@@ -1,9 +1,15 @@
+let initializedOnce = false;
+
 export default {
   name: "ember-events",
 
   initialize: function () {
     // By default Ember listens to too many events. This tells it the only events
-    // we're interested in.
+    // we're interested in. (it removes mousemove and touchmove)
+    if (initializedOnce) {
+      return;
+    }
+
     Ember.EventDispatcher.reopen({
       events: {
         touchstart: "touchStart",
@@ -33,5 +39,7 @@ export default {
         dragend: "dragEnd",
       },
     });
+
+    initializedOnce = true;
   },
 };

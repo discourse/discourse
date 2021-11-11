@@ -11,6 +11,7 @@ import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { cancel } from "@ember/runloop";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -190,6 +191,7 @@ export default createWidget("search-menu", {
   defaultState(attrs) {
     return {
       inTopicContext: attrs.inTopicContext,
+      _debouncer: null,
     };
   },
 
@@ -201,6 +203,12 @@ export default createWidget("search-menu", {
       let query = "";
 
       query += `q=${encodeURIComponent(searchData.term)}`;
+
+      const searchContext = this.searchContext();
+
+      if (searchContext?.type === "topic") {
+        query += encodeURIComponent(` topic:${searchContext.id}`);
+      }
 
       if (query) {
         params.push(query);
@@ -314,7 +322,7 @@ export default createWidget("search-menu", {
     });
   },
 
-  clickOutside() {
+  mouseDownOutside() {
     this.sendWidgetAction("toggleSearchMenu");
   },
 
@@ -434,11 +442,17 @@ export default createWidget("search-menu", {
       }
 
       searchData.loading = true;
+      cancel(this.state._debouncer);
       SearchHelper.perform(this);
     } else {
       searchData.loading = false;
       if (!this.state.inTopicContext) {
-        discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
+        this.state._debouncer = discourseDebounce(
+          SearchHelper,
+          SearchHelper.perform,
+          this,
+          400
+        );
       }
     }
   },

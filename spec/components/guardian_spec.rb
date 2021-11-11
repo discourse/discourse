@@ -3196,12 +3196,7 @@ describe Guardian do
 
     context "allowlist mode" do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it "should respect theme allowlisting" do

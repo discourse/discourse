@@ -240,7 +240,6 @@ ja:
   topic_invite:
     failed_to_invite: "次のいずれかのグループのグループメンバーシップがない場合、ユーザーをこのトピックに招待できません: %{group_names}。"
     user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
-    muted_invitee: "そのユーザーはあなたをミュートしています。"
     muted_topic: "そのユーザーはこのトピックをミュートしています。"
     receiver_does_not_allow_pm: "そのユーザーは、あなたがプライベートメッセージを送信することを許可していません。"
     sender_does_not_allow_pm: "そのユーザーがプライベートメッセージを送信することを許可していません。"
@@ -1396,7 +1395,6 @@ ja:
     summary_likes_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の「いいね！」数。この設定を変更すると、1 週間以内で遡って適用されます。"
     summary_percent_filter: "「このトピックを要約」をクリックしたとき表示される上位投稿の割合%"
     summary_max_results: "'このトピックを要約' が返す最大投稿数"
-    enable_personal_messages: "信頼レベル 1 ユーザーによるメッセージとメッセージへの返信の作成を許可する (メッセージを送信する最低信頼レベルで構成可能)。スタッフは設定に関係なく必ずメッセージを作成できます。"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
@@ -1726,7 +1724,6 @@ ja:
     topic_view_duration_hours: "N 時間ごとに IP/ユーザーあたりの新規トピックビューを 1 回カウントする"
     user_profile_view_duration_hours: "N 時間ごとに IP/ユーザーあたりの新規ユーザープロフィールビューを 1 回カウントする"
     levenshtein_distance_spammer_emails: "迷惑メールのアドレスを照合する場合、あいまい一致を許可する文字数の差。"
-    max_new_accounts_per_registration_ip: "この IP でアクセスする信頼レベル 0 のアカウントが (n) 個存在する場合 (さらにこれらがスタッフメンバーや TL2 以上のメンバーでない場合)、この IP から新たに登録できないようにします。"
     min_ban_entries_for_roll_up: "ロールアップボタンをクリックする際に少なくとも (N) 個のエントリーがある場合、新しいサブネット禁止エントリーを作成します。"
     max_age_unmatched_emails: "(N) 日間一致しなかったスクリーン対象メールアドレスを削除します。"
     max_age_unmatched_ips: "(N) 日間一致しなかったスクリーン対象 IP アドレスを削除します。"
@@ -4177,10 +4174,8 @@ ja:
             label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
-            label: "コミュニティについて簡単な一文で説明してください"
             placeholder: "純子と純子の仲間がワイワイする場所"
           short_site_description:
-            label: "コミュニティについて短い言葉で説明してください"
             placeholder: "史上最高のコミュニティ"
       introduction:
         title: "紹介"

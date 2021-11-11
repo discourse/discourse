@@ -20,8 +20,12 @@ module("Unit | Model | badge", function () {
     const badges = Badge.createFromJson(badgesJson);
 
     assert.ok(Array.isArray(badges), "returns an array");
-    assert.equal(badges[0].get("name"), "Badge 1", "badge details are set");
-    assert.equal(
+    assert.strictEqual(
+      badges[0].get("name"),
+      "Badge 1",
+      "badge details are set"
+    );
+    assert.strictEqual(
       badges[0].get("badge_type.name"),
       "Silver 1",
       "badge_type reference is set"
@@ -46,8 +50,8 @@ module("Unit | Model | badge", function () {
     };
     const badge = Badge.create({ name: "Badge 1" });
     badge.updateFromJson(badgeJson);
-    assert.equal(badge.get("id"), 1126, "id is set");
-    assert.equal(
+    assert.strictEqual(badge.get("id"), 1126, "id is set");
+    assert.strictEqual(
       badge.get("badge_type.name"),
       "Silver 1",
       "badge_type reference is set"

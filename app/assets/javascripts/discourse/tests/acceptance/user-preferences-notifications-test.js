@@ -40,22 +40,22 @@ acceptance("User notification schedule", function (needs) {
       "Saturday",
       "Sunday",
     ].forEach((day) => {
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .starts-at .combobox`).header().label(),
         "8:00 AM",
         "8am is selected"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .starts-at .combobox`).header().value(),
         "480",
         "8am is 480"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .ends-at .combobox`).header().label(),
         "5:00 PM",
         "5am is selected"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .ends-at .combobox`).header().value(),
         "1020",
         "5pm is 1020"
@@ -70,17 +70,17 @@ acceptance("User notification schedule", function (needs) {
     await selectKit(".day.Monday .combobox").expand();
     await selectKit(".day.Monday .combobox").selectRowByValue(-1);
 
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Monday .starts-at .combobox").header().value(),
       "-1",
       "set monday input to none"
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Monday .starts-at .combobox").header().label(),
       "None",
       "set monday label to none"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".day.Monday .select-kit.single-select"),
       1,
       "The end time input is hidden"
@@ -96,7 +96,7 @@ acceptance("User notification schedule", function (needs) {
       "1350"
     );
 
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Tuesday .ends-at .combobox").header().value(),
       "1380",
       "End time is 30 past start time"

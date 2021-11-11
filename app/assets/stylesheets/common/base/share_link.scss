@@ -1,18 +1,15 @@
 // styles that apply to the "share" modal & popup when sharing a link to a post or topic
 
-.link-share-container {
+.link-share-container,
+.notify-user-input {
   display: flex;
-  button {
+  .btn {
     margin-left: 0.5em;
-    transition-property: background-color, color; // don't transition outline
   }
-  input {
+  input,
+  .select-kit {
     width: 100%;
-    font-size: var(--font-up-1);
     margin-bottom: 0;
-    &:focus + button {
-      outline: 1px solid var(--tertiary);
-    }
   }
 }
 
@@ -62,7 +59,8 @@
   box-shadow: shadow("card");
   background-color: var(--secondary);
   padding: 0.5em;
-  width: 300px;
+  width: 20em; // scales with user font-size
+  max-width: 100vw; // prevents overflow due to extra large user font-size
   display: none;
   &.visible {
     display: block;
@@ -111,23 +109,6 @@
       margin-top: 0;
       margin-right: 0;
     }
-  }
-}
-
-.notify-user-input {
-  display: flex;
-  align-items: stretch;
-
-  .select-kit {
-    width: 100%;
-  }
-
-  .multi-select-header {
-    width: 100%;
-  }
-
-  .select-kit.multi-select .choices {
-    padding: 0;
   }
 }
 

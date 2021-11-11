@@ -73,54 +73,54 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(count(".post-stream"), 1);
-        assert.equal(count(".topic-post"), 6, "renders all posts");
+        assert.strictEqual(count(".post-stream"), 1);
+        assert.strictEqual(count(".topic-post"), 6, "renders all posts");
 
         // look for special class bindings
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(1).topic-owner").length,
           1,
           "it applies the topic owner class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(1).group-trout").length,
           1,
           "it applies the primary group class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(1).regular").length,
           1,
           "it applies the regular class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(2).moderator").length,
           1,
           "it applies the moderator class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(3).post-hidden").length,
           1,
           "it applies the hidden class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(4).whisper").length,
           1,
           "it applies the whisper class"
         );
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-post:nth-of-type(5).wiki").length,
           1,
           "it applies the wiki class"
         );
 
         // it renders an article for the body with appropriate attributes
-        assert.equal(count("article#post_2"), 1);
-        assert.equal(count('article[data-user-id="123"]'), 1);
-        assert.equal(count('article[data-post-id="3"]'), 1);
-        assert.equal(count("article#post_5.via-email"), 1);
-        assert.equal(count("article#post_6.is-auto-generated"), 1);
+        assert.strictEqual(count("article#post_2"), 1);
+        assert.strictEqual(count('article[data-user-id="123"]'), 1);
+        assert.strictEqual(count('article[data-post-id="3"]'), 1);
+        assert.strictEqual(count("article#post_5.via-email"), 1);
+        assert.strictEqual(count("article#post_6.is-auto-generated"), 1);
 
-        assert.equal(
+        assert.strictEqual(
           queryAll("article:nth-of-type(1) .main-avatar").length,
           1,
           "renders the main avatar"
@@ -143,12 +143,12 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".topic-post.deleted"),
           1,
           "it applies the deleted class"
         );
-        assert.equal(
+        assert.strictEqual(
           count(".deleted-user-avatar"),
           1,
           "it has the trash avatar"

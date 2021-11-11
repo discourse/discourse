@@ -49,7 +49,7 @@ export default Controller.extend(GrantBadgeController, {
       let result = {
         badge: badges[0].badge,
         granted_at: lastGranted,
-        badges: badges,
+        badges,
         count: badges.length,
         grouped: true,
       };

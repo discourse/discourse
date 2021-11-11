@@ -8,7 +8,7 @@ import hbs from "htmlbars-inline-precompile";
 
 const createArgs = (topic) => {
   return {
-    topic: topic,
+    topic,
     openUpwards: "true",
     toggleMultiSelect: () => {},
     deleteTopic: () => {},

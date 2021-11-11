@@ -50,7 +50,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(
+        assert.strictEqual(
           selectKit().header().label(),
           "Normal",
           "it has the correct label"
@@ -58,7 +58,7 @@ discourseModule(
 
         await this.set("topic", buildTopic({ level: 2 }));
 
-        assert.equal(
+        assert.strictEqual(
           selectKit().header().label(),
           "Tracking",
           "it correctly changes the label"
@@ -83,7 +83,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           selectKit().header().label(),
           `${originalTranslation} PM`,
           "it has the correct label for PMs"
@@ -105,7 +105,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.mailing_list_mode"),
           "mailing_list_mode enabled for the user shows unique text"
@@ -128,7 +128,7 @@ discourseModule(
       test(assert) {
         this.set("topic", buildTopic({ level: 3, reason: 999 }));
 
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.3"),
           "fallback to regular level translation if reason does not exist"
@@ -150,7 +150,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.2_8"),
           "use 2_8 notification if user is still tracking category"
@@ -177,7 +177,7 @@ discourseModule(
         },
 
         test(assert) {
-          assert.equal(
+          assert.strictEqual(
             queryAll(".topic-notifications-button .text").text(),
             I18n.t("topic.notifications.reasons.2_8_stale"),
             "use _stale notification if user is no longer tracking category"
@@ -200,7 +200,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.3_6"),
           "use 3_6 notification if user is still watching category"
@@ -227,7 +227,7 @@ discourseModule(
         },
 
         test(assert) {
-          assert.equal(
+          assert.strictEqual(
             queryAll(".topic-notifications-button .text").text(),
             I18n.t("topic.notifications.reasons.3_6_stale"),
             "use _stale notification if user is no longer watching category"
@@ -250,7 +250,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.3_10"),
           "use 3_10 notification if user is still watching tag"
@@ -272,7 +272,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           queryAll(".topic-notifications-button .text").text(),
           I18n.t("topic.notifications.reasons.3_10_stale"),
           "use _stale notification if user is no longer watching tag"

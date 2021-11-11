@@ -101,19 +101,25 @@ acceptance("Admin - User Index", function (needs) {
   test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.equal(queryAll(".display-row.username .value").text().trim(), "sam");
+    assert.strictEqual(
+      queryAll(".display-row.username .value").text().trim(),
+      "sam"
+    );
 
     // Trying cancel.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
-    assert.equal(queryAll(".display-row.username .value").text().trim(), "sam");
+    assert.strictEqual(
+      queryAll(".display-row.username .value").text().trim(),
+      "sam"
+    );
 
     // Doing edit.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".display-row.username .value").text().trim(),
       "new-sam"
     );
@@ -122,7 +128,7 @@ acceptance("Admin - User Index", function (needs) {
   test("shows the number of post edits", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
-    assert.equal(queryAll(".post-edits-count .value").text().trim(), "6");
+    assert.strictEqual(queryAll(".post-edits-count .value").text().trim(), "6");
 
     assert.ok(
       exists(".post-edits-count .controls .btn.btn-icon"),
@@ -137,7 +143,7 @@ acceptance("Admin - User Index", function (needs) {
 
     await click(".post-edits-count .controls .btn.btn-icon");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       `/admin/reports/post_edits?filters=${filter}`,
       "it redirects to the right admin report"
@@ -156,7 +162,7 @@ acceptance("Admin - User Index", function (needs) {
   test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".display-row.username .value").text().trim(),
       "sam",
       "the name should be correct"
@@ -165,11 +171,15 @@ acceptance("Admin - User Index", function (needs) {
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
     await groupChooser.selectRowByValue(42);
-    assert.equal(groupChooser.header().value(), 42, "group should be set");
+    assert.strictEqual(
+      groupChooser.header().value(),
+      "42",
+      "group should be set"
+    );
 
     await visit("/admin/users/1/eviltrout");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".display-row.username .value").text().trim(),
       "eviltrout",
       "the name should be correct"
@@ -185,7 +195,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
     assert.ok(exists(".bootbox"));
-    assert.equal(
+    assert.strictEqual(
       I18n.t("admin.user.grant_admin_confirm"),
       query(".modal-body").textContent.trim()
     );

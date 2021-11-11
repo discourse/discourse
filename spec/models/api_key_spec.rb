@@ -107,47 +107,63 @@ describe ApiKey do
 
     let(:env) { request.env }
 
-    let(:scope) do
-      ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' })
-    end
-
     let(:key) { ApiKey.new(api_key_scopes: [scope]) }
 
-    it 'allows the request if there are no allowed IPs' do
-      key.allowed_ips = nil
-      key.api_key_scopes = []
-      expect(key.request_allowed?(env)).to eq(true)
+    context 'with regular scopes' do
+      let(:scope) do
+        ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' })
+      end
+
+      it 'allows the request if there are no allowed IPs' do
+        key.allowed_ips = nil
+        key.api_key_scopes = []
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it 'rejects the request if the IP is not allowed' do
+        key.allowed_ips = %w[115.65.76.87]
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+
+      it 'allow the request if there are not allowed params' do
+        scope.allowed_parameters = nil
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it 'rejects the request when params are different' do
+        request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+
+      it 'accepts the request if one of the parameters match' do
+        request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
+        scope.allowed_parameters = { topic_id: %w[3 4] }
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it 'allow the request when the scope has an alias' do
+        request.path_parameters = { controller: "topics", action: "show", id: "3" }
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it 'rejects the request when the main parameter and the alias are both used' do
+        request.path_parameters = { controller: "topics", action: "show", topic_id: "3", id: "3" }
+        expect(key.request_allowed?(env)).to eq(false)
+      end
     end
 
-    it 'rejects the request if the IP is not allowed' do
-      key.allowed_ips = %w[115.65.76.87]
-      expect(key.request_allowed?(env)).to eq(false)
-    end
+    context 'with global:read scope' do
+      let(:scope) do
+        ApiKeyScope.new(resource: 'global', action: 'read')
+      end
 
-    it 'allow the request if there are not allowed params' do
-      scope.allowed_parameters = nil
-      expect(key.request_allowed?(env)).to eq(true)
-    end
+      it 'allows only GET requests for global:read' do
+        request.request_method = 'GET'
+        expect(key.request_allowed?(env)).to eq(true)
 
-    it 'rejects the request when params are different' do
-      request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
-      expect(key.request_allowed?(env)).to eq(false)
-    end
-
-    it 'accepts the request if one of the parameters match' do
-      request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
-      scope.allowed_parameters = { topic_id: %w[3 4] }
-      expect(key.request_allowed?(env)).to eq(true)
-    end
-
-    it 'allow the request when the scope has an alias' do
-      request.path_parameters = { controller: "topics", action: "show", id: "3" }
-      expect(key.request_allowed?(env)).to eq(true)
-    end
-
-    it 'rejects the request when the main parameter and the alias are both used' do
-      request.path_parameters = { controller: "topics", action: "show", topic_id: "3", id: "3" }
-      expect(key.request_allowed?(env)).to eq(false)
+        request.request_method = 'POST'
+        expect(key.request_allowed?(env)).to eq(false)
+      end
     end
   end
 end

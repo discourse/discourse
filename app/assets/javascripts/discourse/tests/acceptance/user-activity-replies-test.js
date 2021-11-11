@@ -22,7 +22,7 @@ acceptance("User Activity / Replies - empty state", function (needs) {
   test("When looking at another user activity it renders the 'No activity' message", async function (assert) {
     await visit("/u/charlie/activity/replies");
     assert.ok(exists("div.alert-info"));
-    assert.equal(
+    assert.strictEqual(
       query("div.alert-info").innerText.trim(),
       I18n.t("user_activity.no_replies_others")
     );

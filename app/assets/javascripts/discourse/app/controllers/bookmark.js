@@ -77,7 +77,7 @@ export default Controller.extend(ModalFunctionality, {
    */
   onClose(opts = {}) {
     if (this.onCloseHandler) {
-      this.onCloseHandler(opts.initiatedByCloseButton);
+      this.onCloseHandler(opts);
     }
   },
 });

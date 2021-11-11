@@ -1,12 +1,26 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example
+is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
+walkthrough will go through these in detail:
 
->  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
+1. [Create new cloud server](#1-create-new-cloud-server)
+2. [Access new cloud server](#2-access-your-cloud-server)
+3. [Install Discourse](#3-install-discourse)
+4. [Setting up email](#4-setting-up-email)
+5. [Customize domain name](#5-customize-domain-name)
+6. [Edit Discourse configuration](#6-edit-discourse-configuration)
+7. [Start Discourse](#7-start-discourse)
+8. [Register new account and become admin](#8-register-new-account-and-become-admin)
+9. [Post-install maintenance](#9-post-install-maintenance)
+10. [(Optional) Add more Discourse features](#10-optional-add-more-discourse-features)
 
-### Create New Cloud Server
+> 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
+
+### 1. Create New Cloud Server
 
 Create your new cloud server, for example [on DigitalOcean][do]:
 
-- The default of **the current supported LTS release of Ubuntu Server** works fine. At minimum, a 64-bit Linux OS with a modern kernel version is required.
+- The default of **the current supported LTS release of Ubuntu Server** works fine. At minimum, a 64-bit Linux OS with a
+  modern kernel version is required.
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
@@ -16,7 +30,7 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 
 Create your new Droplet. You may receive an email with the root password, however, [you should set up SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), as they are more secure.
 
-### Access Your Cloud Server
+### 2. Access Your Cloud Server
 
 Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
@@ -24,8 +38,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
-
-### Install Discourse
+### 3. Install Discourse
 
 Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
 
@@ -35,7 +48,7 @@ Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
 
 You will need to be root through the rest of the setup and bootstrap process.
 
-### Email
+### 4. Setting Up Email
 
 > ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
 
@@ -49,7 +62,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
-### Domain Name
+### 5. Customize Domain Name
 
 > 🔔 Discourse will not work from an IP address, you must own a domain name such as `example.com` to proceed.
 
@@ -59,7 +72,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 
-### Edit Discourse Configuration
+### 6. Edit Discourse Configuration
 
 Launch the setup tool at
 
@@ -82,13 +95,13 @@ Let's Encrypt account setup is to give you a free HTTPS certificate for your sit
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
-### Start Discourse
+### 7. Start Discourse
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier.
 
 <img src="https://www.discourse.org/images/install/17/discourse-congrats.png" width="650">
 
-### Register New Account and Become Admin
+### 8. Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
@@ -106,7 +119,7 @@ After completing the setup wizard, you should see Staff topics and **READ ME FIR
 
 <img src="https://www.discourse.org/images/install/17/discourse-homepage.png">
 
-### Post-Install Maintenance
+### 9. Post-Install Maintenance
 
 - We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command. In CentOS/RHEL, use the [`yum-cron`](https://www.redhat.com/sysadmin/using-yum-cron) package.
 - If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt install libpam-cracklib` package. We also recommend `fail2ban` which blocks any IP addresses for 10 minutes that attempt more than 3 password retries.
@@ -146,7 +159,7 @@ Options:
     --docker-args              Extra arguments to pass when running docker
 ```
 
-### Add More Discourse Features
+### 10. (Optional) Add More Discourse Features
 
 Do you want...
 

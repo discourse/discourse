@@ -249,7 +249,6 @@ fr:
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
     user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
-    muted_invitee: "Nous sommes désolés, cet utilisateur vous a mis(e) en sourdine."
     muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
     receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
     sender_does_not_allow_pm: "Nous sommes désolés, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
@@ -1446,7 +1445,6 @@ fr:
     summary_likes_required: "Nombre minimal de « J'aime » dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
-    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages directs et à y répondre (configurable via le niveau de confiance minimal pour envoyer des messages directs). Notez que les responsables peuvent toujours envoyer des messages directs."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne dans la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon et risquent donc de les retarder"
@@ -1769,7 +1767,6 @@ fr:
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse courriel sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
-    max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance 0 en provenance de cette adresse IP (et aucun n'est un responsable ou avec un niveau de confiance 2 et plus), ne plus accepter de nouvelles inscriptions depuis cette adresse IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses courriel sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
@@ -4273,10 +4270,8 @@ fr:
             label: "Nom de votre communauté"
             placeholder: "Le repaire de Jeanne"
           site_description:
-            label: "Décrivez votre communauté en une courte phrase"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
           short_site_description:
-            label: "Décrivez votre communauté en quelques mots"
             placeholder: "Meilleure communauté de tous les temps"
       introduction:
         title: "Introduction"

@@ -38,6 +38,18 @@ import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
 
+// original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+// group 1 `image|foo=bar`
+// group 2 `690x220`
+// group 3 `, 50%`
+// group 4 '|bar=baz'
+// group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+// Notes:
+// Group 3 is optional. group 4 can match images with or without a markdown title.
+// All matches are whitespace tolerant as long it's still valid markdown.
+// If the image is inside a code block, we'll ignore it `(?!(.*`))`.
+const IMAGE_MARKDOWN_REGEX = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
 let uploadHandlers = [];
@@ -538,7 +550,7 @@ export default Component.extend(ComposerUpload, {
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
-              name: name,
+              name,
               user_count: $e.data("mentionable-user-count"),
               max_mentions: $e.data("max-mentions"),
             },
@@ -589,24 +601,15 @@ export default Component.extend(ComposerUpload, {
   },
 
   _registerImageScaleButtonClick($preview) {
-    // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-    // group 1 `image|foo=bar`
-    // group 2 `690x220`
-    // group 3 `, 50%`
-    // group 4 '|bar=baz'
-    // group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
-
-    // Notes:
-    // Group 3 is optional. group 4 can match images with or without a markdown title.
-    // All matches are whitespace tolerant as long it's still valid markdown.
-    // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
-      const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
+      const index = parseInt(
+        $(e.target).closest(".button-wrapper").attr("data-image-index"),
+        10
+      );
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
-        imageScaleRegex
+        IMAGE_MARKDOWN_REGEX
       );
 
       if (matchingPlaceholder) {
@@ -614,7 +617,7 @@ export default Component.extend(ComposerUpload, {
 
         if (match) {
           const replacement = match.replace(
-            imageScaleRegex,
+            IMAGE_MARKDOWN_REGEX,
             `![$1|$2, ${scale}%$4]($5)`
           );
 
@@ -622,7 +625,7 @@ export default Component.extend(ComposerUpload, {
             "composer:replace-text",
             matchingPlaceholder[index],
             replacement,
-            { regex: imageScaleRegex, index }
+            { regex: IMAGE_MARKDOWN_REGEX, index }
           );
         }
       }
@@ -630,6 +633,58 @@ export default Component.extend(ComposerUpload, {
       e.preventDefault();
       return;
     });
+  },
+
+  _registerImageAltTextButtonClick($preview) {
+    $preview
+      .off("click", ".alt-text-edit-btn")
+      .on("click", ".alt-text-edit-btn", (e) => {
+        const parentContainer = $(e.target).closest(
+          ".alt-text-readonly-container"
+        );
+        const altText = parentContainer.find(".alt-text");
+        const correspondingInput = parentContainer.find(".alt-text-input");
+
+        $(e.target).hide();
+        altText.hide();
+        correspondingInput.val(altText.text());
+        correspondingInput.show();
+        e.preventDefault();
+      });
+
+    $preview
+      .off("keypress", ".alt-text-input")
+      .on("keypress", ".alt-text-input", (e) => {
+        if (e.key === "[" || e.key === "]") {
+          e.preventDefault();
+        }
+
+        if (e.key === "Enter") {
+          const index = parseInt(
+            $(e.target).closest(".button-wrapper").attr("data-image-index"),
+            10
+          );
+          const matchingPlaceholder = this.get("composer.reply").match(
+            IMAGE_MARKDOWN_REGEX
+          );
+          const match = matchingPlaceholder[index];
+          const replacement = match.replace(
+            IMAGE_MARKDOWN_REGEX,
+            `![${$(e.target).val()}|$2$3$4]($5)`
+          );
+
+          this.appEvents.trigger("composer:replace-text", match, replacement);
+
+          const parentContainer = $(e.target).closest(
+            ".alt-text-readonly-container"
+          );
+          const altText = parentContainer.find(".alt-text");
+          const altTextButton = parentContainer.find(".alt-text-edit-btn");
+          altText.show();
+          altTextButton.show();
+          $(e.target).hide();
+        }
+      });
   },
 
   @on("willDestroyElement")
@@ -807,6 +862,7 @@ export default Component.extend(ComposerUpload, {
       }
 
       this._registerImageScaleButtonClick($preview);
+      this._registerImageAltTextButtonClick($preview);
 
       this.trigger("previewRefreshed", $preview[0]);
       this.afterRefresh($preview);

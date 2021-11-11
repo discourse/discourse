@@ -15,7 +15,7 @@ discourseModule("Integration | Component | d-icon", function (hooks) {
 
     test(assert) {
       const html = queryAll(".test").html().trim();
-      assert.equal(
+      assert.strictEqual(
         html,
         '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#bars"></use></svg>'
       );
@@ -27,7 +27,7 @@ discourseModule("Integration | Component | d-icon", function (hooks) {
 
     test(assert) {
       const html = queryAll(".test").html().trim();
-      assert.equal(
+      assert.strictEqual(
         html,
         '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#discourse-bell-exclamation"></use></svg>'
       );

@@ -19,17 +19,17 @@ acceptance("Category New", function (needs) {
     assert.notOk(exists(".category-breadcrumb"));
 
     await fillIn("input.category-name", "testing");
-    assert.equal(queryAll(".badge-category").text(), "testing");
+    assert.strictEqual(queryAll(".badge-category").text(), "testing");
 
     await click("#save-category");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/testing/edit/general",
       "it transitions to the category edit route"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".edit-category-title h2").text(),
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",

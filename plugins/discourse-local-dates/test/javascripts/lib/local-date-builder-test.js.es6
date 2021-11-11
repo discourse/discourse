@@ -47,7 +47,7 @@ QUnit.assert.buildsCorrectDate = function (options, expected, message) {
   );
 
   if (expected.formated) {
-    this.test.assert.equal(
+    this.test.assert.strictEqual(
       localDateBuilder.build().formated,
       expected.formated,
       message || "it formates the date correctly"

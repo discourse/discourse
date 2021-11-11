@@ -225,10 +225,11 @@ createWidget("timeline-scrollarea", {
 
     let showButton = false;
     const hasBackPosition =
+      position.lastRead &&
       position.lastRead > 3 &&
+      position.lastRead > position.current &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      position.lastRead &&
       position.lastRead !== position.total;
 
     if (hasBackPosition) {

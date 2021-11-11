@@ -21,7 +21,7 @@ discourseModule("Integration | Component | site-header", function (hooks) {
     },
 
     async test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count(".ring-backdrop"),
         1,
         "there is the first notification mask"

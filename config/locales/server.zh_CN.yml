@@ -241,7 +241,6 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
-    muted_invitee: "抱歉，该用户已将您设为免打扰。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
     sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"
@@ -1403,7 +1402,6 @@ zh_CN:
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
     summary_timeline_button: "在时间线中显示“总结”按钮"
-    enable_personal_messages: "允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_long_polling: "用于通知的消息总线可以使用长轮询"
     enable_chunked_encoding: "启用服务器的分块编码响应。此功能适用于大多数设置，但某些代理可能会缓冲，导致响应延迟"
@@ -1734,7 +1732,6 @@ zh_CN:
     topic_view_duration_hours: "每个 IP/用户每 N 小时计算一次新话题浏览"
     user_profile_view_duration_hours: "每个 IP/用户每 N 小时计算一次新用户个人资料浏览"
     levenshtein_distance_spammer_emails: "在匹配垃圾信息发布者电子邮件时，仍然允许模糊匹配的字符数差异。"
-    max_new_accounts_per_registration_ip: "如果已经有 (n) 个来自此 IP 的信任级别 0 帐户（并且没有一个是管理人员或者是 TL2 或更高级别），则停止接受来自该 IP 的新注册。"
     min_ban_entries_for_roll_up: "点击“汇总”按钮时，如果至少有 (N) 个条目，将创建一个子网禁止条目"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽电子邮件条目。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽 IP 条目。"
@@ -4272,10 +4269,8 @@ zh_CN:
             label: "您社区的名称"
             placeholder: "朱桦的环聊"
           site_description:
-            label: "用一句话描述您的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           short_site_description:
-            label: "用几个词描述您的社区"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"

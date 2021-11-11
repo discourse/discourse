@@ -147,7 +147,7 @@ export default class {
 
     const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
     const data = {
-      timings: timings,
+      timings,
       topic_time: topicTime,
       topic_id: topicId,
     };

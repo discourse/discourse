@@ -227,7 +227,6 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
-    muted_invitee: "Sorry, die gebruiker heeft u gedempt."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -1349,7 +1348,6 @@ nl:
     summary_likes_required: "Het minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten tonen"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
-    enable_personal_messages: "Gebruikers met vertrouwensniveau 1 (instelbaar via het minimale niveau om berichten te verzenden) toestaan om berichten aan te maken en op berichten te antwoorden. Houd er rekening mee dat stafleden altijd berichten kunnen verzenden."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
     enable_long_polling: "Gebruikte 'message bus' voor melding kan 'long polling' gebruiken"
     enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
@@ -1624,7 +1622,6 @@ nl:
     topic_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-topicweergave tellen."
     user_profile_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-gebruikersprofielweergave tellen."
     levenshtein_distance_spammer_emails: "Bij het vergelijken van spam-e-mails, het aantal verschillende tekens waarbij nog steeds een wazige overeenkomst kan bestaan."
-    max_new_accounts_per_registration_ip: "Als er al (n) accounts met vertrouwensniveau 0 zijn van een bepaald IP-adres (en geen daarvan is staflid of heeft een vertrouwensniveau 2 of hoger), het accepteren van nieuwe registraties vanaf dat IP-adres stoppen."
     min_ban_entries_for_roll_up: "Bij het klikken op de knop Samenvoegen, een nieuwe subnet-banvermelding maken als er minstens (N) vermeldingen zijn."
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."

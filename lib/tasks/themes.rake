@@ -30,7 +30,7 @@ task "themes:install" => :environment do |task, args|
   use_json = theme_args == ''
 
   theme_args = begin
-                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::load(theme_args)
+                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::safe_load(theme_args)
                rescue
                  puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
                  exit 1

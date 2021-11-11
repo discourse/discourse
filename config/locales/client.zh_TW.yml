@@ -970,7 +970,7 @@ zh_TW:
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標籤"
-        read_more: "想看更多？在<a href='%{basePath}/u/%{username}/message'>個人訊息</a>瀏覽其他訊息。"
+        read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
         security: "安全性"
@@ -3231,12 +3231,8 @@ zh_TW:
           embedded_scss:
             text: "嵌入的 CSS"
             title: "輸入用於嵌入回應的自定義 CSS 樣式"
-          head_tag:
-            text: "</head>"
-            title: "會在</head>標籤前被插入的 HTML"
           body_tag:
-            text: "</body>"
-            title: "會在</body>標籤前被插入的 HTML"
+            text: "內容"
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"
@@ -3918,7 +3914,6 @@ zh_TW:
           badge_query_examples_title: "查詢徽章範例"
       emoji:
         title: "Emoji"
-        help: "新增新的emoji供所有人使用。(提示：一次拖放多個檔案)"
         add: "新增emoji"
         uploading: "正在上傳..."
         name: "名稱"
@@ -3928,7 +3923,6 @@ zh_TW:
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         confirm_delete: "你確定要刪除此主機？"
-        sample: "使用下列 HTML 代碼至你的站點開啟和嵌入 Discourse 話題。把<b>REPLACE_ME</b> 替換成你將嵌入至的網址。"
         title: "嵌入"
         host: "允許的主機"
         class_name: "階級名稱"

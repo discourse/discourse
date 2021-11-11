@@ -1755,4 +1755,22 @@ describe Post do
       post.publish_change_to_clients!(:created)
     end
   end
+
+  describe "#cannot_permanently_delete_reason" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      freeze_time
+      PostDestroyer.new(admin, post).destroy
+    end
+
+    it 'returns error message if same admin and time did not pass' do
+      expect(post.cannot_permanently_delete_reason(admin)).to eq(I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i)))
+    end
+
+    it 'returns nothing if different admin' do
+      expect(post.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+  end
 end

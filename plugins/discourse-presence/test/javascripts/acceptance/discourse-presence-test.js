@@ -27,7 +27,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     );
     await click("#reply-control button.create");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/t/internationalization-localization/280",
       "it transitions to the newly created topic URL"
@@ -81,7 +81,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await menu.expand();
     await menu.selectRowByValue("toggleWhisper");
 
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
       1,
       "it sets the post type to whisper"
@@ -114,7 +114,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
       "composer has contents of post to be edited"
@@ -156,7 +156,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       exists(".topic-above-footer-buttons-outlet.presence"),
       "includes the presence component"
     );
-    assert.equal(count(avatarSelector), 0, "no avatars displayed");
+    assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
@@ -164,7 +164,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "myusername",
     });
 
-    assert.equal(count(avatarSelector), 1, "avatar displayed");
+    assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
@@ -172,19 +172,19 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "myusername2",
     });
 
-    assert.equal(count(avatarSelector), 2, "whisper avatar displayed");
+    assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
 
     await leaveChannel("/discourse-presence/reply/280", {
       id: 123,
     });
 
-    assert.equal(count(avatarSelector), 1, "reply avatar removed");
+    assert.strictEqual(count(avatarSelector), 1, "reply avatar removed");
 
     await leaveChannel("/discourse-presence/whisper/280", {
       id: 124,
     });
 
-    assert.equal(count(avatarSelector), 0, "whisper avatar removed");
+    assert.strictEqual(count(avatarSelector), 0, "whisper avatar removed");
   });
 
   test("Displays replying and whispering presence in composer", async function (assert) {
@@ -198,7 +198,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       exists(".composer-fields-outlet.presence"),
       "includes the presence component"
     );
-    assert.equal(count(avatarSelector), 0, "no avatars displayed");
+    assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
@@ -206,7 +206,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "myusername",
     });
 
-    assert.equal(count(avatarSelector), 1, "avatar displayed");
+    assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
@@ -214,18 +214,18 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "myusername2",
     });
 
-    assert.equal(count(avatarSelector), 2, "whisper avatar displayed");
+    assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
 
     await leaveChannel("/discourse-presence/reply/280", {
       id: 123,
     });
 
-    assert.equal(count(avatarSelector), 1, "reply avatar removed");
+    assert.strictEqual(count(avatarSelector), 1, "reply avatar removed");
 
     await leaveChannel("/discourse-presence/whisper/280", {
       id: 124,
     });
 
-    assert.equal(count(avatarSelector), 0, "whisper avatar removed");
+    assert.strictEqual(count(avatarSelector), 0, "whisper avatar removed");
   });
 });

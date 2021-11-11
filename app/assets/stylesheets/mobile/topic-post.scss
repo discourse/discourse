@@ -433,16 +433,16 @@ span.highlighted {
 }
 
 .posts-filtered-notice {
-  padding-right: 10em;
+  padding-right: 8.5em;
+  padding-bottom: unquote("max(1em, env(safe-area-inset-bottom))");
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding-bottom: unquote("max(0.75em, env(safe-area-inset-bottom))");
   margin: 1em -9px;
 
   z-index: 101;
   .filtered-replies-show-all {
     position: absolute;
-    right: 2em;
+    right: 1em;
   }
 
   .filtered-replies-viewing {

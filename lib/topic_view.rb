@@ -54,7 +54,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who"]
+    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who", "action_code_path"]
   end
 
   def self.post_custom_fields_allowlisters
