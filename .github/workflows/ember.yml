@@ -49,7 +49,23 @@ jobs:
         working-directory: ./app/assets/javascripts/discourse
         run: yarn install
 
-      - name: Core QUnit
+      - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember test --launch "${{ matrix.browser }}"
+        run: |
+          sudo -E -u discourse mkdir /tmp/emberbuild
+          sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+
+      - name: Core QUnit 1
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}"
+        timeout-minutes: 60
+
+      - name: Core QUnit 2
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}"
+        timeout-minutes: 60
+
+      - name: Core QUnit 3
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}"
         timeout-minutes: 60
