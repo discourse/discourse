@@ -549,7 +549,7 @@ export default RestModel.extend({
 
     post.setProperties({
       post_number: topic.get("highest_post_number"),
-      topic: topic,
+      topic,
       created_at: new Date(),
       id: -1,
     });
@@ -847,6 +847,18 @@ export default RestModel.extend({
     return resolved;
   },
 
+  triggerLikedPost(postId, likesCount) {
+    const resolved = Promise.resolve();
+
+    const post = this.findLoadedPost(postId);
+    if (post) {
+      post.updateLikeCount(likesCount);
+      this.storePost(post);
+    }
+
+    return resolved;
+  },
+
   triggerReadPost(postId, readersCount) {
     const resolved = Promise.resolve();
     resolved.then(() => {
@@ -1063,7 +1075,7 @@ export default RestModel.extend({
     const url = `/t/${this.get("topic.id")}/posts.json`;
     let data = {
       post_number: postNumber,
-      asc: asc,
+      asc,
       include_suggested: includeSuggested,
     };
 

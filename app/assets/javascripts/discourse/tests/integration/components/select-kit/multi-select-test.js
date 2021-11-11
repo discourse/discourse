@@ -47,18 +47,18 @@ discourseModule(
         await this.subject.expand();
 
         const content = this.subject.displayedContent();
-        assert.equal(content.length, 3, "it shows rows");
-        assert.equal(
+        assert.strictEqual(content.length, 3, "it shows rows");
+        assert.strictEqual(
           content[0].name,
           this.content.firstObject.name,
           "it has the correct name"
         );
-        assert.equal(
+        assert.strictEqual(
           content[0].id,
-          this.content.firstObject.id,
+          this.content.firstObject.id.toString(),
           "it has the correct value"
         );
-        assert.equal(
+        assert.strictEqual(
           this.subject.header().value(),
           null,
           "it doesn't set a value from the content"

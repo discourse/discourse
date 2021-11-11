@@ -152,14 +152,14 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     let video = fixture().querySelector("video");
     let link = fixture().querySelector("a");
 
-    assert.equal(image1.getAttribute("src"), "/images/avatar.png?a");
-    assert.equal(image2.getAttribute("src"), "/images/avatar.png?b");
-    assert.equal(link.getAttribute("href"), "/uploads/short-url/c.pdf");
-    assert.equal(
+    assert.strictEqual(image1.getAttribute("src"), "/images/avatar.png?a");
+    assert.strictEqual(image2.getAttribute("src"), "/images/avatar.png?b");
+    assert.strictEqual(link.getAttribute("href"), "/uploads/short-url/c.pdf");
+    assert.strictEqual(
       video.querySelector("source").getAttribute("src"),
       "/uploads/default/original/3X/c/b/4.mp4"
     );
-    assert.equal(
+    assert.strictEqual(
       audio.querySelector("source").getAttribute("src"),
       "/uploads/default/original/3X/c/b/5.mp3"
     );
@@ -171,7 +171,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     await settled();
     let video = fixture().querySelectorAll("video")[1];
 
-    assert.equal(
+    assert.strictEqual(
       video.querySelector("source").getAttribute("src"),
       "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
     );
@@ -193,7 +193,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     await settled();
 
     let link = fixture().querySelector("a");
-    assert.equal(
+    assert.strictEqual(
       link.getAttribute("href"),
       "/secure-media-uploads/default/original/3X/c/b/3.pdf"
     );

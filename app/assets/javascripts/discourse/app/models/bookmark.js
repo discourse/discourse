@@ -157,7 +157,7 @@ const Bookmark = RestModel.extend({
     return User.create({
       username: post_user_username,
       avatar_template: avatarTemplate,
-      name: name,
+      name,
     });
   },
 });

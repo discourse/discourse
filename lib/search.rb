@@ -69,19 +69,17 @@ class Search
       SiteSetting.search_tokenize_chinese_japanese_korean
   end
 
-  def self.prepare_data(search_data, purpose = :query)
-    purpose ||= :query
-
+  def self.prepare_data(search_data, purpose = nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
+
     if purpose != :topic
       # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
       # Korean appears to be safe cause words are already space separated
       # For Japanese we should investigate using kakasi
       if segment_cjk?
         require 'cppjieba_rb' unless defined? CppjiebaRb
-        mode = (purpose == :query ? :query : :mix)
-        data = CppjiebaRb.segment(search_data, mode: mode)
+        data = CppjiebaRb.segment(search_data, mode: :mix)
 
         # TODO: we still want to tokenize here but the current stopword list is too wide
         # in cppjieba leading to words such as volume to be skipped. PG already has an English

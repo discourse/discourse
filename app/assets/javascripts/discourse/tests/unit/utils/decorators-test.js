@@ -42,12 +42,12 @@ discourseModule("utils:decorators", function (hooks) {
 
     async test(assert) {
       assert.ok(exists(document.querySelector(".foo-component")));
-      assert.equal(this.baz, 1);
+      assert.strictEqual(this.baz, 1);
 
       await this.clearRender();
 
       assert.ok(!exists(document.querySelector(".foo-component")));
-      assert.equal(this.baz, 1);
+      assert.strictEqual(this.baz, 1);
     },
   });
 });

@@ -3134,6 +3134,8 @@ lv:
           add: "Pievienot"
           scss:
             text: "CSS"
+          body_tag:
+            text: "Ķermenis"
         colors:
           undo: "atsaukt"
           revert: "atgriezt"
@@ -3658,7 +3660,6 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
-        help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
         add: "Pievienot Jaunu Smaidiņu"
         uploading: "Notiek ielāde..."
         name: "Nosaukums"
@@ -3668,7 +3669,6 @@ lv:
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Vai tiešām vēlies dzēst šo?"
-        sample: "(Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on.)"
         title: "Ieguldīšana"
         host: "Atļautie lietotāji"
         class_name: "Klases Nosaukums"

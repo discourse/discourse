@@ -38,9 +38,9 @@ function preloadInvite({
       title: "team",
     },
     username: "invited",
-    email_verified_by_link: email_verified_by_link,
-    different_external_email: different_external_email,
-    hidden_email: hidden_email,
+    email_verified_by_link,
+    different_external_email,
+    hidden_email,
   };
 
   if (link) {
@@ -100,7 +100,7 @@ acceptance("Invite accept", function (needs) {
     await visit("/invites/myvalidinvitetoken");
     assert.ok(exists("#new-account-email"), "shows the email input");
     assert.ok(exists("#new-account-username"), "shows the username input");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#new-account-username").val(),
       "invited",
       "username is prefilled"
@@ -277,18 +277,18 @@ acceptance("Invite link with authentication data", function (needs) {
       "email field is disabled"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#account-email-validation").text().trim(),
       I18n.t("user.email.authenticated", { provider: "Facebook" })
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#new-account-username").val(),
       "foobar",
       "username is prefilled"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#new-account-name").val(),
       "barfoo",
       "name is prefilled"
@@ -312,7 +312,7 @@ acceptance("Email Invite link with authentication data", function (needs) {
 
     await visit("/invites/myvalidinvitetoken");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#account-email-validation").text().trim(),
       I18n.t("user.email.invite_auth_email_invalid", { provider: "Facebook" })
     );
@@ -350,18 +350,18 @@ acceptance(
       );
       assert.ok(!exists("#new-account-email"), "does not show email field");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),
         I18n.t("user.email.authenticated", { provider: "Facebook" })
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#new-account-username").val(),
         "foobar",
         "username is prefilled"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#new-account-name").val(),
         "barfoo",
         "name is prefilled"
@@ -388,7 +388,7 @@ acceptance(
 
       await visit("/invites/myvalidinvitetoken");
 
-      assert.equal(
+      assert.strictEqual(
         query(".bad").textContent.trim(),
         "Your invitation email does not match the email authenticated by Facebook"
       );
@@ -416,7 +416,7 @@ acceptance(
 
       assert.ok(!exists("#new-account-email"), "does not show email field");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),
         I18n.t("user.email.authenticated_by_invite")
       );
@@ -444,7 +444,7 @@ acceptance(
 
       assert.ok(!exists("#new-account-email"), "does not show email field");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#account-email-validation").text().trim(),
         I18n.t("user.email.ok")
       );

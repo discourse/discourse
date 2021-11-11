@@ -1143,7 +1143,7 @@ it:
         tags: "Etichette"
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
-        read_more: "Vuoi saperne di più? Sfoglia altri messaggi nei <a href='%{basePath}/u/%{username}/message'>messaggi personali</a>."
+        read_more: "Vuoi saperne di più? Leggi altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -2022,6 +2022,8 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
       reload: "Ricarica"
       ignore: "Ignora"
+      image_alt_text:
+        aria_label: Testo alternativo per l'immagine
     notifications:
       tooltip:
         regular:
@@ -3573,6 +3575,8 @@ it:
       no_activity_others: "Nessuna attività."
       no_replies_others: "Nessuna risposta."
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
+    fullscreen_table:
+      expand_btn: "Espandi Tabella"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -4170,11 +4174,11 @@ it:
 
               Si consiglia di assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
           head_tag:
-            text: "</head>"
-            title: "HTML che sarà inserito prima del tag </head> "
+            text: "Intestazione"
+            title: "L'HTML sarà inserito prima dell'etichetta di intestazione"
           body_tag:
-            text: "</body>"
-            title: "HTML che deve essere inserito prima del tag </body>"
+            text: "Corpo"
+            title: "HTML che sarà inserito prima dell'etichetta del corpo"
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
@@ -5016,7 +5020,7 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuovi emoji da mettere a disposizione per tutti. (Suggerimento: trascina e rilascia più file in una volta sola)"
+        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"
@@ -5027,7 +5031,7 @@ it:
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
-        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonico della pagina in cui lo stai incorporando."
+        sample: "Incolla il seguente codice HTML nel tuo sito per creare e incorporare argomenti Discourse. Sostituire <b>REPLACE_ME</b> con l'URL canonico della pagina su cui si sta incorporando."
         title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"

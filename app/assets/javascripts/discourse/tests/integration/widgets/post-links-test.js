@@ -30,7 +30,7 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".post-links a.track-link"),
           1,
           "it hides the dupe link"
@@ -83,9 +83,9 @@ discourseModule(
         });
       },
       async test(assert) {
-        assert.equal(count(".expand-links"), 1, "collapsed by default");
+        assert.strictEqual(count(".expand-links"), 1, "collapsed by default");
         await click("a.expand-links");
-        assert.equal(count(".post-links a.track-link"), 7);
+        assert.strictEqual(count(".post-links a.track-link"), 7);
       },
     });
   }

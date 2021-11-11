@@ -8,7 +8,7 @@ module("Unit | Model | category", function () {
     const store = createStore();
 
     const slugFor = function (cat, val, text) {
-      assert.equal(Category.slugFor(cat), val, text);
+      assert.strictEqual(Category.slugFor(cat), val, text);
     };
 
     slugFor(
@@ -39,7 +39,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         slug: "luke",
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "darth/luke",
       "it uses the parent slug before the child"
@@ -48,7 +48,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         id: 555,
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "darth/555-category",
       "it uses the parent slug before the child and then uses id"
@@ -58,7 +58,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         id: 555,
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "345-category/555-category",
       "it uses the parent before the child and uses ids for both"

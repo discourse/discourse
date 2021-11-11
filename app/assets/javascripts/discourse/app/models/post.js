@@ -208,6 +208,8 @@ const Post = RestModel.extend({
         deleted_at: new Date(),
         deleted_by: deletedBy,
         can_delete: false,
+        can_permanently_delete:
+          this.siteSettings.can_permanently_delete && deletedBy.admin,
         can_recover: true,
       });
     } else {
@@ -217,8 +219,9 @@ const Post = RestModel.extend({
           : "post.deleted_by_author_simple";
       promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
-          cooked: cooked,
+          cooked,
           can_delete: false,
+          can_permanently_delete: false,
           version: this.version + 1,
           can_recover: true,
           can_edit: false,
@@ -349,6 +352,37 @@ const Post = RestModel.extend({
     if (json && json.id === this.id) {
       json = Post.munge(json);
       this.set("actions_summary", json.actions_summary);
+    }
+  },
+
+  updateLikeCount(count) {
+    let current_actions_summary = this.get("actions_summary");
+    let likeActionID = Site.current().post_action_types.find(
+      (a) => a.name_key === "like"
+    ).id;
+
+    if (!this.actions_summary.find((entry) => entry.id === likeActionID)) {
+      let json = Post.munge({
+        id: this.id,
+        actions_summary: [
+          {
+            id: likeActionID,
+            count,
+          },
+        ],
+      });
+      this.set(
+        "actions_summary",
+        Object.assign(current_actions_summary, json.actions_summary)
+      );
+      this.set("actionByName", json.actionByName);
+      this.set("likeAction", json.likeAction);
+    } else {
+      this.actions_summary.find(
+        (entry) => entry.id === likeActionID
+      ).count = count;
+      this.actionByName["like"] = count;
+      this.likeAction.count = count;
     }
   },
 

@@ -86,7 +86,7 @@ class Cache
 
       if raw
         begin
-          Marshal.load(raw)
+          Marshal.load(raw) # rubocop:disable Security/MarshalLoad
         rescue => e
           log_first_exception(e)
         end
@@ -113,7 +113,7 @@ class Cache
 
   def read_entry(key)
     if data = redis.get(key)
-      Marshal.load(data)
+      Marshal.load(data) # rubocop:disable Security/MarshalLoad
     end
   rescue => e
     # corrupt cache, this can happen if Marshal version

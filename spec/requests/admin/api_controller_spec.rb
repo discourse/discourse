@@ -12,6 +12,7 @@ describe Admin::ApiController do
 
   fab!(:key1, refind: false) { Fabricate(:api_key, description: "my key") }
   fab!(:key2, refind: false) { Fabricate(:api_key, user: admin) }
+  fab!(:key3, refind: false) { Fabricate(:api_key, user: admin) }
 
   context "as an admin" do
     before do
@@ -22,7 +23,21 @@ describe Admin::ApiController do
       it "succeeds" do
         get "/admin/api/keys.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body["keys"].length).to eq(2)
+        expect(response.parsed_body["keys"].length).to eq(3)
+      end
+
+      it "can paginate results" do
+        get "/admin/api/keys.json?offset=0&limit=2"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(key3.id, key2.id)
+
+        get "/admin/api/keys.json?offset=1&limit=2"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(key2.id, key1.id)
+
+        get "/admin/api/keys.json?offset=2&limit=2"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["keys"].map { |x| x["id"] }).to contain_exactly(key1.id)
       end
     end
 
@@ -222,7 +237,7 @@ describe Admin::ApiController do
 
         scopes = response.parsed_body['scopes']
 
-        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts')
+        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts', 'global')
       end
     end
   end
@@ -246,7 +261,7 @@ describe Admin::ApiController do
       }
       expect(response.status).to eq(404)
 
-      expect(ApiKey.count).to eq(2)
+      expect(ApiKey.count).to eq(3)
     end
   end
 end

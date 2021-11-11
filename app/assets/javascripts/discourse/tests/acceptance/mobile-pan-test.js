@@ -24,7 +24,7 @@ async function triggerSwipeStart(touchTarget) {
   );
 
   const touchStart = {
-    touchTarget: touchTarget,
+    touchTarget,
     x:
       zoom *
       (touchTarget.getBoundingClientRect().x +
@@ -108,7 +108,7 @@ acceptance("Mobile - menu swipes", function (needs) {
       await triggerSwipeMove(swipe);
       await triggerSwipeEnd(swipe);
 
-      assert.equal(
+      assert.strictEqual(
         count(".panel-body"),
         1,
         "it should re-open hamburger on a right swipe"

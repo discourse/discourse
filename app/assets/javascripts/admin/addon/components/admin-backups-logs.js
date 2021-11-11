@@ -48,7 +48,7 @@ export default Component.extend({
     }
     // update the formatted logs & cache index
     this.setProperties({
-      formattedLogs: formattedLogs,
+      formattedLogs,
       index: logs.length,
     });
     // force rerender

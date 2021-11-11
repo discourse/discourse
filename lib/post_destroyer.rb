@@ -205,7 +205,8 @@ class PostDestroyer
       @post.revise(@user,
         { raw: I18n.t(key) },
         force_new_version: true,
-        deleting_post: true
+        deleting_post: true,
+        skip_validations: true
       )
 
       Post.transaction do

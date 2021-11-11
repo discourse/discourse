@@ -27,10 +27,10 @@ export function extractLinkMeta(topic) {
   }
 
   const meta = {
-    target: target,
+    target,
     href,
-    domain: domain,
-    rel: rel,
+    domain,
+    rel,
   };
 
   if (_decorators.length) {

@@ -10,8 +10,8 @@ module("Unit | Utility | icon-library", function () {
     assert.ok(iconHTML("bars").indexOf('use xlink:href="#bars"') > -1);
 
     const nodeIcon = iconNode("bars");
-    assert.equal(nodeIcon.tagName, "svg");
-    assert.equal(
+    assert.strictEqual(nodeIcon.tagName, "svg");
+    assert.strictEqual(
       nodeIcon.properties.attributes.class,
       "fa d-icon d-icon-bars svg-icon svg-node"
     );

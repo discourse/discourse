@@ -34,7 +34,7 @@ acceptance("Enforce Second Factor", function (needs) {
 
     await catchAbortedTransition();
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it will not transition from second-factor preferences"
@@ -43,7 +43,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("#toggle-hamburger-menu");
     await click("a.admin-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it stays at second-factor preferences"
@@ -58,7 +58,7 @@ acceptance("Enforce Second Factor", function (needs) {
 
     await catchAbortedTransition();
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it will not transition from second-factor preferences"
@@ -67,7 +67,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("#toggle-hamburger-menu");
     await click("a.about-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it stays at second-factor preferences"
@@ -83,7 +83,7 @@ acceptance("Enforce Second Factor", function (needs) {
 
     await catchAbortedTransition();
 
-    assert.notEqual(
+    assert.notStrictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it will transition from second-factor preferences"
@@ -92,7 +92,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("#toggle-hamburger-menu");
     await click("a.about-link");
 
-    assert.notEqual(
+    assert.notStrictEqual(
       queryAll(".control-label").text(),
       "Password",
       "it is possible to navigate to other pages"

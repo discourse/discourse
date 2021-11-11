@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'imap/sync'
-require_relative 'imap_helper'
 
 describe Imap::Sync do
 

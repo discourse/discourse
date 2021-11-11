@@ -10,7 +10,7 @@ discourseModule("Unit | Controller | history", function () {
       topicController: {},
     });
 
-    assert.equal(
+    assert.strictEqual(
       HistoryController.get("displayEdit"),
       false,
       "it should not display edit button when user cannot edit the post"
@@ -18,14 +18,14 @@ discourseModule("Unit | Controller | history", function () {
 
     HistoryController.set("model.can_edit", true);
 
-    assert.equal(
+    assert.strictEqual(
       HistoryController.get("displayEdit"),
       true,
       "it should display edit button when user can edit the post"
     );
 
     HistoryController.set("topicController", null);
-    assert.equal(
+    assert.strictEqual(
       HistoryController.get("displayEdit"),
       false,
       "it should not display edit button when there is not topic controller"
@@ -33,7 +33,7 @@ discourseModule("Unit | Controller | history", function () {
     HistoryController.set("topicController", {});
 
     HistoryController.set("model.current_revision", 2);
-    assert.equal(
+    assert.strictEqual(
       HistoryController.get("displayEdit"),
       false,
       "it should only display the edit button on the latest revision"
@@ -109,7 +109,7 @@ discourseModule("Unit | Controller | history", function () {
     await HistoryController.bodyDiffChanged();
 
     const output = HistoryController.get("bodyDiff");
-    assert.equal(
+    assert.strictEqual(
       output,
       expectedOutput,
       "it keeps HTML safe and doesn't strip onebox tags"

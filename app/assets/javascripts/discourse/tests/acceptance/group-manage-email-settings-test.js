@@ -17,7 +17,7 @@ acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
       query(".user-secondary-navigation").innerText.includes("Email"),
       "email link is not shown in the sidebar"
     );
-    assert.equal(
+    assert.strictEqual(
       currentRouteName(),
       "group.manage.profile",
       "it redirects to the group profile page"
@@ -37,7 +37,7 @@ acceptance(
         query(".user-secondary-navigation").innerText.includes("Email"),
         "email link is shown in the sidebar"
       );
-      assert.equal(
+      assert.strictEqual(
         currentRouteName(),
         "group.manage.email",
         "it redirects to the group email page"
@@ -84,12 +84,12 @@ acceptance(
       assert.ok(exists(".group-smtp-email-settings"));
 
       await click("#prefill_smtp_gmail");
-      assert.equal(
+      assert.strictEqual(
         query("input[name='smtp_server']").value,
         "smtp.gmail.com",
         "prefills SMTP server settings for gmail"
       );
-      assert.equal(
+      assert.strictEqual(
         query("input[name='smtp_port']").value,
         "587",
         "prefills SMTP port settings for gmail"
@@ -112,7 +112,7 @@ acceptance(
 
       await click(".group-manage-save");
 
-      assert.equal(
+      assert.strictEqual(
         query(".group-manage-save-button > span").innerText,
         "Saved!"
       );
@@ -123,7 +123,7 @@ acceptance(
       );
 
       await click("#enable_smtp");
-      assert.equal(
+      assert.strictEqual(
         query(".modal-body").innerText,
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         "shows a confirm dialogue warning SMTP settings will be wiped"
@@ -155,12 +155,12 @@ acceptance(
       );
 
       await click("#prefill_imap_gmail");
-      assert.equal(
+      assert.strictEqual(
         query("input[name='imap_server']").value,
         "imap.gmail.com",
         "prefills IMAP server settings for gmail"
       );
-      assert.equal(
+      assert.strictEqual(
         query("input[name='imap_port']").value,
         "993",
         "prefills IMAP port settings for gmail"
@@ -175,7 +175,7 @@ acceptance(
 
       await click(".group-manage-save");
 
-      assert.equal(
+      assert.strictEqual(
         query(".group-manage-save-button > span").innerText,
         "Saved!"
       );
@@ -199,7 +199,7 @@ acceptance(
       );
 
       await click("#enable_imap");
-      assert.equal(
+      assert.strictEqual(
         query(".modal-body").innerText,
         I18n.t("groups.manage.email.imap_disable_confirm"),
         "shows a confirm dialogue warning IMAP settings will be wiped"
@@ -277,38 +277,38 @@ acceptance(
       assert.notOk(exists("#enable_smtp:disabled"), "SMTP is not disabled");
       assert.notOk(exists("#enable_imap:disabled"), "IMAP is not disabled");
 
-      assert.equal(
+      assert.strictEqual(
         query("[name='username']").value,
         "test@test.com",
         "email username is prefilled"
       );
-      assert.equal(
+      assert.strictEqual(
         query("[name='password']").value,
         "password",
         "email password is prefilled"
       );
-      assert.equal(
+      assert.strictEqual(
         query("[name='smtp_server']").value,
         "smtp.gmail.com",
         "smtp server is prefilled"
       );
-      assert.equal(
+      assert.strictEqual(
         query("[name='smtp_port']").value,
         "587",
         "smtp port is prefilled"
       );
 
-      assert.equal(
+      assert.strictEqual(
         query("[name='imap_server']").value,
         "imap.gmail.com",
         "imap server is prefilled"
       );
-      assert.equal(
+      assert.strictEqual(
         query("[name='imap_port']").value,
         "993",
         "imap port is prefilled"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit("#imap_mailbox").header().value(),
         "INBOX",
         "imap mailbox is prefilled"
@@ -359,7 +359,7 @@ acceptance(
       await fillIn('input[name="password"]', "password@gmail.com");
       await click(".test-smtp-settings");
 
-      assert.equal(
+      assert.strictEqual(
         query(".modal-body").innerText,
         "There was an issue with the SMTP credentials provided, check the username and password and try again.",
         "shows a dialogue with the error message from the server"

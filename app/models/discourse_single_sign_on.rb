@@ -50,8 +50,10 @@ class DiscourseSingleSignOn < SingleSignOn
   def nonce_error
     if Discourse.cache.read(used_nonce_key).present?
       "Nonce has already been used"
+    elsif SiteSetting.discourse_connect_csrf_protection
+      "Nonce is incorrect, was generated in a different browser session, or has expired"
     else
-      "Nonce has expired"
+      "Nonce is incorrect, or has expired"
     end
   end
 
@@ -323,8 +325,8 @@ class DiscourseSingleSignOn < SingleSignOn
     if SiteSetting.auth_overrides_username? && username.present?
       if user.username.downcase == username.downcase
         user.username = username # there may be a change of case
-      elsif user.username != username
-        user.username = UserNameSuggester.suggest(username || name || email, user.username)
+      elsif user.username != UserNameSuggester.fix_username(username)
+        user.username = UserNameSuggester.suggest(username)
       end
     end
 

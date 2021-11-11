@@ -711,12 +711,23 @@ describe Topic do
         end
 
         context "from a muted user" do
-          before { MutedUser.create!(user: another_user, muted_user: user) }
+          before { Fabricate(:muted_user, user: another_user, muted_user: user) }
 
-          it 'fails with an error message' do
+          it 'fails with an error' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
-              .with_message(I18n.t("topic_invite.muted_invitee"))
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
+        end
+
+        context "from a ignored user" do
+          before { Fabricate(:ignored_user, user: another_user, ignored_user: user) }
+
+          it 'fails with an error' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -2060,9 +2071,13 @@ describe Topic do
       it "doesn't return topics from suppressed categories" do
         user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
-        Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
 
         SiteSetting.digest_suppress_categories = "#{category.id}"
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+
+        Fabricate(:topic_user, user: user, topic: topic, notification_level: TopicUser.notification_levels[:regular])
 
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
@@ -2934,6 +2949,36 @@ describe Topic do
           "unrelated@test.com"
         )
       end
+    end
+  end
+
+  describe "#cannot_permanently_delete_reason" do
+    fab!(:post) { Fabricate(:post) }
+    let!(:topic) { post.topic }
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      freeze_time
+    end
+
+    it 'returns error message if topic has more posts' do
+      post_2 = PostCreator.create!(Fabricate(:user), topic_id: topic.id, raw: 'some post content')
+
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(I18n.t('post.cannot_permanently_delete.many_posts'))
+
+      PostDestroyer.new(admin, post_2).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+
+    it 'returns error message if same admin and time did not pass' do
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(admin)).to eq(I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i)))
+    end
+
+    it 'returns nothing if different admin' do
+      PostDestroyer.new(admin, post).destroy
+      expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
 end

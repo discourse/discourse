@@ -61,16 +61,32 @@ module DiscourseUpdates
       Discourse.redis.get last_installed_version_key
     end
 
+    def last_installed_version=(arg)
+      Discourse.redis.set(last_installed_version_key, arg)
+    end
+
     def latest_version
       Discourse.redis.get latest_version_key
+    end
+
+    def latest_version=(arg)
+      Discourse.redis.set(latest_version_key, arg)
     end
 
     def missing_versions_count
       Discourse.redis.get(missing_versions_count_key).try(:to_i)
     end
 
+    def missing_versions_count=(arg)
+      Discourse.redis.set(missing_versions_count_key, arg)
+    end
+
     def critical_updates_available?
       (Discourse.redis.get(critical_updates_available_key) || false) == 'true'
+    end
+
+    def critical_updates_available=(arg)
+      Discourse.redis.set(critical_updates_available_key, arg)
     end
 
     def updated_at
@@ -80,12 +96,6 @@ module DiscourseUpdates
 
     def updated_at=(time_with_zone)
       Discourse.redis.set updated_at_key, time_with_zone.as_json
-    end
-
-    ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
-      eval "define_method :#{name}= do |arg|
-        Discourse.redis.set #{name}_key, arg
-      end"
     end
 
     def missing_versions=(versions)

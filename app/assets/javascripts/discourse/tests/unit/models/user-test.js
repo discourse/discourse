@@ -22,7 +22,7 @@ module("Unit | Model | user", function () {
 
     assert.deepEqual(
       user.get("searchContext"),
-      { type: "user", id: "eviltrout", user: user },
+      { type: "user", id: "eviltrout", user },
       "has a search context"
     );
   });
@@ -45,7 +45,7 @@ module("Unit | Model | user", function () {
     let user = User.create({ admin: true });
     let group = Group.create({ automatic: true });
 
-    assert.equal(
+    assert.strictEqual(
       user.canManageGroup(group),
       false,
       "automatic groups cannot be managed."
@@ -54,7 +54,7 @@ module("Unit | Model | user", function () {
     group.set("automatic", false);
     group.setProperties({ can_admin_group: true });
 
-    assert.equal(
+    assert.strictEqual(
       user.canManageGroup(group),
       true,
       "an admin should be able to manage the group"
@@ -63,7 +63,7 @@ module("Unit | Model | user", function () {
     user.set("admin", false);
     group.setProperties({ is_group_owner: true });
 
-    assert.equal(
+    assert.strictEqual(
       user.canManageGroup(group),
       true,
       "a group owner should be able to manage the group"
@@ -78,7 +78,7 @@ module("Unit | Model | user", function () {
     sinon.stub(ajaxlib.ajax);
     let spy = sinon.spy(ajaxlib, "ajax");
 
-    assert.equal(
+    assert.strictEqual(
       user.resolvedTimezone(user),
       tz,
       "if the user already has a timezone return it"
@@ -88,7 +88,7 @@ module("Unit | Model | user", function () {
       "if the user already has a timezone do not call AJAX update"
     );
     user = User.create({ username: "chuck", id: 111 });
-    assert.equal(
+    assert.strictEqual(
       user.resolvedTimezone(user),
       "America/Chicago",
       "if the user has no timezone guess it with moment"
@@ -103,9 +103,9 @@ module("Unit | Model | user", function () {
     );
 
     let otherUser = User.create({ username: "howardhamlin", id: 999 });
-    assert.equal(
+    assert.strictEqual(
       otherUser.resolvedTimezone(user),
-      null,
+      undefined,
       "if the user has no timezone and the user is not the current user, do NOT guess with moment"
     );
     assert.not(

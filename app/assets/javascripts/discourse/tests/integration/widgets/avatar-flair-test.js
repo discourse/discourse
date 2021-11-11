@@ -25,7 +25,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0000; color: #FFFFFF; ",
           "it has styles"

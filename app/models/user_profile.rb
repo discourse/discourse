@@ -12,12 +12,15 @@ class UserProfile < ActiveRecord::Base
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
+  after_save :pull_hotlinked_image
 
   validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
 
   has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
+
+  attr_accessor :skip_pull_hotlinked_image
 
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
@@ -111,6 +114,16 @@ class UserProfile < ActiveRecord::Base
 
   def trigger_badges
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
+  end
+
+  def pull_hotlinked_image
+    if !skip_pull_hotlinked_image && saved_change_to_bio_raw?
+      Jobs.enqueue_in(
+        SiteSetting.editing_grace_period,
+        :pull_user_profile_hotlinked_images,
+        user_id: self.user_id
+      )
+    end
   end
 
   private

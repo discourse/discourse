@@ -14,7 +14,6 @@ import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
-import HeaderComponent from "discourse/components/site-header";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -212,9 +211,6 @@ export function acceptance(name, optionsOrCallback) {
   const setup = {
     beforeEach() {
       resetMobile();
-
-      // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
       if (mobileView) {

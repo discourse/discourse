@@ -432,7 +432,7 @@ acceptance("Poll quote", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
-    assert.equal(count(".poll"), 2, "polls are rendered");
-    assert.equal(count(".poll-buttons"), 2, "polls are extended");
+    assert.strictEqual(count(".poll"), 2, "polls are rendered");
+    assert.strictEqual(count(".poll-buttons"), 2, "polls are extended");
   });
 });

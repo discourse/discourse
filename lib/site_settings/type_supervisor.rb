@@ -92,7 +92,7 @@ class SiteSettings::TypeSupervisor
     end
 
     if (new_choices = opts[:choices])
-      new_choices = eval(new_choices) if new_choices.is_a?(String)
+      new_choices = eval(new_choices) if new_choices.is_a?(String) # rubocop:disable Security/Eval
 
       if @choices.has_key?(name)
         @choices[name].concat(new_choices)

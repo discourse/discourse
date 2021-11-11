@@ -27,11 +27,11 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
     await visit("/t/-/13");
 
     const polls = queryAll(".poll");
-    assert.equal(polls.length, 1, "it should render the poll correctly");
+    assert.strictEqual(polls.length, 1, "it should render the poll correctly");
 
     await click("button.toggle-results");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       25,
       "it should display the right number of voters"
@@ -44,7 +44,7 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
 
     await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".poll-voters:nth-of-type(1) li").length,
       35,
       "it should display the right number of voters"

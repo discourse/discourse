@@ -18,7 +18,7 @@ import User from "discourse/models/user";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
-const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 5000;
+const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
 
@@ -227,9 +227,14 @@ export default class PresenceService extends Service {
     this._presentProxies = {};
     this._subscribedProxies = {};
     this._initialDataRequests = {};
-    window.addEventListener("beforeunload", () => {
-      this._beaconLeaveAll();
-    });
+
+    this._beforeUnloadCallback = () => this._beaconLeaveAll();
+    window.addEventListener("beforeunload", this._beforeUnloadCallback);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beforeUnloadCallback);
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -257,6 +262,7 @@ export default class PresenceService extends Service {
     if (this._initialDataAjax) {
       // try again next runloop
       next(this, () => once(this, this._makeInitialDataRequest));
+      return;
     }
 
     if (Object.keys(this._initialDataRequests).length === 0) {
@@ -325,6 +331,9 @@ export default class PresenceService extends Service {
   _removeSubscribed(channelProxy) {
     let subscribed = this._subscribedProxies[channelProxy.name];
     subscribed?.delete(channelProxy);
+    if (subscribed?.size === 0) {
+      delete this._subscribedProxies[channelProxy.name];
+    }
     return subscribed?.size || 0;
   }
 
@@ -346,7 +355,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "enter",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();
@@ -375,7 +384,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "leave",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();
@@ -384,6 +393,10 @@ export default class PresenceService extends Service {
   }
 
   async _subscribe(channelProxy, initialData = null) {
+    if (this.siteSettings.login_required && !this.currentUser) {
+      throw "Presence is only available to authenticated users on login-required sites";
+    }
+
     this._addSubscribed(channelProxy);
     const channelName = channelProxy.name;
     let state = this._presenceChannelStates[channelName];
@@ -415,9 +428,14 @@ export default class PresenceService extends Service {
       .filter((e) => e.type === "leave")
       .map((e) => e.channel);
 
+    channelsToLeave.push(...this._presentChannels);
+
+    if (channelsToLeave.length === 0) {
+      return;
+    }
+
     const data = new FormData();
     data.append("client_id", this.messageBus.clientId);
-    this._presentChannels.forEach((ch) => data.append("leave_channels[]", ch));
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));

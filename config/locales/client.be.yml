@@ -1563,8 +1563,8 @@ be:
           add: "Дадаць"
           header:
             text: "Header"
-          head_tag:
-            text: "<"
+          body_tag:
+            text: "цела"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"

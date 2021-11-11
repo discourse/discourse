@@ -14,12 +14,12 @@ discourseModule(
       template: hbs`{{d-button icon="plus"}} {{d-button icon="plus" label="topic.create"}} {{d-button label="topic.create"}}`,
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           query(".btn:nth-child(1)").offsetHeight,
           query(".btn:nth-child(2)").offsetHeight,
           "have equal height"
         );
-        assert.equal(
+        assert.strictEqual(
           query(".btn:nth-child(1)").offsetHeight,
           query(".btn:nth-child(3)").offsetHeight,
           "have equal height"
@@ -33,7 +33,7 @@ discourseModule(
       template: hbs`{{text-field}} {{d-button icon="plus" label="topic.create"}}`,
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           query("input").offsetHeight,
           query(".btn").offsetHeight,
           "have equal height"
@@ -47,7 +47,7 @@ discourseModule(
       template: hbs`{{combo-box options=(hash none="category.none")}} {{text-field}}`,
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           query("input").offsetHeight,
           query(".combo-box").offsetHeight,
           "have equal height"

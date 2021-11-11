@@ -43,12 +43,12 @@ acceptance("Edit Notification Click", function (needs) {
     await click(".d-header-icons #current-user");
     await click("#quick-access-notifications .edited");
     const [v1, v2] = queryAll(".history-modal .revision-content");
-    assert.equal(
+    assert.strictEqual(
       v1.textContent.trim(),
       "Hello world this is a test",
       "history modal for the edited post is shown"
     );
-    assert.equal(
+    assert.strictEqual(
       v2.textContent.trim(),
       "Hello world this is a testThis is an edit!",
       "history modal for the edited post is shown"

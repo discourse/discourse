@@ -10,7 +10,7 @@ class ImportScripts::JForum < ImportScripts::Base
   def initialize
     super
 
-    @settings = YAML.load(File.read(ARGV.first), symbolize_names: true)
+    @settings = YAML.safe_load(File.read(ARGV.first), symbolize_names: true)
 
     @database_client = Mysql2::Client.new(
       host: @settings[:database][:host],

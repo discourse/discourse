@@ -27,7 +27,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-text", "Google");
     await click(".modal-footer button.btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "This is a link to [Google](https://google.com)",
       "adds link with url and text, prepends 'https://'"
@@ -45,7 +45,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-text", "Google");
     await click(".modal-footer button.btn-danger");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "Reset textarea contents.",
       "doesn’t insert anything after cancelling"
@@ -64,7 +64,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-url", "somelink.com");
     await click(".modal-footer button.btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "[Reset](https://somelink.com) textarea contents.",
       "adds link to a selected text"

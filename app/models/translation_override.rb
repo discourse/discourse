@@ -39,6 +39,7 @@ class TranslationOverride < ActiveRecord::Base
     }
   }
 
+  include HasSanitizableFields
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor
   deprecate_constant 'CUSTOM_INTERPOLATION_KEYS_WHITELIST', 'TranslationOverride::ALLOWED_CUSTOM_INTERPOLATION_KEYS'
 
@@ -50,13 +51,15 @@ class TranslationOverride < ActiveRecord::Base
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
 
-    data = { value: value }
+    translation_override = find_or_initialize_by(params)
+    sanitized_value = translation_override.sanitize_field(value, additional_attributes: ['data-auto-route'])
+
+    data = { value: sanitized_value }
     if key.end_with?('_MF')
       _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
-      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, value)
+      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
     end
 
-    translation_override = find_or_initialize_by(params)
     params.merge!(data) if translation_override.new_record?
     i18n_changed(locale, [key]) if translation_override.update(data)
     translation_override
@@ -125,7 +128,6 @@ class TranslationOverride < ActiveRecord::Base
     if original_text
       original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
       new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-
       custom_interpolation_keys = []
 
       ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|

@@ -2665,10 +2665,6 @@ th:
             text: "Footer"
           embedded_scss:
             text: "Embedded CSS"
-          head_tag:
-            text: "</head>"
-          body_tag:
-            text: "</body>"
         colors:
           title: "สี"
           undo: "เลิกทำ"

@@ -511,7 +511,7 @@ class Topic < ActiveRecord::Base
     # Remove muted and shared draft categories
     remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
+      topics = topics.where("topics.category_id NOT IN (?)", SiteSetting.digest_suppress_categories.split("|").map(&:to_i))
     end
     if SiteSetting.shared_drafts_enabled?
       remove_category_ids << SiteSetting.shared_drafts_category
@@ -1022,13 +1022,7 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      if MutedUser
-          .where(user: target_user, muted_user: invited_by)
-          .joins(:muted_user)
-          .where('NOT admin AND NOT moderator')
-          .exists?
-        raise NotAllowed.new(I18n.t("topic_invite.muted_invitee"))
-      end
+      ensure_can_invite!(target_user, invited_by)
 
       if TopicUser
           .where(topic: self,
@@ -1063,6 +1057,22 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
+    end
+  end
+
+  def ensure_can_invite!(target_user, invited_by)
+    if MutedUser
+        .where(user: target_user, muted_user: invited_by)
+        .joins(:muted_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
+    elsif IgnoredUser
+        .where(user: target_user, ignored_user: invited_by)
+        .joins(:ignored_user)
+        .where('NOT admin AND NOT moderator')
+        .exists?
+      raise NotAllowed
     end
   end
 
@@ -1733,6 +1743,9 @@ class Topic < ActiveRecord::Base
   end
 
   def create_invite_notification!(target_user, notification_type, username)
+    invited_by = User.find_by_username(username)
+    ensure_can_invite!(target_user, invited_by)
+
     target_user.notifications.create!(
       notification_type: notification_type,
       topic_id: self.id,
@@ -1753,6 +1766,15 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_topic_invitations_per_day,
       1.day.to_i
     ).performed!
+  end
+
+  def cannot_permanently_delete_reason(user)
+    if self.posts_count > 0
+      I18n.t('post.cannot_permanently_delete.many_posts')
+    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
   end
 
   private
@@ -1814,15 +1836,6 @@ class Topic < ActiveRecord::Base
 
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
-  end
-
-  def cannot_permanently_delete_reason(user)
-    if self.posts_count > 1
-      I18n.t('post.cannot_permanently_delete.many_posts')
-    elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
-      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
-      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
-    end
   end
 end
 

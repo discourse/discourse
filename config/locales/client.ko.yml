@@ -81,7 +81,7 @@ ko:
         x_days:
           other: "%{count}일 전"
         x_months:
-          other: "%{count}달 전"
+          other: "%{count}개월 전"
         x_years:
           other: "%{count}년 전"
       later:
@@ -257,6 +257,7 @@ ko:
     bookmarks:
       created: "이 글을 북마크했습니다. %{name}"
       not_bookmarked: "이 글을 북마크"
+      remove_reminder_keep_bookmark: "알림 제거 및 북마크 유지"
       created_with_reminder: "알림 %{date}으로 이 글을 북마크했습니다. %{name}"
       remove: "북마크 삭제"
       delete: "북마크 삭제"
@@ -1085,6 +1086,7 @@ ko:
         failed_to_move: "선택한 메시지를 이동하지 못했습니다. (네트워크가 다운되었을 수 있음)"
         tags: "태그"
         warnings: "공식 경고"
+        read_more_in_group: "더 읽을거리가 필요하신가요? %{groupLink}에서 다른 메시지를 찾아보십시오."
       preferences_nav:
         account: "계정"
         security: "보안"
@@ -1241,6 +1243,7 @@ ko:
         not_connected: "(연결되지 않음)"
         confirm_modal_title: "%{provider} 계정 연결"
         confirm_description:
+          disconnect: "기존 %{provider} 계정 '%{account_description}' 연결이 해제됩니다."
           account_specific: "사용자님의 %{provider} 계정 '%{account_description}'이 인증에 사용됩니다."
           generic: "%{provider} 계정이 인증에 사용됩니다."
       name:
@@ -1582,6 +1585,7 @@ ko:
       enable: "이 글 요약"
       disable: "모든 글 표시"
       short_label: "요약하기"
+      short_title: "이 글의 요약: 커뮤니티의 인기 게시물"
     deleted_filter:
       enabled_description: "이 글에는 숨겨진 삭제 된 게시물이 있습니다."
       disabled_description: "글에 삭제 된 게시물이 표시됩니다."
@@ -1852,6 +1856,7 @@ ko:
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 만들기"
       edit_shared_draft: "공유 초안 편집"
+      title: "또는 %{modifier}Enter 키를 누릅니다."
       users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요."
@@ -2059,6 +2064,7 @@ ko:
       categories: "카테고리"
       tags: "태그"
       in_this_topic: "이 글에서"
+      in_this_topic_tooltip: "모든 글 검색으로 전환"
       in_topics_posts: "모든 글과 댓글에서"
       enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
@@ -2713,6 +2719,7 @@ ko:
           just_the_post: "아니오, 글만 삭제합니다."
         admin: "관리자 기능"
         permanently_delete: "영구적으로 삭제"
+        permanently_delete_confirmation: "이 게시물을 영구적으로 삭제하시겠습니까? 복구할 수 없습니다."
         wiki: "위키 만들기"
         unwiki: "위키 제거하기"
         convert_to_moderator: "스태프 색상 추가하기"
@@ -3427,12 +3434,15 @@ ko:
       no_replies_title: "아직 어떤 글에도 댓글을 달지 않았습니다."
       no_replies_others: "답글이 없습니다."
       no_drafts_title: "초안을 시작하지 않았습니다."
+      no_drafts_body: "아직 글을 작성할 준비가 되지 않았습니까? 글, 댓글 또는 개인 메시지 작성을 시작할 때마다 새 초안을 자동으로 저장하고 여기에 나열합니다. 취소 버튼을 클릭해 삭제하거나 나중에 계속하려면 초안을 저장하세요."
       no_likes_title: "아직 어떤 글에도 좋아요를 클릭하지 않으셨습니다."
       no_likes_body: "참여와 기여를 시작하는 가장 좋은 방법은 다른 사용자의 글을 읽고 %{heartIcon} 을 클릭하는 것입니다!"
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
       no_topics_title: "아직 작성한 글이 없습니다."
       no_read_topics_title: "아직 읽은 글이 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다."
+    fullscreen_table:
+      expand_btn: "테이블 확장"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -4025,11 +4035,11 @@ ko:
 
               플러그인 및/또는 코어와의 충돌을 피하기 위해 속성 이름 앞에 붙이는 것이 좋습니다.
           head_tag:
-            text: "</head>"
-            title: "</head> 태그 전에 들어갈 HTML"
+            text: "헤드"
+            title: "헤드 태그 앞에 삽입될 HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> 태그 전에 들어갈 HTML"
+            text: "바디"
+            title: "본문 태그 앞에 삽입될 HTML"
           yaml:
             text: "YAML"
             title: "YAML 형식으로 테마 설정 정의"
@@ -4874,7 +4884,7 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.(PROTIP: 한 번에 여러 파일을 드래그 앤 드롭)"
+        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.이름을 입력하지 않고 여러 파일을 한 번에 끌어다 놓아 파일 이름을 사용하여 이모티콘을 만들 수 있습니다."
         add: "새 이모티콘 추가"
         uploading: "업로드 중..."
         name: "이름"
@@ -4885,7 +4895,6 @@ ko:
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 호스트 추가부터 하세요"
         confirm_delete: "정말로 host를 삭제할까요?"
-        sample: "Discourse 토픽을 웹사이트에 삽입(embed)하기 위해 다음 HTML코드를 이용하세요. <b>REPLACE_ME</b> 부분을 당신이 삽입하려는 웹사이트의 정식URL로 교체 하면 됩니다."
         title: "삽입(Embedding)"
         host: "허용 Host"
         class_name: "클래스 이름"

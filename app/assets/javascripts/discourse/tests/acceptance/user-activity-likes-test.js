@@ -22,7 +22,7 @@ acceptance("User Activity / Likes - empty state", function (needs) {
   test("When looking at another user activity it renders the 'No activity' message", async function (assert) {
     await visit("/u/charlie/activity/likes-given");
     assert.ok(exists("div.alert-info"));
-    assert.equal(
+    assert.strictEqual(
       query("div.alert-info").innerText.trim(),
       I18n.t("user_activity.no_likes_others")
     );

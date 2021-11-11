@@ -14,7 +14,7 @@ export default {
   initialize() {
     registerTopicFooterButton({
       id: "share-and-invite",
-      icon: "link",
+      icon: "d-topic-share",
       priority: SHARE_PRIORITY,
       label() {
         if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {

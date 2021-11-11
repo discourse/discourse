@@ -45,23 +45,23 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".themes-tab").hasClass("active"),
         true,
         "themes tab is active"
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".components-tab").hasClass("active"),
         false,
         "components tab is not active"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".inactive-indicator").index(),
         -1,
         "there is no inactive themes separator when all themes are inactive"
       );
-      assert.equal(count(".themes-list-item"), 5, "displays all themes");
+      assert.strictEqual(count(".themes-list-item"), 5, "displays all themes");
 
       [2, 3].forEach((num) => this.themes[num].set("user_selectable", true));
       this.themes[4].set("default", true);
@@ -74,7 +74,7 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
         names,
         "sorts themes correctly"
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".inactive-indicator").index(),
         3,
         "the separator is in the right location"
@@ -82,19 +82,19 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
 
       this.themes.forEach((theme) => theme.set("user_selectable", true));
       this.set("themes", this.themes);
-      assert.equal(
+      assert.strictEqual(
         queryAll(".inactive-indicator").index(),
         -1,
         "there is no inactive themes separator when all themes are user-selectable"
       );
 
       this.set("themes", []);
-      assert.equal(
+      assert.strictEqual(
         count(".themes-list-item"),
         1,
         "shows one entry with a message when there is nothing to display"
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".themes-list-item span.empty").text().trim(),
         I18n.t("admin.customize.theme.empty"),
         "displays the right message"
@@ -122,31 +122,35 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".components-tab").hasClass("active"),
         true,
         "components tab is active"
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".themes-tab").hasClass("active"),
         false,
         "themes tab is not active"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".inactive-indicator").index(),
         -1,
         "there is no separator"
       );
-      assert.equal(count(".themes-list-item"), 5, "displays all components");
+      assert.strictEqual(
+        count(".themes-list-item"),
+        5,
+        "displays all components"
+      );
 
       this.set("components", []);
-      assert.equal(
+      assert.strictEqual(
         count(".themes-list-item"),
         1,
         "shows one entry with a message when there is nothing to display"
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".themes-list-item span.empty").text().trim(),
         I18n.t("admin.customize.theme.empty"),
         "displays the right message"
@@ -228,7 +232,7 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
       },
       async test(assert) {
         await fillIn(".themes-list-filter .filter-input", "11");
-        assert.equal(
+        assert.strictEqual(
           query(".themes-list-container").textContent.trim(),
           "Theme 11",
           "only 1 theme is shown"
@@ -273,14 +277,14 @@ discourseModule("Integration | Component | themes-list", function (hooks) {
         );
 
         await fillIn(".themes-list-filter .filter-input", "66");
-        assert.equal(
+        assert.strictEqual(
           query(".themes-list-container").textContent.trim(),
           "Component 66",
           "only 1 component is shown"
         );
 
         await click(".themes-list-header .themes-tab");
-        assert.equal(
+        assert.strictEqual(
           query(".themes-list-container").textContent.trim(),
           "Theme 66",
           "filter term persisted between tabs because both have more than 10 items"

@@ -40,3 +40,4 @@ tr_TR:
             every_three_months: "Üç ayda bir"
             every_six_months: "Altı ayda bir"
             every_year: "Her yıl"
+      default_title: "%{site_name} Etkinliği"

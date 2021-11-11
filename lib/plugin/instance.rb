@@ -950,6 +950,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
+  # Registers a new push notification filter. User and notification payload are passed into block, and if all
+  # filters return `true`, the push notification will be sent.
+  def register_push_notification_filter(&block)
+    DiscoursePluginRegistry.register_push_notification_filter(block, self)
+  end
+
   # Register a ReviewableScore setting_name associated with a reason.
   # We'll use this to build a site setting link and add it to the reason's translation.
   #

@@ -60,7 +60,7 @@ discourseModule(
           exists($header.el().find(".btn-clear")),
           "it shows the clear button"
         );
-        assert.equal($header.value(), DEFAULT_VALUE);
+        assert.strictEqual($header.value(), DEFAULT_VALUE.toString());
 
         await click($header.el().find(".btn-clear")[0]);
 
@@ -68,7 +68,7 @@ discourseModule(
           exists($header.el().find(".btn-clear")),
           "it hides the clear button"
         );
-        assert.equal($header.value(), null);
+        assert.strictEqual($header.value(), null);
       },
     });
 

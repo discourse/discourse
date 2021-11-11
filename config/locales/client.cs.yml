@@ -3215,12 +3215,8 @@ cs:
           embedded_scss:
             text: "Vloženo CSS"
             title: "Zadat vlastní CSS k doručení s vloženou verzí kometářů"
-          head_tag:
-            text: "</head>"
-            title: "HTML které bude vloženo před</head> štítkem"
           body_tag:
-            text: "</body>"
-            title: "HTML, který bude vložený před </body>štítek"
+            text: "Tělo"
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
@@ -3845,7 +3841,6 @@ cs:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Vložte nové emoji, které bude dostupné pro všechny na fóru. (Protip: můžete přetáhnout několik souborů najednou.)"
         add: "Vložit nový Emoji"
         uploading: "Nahrává se..."
         name: "Název"
@@ -3855,7 +3850,6 @@ cs:
       embedding:
         get_started: "Pokud chceš zabudovat Discourse do jiných stránek, začni s přidáním hostu."
         confirm_delete: "Opravdu chcete smazat tento host?"
-        sample: "Abyste vytvořili a zabudovali témata z discourse, použijte následující HTML kód na vašem webu. Nahraď <b>REPLACE_ME</b> celkovým URL stránky, do které je zabudováváš."
         title: "Zabudování"
         host: "Povolené hosty"
         class_name: "název třídy"

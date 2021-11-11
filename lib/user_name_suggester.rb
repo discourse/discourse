@@ -4,9 +4,9 @@ module UserNameSuggester
   GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
   LAST_RESORT_USERNAME = "user"
 
-  def self.suggest(name_or_email, allowed_username = nil)
+  def self.suggest(name_or_email)
     name = parse_name_from_email(name_or_email)
-    find_available_username_based_on(name, allowed_username)
+    find_available_username_based_on(name)
   end
 
   def self.parse_name_from_email(name_or_email)
@@ -20,22 +20,13 @@ module UserNameSuggester
     name
   end
 
-  def self.find_available_username_based_on(name, allowed_username = nil)
+  def self.find_available_username_based_on(name)
     name = fix_username(name)
     offset = nil
     i = 1
 
     attempt = name
-    normalized_attempt = User.normalize_username(attempt)
-
-    original_allowed_username = allowed_username
-    allowed_username = User.normalize_username(allowed_username) if allowed_username
-
-    until (
-      normalized_attempt == allowed_username ||
-      User.username_available?(attempt) ||
-      i > 100
-    )
+    until User.username_available?(attempt) || i > 100
 
       if offset.nil?
         normalized = User.normalize_username(name)
@@ -51,8 +42,7 @@ module UserNameSuggester
 
           params = {
             count: count + 10,
-            name: normalized,
-            allowed_normalized: allowed_username || ''
+            name: normalized
           }
 
           # increasing the search space a bit to allow for some extra noise
@@ -60,11 +50,7 @@ module UserNameSuggester
             WITH numbers AS (SELECT generate_series(1, :count) AS n)
 
             SELECT n FROM numbers
-            LEFT JOIN users ON (
-              username_lower = :name || n::varchar
-            ) AND (
-              username_lower <> :allowed_normalized
-            )
+            LEFT JOIN users ON (username_lower = :name || n::varchar)
             WHERE users.id IS NULL
             ORDER by n ASC
             LIMIT 1
@@ -82,22 +68,15 @@ module UserNameSuggester
 
       max_length = User.username_length.end - suffix.length
       attempt = "#{truncate(name, max_length)}#{suffix}"
-      normalized_attempt = User.normalize_username(attempt)
       i += 1
     end
 
-    until normalized_attempt == allowed_username || User.username_available?(attempt) || i > 200
+    until User.username_available?(attempt) || i > 200
       attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
-      normalized_attempt = User.normalize_username(attempt)
       i += 1
     end
 
-    if allowed_username == normalized_attempt
-      original_allowed_username
-    else
-      attempt
-    end
-
+    attempt
   end
 
   def self.fix_username(name)

@@ -64,7 +64,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC000A; color: #FFFFFA; ",
           "it has styles"
@@ -89,7 +89,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0005; color: #FFFFF5; ",
           "it has styles"
@@ -114,7 +114,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
           "it has styles"
@@ -139,7 +139,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #CC0002; color: #FFFFF2; ",
           "it has styles"
@@ -189,7 +189,7 @@ discourseModule(
       test(assert) {
         assert.ok(exists(".avatar-flair"), "it has the tag");
         assert.ok(exists("svg.d-icon-times"), "it has the svg icon");
-        assert.equal(
+        assert.strictEqual(
           queryAll(".avatar-flair").attr("style"),
           "background-color: #123456; color: #B0B0B0; ",
           "it has styles"

@@ -38,7 +38,10 @@ acceptance("User Directory", function () {
     const columnData = firstRow.querySelectorAll("td");
     const favoriteColorTd = columnData[columnData.length - 1];
 
-    assert.equal(favoriteColorTd.querySelector("span").textContent, "Blue");
+    assert.strictEqual(
+      favoriteColorTd.querySelector("span").textContent,
+      "Blue"
+    );
   });
 });
 
@@ -52,17 +55,17 @@ acceptance("User directory - Editing columns", function (needs) {
     const columns = queryAll(
       ".edit-directory-columns-container .edit-directory-column"
     );
-    assert.equal(columns.length, 8);
+    assert.strictEqual(columns.length, 8);
 
     const checked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:checked"
     );
-    assert.equal(checked.length, 7);
+    assert.strictEqual(checked.length, 7);
 
     const unchecked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:not(:checked)"
     );
-    assert.equal(unchecked.length, 1);
+    assert.strictEqual(unchecked.length, 1);
   });
 
   const fetchColumns = function () {
@@ -75,11 +78,11 @@ acceptance("User directory - Editing columns", function (needs) {
 
     let columns;
     columns = fetchColumns();
-    assert.equal(
+    assert.strictEqual(
       columns[3].querySelector(".column-name").textContent.trim(),
       "Replies Posted"
     );
-    assert.equal(
+    assert.strictEqual(
       columns[4].querySelector(".column-name").textContent.trim(),
       "Topics Viewed"
     );
@@ -88,11 +91,11 @@ acceptance("User directory - Editing columns", function (needs) {
     await click(columns[4].querySelector(".move-column-up"));
 
     columns = fetchColumns();
-    assert.equal(
+    assert.strictEqual(
       columns[3].querySelector(".column-name").textContent.trim(),
       "Topics Viewed"
     );
-    assert.equal(
+    assert.strictEqual(
       columns[4].querySelector(".column-name").textContent.trim(),
       "Replies Posted"
     );
@@ -105,11 +108,11 @@ acceptance("User directory - Editing columns", function (needs) {
     await click(moveUserFieldColumnUpBtn);
 
     columns = fetchColumns();
-    assert.equal(
+    assert.strictEqual(
       columns[4].querySelector(".column-name").textContent.trim(),
       "Favorite Color"
     );
-    assert.equal(
+    assert.strictEqual(
       columns[5].querySelector(".column-name").textContent.trim(),
       "Replies Posted"
     );

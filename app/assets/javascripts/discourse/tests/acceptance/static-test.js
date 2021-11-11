@@ -21,7 +21,7 @@ acceptance("Static", function () {
     assert.ok(exists(".body-page"), "The content is present");
 
     await visit("/login");
-    assert.equal(
+    assert.strictEqual(
       currentRouteName(),
       "discovery.latest",
       "it redirects them to latest unless `login_required`"

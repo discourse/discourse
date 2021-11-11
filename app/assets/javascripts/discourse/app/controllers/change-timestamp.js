@@ -54,7 +54,7 @@ export default Controller.extend(ModalFunctionality, {
           next(() => DiscourseURL.routeTo(topic.url));
         })
         .catch(() =>
-          this.flash(I18n.t("topic.change_timestamp.error"), "alert-error")
+          this.flash(I18n.t("topic.change_timestamp.error"), "error")
         )
         .finally(() => this.set("saving", false));
 

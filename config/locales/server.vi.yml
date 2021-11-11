@@ -1067,7 +1067,6 @@ vi:
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
-    max_new_accounts_per_registration_ip: "Nếu đã có (n) tài khoản với độ tin cậy mức 0 từ IP này (không phải là BQT, mức TL2 hoặc cao hơn), ngừng chấp nhận đăng ký mới từ IP này."
     min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
     max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."

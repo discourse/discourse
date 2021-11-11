@@ -2564,12 +2564,8 @@ sk:
             text: "Päta"
           embedded_scss:
             text: "Vnorené CSS"
-          head_tag:
-            text: "</head>"
-            title: "HTML, ktoré bude vložené pred </body> tag"
           body_tag:
-            text: "</body>"
-            title: "HTML, ktoré bude vložené pred </body> tag"
+            text: "Telo"
         colors:
           title: "Farby"
           copy_name_prefix: "Kópia"
@@ -3094,7 +3090,6 @@ sk:
             with_time: <span class="username">%{username}</span> v čase <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Pridaj nové emoji, ktoré bude dostupné pre všetkých (TIP: môžete pretiahnuť viac súborov naraz)"
         add: "Pridaj nové Emoji"
         uploading: "Upload prebieha..."
         name: "Meno"
@@ -3104,7 +3099,6 @@ sk:
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
         confirm_delete: "Ste si istý, že chcete zmazať tohoto hostiteľa?"
-        sample: "Použite nasledovný HTML kód vo Vašej stránke pre vytvorenie vloženej témy Discourse. Nahraďte <b>REPLACE_ME</b> kanonickou URL adresou stránky, do ktorej to vkladáte."
         title: "Vkladám"
         host: "Povolení hostitelia"
         edit: "uprav"

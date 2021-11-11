@@ -177,7 +177,6 @@ lt:
   topic_invite:
     failed_to_invite: "Vartotojas negali būti pakviestas į šią temą be grupės narystės vienoje iš šių grupių: %{group_names}."
     user_exists: "Atsiprašome, šis vartotojas jau buvo pakviestas. Galite pakviesti vartotoją į temą tik vieną kartą."
-    muted_invitee: "Atsiprašome, vartotojas jus nutildė."
     muted_topic: "Atsiprašome, kad vartotojas nutildė šią temą."
     receiver_does_not_allow_pm: "Atsiprašome, vartotojas neleidžia jums siųsti asmeninių pranešimų."
     sender_does_not_allow_pm: "Atsiprašome, jūs neleidžiate šiam vartotojui siųsti jums asmeninių pranešimų."
@@ -1350,6 +1349,13 @@ lt:
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."
       blocked: "negalimas."
       does_not_exist: "N/A"
+    ip_address:
+      blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
+      max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
+    website:
+      domain_not_allowed: "Svetainė netinkama. Leidžiami domenai yra: %{domains}"
+    destroy_reasons:
+      inactive_user: "Neaktyvus vartotojas"
   invite_forum_mailer:
     text_body_template: |
       %{inviter_name} pakvietė jus prisijungti
@@ -2064,6 +2070,8 @@ lt:
         Šis ženklelis suteikiamas, kai jūsų tema sulaukia 10 teigiamų įvertinimų. Pradėjote įdomų pokalbį, kuris patiko visuomenei.
     good_topic:
       name: Gera tema
+      long_description: |
+        Šis ženklelis suteikiamas, kai jūsų tema sulaukia 25 teigiamų įvertinimų. Pradėjote įdomų pokalbį, kuris patiko visuomenei.
     great_topic:
       name: Puiki tema
       long_description: |
@@ -2234,10 +2242,8 @@ lt:
           title:
             label: "Jūsų bendruomenės pavadinimas"
           site_description:
-            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu"
             placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
           short_site_description:
-            label: "Apibūdinkite savo bendruomenę keliais žodžiais"
             placeholder: "Pati geriausia bendruomenė"
       introduction:
         title: "Prisistatymas"

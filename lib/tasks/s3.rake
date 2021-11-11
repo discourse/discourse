@@ -46,22 +46,7 @@ def use_db_s3_config
 end
 
 def helper
-  @helper ||= begin
-    bucket, options =
-      if use_db_s3_config
-        [
-          SiteSetting.s3_upload_bucket.downcase,
-          S3Helper.s3_options(SiteSetting)
-        ]
-      else
-        [
-          GlobalSetting.s3_bucket.downcase,
-          S3Helper.s3_options(GlobalSetting)
-        ]
-      end
-
-    S3Helper.new(bucket, '', options)
-  end
+  @helper ||= S3Helper.build_from_config(use_db_s3_config: use_db_s3_config)
 end
 
 def assets
@@ -186,12 +171,23 @@ task 's3:correct_cachecontrol' => :environment do
 
 end
 
-task 's3:upload_assets' => :environment do
+task 's3:ensure_cors_rules' => :environment do
   ensure_s3_configured!
 
-  puts "installing CORS rule"
-  helper.ensure_cors!
+  puts "Installing CORS rules..."
+  result = S3CorsRulesets.sync(use_db_s3_config: use_db_s3_config)
 
+  if !result
+    puts "skipping"
+    next
+  end
+
+  puts "Assets rules status: #{result[:assets_rules_status]}."
+  puts "Backup rules status: #{result[:backup_rules_status]}."
+  puts "Direct upload rules status: #{result[:direct_upload_rules_status]}."
+end
+
+task 's3:upload_assets' => [:environment, 's3:ensure_cors_rules'] do
   assets.each do |asset|
     upload(*asset)
   end

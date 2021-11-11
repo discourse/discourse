@@ -6,7 +6,11 @@ acceptance("User Anonymous", function () {
   test("Root URL", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-summary-page").length, "has the body class");
-    assert.equal(currentRouteName(), "user.summary", "it defaults to summary");
+    assert.strictEqual(
+      currentRouteName(),
+      "user.summary",
+      "it defaults to summary"
+    );
   });
 
   test("Filters", async function (assert) {
@@ -35,7 +39,7 @@ acceptance("User Anonymous", function () {
   test("Restricted Routes", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/u/eviltrout/activity",
       "it redirects from preferences"

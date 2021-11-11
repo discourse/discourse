@@ -1561,12 +1561,8 @@ te:
             text: "హెడర్"
           footer:
             text: "ఫుటరు"
-          head_tag:
-            text: "</head>"
-            title: "</head> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
           body_tag:
-            text: "</body>"
-            title: "</body> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
+            text: "శరీరం"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"

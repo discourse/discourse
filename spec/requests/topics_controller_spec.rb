@@ -1358,6 +1358,53 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
+        context 'when using SiteSetting.disable_category_edit_notifications or SiteSetting.disable_tags_edit_notifications' do
+          shared_examples 'a topic bump suppressor' do
+            it "doesn't bump the topic if the setting is enabled" do
+              enable_setting
+              last_bumped_at = topic.bumped_at
+              expect(last_bumped_at).not_to be_nil
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: params
+              end.to change { topic.reload.send(attribute_to_change) }.to(expected_new_value)
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
+            end
+
+            it "bumps the topic if the setting is disabled" do
+              disable_setting
+              last_bumped_at = topic.bumped_at
+              expect(last_bumped_at).not_to be_nil
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: params
+              end.to change { topic.reload.send(attribute_to_change) }.to(expected_new_value)
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
+            end
+          end
+
+          it_behaves_like 'a topic bump suppressor' do
+            let(:attribute_to_change) { :category_id }
+            let(:expected_new_value) { category.id }
+            let(:params) { { category_id: category.id } }
+            let(:enable_setting) { SiteSetting.disable_category_edit_notifications = true }
+            let(:disable_setting) { SiteSetting.disable_category_edit_notifications = false }
+          end
+
+          it_behaves_like 'a topic bump suppressor' do
+            let(:tags) { [Fabricate(:tag), Fabricate(:tag)] }
+            let(:attribute_to_change) { :tags }
+            let(:expected_new_value) { tags }
+            let(:params) { { tags: tags.map(&:name) } }
+            let(:enable_setting) { SiteSetting.disable_tags_edit_notifications = true }
+            let(:disable_setting) { SiteSetting.disable_tags_edit_notifications = false }
+          end
+        end
+
         describe "when first post is locked" do
           it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
             SiteSetting.trusted_users_can_edit_others = true

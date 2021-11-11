@@ -18,7 +18,7 @@ acceptance("CustomHTML set", function () {
     setCustomHTML("top", '<span class="custom-html-test">HTML</span>');
 
     await visit("/static/faq");
-    assert.equal(
+    assert.strictEqual(
       queryAll("span.custom-html-test").text(),
       "HTML",
       "it inserted the markup"
@@ -31,7 +31,7 @@ acceptance("CustomHTML set", function () {
     });
 
     await visit("/static/faq");
-    assert.equal(
+    assert.strictEqual(
       queryAll("span.cookie").text(),
       "monster",
       "it inserted the markup"

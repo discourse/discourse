@@ -31,8 +31,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".option .percentage")[0].innerText, "56%");
-        assert.equal(queryAll(".option .percentage")[1].innerText, "44%");
+        assert.strictEqual(queryAll(".option .percentage")[0].innerText, "56%");
+        assert.strictEqual(queryAll(".option .percentage")[1].innerText, "44%");
       },
     });
 
@@ -50,8 +50,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".option .percentage")[0].innerText, "56%");
-        assert.equal(queryAll(".option .percentage")[1].innerText, "44%");
+        assert.strictEqual(queryAll(".option .percentage")[0].innerText, "56%");
+        assert.strictEqual(queryAll(".option .percentage")[1].innerText, "44%");
       },
     });
 
@@ -78,17 +78,17 @@ discourseModule(
 
       test(assert) {
         let percentages = queryAll(".option .percentage");
-        assert.equal(percentages[0].innerText, "41%");
-        assert.equal(percentages[1].innerText, "33%");
-        assert.equal(percentages[2].innerText, "16%");
-        assert.equal(percentages[3].innerText, "8%");
+        assert.strictEqual(percentages[0].innerText, "41%");
+        assert.strictEqual(percentages[1].innerText, "33%");
+        assert.strictEqual(percentages[2].innerText, "16%");
+        assert.strictEqual(percentages[3].innerText, "8%");
 
-        assert.equal(
+        assert.strictEqual(
           queryAll(".option")[3].querySelectorAll("span")[1].innerText,
           "a"
         );
-        assert.equal(percentages[4].innerText, "8%");
-        assert.equal(
+        assert.strictEqual(percentages[4].innerText, "8%");
+        assert.strictEqual(
           queryAll(".option")[4].querySelectorAll("span")[1].innerText,
           "b"
         );
