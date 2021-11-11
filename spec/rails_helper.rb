@@ -291,6 +291,10 @@ RSpec.configure do |config|
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
   end
 
+  # Match the request hostname to the value in `database.yml`
+  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
+
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
 
