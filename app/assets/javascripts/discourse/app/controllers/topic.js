@@ -103,7 +103,17 @@ export default Controller.extend(bufferedProperty("model"), {
   ),
 
   updateQueryParams() {
-    this.setProperties(this.get("model.postStream.streamFilters"));
+    const filters = this.get("model.postStream.streamFilters");
+
+    if (Object.keys(filters).length > 0) {
+      this.setProperties(filters);
+    } else {
+      this.setProperties({
+        username_filters: null,
+        filter: null,
+        replies_to_post_number: null,
+      });
+    }
   },
 
   @observes("model.title", "category")
