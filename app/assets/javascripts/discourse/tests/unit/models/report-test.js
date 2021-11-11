@@ -563,7 +563,7 @@ module("Unit | Model | report", function () {
     const userLink = computedLabels[0].compute(row).formatedValue;
     assert.strictEqual(
       userLink,
-      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/forum/admin/users/1/joffrey'><img alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
     );
   });
 });
