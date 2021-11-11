@@ -133,7 +133,8 @@ tbody {
   border-top: 3px solid var(--primary-low);
 }
 
-.topic-list-item, tr {
+.topic-list-item,
+tr {
   border-bottom: 1px solid var(--primary-low);
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
