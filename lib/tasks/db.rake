@@ -547,10 +547,9 @@ task 'db:rebuild_indexes' => 'environment' do
 end
 
 desc 'Check that the DB can be accessed'
-task 'db:status:json' do
+task 'db:status:json' => ['environment'] do
   DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 1200) do
     begin
-      Rake::Task['environment'].invoke
       DB.query('SELECT 1')
     rescue
       puts({ status: 'error' }.to_json)
