@@ -4863,13 +4863,12 @@ describe UsersController do
           trust_level: user.trust_level,
           issued_at: 5.minutes.ago,
         )
-        env = create_request_env(path: "/").merge(
-          "HTTP_COOKIE" => "_t=#{cookie};"
-        )
-        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
 
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: token.id },
+          headers: { "HTTP_COOKIE" => "_t=#{cookie}" }
 
+        expect(token.reload.id).to be_present
         expect(response.status).to eq(400)
       end
 
