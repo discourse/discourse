@@ -482,7 +482,7 @@ describe Notification do
       fab!(:post) { Fabricate(:post) }
 
       def create_membership_request_notification
-        Notification.create(
+        Notification.consolidate_or_create!(
           notification_type: Notification.types[:private_message],
           user_id: user.id,
           data: {
@@ -500,23 +500,21 @@ describe Notification do
       end
 
       it 'should consolidate membership requests to a new notification' do
-        notification = create_membership_request_notification
-        notification.reload
+        original_notification = create_membership_request_notification
+        starting_count = SiteSetting.notification_consolidation_threshold
 
-        notification = create_membership_request_notification
-        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        consolidated_notification = create_membership_request_notification
+        expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
-        notification = Notification.last
-        expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
+        expect(consolidated_notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
 
-        data = notification.data_hash
+        data = consolidated_notification.data_hash
         expect(data[:group_name]).to eq(group.name)
-        expect(data[:count]).to eq(4)
+        expect(data[:count]).to eq(starting_count + 1)
 
-        notification = create_membership_request_notification
-        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        updated_consolidated_notification = create_membership_request_notification
 
-        expect(Notification.last.data_hash[:count]).to eq(5)
+        expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
       end
 
       it 'consolidates membership requests with "processed" false if user is in DND' do
