@@ -234,10 +234,10 @@ RSpec.describe Admin::BackupsController do
 
     describe "when filename is valid" do
       it "should upload the file successfully" do
+        freeze_time
         described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
         filename = 'test_Site-0123456789.tar.gz'
-        @paths = [backup_path(File.join('tmp', 'test', "#{filename}.part1"))]
 
         post "/admin/backups/upload.json", params: {
           resumableFilename: filename,
@@ -248,9 +248,100 @@ RSpec.describe Admin::BackupsController do
           resumableCurrentChunkSize: '1',
           file: fixture_file_upload(Tempfile.new)
         }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 1
+        }, at: 5.seconds.from_now)
 
         expect(response.status).to eq(200)
         expect(response.body).to eq("")
+      end
+    end
+
+    describe "completing an upload by enqueuing backup_chunks_merger" do
+      let(:filename) { 'test_Site-0123456789.tar.gz' }
+
+      it "works with a single chunk" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+
+        # 2MB file, 2MB chunks = 1x 2MB chunk
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '2097152',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 1
+        }, at: 5.seconds.from_now)
+      end
+
+      it "works with multiple chunks when the final chunk is chunk_size + remainder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).twice.returns(true)
+
+        # 5MB file, 2MB chunks = 1x 2MB chunk + 1x 3MB chunk with resumable.js
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '2',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '3145728',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 2
+        }, at: 5.seconds.from_now)
+      end
+
+      it "works with multiple chunks when the final chunk is just the remaninder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
+
+        # 5MB file, 2MB chunks = 2x 2MB chunk + 1x 1MB chunk with uppy.js
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '2',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '3',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '1048576',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 3
+        }, at: 5.seconds.from_now)
       end
     end
   end
