@@ -396,7 +396,7 @@ export default Component.extend(TextareaTextManipulation, {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
 
-        linkSeenHashtags($(cookedElement));
+        linkSeenHashtags(cookedElement);
         linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
@@ -429,7 +429,7 @@ export default Component.extend(TextareaTextManipulation, {
           }
 
           if (this.previewUpdated) {
-            this.previewUpdated($(preview));
+            this.previewUpdated(preview);
           }
         });
       });
