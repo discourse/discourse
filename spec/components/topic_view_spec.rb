@@ -968,4 +968,27 @@ describe TopicView do
       expect(topic_view.reviewable_counts.keys).to contain_exactly(reviewable.target_id)
     end
   end
+
+  describe '.apply_custom_default_scope' do
+    fab!(:post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
+
+    after do
+      TopicView.reset_custom_default_scopes
+    end
+
+    it 'allows a custom default scope to be configured' do
+      topic_view = TopicView.new(topic, admin)
+
+      expect(topic_view.filtered_post_ids).to eq([post.id, post_2.id])
+
+      TopicView.apply_custom_default_scope do |scope, _|
+        scope.unscope(:order).order("posts.created_at DESC")
+      end
+
+      topic_view = TopicView.new(topic, admin)
+
+      expect(topic_view.filtered_post_ids).to eq([post_2.id, post.id])
+    end
+  end
 end
