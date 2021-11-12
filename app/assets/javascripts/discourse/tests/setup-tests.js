@@ -379,6 +379,7 @@ function setupTestsCommon(application, container, config) {
   }
 
   // forces 0 as duration for all jquery animations
+  // eslint-disable-next-line no-undef
   jQuery.fx.off = true;
 
   setupToolbar();

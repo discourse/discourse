@@ -53,7 +53,7 @@ function findClass(outletName, uniqueName) {
   let foundClass = _extraConnectorClasses[id] || _classPaths[id];
 
   return foundClass
-    ? jQuery.extend({}, DefaultConnectorClass, foundClass)
+    ? Object.assign({}, DefaultConnectorClass, foundClass)
     : DefaultConnectorClass;
 }
 

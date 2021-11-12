@@ -5,6 +5,7 @@
     "eol-last": 2
   },
   "globals": {
+    "jQuery": "off",
     "moduleFor": "off",
     "moduleForComponent": "off",
     "testStart": "off",

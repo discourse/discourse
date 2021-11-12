@@ -146,7 +146,7 @@ createWidget("header-notifications", {
 
 createWidget(
   "user-dropdown",
-  jQuery.extend(
+  Object.assign(
     {
       tagName: "li.header-dropdown-toggle.current-user",
 
@@ -176,7 +176,7 @@ createWidget(
 
 createWidget(
   "header-dropdown",
-  jQuery.extend(
+  Object.assign(
     {
       tagName: "li.header-dropdown-toggle",
 
