@@ -2317,10 +2317,27 @@ RSpec.describe TopicsController do
         fab!(:post3) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
         fab!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
         fab!(:post5) { Fabricate(:post, topic: topic) }
+
+        fab!(:deleted_reply_post_id) do
+          post = Fabricate(:post,
+            topic: topic,
+            reply_to_post_number: post2.post_number
+          )
+          id = post.id
+          post.trash!
+          id
+        end
+
+        fab!(:deleted_post) do
+          Fabricate(:post, topic: topic,).tap(&:trash!)
+        end
+
         fab!(:quote_reply) { Fabricate(:basic_reply, user: user, topic: topic) }
         fab!(:post_reply) { PostReply.create(post_id: post2.id, reply_post_id: quote_reply.id) }
 
         it 'should return the right posts' do
+          sign_in(admin)
+
           get "/t/#{topic.id}.json", params: {
             replies_to_post_number: post2.post_number
           }
@@ -2334,6 +2351,13 @@ RSpec.describe TopicsController do
 
           ids = body["post_stream"]["posts"].map { |p| p["id"] }
           expect(ids).to eq([post.id, post2.id, post3.id, post4.id, quote_reply.id])
+
+          expect(body["post_stream"]["gaps"]).to eq({
+            "before" => {
+              quote_reply.id.to_s => [deleted_reply_post_id]
+            },
+            "after" => {}
+          })
         end
       end
 

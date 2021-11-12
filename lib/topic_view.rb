@@ -153,6 +153,14 @@ class TopicView
     @contains_gaps
   end
 
+  def unfiltered_gap_posts
+    if @replies_to_post_number
+      scope_replies_to_post_number(unfiltered_posts, @replies_to_post_number)
+    else
+      unfiltered_posts
+    end
+  end
+
   def gaps
     return unless @contains_gaps
 
@@ -160,7 +168,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, apply_default_order(unfiltered_posts).pluck(:id))
+        Gaps.new(filtered_post_ids, apply_default_order(unfiltered_gap_posts).pluck(:id))
       end
     end
   end
@@ -766,6 +774,21 @@ class TopicView
     scope.order(sort_order: :asc)
   end
 
+  def scope_replies_to_post_number(scope, post_number)
+    post_id = filtered_post_id(post_number.to_i)
+
+    scope.where(<<~SQL, post_number: post_number.to_i, post_id: post_id)
+      posts.post_number = 1
+      OR posts.post_number = :post_number
+      OR posts.reply_to_post_number = :post_number
+      OR posts.id IN (
+        SELECT pr.reply_post_id
+        FROM post_replies pr
+        WHERE pr.post_id = :post_id
+      )
+    SQL
+  end
+
   def setup_filtered_posts
     # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
@@ -819,12 +842,10 @@ class TopicView
 
     # Filter replies
     if @replies_to_post_number.present?
-      post_id = filtered_post_id(@replies_to_post_number.to_i)
-      @filtered_posts = @filtered_posts.where('
-        posts.post_number = 1
-        OR posts.post_number = :post_number
-        OR posts.reply_to_post_number = :post_number
-        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
+      @filtered_posts = scope_replies_to_post_number(
+        @filtered_posts,
+        @replies_to_post_number
+      )
 
       @contains_gaps = true
     end
