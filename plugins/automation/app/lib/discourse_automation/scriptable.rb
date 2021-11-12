@@ -22,7 +22,7 @@ module DiscourseAutomation
       @version = 0
       @fields = []
       @placeholders = [:site_title]
-      @triggerables = (@@plugin_triggerables[name.to_sym] || []) + []
+      @triggerables = (@@plugin_triggerables[name&.to_sym] || [])
       @script = proc {}
       @not_found = false
       @forced_triggerable = nil

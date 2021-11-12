@@ -10,6 +10,8 @@ describe 'GiftExchange' do
   fab!(:user_3) { Fabricate(:user) }
 
   before do
+    SiteSetting.discourse_automation_enabled = true
+
     gift_group.add(user_1)
     gift_group.add(user_2)
     gift_group.add(user_3)

@@ -9,6 +9,7 @@ describe 'FlagPostsOnWords' do
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scriptable::FLAG_POST_ON_WORDS, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED) }
 
   before do
+    SiteSetting.discourse_automation_enabled = true
     automation.fields.create!(
       component: 'text_list',
       name: 'words',

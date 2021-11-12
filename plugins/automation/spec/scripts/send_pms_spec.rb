@@ -6,6 +6,8 @@ describe 'SendPms' do
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scriptable::SEND_PMS, trigger: 'stalled_wiki') }
 
   before do
+    SiteSetting.discourse_automation_enabled = true
+
     automation.upsert_field!('sender', 'user', { value: Discourse.system_user.username })
     automation.upsert_field!('sendable_pms', 'pms', { value: [{ title: 'A message from %%SENDER_USERNAME%%', raw: 'This is a message sent to @%%RECEIVER_USERNAME%%' }] })
   end

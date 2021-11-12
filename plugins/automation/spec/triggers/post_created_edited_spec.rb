@@ -3,6 +3,10 @@
 require_relative '../discourse_automation_helper'
 
 describe 'PostCreatedEdited' do
+  before do
+    SiteSetting.discourse_automation_enabled = true
+  end
+
   let(:basic_topic_params) { { title: 'hello world topic', raw: 'my name is fred', archetype_id: 1 } }
   fab!(:user) { Fabricate(:user) }
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED) }

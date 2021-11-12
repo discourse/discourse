@@ -42,7 +42,7 @@ module DiscourseAutomation
         with_trigger_doc: I18n.exists?(script_with_trigger_key, :en) ? I18n.t(script_with_trigger_key) : nil,
         forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found,
-        templates: process_templates(scriptable),
+        templates: process_templates(scriptable.fields.filter { |f| !f[:triggerable] || f[:triggerable].to_sym == object.trigger&.to_sym }),
         fields: process_fields(object.fields.where(target: 'script'))
       }
     end
@@ -57,16 +57,16 @@ module DiscourseAutomation
         description: I18n.t("#{key}.#{object.trigger}.description"),
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable.not_found,
-        templates: process_templates(triggerable),
+        templates: process_templates(triggerable.fields),
         fields: process_fields(object.fields.where(target: 'trigger'))
       }
     end
 
     private
 
-    def process_templates(targetable)
+    def process_templates(fields)
       ActiveModel::ArraySerializer.new(
-          targetable.fields,
+          fields,
           each_serializer: DiscourseAutomation::TemplateSerializer, scope: { automation: object }
         ).as_json
     end

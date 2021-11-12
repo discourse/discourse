@@ -3,6 +3,10 @@
 require_relative '../discourse_automation_helper'
 
 describe Jobs::DiscourseAutomationTracker do
+  before do
+    SiteSetting.discourse_automation_enabled = true
+  end
+
   describe 'pending automation' do
     fab!(:automation) {
       Fabricate(

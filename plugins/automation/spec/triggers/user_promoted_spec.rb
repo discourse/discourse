@@ -3,6 +3,10 @@
 require_relative '../discourse_automation_helper'
 
 describe 'UserPromoted' do
+  before do
+    SiteSetting.discourse_automation_enabled = true
+  end
+
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_PROMOTED) }
 

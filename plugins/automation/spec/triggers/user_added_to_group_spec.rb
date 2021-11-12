@@ -13,6 +13,7 @@ describe 'UserAddedToGroup' do
   }
 
   before do
+    SiteSetting.discourse_automation_enabled = true
     automation.upsert_field!('joined_group', 'group', { value: tracked_group.id }, target: 'trigger')
   end
 
