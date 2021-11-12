@@ -127,7 +127,7 @@
 
 // Topic list body
 
-.topic-list-item.visited,
+.topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   a.title:not(.badge-notification) {
@@ -228,7 +228,7 @@
     font-size: $font-0;
   }
 
-  .main-link {
+  .topic-list-data.main-link {
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {
