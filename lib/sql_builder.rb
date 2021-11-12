@@ -4,7 +4,7 @@ class SqlBuilder
 
   def initialize(template, klass = nil)
 
-    Discourse.deprecate("SqlBuilder is deprecated and will be removed, please use DB.build instead!")
+    Discourse.deprecate("SqlBuilder is deprecated and will be removed, please use DB.build instead!", drop_from: '2.9.0')
 
     @args = {}
     @sql = template
