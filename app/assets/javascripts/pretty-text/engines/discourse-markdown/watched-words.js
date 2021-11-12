@@ -73,7 +73,7 @@ export function setup(helper) {
       return;
     }
 
-    const cache = {};
+    const cache = new Map();
 
     md.core.ruler.push("watched-words", (state) => {
       for (let j = 0, l = state.tokens.length; j < l; j++) {
@@ -153,8 +153,14 @@ export function setup(helper) {
 
           if (currentToken.type === "text") {
             const text = currentToken.content;
-            const matches = (cache[text] =
-              cache[text] || findAllMatches(text, matchers));
+
+            let matches;
+            if (cache.has(text)) {
+              matches = cache.get(text);
+            } else {
+              matches = findAllMatches(text, matchers);
+              cache.set(text, matches);
+            }
 
             // Now split string to nodes
             const nodes = [];
