@@ -747,7 +747,7 @@ class Category < ActiveRecord::Base
   end
 
   def url_with_id
-    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true)
+    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true, drop_from: '2.9.0')
 
     url
   end

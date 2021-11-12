@@ -107,7 +107,7 @@ class Report
   def add_filter(name, options = {})
     if options[:type].blank?
       options[:type] = name
-      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.")
+      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.", drop_from: '2.9.0')
     end
 
     available_filters[name] = options
