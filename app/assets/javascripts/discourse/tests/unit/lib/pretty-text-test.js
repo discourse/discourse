@@ -1689,6 +1689,7 @@ var bar = 'bar';
     };
 
     assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
+    assert.cookedOptions("constructor", opts, "<p>constructor</p>");
   });
 
   test("watched words link", function (assert) {
