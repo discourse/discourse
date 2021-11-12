@@ -529,14 +529,12 @@ class Guardian
   end
 
   def auth_token
+    return if !request
+
     cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
-    cookie_string = request&.cookies[cookie_name].presence
-    if cookie_string
-      req = ActionDispatch::Request.new(request.env)
-      cookie = req.cookie_jar.encrypted[cookie_name]
-      return if !cookie
-      UserAuthToken.hash_token(cookie[:token])
-    end
+    cookie = request.cookie_jar.encrypted[cookie_name].presence
+    return if !cookie
+    UserAuthToken.hash_token(cookie[:token])
   end
 
   private
