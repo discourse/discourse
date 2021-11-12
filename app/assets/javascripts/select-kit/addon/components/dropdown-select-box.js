@@ -12,6 +12,7 @@ export default SingleSelectComponent.extend({
     caretUpIcon: "caret-up",
     caretDownIcon: "caret-down",
     showCaret: false,
+    customStyle: null,
   },
 
   modifyComponentForRow() {

@@ -3768,6 +3768,9 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      choose_for_topic_required:
+        one: "select at least %{count} tag..."
+        other: "select at least %{count} tags..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."

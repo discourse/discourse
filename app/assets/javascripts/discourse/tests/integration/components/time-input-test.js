@@ -52,7 +52,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
 
     async test(assert) {
       await this.subject.expand();
-      await this.subject.selectRowByIndex(3);
+      await this.subject.selectRowByIndex(4);
       assert.strictEqual(this.subject.header().name(), "00:45");
     },
   });
