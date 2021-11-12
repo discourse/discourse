@@ -518,41 +518,40 @@ export default Component.extend(ComposerUpload, {
     $input.stop(true).animate({ scrollTop }, 100, "linear");
   },
 
-  _renderUnseenMentions($preview, unseen) {
+  _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
-      linkSeenMentions($preview[0], this.siteSettings);
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+      linkSeenMentions(preview, this.siteSettings);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
     });
   },
 
-  _renderUnseenHashtags($preview) {
-    const unseen = linkSeenHashtags($preview);
+  _renderUnseenHashtags(preview) {
+    const unseen = linkSeenHashtags(preview);
     if (unseen.length > 0) {
       fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags($preview);
+        linkSeenHashtags(preview);
       });
     }
   },
 
-  _warnMentionedGroups($preview) {
+  _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
       let found = this.warnedGroupMentions || [];
-      $preview.find(".mention-group.notify").each((idx, e) => {
-        if (this._isInQuote(e)) {
+      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
+        if (this._isInQuote(mention)) {
           return;
         }
 
-        const $e = $(e);
-        let name = $e.data("name");
+        let name = mention.dataset.name;
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
               name,
-              user_count: $e.data("mentionable-user-count"),
-              max_mentions: $e.data("max-mentions"),
+              user_count: mention.dataset.mentionableUserCount,
+              max_mentions: mention.dataset.maxMentions,
             },
           ]);
           found.push(name);
@@ -563,7 +562,7 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
-  _warnCannotSeeMention($preview) {
+  _warnCannotSeeMention(preview) {
     const composerDraftKey = this.get("composer.draftKey");
 
     if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
@@ -573,9 +572,8 @@ export default Component.extend(ComposerUpload, {
     schedule("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
-      $preview.find(".mention.cannot-see").each((idx, e) => {
-        const $e = $(e);
-        let name = $e.data("name");
+      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
+        let name = mention.dataset.name;
 
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
@@ -584,8 +582,9 @@ export default Component.extend(ComposerUpload, {
             this,
             () => {
               if (
-                $preview.find('.mention.cannot-see[data-name="' + name + '"]')
-                  .length > 0
+                preview?.querySelectorAll(
+                  `.mention.cannot-see[data-name="${name}"]`
+                )?.length > 0
               ) {
                 this.cannotSeeMention([{ name }]);
                 found.push(name);
@@ -802,26 +801,29 @@ export default Component.extend(ComposerUpload, {
       });
     },
 
-    previewUpdated($preview) {
+    previewUpdated(preview) {
+      // cache jquery objects for functions still using jquery
+      const $preview = $(preview);
+
       // Paint mentions
-      const unseenMentions = linkSeenMentions($preview[0], this.siteSettings);
+      const unseenMentions = linkSeenMentions(preview, this.siteSettings);
       if (unseenMentions.length) {
         discourseDebounce(
           this,
           this._renderUnseenMentions,
-          $preview,
+          preview,
           unseenMentions,
           450
         );
       }
 
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
 
       // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags($preview);
+      const unseenHashtags = linkSeenHashtags(preview);
       if (unseenHashtags.length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }
 
       // Paint oneboxes
@@ -835,7 +837,7 @@ export default Component.extend(ComposerUpload, {
         }
 
         const paintedCount = loadOneboxes(
-          $preview[0],
+          preview,
           ajax,
           this.get("composer.topic.id"),
           this.get("composer.category.id"),
@@ -851,7 +853,7 @@ export default Component.extend(ComposerUpload, {
       discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);
+      resolveAllShortUrls(ajax, this.siteSettings, preview);
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
@@ -864,7 +866,7 @@ export default Component.extend(ComposerUpload, {
       this._registerImageScaleButtonClick($preview);
       this._registerImageAltTextButtonClick($preview);
 
-      this.trigger("previewRefreshed", $preview[0]);
+      this.trigger("previewRefreshed", preview);
       this.afterRefresh($preview);
     },
   },
