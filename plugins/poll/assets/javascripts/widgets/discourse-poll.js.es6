@@ -791,7 +791,7 @@ export default createWidget("discourse-poll", {
       (attrs.post.get("topic.archived") && !staffOnly) ||
       (this.isClosed() && !staffOnly);
 
-    const newAttrs = jQuery.extend({}, attrs, {
+    const newAttrs = Object.assign({}, attrs, {
       canCastVotes: this.canCastVotes(),
       hasVoted: this.hasVoted(),
       isAutomaticallyClosed: this.isAutomaticallyClosed(),
