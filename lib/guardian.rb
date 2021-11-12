@@ -532,6 +532,12 @@ class Guardian
     return if !request
 
     cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
+    cookie = request.cookie_jar[cookie_name].presence
+    return if !cookie
+
+    # v0 of our auth cookie
+    return UserAuthToken.hash_token(cookie) if cookie.size == 32
+
     cookie = request.cookie_jar.encrypted[cookie_name].presence
     return if !cookie
     UserAuthToken.hash_token(cookie[:token])

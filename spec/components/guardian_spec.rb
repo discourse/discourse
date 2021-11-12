@@ -3854,7 +3854,16 @@ describe Guardian do
       )
       env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
 
-      guardian = Guardian.new(user, Rack::Request.new(env))
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
+    end
+
+    it 'supports v0 of auth cookie' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = token.unhashed_auth_token
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
+
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
       expect(guardian.auth_token).to eq(token.auth_token)
     end
   end
