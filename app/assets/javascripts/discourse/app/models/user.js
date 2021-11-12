@@ -1125,6 +1125,7 @@ User.reopenClass(Singleton, {
 
 if (typeof Discourse !== "undefined") {
   let warned = false;
+  // eslint-disable-next-line no-undef
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {
