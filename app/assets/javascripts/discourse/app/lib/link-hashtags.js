@@ -8,6 +8,7 @@ const tagHashtags = {};
 const checkedHashtags = new Set();
 
 export function linkSeenHashtags(elem) {
+  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     elem = elem[0];
 
