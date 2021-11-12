@@ -16,6 +16,7 @@ import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
+import bootbox from "bootbox";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
