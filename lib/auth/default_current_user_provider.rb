@@ -209,7 +209,7 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = current_user
   end
 
-  def refresh_session(user, session, cookies)
+  def refresh_session(user, session, cookie_jar)
     # if user was not loaded, no point refreshing session
     # it could be an anonymous path, this would add cost
     return if is_api? || !@env.key?(CURRENT_USER_KEY)
@@ -223,18 +223,18 @@ class Auth::DefaultCurrentUserProvider
         if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
                                client_ip: @request.ip,
                                path: @env['REQUEST_PATH'])
-          cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token, user)
+          set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
           DiscourseEvent.trigger(:user_session_refreshed, user)
         end
       end
     end
 
-    if !user && cookies.key?(TOKEN_COOKIE)
-      cookies.delete(TOKEN_COOKIE)
+    if !user && cookie_jar.key?(TOKEN_COOKIE)
+      cookie_jar.delete(TOKEN_COOKIE)
     end
   end
 
-  def log_on_user(user, session, cookies, opts = {})
+  def log_on_user(user, session, cookie_jar, opts = {})
     @user_token = UserAuthToken.generate!(
       user_id: user.id,
       user_agent: @env['HTTP_USER_AGENT'],
@@ -243,7 +243,7 @@ class Auth::DefaultCurrentUserProvider
       staff: user.staff?,
       impersonate: opts[:impersonate])
 
-    cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token, user)
+    set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
     make_developer_admin(user)
     enable_bootstrap_mode(user)
@@ -253,31 +253,29 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = user
   end
 
-  def cookie_hash(unhashed_auth_token, user)
+  def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
     data = {
       token: unhashed_auth_token,
       user_id: user.id,
       trust_level: user.trust_level,
       issued_at: Time.zone.now.to_i
     }
-    temp_request = ActionDispatch::Request.new(@env)
-    hash = temp_request.cookie_jar.encrypted[TOKEN_COOKIE] = {
-      value: data,
-      httponly: true,
-      secure: SiteSetting.force_https
-    }
 
     if SiteSetting.persistent_sessions
-      hash[:expires] = SiteSetting.maximum_session_age.hours.from_now
+      expires = SiteSetting.maximum_session_age.hours.from_now
     end
 
     if SiteSetting.same_site_cookies != "Disabled"
-      hash[:same_site] = SiteSetting.same_site_cookies
-    else
-      hash.delete(:same_site)
+      same_site = SiteSetting.same_site_cookies
     end
 
-    hash
+    cookie_jar.encrypted[TOKEN_COOKIE] = {
+      value: data,
+      httponly: true,
+      secure: SiteSetting.force_https,
+      expires: expires,
+      same_site: same_site
+    }
   end
 
   def make_developer_admin(user)
@@ -298,7 +296,7 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
-  def log_off_user(session, cookies)
+  def log_off_user(session, cookie_jar)
     user = current_user
 
     if SiteSetting.log_out_strict && user
@@ -306,7 +304,7 @@ class Auth::DefaultCurrentUserProvider
 
       if user.admin && defined?(Rack::MiniProfiler)
         # clear the profiling cookie to keep stuff tidy
-        cookies.delete("__profilin")
+        cookie_jar.delete("__profilin")
       end
 
       user.logged_out
@@ -314,8 +312,8 @@ class Auth::DefaultCurrentUserProvider
       @user_token.destroy
     end
 
-    cookies.delete('authentication_data')
-    cookies.delete(TOKEN_COOKIE)
+    cookie_jar.delete('authentication_data')
+    cookie_jar.delete(TOKEN_COOKIE)
   end
 
   # api has special rights return true if api was detected
@@ -443,16 +441,16 @@ class Auth::DefaultCurrentUserProvider
       token = @request.cookies[TOKEN_COOKIE]
 
       # backward compatibility for v0 of our auth cookie
-      return token if token&.size == TOKEN_SIZE
-
-      return if !token
-
-      req = ActionDispatch::Request.new(@env)
-      cookie = req.cookie_jar.encrypted[TOKEN_COOKIE]
-      if cookie && cookie[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
-        cookie[:token]
-      else
-        nil
+      if token&.size == TOKEN_SIZE
+        token
+      elsif token.present?
+        req = ActionDispatch::Request.new(@env)
+        cookie = req.cookie_jar.encrypted[TOKEN_COOKIE]
+        if cookie && cookie[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
+          cookie[:token]
+        else
+          nil
+        end
       end
     end
   end

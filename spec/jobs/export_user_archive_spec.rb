@@ -46,7 +46,8 @@ describe Jobs::ExportUserArchive do
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
       )
-      Discourse.current_user_provider.new(env).log_on_user(user, {}, {})
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
 
       # force a nonstandard post action
       PostAction.new(user: user, post: post, post_action_type_id: 5).save
@@ -203,7 +204,8 @@ describe Jobs::ExportUserArchive do
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
       )
-      Discourse.current_user_provider.new(env).log_on_user(user, {}, {})
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
     end
 
     it 'properly includes session records' do
