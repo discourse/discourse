@@ -1,6 +1,7 @@
 import {
   acceptance,
   count,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";

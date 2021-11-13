@@ -2,6 +2,7 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import bootbox from "bootbox";
 
 export function showUnassignedComponentWarning(theme, callback) {
   bootbox.confirm(

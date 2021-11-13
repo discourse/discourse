@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -91,16 +92,16 @@ acceptance("Admin - Watched Words", function (needs) {
     await visit("/admin/customize/watched_words/action/replace");
     await click(".watched-word-test");
     await fillIn(".modal-body textarea", "Hi there!");
-    assert.strictEqual(find(".modal-body li .match").text(), "Hi");
-    assert.strictEqual(find(".modal-body li .replacement").text(), "hello");
+    assert.strictEqual(query(".modal-body li .match").innerText, "Hi");
+    assert.strictEqual(query(".modal-body li .replacement").innerText, "hello");
   });
 
   test("test modal - tag", async function (assert) {
     await visit("/admin/customize/watched_words/action/tag");
     await click(".watched-word-test");
     await fillIn(".modal-body textarea", "Hello world!");
-    assert.strictEqual(find(".modal-body li .match").text(), "Hello");
-    assert.strictEqual(find(".modal-body li .tag").text(), "greeting");
+    assert.strictEqual(query(".modal-body li .match").innerText, "Hello");
+    assert.strictEqual(query(".modal-body li .tag").innerText, "greeting");
   });
 });
 

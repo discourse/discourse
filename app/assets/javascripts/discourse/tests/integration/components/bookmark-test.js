@@ -10,6 +10,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | bookmark", function (hooks) {
   setupRenderingTest(hooks);
