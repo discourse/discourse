@@ -119,7 +119,7 @@ class RequestsRateLimiter
       "global_ip_limit_10_assets_#{user_ip_or_id}",
       GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
       10,
-      global: limit_on_user_id?,
+      global: !limit_on_user_id?,
       error_code: error_code
     )
   end
