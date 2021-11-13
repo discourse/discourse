@@ -1,5 +1,6 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { click, fillIn, visit } from "@ember/test-helpers";
 
 acceptance("Local Dates - composer", function (needs) {
   needs.user();

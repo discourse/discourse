@@ -13,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 const FETCH_VOTERS_COUNT = 25;
 
