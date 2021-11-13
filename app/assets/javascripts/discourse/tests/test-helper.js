@@ -20,5 +20,8 @@ document.addEventListener("discourse-booted", () => {
   );
 
   setupTests(config.APP);
-  start({ setupTestContainer: false });
+  start({
+    setupTestContainer: false,
+    setupTestIsolationValidation: false,
+  });
 });
