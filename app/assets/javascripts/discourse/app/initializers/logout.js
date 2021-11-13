@@ -9,7 +9,7 @@ export default {
   name: "logout",
   after: "message-bus",
 
-  initialize: function (container) {
+  initialize(container) {
     const messageBus = container.lookup("message-bus:main");
 
     if (!messageBus) {

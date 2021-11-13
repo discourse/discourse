@@ -151,7 +151,7 @@ const rule = {
     state.push("bbcode_open", "blockquote", 1);
   },
 
-  after: function (state) {
+  after(state) {
     state.push("bbcode_close", "blockquote", -1);
     state.push("bbcode_close", "aside", -1);
   },

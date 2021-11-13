@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 const EmailSettings = EmberObject.extend({});
 
 EmailSettings.reopenClass({
-  find: function () {
+  find() {
     return ajax("/admin/email.json").then(function (settings) {
       return EmailSettings.create(settings);
     });

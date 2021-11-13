@@ -761,7 +761,7 @@ const User = RestModel.extend({
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
-  delete: function () {
+  delete() {
     if (this.can_delete_account) {
       return ajax(userPath(this.username + ".json"), {
         type: "DELETE",

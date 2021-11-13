@@ -70,7 +70,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   @observes("model.id")
-  _resetSaving: function () {
+  _resetSaving() {
     this.set("saving", false);
     this.set("savingStatus", "");
   },

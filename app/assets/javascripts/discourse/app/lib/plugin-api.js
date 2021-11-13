@@ -202,7 +202,7 @@ class PluginApi {
    *
    * ```
    * api.modifyClassStatic('controller:composer', {
-   *   superFinder: function() { return []; }
+   *   superFinder() { return []; }
    * });
    * ```
    **/
@@ -1036,7 +1036,7 @@ class PluginApi {
    * Example:
    *
    * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation: function (data, options) {
+   *    myFileTransformation(data, options) {
    *      let p = new Promise((resolve, reject) => {
    *        let file = data.files[data.index];
    *        console.log(`Transforming ${file.name}`);
