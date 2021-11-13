@@ -107,14 +107,14 @@ function getTitle(tokens, startToken) {
 const rule = {
   tag: "poll",
 
-  before: function (state, tagInfo, raw) {
+  before(state, tagInfo, raw) {
     let token = state.push("text", "", 0);
     token.content = raw;
     token.bbcode_attrs = tagInfo.attrs;
     token.bbcode_type = "poll_open";
   },
 
-  after: function (state, openToken, raw) {
+  after(state, openToken, raw) {
     const titleTokens = getTitle(state.tokens, openToken);
     let items = getListItems(state.tokens, openToken);
 

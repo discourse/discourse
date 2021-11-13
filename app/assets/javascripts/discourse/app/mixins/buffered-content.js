@@ -10,11 +10,11 @@ export function bufferedProperty(property) {
       });
     }),
 
-    rollbackBuffer: function () {
+    rollbackBuffer() {
       this.buffered.discardBufferedChanges();
     },
 
-    commitBuffer: function () {
+    commitBuffer() {
       this.buffered.applyBufferedChanges();
     },
   };

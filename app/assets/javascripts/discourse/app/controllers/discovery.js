@@ -23,7 +23,7 @@ export default Controller.extend({
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
   @observes("loadedAllItems")
-  _showFooter: function () {
+  _showFooter() {
     this.set("application.showFooter", this.loadedAllItems);
   },
 

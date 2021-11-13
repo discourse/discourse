@@ -567,7 +567,7 @@ function pieChartConfig(data, labels, opts = {}) {
       plugins: {
         legend: {
           labels: {
-            generateLabels: function () {
+            generateLabels() {
               return labels.map((text, index) => {
                 return {
                   fillStyle: getColors(data.length)[index],

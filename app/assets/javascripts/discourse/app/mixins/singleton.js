@@ -36,8 +36,8 @@
     // Define your class and apply the Mixin
     Foot = EmberObject.extend({});
     Foot.reopenClass(Singleton, {
-      createCurrent: function() {
-        return Foot.create({toes: 5});
+      createCurrent() {
+        return Foot.create({ toes: 5 });
       }
     });
 

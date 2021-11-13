@@ -5,7 +5,6 @@
     import Sharing from 'discourse/lib/sharing';
 
     Sharing.addSource({
-
       // This id must be present in the `share_links` site setting too
       id: 'twitter',
 
@@ -15,12 +14,12 @@
       htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
-      generateUrl: function(link, title) {
+      generateUrl(link, title) {
         return "http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title);
       },
 
       // If provided, handle by custom javascript rather than default url open
-      clickHandler: function(link, title){
+      clickHandler(link, title) {
         alert("Hello!")
       },
 

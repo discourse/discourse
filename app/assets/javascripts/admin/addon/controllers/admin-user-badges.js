@@ -61,7 +61,7 @@ export default Controller.extend(GrantBadgeController, {
   },
 
   actions: {
-    expandGroup: function (userBadge) {
+    expandGroup(userBadge) {
       const model = this.model;
       model.set("expandedBadges", model.get("expandedBadges") || []);
       model.get("expandedBadges").pushObject(userBadge.badge.id);
