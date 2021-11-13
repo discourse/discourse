@@ -402,7 +402,7 @@ export default createWidget("header", {
     let contentsAttrs = { contents, minimized: !!attrs.topic };
     return h(
       "div.wrap",
-      this.attach("header-contents", $.extend({}, attrs, contentsAttrs))
+      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
     );
   },
 

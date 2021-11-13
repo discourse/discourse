@@ -97,7 +97,11 @@ export function withFrozenTime(timeString, timezone, callback) {
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {
-  let siteAttrs = $.extend({}, siteFixtures["site.json"].site, extras || {});
+  let siteAttrs = Object.assign(
+    {},
+    siteFixtures["site.json"].site,
+    extras || {}
+  );
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
   return Site.resetCurrent(Site.create(siteAttrs));
