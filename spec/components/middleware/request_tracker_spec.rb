@@ -531,6 +531,38 @@ describe Middleware::RequestTracker do
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
     end
+
+    it "falls back to IP rate limiting if the cookie is tampered with" do
+      unfreeze_time
+      global_setting :max_reqs_per_ip_per_minute, 1
+      global_setting :skip_per_ip_rate_limit_trust_level, 3
+      user = Fabricate(:user, trust_level: 3)
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        issued_at: Time.zone.now
+      )
+      cookie = swap_2_different_characters(cookie)
+      env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
+
+      called = 0
+      app = lambda do |_|
+        called += 1
+        [200, {}, ["OK"]]
+      end
+
+      middleware = Middleware::RequestTracker.new(app)
+      status, = middleware.call(env)
+      expect(status).to eq(200)
+
+      middleware = Middleware::RequestTracker.new(app)
+      status, headers, response = middleware.call(env)
+      expect(status).to eq(429)
+      expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(response.first).to include("Error code: ip_60_secs_limit.")
+    end
   end
 
   context "callbacks" do
