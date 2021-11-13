@@ -1,6 +1,7 @@
 import {
   acceptance,
   count,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
