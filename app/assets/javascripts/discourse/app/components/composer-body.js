@@ -11,9 +11,9 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { headerHeight } from "discourse/components/site-header";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 
-const START_EVENTS = "touchstart mousedown";
-const DRAG_EVENTS = "touchmove mousemove";
-const END_EVENTS = "touchend mouseup";
+const START_DRAG_EVENTS = ["touchstart", "mousedown"];
+const DRAG_EVENTS = ["touchmove", "mousemove"];
+const END_DRAG_EVENTS = ["touchend", "mouseup"];
 
 const THROTTLE_RATE = 20;
 
@@ -54,7 +54,9 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   movePanels(size) {
-    $("#main-outlet").css("padding-bottom", size ? size : "");
+    document.querySelector("#main-outlet").style.paddingBottom = size
+      ? `${size}px`
+      : "";
 
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
@@ -105,51 +107,75 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   setupComposerResizeEvents() {
-    const $composer = $(this.element);
-    const $grippie = $(this.element.querySelector(".grippie"));
-    const $document = $(document);
-    let origComposerSize = 0;
-    let lastMousePos = 0;
+    this.origComposerSize = 0;
+    this.lastMousePos = 0;
 
-    const performDrag = (event) => {
-      $composer.trigger("div-resizing");
-      this.appEvents.trigger("composer:div-resizing");
-      $composer.addClass("clear-transitions");
-      const currentMousePos = mouseYPos(event);
-      let size = origComposerSize + (lastMousePos - currentMousePos);
-
-      const winHeight = $(window).height();
-      size = Math.min(size, winHeight - headerHeight());
-      this.movePanels(size);
-      $composer.height(size);
-    };
-
-    const throttledPerformDrag = ((event) => {
-      event.preventDefault();
-      throttle(this, performDrag, event, THROTTLE_RATE);
-    }).bind(this);
-
-    const endDrag = (() => {
-      this.appEvents.trigger("composer:resize-ended");
-      $document.off(DRAG_EVENTS, throttledPerformDrag);
-      $document.off(END_EVENTS, endDrag);
-      $composer.removeClass("clear-transitions");
-      $composer.focus();
-    }).bind(this);
-
-    $grippie.on(START_EVENTS, (event) => {
-      event.preventDefault();
-      origComposerSize = $composer.height();
-      lastMousePos = mouseYPos(event);
-      $document.on(DRAG_EVENTS, throttledPerformDrag);
-      $document.on(END_EVENTS, endDrag);
-      this.appEvents.trigger("composer:resize-started");
+    START_DRAG_EVENTS.forEach((startDragEvent) => {
+      this.element
+        .querySelector(".grippie")
+        ?.addEventListener(startDragEvent, this.startDragHandler);
     });
 
     if (this._visualViewportResizing()) {
       this.viewportResize();
       window.visualViewport.addEventListener("resize", this.viewportResize);
     }
+  },
+
+  @bind
+  performDragHandler() {
+    const divResizingEvent = new Event("div-resizing");
+    this.element.dispatchEvent(divResizingEvent);
+
+    this.appEvents.trigger("composer:div-resizing");
+    this.element.classList.add("clear-transitions");
+    const currentMousePos = mouseYPos(event);
+    let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
+
+    const winHeight = window.innerHeight;
+    size = Math.min(size, winHeight - headerHeight());
+    this.movePanels(size);
+    $(this.element).height(size);
+  },
+
+  @bind
+  startDragHandler(event) {
+    event.preventDefault();
+
+    this.origComposerSize = $(this.element).height();
+    this.lastMousePos = mouseYPos(event);
+
+    DRAG_EVENTS.forEach((dragEvent) => {
+      document.addEventListener(dragEvent, this.throttledPerformDrag);
+    });
+
+    END_DRAG_EVENTS.forEach((endDragEvent) => {
+      document.addEventListener(endDragEvent, this.endDragHandler);
+    });
+
+    this.appEvents.trigger("composer:resize-started");
+  },
+
+  @bind
+  endDragHandler() {
+    this.appEvents.trigger("composer:resize-ended");
+
+    DRAG_EVENTS.forEach((dragEvent) => {
+      document.removeEventListener(dragEvent, this.throttledPerformDrag);
+    });
+
+    END_DRAG_EVENTS.forEach((endDragEvent) => {
+      document.removeEventListener(endDragEvent, this.endDragHandler);
+    });
+
+    this.element.classList.remove("clear-transitions");
+    this.element.focus();
+  },
+
+  @bind
+  throttledPerformDrag(event) {
+    event.preventDefault();
+    throttle(this, this.performDragHandler, event, THROTTLE_RATE);
   },
 
   @bind
@@ -207,10 +233,17 @@ export default Component.extend(KeyEnterEscape, {
 
   willDestroyElement() {
     this._super(...arguments);
+
     this.appEvents.off("composer:resize", this, this.resize);
     if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
+
+    START_DRAG_EVENTS.forEach((startDragEvent) => {
+      this.element
+        ?.querySelector(".grippie")
+        ?.removeEventListener(startDragEvent, this.startDragHandler);
+    });
 
     cancel(this._lastKeyTimeout);
   },
