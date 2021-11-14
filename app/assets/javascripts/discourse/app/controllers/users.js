@@ -83,7 +83,7 @@ export default Controller.extend({
   @action
   groupChanged(_, groupAttrs) {
     // First param is the group name, which include none or 'all groups'. Ignore this and look at second param.
-    this.set("group", groupAttrs ? groupAttrs.id : null);
+    this.set("group", groupAttrs?.id);
   },
 
   @action
