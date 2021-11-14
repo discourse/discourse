@@ -1,3 +1,4 @@
+import { bind } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import toMarkdown from "discourse/lib/to-markdown";
 import { isTesting } from "discourse-common/config/environment";
@@ -223,6 +224,7 @@ export default Mixin.create({
     return null;
   },
 
+  @bind
   paste(e) {
     if (!this._$textarea.is(":focus") && !isTesting()) {
       return;
