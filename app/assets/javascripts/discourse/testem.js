@@ -41,7 +41,7 @@ module.exports = {
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
+      "--js-flags=--max_old_space_size=512",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
     "Headless Firefox": ["--width=1440", "--height=900"],
