@@ -241,7 +241,7 @@ export default Component.extend(KeyEnterEscape, {
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element
-        ?.querySelector(".grippie")
+        .querySelector(".grippie")
         ?.removeEventListener(startDragEvent, this.startDragHandler);
     });
 
