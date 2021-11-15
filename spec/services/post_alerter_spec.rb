@@ -29,6 +29,7 @@ describe PostAlerter do
 
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
@@ -345,7 +346,7 @@ describe PostAlerter do
 
   context '@here' do
     let(:topic) { Fabricate(:topic) }
-    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", topic: topic) }
+    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
 
     before do
       Jobs.run_immediately!
@@ -356,7 +357,7 @@ describe PostAlerter do
     end
 
     it 'does not work if user here exists' do
-      Fabricate(:user, username: PostAlerter::HERE_MENTION)
+      Fabricate(:user, username: SiteSetting.here_mention)
       Fabricate(:topic_allowed_user, topic: topic, user: evil_trout)
       expect { post }.to change(evil_trout.notifications, :count).by(0)
     end

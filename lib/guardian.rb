@@ -543,7 +543,7 @@ class Guardian
 
   def can_mention_here?
     return false if SiteSetting.here_mention.blank?
-    return false if SiteSetting.max_here_mentioned < 0
+    return false if SiteSetting.max_here_mentioned < 1
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
