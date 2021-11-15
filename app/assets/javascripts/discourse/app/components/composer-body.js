@@ -62,11 +62,7 @@ export default Component.extend(KeyEnterEscape, {
     this.appEvents.trigger("composer:resized");
   },
 
-  @observes(
-    "composeState",
-    "composer.action",
-    "composer.canEditTopicFeaturedLink"
-  )
+  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
   resize() {
     schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
