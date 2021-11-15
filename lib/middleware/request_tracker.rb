@@ -177,7 +177,7 @@ class Middleware::RequestTracker
 
     request = Rack::Request.new(env)
 
-    cookie = find_auth_cookie(env)
+    cookie = find_auth_cookie(request)
     limiter = RequestsRateLimiter.new(
       user_id: cookie&.dig(:user_id),
       trust_level: cookie&.dig(:trust_level),
@@ -227,9 +227,12 @@ class Middleware::RequestTracker
     end
   end
 
-  def find_auth_cookie(env)
-    request = ActionDispatch::Request.new(env)
-    cookie = request.cookie_jar.encrypted[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
+  def find_auth_cookie(rack_request)
+    cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
+    return if rack_request.cookies[cookie_name].blank?
+
+    request = ActionDispatch::Request.new(rack_request.env)
+    cookie = request.cookie_jar.encrypted[cookie_name]
 
     if cookie && cookie[:issued_at] >= max_cookie_age.ago.to_i
       cookie
