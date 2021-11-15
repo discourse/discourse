@@ -79,9 +79,4 @@ export default Component.extend({
         );
     }
   },
-
-  @action
-  onChangePermalinkType(type) {
-    this.set("permalinkType", type);
-  },
 });
