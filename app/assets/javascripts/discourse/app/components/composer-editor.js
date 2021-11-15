@@ -139,7 +139,7 @@ export default Component.extend(ComposerUpload, {
 
   @discourseComputed
   showLink() {
-    return this.currentUser?.link_posting_access !== "none";
+    return this.currentUser && this.currentUser.link_posting_access !== "none";
   },
 
   @observes("focusTarget")
