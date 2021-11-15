@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 60
+    continue-on-error: ${{ matrix.browser == 'Chrome' }}
 
     strategy:
       fail-fast: false
