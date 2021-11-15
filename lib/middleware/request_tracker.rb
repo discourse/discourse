@@ -107,11 +107,13 @@ class Middleware::RequestTracker
     track_view &&= env_track_view != "0" && env_track_view != "false"
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
     track_view = !!track_view
+    has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
+    has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
 
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
-      has_auth_cookie: helper.has_auth_cookie?,
+      has_auth_cookie: has_auth_cookie,
       is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
@@ -168,7 +170,6 @@ class Middleware::RequestTracker
 
   def call(env)
     result = nil
-    log_request = true
     info = nil
 
     # doing this as early as possible so we have an
@@ -177,7 +178,7 @@ class Middleware::RequestTracker
 
     request = Rack::Request.new(env)
 
-    cookie = find_auth_cookie(request)
+    cookie = find_auth_cookie(env)
     limiter = RequestsRateLimiter.new(
       user_id: cookie&.dig(:user_id),
       trust_level: cookie&.dig(:trust_level),
@@ -216,7 +217,9 @@ class Middleware::RequestTracker
       result
     end
   ensure
-    log_request_info(env, result, info) unless !log_request || env["discourse.request_tracker.skip"]
+    if !env["discourse.request_tracker.skip"]
+      log_request_info(env, result, info)
+    end
   end
 
   def log_later(data)
@@ -227,17 +230,10 @@ class Middleware::RequestTracker
     end
   end
 
-  def find_auth_cookie(rack_request)
-    cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
-    return if rack_request.cookies[cookie_name].blank?
-
-    request = ActionDispatch::Request.new(rack_request.env)
-    cookie = request.cookie_jar.encrypted[cookie_name]
-
+  def find_auth_cookie(env)
+    cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
     if cookie && cookie[:issued_at] >= max_cookie_age.ago.to_i
       cookie
-    else
-      nil
     end
   end
 

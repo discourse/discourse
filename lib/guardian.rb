@@ -531,18 +531,14 @@ class Guardian
   def auth_token
     return if !request
 
-    cookie_name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
-    cookie = request.cookie_jar[cookie_name].presence
-    return if !cookie
+    token = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).presence
 
-    # v0 of our auth cookie
-    if cookie.size == Auth::DefaultCurrentUserProvider::TOKEN_SIZE
-      return UserAuthToken.hash_token(cookie)
+    if !token
+      cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(request.env)
+      token = cookie[:token] if cookie
     end
 
-    cookie = request.cookie_jar.encrypted[cookie_name]
-    return if !cookie
-    UserAuthToken.hash_token(cookie[:token])
+    UserAuthToken.hash_token(token) if token
   end
 
   private

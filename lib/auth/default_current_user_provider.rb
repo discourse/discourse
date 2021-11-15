@@ -40,6 +40,7 @@ class Auth::DefaultCurrentUserProvider
   PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
+  DECRYPTED_AUTH_COOKIE = "_DISCOURSE_DECRYPTED_AUTH_COOKIE"
 
   TOKEN_SIZE = 32
 
@@ -74,6 +75,25 @@ class Auth::DefaultCurrentUserProvider
       formats: nil
     ),
   ]
+
+  def self.find_v0_auth_cookie(request)
+    cookie = request.cookies[TOKEN_COOKIE].presence
+    if cookie && cookie.size == TOKEN_SIZE
+      cookie
+    end
+  end
+
+  def self.find_v1_auth_cookie(env)
+    return env[DECRYPTED_AUTH_COOKIE] if env.key?(DECRYPTED_AUTH_COOKIE)
+
+    env[DECRYPTED_AUTH_COOKIE] = begin
+      request = ActionDispatch::Request.new(env)
+      # don't even initialize a cookie jar if we don't have a cookie at all
+      if request.cookies[TOKEN_COOKIE].present?
+        request.cookie_jar.encrypted[TOKEN_COOKIE]
+      end
+    end
+  end
 
   # do all current user initialization here
   def initialize(env)
@@ -438,18 +458,11 @@ class Auth::DefaultCurrentUserProvider
     return @auth_token if defined?(@auth_token)
 
     @auth_token = begin
-      token = @request.cookies[TOKEN_COOKIE]
-
-      # backward compatibility for v0 of our auth cookie
-      if token&.size == TOKEN_SIZE
-        token
-      elsif token.present?
-        req = ActionDispatch::Request.new(@env)
-        cookie = req.cookie_jar.encrypted[TOKEN_COOKIE]
-        if cookie && cookie[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
-          cookie[:token]
-        else
-          nil
+      if v0 = self.class.find_v0_auth_cookie(@request)
+        v0
+      elsif v1 = self.class.find_v1_auth_cookie(@env)
+        if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
+          v1[:token]
         end
       end
     end
