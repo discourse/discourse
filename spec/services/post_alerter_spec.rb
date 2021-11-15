@@ -1374,6 +1374,21 @@ describe PostAlerter do
       expect(email.subject).to eq("Re: #{topic.title}")
     end
 
+    it "sends a group smtp email when the original group has had SMTP disabled and there is an additional topic allowed group" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      other_allowed_group = Fabricate(:smtp_group)
+      TopicAllowedGroup.create(group: other_allowed_group, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      group.update!(smtp_enabled: false)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to include(other_allowed_group.email_username)
+      expect(email.to).to contain_exactly(topic.reload.topic_allowed_users.order(:created_at).first.user.email)
+      expect(email.cc).to match_array(["bar@discourse.org", "jim@othersite.com"])
+      expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
     it "does not send a group smtp email if smtp is not enabled for the group" do
       group.update!(smtp_enabled: false)
       incoming_email_post = create_post_with_incoming
