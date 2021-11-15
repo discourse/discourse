@@ -10,7 +10,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
   field :giftee_assignment_messages, component: :pms, accepts_placeholders: true, required: true
   field :gift_exchangers_group, component: :group, required: true
 
-  version 16
+  version 17
 
   triggerables %i[point_in_time]
 
