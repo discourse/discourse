@@ -207,7 +207,6 @@ export default Component.extend(KeyEnterEscape, {
 
   willDestroyElement() {
     this._super(...arguments);
-    this.appEvents.off("composer:resize", this, this.resize);
     if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
