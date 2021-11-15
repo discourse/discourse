@@ -323,7 +323,7 @@ GEM
       activerecord (~> 6.0)
       concurrent-ruby
       railties (~> 6.0)
-    rails_multisite (3.1.0)
+    rails_multisite (4.0.0)
       activerecord (> 5.0, < 7)
       railties (> 5.0, < 7)
     railties (6.1.4.1)
