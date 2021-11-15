@@ -8,7 +8,7 @@ import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
 
 export default Component.extend({
-  classNames: ["permalink-form"],
+  tagName: "",
   formSubmitted: false,
   permalinkType: "topic_id",
   permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
@@ -41,7 +41,7 @@ export default Component.extend({
   },
 
   @action
-  submit() {
+  onSubmit() {
     if (!this.formSubmitted) {
       this.set("formSubmitted", true);
 
