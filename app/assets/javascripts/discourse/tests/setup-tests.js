@@ -42,7 +42,7 @@ function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
     let $this = $(this);
     let data = $this.data("bs.modal");
-    let options = $.extend(
+    let options = Object.assign(
       {},
       Modal.DEFAULTS,
       $this.data(),
