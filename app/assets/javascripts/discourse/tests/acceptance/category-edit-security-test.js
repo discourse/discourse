@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -41,7 +42,7 @@ acceptance("Category Edit - security", function (needs) {
       "everyone has been removed and appears in the available groups"
     );
     assert.strictEqual(
-      queryAll(".row-empty").text(),
+      query(".row-empty").innerText,
       I18n.t("category.permissions.no_groups_selected"),
       "shows message when no groups are selected"
     );
