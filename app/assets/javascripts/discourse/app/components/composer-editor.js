@@ -754,6 +754,15 @@ export default Component.extend(ComposerUpload, {
       this._teardownInputPreviewSync();
     }
 
+    if (!this._enableAdvancedEditorPreviewSync()) {
+      this.element
+        .querySelector(".d-editor-input")
+        ?.removeEventListener(
+          "scroll",
+          this._throttledSyncEditorAndPreviewScroll
+        );
+    }
+
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     preview?.removeEventListener("click", this._handleImageScaleButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
