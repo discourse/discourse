@@ -1,7 +1,8 @@
 import { later } from "@ember/runloop";
+import bootbox from "bootbox";
 import { createWidget } from "discourse/widgets/widget";
+import I18n from "I18n";
 import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -255,10 +256,18 @@ export default createWidget("user-menu", {
     );
 
     if (unreadHighPriorityNotifications > 0) {
-      return showModal("dismiss-notification-confirmation").setProperties({
-        count: unreadHighPriorityNotifications,
-        dismissNotifications: () => this.state.markRead(),
-      });
+      return bootbox.confirm(
+        I18n.t("notifications.dismiss_confirmation.body", {
+          count: unreadHighPriorityNotifications,
+        }),
+        I18n.t("notifications.dismiss_confirmation.cancel"),
+        I18n.t("notifications.dismiss_confirmation.confirm"),
+        (result) => {
+          if (result) {
+            this.state.markRead();
+          }
+        }
+      );
     } else {
       return this.state.markRead();
     }

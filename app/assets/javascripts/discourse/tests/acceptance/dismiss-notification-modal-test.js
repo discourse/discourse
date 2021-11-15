@@ -19,7 +19,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
     await visit("/");
     await click(".current-user");
     await click(".notifications-dismiss");
-    assert.notOk(exists(".dismiss-notification-confirmation"));
+    assert.notOk(exists(".bootbox.modal"));
   });
 
   test("shows confirmation modal", async function (assert) {
@@ -29,12 +29,13 @@ acceptance("Dismiss notification confirmation", function (needs) {
     await visit("/");
     await click(".current-user");
     await click(".notifications-dismiss");
-    assert.ok(exists(".dismiss-notification-confirmation"));
+    assert.ok(exists(".bootbox.modal"));
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation-modal .modal-body").innerText,
+      query(".bootbox.modal .modal-body").innerText,
       "You have 2 important notifications, are you sure you would like to dismiss?"
     );
+    await click(".bootbox.modal .btn-default");
   });
 
   test("marks unread when confirm and closes modal", async function (assert) {
@@ -46,19 +47,19 @@ acceptance("Dismiss notification confirmation", function (needs) {
     await click(".notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation-modal .btn-primary").innerText,
+      query(".bootbox.modal .btn-primary span").innerText,
       "Confirm"
     );
     pretender.put("/notifications/mark-read", () => {
       return [200, { "Content-Type": "application/json" }, { success: true }];
     });
 
-    await click(".dismiss-notification-confirmation-modal .btn-primary");
+    await click(".bootbox.modal .btn-primary");
 
-    assert.notOk(exists(".dismiss-notification-confirmation"));
+    assert.notOk(exists(".bootbox.modal"));
   });
 
-  test("does marks unread when cancel and closes modal", async function (assert) {
+  test("marks unread when cancel and closes modal", async function (assert) {
     updateCurrentUser({
       unread_high_priority_notifications: 2,
     });
@@ -67,12 +68,12 @@ acceptance("Dismiss notification confirmation", function (needs) {
     await click(".notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation-modal .cancel").innerText,
+      query(".bootbox.modal .btn-default span").innerText,
       "Cancel"
     );
 
-    await click(".dismiss-notification-confirmation-modal .cancel");
+    await click(".bootbox.modal .btn-default");
 
-    assert.notOk(exists(".dismiss-notification-confirmation"));
+    assert.notOk(exists(".bootbox.modal"));
   });
 });
