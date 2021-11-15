@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "RequestsRateLimiter in multisite", type: :multisite do
+describe "RequestTracker in multisite", type: :multisite do
   before do
     global_setting :skip_per_ip_rate_limit_trust_level, 2
 
@@ -25,23 +25,30 @@ describe "RequestsRateLimiter in multisite", type: :multisite do
     )
   end
 
+  def call(env, &block)
+    Middleware::RequestTracker.new(block).call(env)
+  end
+
+  def create_env(opts)
+    create_request_env.merge(opts)
+  end
+
   shared_examples "ip rate limiters behavior" do |error_code, app_callback|
     it "applies rate limits on an IP address across all sites" do
-      limiter = create_limiter(
-        env: create_request_env.merge("REMOTE_ADDR" => "123.10.71.4")
-      )
       called = { default: 0, second: 0 }
       test_multisite_connection("default") do
-        status, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4")
+        status, = call(env) do
           called[:default] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(200)
 
-        status, headers, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4")
+        status, headers = call(env) do
           called[:default] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(429)
@@ -50,9 +57,10 @@ describe "RequestsRateLimiter in multisite", type: :multisite do
       end
 
       test_multisite_connection("second") do
-        status, headers = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4")
+        status, headers = call(env) do
           called[:second] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(429)
@@ -64,23 +72,25 @@ describe "RequestsRateLimiter in multisite", type: :multisite do
 
   shared_examples "user id rate limiters behavior" do |error_code, app_callback|
     it "does not leak rate limits for a user id to other sites" do
-      limiter = create_limiter(
+      cookie = create_auth_cookie(
+        token: SecureRandom.hex,
         user_id: 1,
-        trust_level: 2,
-        env: create_request_env.merge("REMOTE_ADDR" => "123.10.71.4")
+        trust_level: 2
       )
       called = { default: 0, second: 0 }
       test_multisite_connection("default") do
-        status, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4", "HTTP_COOKIE" => "_t=#{cookie}")
+        status, = call(env) do
           called[:default] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(200)
 
-        status, headers, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4", "HTTP_COOKIE" => "_t=#{cookie}")
+        status, headers, = call(env) do
           called[:default] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(429)
@@ -89,16 +99,18 @@ describe "RequestsRateLimiter in multisite", type: :multisite do
       end
 
       test_multisite_connection("second") do
-        status, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4", "HTTP_COOKIE" => "_t=#{cookie}")
+        status, = call(env) do
           called[:second] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(200)
 
-        status, headers, = limiter.apply_limits! do
+        env = create_env("REMOTE_ADDR" => "123.10.71.4", "HTTP_COOKIE" => "_t=#{cookie}")
+        status, headers, = call(env) do
           called[:second] += 1
-          app_callback&.call(limiter.request.env)
+          app_callback&.call(env)
           [200, {}, ["OK"]]
         end
         expect(status).to eq(429)
