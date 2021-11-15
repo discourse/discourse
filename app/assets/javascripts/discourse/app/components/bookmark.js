@@ -17,7 +17,7 @@ import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -65,7 +65,7 @@ export default Component.extend({
       _itsatrap: new ItsATrap(),
     });
 
-    this.registerOnCloseHandler(this._onModalClose.bind(this));
+    this.registerOnCloseHandler(this._onModalClose);
 
     this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
@@ -239,6 +239,7 @@ export default Component.extend({
     }
   },
 
+  @bind
   _onModalClose(closeOpts) {
     // we want to close without saving if the user already saved
     // manually or deleted the bookmark, as well as when the modal

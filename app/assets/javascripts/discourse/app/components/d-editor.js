@@ -319,7 +319,7 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     if (isTesting()) {
-      this.element.addEventListener("paste", this.paste.bind(this));
+      this.element.addEventListener("paste", this.paste);
     }
   },
 

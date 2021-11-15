@@ -6,6 +6,7 @@ import {
   determinePostReplaceSelection,
   safariHacksDisabled,
 } from "discourse/lib/utilities";
+import { bind } from "discourse-common/utils/decorators";
 import { next, schedule } from "@ember/runloop";
 
 const isInside = (text, regex) => {
@@ -223,6 +224,7 @@ export default Mixin.create({
     return null;
   },
 
+  @bind
   paste(e) {
     if (!this._$textarea.is(":focus") && !isTesting()) {
       return;
