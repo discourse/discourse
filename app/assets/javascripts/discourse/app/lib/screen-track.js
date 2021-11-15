@@ -237,7 +237,8 @@ export default class {
       ] = 1;
     }
 
-    Object.keys(newTimings).forEach((postNumber) => {
+    const newTimingsKeys = Object.keys(newTimings);
+    newTimingsKeys.forEach((postNumber) => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
@@ -248,7 +249,7 @@ export default class {
 
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
-    if (!$.isEmptyObject(newTimings)) {
+    if (newTimingsKeys.length > 0) {
       if (this.currentUser && !isTesting()) {
         this.consolidateTimings(newTimings, this._topicTime, topicId);
         this.sendNextConsolidatedTiming();
@@ -267,6 +268,7 @@ export default class {
         } else {
           topicIds = [];
         }
+
         if (
           topicIds.indexOf(topicId) === -1 &&
           topicIds.length < ANON_MAX_TOPIC_IDS
