@@ -506,8 +506,8 @@ class UsersController < ApplicationController
     end
 
     here_count = nil
-    if usernames.include?(PostAlerter::HERE_MENTION) && !User.where(username_lower: PostAlerter::HERE_MENTION).exists?
-      PostAlerter.new.expand_here_mention(topic.first_post) do |users|
+    if usernames.include?(SiteSetting.here_mention) && !User.where(username_lower: SiteSetting.here_mention).exists?
+      PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]) do |users|
         here_count = users.size
       end
     end

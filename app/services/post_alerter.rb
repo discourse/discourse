@@ -2,8 +2,6 @@
 
 class PostAlerter
   USER_BATCH_SIZE = 100
-  HERE_MENTION = "here"
-  HERE_MENTIONED = 10
 
   def self.post_created(post, opts = {})
     PostAlerter.new(opts).after_save_post(post, true)
@@ -135,7 +133,7 @@ class PostAlerter
       end
 
       if mentioned_here
-        expand_here_mention(post) do |users|
+        expand_here_mention(post, exclude_ids: notified.map(&:id)) do |users|
           users = only_allowed_users(users, post)
           notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
         end
@@ -552,48 +550,47 @@ class PostAlerter
 
   end
 
-  def expand_here_mention(post)
+  def expand_here_mention(post, exclude_ids: nil)
+    exclude_ids ||= []
     user_ids = []
 
-    # users that were allowed to topic
-    if user_ids.size < HERE_MENTIONED
-      user_ids += TopicAllowedUser
-        .where(topic_id: post.topic_id)
-        .pluck(:user_id)
-
-      user_ids.uniq!
-    end
-
-    # users that are members of groups allowed to topic
-    if user_ids.size < HERE_MENTIONED
-      user_ids += GroupUser
-        .where(group_id: TopicAllowedGroup.select(:group_id).where(topic_id: post.topic_id))
-        .pluck(:user_id)
-
-      user_ids.uniq!
-    end
-
     # users that liked posts in topic
-    if user_ids.size < HERE_MENTIONED
+    if user_ids.size < SiteSetting.max_here_mentioned
       user_ids += PostAction
         .where(post_id: Post.select(:id).where(topic_id: post.topic_id))
         .where(post_action_type_id: PostActionType.types[:like])
+        .group(:user_id)
+        .order('COUNT(user_id) DESC')
         .pluck(:user_id)
-
-      user_ids.uniq!
+      user_ids = (user_ids - exclude_ids).uniq
     end
 
     # users that read the topic
-    if user_ids.size < HERE_MENTIONED
+    if user_ids.size < SiteSetting.max_here_mentioned
       user_ids += TopicUser
         .where(topic_id: post.topic_id)
         .order(total_msecs_viewed: :desc)
         .pluck(:user_id)
-
-      user_ids.uniq!
+      user_ids = (user_ids - exclude_ids).uniq
     end
 
-    yield User.where(id: user_ids[0..HERE_MENTIONED])
+    # users that were allowed to topic
+    if user_ids.size < SiteSetting.max_here_mentioned
+      user_ids += TopicAllowedUser
+        .where(topic_id: post.topic_id)
+        .pluck(:user_id)
+      user_ids = (user_ids - exclude_ids).uniq
+    end
+
+    # users that are members of groups allowed to topic
+    if user_ids.size < SiteSetting.max_here_mentioned
+      user_ids += GroupUser
+        .where(group_id: TopicAllowedGroup.select(:group_id).where(topic_id: post.topic_id))
+        .pluck(:user_id)
+      user_ids = (user_ids - exclude_ids).uniq
+    end
+
+    yield User.real.where(id: user_ids[0..SiteSetting.max_here_mentioned])
   end
 
   # TODO: Move to post-analyzer?
@@ -611,7 +608,7 @@ class PostAlerter
     end
 
     # @here can be a user mention and then this feature is disabled
-    here = mentions.include?(HERE_MENTION) && !User.where(username_lower: HERE_MENTION).exists?
+    here = mentions.include?(SiteSetting.here_mention) && !User.where(username_lower: SiteSetting.here_mention).exists?
 
     [groups, users, here]
   end

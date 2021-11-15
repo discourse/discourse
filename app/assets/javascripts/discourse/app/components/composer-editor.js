@@ -645,15 +645,13 @@ export default Component.extend(ComposerUpload, {
       return;
     }
 
-    schedule("afterRender", () => {
-      later(
-        this,
-        () => {
-          this.hereMention(hereCount);
-        },
-        2000
-      );
-    });
+    later(
+      this,
+      () => {
+        this.hereMention(hereCount);
+      },
+      2000
+    );
   },
 
   @bind

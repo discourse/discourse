@@ -285,6 +285,8 @@ class User < ActiveRecord::Base
   def self.reserved_username?(username)
     username = normalize_username(username)
 
+    return true if SiteSetting.here_mention == username
+
     SiteSetting.reserved_usernames.unicode_normalize.split("|").any? do |reserved|
       username.match?(/^#{Regexp.escape(reserved).gsub('\*', '.*')}$/)
     end

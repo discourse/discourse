@@ -1883,6 +1883,8 @@ en:
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
     enable_mentions: "Allow users to mention other users."
+    here_mention: "Name used for @here mention. Must not be an existent username."
+    max_here_mentioned: "Maximum number of mentioned people by @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -2325,6 +2327,7 @@ en:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
+      valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
