@@ -450,7 +450,11 @@ acceptance("Tag info", function (needs) {
     assert.ok(exists("#delete-tag"), "can delete tag");
 
     await click("#edit-synonyms");
-    assert.ok(count(".unlink-synonym:visible"), 2, "unlink UI is visible");
+    assert.strictEqual(
+      count(".unlink-synonym:visible"),
+      2,
+      "unlink UI is visible"
+    );
     assert.strictEqual(
       count(".delete-synonym:visible"),
       2,
