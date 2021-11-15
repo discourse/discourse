@@ -18,12 +18,12 @@
   }}
 
   {{text-field
-    value=permalink_type_value
+    value=permalinkTypeValue
     disabled=formSubmitted
-    class="external-url"
     placeholderKey=permalinkTypePlaceholder
     autocorrect="off"
     autocapitalize="off"
+    keyDown=(action "submitFormOnEnter")
   }}
 
   {{d-button
