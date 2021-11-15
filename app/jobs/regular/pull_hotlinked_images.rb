@@ -241,7 +241,7 @@ module Jobs
       )
     end
 
-    private
+    protected
 
     def normalize_src(src)
       uri = Addressable::URI.heuristic_parse(src)

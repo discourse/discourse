@@ -50,6 +50,7 @@ class Theme < ActiveRecord::Base
       :locale_fields,
       :user,
       :color_scheme,
+      :theme_translation_overrides,
       theme_fields: :upload
     )
   }
@@ -180,6 +181,18 @@ class Theme < ActiveRecord::Base
   def self.user_theme_ids
     get_set_cache "user_theme_ids" do
       Theme.user_selectable.pluck(:id)
+    end
+  end
+
+  def self.allowed_remote_theme_ids
+    return nil if GlobalSetting.allowed_theme_repos.blank?
+
+    get_set_cache "allowed_remote_theme_ids" do
+      urls = GlobalSetting.allowed_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
     end
   end
 

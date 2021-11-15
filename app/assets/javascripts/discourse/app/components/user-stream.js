@@ -31,7 +31,7 @@ export default Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   @observes("stream.user.id")
-  _scrollTopOnModelChange: function () {
+  _scrollTopOnModelChange() {
     schedule("afterRender", () => $(document).scrollTop(0));
   },
 

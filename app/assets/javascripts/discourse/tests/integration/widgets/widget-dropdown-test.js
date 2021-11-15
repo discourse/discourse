@@ -95,7 +95,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(headerLabel(), "FooBaz");
+        assert.strictEqual(headerLabel(), "FooBaz");
       },
     });
 
@@ -115,7 +115,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(headerLabel(), this.translatedLabel);
+        assert.strictEqual(headerLabel(), this.translatedLabel);
       },
     });
 
@@ -128,9 +128,9 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(1).dataset.id, 1, "it creates rows");
-        assert.equal(rowById(2).dataset.id, 2, "it creates rows");
-        assert.equal(rowById(3).dataset.id, 3, "it creates rows");
+        assert.strictEqual(rowById(1).dataset.id, "1", "it creates rows");
+        assert.strictEqual(rowById(2).dataset.id, "2", "it creates rows");
+        assert.strictEqual(rowById(3).dataset.id, "3", "it creates rows");
       },
     });
 
@@ -157,9 +157,9 @@ discourseModule(
       async test(assert) {
         await toggle();
         await clickRowById(2);
-        assert.equal(
+        assert.strictEqual(
           queryAll("#test").text(),
-          2,
+          "2",
           "it calls the onChange actions"
         );
       },
@@ -176,7 +176,7 @@ discourseModule(
         assert.ok(exists("#my-dropdown.closed"));
         assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
-        assert.equal(rowById(2).innerText.trim(), "FooBar");
+        assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
         assert.ok(exists("#my-dropdown.opened"));
         assert.ok(exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
@@ -220,7 +220,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(2).innerText.trim(), "FooBar");
+        assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
       },
     });
 
@@ -240,7 +240,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(1).innerText.trim(), "FooBaz");
+        assert.strictEqual(rowById(1).innerText.trim(), "FooBaz");
       },
     });
 
@@ -266,7 +266,10 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
+        assert.strictEqual(
+          rowById(4).innerHTML.trim(),
+          "<span><b>baz</b></span>"
+        );
       },
     });
 
@@ -360,7 +363,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(1), undefined, "it does not display options");
+        assert.strictEqual(rowById(1), null, "it does not display options");
       },
     });
 

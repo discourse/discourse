@@ -152,10 +152,10 @@
     "@glimmer/interfaces" "^0.54.2"
     "@simple-dom/interface" "^1.4.0"
 
-"@highlightjs/cdn-assets@^10.6.0":
-  version "10.6.0"
-  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.6.0.tgz#ec1404662cd20ed3de4e918d952f01af6350d5d0"
-  integrity sha512-u1nkZi2HRsZ3FuvnafUxhv6Bk3tyXboG4F0SE+QQJk+GhAxRQaENPMdZ6zVVQg6Vsv9r23VyWJLo4Vnw72NIxQ==
+"@highlightjs/cdn-assets@^10.7.0":
+  version "10.7.3"
+  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.7.3.tgz#bccdef5cdfe4bf74ed9393cba528539f94753306"
+  integrity sha512-Bz1c7NOPQE1h/0S3lYaDyA5wTimP9b8ppeN3HBfv+SF0IEeLsu86xneMcBvCaXBMwcwLc6/xGpyPOmPhCM8hAg==
 
 "@json-editor/json-editor@^2.5.2":
   version "2.5.2"
@@ -1492,10 +1492,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-discourse@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.8.tgz#c297831876811ea08203aa348d1ba2a963b2ae78"
-  integrity sha512-ZSQfhliiO5Cfa7WcKoMkN4wW/1rBJpecpMJpfjiFsElfgPj4EV4Pzksi5CvFnRbJDoZh6DYYrQfO+tW062VOUA==
+eslint-config-discourse@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.9.tgz#9a5ee6b3a4b986e5243f517e7945d1709c4e22df"
+  integrity sha512-a4KG+/9/7ZhYVV0URGK70K7QtxlydYKjie0ZssHEGxl2auOUTDcdRMBfZQBtIxQr9X8TF0+eeUUsScBXNU6xZw==
   dependencies:
     babel-eslint "^10.1.0"
     ember-template-lint "^2.11.0"

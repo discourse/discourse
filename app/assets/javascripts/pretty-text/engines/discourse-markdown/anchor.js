@@ -39,7 +39,11 @@ export function setup(helper) {
           .replace(/^-+/, "")
           .replace(/-+$/, "");
 
-        slug = `${slug || "heading"}-${++headingId}`;
+        if (slug.match(/^[^a-z]/)) {
+          slug = `h-${slug}`;
+        }
+
+        slug = `${slug || "h"}-${++headingId}`;
 
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");

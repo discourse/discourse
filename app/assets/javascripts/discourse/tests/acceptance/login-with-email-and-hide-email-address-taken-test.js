@@ -21,7 +21,7 @@ acceptance("Login with email - hide email address taken", function (needs) {
     await fillIn("#login-account-name", "someuser@example.com");
     await click("#email-login-link");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".alert-success").html().trim(),
       I18n.t("email_login.complete_email_found", {
         email: "someuser@example.com",

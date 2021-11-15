@@ -1247,7 +1247,7 @@ pl_PL:
         tags: "Tagi"
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
-        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/message'>wiadomościach prywatnych</a>."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -4538,12 +4538,8 @@ pl_PL:
               %{example}
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
-          head_tag:
-            text: "</head>"
-            title: "HTML, który zostanie umieszczony przed tagiem </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML, który zostanie umieszczony przed tagiem </body>"
+            text: "Body"
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
@@ -5407,7 +5403,6 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji. (PROTIP: przeciągnij i upuść kilka plików na raz)"
         add: "Dodaj nowe Emoji"
         uploading: "Przesyłanie…"
         name: "Nazwa"
@@ -5418,7 +5413,6 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
-        sample: "Użyj poniższego kodu HTML na swojej stronie, aby osadzić tematy z Discourse. Zastąp <b>REPLACE_ME</b> domyślnym adresem URL strony na której osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"

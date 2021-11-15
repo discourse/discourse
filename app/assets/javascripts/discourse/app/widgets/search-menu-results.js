@@ -380,6 +380,8 @@ createWidget("search-menu-results", {
 
 createWidget("search-menu-assistant", {
   tagName: "ul.search-menu-assistant",
+  buildKey: () => `search-menu-assistant`,
+  services: ["router"],
 
   html(attrs) {
     if (this.currentUser) {
@@ -434,15 +436,48 @@ createWidget("search-menu-assistant", {
         });
         break;
       case "@":
-        attrs.results.forEach((user) => {
+        // when only one user matches while in topic
+        // quick suggest user search in the topic or globally
+        if (
+          attrs.results.length === 1 &&
+          this.router.currentRouteName.startsWith("topic.")
+        ) {
+          const user = attrs.results[0];
           content.push(
             this.attach("search-menu-assistant-item", {
               prefix,
               user,
+              setTopicContext: true,
               slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_this_topic")}`
+              ),
             })
           );
-        });
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              extraHint: I18n.t("search.enter_hint"),
+              prefix,
+              user,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_topics_posts")}`
+              ),
+            })
+          );
+        } else {
+          attrs.results.forEach((user) => {
+            content.push(
+              this.attach("search-menu-assistant-item", {
+                prefix,
+                user,
+                slug: `${prefix}@${user.username}`,
+              })
+            );
+          });
+        }
         break;
       default:
         suggestionShortcuts.forEach((item) => {
@@ -611,13 +646,14 @@ createWidget("search-menu-assistant-item", {
           username: attrs.user.username,
         }),
         h("span.username", formatUsername(attrs.user.username)),
+        attrs.suffix,
       ];
       content.push(h("span.search-item-user", userResult));
     } else {
       content.push(h("span.search-item-slug", attrs.label || attrs.slug));
-      if (attrs.extraHint) {
-        content.push(h("span.extra-hint", attrs.extraHint));
-      }
+    }
+    if (attrs.extraHint) {
+      content.push(h("span.extra-hint", attrs.extraHint));
     }
     return h("a.widget-link.search-link", { attributes }, content);
   },

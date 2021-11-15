@@ -4070,12 +4070,8 @@ da:
               %{example}
 
               Præfiksering af egenskabsnavne anbefales stærkt for at undgå konflikter med plugins og/eller kernen.
-          head_tag:
-            text: "</head>"
-            title: "HTML som vil blive sat ind før tagget </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML som vil blive sat ind før tagget </body>"
+            text: "Brødtekst"
           yaml:
             text: "YAML"
             title: "Definér tema indstillinger i YAML-format"
@@ -4580,7 +4576,7 @@ da:
             title: "Fremskridt med sletning af indlæg"
             description: "Sletter indlæg ..."
           confirmation:
-            cancel: "Afbryd"
+            cancel: "Annuller"
         merge:
           button: "Flet"
           prompt:
@@ -4591,7 +4587,7 @@ da:
               <p>Alle emner, indlæg, beskeder og andet indhold oprettet af <b>@%{username}</b> overføres.</p>
             target_username_placeholder: "Brugernavn på ny ejer"
             transfer_and_delete: "Overfør & Slet @%{username}"
-            cancel: "Afbryd"
+            cancel: "Annuller"
           progress:
             title: "Flet fremgang"
           confirmation:
@@ -4604,7 +4600,7 @@ da:
               <p>For at fortsætte skriv: <code>%{text}</code></p>
             text: "overfør @%{username} til @%{targetUsername}"
             transfer_and_delete: "Overfør & Slet @%{username}"
-            cancel: "Afbryd"
+            cancel: "Annuller"
         merging_user: "Fletter bruger..."
         merge_failed: "Der opstod en fejl under sammenfletning af brugere."
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
@@ -4710,7 +4706,7 @@ da:
         save: "Gem"
         edit: "Ret"
         delete: "Slet"
-        cancel: "Afbryd"
+        cancel: "Annuller"
         delete_confirm: "Er du sikker på at du vil slette det brugerfelt?"
         options: "Indstillinger"
         required:
@@ -4906,7 +4902,6 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
-        help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
         add: "Tilføj ny emoji"
         uploading: "Overfører…"
         name: "Navn"
@@ -4917,7 +4912,6 @@ da:
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
         confirm_delete: "Er du sikker på at du vil slette denne server?"
-        sample: "Tilføj denne HTML til dit site for at oprette og indlejre emner fra discourse. Erstat <b>REPLACE_ME</b> med den kanoniske URL for den side du indlejrer den på,"
         title: "Indlejring"
         host: "Tilladte servere"
         class_name: "Klasse Navn"

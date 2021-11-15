@@ -8,6 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | site-header", function (hooks) {
   setupRenderingTest(hooks);
@@ -21,7 +22,7 @@ discourseModule("Integration | Component | site-header", function (hooks) {
     },
 
     async test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count(".ring-backdrop"),
         1,
         "there is the first notification mask"

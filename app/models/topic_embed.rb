@@ -117,8 +117,8 @@ class TopicEmbed < ActiveRecord::Base
       follow_canonical: true,
     )
 
-    url = fd.resolve
-    return if url.blank?
+    uri = fd.resolve
+    return if uri.blank?
 
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -132,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(url, allow_redirections: :safe).read
+      html = uri.read(allow_redirections: :safe)
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
@@ -255,10 +255,6 @@ class TopicEmbed < ActiveRecord::Base
       body << TopicEmbed.imported_from_html(url)
       body
     end
-  end
-
-  def self.open(uri, **kwargs)
-    URI.open(uri, **kwargs)
   end
 end
 

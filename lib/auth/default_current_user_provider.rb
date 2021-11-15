@@ -137,8 +137,9 @@ class Auth::DefaultCurrentUserProvider
     # user api key handling
     if user_api_key
 
-      limiter_min = RateLimiter.new(nil, "user_api_min_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
-      limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
+      hashed_user_api_key = ApiKey.hash_key(user_api_key)
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{hashed_user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
         limiter_day.performed!
@@ -382,7 +383,7 @@ class Auth::DefaultCurrentUserProvider
 
     limit = GlobalSetting.max_admin_api_reqs_per_minute.to_i
     if GlobalSetting.respond_to?(:max_admin_api_reqs_per_key_per_minute)
-      Discourse.deprecate("DISCOURSE_MAX_ADMIN_API_REQS_PER_KEY_PER_MINUTE is deprecated. Please use DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE")
+      Discourse.deprecate("DISCOURSE_MAX_ADMIN_API_REQS_PER_KEY_PER_MINUTE is deprecated. Please use DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE", drop_from: '2.9.0')
       limit = [ GlobalSetting.max_admin_api_reqs_per_key_per_minute.to_i, limit].max
     end
 

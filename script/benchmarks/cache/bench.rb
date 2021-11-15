@@ -46,7 +46,7 @@ Benchmark.ips do |x|
 
   x.report("redis get string marshal") do |times|
     while times > 0
-      Marshal.load(Discourse.redis.get("test_keym"))
+      Marshal.load(Discourse.redis.get("test_keym")) # rubocop:disable Security/MarshalLoad
       times -= 1
     end
   end

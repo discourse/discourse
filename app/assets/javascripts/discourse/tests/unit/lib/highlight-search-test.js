@@ -4,21 +4,15 @@ import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | highlight-search", function () {
   test("highlighting text", function (assert) {
-    fixture().html(
-      `
+    fixture().innerHTML = `
       <p>This is some text to highlight</p>
-      `
-    );
+      `;
 
-    highlightSearch(fixture()[0], "some text");
+    highlightSearch(fixture(), "some text");
 
-    const terms = [];
+    const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
-    fixture(`.${CLASS_NAME}`).each((_, elem) => {
-      terms.push(elem.textContent);
-    });
-
-    assert.equal(
+    assert.strictEqual(
       terms.join(" "),
       "some text",
       "it should highlight the terms correctly"
@@ -26,21 +20,15 @@ module("Unit | Utility | highlight-search", function () {
   });
 
   test("highlighting unicode text", function (assert) {
-    fixture().html(
-      `
+    fixture().innerHTML = `
       <p>This is some தமிழ் & русский text to highlight</p>
-      `
-    );
+      `;
 
-    highlightSearch(fixture()[0], "தமிழ் & русский");
+    highlightSearch(fixture(), "தமிழ் & русский");
 
-    const terms = [];
+    const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
-    fixture(`.${CLASS_NAME}`).each((_, elem) => {
-      terms.push(elem.textContent);
-    });
-
-    assert.equal(
+    assert.strictEqual(
       terms.join(" "),
       "தமிழ் & русский",
       "it should highlight the terms correctly"

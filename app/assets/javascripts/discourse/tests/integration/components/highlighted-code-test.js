@@ -22,7 +22,7 @@ discourseModule("Integration | Component | highlighted-code", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         queryAll("code.ruby.hljs .hljs-function .hljs-keyword").text().trim(),
         "def"
       );
@@ -39,7 +39,10 @@ discourseModule("Integration | Component | highlighted-code", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("code").text().trim(), LONG_CODE_BLOCK.trim());
+      assert.strictEqual(
+        queryAll("code").text().trim(),
+        LONG_CODE_BLOCK.trim()
+      );
     },
   });
 });

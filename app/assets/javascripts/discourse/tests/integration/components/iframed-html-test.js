@@ -15,14 +15,14 @@ discourseModule("Integration | Component | iframed-html", function (hooks) {
 
     async test(assert) {
       const iframe = queryAll("iframe.this-is-an-iframe");
-      assert.equal(iframe.length, 1, "inserts an iframe");
+      assert.strictEqual(iframe.length, 1, "inserts an iframe");
 
       assert.ok(
         iframe[0].classList.contains("this-is-an-iframe"),
         "Adds className to the iframes classList"
       );
 
-      assert.equal(
+      assert.strictEqual(
         iframe[0].contentWindow.document.body.querySelectorAll("#find-me")
           .length,
         1,

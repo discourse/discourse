@@ -32,7 +32,7 @@ category vs tag: #bug vs #bug::tag
 uppercase hashtag works too #BUG, #BUG::tag`
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-preview:visible").html().trim(),
       `<p>this is a category hashtag <a href="/c/bugs" class="hashtag" tabindex=\"-1\">#<span>bug</span></a></p>
 <p>this is a tag hashtag <a href="/tag/monkey" class="hashtag" tabindex=\"-1\">#<span>monkey</span></a></p>

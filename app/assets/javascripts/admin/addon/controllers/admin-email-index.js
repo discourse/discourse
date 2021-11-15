@@ -19,7 +19,7 @@ export default Controller.extend({
     @method testEmailAddressChanged
   **/
   @observes("testEmailAddress")
-  testEmailAddressChanged: function () {
+  testEmailAddressChanged() {
     this.set("sentTestEmail", false);
   },
 
@@ -29,7 +29,7 @@ export default Controller.extend({
 
       @method sendTestEmail
     **/
-    sendTestEmail: function () {
+    sendTestEmail() {
       this.setProperties({
         sendingEmail: true,
         sentTestEmail: false,

@@ -191,19 +191,13 @@ describe TopicEmbed do
 
   describe '.find_remote' do
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-    let(:file) { StringIO.new }
-
-    before do
-      TopicEmbed.stubs(:open).returns file
-    end
 
     context ".title_scrub" do
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "<title>Through the Looking Glass - Classic Books</title><body>some content here</body>" }
 
       before do
-        file.stubs(:read).returns contents
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "doesn't scrub the title by default" do
@@ -225,8 +219,7 @@ describe TopicEmbed do
 
       before do
         SiteSetting.allowed_embed_classnames = 'emoji, foo'
-        file.stubs(:read).returns contents
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
         @response = TopicEmbed.find_remote(url)
       end
 
@@ -257,9 +250,7 @@ describe TopicEmbed do
       let(:contents) { '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>' }
 
       before(:each) do
-        file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "has no author tag" do
@@ -276,8 +267,7 @@ describe TopicEmbed do
 
       before(:each) do
         SiteSetting.allowed_embed_classnames = ''
-        file.stubs(:read).returns contents
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
         @response = TopicEmbed.find_remote(url)
       end
 
@@ -303,8 +293,7 @@ describe TopicEmbed do
       let(:contents) { "<title>سلام</title><body>این یک پاراگراف آزمون است.</body>" }
 
       before do
-        stub_request(:get, url)
-        file.stubs(:read).returns contents
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "doesn't throw an error" do
@@ -318,8 +307,7 @@ describe TopicEmbed do
       let(:contents) { "<title>Hello World!</title><body></body>" }
 
       before do
-        stub_request(:get, url)
-        file.stubs(:read).returns contents
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "doesn't throw an error" do
@@ -341,8 +329,7 @@ describe TopicEmbed do
       let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
 
       before do
-        file.stubs(:read).returns contents
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "handles mailto links" do
@@ -358,8 +345,7 @@ describe TopicEmbed do
       let(:contents) { '<p><a href="(http://foo.bar)">Baz</a></p>' }
 
       before do
-        file.stubs(:read).returns contents
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: contents)
       end
 
       it "doesn’t raise an exception" do
@@ -374,9 +360,9 @@ describe TopicEmbed do
       let(:canonical_content) {  "<title>Canonical</title><body></body>" }
 
       before do
-        file.stubs(:read).returns canonical_content
-        stub_request(:get, url)
+        stub_request(:get, url).to_return(status: 200, body: content)
         stub_request(:head, canonical_url)
+        stub_request(:get, canonical_url).to_return(status: 200, body: canonical_content)
       end
 
       it 'a' do

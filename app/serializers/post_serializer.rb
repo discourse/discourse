@@ -79,6 +79,7 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
+             :action_code_path,
              :notice,
              :last_wiki_edit,
              :locked,
@@ -284,7 +285,6 @@ class PostSerializer < BasicPostSerializer
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
-      summary[:hidden] = true if sym == :vote
 
       if scope.post_can_act?(object, sym, opts: { taken_actions: actions }, can_see_post: can_see_post)
         summary[:can_act] = true
@@ -442,6 +442,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code_who?
     include_action_code? && action_code_who.present?
+  end
+
+  def action_code_path
+    post_custom_fields["action_code_path"]
+  end
+
+  def include_action_code_path?
+    include_action_code? && action_code_path.present?
   end
 
   def notice

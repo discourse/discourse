@@ -270,7 +270,6 @@ en:
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
-    muted_invitee: "Sorry, that user muted you."
     muted_topic: "Sorry, that user muted this topic."
     receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
     sender_does_not_allow_pm: "Sorry, you do not allow that user to send you private messages."
@@ -1548,7 +1547,7 @@ en:
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
     summary_timeline_button: "Show a 'Summarize' button in the timeline"
 
-    enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
@@ -1950,7 +1949,7 @@ en:
     user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
+    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
@@ -2131,6 +2130,8 @@ en:
 
     disable_category_edit_notifications: "Disable category edit notifications on topics."
 
+    disable_tags_edit_notifications: "Disable tags edit notifications on topics."
+
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
@@ -2164,7 +2165,7 @@ en:
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
-    show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard. This feature is not supported on Internet Explorer."
+    show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
@@ -4810,10 +4811,10 @@ en:
             label: "Your community’s name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your community in one short sentence"
+            label: "Describe your community in one short sentence (used in search results and social media)"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
           short_site_description:
-            label: "Describe your community in few words"
+            label: "Describe your community in few words (used for the homepage title)"
             placeholder: "Best community ever"
 
       introduction:

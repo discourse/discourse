@@ -273,9 +273,7 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       this.set("loggingIn", true);
-      loginMethod
-        .doLogin({ signup: signup })
-        .catch(() => this.set("loggingIn", false));
+      loginMethod.doLogin({ signup }).catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {

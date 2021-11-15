@@ -35,10 +35,10 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(fromDateInput().value, "2019-01-29");
-        assert.equal(fromTimeInput().dataset.name, "14:45");
-        assert.equal(toDateInput().value, "");
-        assert.equal(toTimeInput().dataset.name, "--:--");
+        assert.strictEqual(fromDateInput().value, "2019-01-29");
+        assert.strictEqual(fromTimeInput().dataset.name, "14:45");
+        assert.strictEqual(toDateInput().value, "");
+        assert.strictEqual(toTimeInput().dataset.name, "--:--");
       },
     });
   }

@@ -473,6 +473,18 @@ describe PostDestroyer do
       expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
     end
 
+    it "skips post revise validations when post is marked for deletion by the author" do
+      SiteSetting.min_first_post_length = 100
+      post = create_post(raw: "this is a long post what passes the min_first_post_length validation " * 3)
+      PostDestroyer.new(post.user, post).destroy
+      post.reload
+      expect(post.errors).to be_blank
+      expect(post.revisions.count).to eq(1)
+      expect(post.raw).to eq(I18n.t("js.topic.deleted_by_author_simple"))
+      expect(post.user_deleted).to eq(true)
+      expect(post.topic.closed).to eq(true)
+    end
+
     context "as a moderator" do
       it "deletes the post" do
         author = post.user

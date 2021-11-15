@@ -38,6 +38,18 @@ import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
 
+// original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+// group 1 `image|foo=bar`
+// group 2 `690x220`
+// group 3 `, 50%`
+// group 4 '|bar=baz'
+// group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+// Notes:
+// Group 3 is optional. group 4 can match images with or without a markdown title.
+// All matches are whitespace tolerant as long it's still valid markdown.
+// If the image is inside a code block, we'll ignore it `(?!(.*`))`.
+const IMAGE_MARKDOWN_REGEX = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
 let uploadHandlers = [];
@@ -48,7 +60,14 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 export function cleanUpComposerUploadHandler() {
-  uploadHandlers = [];
+  // we cannot set this to uploadHandlers = [] because that messes with
+  // the references to the original array that the component has. this only
+  // really affects tests, but without doing this you could addComposerUploadHandler
+  // in a beforeEach function in a test but then it's not adding to the
+  // existing reference that the component has, because an earlier test ran
+  // cleanUpComposerUploadHandler and lost it. setting the length to 0 empties
+  // the array but keeps the reference
+  uploadHandlers.length = 0;
 }
 
 let uploadProcessorQueue = [];
@@ -499,41 +518,40 @@ export default Component.extend(ComposerUpload, {
     $input.stop(true).animate({ scrollTop }, 100, "linear");
   },
 
-  _renderUnseenMentions($preview, unseen) {
+  _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
-      linkSeenMentions($preview, this.siteSettings);
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+      linkSeenMentions(preview, this.siteSettings);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
     });
   },
 
-  _renderUnseenHashtags($preview) {
-    const unseen = linkSeenHashtags($preview);
+  _renderUnseenHashtags(preview) {
+    const unseen = linkSeenHashtags(preview);
     if (unseen.length > 0) {
       fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags($preview);
+        linkSeenHashtags(preview);
       });
     }
   },
 
-  _warnMentionedGroups($preview) {
+  _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
       let found = this.warnedGroupMentions || [];
-      $preview.find(".mention-group.notify").each((idx, e) => {
-        if (this._isInQuote(e)) {
+      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
+        if (this._isInQuote(mention)) {
           return;
         }
 
-        const $e = $(e);
-        let name = $e.data("name");
+        let name = mention.dataset.name;
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
-              name: name,
-              user_count: $e.data("mentionable-user-count"),
-              max_mentions: $e.data("max-mentions"),
+              name,
+              user_count: mention.dataset.mentionableUserCount,
+              max_mentions: mention.dataset.maxMentions,
             },
           ]);
           found.push(name);
@@ -544,7 +562,7 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
-  _warnCannotSeeMention($preview) {
+  _warnCannotSeeMention(preview) {
     const composerDraftKey = this.get("composer.draftKey");
 
     if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
@@ -554,9 +572,8 @@ export default Component.extend(ComposerUpload, {
     schedule("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
-      $preview.find(".mention.cannot-see").each((idx, e) => {
-        const $e = $(e);
-        let name = $e.data("name");
+      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
+        let name = mention.dataset.name;
 
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
@@ -565,8 +582,9 @@ export default Component.extend(ComposerUpload, {
             this,
             () => {
               if (
-                $preview.find('.mention.cannot-see[data-name="' + name + '"]')
-                  .length > 0
+                preview?.querySelectorAll(
+                  `.mention.cannot-see[data-name="${name}"]`
+                )?.length > 0
               ) {
                 this.cannotSeeMention([{ name }]);
                 found.push(name);
@@ -582,24 +600,15 @@ export default Component.extend(ComposerUpload, {
   },
 
   _registerImageScaleButtonClick($preview) {
-    // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-    // group 1 `image|foo=bar`
-    // group 2 `690x220`
-    // group 3 `, 50%`
-    // group 4 '|bar=baz'
-    // group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
-
-    // Notes:
-    // Group 3 is optional. group 4 can match images with or without a markdown title.
-    // All matches are whitespace tolerant as long it's still valid markdown.
-    // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
-      const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
+      const index = parseInt(
+        $(e.target).closest(".button-wrapper").attr("data-image-index"),
+        10
+      );
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
-        imageScaleRegex
+        IMAGE_MARKDOWN_REGEX
       );
 
       if (matchingPlaceholder) {
@@ -607,7 +616,7 @@ export default Component.extend(ComposerUpload, {
 
         if (match) {
           const replacement = match.replace(
-            imageScaleRegex,
+            IMAGE_MARKDOWN_REGEX,
             `![$1|$2, ${scale}%$4]($5)`
           );
 
@@ -615,7 +624,7 @@ export default Component.extend(ComposerUpload, {
             "composer:replace-text",
             matchingPlaceholder[index],
             replacement,
-            { regex: imageScaleRegex, index }
+            { regex: IMAGE_MARKDOWN_REGEX, index }
           );
         }
       }
@@ -623,6 +632,58 @@ export default Component.extend(ComposerUpload, {
       e.preventDefault();
       return;
     });
+  },
+
+  _registerImageAltTextButtonClick($preview) {
+    $preview
+      .off("click", ".alt-text-edit-btn")
+      .on("click", ".alt-text-edit-btn", (e) => {
+        const parentContainer = $(e.target).closest(
+          ".alt-text-readonly-container"
+        );
+        const altText = parentContainer.find(".alt-text");
+        const correspondingInput = parentContainer.find(".alt-text-input");
+
+        $(e.target).hide();
+        altText.hide();
+        correspondingInput.val(altText.text());
+        correspondingInput.show();
+        e.preventDefault();
+      });
+
+    $preview
+      .off("keypress", ".alt-text-input")
+      .on("keypress", ".alt-text-input", (e) => {
+        if (e.key === "[" || e.key === "]") {
+          e.preventDefault();
+        }
+
+        if (e.key === "Enter") {
+          const index = parseInt(
+            $(e.target).closest(".button-wrapper").attr("data-image-index"),
+            10
+          );
+          const matchingPlaceholder = this.get("composer.reply").match(
+            IMAGE_MARKDOWN_REGEX
+          );
+          const match = matchingPlaceholder[index];
+          const replacement = match.replace(
+            IMAGE_MARKDOWN_REGEX,
+            `![${$(e.target).val()}|$2$3$4]($5)`
+          );
+
+          this.appEvents.trigger("composer:replace-text", match, replacement);
+
+          const parentContainer = $(e.target).closest(
+            ".alt-text-readonly-container"
+          );
+          const altText = parentContainer.find(".alt-text");
+          const altTextButton = parentContainer.find(".alt-text-edit-btn");
+          altText.show();
+          altTextButton.show();
+          $(e.target).hide();
+        }
+      });
   },
 
   @on("willDestroyElement")
@@ -688,6 +749,14 @@ export default Component.extend(ComposerUpload, {
     }
   },
 
+  _findMatchingUploadHandler(fileName) {
+    return this.uploadHandlers.find((handler) => {
+      const ext = handler.extensions.join("|");
+      const regex = new RegExp(`\\.(${ext})$`, "i");
+      return regex.test(fileName);
+    });
+  },
+
   actions: {
     importQuote(toolbarEvent) {
       this.importQuote(toolbarEvent);
@@ -732,26 +801,29 @@ export default Component.extend(ComposerUpload, {
       });
     },
 
-    previewUpdated($preview) {
+    previewUpdated(preview) {
+      // cache jquery objects for functions still using jquery
+      const $preview = $(preview);
+
       // Paint mentions
-      const unseenMentions = linkSeenMentions($preview, this.siteSettings);
+      const unseenMentions = linkSeenMentions(preview, this.siteSettings);
       if (unseenMentions.length) {
         discourseDebounce(
           this,
           this._renderUnseenMentions,
-          $preview,
+          preview,
           unseenMentions,
           450
         );
       }
 
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
 
       // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags($preview);
+      const unseenHashtags = linkSeenHashtags(preview);
       if (unseenHashtags.length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }
 
       // Paint oneboxes
@@ -765,7 +837,7 @@ export default Component.extend(ComposerUpload, {
         }
 
         const paintedCount = loadOneboxes(
-          $preview[0],
+          preview,
           ajax,
           this.get("composer.topic.id"),
           this.get("composer.category.id"),
@@ -781,7 +853,7 @@ export default Component.extend(ComposerUpload, {
       discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);
+      resolveAllShortUrls(ajax, this.siteSettings, preview);
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
@@ -792,8 +864,9 @@ export default Component.extend(ComposerUpload, {
       }
 
       this._registerImageScaleButtonClick($preview);
+      this._registerImageAltTextButtonClick($preview);
 
-      this.trigger("previewRefreshed", $preview[0]);
+      this.trigger("previewRefreshed", preview);
       this.afterRefresh($preview);
     },
   },

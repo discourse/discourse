@@ -334,6 +334,6 @@ acceptance("Topic Timeline", function (needs) {
 
   test("Shows dates of first and last posts", async function (assert) {
     await visit("/t/deleted-topic-with-whisper-post/129");
-    assert.equal(query(".now-date").innerText, "Jul 2020");
+    assert.strictEqual(query(".now-date").innerText, "Jul 2020");
   });
 });

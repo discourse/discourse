@@ -351,7 +351,7 @@ export function setup(helper) {
 
     ruler.push("code", {
       tag: "code",
-      replace: function (state, tagInfo, content) {
+      replace(state, tagInfo, content) {
         let token;
         token = state.push("fence", "code", 0);
         token.content = content;

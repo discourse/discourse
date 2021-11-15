@@ -81,6 +81,7 @@ import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
@@ -93,7 +94,7 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.13.0";
+const PLUGIN_API_VERSION = "0.13.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -201,7 +202,7 @@ class PluginApi {
    *
    * ```
    * api.modifyClassStatic('controller:composer', {
-   *   superFinder: function() { return []; }
+   *   superFinder() { return []; }
    * });
    * ```
    **/
@@ -735,18 +736,33 @@ class PluginApi {
   }
 
   /**
-   * Register a small icon to be used for custom small post actions
+   * Register a button to display at the bottom of a topic
    *
    * ```javascript
    * api.registerTopicFooterButton({
-   *   key: "flag"
-   *   icon: "flag"
-   *   action: (context) => console.log(context.get("topic.id"))
+   *   id: "flag",
+   *   icon: "flag",
+   *   action(context) { console.log(context.get("topic.id")) },
    * });
    * ```
    **/
-  registerTopicFooterButton(action) {
-    registerTopicFooterButton(action);
+  registerTopicFooterButton(buttonOptions) {
+    registerTopicFooterButton(buttonOptions);
+  }
+
+  /**
+   * Register a dropdown to display at the bottom of a topic, desktop only
+   *
+   * ```javascript
+   * api.registerTopicFooterDropdown({
+   *   id: "my-button",
+   *   content() { return [{id: 1, name: "foo"}] },
+   *   action(itemId) { console.log(itemId) },
+   * });
+   * ```
+   **/
+  registerTopicFooterDropdown(dropdownOptions) {
+    registerTopicFooterDropdown(dropdownOptions);
   }
 
   /**
@@ -1020,7 +1036,7 @@ class PluginApi {
    * Example:
    *
    * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation: function (data, options) {
+   *    myFileTransformation(data, options) {
    *      let p = new Promise((resolve, reject) => {
    *        let file = data.files[data.index];
    *        console.log(`Transforming ${file.name}`);
@@ -1564,6 +1580,9 @@ function getPluginApi(version) {
       owner.registry.register("plugin-api:main", pluginApi, {
         instantiate: false,
       });
+    } else {
+      // If we are re-using an instance, make sure the container is correct
+      pluginApi.container = owner;
     }
 
     // We are recycling the compatible object, but let's update to the higher version

@@ -17,7 +17,7 @@ import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -65,7 +65,7 @@ export default Component.extend({
       _itsatrap: new ItsATrap(),
     });
 
-    this.registerOnCloseHandler(this._onModalClose.bind(this));
+    this.registerOnCloseHandler(this._onModalClose);
 
     this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
@@ -201,6 +201,7 @@ export default Component.extend({
       post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
+      topic_id: this.model.topicId,
     });
   },
 
@@ -238,12 +239,15 @@ export default Component.extend({
     }
   },
 
-  _onModalClose(initiatedByCloseButton) {
+  @bind
+  _onModalClose(closeOpts) {
     // we want to close without saving if the user already saved
     // manually or deleted the bookmark, as well as when the modal
     // is just closed with the X button
     this._closeWithoutSaving =
-      this._closeWithoutSaving || initiatedByCloseButton;
+      this._closeWithoutSaving ||
+      closeOpts.initiatedByCloseButton ||
+      closeOpts.initiatedByESC;
 
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));

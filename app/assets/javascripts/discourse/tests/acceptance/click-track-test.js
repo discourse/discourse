@@ -20,8 +20,11 @@ acceptance("Click Track", function (needs) {
     assert.ok(!exists(".user-card.show"), "card should not appear");
 
     await click('article[data-post-id="3651"] a.mention');
-    assert.equal(count(".user-card.show"), 1, "card appear");
-    assert.equal(currentURL(), "/t/internationalization-localization/280");
+    assert.strictEqual(count(".user-card.show"), 1, "card appear");
+    assert.strictEqual(
+      currentURL(),
+      "/t/internationalization-localization/280"
+    );
     assert.ok(!tracked);
   });
 });

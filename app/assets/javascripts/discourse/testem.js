@@ -27,7 +27,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
-  tap_failed_tests_only: true,
+  tap_failed_tests_only: process.env.CI,
   parallel: 1, // disable parallel tests for stability
   browser_start_timeout: 120,
   browser_args: {
@@ -41,7 +41,7 @@ module.exports = {
       "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags='--max_old_space_size=512 --max_semi_space_size=512'",
+      "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
     "Headless Firefox": ["--width=1440", "--height=900"],

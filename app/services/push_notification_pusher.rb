@@ -16,7 +16,7 @@ class PushNotificationPusher
         body: payload[:excerpt],
         badge: get_badge,
         icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
-        tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
+        tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
         url: payload[:post_url],
         hide_when_active: true

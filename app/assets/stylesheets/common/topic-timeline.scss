@@ -29,7 +29,7 @@
     }
     .topic-timeline {
       .timeline-footer-controls {
-        display: inherit;
+        display: flex;
       }
     }
     .timeline-controls {
@@ -119,17 +119,19 @@
         bottom: 20px;
         left: 10px;
 
-        button,
-        .btn-group {
-          margin-bottom: 0;
-          margin-right: 15px;
-          vertical-align: top;
+        .topic-notifications-button {
+          margin-right: 0.5em;
         }
 
-        .widget-component-connector {
-          vertical-align: top;
+        .jump-to-post {
+          margin-bottom: 0.5em;
+        }
+
+        .topic-admin-menu-button {
+          display: flex;
         }
       }
+
       .timeline-scrollarea-wrapper {
         display: table-cell;
         padding-right: 1.5em;
@@ -140,7 +142,7 @@
         border-right-style: solid;
         border-right-width: 1px;
         max-width: 120px;
-        float: right;
+        margin-top: 2em;
 
         .timeline-scroller {
           position: relative;

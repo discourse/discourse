@@ -5,6 +5,7 @@
 # version: 0.4
 # authors: Régis Hanol
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-details
+# transpile_js: true
 
 enabled_site_setting :details_enabled
 hide_plugin if self.respond_to?(:hide_plugin)

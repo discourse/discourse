@@ -1107,7 +1107,7 @@ describe Search do
     it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
       data = Search.prepare_data(sentence).split(' ')
-      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
     end
 
     it 'splits for indexing and filter out stop words' do
@@ -1119,12 +1119,6 @@ describe Search do
     it 'splits English / Traditional Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_TW'
       data = Search.prepare_data(sentence_t).split(' ')
-      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
-    end
-
-    it 'splits for indexing and filter out stop words' do
-      SiteSetting.default_locale = 'zh_TW'
-      data = Search.prepare_data(sentence_t, :index).split(' ')
       expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 

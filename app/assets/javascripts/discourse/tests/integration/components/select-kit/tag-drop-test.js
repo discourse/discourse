@@ -75,12 +75,12 @@ discourseModule(
 
         const content = this.subject.displayedContent();
 
-        assert.equal(
+        assert.strictEqual(
           content[0].name,
           I18n.t("tagging.selector_no_tags"),
           "it has the translated label for no-tags"
         );
-        assert.equal(
+        assert.strictEqual(
           content[1].name,
           I18n.t("tagging.selector_all_tags"),
           "it has the correct label for all-tags"

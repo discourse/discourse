@@ -40,3 +40,4 @@ nb_NO:
             every_three_months: "Hver tredje måned"
             every_six_months: "Hver sjette måned"
             every_year: "Hvert år"
+      default_title: "%{site_name} Hendelse"

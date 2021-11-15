@@ -53,6 +53,19 @@ describe CategoryList do
       expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
     end
 
+    it "doesn't show muted topics" do
+      cat = Fabricate(:category_with_definition) # public category
+      topic = Fabricate(:topic, category: cat)
+
+      CategoryFeaturedTopic.feature_topics
+
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(1)
+
+      TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:muted])
+
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(0)
+    end
+
   end
 
   context "when mute_all_categories_by_default enabled" do

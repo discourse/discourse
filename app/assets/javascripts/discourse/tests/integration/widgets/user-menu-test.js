@@ -37,7 +37,7 @@ discourseModule(
       async test(assert) {
         const $links = queryAll(".quick-access-panel li a");
 
-        assert.equal($links.length, 6);
+        assert.strictEqual($links.length, 6);
         assert.ok($links[1].href.includes("/t/a-slug/123"));
 
         assert.ok(
@@ -46,7 +46,7 @@ discourseModule(
           )
         );
 
-        assert.equal(
+        assert.strictEqual(
           $links[2].text,
           `aquaman ${I18n.t("notifications.liked_consolidated_description", {
             count: 5,

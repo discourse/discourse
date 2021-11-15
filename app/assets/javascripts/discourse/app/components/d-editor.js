@@ -319,7 +319,7 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     if (isTesting()) {
-      this.element.addEventListener("paste", this.paste.bind(this));
+      this.element.addEventListener("paste", this.paste);
     }
   },
 
@@ -341,6 +341,8 @@ export default Component.extend(TextareaTextManipulation, {
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
     }
+
+    this._cachedCookFunction = null;
   },
 
   @discourseComputed()
@@ -394,8 +396,8 @@ export default Component.extend(TextareaTextManipulation, {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
 
-        linkSeenHashtags($(cookedElement));
-        linkSeenMentions($(cookedElement), this.siteSettings);
+        linkSeenHashtags(cookedElement);
+        linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,
@@ -427,7 +429,7 @@ export default Component.extend(TextareaTextManipulation, {
           }
 
           if (this.previewUpdated) {
-            this.previewUpdated($(preview));
+            this.previewUpdated(preview);
           }
         });
       });

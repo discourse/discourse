@@ -62,12 +62,12 @@
                     recipients=model.targetRecipients
                     hasGroups=model.hasTargetGroups
                     focusTarget=focusTarget
-                    class="users-input"
+                    class=(concat "users-input" (if showWarning " can-warn"))
                   }}
                   {{#if showWarning}}
                     <label class="add-warning">
                       {{input type="checkbox" checked=model.isWarning}}
-                      {{i18n "composer.add_warning"}}
+                      <span>{{i18n "composer.add_warning"}}</span>
                     </label>
                   {{/if}}
                 </div>
@@ -99,7 +99,6 @@
                     options=(hash
                       categoryId=model.categoryId
                       minimum=model.minimumRequiredTags
-                      requiredTagGroups=model.requiredTagGroups
                     )
                   }}
                   {{popup-input-tip validation=tagValidation}}

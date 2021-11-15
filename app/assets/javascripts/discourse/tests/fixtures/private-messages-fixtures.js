@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 export default {
   "/topics/private-messages/eviltrout.json": {
     users: [

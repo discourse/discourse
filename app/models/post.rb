@@ -84,9 +84,13 @@ class Post < ActiveRecord::Base
 
   register_custom_field_type(NOTICE, :json)
 
-  scope :private_posts_for_user, ->(user) {
-    where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
-  }
+  scope :private_posts_for_user, ->(user) do
+    where(
+      "topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
+      user_id: user.id
+    )
+  end
 
   scope :by_newest, -> { order('created_at DESC, id DESC') }
   scope :by_post_number, -> { order('post_number ASC') }

@@ -1142,9 +1142,9 @@ sv:
         tags: "Taggar"
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
-        read_more: "Vill du läsa mer? Bläddra genom andra meddelanden i <a href='%{basePath}/u/%{username}/message'>personliga meddelanden</a>."
+        read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
         read_more_group_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra meddelanden i {groupLink}"
-        read_more_personal_pm_MF: "Där { UNREAD, plural, =0 {} one { är <a href='{basePath}/u/{username}/messages/unread'># oläst</a> } other { är <a href='{basePath}/u/{username}/messages/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {är } other{}} <a href='{basePath}/u/{username}/messages/new'># nya</a> meddelanden} } kvar, eller bläddra genom andra <a href='{basePath}/u/{username}/message'>personliga meddelanden</a>"
+        read_more_personal_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/personal/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/personal/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>"
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -2034,6 +2034,8 @@ sv:
           desc: "Svara utan att ändra senaste svarsdatum"
       reload: "Ladda om"
       ignore: "Ignorera"
+      image_alt_text:
+        aria_label: Alternativ text för bild
     notifications:
       tooltip:
         regular:
@@ -3622,6 +3624,8 @@ sv:
       no_read_topics_title: "Du har inte läst några ämnen än"
       no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
     no_group_messages_title: "Inga gruppmeddelanden hittades"
+    fullscreen_table:
+      expand_btn: "Expandera tabell"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4221,11 +4225,11 @@ sv:
 
               Användning av prefix för egenskapsnamnen rekommenderas starkt för att undvika konflikter mellan tillägg och/eller grundläggande program.
           head_tag:
-            text: "</head>"
-            title: "HTML som kommer att sättas in före </head> taggen"
+            text: "Huvud"
+            title: "HTML som kommer att infogas före huvudtaggen"
           body_tag:
-            text: "</body>"
-            title: "HTML som kommer att infogas in före taggen </body>"
+            text: "Huvuddel"
+            title: "HTML som kommer att infogas innan kroppstaggen"
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
@@ -5077,7 +5081,7 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
-        help: "Lägg till en ny emoji för andra att använda. (TIPS: dra och släpp flera filer på en och samma gång)"
+        help: "Lägg till nya emoji som kommer att vara tillgängliga för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn."
         add: "Lägg till ny emoji"
         uploading: "Laddar upp..."
         name: "Namn"
@@ -5088,7 +5092,7 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Använd följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den kanoniska URL-en för sidan som du bäddar in den i."
+        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
         class_name: "Klassnamn"

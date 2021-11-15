@@ -25,5 +25,5 @@ end:/<\/script>/,returnEnd:!0,subLanguage:["javascript","handlebars","xml"]}},{
 className:"tag",begin:/<>|<\/>/},{className:"tag",
 begin:a(/</,n(a(t,s(/\/>/,/>/,/\s/)))),end:/\/?>/,contains:[{className:"name",
 begin:t,relevance:0,starts:m}]},{className:"tag",begin:a(/<\//,n(a(t,/>/))),
-contains:[{className:"name",begin:t,relevance:0},{begin:/>/,relevance:0}]}]}}
-})());
+contains:[{className:"name",begin:t,relevance:0},{begin:/>/,relevance:0,
+endsParent:!0}]}]}}})());

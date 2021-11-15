@@ -5,7 +5,7 @@ function handleDescriptor(target, property, desc, fn, params = []) {
     enumerable: desc.enumerable,
     configurable: desc.configurable,
     writable: desc.writable,
-    initializer: function () {
+    initializer() {
       return fn(...params);
     },
   };

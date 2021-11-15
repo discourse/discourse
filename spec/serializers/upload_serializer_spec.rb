@@ -7,7 +7,7 @@ RSpec.describe UploadSerializer do
   let(:subject) { UploadSerializer.new(upload, root: false) }
 
   it 'should render without errors' do
-    json_data = JSON.load(subject.to_json)
+    json_data = JSON.parse(subject.to_json)
 
     expect(json_data['id']).to eql upload.id
     expect(json_data['width']).to eql upload.width

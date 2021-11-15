@@ -54,7 +54,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who"]
+    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who", "action_code_path"]
   end
 
   def self.post_custom_fields_allowlisters
@@ -65,8 +65,8 @@ class TopicView
     post_custom_fields_allowlisters << block
   end
 
-  def self.allowed_post_custom_fields(user)
-    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
+  def self.allowed_post_custom_fields(user, topic)
+    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
     wpcf.flatten.uniq
   end
 
@@ -116,7 +116,7 @@ class TopicView
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (allowed_fields = TopicView.allowed_post_custom_fields(@user)).present?
+      if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
@@ -388,7 +388,7 @@ class TopicView
 
   def bookmarks
     @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
-      :id, :post_id, :for_topic, :reminder_at, :name, :auto_delete_preference
+      :id, :post_id, "topics.id AS topic_id", :for_topic, :reminder_at, :name, :auto_delete_preference
     )
   end
 

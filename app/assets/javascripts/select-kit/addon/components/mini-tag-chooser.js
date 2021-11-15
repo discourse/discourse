@@ -23,10 +23,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
     termMatchesForbidden: false,
     categoryId: null,
     everyTag: false,
-    none: "tagging.choose_for_topic",
     closeOnChange: false,
-    maximum: "maximumSelectedTags",
-    minimum: "minimumSelectedTags",
+    maximum: "maxTagsPerTopic",
     autoInsertNoneItem: false,
   },
 
@@ -38,31 +36,20 @@ export default MultiSelectComponent.extend(TagsMixin, {
     return "tag-row";
   },
 
-  allowAnyTag: or("allowCreate", "site.can_create_tag"),
-
-  maximumSelectedTags: computed(function () {
-    return parseInt(
-      this.options.limit ||
-        this.selectKit.options.maximum ||
-        this.maxTagsPerTopic,
-      10
-    );
-  }),
-
-  minimumSelectedTags: computed(function () {
-    if (
-      this.selectKit.options.minimum ||
-      this.selectKit.options.requiredTagGroups
-    ) {
-      const minimum = parseInt(this.selectKit.options.minimum, 10);
-      if (minimum > 0) {
-        return this.defaultItem(
-          null,
-          I18n.t("select_kit.min_content_not_reached", { count: minimum })
-        );
-      }
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum > 0) {
+      return this.defaultItem(
+        null,
+        I18n.t("tagging.choose_for_topic_required", {
+          count: this.selectKit.options.minimum,
+        })
+      );
+    } else {
+      return this.defaultItem(null, I18n.t("tagging.choose_for_topic"));
     }
-  }),
+  },
+
+  allowAnyTag: or("allowCreate", "site.can_create_tag"),
 
   caretIcon: computed("value.[]", "content.[]", function () {
     const maximum = this.selectKit.options.maximum;

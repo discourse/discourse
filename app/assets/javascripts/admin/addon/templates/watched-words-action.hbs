@@ -9,7 +9,11 @@
     icon="download"
     label="admin.watched_words.download"}}
 
-  {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
+  {{watched-word-uploader
+    id="watched-word-uploader"
+    uploading=uploading
+    actionKey=actionNameKey
+    done=(action "uploadComplete")}}
 
   {{d-button
     class="watched-word-test"

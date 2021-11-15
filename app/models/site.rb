@@ -32,7 +32,7 @@ class Site
   end
 
   def user_fields
-    UserField.order(:position).all
+    UserField.includes(:user_field_options).order(:position).all
   end
 
   def self.categories_cache_key
@@ -138,12 +138,11 @@ class Site
   end
 
   def self.json_for(guardian)
-
     if guardian.anonymous? && SiteSetting.login_required
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
-        user_fields: UserField.all.map do |userfield|
+        user_fields: UserField.includes(:user_field_options).order(:position).all.map do |userfield|
           UserFieldSerializer.new(userfield, root: false, scope: guardian)
         end,
         auth_providers: Discourse.enabled_auth_providers.map do |provider|
@@ -162,7 +161,6 @@ class Site
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
       end
-
     end
 
     site = Site.new(guardian)

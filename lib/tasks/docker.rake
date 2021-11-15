@@ -19,6 +19,7 @@
 # => JS_TIMEOUT                set timeout for qunit tests in ms
 # => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
 # => EMBER_CLI                 set to 1 to run JS tests using the Ember CLI
+# => EMBER_CLI_BROWSERS        comma separated list of browsers to test against. Options are Chrome, Firefox, and Headless Firefox.
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -86,7 +87,7 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.{js,es6}"')
+          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"')
         end
 
         unless ENV["SKIP_PLUGINS"]
@@ -225,8 +226,9 @@ task 'docker:test' do
 
         if ENV["EMBER_CLI"]
           Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir
+            browsers = ENV["EMBER_CLI_BROWSERS"] || 'Chrome'
             @good &&= run_or_fail("yarn install")
-            @good &&= run_or_fail("yarn ember test")
+            @good &&= run_or_fail("yarn ember test --launch #{browsers}")
           end
         end
       end

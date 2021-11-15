@@ -9,7 +9,7 @@ const ScreenedEmail = EmberObject.extend({
     return I18n.t("admin.logs.screened_actions." + action);
   },
 
-  clearBlock: function () {
+  clearBlock() {
     return ajax("/admin/logs/screened_emails/" + this.id, {
       type: "DELETE",
     });
@@ -17,7 +17,7 @@ const ScreenedEmail = EmberObject.extend({
 });
 
 ScreenedEmail.reopenClass({
-  findAll: function () {
+  findAll() {
     return ajax("/admin/logs/screened_emails.json").then(function (
       screened_emails
     ) {

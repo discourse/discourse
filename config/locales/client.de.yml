@@ -1143,9 +1143,9 @@ de:
         tags: "Schlagwörter"
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
-        read_more: "Möchtest Du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/message'>persönliche Nachrichten</a>."
+        read_more: "Möchtest Du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/messages'>persönliche Nachrichten</a>."
         read_more_group_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten} } verbleibend, oder durchsuche andere Nachrichten in {groupLink}"
-        read_more_personal_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten} } verbleibend oder durchsuche andere <a href='{basePath}/u/{username}/message'>persönliche Nachrichten</a>"
+        read_more_personal_pm_MF: "Dort { UNREAD, plural, =0 {} one { ist <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } other { sind <a href='{basePath}/u/{username}/messages/unread'># ungelesen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {sind } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten} } verbleibend oder durchsuche andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -3622,6 +3622,8 @@ de:
       no_read_topics_title: "Du hast noch keine Themen gelesen"
       no_read_topics_body: "Sobald Du mit dem Lesen von Diskussionen beginnst, siehst Du hier eine Liste. Zum Lesen suche nach Themen, die Du in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> oder suche nach dem Stichwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
+    fullscreen_table:
+      expand_btn: "Tabelle erweitern"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4221,11 +4223,11 @@ de:
 
               Eigenschaften sollten mit einem Präfix versehen werden, um Konflikte mit Discourse und/oder Plug-ins zu vermeiden.
           head_tag:
-            text: "</head>"
-            title: "HTML, das vor dem </head>-Tag eingefügt wird"
+            text: "Kopf"
+            title: "HTML, das vor dem Head-Tag eingefügt wird"
           body_tag:
-            text: "</body>"
-            title: "HTML, das vor dem </body>-Tag eingefügt wird"
+            text: "Body"
+            title: "HTML, das vor dem Body-Tag eingefügt wird"
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"
@@ -5077,7 +5079,6 @@ de:
           grant_existing_holders: Gewähre weiteren Abzeichen an bestehende Abzeicheninhaber
       emoji:
         title: "Emoji"
-        help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (TIPP: Per Drag-and-drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
         add: "Neues Emoji hinzufügen"
         uploading: "Wird hochgeladen …"
         name: "Name"
@@ -5088,7 +5089,6 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
-        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du ihn einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"

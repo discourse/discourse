@@ -1988,12 +1988,6 @@ sr:
             text: "Header"
           footer:
             text: "Footer"
-          head_tag:
-            text: "</head>"
-            title: "HTML koji će biti umetnut pre </head> oznake"
-          body_tag:
-            text: "</body>"
-            title: "HTML koji će biti umetnut pre </body oznake"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"
@@ -2445,7 +2439,6 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Dodajte nove Emoji-e koji će biti dostupni svima. (Savet: povuci i ispusti više datoteka odjednom)"
         add: "Dodaj Novi Emoji"
         uploading: "Učitavanje..."
         name: "Ime"

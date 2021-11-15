@@ -13,24 +13,20 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
+import bootbox from "bootbox";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
-export default Mixin.create({
+export default Mixin.create(UppyS3Multipart, {
   uploading: false,
   uploadProgress: 0,
   _uppyInstance: null,
   autoStartUploads: true,
+  _inProgressUploads: 0,
   id: null,
-
-  // TODO (martin): currently used for backups to turn on auto upload and PUT/XML requests
-  // and for emojis to do sequential uploads, when we get to replacing those
-  // with uppy make sure this is used when initializing uppy
-  uploadOptions() {
-    return {};
-  },
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -137,31 +133,57 @@ export default Mixin.create({
       this.set("uploadProgress", progress);
     });
 
+    this._uppyInstance.on("upload", (data) => {
+      this._inProgressUploads += data.fileIDs.length;
+    });
+
     this._uppyInstance.on("upload-success", (file, response) => {
+      this._inProgressUploads--;
+
       if (this.usingS3Uploads) {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
           .then((completeResponse) => {
             this.uploadDone(completeResponse);
-            this._reset();
+
+            if (this._inProgressUploads === 0) {
+              this._reset();
+            }
           })
           .catch((errResponse) => {
             displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            this._reset();
+            if (this._inProgressUploads === 0) {
+              this._reset();
+            }
           });
       } else {
         this.uploadDone(response.body);
-        this._reset();
+        if (this._inProgressUploads === 0) {
+          this._reset();
+        }
       }
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
-      displayErrorForUpload(response, this.siteSettings, file.name);
+      displayErrorForUpload(response || error, this.siteSettings, file.name);
       this._reset();
     });
 
-    if (this.siteSettings.enable_direct_s3_uploads) {
-      this._useS3Uploads();
+    // TODO (martin) preventDirectS3Uploads is necessary because some of
+    // the current upload mixin components, for example the emoji uploader,
+    // send the upload to custom endpoints that do fancy things in the rails
+    // controller with the upload or create additional data or records. we
+    // need a nice way to do this on complete-external-upload before we can
+    // allow these other uploaders to go direct to S3.
+    if (
+      this.siteSettings.enable_direct_s3_uploads &&
+      !this.preventDirectS3Uploads
+    ) {
+      if (this.useMultipartUploadsIfAvailable) {
+        this._useS3MultipartUploads();
+      } else {
+        this._useS3Uploads();
+      }
     } else {
       this._useXHRUploads();
     }
@@ -264,5 +286,6 @@ export default Mixin.create({
       processing: false,
       uploadProgress: 0,
     });
+    this.fileInputEl.value = "";
   },
 });

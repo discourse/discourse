@@ -8,7 +8,7 @@ export default buildCategoryPanel("topic-template", {
   showInsertLinkButton: false,
 
   @observes("activeTab")
-  _activeTabChanged: function () {
+  _activeTabChanged() {
     if (this.activeTab) {
       schedule("afterRender", () =>
         this.element.querySelector(".d-editor-input").focus()

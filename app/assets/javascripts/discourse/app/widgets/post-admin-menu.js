@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 
 createWidget(
   "post-admin-menu-button",
-  jQuery.extend(ButtonClass, { tagName: "li.btn" })
+  Object.assign(ButtonClass, { tagName: "li.btn" })
 );
 
 createWidget("post-admin-menu-button", {
@@ -37,7 +37,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (attrs.canPermanentlyDelete || attrs.canPermanentlyDeleteTopic) {
+  if (attrs.canPermanentlyDelete) {
     contents.push({
       icon: "trash-alt",
       className: "popup-menu-button permanently-delete",

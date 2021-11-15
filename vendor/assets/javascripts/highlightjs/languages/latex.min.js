@@ -24,7 +24,7 @@ end:/(.|\r?\n)/,excludeBegin:!0,excludeEnd:!0,endsParent:!0}),b=e=>({
 className:"string",end:"(?=\\\\end\\{"+e+"\\})"}),p=(e="string")=>({relevance:0,
 begin:/\{/,starts:{endsParent:!0,contains:[{className:e,end:/(?=\})/,
 endsParent:!0,contains:[{begin:/\{/,end:/\}/,relevance:0,contains:["self"]}]}]}
-});return{name:"LaTeX",aliases:["TeX"],
+});return{name:"LaTeX",aliases:["tex"],
 contains:[...["verb","lstinline"].map((e=>d(e,{contains:[m()]}))),d("mint",o(c,{
 contains:[m()]})),d("mintinline",o(c,{contains:[p(),m()]})),d("url",{
 contains:[p("link"),p("link")]}),d("hyperref",{contains:[p("link")]

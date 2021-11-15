@@ -2,6 +2,7 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import bootbox from "bootbox";
 
 export function showUnassignedComponentWarning(theme, callback) {
   bootbox.confirm(
@@ -39,8 +40,8 @@ export default Route.extend({
     });
 
     controller.setProperties({
-      model: model,
-      parentController: parentController,
+      model,
+      parentController,
       allThemes: parentController.get("model"),
       colorSchemeId: model.get("color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),

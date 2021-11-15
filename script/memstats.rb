@@ -131,7 +131,7 @@ def format_number(n)
 end
 
 def get_commandline(pid)
-  commandline = IO.read("/proc/#{pid}/cmdline").split("\0")
+  commandline = File.read("/proc/#{pid}/cmdline").split("\0")
   if commandline.first =~ /java$/ then
     loop { break if commandline.shift == "-jar" }
     return "[java] #{commandline.shift}"
