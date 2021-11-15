@@ -4,14 +4,14 @@ import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
-import { clearRewrites, setURLContainer } from "discourse/lib/url";
+import { clearRewrites } from "discourse/lib/url";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
@@ -251,8 +251,6 @@ export function acceptance(name, optionsOrCallback) {
         });
       }
 
-      setURLContainer(this.container);
-      setDefaultOwner(this.container);
       if (!this.owner) {
         this.owner = this.container;
       }
@@ -291,8 +289,6 @@ export function acceptance(name, optionsOrCallback) {
       clearNavItems();
       setTopicList(null);
       _clearSnapshots();
-      setURLContainer(null);
-      setDefaultOwner(null);
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
