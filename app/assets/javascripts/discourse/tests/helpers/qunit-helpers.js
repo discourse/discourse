@@ -302,15 +302,12 @@ export function acceptance(name, optionsOrCallback) {
       resetLastEditNotificationClick();
       clearAuthMethods();
 
-      app._runInitializer("instanceInitializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
+      app._runInitializer("instanceInitializers", (_, initializer) => {
+        initializer.teardown?.();
       });
-      app._runInitializer("initializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
+
+      app._runInitializer("initializers", (_, initializer) => {
+        initializer.teardown?.(this.container);
       });
 
       if (LEGACY_ENV) {

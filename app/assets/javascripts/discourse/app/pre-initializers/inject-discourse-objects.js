@@ -14,7 +14,7 @@ import User from "discourse/models/user";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
-export function registerObjects(container, app) {
+export function registerObjects(app) {
   if (app.__registeredObjects__) {
     // don't run registrations twice.
     return;
@@ -36,7 +36,7 @@ export default {
   after: "discourse-bootstrap",
 
   initialize(container, app) {
-    registerObjects(container, app);
+    registerObjects(app);
 
     let siteSettings = container.lookup("site-settings:main");
 

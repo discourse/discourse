@@ -12,7 +12,7 @@ import {
   currentSettings,
   resetSettings,
 } from "discourse/tests/helpers/site-settings";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
@@ -25,7 +25,6 @@ import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { clearAppEventsCache } from "discourse/services/app-events";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
@@ -84,7 +83,7 @@ function createApplication(config, settings) {
   }
 
   app.SiteSettings = settings;
-  registerObjects(container, app);
+  registerObjects(app);
   return app;
 }
 
@@ -314,13 +313,6 @@ function setupTestsCommon(application, container, config) {
     // Destroy any modals
     $(".modal-backdrop").remove();
     flushMap();
-
-    if (isLegacyEmber()) {
-      // ensures any event not removed is not leaking between tests
-      // most likely in initializers, other places (controller, component...)
-      // should be fixed in code
-      clearAppEventsCache(getOwner(this));
-    }
 
     MessageBus.unsubscribe("*");
     server = null;
