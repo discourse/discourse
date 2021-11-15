@@ -120,9 +120,6 @@ export default Component.extend(KeyEnterEscape, {
 
   @bind
   performDragHandler() {
-    const divResizingEvent = new Event("div-resizing");
-    this.element.dispatchEvent(divResizingEvent);
-
     this.appEvents.trigger("composer:div-resizing");
     this.element.classList.add("clear-transitions");
     const currentMousePos = mouseYPos(event);
