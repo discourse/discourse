@@ -9,7 +9,7 @@ module Discourse
     module VERSION #:nodoc:
       MAJOR = 2
       MINOR = 7
-      TINY  = 9
+      TINY  = 10
       PRE   = nil
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
