@@ -75,7 +75,7 @@ export default {
       siteSettings,
       session,
       currentUser,
-      app.appEvents
+      container.lookup("service:app-events")
     );
     app.register("service:screen-track", screenTrack, { instantiate: false });
 
