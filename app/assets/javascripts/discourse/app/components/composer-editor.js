@@ -224,8 +224,9 @@ export default Component.extend(ComposerUpload, {
 
     // ensures textarea scroll position is correct
     schedule("afterRender", () => {
-      const $input = $(this.element.querySelector(".d-editor-input"));
-      $input.blur().focus();
+      const input = this.element.querySelector(".d-editor-input");
+      input?.blur();
+      input?.focus();
     });
   },
 
