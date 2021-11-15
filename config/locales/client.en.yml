@@ -4183,6 +4183,8 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            uploads:
+              create: Upload a new image.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
