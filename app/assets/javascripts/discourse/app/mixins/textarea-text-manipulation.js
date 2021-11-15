@@ -7,6 +7,7 @@ import {
   determinePostReplaceSelection,
   safariHacksDisabled,
 } from "discourse/lib/utilities";
+import { bind } from "discourse-common/utils/decorators";
 import { next, schedule } from "@ember/runloop";
 
 const isInside = (text, regex) => {

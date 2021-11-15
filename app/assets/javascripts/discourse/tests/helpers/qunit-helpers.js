@@ -485,7 +485,7 @@ export function exists(selector) {
 export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .map((c) => c.func(...args));
+    .forEach((c) => c.func(...args));
 }
 
 export async function selectText(selector, endOffset = null) {
