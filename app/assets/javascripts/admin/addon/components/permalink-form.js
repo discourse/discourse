@@ -36,7 +36,7 @@ export default Component.extend({
   @action
   submitFormOnEnter(event) {
     if (event.key === "Enter") {
-      this.submit();
+      this.onSubmit();
     }
   },
 
