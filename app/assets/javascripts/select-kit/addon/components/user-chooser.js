@@ -27,6 +27,7 @@ export default MultiSelectComponent.extend({
     allowEmails: false,
     groupMembersOf: undefined,
     excludeCurrentUser: false,
+    customOptions: {},
   },
 
   content: computed("value.[]", function () {
@@ -70,7 +71,7 @@ export default MultiSelectComponent.extend({
       (obj, option) => {
         return {
           ...obj,
-          [option]: options[option],
+          [option]: options.customOptions[option],
         };
       },
       {}
