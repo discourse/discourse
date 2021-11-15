@@ -74,8 +74,11 @@ export default Component.extend(KeyEnterEscape, {
   },
 
   debounceMove() {
-    const h = $("#reply-control:not(.saving)").height() || 0;
-    this.movePanels(h);
+    let height = 0;
+    if (!this.element.classList.contains("saving")) {
+      height = this.element.offsetHeight;
+    }
+    this.movePanels(height);
   },
 
   keyUp() {
@@ -125,17 +128,16 @@ export default Component.extend(KeyEnterEscape, {
     const currentMousePos = mouseYPos(event);
     let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
 
-    const winHeight = window.innerHeight;
-    size = Math.min(size, winHeight - headerHeight());
+    size = Math.min(size, window.innerHeight - headerHeight());
     this.movePanels(size);
-    $(this.element).height(size);
+    this.element.style.height = size ? `${size}px` : "";
   },
 
   @bind
   startDragHandler(event) {
     event.preventDefault();
 
-    this.origComposerSize = $(this.element).height();
+    this.origComposerSize = this.element.offsetHeight;
     this.lastMousePos = mouseYPos(event);
 
     DRAG_EVENTS.forEach((dragEvent) => {
