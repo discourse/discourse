@@ -1885,6 +1885,7 @@ en:
     enable_mentions: "Allow users to mention other users."
     here_mention: "Name used for @here mention. Must not be an existent username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
+    min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 

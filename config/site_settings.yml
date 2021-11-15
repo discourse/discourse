@@ -877,6 +877,9 @@ posting:
     default: "here"
     validator: "NotUsernameValidator"
   max_here_mentioned: 10
+  min_trust_level_for_here_mention:
+    default: "2"
+    enum: "TrustLevelAndStaffSetting"
   title_max_word_length:
     default: 30
     locale_default:

@@ -608,7 +608,7 @@ class PostAlerter
     end
 
     # @here can be a user mention and then this feature is disabled
-    here = mentions.include?(SiteSetting.here_mention) && !User.where(username_lower: SiteSetting.here_mention).exists?
+    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(post.user).can_mention_here?
 
     [groups, users, here]
   end
