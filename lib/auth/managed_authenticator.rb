@@ -122,7 +122,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     retrieve_avatar(user, association.info["image"])
     retrieve_profile(user, association.info)
 
-    auth.apply_associated_attributes!
+    auth.apply_associated_attributes! if auth.respond_to?(:apply_associated_attributes!)
   end
 
   def find_user_by_email(auth_token)

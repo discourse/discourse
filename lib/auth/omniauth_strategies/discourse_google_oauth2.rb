@@ -23,13 +23,18 @@ class ::OmniAuth::Strategies::DiscourseGoogleOauth2 < OmniAuth::Strategies::Goog
           userKey: uid
         }
         params[:pageToken] = page_token if page_token
-        params[:domain] = options[:hd] if options[:hd]
 
-        response = access_token.get(groups_url, params: params).parsed
-        groups.push(*response['groups'])
+        response = access_token.get(groups_url, params: params, raise_errors: false)
 
-        page_token = response['nextPageToken']
-        break if page_token.nil?
+        if response.status == 200
+          response = response.parsed
+          groups.push(*response['groups'])
+          page_token = response['nextPageToken']
+          break if page_token.nil?
+        else
+          Rails.logger.warn("[Discourse Google OAuth2] failed to retrieve groups for #{uid}")
+          break
+        end
       end
 
       groups

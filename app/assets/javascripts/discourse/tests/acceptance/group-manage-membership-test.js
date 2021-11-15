@@ -36,12 +36,6 @@ acceptance("Managing Group Membership", function (needs) {
       "it should display automatic membership label"
     );
 
-    assert.ok(
-      count('label[for="automatic_membership_associated_groups"]'),
-      1,
-      "it should display associated groups automatic membership label"
-    );
-
     assert.equal(
       count(".groups-form-primary-group"),
       1,
@@ -131,7 +125,7 @@ acceptance("Managing Group Membership", function (needs) {
     assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
   });
 
-  test("As an admin on a site that cant associate groups", async function (assert) {
+  test("As an admin on a site that can't associate groups", async function (assert) {
     let site = Site.current();
     site.set("can_associate_groups", false);
     updateCurrentUser({ can_create_group: true });

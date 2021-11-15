@@ -23,7 +23,7 @@ export default Component.extend({
       { name: 4, value: 4 },
     ];
 
-    if (this.site.can_associate_groups) {
+    if (this.showAssociatedGroups) {
       this.loadAssociatedGroups();
     }
   },
