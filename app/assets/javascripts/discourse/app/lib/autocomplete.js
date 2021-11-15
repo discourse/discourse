@@ -447,12 +447,6 @@ export default function (options) {
     closeAutocomplete();
   });
 
-  window.addEventListener("click", closeAutocomplete);
-  this[0].addEventListener("click", closeAutocomplete);
-  this[0].addEventListener("paste", handlePaste);
-  this[0].addEventListener("keyup", handleKeyUp);
-  this[0].addEventListener("keydown", handleKeyDown);
-
   function checkTriggerRule(opts) {
     return options.triggerRule ? options.triggerRule(me[0], opts) : true;
   }
@@ -601,7 +595,9 @@ export default function (options) {
             // We're cancelling it, really.
             return true;
           }
+
           e.stopImmediatePropagation();
+          e.preventDefault();
           return false;
         case keys.upArrow:
           selectedOption = selectedOption - 1;
@@ -652,6 +648,12 @@ export default function (options) {
       }
     }
   }
+
+  window.addEventListener("click", closeAutocomplete);
+  this[0].addEventListener("click", closeAutocomplete);
+  this[0].addEventListener("paste", handlePaste);
+  this[0].addEventListener("keyup", handleKeyUp);
+  this[0].addEventListener("keydown", handleKeyDown);
 
   return this;
 }
