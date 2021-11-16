@@ -46,8 +46,6 @@ const keys = {
 let inputTimeout;
 
 export default function (options) {
-  const autocompletePlugin = this;
-
   if (this.length === 0) {
     return;
   }
@@ -55,13 +53,11 @@ export default function (options) {
   if (options === "destroy" || options.updateData) {
     cancel(inputTimeout);
 
-    $(this)
-      .off("keyup.autocomplete")
-      .off("keydown.autocomplete")
-      .off("paste.autocomplete")
-      .off("click.autocomplete");
-
-    $(window).off("click.autocomplete");
+    this[0].removeEventListener("keydown", handleKeyDown);
+    this[0].removeEventListener("keyup", handleKeyUp);
+    this[0].removeEventListener("paste", handlePaste);
+    this[0].removeEventListener("click", closeAutocomplete);
+    window.removeEventListener("click", closeAutocomplete);
 
     if (options === "destroy") {
       return;
@@ -116,8 +112,12 @@ export default function (options) {
   const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
+  function handlePaste() {
+    later(() => me.trigger("keydown"), 50);
+  }
+
   function closeAutocomplete() {
-    _autoCompletePopper && _autoCompletePopper.destroy();
+    _autoCompletePopper?.destroy();
 
     if (div) {
       div.hide().remove();
@@ -276,7 +276,7 @@ export default function (options) {
     this.val("");
     completeStart = 0;
     wrap.click(function () {
-      autocompletePlugin.focus();
+      this.focus();
       return true;
     });
   }
@@ -447,24 +447,17 @@ export default function (options) {
     closeAutocomplete();
   });
 
-  $(window).on("click.autocomplete", () => closeAutocomplete());
-  $(this).on("click.autocomplete", () => closeAutocomplete());
-
-  $(this).on("paste.autocomplete", () => {
-    later(() => me.trigger("keydown"), 50);
-  });
-
   function checkTriggerRule(opts) {
     return options.triggerRule ? options.triggerRule(me[0], opts) : true;
   }
 
-  $(this).on("keyup.autocomplete", function (e) {
+  function handleKeyUp(e) {
     if (options.debounced) {
       discourseDebounce(this, performAutocomplete, e, INPUT_DELAY);
     } else {
       performAutocomplete(e);
     }
-  });
+  }
 
   function performAutocomplete(e) {
     if ([keys.esc, keys.enter].indexOf(e.which) !== -1) {
@@ -503,7 +496,7 @@ export default function (options) {
     }
   }
 
-  $(this).on("keydown.autocomplete", function (e) {
+  function handleKeyDown(e) {
     let c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
     let cp;
 
@@ -602,7 +595,9 @@ export default function (options) {
             // We're cancelling it, really.
             return true;
           }
+
           e.stopImmediatePropagation();
+          e.preventDefault();
           return false;
         case keys.upArrow:
           selectedOption = selectedOption - 1;
@@ -652,7 +647,13 @@ export default function (options) {
           return true;
       }
     }
-  });
+  }
+
+  window.addEventListener("click", closeAutocomplete);
+  this[0].addEventListener("click", closeAutocomplete);
+  this[0].addEventListener("paste", handlePaste);
+  this[0].addEventListener("keyup", handleKeyUp);
+  this[0].addEventListener("keydown", handleKeyDown);
 
   return this;
 }
