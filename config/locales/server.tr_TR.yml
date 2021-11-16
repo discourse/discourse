@@ -3409,9 +3409,9 @@ tr_TR:
     png_to_jpg_conversion_failure_message: "PNG'den JPG'ye dönüştürülürken bir hata oluştu."
     optimize_failure_message: "Yüklenen imaj optimize edilirken bir hata oluştu."
     download_failure: "Dosyayı harici sağlayıcıdan indirme işlemi başarısız oldu."
-    create_mutlipart_failure: "Harici depoda çok parçalı yükleme oluşturulamadı."
-    abort_mutlipart_failure: "Harici depoda çok parçalı yükleme iptal edilmedi."
-    complete_mutlipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
+    create_multipart_failure: "Harici depoda çok parçalı yükleme oluşturulamadı."
+    abort_multipart_failure: "Harici depoda çok parçalı yükleme iptal edilmedi."
+    complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."

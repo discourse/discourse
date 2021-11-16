@@ -326,14 +326,14 @@ class UploadsController < ApplicationController
       )
     rescue Aws::S3::Errors::ServiceError => err
       return render_json_error(
-        debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
+        debug_upload_error(err, "upload.create_multipart_failure", additional_detail: err.message),
         status: 422
       )
     rescue BackupRestore::BackupStore::BackupFileExists
       return render_json_error(I18n.t("backup.file_exists"), status: 422)
     rescue BackupRestore::BackupStore::StorageError => err
       return render_json_error(
-        debug_upload_error(err, "upload.create_mutlipart_failure", additional_detail: err.message),
+        debug_upload_error(err, "upload.create_multipart_failure", additional_detail: err.message),
         status: 422
       )
     end
@@ -422,7 +422,7 @@ class UploadsController < ApplicationController
       )
     rescue Aws::S3::Errors::ServiceError => err
       return render_json_error(
-        debug_upload_error(err, "upload.abort_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
+        debug_upload_error(err, "upload.abort_multipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
         status: 422
       )
     end
@@ -474,7 +474,7 @@ class UploadsController < ApplicationController
       )
     rescue Aws::S3::Errors::ServiceError => err
       return render_json_error(
-        debug_upload_error(err, "upload.complete_mutlipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
+        debug_upload_error(err, "upload.complete_multipart_failure", additional_detail: "external upload stub id: #{external_upload_stub.id}"),
         status: 422
       )
     end
