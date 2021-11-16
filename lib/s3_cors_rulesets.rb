@@ -49,19 +49,25 @@ class S3CorsRulesets
     s3_helper = S3Helper.build_from_config(
       s3_client: s3_client, use_db_s3_config: use_db_s3_config
     )
-    puts "Attempting to apply ASSETS S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
+    if !Rails.env.test?
+      puts "Attempting to apply ASSETS S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
+    end
     assets_rules_status = s3_helper.ensure_cors!([S3CorsRulesets::ASSETS]) ? RULE_STATUS_APPLIED : RULE_STATUS_EXISTED
 
     if SiteSetting.enable_backups? && SiteSetting.backup_location == BackupLocationSiteSetting::S3
       backup_s3_helper = S3Helper.build_from_config(
         s3_client: s3_client, use_db_s3_config: use_db_s3_config, for_backup: true
       )
-      puts "Attempting to apply BACKUP_DIRECT_UPLOAD S3 CORS ruleset in bucket #{backup_s3_helper.s3_bucket_name}."
+      if !Rails.env.test?
+        puts "Attempting to apply BACKUP_DIRECT_UPLOAD S3 CORS ruleset in bucket #{backup_s3_helper.s3_bucket_name}."
+      end
       backup_rules_status = backup_s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD]) ? RULE_STATUS_APPLIED : RULE_STATUS_EXISTED
     end
 
     if SiteSetting.enable_direct_s3_uploads
-      puts "Attempting to apply DIRECT_UPLOAD S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
+      if !Rails.env.test?
+        puts "Attempting to apply DIRECT_UPLOAD S3 CORS ruleset in bucket #{s3_helper.s3_bucket_name}."
+      end
       direct_upload_rules_status = s3_helper.ensure_cors!([S3CorsRulesets::DIRECT_UPLOAD]) ? RULE_STATUS_APPLIED : RULE_STATUS_EXISTED
     end
 
