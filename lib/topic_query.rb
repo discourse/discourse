@@ -822,7 +822,7 @@ class TopicQuery
   def remove_muted(list, user, options)
     list = remove_muted_topics(list, user) unless options && options[:state] == "muted"
     list = remove_muted_categories(list, user, exclude: options[:category])
-    remove_muted_tags(list, user, options)
+    TopicQuery.remove_muted_tags(list, user, options)
   end
 
   def remove_muted_topics(list, user)
@@ -867,7 +867,7 @@ class TopicQuery
     list
   end
 
-  def remove_muted_tags(list, user, opts = {})
+  def self.remove_muted_tags(list, user, opts = {})
     if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end

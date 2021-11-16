@@ -1,3 +1,4 @@
+import { bind } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import toMarkdown from "discourse/lib/to-markdown";
 import { isTesting } from "discourse-common/config/environment";
@@ -6,7 +7,6 @@ import {
   determinePostReplaceSelection,
   safariHacksDisabled,
 } from "discourse/lib/utilities";
-import { bind } from "discourse-common/utils/decorators";
 import { next, schedule } from "@ember/runloop";
 
 const isInside = (text, regex) => {

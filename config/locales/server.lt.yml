@@ -1946,9 +1946,9 @@ lt:
     png_to_jpg_conversion_failure_message: "Konvertuojant iš PNG į JPG įvyko klaida."
     optimize_failure_message: "Optimizuojant įkeltą vaizdą įvyko klaida."
     download_failure: "Nepavyko atsisiųsti failo iš išorinio teikėjo."
-    create_mutlipart_failure: "Nepavyko sukurti kelių dalių įkėlimo išorinėje parduotuvėje."
-    abort_mutlipart_failure: "Nepavyko nutraukti kelių dalių įkėlimo išorinėje parduotuvėje."
-    complete_mutlipart_failure: "Nepavyko užbaigti kelių dalių įkėlimo išorinėje parduotuvėje."
+    create_multipart_failure: "Nepavyko sukurti kelių dalių įkėlimo išorinėje parduotuvėje."
+    abort_multipart_failure: "Nepavyko nutraukti kelių dalių įkėlimo išorinėje parduotuvėje."
+    complete_multipart_failure: "Nepavyko užbaigti kelių dalių įkėlimo išorinėje parduotuvėje."
     attachments:
       too_large: "Atsiprašome, failas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB)."
       too_large_humanized: "Atsiprašome, failas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size}KB)."
