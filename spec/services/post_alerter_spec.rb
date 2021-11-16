@@ -1381,7 +1381,9 @@ describe PostAlerter do
       TopicAllowedGroup.create(group: other_allowed_group, topic: topic)
       post = Fabricate(:post, topic: topic)
       group.update!(smtp_enabled: false)
+
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to include(other_allowed_group.email_username)
       expect(email.to).to contain_exactly(topic.reload.topic_allowed_users.order(:created_at).first.user.email)

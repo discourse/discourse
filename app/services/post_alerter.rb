@@ -643,8 +643,9 @@ class PostAlerter
     if post.topic.allowed_groups.count == 1
       return post.topic.first_smtp_enabled_group
     end
+
     group = Group.find_by_email(post.topic.incoming_email.first.to_addresses)
-    if group.blank? || !group.smtp_enabled
+    if !group&.smtp_enabled
       return post.topic.first_smtp_enabled_group
     end
     group
