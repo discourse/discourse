@@ -1,5 +1,4 @@
 import Mixin from "@ember/object/mixin";
-import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
@@ -124,7 +123,7 @@ export default Mixin.create(UppyS3Multipart, {
         // for a single file, we want to override file meta with the
         // data property (which may be computed), to override any keys
         // specified by this.data (such as name)
-        if (this.data && !isEmpty(this.data) && fileCount === 1) {
+        if (this.data && Object.keys(this.data).length && fileCount === 1) {
           deepMerge(Object.values(files)[0].meta, this.data);
         }
       },
