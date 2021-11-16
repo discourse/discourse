@@ -558,6 +558,8 @@ export default function (options) {
     if (e.which === keys.esc) {
       if (div !== null) {
         closeAutocomplete();
+        e.preventDefault();
+        e.stopImmediatePropagation();
         return false;
       }
       return true;
@@ -605,6 +607,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          e.preventDefault();
           return false;
         case keys.downArrow:
           total = autocompleteOptions.length;
@@ -616,6 +619,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          e.preventDefault();
           return false;
         case keys.backSpace:
           autocompleteOptions = null;
