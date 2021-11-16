@@ -122,6 +122,7 @@ ol.category-breadcrumb {
     line-height: $line-height-medium;
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
+    font-size: var(--font-up-1);
     a.title {
       color: var(--primary);
       padding: 0.5em 0 1.2em 0;
@@ -162,7 +163,7 @@ ol.category-breadcrumb {
 
   .topic-item-stats {
     position: relative;
-    margin-top: 0.25em;
+    margin-top: 0.5em;
     z-index: z("base");
     .category,
     .num,
@@ -229,7 +230,6 @@ ol.category-breadcrumb {
   }
 
   .posts {
-    width: 10%;
     vertical-align: top;
   }
 
@@ -434,9 +434,12 @@ td .main-link {
   }
 }
 .topic-list {
-  .num.posts-map button {
+  .num.posts-map {
     font-size: $font-up-2;
     padding: 0;
+    button {
+      padding: 0;
+    }
   }
   .num.activity a {
     padding: 0;
