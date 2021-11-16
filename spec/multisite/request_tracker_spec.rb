@@ -17,14 +17,6 @@ describe "RequestTracker in multisite", type: :multisite do
     RateLimiter.clear_all_global!
   end
 
-  def create_limiter(user_id: nil, trust_level: nil, env:)
-    RequestsRateLimiter.new(
-      user_id: user_id,
-      trust_level: trust_level,
-      request: Rack::Request.new(env)
-    )
-  end
-
   def call(env, &block)
     Middleware::RequestTracker.new(block).call(env)
   end
