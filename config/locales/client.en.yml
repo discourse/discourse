@@ -4184,7 +4184,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
             uploads:
-              create: Upload a new image.
+              create: Upload a new file.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
