@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import AwsS3Multipart from "@uppy/aws-s3-multipart";
@@ -19,10 +20,10 @@ export default Mixin.create({
       limit: 10,
       retryDelays: this.retryDelays,
 
-      createMultipartUpload: this._createMultipartUpload.bind(this),
-      prepareUploadParts: this._prepareUploadParts.bind(this),
-      completeMultipartUpload: this._completeMultipartUpload.bind(this),
-      abortMultipartUpload: this._abortMultipartUpload.bind(this),
+      createMultipartUpload: this._createMultipartUpload,
+      prepareUploadParts: this._prepareUploadParts,
+      completeMultipartUpload: this._completeMultipartUpload,
+      abortMultipartUpload: this._abortMultipartUpload,
 
       // we will need a listParts function at some point when we want to
       // resume multipart uploads; this is used by uppy to figure out
@@ -30,6 +31,7 @@ export default Mixin.create({
     });
   },
 
+  @bind
   _createMultipartUpload(file) {
     this._uppyInstance.emit("create-multipart", file.id);
 
@@ -63,6 +65,7 @@ export default Mixin.create({
     });
   },
 
+  @bind
   _prepareUploadParts(file, partData) {
     if (file.preparePartsRetryAttempts === undefined) {
       file.preparePartsRetryAttempts = 0;
@@ -113,6 +116,7 @@ export default Mixin.create({
       });
   },
 
+  @bind
   _completeMultipartUpload(file, data) {
     this._uppyInstance.emit("complete-multipart", file.id);
     const parts = data.parts.map((part) => {
@@ -134,6 +138,7 @@ export default Mixin.create({
     });
   },
 
+  @bind
   _abortMultipartUpload(file, { key, uploadId }) {
     // if the user cancels the upload before the key and uploadId
     // are stored from the createMultipartUpload response then they
