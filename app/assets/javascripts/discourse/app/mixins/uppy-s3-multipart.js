@@ -3,7 +3,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import AwsS3Multipart from "@uppy/aws-s3-multipart";
-const retryDelays = [0, 1000, 3000, 5000];
+const RETRY_DELAYS = [0, 1000, 3000, 5000];
 
 export default Mixin.create({
   _useS3MultipartUploads() {
@@ -18,7 +18,7 @@ export default Mixin.create({
       // chunk size via getChunkSize(file), so we may want to increase
       // the chunk size for larger files
       limit: 10,
-      retryDelays,
+      retryDelays: RETRY_DELAYS,
 
       createMultipartUpload: this._createMultipartUpload,
       prepareUploadParts: this._prepareUploadParts,
@@ -98,10 +98,10 @@ export default Mixin.create({
         // if we exceed the attempts then there is no way that uppy will
         // retry the upload once again, so in that case the alert can
         // be safely shown to the user that their upload has failed.
-        if (file.preparePartsRetryAttempts < retryDelays.length) {
+        if (file.preparePartsRetryAttempts < RETRY_DELAYS.length) {
           file.preparePartsRetryAttempts += 1;
           const attemptsLeft =
-            retryDelays.length - file.preparePartsRetryAttempts + 1;
+            RETRY_DELAYS.length - file.preparePartsRetryAttempts + 1;
           this._consoleDebug(
             `[uppy] Fetching a batch of upload part URLs for ${file.id} failed with status ${status}, retrying ${attemptsLeft} more times...`
           );
