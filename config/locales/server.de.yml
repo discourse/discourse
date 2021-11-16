@@ -1950,7 +1950,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
-    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Blockinhalt in die Zwischenablage des Benutzers zu kopieren. Diese Funktion wird im Internet Explorer nicht unterstützt."
+    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Inhalt des Blocks in die Zwischenablage des Nutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
     embed_topics_list: "HTML-Einbettung von Themenlisten unterstützen"
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
@@ -4367,8 +4367,10 @@ de:
             label: "Name deiner Community"
             placeholder: "Erikas Stammtisch"
           site_description:
+            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
           short_site_description:
+            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
             placeholder: "Beste Community aller Zeiten"
       introduction:
         title: "Einführung"

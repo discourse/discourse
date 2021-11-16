@@ -1886,7 +1886,6 @@ ko:
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
-    show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립 보드에 복사합니다. 이 기능은 Internet Explorer에서 지원되지 않습니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
     embed_set_canonical_url: "포함된 글의 표준 URL을 포함된 콘텐츠의 URL로 설정합니다."

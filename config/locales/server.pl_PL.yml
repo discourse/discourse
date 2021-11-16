@@ -2052,7 +2052,7 @@ pl_PL:
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     highlighted_languages: "Dołączone reguły podświetlania składni. (Ostrzeżenie: dołączenie zbyt wielu języków może wpłynąć na wydajność) Zobacz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>, aby zobaczyć wersję demonstracyjną"
-    show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku bezpośrednio do schowka użytkownika. Ta funkcja nie jest obsługiwana w przeglądarce Internet Explorer."
+    show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku do schowka użytkownika."
     embed_any_origin: "Zezwalaj na osadzanie zawartości niezależnie od jej pochodzenia. Jest to wymagane w przypadku aplikacji mobilnych ze statycznym kodem HTML."
     embed_topics_list: "Obsługa osadzania list tematów w formacie HTML"
     embed_set_canonical_url: "Ustaw kanoniczny adres URL dla osadzonych tematów w adresie osadzonej zawartości."
@@ -4519,8 +4519,10 @@ pl_PL:
             label: "Twoja pełna nazwa"
             placeholder: "Hangout Jane"
           site_description:
+            label: "Opisz swoją społeczność w jednym krótkim zdaniu (używanym w wynikach wyszukiwania i mediach społecznościowych)"
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
           short_site_description:
+            label: "Opisz swoją społeczność kilkoma słowami (używane do tytułu strony głównej)"
             placeholder: "Najlepsza społeczność kiedykolwiek"
       introduction:
         title: "Wprowadzenie"
@@ -4682,6 +4684,8 @@ pl_PL:
     missing_version: "Musisz wprowadzić parametr wersji"
     conflict: "Wystąpił konflikt aktualizacji, który uniemożliwia Ci to działanie."
     reasons:
+      post_count: "Kilka pierwszych postów każdego użytkownika musi zostać zatwierdzonych przez personel. Zobacz %{link}."
+      trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz %{link}."
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
       fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
       auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"

@@ -1890,7 +1890,6 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
-    show_copy_button_on_codeblocks: "向代码块添加按钮以将块内容复制到用户的剪贴板。Internet Explorer 不支持此功能。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
     embed_topics_list: "支持话题列表的 HTML 嵌入"
     embed_set_canonical_url: "将嵌入话题的规范 URL 设置为嵌入内容的 URL。"

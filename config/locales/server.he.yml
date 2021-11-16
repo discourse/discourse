@@ -2027,7 +2027,7 @@ he:
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "הוספת כפתור למקטעי קוד כדי להעתיק את תוכן המקטע ללוח הגזירים של המשתמש. תכונה זו אינה נתמכת ב־Internet Explorer."
+    show_copy_button_on_codeblocks: "הוספת כפתור למקטעי קוד כדי להעתיק את תוכני המקטע ללוח הגזירים של המשתמש."
     embed_any_origin: "לאפשר תוכן עם יכולת הטמעה ללא תלות במקור. נחוץ ליישומונים לנייד עם HTML סטטי."
     embed_topics_list: "תמיכה בהטמעת רשימות נושאים ב־HTML"
     embed_set_canonical_url: "הגדרת הכתובת הקנונית לנושאים מוטמעים כדי להטמיע את כתובת התוכן."
