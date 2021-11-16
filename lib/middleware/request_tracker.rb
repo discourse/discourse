@@ -137,7 +137,7 @@ class Middleware::RequestTracker
     h
   end
 
-  def log_request_info(env, result, info, request)
+  def log_request_info(env, result, info, request = nil)
     # we got to skip this on error ... its just logging
     data = self.class.get_data(env, result, info, request) rescue nil
 
