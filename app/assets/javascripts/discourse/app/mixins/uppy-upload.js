@@ -123,7 +123,7 @@ export default Mixin.create(UppyS3Multipart, {
         // for a single file, we want to override file meta with the
         // data property (which may be computed), to override any keys
         // specified by this.data (such as name)
-        if (this.data && Object.keys(this.data).length && fileCount === 1) {
+        if (fileCount === 1) {
           deepMerge(Object.values(files)[0].meta, this.data);
         }
       },
