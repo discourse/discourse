@@ -206,6 +206,7 @@ class BulkImport::Base
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
+    @highest_category_position = Category.unscoped.maximum(:position) || 0
     @category_names = Category.unscoped.pluck(:parent_category_id, :name).map { |pci, name| "#{pci}-#{name}" }.to_set
 
     puts "Loading topics indexes..."
@@ -519,6 +520,12 @@ class BulkImport::Base
   end
 
   def process_category(category)
+    if category[:existing_id].present?
+      @categories[category[:imported_id].to_i] = category[:existing_id]
+      category[:skip] = true
+      return category
+    end
+
     category[:id] ||= @last_category_id += 1
     @categories[category[:imported_id].to_i] ||= category[:id]
     category[:name] = category[:name][0...50].scrub.strip
@@ -529,6 +536,13 @@ class BulkImport::Base
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
     category[:created_at] ||= NOW
     category[:updated_at] ||= category[:created_at]
+
+    if category[:position]
+      @highest_category_position = category[:position] if category[:position] > @highest_category_position
+    else
+      category[:position] = @highest_category_position += 1
+    end
+
     category
   end
 

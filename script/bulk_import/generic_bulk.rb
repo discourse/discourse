@@ -22,10 +22,46 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    import_categories
     import_users
     import_user_emails
     import_single_sign_on_records
     import_topics
+    import_posts
+  end
+
+  def import_categories
+    puts "Importing categories..."
+
+    categories = @db.execute(<<~SQL)
+      WITH RECURSIVE tree(id, parent_category_id, name, description, color, text_color, read_restricted, slug,
+                          old_relative_url, existing_id, level, rowid) AS (
+          SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
+                 c.old_relative_url, c.existing_id, 0 AS level, c.ROWID
+          FROM categories c
+          WHERE c.parent_category_id IS NULL
+          UNION
+          SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
+                 c.old_relative_url, c.existing_id, tree.level + 1 AS level, c.ROWID
+          FROM categories c,
+               tree
+          WHERE c.parent_category_id = tree.id
+      )
+      SELECT *
+      FROM tree
+      ORDER BY level, rowid
+    SQL
+
+    create_categories(categories) do |row|
+      {
+        imported_id: row["id"],
+        existing_id: row["existing_id"],
+        name: row["name"],
+        description: row["description"],
+        parent_category_id: row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
+        slug: row["slug"]
+      }
+    end
   end
 
   def import_users
@@ -94,7 +130,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_topics
     puts "Importing topics..."
 
-    topics = @db.execute(<<~SQL, last_row_id: @last_imported_topic_id)
+    last_imported_topic_id = @last_imported_topic_id
+    topics = @db.execute(<<~SQL, last_row_id: last_imported_topic_id)
       SELECT ROWID, *
       FROM topics
       WHERE ROWID > :last_row_id
@@ -104,10 +141,55 @@ class BulkImport::Generic < BulkImport::Base
     create_topics(topics) do |row|
       {
         imported_id: row["id"],
-        title: normalize_text(row["title"]),
+        title: row["title"],
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        category_id: 1
+        category_id: category_id_from_imported_id(row["category_id"])
+      }
+    end
+
+    puts "Importing first posts..."
+    topics = @db.execute(<<~SQL, last_row_id: last_imported_topic_id)
+      SELECT ROWID, *
+      FROM topics
+      WHERE ROWID > :last_row_id
+      ORDER BY ROWID
+    SQL
+
+    create_posts(topics) do |row|
+      next if row["raw"].blank?
+      next unless topic_id = topic_id_from_imported_id(row["id"])
+
+      {
+        imported_id: row["id"],
+        topic_id: topic_id,
+        user_id: user_id_from_imported_id(row["user_id"]),
+        created_at: to_datetime(row["created_at"]),
+        raw: row["raw"]
+      }
+    end
+  end
+
+  def import_posts
+    puts "Importing posts..."
+
+    posts = @db.execute(<<~SQL, last_row_id: @last_imported_post_id)
+      SELECT ROWID, *
+      FROM posts
+      WHERE ROWID > :last_row_id
+      ORDER BY topic_id, post_number
+    SQL
+
+    create_posts(posts) do |row|
+      next if row["raw"].blank?
+      next unless topic_id = topic_id_from_imported_id(row["id"])
+
+      {
+        imported_id: row["id"],
+        topic_id: topic_id,
+        user_id: user_id_from_imported_id(row["user_id"]),
+        created_at: to_datetime(row["created_at"]),
+        raw: row["raw"]
       }
     end
   end
