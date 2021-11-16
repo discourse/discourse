@@ -1,6 +1,8 @@
 import { bind } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
 import toMarkdown from "discourse/lib/to-markdown";
+import { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import {
   clipboardHelpers,
@@ -286,6 +288,29 @@ export default Mixin.create({
 
     if (handled || (canUpload && !plainText)) {
       e.preventDefault();
+    }
+  },
+
+  @action
+  emojiSelected(code) {
+    let selected = this._getSelected();
+    const captures = selected.pre.match(/\B:(\w*)$/);
+
+    if (isEmpty(captures)) {
+      if (selected.pre.match(/\S$/)) {
+        this._addText(selected, ` :${code}:`);
+      } else {
+        this._addText(selected, `:${code}:`);
+      }
+    } else {
+      let numOfRemovedChars = selected.pre.length - captures[1].length;
+      selected.pre = selected.pre.slice(
+        0,
+        selected.pre.length - captures[1].length
+      );
+      selected.start -= numOfRemovedChars;
+      selected.end -= numOfRemovedChars;
+      this._addText(selected, `${code}:`);
     }
   },
 });
