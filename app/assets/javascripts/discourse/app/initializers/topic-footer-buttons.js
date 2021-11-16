@@ -23,7 +23,9 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        const controller = showModal("share-topic");
+        const controller = showModal("share-topic", {
+          model: this.topic.category,
+        });
         controller.setProperties({
           allowInvites: this.canInviteTo && !this.inviteDisabled,
           topic: this.topic,

@@ -48,5 +48,18 @@ export default {
       slug: "testing",
       can_edit: true
     }
-  }
+  },
+  "/c/2481/show.json": {
+    category: {
+      id: 2481,
+      name: "restricted-group",
+      color: "e9dd00",
+      text_color: "000000",
+      slug: "restricted-group",
+      read_restricted: true,
+      permission: null,
+      group_permissions: [{ permission_type: 1, group_name: "moderators" }],
+    }
+  },
+
 };
