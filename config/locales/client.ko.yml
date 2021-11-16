@@ -313,7 +313,7 @@ ko:
     saved: "저장되었습니다!"
     upload: "업로드"
     uploading: "업로드 중..."
-    uploading_filename: "업로드 중: %{filename}..."
+    uploading_filename: "업르도 중: %{filename}..."
     processing_filename: "처리 중: %{filename}..."
     clipboard: "클립보드"
     uploaded: "업로드 되었습니다!"
