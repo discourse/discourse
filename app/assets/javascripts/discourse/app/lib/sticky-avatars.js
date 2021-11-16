@@ -11,7 +11,7 @@ export default class StickyAvatars {
   prevOffset = -1;
 
   static init(container) {
-    new this(container).init();
+    return new this(container).init();
   }
 
   constructor(container) {
@@ -29,6 +29,12 @@ export default class StickyAvatars {
     appEvents.on("page:topic-loaded", this._initIntersectionObserver);
 
     addWidgetCleanCallback("post-stream", this._clearIntersectionObserver);
+
+    return this;
+  }
+
+  destroy() {
+    this.container = null;
   }
 
   @bind

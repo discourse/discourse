@@ -5,6 +5,10 @@ export default {
   after: "inject-objects",
 
   initialize(container) {
-    StickyAvatars.init(container);
+    this._stickyAvatar = StickyAvatars.init(container);
+  },
+
+  teardown() {
+    this._stickyAvatar?.destroy();
   },
 };
