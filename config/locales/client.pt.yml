@@ -3583,7 +3583,6 @@ pt:
         delete: Excluir Permanentemente
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
-        use_global_key: Chave Global (permite todas as ações)
         scopes:
           description: |
             Ao usar escopos, você pode restringir uma chave de API a um conjunto específico de endpoints.

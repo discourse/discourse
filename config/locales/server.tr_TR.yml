@@ -1895,7 +1895,6 @@ tr_TR:
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin."
     autohighlight_all_code: "Tüm önceden biçimlendirilen kod parçalarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil. (Uyarı: çok fazla dil dahil etmek performansı etkileyebilir) bkz: demo için <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının kopyalayabilmesi için kod bloklarına bir düğme ekle. Bu özellik Internet Explorer'da desteklenmez."
     embed_any_origin: "Kaynağı ne olursa olsun gömülebilir içeriğe izin ver. Bu, statik HTML'ye sahip mobil uygulamalar için gereklidir."
     embed_topics_list: "Konu listelerinin HTML yerleştirmesini destekleyin"
     embed_truncate: "Yerleştirilmiş gönderileri kırp."

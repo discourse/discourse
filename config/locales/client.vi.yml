@@ -3416,7 +3416,6 @@ vi:
         delete: Xóa vĩnh viễn
         not_shown_again: Khóa này sẽ không được hiển thị lại. Đảm bảo bạn chụp một bản sao trước khi tiếp tục.
         continue: Tiếp tục
-        use_global_key: Khóa toàn cầu (cho phép tất cả các hành động)
         scopes:
           description: |
             Khi sử dụng phạm vi, bạn có thể hạn chế khóa API đối với một tập hợp các điểm cuối cụ thể.

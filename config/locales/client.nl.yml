@@ -116,6 +116,7 @@ nl:
       previous_month: "Vorige maand"
       next_month: "Volgende maand"
       placeholder: datum
+      from_placeholder: "vanaf datum"
       to_placeholder: "tot datum"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
@@ -1893,6 +1894,7 @@ nl:
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
+      title: "Of druk op %{modifier}Enter"
       users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
@@ -2666,7 +2668,9 @@ nl:
           other: "U hebt <b>%{count}</b> berichten geselecteerd."
     post:
       quote_reply: "Citeren"
+      quote_reply_shortcut: "Of druk op q"
       quote_edit: "Bewerken"
+      quote_edit_shortcut: "Of druk op e"
       quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
@@ -3128,6 +3132,7 @@ nl:
       other: "gebruikers"
     category_title: "Categorie"
     history_capped_revisions: "Geschiedenis, laatste 100 herzieningen"
+    history: "Geschiedenis"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -3426,6 +3431,7 @@ nl:
         usable_only_by_groups: "Tags zijn voor iedereen zichtbaar, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
         cannot_save: "Kan tag-groep niet opslaan. Zorg ervoor dat er ten minste één tag aanwezig is, de tag-group naam niet leeg is en een groep geselecteerd is voor tags toestemming."
+        parent_tag_placeholder: "Optioneel"
       topics:
         none:
           unread: "U hebt geen ongelezen topics."
@@ -3569,6 +3575,7 @@ nl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeklogboeken</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
+          average_chart_label: Gemiddeld
           filters:
             file_extension:
               label: Bestandsextensie
@@ -3672,7 +3679,6 @@ nl:
         delete: Definitief verwijderen
         not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg ervoor dat u een kopie maakt voordat u doorgaat.
         continue: Doorgaan
-        use_global_key: Algemene sleutel (staat alle acties toe)
         scopes:
           description: |
             Bij het gebruik van scopes kunt u een API-sleutel tot een bepaalde groep eindpunten beperken.
@@ -4498,6 +4504,7 @@ nl:
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
         post_edits: "Berichtbewerkingen"
+        view_edits: "Bewerkingen bekijken"
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
         penalty_post_delete: "Het bericht verwijderen"
         penalty_post_delete_replies: "Het bericht + alle antwoorden verwijderen"

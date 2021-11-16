@@ -3675,7 +3675,6 @@ da:
         delete: Slet permanent
         not_shown_again: Denne nøgle vil ikke blive vist igen. Sørg for at tage en kopi før du fortsætter.
         continue: Fortsæt
-        use_global_key: Global nøgle (tillader alle handlinger)
         scopes:
           description: |
             Når du bruger anvendelsesområder, kan du begrænse en API-nøgle til et bestemt sæt endepunkter.
