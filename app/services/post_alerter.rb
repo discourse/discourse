@@ -639,12 +639,17 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+    return if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+    return if post.topic.allowed_groups.none?
+
     if post.topic.allowed_groups.count == 1
       return post.topic.first_smtp_enabled_group
     end
 
-    group = Group.find_by_email(post.topic.incoming_email.first.to_addresses)
+    topic_incoming_email = post.topic.incoming_email.first
+    return if topic_incoming_email.blank?
+
+    group = Group.find_by_email(topic_incoming_email.to_addresses)
     if !group&.smtp_enabled
       return post.topic.first_smtp_enabled_group
     end
