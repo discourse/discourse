@@ -11,6 +11,7 @@ task "import:ensure_consistency" => :environment do
   insert_topic_views
   insert_user_actions
   insert_user_options
+  insert_user_profiles
   insert_user_stats
   insert_user_visits
   insert_draft_sequences
@@ -184,6 +185,17 @@ def insert_user_options
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL
+  SQL
+end
+
+def insert_user_profiles
+  log "Inserting user stats..."
+
+  DB.exec <<-SQL
+    INSERT INTO user_profiles (user_id)
+         SELECT id
+           FROM users
+    ON CONFLICT DO NOTHING
   SQL
 end
 
@@ -519,4 +531,28 @@ task "import:update_first_post_created_at" => :environment do
   SQL
 
   log "Done"
+end
+
+desc "Update avatars from external_avatar_url in SSO records"
+task "import:update_avatars_from_sso" => :environment do
+  log "Updating avatars from SSO records"
+
+  sql = <<~SQL
+    SELECT user_id, external_avatar_url
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  DB.query_each(sql) do |row|
+    Jobs.enqueue(
+      :download_avatar_from_url,
+      url: row.external_avatar_url,
+      user_id: row.user_id,
+      override_gravatar: true
+    )
+  end
 end
