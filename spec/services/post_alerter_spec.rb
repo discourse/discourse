@@ -1362,6 +1362,30 @@ describe PostAlerter do
       Email::Receiver.new(raw_mail, {}).process!
     end
 
+    it "does not error if SMTP is enabled and the topic has no incoming email or allowed groups" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
+    it "does not error if SMTP is enabled and the topic has no incoming email but does have an allowed group" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
+    it "does not error if SMTP is enabled and the topic has no incoming email but has multiple allowed groups" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
     it "sends a group smtp email because SMTP is enabled for the site and the group" do
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
