@@ -24,6 +24,7 @@ class BulkImport::Generic < BulkImport::Base
   def execute
     import_users
     import_user_emails
+    import_single_sign_on_records
     import_topics
   end
 
@@ -38,10 +39,13 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_users(users) do |row|
+      sso_record = JSON.parse(row["sso_record"]) if row["sso_record"].present?
+
       {
         imported_id: row["id"],
         username: row["username"],
         email: row["email"],
+        external_id: sso_record&.fetch("external_id"),
         created_at: to_datetime(row["created_at"])
       }
     end
@@ -51,7 +55,7 @@ class BulkImport::Generic < BulkImport::Base
     puts '', 'Importing user emails...'
 
     users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
-      SELECT ROWID, *
+      SELECT ROWID, id, email, created_at
       FROM users
       WHERE ROWID > :last_row_id
       ORDER BY ROWID
@@ -59,11 +63,31 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_emails(users) do |row|
       {
+        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
         imported_id: row["id"],
         imported_user_id: row["id"],
         email: row["email"],
         created_at: to_datetime(row["created_at"])
       }
+    end
+  end
+
+  def import_single_sign_on_records
+    puts '', 'Importing SSO records...'
+
+    users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
+      SELECT ROWID, id, sso_record
+      FROM users
+      WHERE ROWID > :last_row_id AND sso_record IS NOT NULL
+      ORDER BY ROWID
+    SQL
+
+    create_single_sign_on_records(users) do |row|
+      sso_record = JSON.parse(row["sso_record"], symbolize_names: true)
+      # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
+      sso_record[:imported_id] = row["id"]
+      sso_record[:imported_user_id] = row["id"]
+      sso_record
     end
   end
 
