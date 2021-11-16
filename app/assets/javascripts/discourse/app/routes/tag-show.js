@@ -171,10 +171,6 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   actions: {
-    invalidateModel() {
-      this.refresh();
-    },
-
     renameTag(tag) {
       showModal("rename-tag", { model: tag });
     },
