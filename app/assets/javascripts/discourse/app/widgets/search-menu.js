@@ -16,6 +16,7 @@ import { cancel } from "@ember/runloop";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
+const SECOND_ENTER_MAX_DELAY = 15000;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -111,14 +112,14 @@ const SearchHelper = {
 
     if (!term) {
       searchData.noResults = false;
-      searchData.results = [];
+      searchData.results = {};
       searchData.loading = false;
       searchData.invalidTerm = false;
 
       widget.scheduleRerender();
     } else if (!isValidSearchTerm(term, widget.siteSettings)) {
       searchData.noResults = true;
-      searchData.results = [];
+      searchData.results = {};
       searchData.loading = false;
       searchData.invalidTerm = true;
 
@@ -191,6 +192,7 @@ export default createWidget("search-menu", {
   defaultState(attrs) {
     return {
       inTopicContext: attrs.inTopicContext,
+      _lastEnterTimestamp: null,
       _debouncer: null,
     };
   },
@@ -418,13 +420,23 @@ export default createWidget("search-menu", {
 
     const searchInput = document.querySelector("#search-term");
     if (e.which === 13 && e.target === searchInput) {
+      const recentEnterHit =
+        this.state._lastEnterTimestamp &&
+        Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
+
       // same combination as key-enter-escape mixin
-      if (e.ctrlKey || e.metaKey || (isiPad() && e.altKey)) {
+      if (
+        e.ctrlKey ||
+        e.metaKey ||
+        (isiPad() && e.altKey) ||
+        (searchData.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit)
+      ) {
         this.fullSearch();
       } else {
         searchData.typeFilter = null;
         this.triggerSearch();
       }
+      this.state._lastEnterTimestamp = Date.now();
     }
 
     if (e.target === searchInput && e.which === 8 /* backspace */) {
@@ -477,7 +489,6 @@ export default createWidget("search-menu", {
   },
 
   fullSearch() {
-    searchData.results = [];
     searchData.loading = false;
     SearchHelper.cancel();
     const url = this.fullSearchUrl();
