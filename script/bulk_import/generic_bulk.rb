@@ -67,10 +67,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_users
     puts "Importing users..."
 
-    users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
+    users = @db.execute(<<~SQL)
       SELECT ROWID, *
       FROM users
-      WHERE ROWID > :last_row_id
       ORDER BY ROWID
     SQL
 
@@ -90,10 +89,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_emails
     puts '', 'Importing user emails...'
 
-    users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
+    users = @db.execute(<<~SQL)
       SELECT ROWID, id, email, created_at
       FROM users
-      WHERE ROWID > :last_row_id
       ORDER BY ROWID
     SQL
 
@@ -111,10 +109,10 @@ class BulkImport::Generic < BulkImport::Base
   def import_single_sign_on_records
     puts '', 'Importing SSO records...'
 
-    users = @db.execute(<<~SQL, last_row_id: @last_imported_user_id)
+    users = @db.execute(<<~SQL)
       SELECT ROWID, id, sso_record
       FROM users
-      WHERE ROWID > :last_row_id AND sso_record IS NOT NULL
+      WHERE sso_record IS NOT NULL
       ORDER BY ROWID
     SQL
 
@@ -130,11 +128,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_topics
     puts "Importing topics..."
 
-    last_imported_topic_id = @last_imported_topic_id
-    topics = @db.execute(<<~SQL, last_row_id: last_imported_topic_id)
+    topics = @db.execute(<<~SQL)
       SELECT ROWID, *
       FROM topics
-      WHERE ROWID > :last_row_id
       ORDER BY ROWID
     SQL
 
@@ -149,10 +145,9 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     puts "Importing first posts..."
-    topics = @db.execute(<<~SQL, last_row_id: last_imported_topic_id)
+    topics = @db.execute(<<~SQL)
       SELECT ROWID, *
       FROM topics
-      WHERE ROWID > :last_row_id
       ORDER BY ROWID
     SQL
 
@@ -173,16 +168,15 @@ class BulkImport::Generic < BulkImport::Base
   def import_posts
     puts "Importing posts..."
 
-    posts = @db.execute(<<~SQL, last_row_id: @last_imported_post_id)
+    posts = @db.execute(<<~SQL)
       SELECT ROWID, *
       FROM posts
-      WHERE ROWID > :last_row_id
       ORDER BY topic_id, post_number
     SQL
 
     create_posts(posts) do |row|
       next if row["raw"].blank?
-      next unless topic_id = topic_id_from_imported_id(row["id"])
+      next unless topic_id = topic_id_from_imported_id(row["topic_id"])
 
       {
         imported_id: row["id"],

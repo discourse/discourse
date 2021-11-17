@@ -189,7 +189,7 @@ def insert_user_options
 end
 
 def insert_user_profiles
-  log "Inserting user stats..."
+  log "Inserting user profiles..."
 
   DB.exec <<-SQL
     INSERT INTO user_profiles (user_id)
