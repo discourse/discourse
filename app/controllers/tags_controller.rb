@@ -135,11 +135,14 @@ class TagsController < ::ApplicationController
     tag = Tag.find_by_name(params[:tag_id])
     raise Discourse::NotFound if tag.nil?
 
-    new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
-    tag.name = new_tag_name
+    if (params[:tag][:id].present?)
+      new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
+      tag.name = new_tag_name
+    end
+    tag.description = params[:tag][:description] if params[:tag]&.has_key?(:description)
     if tag.save
       StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
-      render json: { tag: { id: new_tag_name } }
+      render json: { tag: { id: tag.name, description: tag.description } }
     else
       render_json_error tag.errors.full_messages
     end
@@ -353,6 +356,8 @@ class TagsController < ::ApplicationController
       {
         id: t.name,
         text: t.name,
+        name: t.name,
+        description: t.description,
         count: t.topic_count,
         pm_count: show_pm_tags ? t.pm_topic_count : 0,
         target_tag: t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil

@@ -312,7 +312,10 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     topicTagsChanged(value) {
-      this.set("buffered.tags", value);
+      this.setProperties({
+        "buffered.tags": value,
+        "buffered.tagNames": value,
+      });
     },
 
     deletePending(pending) {

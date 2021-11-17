@@ -32,7 +32,7 @@
 
             {{#if canEditTags}}
               {{mini-tag-chooser
-                value=buffered.tags
+                value=buffered.tagNames
                 onChange=(action "topicTagsChanged")
                 options=(hash
                   filterable=true

@@ -4,6 +4,7 @@ import {
   count,
   exists,
   invisible,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -355,6 +356,7 @@ acceptance("Tag info", function (needs) {
         tag_info: {
           id: 13,
           name: "happy-monkey",
+          description: "happy monkey description",
           topic_count: 1,
           staff: false,
           synonyms: [],
@@ -429,6 +431,28 @@ acceptance("Tag info", function (needs) {
     );
   });
 
+  test("edit tag is showing input for name and description", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true });
+
+    await visit("/tag/happy-monkey");
+    assert.strictEqual(count("#show-tag-info"), 1);
+
+    await click("#show-tag-info");
+    assert.ok(exists(".tag-info .tag-name"), "show tag");
+
+    await click("#edit-tag");
+    assert.equal(
+      query("#edit-name").value,
+      "happy-monkey",
+      "it displays original tag name"
+    );
+    assert.equal(
+      query("#edit-description").value,
+      "happy monkey description",
+      "it displays original tag description"
+    );
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters");
 
@@ -445,7 +469,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists("#rename-tag"), "can rename tag");
+    assert.ok(exists("#edit-tag"), "can rename tag");
     assert.ok(exists("#edit-synonyms"), "can edit synonyms");
     assert.ok(exists("#delete-tag"), "can delete tag");
 

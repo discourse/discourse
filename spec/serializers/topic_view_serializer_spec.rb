@@ -181,7 +181,7 @@ describe TopicViewSerializer do
 
   describe 'when tags added to private message topics' do
     fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag) { Fabricate(:tag, description: "text") }
     fab!(:pm) do
       Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: moderator),
@@ -202,7 +202,7 @@ describe TopicViewSerializer do
     it "should include the tag for staff users" do
       [moderator, admin].each do |user|
         json = serialize_topic(pm, user)
-        expect(json[:tags]).to eq([tag.name])
+        expect(json[:tags]).to eq([{ name: tag.name, description: tag.description }])
       end
     end
 
@@ -226,7 +226,7 @@ describe TopicViewSerializer do
 
     it 'returns hidden tag to staff' do
       json = serialize_topic(topic, admin)
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ name: hidden_tag.name }])
     end
 
     it 'does not return hidden tag to non-staff' do
@@ -248,13 +248,13 @@ describe TopicViewSerializer do
 
     it 'tags are automatically sorted by tag popularity' do
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w(btag ctag atag))
+      expect(json[:tags]).to eq([{ name: "btag" }, { name: "ctag" },  { name: "atag" } ])
     end
 
     it 'tags can be sorted alphabetically' do
       SiteSetting.tags_sort_alphabetically = true
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w(atag btag ctag))
+      expect(json[:tags]).to eq([{ name: "atag" }, { name: "btag" },  { name: "ctag" } ])
     end
   end
 

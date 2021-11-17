@@ -11,11 +11,16 @@ module TopicTagsMixin
 
   def tags
     # Calling method `pluck` or `order` along with `includes` causing N+1 queries
-    tags = (SiteSetting.tags_sort_alphabetically ? topic.tags.sort_by(&:name) : topic.tags.sort_by(&:topic_count).reverse).map(&:name)
+    tags = (SiteSetting.tags_sort_alphabetically ? topic.tags.sort_by(&:name) : topic.tags.sort_by(&:topic_count).reverse).map do |tag|
+      {
+        name: tag.name,
+        description: tag.description
+      }.compact
+    end
     if scope.is_staff?
       tags
     else
-      tags - scope.hidden_tag_names
+      tags.reject { |tag| scope.hidden_tag_names.include?(tag[:name]) }
     end
   end
 
