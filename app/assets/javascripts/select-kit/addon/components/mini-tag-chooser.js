@@ -99,7 +99,11 @@ export default MultiSelectComponent.extend(TagsMixin, {
     return results
       .filter((r) => !makeArray(context.tags).includes(r.id))
       .map((result) => {
-        return { id: result.text, name: result.text, count: result.count };
+        return {
+          id: result.text,
+          name: result.description,
+          count: result.count,
+        };
       });
   },
 });

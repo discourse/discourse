@@ -4,6 +4,7 @@ import {
   count,
   exists,
   invisible,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -355,6 +356,7 @@ acceptance("Tag info", function (needs) {
         tag_info: {
           id: 13,
           name: "happy-monkey",
+          description: "happy monkey description",
           topic_count: 1,
           staff: false,
           synonyms: [],
@@ -426,6 +428,23 @@ acceptance("Tag info", function (needs) {
         return r.dataset.value;
       }),
       ["monkey", "not-monkey"]
+    );
+  });
+
+  test("tag info shows edit description button", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true });
+
+    await visit("/tag/happy-monkey");
+    assert.strictEqual(count("#show-tag-info"), 1);
+
+    await click("#show-tag-info");
+    assert.ok(exists(".tag-info .tag-name"), "show tag");
+
+    await click("#edit-description");
+    assert.equal(
+      query(".edit-tag-description-modal input").value,
+      "happy monkey description",
+      "it displays original tag description"
     );
   });
 

@@ -62,7 +62,7 @@ describe TopicListItemSerializer do
         root: false
       ).as_json
 
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ name: hidden_tag.name }])
     end
 
     it 'does not return hidden tag to non-staff' do

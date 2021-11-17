@@ -73,6 +73,15 @@ export default Component.extend({
       showModal("rename-tag", { model: this.tag });
     },
 
+    editDescription() {
+      if (!this.tag.description) {
+        this.tag.set("description", this.tagInfo.description);
+      }
+      showModal("edit-tag-description", {
+        model: this.tag,
+      });
+    },
+
     deleteTag() {
       this.deleteAction(this.tagInfo);
     },

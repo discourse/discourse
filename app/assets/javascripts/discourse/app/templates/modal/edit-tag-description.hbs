@@ -1,0 +1,20 @@
+{{#d-modal-body title="tagging.edit_description"}}
+  <label class="control-label">
+    {{i18n "tagging.edit_description_instructions"}}
+  </label>
+  <div class="controls">
+    {{input
+      value=(readonly model.description)
+      maxlength=280
+      input=(action (mut newDescription) value="target.value")
+    }}
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    action=(action "performUpdateDescription")
+    label="tagging.update_description"
+  }}
+</div>

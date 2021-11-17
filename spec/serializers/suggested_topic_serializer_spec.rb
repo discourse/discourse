@@ -38,7 +38,7 @@ describe SuggestedTopicSerializer do
 
   describe 'hidden tags' do
     let(:topic) { Fabricate(:topic) }
-    let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+    let(:hidden_tag) { Fabricate(:tag, name: 'hidden', description: 'description text') }
     let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     before do
@@ -49,7 +49,7 @@ describe SuggestedTopicSerializer do
 
     it 'returns hidden tag to staff' do
       json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq([{ name: hidden_tag.name, description: hidden_tag.description }])
     end
 
     it 'does not return hidden tag to non-staff' do

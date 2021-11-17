@@ -7,6 +7,7 @@
         {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) connectorTagName="" tagName="section"}}
 
         {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag" id="rename-tag"}}
+        {{d-button class="btn-default" action=(action "editDescription") icon="far-edit" label="tagging.edit_description" id="edit-description"}}
         {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
         {{#if deleteAction}}
           {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag" id="delete-tag"}}
