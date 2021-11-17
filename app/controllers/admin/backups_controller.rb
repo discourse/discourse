@@ -4,6 +4,8 @@ require "backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
+  include ExternalUploadHelpers
+
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
@@ -233,5 +235,25 @@ class Admin::BackupsController < Admin::AdminController
 
   def render_error(message_key)
     render json: failed_json.merge(message: I18n.t(message_key))
+  end
+
+  def validate_before_create_multipart(file_name:, file_size:, upload_type:)
+    return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
+    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
+  end
+
+  def self.serialize_upload(_upload)
+    {} # noop, the backup does not create an upload record
+  end
+
+  def create_direct_multipart_upload
+    begin
+      yield
+    rescue BackupRestore::BackupStore::StorageError => err
+      message = debug_upload_error(err, I18n.t("upload.create_multipart_failure", additional_detail: err.message))
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+    rescue BackupRestore::BackupStore::BackupFileExists
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
+    end
   end
 end

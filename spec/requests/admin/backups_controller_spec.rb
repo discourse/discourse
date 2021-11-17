@@ -416,4 +416,92 @@ RSpec.describe Admin::BackupsController do
       expect(response).to be_not_found
     end
   end
+
+  describe "S3 multipart uploads" do
+    let(:upload_type) { "backup" }
+    let(:test_bucket_prefix) { "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}" }
+    let(:backup_file_exists_response) { { status: 404 } }
+    let(:mock_multipart_upload_id) { "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--" }
+
+    before do
+      setup_s3
+      SiteSetting.enable_direct_s3_uploads = true
+      SiteSetting.s3_backup_bucket = "s3-backup-bucket"
+      SiteSetting.backup_location = BackupLocationSiteSetting::S3
+      stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
+      stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/default/test.tar.gz").to_return(
+        backup_file_exists_response
+      )
+    end
+
+    context "when the user is not admin" do
+      before do
+        admin.update(admin: false)
+      end
+
+      it "errors with invalid access error" do
+        post "/admin/backups/create-multipart.json", params: {
+          file_name: "test.tar.gz",
+          upload_type: upload_type,
+          file_size: 4098
+        }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when the user is admin" do
+      def stub_create_multipart_backup_request
+        BackupRestore::S3BackupStore.any_instance.stubs(:temporary_upload_path).returns(
+          "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz"
+        )
+        create_multipart_result = <<~BODY
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+        <InitiateMultipartUploadResult>
+           <Bucket>s3-backup-bucket</Bucket>
+           <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz</Key>
+           <UploadId>#{mock_multipart_upload_id}</UploadId>
+        </InitiateMultipartUploadResult>
+        BODY
+        stub_request(:post, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads").
+          to_return(status: 200, body: create_multipart_result)
+      end
+
+      it "creates the multipart upload" do
+        stub_create_multipart_backup_request
+        post "/admin/backups/create-multipart.json", params: {
+          file_name: "test.tar.gz",
+          upload_type: upload_type,
+          file_size: 4098
+        }
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+
+        external_upload_stub = ExternalUploadStub.where(
+          unique_identifier: result["unique_identifier"],
+          original_filename: "test.tar.gz",
+          created_by: admin,
+          upload_type: upload_type,
+          key: result["key"],
+          multipart: true
+        )
+        expect(external_upload_stub.exists?).to eq(true)
+      end
+
+      context "when backup of same filename already exists" do
+        let(:backup_file_exists_response) { { status: 200, body: "" } }
+
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "test.tar.gz",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.file_exists")
+          )
+        end
+      end
+    end
+  end
 end
