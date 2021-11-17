@@ -19,10 +19,12 @@ export default Controller.extend(
 
     flashText: null,
     flashClass: null,
+    flashLink: false,
 
     invite: null,
     invites: null,
 
+    editing: false,
     inviteToTopic: false,
     limitToEmail: false,
 
@@ -37,8 +39,10 @@ export default Controller.extend(
       this.setProperties({
         flashText: null,
         flashClass: null,
+        flashLink: false,
         invite: null,
         invites: null,
+        editing: false,
         inviteToTopic: false,
         limitToEmail: false,
       });
@@ -109,18 +113,16 @@ export default Controller.extend(
             this.setProperties({
               flashText: result.warnings.join(","),
               flashClass: "warning",
-              flashLink: true,
+              flashLink: !this.editing,
             });
           } else {
             if (this.isEmail && opts.sendEmail) {
               this.send("closeModal");
             } else {
               this.setProperties({
-                flashText: opts.copy
-                  ? I18n.t("user.invited.invite.invite_copied")
-                  : I18n.t("user.invited.invite.invite_saved"),
+                flashText: I18n.t("user.invited.invite.invite_saved"),
                 flashClass: "success",
-                flashLink: true,
+                flashLink: !this.editing,
               });
             }
           }
@@ -129,6 +131,7 @@ export default Controller.extend(
           this.setProperties({
             flashText: extractError(e),
             flashClass: "error",
+            flashLink: false,
           })
         );
     },

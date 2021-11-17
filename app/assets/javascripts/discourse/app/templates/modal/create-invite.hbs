@@ -19,8 +19,23 @@
   </div>
 {{/if}}
 
-{{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
+{{#d-modal-body title=(if editing "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <form>
+    {{#if editing}}
+      <div class="input-group invite-link">
+        <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
+        <div class="link-share-container">
+          {{input
+            name="invite-link"
+            class="invite-link"
+            value=invite.link
+            readonly=true
+          }}
+          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+        </div>
+      </div>
+    {{/if}}
+
     <div class="input-group input-email">
       <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
       <div class="invite-email-container">
@@ -122,12 +137,12 @@
     action=(action "saveInvite")
   }}
 
-  {{#if isEmail}}
-    {{d-button
-      icon="envelope"
-      label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
-      class="btn-primary send-invite"
-      action=(action "saveInvite" true)
-    }}
-  {{/if}}
+  {{d-button
+    icon="envelope"
+    label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
+    class="btn-primary send-invite"
+    action=(action "saveInvite" true)
+    title=(unless isEmail "user.invited.invite.send_invite_email_instructions")
+    disabled=(not isEmail)
+  }}
 </div>
