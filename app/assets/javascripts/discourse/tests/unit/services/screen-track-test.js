@@ -1,6 +1,7 @@
-import { module, test } from "qunit";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
-module("Unit | Utility | screen-track", function () {
+discourseModule("Unit | Service | screen-track", function () {
   test("consolidateTimings", function (assert) {
     const tracker = this.container.lookup("service:screen-track");
 
