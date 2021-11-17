@@ -5,7 +5,6 @@ import PrivateMessageTopicTrackingState from "discourse/models/private-message-t
 import DiscourseLocation from "discourse/lib/discourse-location";
 import KeyValueStore from "discourse/lib/key-value-store";
 import MessageBus from "message-bus-client";
-import ScreenTrack from "discourse/lib/screen-track";
 import SearchService from "discourse/services/search";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -69,16 +68,6 @@ export default {
     const session = Session.current();
     app.register("session:main", session, { instantiate: false });
 
-    // TODO: Automatically register this service
-    const screenTrack = new ScreenTrack(
-      topicTrackingState,
-      siteSettings,
-      session,
-      currentUser,
-      container.lookup("service:app-events")
-    );
-    app.register("service:screen-track", screenTrack, { instantiate: false });
-
     app.register("location:discourse-location", DiscourseLocation);
 
     const keyValueStore = new KeyValueStore("discourse_");
@@ -87,7 +76,6 @@ export default {
 
     ALL_TARGETS.forEach((t) => {
       app.inject(t, "appEvents", "service:app-events");
-      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
       app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
       app.inject(t, "store", "service:store");
       app.inject(t, "site", "site:main");
@@ -99,10 +87,11 @@ export default {
       app.inject(t, "session", "session:main");
       app.inject(t, "messageBus", "message-bus:main");
       app.inject(t, "siteSettings", "site-settings:main");
+      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
     });
 
     if (currentUser) {
-      ["component", "route", "controller", "service"].forEach((t) => {
+      ["controller", "component", "route", "service"].forEach((t) => {
         app.inject(t, "currentUser", "current-user:main");
       });
     }
