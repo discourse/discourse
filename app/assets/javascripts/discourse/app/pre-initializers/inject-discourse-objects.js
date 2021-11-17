@@ -8,8 +8,8 @@ import MessageBus from "message-bus-client";
 import SearchService from "discourse/services/search";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import Store from "discourse/models/store";
 import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
@@ -19,9 +19,6 @@ export function registerObjects(app) {
     return;
   }
   app.__registeredObjects__ = true;
-
-  app.register("store:main", Store);
-  app.register("service:store", Store);
 
   // TODO: This should be included properly
   app.register("message-bus:main", MessageBus, { instantiate: false });
@@ -36,6 +33,16 @@ export default {
 
   initialize(container, app) {
     registerObjects(app);
+
+    app.register("store:main", {
+      create() {
+        deprecated(`"store:main" is deprecated, use "service:store" instead`, {
+          since: "2.8.0.beta8",
+        });
+
+        return container.lookup("service:store");
+      },
+    });
 
     let siteSettings = container.lookup("site-settings:main");
 
