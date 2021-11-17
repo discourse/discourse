@@ -27,7 +27,7 @@ discourseModule("Unit | Controller | preferences/profile", function () {
       { position: 3, id: 3, editable: true },
     ]);
 
-    // Since there are no injections in a unit tests
+    // Since there are no injections in unit tests
     controller.set("site", Site.current());
 
     controller.send("_updateUserFields");
