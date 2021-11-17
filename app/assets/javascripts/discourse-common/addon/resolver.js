@@ -2,6 +2,7 @@ import { classify, dasherize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
+import SuffixTrie from "discourse-common/lib/suffix-trie";
 
 let _options = {};
 
@@ -36,6 +37,15 @@ function parseName(fullName) {
 
 export function buildResolver(baseName) {
   return Ember.DefaultResolver.extend({
+    buildCustomResolveTrie() {
+      this._customResolveTrie = new SuffixTrie("/");
+      Object.keys(requirejs.entries).forEach((name) => {
+        if (!name.includes("/templates/")) {
+          this._customResolveTrie.add(name);
+        }
+      });
+    },
+
     parseName,
 
     resolveRouter(parsedName) {
@@ -104,16 +114,13 @@ export function buildResolver(baseName) {
     },
 
     customResolve(parsedName) {
+      if (!this._customResolveTrie) {
+        this.buildCustomResolveTrie();
+      }
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = Object.keys(requirejs.entries).find(function (e) {
-          return (
-            e.indexOf("/templates/") === -1 &&
-            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-              e.indexOf(dashed, e.length - dashed.length) !== -1)
-          );
-        });
+        moduleName = this._customResolveTrie.withSuffix(dashed, 1)[0];
 
       let module;
       if (moduleName) {
