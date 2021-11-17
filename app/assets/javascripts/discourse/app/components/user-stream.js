@@ -5,6 +5,7 @@ import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import LoadMore from "discourse/mixins/load-more";
 import Post from "discourse/models/post";
+import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
@@ -121,6 +122,9 @@ export default Component.extend(LoadMore, {
             Draft.clear(draft.draft_key, draft.sequence)
               .then(() => {
                 stream.remove(draft);
+                if (draft.draft_key === NEW_TOPIC_KEY) {
+                  this.currentUser.set("has_topic_draft", false);
+                }
               })
               .catch((error) => {
                 popupAjaxError(error);
