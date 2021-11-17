@@ -8,6 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,

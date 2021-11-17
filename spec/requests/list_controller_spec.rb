@@ -55,6 +55,12 @@ RSpec.describe ListController do
 
       get "/latest?search="
       expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids%5B%5D=14583&topic_ids%5B%5D=14584"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids=14583%2C14584"
+      expect(response.status).to eq(200)
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|

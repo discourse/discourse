@@ -50,7 +50,7 @@ export function readOnly(target, name, desc) {
     writable: false,
     enumerable: desc.enumerable,
     configurable: desc.configurable,
-    initializer: function () {
+    initializer() {
       let value = extractValue(desc);
       return value.readOnly();
     },

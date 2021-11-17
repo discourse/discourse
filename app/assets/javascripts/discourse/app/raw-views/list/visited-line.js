@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
   @discourseComputed
-  isLastVisited: function () {
+  isLastVisited() {
     return this.lastVisitedTopic === this.topic;
   },
 });

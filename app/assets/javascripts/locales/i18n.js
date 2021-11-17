@@ -6,7 +6,7 @@ I18n.defaultLocale = "en";
 
 // Set default pluralization rule
 I18n.pluralizationRules = {
-  en: function(n) {
+  en(n) {
     return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
   }
 };

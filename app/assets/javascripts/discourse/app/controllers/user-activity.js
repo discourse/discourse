@@ -13,7 +13,7 @@ export default Controller.extend({
   canDownloadPosts: alias("user.viewingSelf"),
 
   @observes("userActionType", "model.stream.itemsLoaded")
-  _showFooter: function () {
+  _showFooter() {
     let showFooter;
     if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(

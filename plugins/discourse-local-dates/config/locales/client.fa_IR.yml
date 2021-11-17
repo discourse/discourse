@@ -35,3 +35,4 @@ fa_IR:
             every_three_months: "هر سه ماه"
             every_six_months: "هر شش ماه"
             every_year: "هر سال"
+      default_title: "رویداد %{site_name}"

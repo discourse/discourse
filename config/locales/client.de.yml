@@ -2034,6 +2034,8 @@ de:
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
       reload: "Neu laden"
       ignore: "Ignorieren"
+      image_alt_text:
+        aria_label: Alternativ-Text für Bild
     notifications:
       tooltip:
         regular:
@@ -3464,6 +3466,9 @@ de:
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
+      choose_for_topic_required:
+        one: "mindestens %{count} Schlagwort auswählen..."
+        other: "mindestens %{count} Schlagwörter auswählen..."
       info: "Info"
       default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
@@ -3815,6 +3820,7 @@ de:
         no_description: (keine Beschreibung)
         all_api_keys: Alle API-Schlüssel
         user_mode: Benutzerrang
+        scope_mode: Bereich
         impersonate_all_users: Als jeder Benutzer ausgeben
         single_user: "Einzelbenutzer"
         user_placeholder: Benutzernamen eingeben
@@ -3825,12 +3831,15 @@ de:
         delete: Endgültig löschen
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
-        use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
         scopes:
           description: |
             Wenn du Bereiche verwendest, kannst du einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
             Du kannst auch definieren, welche Parameter erlaubt sind. Verwende Kommas, um mehrere Werte zu trennen.
           title: Bereiche
+          granular: Granular
+          read_only: Schreibgeschützt
+          global: Global
+          global_description: Der API-Schlüssel hat keine Einschränkung und alle Endpunkte sind zugänglich.
           resource: Ressource
           action: Aktion
           allowed_parameters: Zulässige Parameter
@@ -3838,6 +3847,8 @@ de:
           any_parameter: (beliebiger Parameter)
           allowed_urls: Zulässige URLs
           descriptions:
+            global:
+              read: Schränke den API-Schlüssel auf schreibgeschützte Endpunkte ein.
             topics:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
@@ -5079,6 +5090,7 @@ de:
           grant_existing_holders: Gewähre weiteren Abzeichen an bestehende Abzeicheninhaber
       emoji:
         title: "Emoji"
+        help: "Füge neue Emoji hinzu, die dann für alle verfügbar sind. Ziehe mehrere Dateien auf einmal per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen."
         add: "Neues Emoji hinzufügen"
         uploading: "Wird hochgeladen …"
         name: "Name"
@@ -5089,6 +5101,7 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
+        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du ihn einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"

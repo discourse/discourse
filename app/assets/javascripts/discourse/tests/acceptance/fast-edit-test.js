@@ -4,7 +4,7 @@ import {
   queryAll,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Fast Edit", function (needs) {

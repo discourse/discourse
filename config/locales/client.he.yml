@@ -3733,6 +3733,11 @@ he:
       changed: "תגיות ששונו:"
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
+      choose_for_topic_required:
+        one: "נא לבחור בתגית %{count} לפחות..."
+        two: "נא לבחור ב־%{count} תגיות לפחות…"
+        many: "נא לבחור ב־%{count} תגיות לפחות…"
+        other: "נא לבחור ב־%{count} תגיות לפחות…"
       info: "פרטים"
       default_info: "תגית זו אינה מוגבלת לאף קטגוריה ואין לה תגיות נרדפות. כדי להוסיף הגבלות, יש להציב את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
@@ -4100,6 +4105,7 @@ he:
         no_description: (אין תיאור)
         all_api_keys: כל מפתחות ה־API
         user_mode: דרגת משתמש
+        scope_mode: היקף
         impersonate_all_users: התחזות לכל משתמש שהוא
         single_user: "משתמש בודד"
         user_placeholder: נא להקליד שם משתמש
@@ -4110,12 +4116,15 @@ he:
         delete: למחוק לצמיתות
         not_shown_again: המפתח הזה לא יוצג עוד. נא לוודא שהעתקת אותו לפני המשך הפעילות שלך.
         continue: המשך
-        use_global_key: מפתח כללי (מאפשר את כל הפעולות)
         scopes:
           description: |
             בעת שימוש בתחומים, ניתן להגביל מפתח API לקבוצה מסוימת של נקודות גישה.
             ניתן גם להגדיר אילו משתנים יורשו. ניתן להשתמש בפסיקים כדי להפריד מגוון ערכים.
           title: תחומים
+          granular: נקודתי
+          read_only: לקריאה בלבד
+          global: גלובלי
+          global_description: למפתח ה־API אין מגבלה וכל נקודות הקצה נגישות לו.
           resource: משאב
           action: פעולה
           allowed_parameters: משתנים מורשים
@@ -4123,6 +4132,8 @@ he:
           any_parameter: (כל משתנה שהוא)
           allowed_urls: כתובות מורשות
           descriptions:
+            global:
+              read: הגבלת מפתח ה־API לנקודות קצה לקריאה בלבד.
             topics:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.

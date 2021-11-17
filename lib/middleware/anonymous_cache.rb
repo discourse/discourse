@@ -315,7 +315,7 @@ module Middleware
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
         env[Rack::RACK_INPUT].size > 0
 
-        return [413, {}, []]
+        return [413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []]
       end
 
       helper = Helper.new(env)

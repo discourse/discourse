@@ -1,11 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
-  renderTemplate: function () {
+  renderTemplate() {
     this.render("admin/templates/logs/screened-emails", { into: "adminLogs" });
   },
 
-  setupController: function () {
+  setupController() {
     return this.controllerFor("adminLogsScreenedEmails").show();
   },
 });

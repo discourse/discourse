@@ -26,7 +26,7 @@ class ActiveRecord::Base
   # Execute SQL manually
   def self.exec_sql(*args)
 
-    Discourse.deprecate("exec_sql should not be used anymore, please use DB.exec or DB.query instead!")
+    Discourse.deprecate("exec_sql should not be used anymore, please use DB.exec or DB.query instead!", drop_from: '2.9.0')
 
     conn = ActiveRecord::Base.connection
     sql = ActiveRecord::Base.public_send(:sanitize_sql_array, args)

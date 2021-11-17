@@ -176,13 +176,14 @@ class Admin::BackupsController < Admin::AdminController
     chunk_number = params.fetch(:resumableChunkNumber).to_i
     chunk_size = params.fetch(:resumableChunkSize).to_i
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
+    previous_chunk_number = chunk_number - 1
 
     # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
     # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
-    uploaded_file_size = chunk_number * chunk_size
+    uploaded_file_size = previous_chunk_number * chunk_size
     # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread

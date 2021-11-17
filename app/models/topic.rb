@@ -1778,6 +1778,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def first_smtp_enabled_group
+    self.allowed_groups.where(smtp_enabled: true).first
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)

@@ -14,6 +14,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
     : "pre code[class]";
   const path = session.highlightJsPath;
 
+  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     deprecated(
       "highlightSyntax now takes a DOM node instead of a jQuery object.",
@@ -40,7 +41,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
       }
 
       e.classList.remove("lang-auto");
-      hljs.highlightBlock(e);
+      hljs.highlightElement(e);
     });
   });
 }

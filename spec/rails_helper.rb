@@ -46,9 +46,9 @@ class RspecErrorTracker
       @app.call(env)
 
     # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-    # inherits from Exception instead of StandardError it does not get captured
-    # by the rescue => e shorthand :(
-    rescue WebMock::NetConnectNotAllowedError, StandardError => e
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
       RspecErrorTracker.last_exception = e
       raise e
     end
@@ -290,6 +290,10 @@ RSpec.configure do |config|
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
   end
+
+  # Match the request hostname to the value in `database.yml`
+  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation

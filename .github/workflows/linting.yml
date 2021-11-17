@@ -61,11 +61,11 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ always() }}
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern app/assets/javascripts
+        run: yarn eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
         if: ${{ always() }}
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/**/{test,assets}/javascripts
+        run: yarn eslint plugins
 
       - name: Prettier
         if: ${{ always() }}
@@ -73,9 +73,9 @@ jobs:
           yarn prettier -v
           yarn prettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
-            "app/assets/javascripts/**/*.{js,es6}" \
+            "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.{js,es6}"
+            "plugins/**/assets/javascripts/**/*.js"
 
       - name: Ember template lint
         if: ${{ always() }}

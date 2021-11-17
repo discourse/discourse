@@ -52,12 +52,15 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: true,
     });
-    plugin._optimizeParallel = function () {
-      return "using parallel";
-    };
-    plugin._optimizeSerial = function () {
-      return "using serial";
-    };
+
+    Object.defineProperty(plugin, "_optimizeParallel", {
+      value: () => "using parallel",
+    });
+
+    Object.defineProperty(plugin, "_optimizeSerial", {
+      value: () => "using serial",
+    });
+
     plugin.install();
     assert.strictEqual(plugin.uppy.preprocessors[0](), "using parallel");
     plugin.runParallel = false;

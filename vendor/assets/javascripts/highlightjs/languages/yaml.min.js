@@ -21,4 +21,4 @@ className:"number",
 begin:"\\b[0-9]{4}(-[0-9][0-9]){0,2}([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?(\\.[0-9]*)?([ \\t])*(Z|[-+][0-9][0-9]?(:[0-9][0-9])?)?\\b"
 },{className:"number",begin:e.C_NUMBER_RE+"\\b",relevance:0},t,g,s],r=[...b]
 ;return r.pop(),r.push(i),l.contains=r,{name:"YAML",case_insensitive:!0,
-aliases:["yml","YAML"],contains:b}}})());
+aliases:["yml"],contains:b}}})());

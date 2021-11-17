@@ -23,26 +23,28 @@ module Jobs
 
     def execute(args)
       return if quit_email_early?
+      email = args[:email]
+      recipient_user = User.find_by_email(email, primary: true)
+
+      post = Post.find_by(id: args[:post_id])
+      if post.blank?
+        return skip(email, nil, recipient_user, :group_smtp_post_deleted)
+      end
 
       group = Group.find_by(id: args[:group_id])
       return if group.blank?
 
-      post = Post.find_by(id: args[:post_id])
-      email = args[:email]
-      cc_addresses = args[:cc_emails]
-      recipient_user = User.find_by_email(email, primary: true)
-
-      if post.blank?
-        return skip(email, nil, recipient_user, :group_smtp_post_deleted)
+      if !group.smtp_enabled
+        return skip(email, post, recipient_user, :group_smtp_disabled_for_group)
       end
 
       if !Topic.exists?(id: post.topic_id)
         return skip(email, post, recipient_user, :group_smtp_topic_deleted)
       end
 
-      if !group.smtp_enabled
-        return skip(email, post, recipient_user, :group_smtp_disabled_for_group)
-      end
+      cc_addresses = args[:cc_emails].map do |cc|
+        cc.match(EmailValidator.email_regex) ? cc : nil
+      end.compact
 
       # There is a rare race condition causing the Imap::Sync class to create
       # an incoming email and associated post/topic, which then kicks off

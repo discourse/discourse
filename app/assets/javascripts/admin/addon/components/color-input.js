@@ -40,7 +40,7 @@ export default Component.extend({
   },
 
   @observes("hexValue", "brightnessValue", "valid")
-  hexValueChanged: function () {
+  hexValueChanged() {
     const hex = this.hexValue;
     let text = this.element.querySelector("input.hex-input");
 
