@@ -8,7 +8,10 @@ class WordWatcher
   end
 
   def self.words_for_action(action)
-    words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
+    words = WatchedWord
+      .where(action: WatchedWord.actions[action.to_sym])
+      .limit(WatchedWord::MAX_WORDS_PER_ACTION)
+
     if WatchedWord.has_replacement?(action.to_sym)
       words.pluck(:word, :replacement).to_h
     else
