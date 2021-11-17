@@ -238,8 +238,8 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def validate_before_create_multipart(file_name:, file_size:, upload_type:)
-    return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
-    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
   end
 
   def self.serialize_upload(_upload)

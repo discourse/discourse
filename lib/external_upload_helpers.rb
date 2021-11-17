@@ -14,7 +14,6 @@ module ExternalUploadHelpers
 
   included do
     before_action :external_store_check, only: [
-      :show_secure,
       :generate_presigned_put,
       :complete_external_upload,
       :create_multipart,

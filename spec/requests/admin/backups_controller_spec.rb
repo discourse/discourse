@@ -502,6 +502,34 @@ RSpec.describe Admin::BackupsController do
           )
         end
       end
+
+      context "when filename is invalid" do
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "blah $$##.tar.gz",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.invalid_filename")
+          )
+        end
+      end
+
+      context "when extension is invalid" do
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "test.png",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.backup_file_should_be_tar_gz")
+          )
+        end
+      end
     end
   end
 end

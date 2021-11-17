@@ -11,6 +11,7 @@ class UploadsController < ApplicationController
   protect_from_forgery except: :show
 
   before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
+  before_action :external_store_check, only: [:show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
