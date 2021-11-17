@@ -197,11 +197,11 @@ protected
 
   def post_query
     Post
-    .joins(:topic)
-    .includes(:topic)
-    .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian&.user, false))
-    .merge(Topic.listable_topics.visible.secured(@guardian))
-    .where(user: @user)
+      .joins(:topic)
+      .includes(:topic)
+      .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian&.user, false))
+      .merge(Topic.listable_topics.visible.secured(@guardian))
+      .where(user: @user)
   end
 
 end
