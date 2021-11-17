@@ -4,6 +4,7 @@ import userSearch, {
 } from "discourse/lib/user-search";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
+import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export const CUSTOM_USER_SEARCH_OPTIONS = [];
@@ -27,6 +28,7 @@ export default MultiSelectComponent.extend({
     allowEmails: false,
     groupMembersOf: undefined,
     excludeCurrentUser: false,
+    customSearchOptions: undefined,
   },
 
   content: computed("value.[]", function () {
@@ -66,15 +68,18 @@ export default MultiSelectComponent.extend({
       return;
     }
 
-    let customUserSearchOptions = CUSTOM_USER_SEARCH_OPTIONS.reduce(
-      (obj, option) => {
-        return {
-          ...obj,
-          [option]: options[option],
-        };
-      },
-      {}
-    );
+    let customUserSearchOptions = {};
+    if (options.customSearchOptions && isPresent(CUSTOM_USER_SEARCH_OPTIONS)) {
+      customUserSearchOptions = CUSTOM_USER_SEARCH_OPTIONS.reduce(
+        (obj, option) => {
+          return {
+            ...obj,
+            [option]: options.customSearchOptions[option],
+          };
+        },
+        {}
+      );
+    }
 
     return userSearch({
       term: filter,
