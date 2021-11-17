@@ -152,12 +152,9 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_posts(topics) do |row|
-      next if row["raw"].blank?
-      next unless topic_id = topic_id_from_imported_id(row["id"])
-
       {
         imported_id: row["id"],
-        topic_id: topic_id,
+        topic_id: topic_id_from_imported_id(row["id"]),
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
         raw: row["raw"]
