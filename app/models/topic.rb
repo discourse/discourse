@@ -392,7 +392,7 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def self.visible_post_types(viewed_by = nil, include_moderator_actions = true)
+  def self.visible_post_types(viewed_by = nil, include_moderator_actions: true)
     types = Post.types
     result = [types[:regular]]
     result += [types[:moderator_action], types[:small_action]] if include_moderator_actions
