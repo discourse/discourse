@@ -560,7 +560,7 @@ class PostAlerter
     end
 
     User.real
-      .where(id: posts.distinct.select(:user_id))
+      .where(id: posts.select(:user_id))
       .limit(SiteSetting.max_here_mentioned)
   end
 
