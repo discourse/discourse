@@ -5,6 +5,7 @@ import { get } from "@ember/object";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
 
 let _options = {};
+let moduleSuffixTrie = null;
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -35,17 +36,20 @@ function parseName(fullName) {
   };
 }
 
+function lookupModuleBySuffix(suffix) {
+  if (!moduleSuffixTrie) {
+    moduleSuffixTrie = new SuffixTrie("/");
+    Object.keys(requirejs.entries).forEach((name) => {
+      if (!name.includes("/templates/")) {
+        moduleSuffixTrie.add(name);
+      }
+    });
+  }
+  return moduleSuffixTrie.withSuffix(suffix, 1)[0];
+}
+
 export function buildResolver(baseName) {
   return Ember.DefaultResolver.extend({
-    buildCustomResolveTrie() {
-      this._customResolveTrie = new SuffixTrie("/");
-      Object.keys(requirejs.entries).forEach((name) => {
-        if (!name.includes("/templates/")) {
-          this._customResolveTrie.add(name);
-        }
-      });
-    },
-
     parseName,
 
     resolveRouter(parsedName) {
@@ -114,13 +118,10 @@ export function buildResolver(baseName) {
     },
 
     customResolve(parsedName) {
-      if (!this._customResolveTrie) {
-        this.buildCustomResolveTrie();
-      }
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = this._customResolveTrie.withSuffix(dashed, 1)[0];
+        moduleName = lookupModuleBySuffix(dashed);
 
       let module;
       if (moduleName) {
