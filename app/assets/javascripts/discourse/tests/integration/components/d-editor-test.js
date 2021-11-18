@@ -729,10 +729,11 @@ third line`
   });
 
   async function paste(element, text) {
-    let e = new Event("paste");
+    let e = new Event("paste", { cancelable: true });
     e.clipboardData = { getData: () => text };
     element.dispatchEvent(e);
     await settled();
+    return e;
   }
 
   componentTest("paste table", {
@@ -762,6 +763,47 @@ third line`
       assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
     },
   });
+
+  testCase(
+    `pasting a link into a selection applies a link format`,
+    async function (assert, textarea) {
+      this.set("value", "See discourse in action");
+      setTextareaSelection(textarea, 4, 13);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.org/");
+      assert.strictEqual(
+        this.value,
+        "See [discourse](https://www.discourse.org/) in action"
+      );
+      assert.strictEqual(event.defaultPrevented, true);
+    }
+  );
+
+  testCase(
+    `pasting other text into a selection will replace text value`,
+    async function (assert, textarea) {
+      this.set("value", "good morning");
+      setTextareaSelection(textarea, 5, 12);
+      const element = query(".d-editor");
+      const event = await paste(element, "evening");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "good morning");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
+
+  testCase(
+    `pasting a url without a selection will insert the url`,
+    async function (assert, textarea) {
+      this.set("value", "a link example:");
+      jumpEnd(textarea);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.org/");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "a link example:");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
 
   (() => {
     // Tests to check cursor/selection after replace-text event.

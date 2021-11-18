@@ -242,7 +242,8 @@ export default Mixin.create({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
+    const selected = this._getSelected(null, { lineVal: true });
+    const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
     const isCodeBlock = isInside(pre, /(^|\n)```/g);
 
@@ -269,6 +270,19 @@ export default Mixin.create({
         );
       } else {
         canPasteHtml = !isCodeBlock;
+      }
+    }
+
+    if (plainText && !handled && selected.end > selected.start) {
+      let isURL;
+      try {
+        isURL = !!new URL(plainText);
+      } catch {
+        isURL = false;
+      }
+      if (isURL) {
+        this._addText(selected, `[${selectedValue}](${plainText})`);
+        handled = true;
       }
     }
 
