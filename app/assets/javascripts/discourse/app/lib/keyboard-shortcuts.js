@@ -744,9 +744,7 @@ export default {
   },
 
   categoriesTopicsList() {
-    const setting = this.container.lookup("site-settings:main")
-      .desktop_category_page_style;
-    switch (setting) {
+    switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":
