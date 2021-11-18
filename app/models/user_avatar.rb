@@ -107,7 +107,8 @@ class UserAvatar < ActiveRecord::Base
       avatar_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,
       tmp_file_name: "sso-avatar",
-      follow_redirect: true
+      follow_redirect: true,
+      skip_rate_limit: true
     )
 
     return unless tempfile
