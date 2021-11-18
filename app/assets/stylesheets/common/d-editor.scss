@@ -202,6 +202,10 @@
       display: flex;
       height: var(--resizer-height);
       align-items: center;
+
+      &[hidden] {
+        display: none;
+      }
     }
 
     .scale-btn {
@@ -272,10 +276,6 @@
         svg {
           margin: 0;
         }
-      }
-
-      &[hidden] {
-        display: none;
       }
     }
 

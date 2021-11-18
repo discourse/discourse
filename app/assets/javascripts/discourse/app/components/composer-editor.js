@@ -677,28 +677,30 @@ export default Component.extend(ComposerUpload, {
     return;
   },
 
-  resetImageControls: function (buttonWrapper) {
-    const imageResize = buttonWrapper.find(".scale-btn-container");
-    const readonlyContainer = buttonWrapper.find(
+  resetImageControls(buttonWrapper) {
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
     );
-    const editContainer = buttonWrapper.find(".alt-text-edit-container");
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
 
-    imageResize.show();
-    readonlyContainer.show();
-    editContainer.attr("hidden", true);
+    imageResize.removeAttribute("hidden");
+    readonlyContainer.removeAttribute("hidden");
+    editContainer.setAttribute("hidden", "true");
   },
 
-  commitAltText: function (buttonWrapper) {
-    const index = parseInt(buttonWrapper.attr("data-image-index"), 10);
+  commitAltText(buttonWrapper) {
+    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
     const matchingPlaceholder = this.get("composer.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
     const match = matchingPlaceholder[index];
-    const input = buttonWrapper.find("input.alt-text-input");
+    const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
       IMAGE_MARKDOWN_REGEX,
-      `![${input.val()}|$2$3$4]($5)`
+      `![${input.value}|$2$3$4]($5)`
     );
 
     this.appEvents.trigger("composer:replace-text", match, replacement);
@@ -717,7 +719,7 @@ export default Component.extend(ComposerUpload, {
     }
 
     if (event.key === "Enter") {
-      const buttonWrapper = $(event.target).closest(".button-wrapper");
+      const buttonWrapper = event.target.closest(".button-wrapper");
       this.commitAltText(buttonWrapper);
     }
   },
@@ -728,20 +730,23 @@ export default Component.extend(ComposerUpload, {
       return;
     }
 
-    const buttonWrapper = $(event.target).closest(".button-wrapper");
-    const imageResize = buttonWrapper.find(".scale-btn-container");
-    const readonlyContainer = buttonWrapper.find(
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+
+    const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
     );
-    const altText = readonlyContainer.find(".alt-text");
+    const altText = readonlyContainer.querySelector(".alt-text");
 
-    const editContainer = readonlyContainer.next();
-    const editContainerInput = editContainer.find(".alt-text-input");
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+    const editContainerInput = editContainer.querySelector(".alt-text-input");
 
-    imageResize.hide();
-    readonlyContainer.hide();
-    editContainerInput.val(altText.text());
-    editContainer.removeAttr("hidden");
+    imageResize.setAttribute("hidden", "true");
+    readonlyContainer.setAttribute("hidden", "true");
+    editContainerInput.value = altText.textContent;
+    editContainer.removeAttribute("hidden");
     editContainerInput.focus();
     event.preventDefault();
   },
@@ -752,7 +757,7 @@ export default Component.extend(ComposerUpload, {
       return;
     }
 
-    const buttonWrapper = $(event.target).closest(".button-wrapper");
+    const buttonWrapper = event.target.closest(".button-wrapper");
     this.commitAltText(buttonWrapper);
   },
 
@@ -762,7 +767,7 @@ export default Component.extend(ComposerUpload, {
       return;
     }
 
-    const buttonWrapper = $(event.target).closest(".button-wrapper");
+    const buttonWrapper = event.target.closest(".button-wrapper");
     this.resetImageControls(buttonWrapper);
   },
 
