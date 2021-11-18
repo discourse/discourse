@@ -30,6 +30,31 @@ export class UppyPluginBase extends BasePlugin {
   _setFileState(fileId, state) {
     this.uppy.setFileState(fileId, state);
   }
+
+  _emitAllComplete(fileIds, skipped = false) {
+    fileIds.forEach((fileId) => {
+      let file = this._getFile(fileId);
+      this._emitComplete(file, skipped);
+    });
+    return Promise.resolve();
+  }
+
+  _emitError(file, errorMessage) {
+    // the error message is stored twice; once to show in a displayErrorForUpload
+    // modal, and on the .message property to show in the uppy logs
+    this.uppy.emit("upload-error", file, {
+      errors: [errorMessage],
+      message: `[${this.id}] ${errorMessage}`,
+    });
+  }
+
+  _skip(file) {
+    return this._emitComplete(file, true);
+  }
+
+  _skipAll(file) {
+    return this._emitAllComplete(file, true);
+  }
 }
 
 export class UploadPreProcessorPlugin extends UppyPluginBase {
@@ -56,31 +81,6 @@ export class UploadPreProcessorPlugin extends UppyPluginBase {
     this.uppy.emit("preprocess-complete", file, skipped, this.id);
     return Promise.resolve();
   }
-
-  _emitAllComplete(fileIds, skipped = false) {
-    fileIds.forEach((fileId) => {
-      let file = this._getFile(fileId);
-      this._emitComplete(file, skipped);
-    });
-    return Promise.resolve();
-  }
-
-  _emitError(file, errorMessage) {
-    // the error message is stored twice; once to show in a displayErrorForUpload
-    // modal, and on the .message property to show in the uppy logs
-    this.uppy.emit("upload-error", file, {
-      errors: [errorMessage],
-      message: `[${this.id}] ${errorMessage}`,
-    });
-  }
-
-  _skip(file) {
-    return this._emitComplete(file, true);
-  }
-
-  _skipAll(file) {
-    return this._emitAllComplete(file, true);
-  }
 }
 
 export class UploaderPlugin extends UppyPluginBase {
@@ -106,30 +106,5 @@ export class UploaderPlugin extends UppyPluginBase {
   _emitComplete(file, skipped = false) {
     this.uppy.emit("upload-complete", file, skipped, this.id);
     return Promise.resolve();
-  }
-
-  _emitAllComplete(fileIds, skipped = false) {
-    fileIds.forEach((fileId) => {
-      let file = this._getFile(fileId);
-      this._emitComplete(file, skipped);
-    });
-    return Promise.resolve();
-  }
-
-  _emitError(file, errorMessage) {
-    // the error message is stored twice; once to show in a displayErrorForUpload
-    // modal, and on the .message property to show in the uppy logs
-    this.uppy.emit("upload-error", file, {
-      errors: [errorMessage],
-      message: `[${this.id}] ${errorMessage}`,
-    });
-  }
-
-  _skip(file) {
-    return this._emitComplete(file, true);
-  }
-
-  _skipAll(file) {
-    return this._emitAllComplete(file, true);
   }
 }
