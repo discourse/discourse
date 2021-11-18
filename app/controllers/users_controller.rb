@@ -493,21 +493,20 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
-    topic_id = params[:topic_id]
-    topic = Topic.find_by(id: topic_id) if !topic_id.blank?
-
     cannot_see = []
-    if topic
+    here_count = nil
+
+    topic_id = params[:topic_id]
+    if topic = Topic.find_by(id: topic_id)
       usernames.each do |username|
         if !Guardian.new(User.find_by_username(username)).can_see?(topic)
           cannot_see.push(username)
         end
       end
-    end
 
-    here_count = nil
-    if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
-      here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
+      if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
+        here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
+      end
     end
 
     result = User.where(staged: false)
