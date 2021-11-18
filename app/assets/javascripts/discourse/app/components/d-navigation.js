@@ -60,10 +60,10 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("categoryReadOnlyBanner", "hasDraft")
   createTopicClass(categoryReadOnlyBanner, hasDraft) {
     let classNames = ["btn-default"];
-    if (categoryReadOnlyBanner && !hasDraft) {
-      classNames.push("disabled");
-    } else if (hasDraft) {
+    if (hasDraft) {
       classNames.push("open-draft");
+    } else if (categoryReadOnlyBanner) {
+      classNames.push("disabled");
     }
     return classNames.join(" ");
   },
