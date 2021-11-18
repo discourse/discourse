@@ -363,8 +363,20 @@ describe PostAlerter do
     end
 
     it 'notifies users who replied' do
-      post2 = Fabricate(:post, topic: topic)
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       post3 = Fabricate(:post, topic: topic)
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(0)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies users who whispered' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      tl2_user.grant_admin!
 
       expect { post }
         .to change(other_post.user.notifications, :count).by(1)
