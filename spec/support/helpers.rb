@@ -14,8 +14,9 @@ module Helpers
   end
 
   def log_in_user(user)
+    cookie_jar = ActionDispatch::Request.new(request.env).cookie_jar
     provider = Discourse.current_user_provider.new(request.env)
-    provider.log_on_user(user, session, cookies)
+    provider.log_on_user(user, session, cookie_jar)
     provider
   end
 

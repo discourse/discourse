@@ -402,7 +402,8 @@ class Reviewable < ActiveRecord::Base
   def post_options
     Discourse.deprecate(
       "Reviewable#post_options is deprecated. Please use #payload instead.",
-      output_in_test: true
+      output_in_test: true,
+      drop_from: '2.9.0',
     )
   end
 

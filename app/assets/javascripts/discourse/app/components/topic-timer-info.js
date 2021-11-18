@@ -75,7 +75,7 @@ export default Component.extend({
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
     if (minutesLeft > 0 || isDeleteRepliesType || this.basedOnLastPost) {
-      let durationMinutes = parseInt(this.durationMinutes, 0) || 0;
+      let durationMinutes = parseInt(this.durationMinutes, 10) || 0;
 
       let options = {
         timeLeft: duration.humanize(true),

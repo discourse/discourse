@@ -155,6 +155,10 @@ export default Component.extend({
 
   @bind
   _intersectionHandler(entries) {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     if (entries[0].isIntersecting === true) {
       this.set("docked", true);
     } else {

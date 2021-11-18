@@ -20,6 +20,7 @@ export default ComboBoxComponent.extend({
     permissionType: PermissionType.FULL,
     excludeCategoryId: null,
     scopedCategoryId: null,
+    prioritizedCategoryId: null,
   },
 
   modifyComponentForRow() {

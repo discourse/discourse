@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 
 createWidget(
   "post-admin-menu-button",
-  jQuery.extend(ButtonClass, { tagName: "li.btn" })
+  Object.assign(ButtonClass, { tagName: "li.btn" })
 );
 
 createWidget("post-admin-menu-button", {

@@ -3846,9 +3846,24 @@ describe Guardian do
   describe '#auth_token' do
     it 'returns the correct auth token' do
       token = UserAuthToken.generate!(user_id: user.id)
-      env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+      cookie = create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        issued_at: 5.minutes.ago,
+      )
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
 
-      guardian = Guardian.new(user, Rack::Request.new(env))
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
+    end
+
+    it 'supports v0 of auth cookie' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = token.unhashed_auth_token
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
+
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
       expect(guardian.auth_token).to eq(token.auth_token)
     end
   end

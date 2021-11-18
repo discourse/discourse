@@ -676,7 +676,7 @@ module("Unit | Model | post-stream", function () {
       topic_id: 10101,
     });
     postStream.appendPost(original);
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       original,
       "the original post is lastAppended"
@@ -710,7 +710,7 @@ module("Unit | Model | post-stream", function () {
       postStream.get("loading"),
       "it is loading while the post is being staged"
     );
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       original,
       "it doesn't consider staged posts as the lastAppended"
@@ -775,7 +775,7 @@ module("Unit | Model | post-stream", function () {
       !postStream.get("posts").includes(stagedPost),
       "the post is removed from the stream"
     );
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       original,
       "it doesn't consider undid post lastAppended"
@@ -792,7 +792,7 @@ module("Unit | Model | post-stream", function () {
       topic_id: 10101,
     });
     postStream.appendPost(original);
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       original,
       "the original post is lastAppended"
@@ -827,7 +827,7 @@ module("Unit | Model | post-stream", function () {
       "alreadyStaging",
       "you can't stage a post while it is currently staging"
     );
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       original,
       "staging a post doesn't change the lastAppended"
@@ -854,7 +854,7 @@ module("Unit | Model | post-stream", function () {
       "different raw value",
       "it also updated the value in the stream"
     );
-    assert.ok(
+    assert.strictEqual(
       postStream.get("lastAppended"),
       found,
       "committing a post changes lastAppended"

@@ -3554,7 +3554,6 @@ ja:
         delete: 永久に削除
         not_shown_again: このキーは二度と表示されません。続行する前に必ずコピーしてください。
         continue: 続行
-        use_global_key: グローバルキー (すべての操作を許可)
         scopes:
           description: |
             スコープを使用する場合、API キーを特定のエンドポイントのセットに制限できます。

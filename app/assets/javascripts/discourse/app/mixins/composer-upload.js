@@ -13,6 +13,7 @@ import {
   validateUploadedFiles,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import bootbox from "bootbox";
 
 export default Mixin.create({
   _xhr: null,

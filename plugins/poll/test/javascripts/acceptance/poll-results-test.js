@@ -6,7 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 
 acceptance("Poll results", function (needs) {
   needs.user();
@@ -568,11 +568,11 @@ acceptance("Poll results", function (needs) {
     await visit("/t/-/load-more-poll-voters");
 
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(1) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(1) .poll-voters li"),
       1
     );
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(2) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(2) .poll-voters li"),
       0
     );
 
@@ -627,11 +627,11 @@ acceptance("Poll results", function (needs) {
     await visit("/t/-/load-more-poll-voters");
 
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(1) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(1) .poll-voters li"),
       1
     );
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(2) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(2) .poll-voters li"),
       1
     );
 
@@ -639,11 +639,11 @@ acceptance("Poll results", function (needs) {
     await visit("/t/-/load-more-poll-voters");
 
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(1) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(1) .poll-voters li"),
       2
     );
     assert.strictEqual(
-      find(".poll-container .results li:nth-child(2) .poll-voters li").length,
+      count(".poll-container .results li:nth-child(2) .poll-voters li"),
       0
     );
   });

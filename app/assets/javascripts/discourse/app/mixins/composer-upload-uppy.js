@@ -10,7 +10,7 @@ import { warn } from "@ember/debug";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import { observes, on } from "discourse-common/utils/decorators";
+import { bind, observes, on } from "discourse-common/utils/decorators";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -18,6 +18,7 @@ import {
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import bootbox from "bootbox";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -32,6 +33,9 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 // functionality and event binding.
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+  uploadRootPath: "/uploads",
+  uploadTargetBound: false,
+
   @observes("composerModel.uploadCancelled")
   _cancelUpload() {
     if (!this.get("composerModel.uploadCancelled")) {
@@ -45,17 +49,18 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
+    if (!this.uploadTargetBound) {
+      return;
+    }
+
     this.fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
     );
 
-    this.element?.removeEventListener("paste", this.pasteEventListener);
+    this.element.removeEventListener("paste", this.pasteEventListener);
 
-    this.appEvents.off(
-      `${this.eventPrefix}:add-files`,
-      this._addFiles.bind(this)
-    );
+    this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
 
     this._reset();
 
@@ -63,6 +68,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this._uppyInstance.close();
       this._uppyInstance = null;
     }
+
+    this.uploadTargetBound = false;
   },
 
   _abortAndReset() {
@@ -78,14 +85,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
-    this.appEvents.on(
-      `${this.eventPrefix}:add-files`,
-      this._addFiles.bind(this)
-    );
+    this.appEvents.on(`${this.eventPrefix}:add-files`, this._addFiles);
 
     this._unbindUploadTarget();
-    this._bindFileInputChangeListener();
-    this._bindPasteListener();
+    this.fileInputEventListener = bindFileInputChangeListener(
+      this.fileInputEl,
+      this._addFiles
+    );
+    this.element.addEventListener("paste", this.pasteEventListener);
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,
@@ -221,7 +228,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       );
     });
 
-    this._uppyInstance.on("upload-error", this._handleUploadError.bind(this));
+    this._uppyInstance.on("upload-error", this._handleUploadError);
 
     this._uppyInstance.on("complete", () => {
       this.appEvents.trigger(`${this.eventPrefix}:all-uploads-complete`);
@@ -249,8 +256,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     this._setupPreProcessors();
     this._setupUIPlugins();
+
+    this.uploadTargetBound = true;
   },
 
+  @bind
   _handleUploadError(file, error, response) {
     this._inProgressUploads--;
     this._resetUpload(file, { removePlaceholder: true });
@@ -410,38 +420,29 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     }
   },
 
-  _bindFileInputChangeListener() {
-    this.fileInputEventListener = bindFileInputChangeListener(
-      this.fileInputEl,
-      this._addFiles.bind(this)
-    );
+  @bind
+  pasteEventListener(event) {
+    if (
+      document.activeElement !== document.querySelector(this.editorInputClass)
+    ) {
+      return;
+    }
+
+    const { canUpload } = clipboardHelpers(event, {
+      siteSettings: this.siteSettings,
+      canUpload: true,
+    });
+
+    if (!canUpload) {
+      return;
+    }
+
+    if (event && event.clipboardData && event.clipboardData.files) {
+      this._addFiles([...event.clipboardData.files], { pasted: true });
+    }
   },
 
-  _bindPasteListener() {
-    this.pasteEventListener = function pasteListener(event) {
-      if (
-        document.activeElement !== document.querySelector(this.editorInputClass)
-      ) {
-        return;
-      }
-
-      const { canUpload } = clipboardHelpers(event, {
-        siteSettings: this.siteSettings,
-        canUpload: true,
-      });
-
-      if (!canUpload) {
-        return;
-      }
-
-      if (event && event.clipboardData && event.clipboardData.files) {
-        this._addFiles([...event.clipboardData.files], { pasted: true });
-      }
-    }.bind(this);
-
-    this.element.addEventListener("paste", this.pasteEventListener);
-  },
-
+  @bind
   _addFiles(files, opts = {}) {
     files = Array.isArray(files) ? files : [files];
     try {

@@ -1,3 +1,4 @@
+import Category from "discourse/models/category";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
@@ -212,11 +213,9 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("model.category")
-  minimumRequiredTags(category) {
-    return category && category.minimum_required_tags > 0
-      ? category.minimum_required_tags
-      : null;
+  @discourseComputed("buffered.category_id")
+  minimumRequiredTags(categoryId) {
+    return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {

@@ -171,10 +171,6 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   actions: {
-    invalidateModel() {
-      this.refresh();
-    },
-
     renameTag(tag) {
       showModal("rename-tag", { model: tag });
     },
@@ -220,7 +216,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       const categoryId = controller.get("category.id");
 
       if (categoryId) {
-        options = $.extend({}, options, {
+        options = Object.assign({}, options, {
           categoryId,
           includeSubcategories: !controller.noSubcategories,
         });

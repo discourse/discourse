@@ -9,13 +9,29 @@ import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
+import Category from "discourse/models/category";
 
 export default Controller.extend(
   ModalFunctionality,
   bufferedProperty("invite"),
   {
+    topic: null,
+    restrictedGroups: null,
+
     onShow() {
       this.set("showNotifyUsers", false);
+
+      if (this.model && this.model.read_restricted) {
+        Category.reloadBySlugPath(this.model.slug).then((result) => {
+          this.setProperties({
+            restrictedGroups: result.category.group_permissions.map(
+              (g) => g.group_name
+            ),
+          });
+        });
+      } else {
+        this.setProperties({ restrictedGroups: null });
+      }
     },
 
     @discourseComputed("topic.shareUrl")
@@ -37,6 +53,21 @@ export default Controller.extend(
         this.siteSettings.share_links,
         privateContext
       );
+    },
+
+    @discourseComputed("restrictedGroups")
+    hasRestrictedGroups(groups) {
+      return !!groups;
+    },
+
+    @discourseComputed("restrictedGroups")
+    restrictedGroupsCount(groups) {
+      return groups.length;
+    },
+
+    @discourseComputed("restrictedGroups")
+    restrictedGroupsDisplayText(groups) {
+      return groups.join(", ");
     },
 
     @action

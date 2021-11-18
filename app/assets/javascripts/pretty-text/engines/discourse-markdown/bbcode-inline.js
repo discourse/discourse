@@ -168,7 +168,7 @@ export function setup(helper) {
 
     ruler.push("code", {
       tag: "code",
-      replace: function (state, tagInfo, content) {
+      replace(state, tagInfo, content) {
         let token;
         token = state.push("code_inline", "code", 0);
         token.content = content;
@@ -179,7 +179,7 @@ export function setup(helper) {
     const simpleUrlRegex = /^http[s]?:\/\//;
     ruler.push("url", {
       tag: "url",
-      wrap: function (startToken, endToken, tagInfo, content) {
+      wrap(startToken, endToken, tagInfo, content) {
         const url = (tagInfo.attrs["_default"] || content).trim();
 
         if (simpleUrlRegex.test(url)) {
@@ -212,7 +212,7 @@ export function setup(helper) {
 
     ruler.push("email", {
       tag: "email",
-      replace: function (state, tagInfo, content) {
+      replace(state, tagInfo, content) {
         let token;
         let email = tagInfo.attrs["_default"] || content;
 
@@ -232,7 +232,7 @@ export function setup(helper) {
 
     ruler.push("image", {
       tag: "img",
-      replace: function (state, tagInfo, content) {
+      replace(state, tagInfo, content) {
         let token = state.push("image", "img", 0);
         token.attrs = [
           ["src", content],

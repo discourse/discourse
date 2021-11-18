@@ -152,10 +152,10 @@
     "@glimmer/interfaces" "^0.54.2"
     "@simple-dom/interface" "^1.4.0"
 
-"@highlightjs/cdn-assets@^10.6.0":
-  version "10.6.0"
-  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.6.0.tgz#ec1404662cd20ed3de4e918d952f01af6350d5d0"
-  integrity sha512-u1nkZi2HRsZ3FuvnafUxhv6Bk3tyXboG4F0SE+QQJk+GhAxRQaENPMdZ6zVVQg6Vsv9r23VyWJLo4Vnw72NIxQ==
+"@highlightjs/cdn-assets@^10.7.0":
+  version "10.7.3"
+  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.7.3.tgz#bccdef5cdfe4bf74ed9393cba528539f94753306"
+  integrity sha512-Bz1c7NOPQE1h/0S3lYaDyA5wTimP9b8ppeN3HBfv+SF0IEeLsu86xneMcBvCaXBMwcwLc6/xGpyPOmPhCM8hAg==
 
 "@json-editor/json-editor@^2.5.2":
   version "2.5.2"
@@ -198,10 +198,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@popperjs/core@v2.9.3":
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.3.tgz#8b68da1ebd7fc603999cf6ebee34a4899a14b88e"
-  integrity sha512-xDu17cEfh7Kid/d95kB6tZsLOmSWKCZKtprnhVepjsSaCij+lM3mItSJDuuHDMbCWTh8Ejmebwb+KONcCJ0eXQ==
+"@popperjs/core@v2.10.2":
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.2.tgz#0798c03351f0dea1a5a4cabddf26a55a7cbee590"
+  integrity sha512-IXf3XA7+XyN7CP9gGh/XB0UxVMlvARGEgGXLubFICsUMGz6Q+DU+i4gGlpOxTjKvXjkJDJC8YdqdKkDj9qZHEQ==
 
 "@simple-dom/interface@^1.4.0":
   version "1.4.0"

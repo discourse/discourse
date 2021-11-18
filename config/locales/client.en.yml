@@ -2285,6 +2285,12 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      dismiss_confirmation:
+        body:
+          one: "You have %{count} important notification, are you sure you would like to dismiss?"
+          other: "You have %{count} important notifications, are you sure you would like to dismiss?"
+        confirm: "Confirm"
+        cancel: "Cancel"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -2825,6 +2831,9 @@ en:
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
         copied: "Topic link copied."
+        restricted_groups:
+          one: "Only visible to members of group:"
+          other: "Only visible to members of groups:"
         notify_users:
           title: "Notify"
           instructions: "Notify the following users about this topic:"
@@ -3711,6 +3720,7 @@ en:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
         insert_url: "%{shortcut} Insert selection into open composer"
+        full_page_search: "%{shortcut} Launches full page search"
 
     badges:
       earned_n_times:
@@ -3768,6 +3778,9 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      choose_for_topic_required:
+        one: "select at least %{count} tag..."
+        other: "select at least %{count} tags..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."

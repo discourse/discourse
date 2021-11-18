@@ -221,6 +221,50 @@ module("Unit | Model | category", function () {
     assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
   });
 
+  test("minimumRequiredTags", function (assert) {
+    const store = createStore();
+
+    let foo = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      required_tag_groups: ["bar"],
+      min_tags_from_required_group: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, 2);
+
+    foo = store.createRecord("category", {
+      id: 2,
+      slug: "foo",
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
+
+    foo = store.createRecord("category", {
+      id: 3,
+      slug: "foo",
+      minimum_required_tags: 0,
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
+
+    foo = store.createRecord("category", {
+      id: 4,
+      slug: "foo",
+      minimum_required_tags: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, 2);
+
+    foo = store.createRecord("category", {
+      id: 5,
+      slug: "foo",
+      min_tags_from_required_group: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
+  });
+
   test("search with category name", function (assert) {
     const store = createStore(),
       category1 = store.createRecord("category", {

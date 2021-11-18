@@ -3814,7 +3814,6 @@ tr_TR:
         delete: Kalıcı Olarak Sil
         not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
-        use_global_key: Genel Anahtar (tüm eylemlere izin verir)
         scopes:
           description: |
             Kapsamları kullanırken, bir API anahtarını ssadece belirli bir endpoint grubuyla kullanılacak şekilde kısıtlayabilirsiniz. Hangi parametrelere izin verileceğini de tanımlayabilirsiniz. Birden çok değer kullanacaksanız bunları ayırmak için virgül kullanın.

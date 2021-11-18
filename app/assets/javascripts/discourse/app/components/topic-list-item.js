@@ -159,16 +159,16 @@ export default Component.extend({
     return classes.join(" ");
   },
 
-  hasLikes: function () {
+  hasLikes() {
     return this.get("topic.like_count") > 0;
   },
 
-  hasOpLikes: function () {
+  hasOpLikes() {
     return this.get("topic.op_like_count") > 0;
   },
 
   @discourseComputed
-  expandPinned: function () {
+  expandPinned() {
     const pinned = this.get("topic.pinned");
     if (!pinned) {
       return false;

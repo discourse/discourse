@@ -14,7 +14,7 @@ describe TopicEmbed do
     fab!(:user) { Fabricate(:user) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { 'http://eviltrout.com/123' }
-    let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'></p>" }
+    let(:contents) { "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>" }
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
     fab!(:category) { Fabricate(:category) }
     fab!(:tag) { Fabricate(:tag) }
@@ -38,6 +38,10 @@ describe TopicEmbed do
         # It converts relative URLs to absolute
         expect(post.cooked).to have_tag('a', with: { href: 'http://eviltrout.com/hello' })
         expect(post.cooked).to have_tag('img', with: { src: 'http://eviltrout.com/images/wat.jpg' })
+
+        # It converts relative URLs to absolute when expanded
+        stub_request(:get, url).to_return(status: 200, body: contents)
+        expect(TopicEmbed.expanded_for(post)).to have_tag('img', with: { src: 'http://eviltrout.com/images/wat.jpg' })
 
         expect(post.topic.has_topic_embed?).to eq(true)
         expect(TopicEmbed.where(topic_id: post.topic_id)).to be_present
@@ -335,7 +339,7 @@ describe TopicEmbed do
       it "handles mailto links" do
         response = TopicEmbed.find_remote(url)
 
-        expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
+        expect(response.body).to have_tag('a', with: { href: 'mailto:foo@example.com' })
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
       end
     end

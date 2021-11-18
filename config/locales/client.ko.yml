@@ -3640,7 +3640,6 @@ ko:
         delete: 영구적으로 삭제
         not_shown_again: 이 키는 다시 표시되지 않습니다. 계속하기 전에 사본을 작성하십시오.
         continue: 계속
-        use_global_key: 전역 키 (모든 작업 허용)
         scopes:
           description: |
             범위를 사용할 때 API키를 특정 엔드 포인트 세트로 제한 할 수 있습니다.

@@ -1,5 +1,7 @@
 import { later } from "@ember/runloop";
+import bootbox from "bootbox";
 import { createWidget } from "discourse/widgets/widget";
+import I18n from "I18n";
 import { h } from "virtual-dom";
 
 const UserMenuAction = {
@@ -249,7 +251,26 @@ export default createWidget("user-menu", {
   },
 
   dismissNotifications() {
-    return this.state.markRead();
+    const unreadHighPriorityNotifications = this.currentUser.get(
+      "unread_high_priority_notifications"
+    );
+
+    if (unreadHighPriorityNotifications > 0) {
+      return bootbox.confirm(
+        I18n.t("notifications.dismiss_confirmation.body", {
+          count: unreadHighPriorityNotifications,
+        }),
+        I18n.t("notifications.dismiss_confirmation.cancel"),
+        I18n.t("notifications.dismiss_confirmation.confirm"),
+        (result) => {
+          if (result) {
+            this.state.markRead();
+          }
+        }
+      );
+    } else {
+      return this.state.markRead();
+    }
   },
 
   itemsLoaded({ hasUnread, markRead }) {

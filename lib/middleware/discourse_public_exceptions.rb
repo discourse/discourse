@@ -35,7 +35,7 @@ module Middleware
           begin
             request.format
           rescue Mime::Type::InvalidMimeType
-            return [400, {}, ["Invalid MIME type"]]
+            return [400, { "Cache-Control" => "private, max-age=0, must-revalidate" }, ["Invalid MIME type"]]
           end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)

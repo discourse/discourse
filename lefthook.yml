@@ -5,14 +5,10 @@ pre-commit:
       glob: "*.rb"
       run: bundle exec rubocop --parallel {staged_files}
     prettier:
-      glob: "*.{js,es6}"
+      glob: "*.js"
       include: "app/assets/javascripts|test/javascripts"
       run: yarn pprettier --list-different {staged_files}
-    eslint-es6:
-      glob: "*.es6"
-      include: "app/assets/javascripts|test/javascripts"
-      run: yarn eslint --ext .es6 -f compact {staged_files}
-    eslint-js:
+    eslint:
       glob: "*.js"
       include: "app/assets/javascripts|test/javascripts"
       run: yarn eslint -f compact {staged_files}
@@ -52,23 +48,17 @@ lints:
     rubocop:
       run: bundle exec rubocop --parallel
     prettier:
-      glob: "*.{js,es6}"
+      glob: "*.js"
       include: "app/assets/javascripts|test/javascripts"
       run: yarn pprettier --list-different {all_files}
-    eslint-assets-es6:
-      run: yarn eslint --ext .es6 app/assets/javascripts
     eslint-assets-js:
       run: yarn eslint app/assets/javascripts
-    eslint-test-es6:
-      run: yarn eslint --ext .es6 test/javascripts
     eslint-test-js:
       run: yarn eslint test/javascripts
     eslint-plugins-assets:
-      run: yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts
+      run: yarn eslint plugins/**/assets/javascripts
     eslint-plugins-test:
-      run: yarn eslint --global I18n --ext .es6 plugins/**/test/javascripts
-    eslint-assets-tests:
-      run: yarn eslint app/assets/javascripts test/javascripts
+      run: yarn eslint plugins/**/test/javascripts
     i18n-lint:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {all_files}

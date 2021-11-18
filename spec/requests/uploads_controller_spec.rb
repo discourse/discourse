@@ -764,7 +764,7 @@ describe UploadsController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        stub_const(UploadsController, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
+        stub_const(ExternalUploadHelpers, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background", file_size: 1024 }
           post "/uploads/generate-presigned-put.json", params: { file_name: "test.png", type: "card_background", file_size: 1024 }
         end
@@ -793,8 +793,6 @@ describe UploadsController do
         sign_in(user)
         SiteSetting.enable_direct_s3_uploads = true
         setup_s3
-        SiteSetting.s3_backup_bucket = "s3-backup-bucket"
-        SiteSetting.backup_location = BackupLocationSiteSetting::S3
       end
 
       it "errors if the correct params are not provided" do
@@ -902,7 +900,7 @@ describe UploadsController do
         RateLimiter.clear_all!
 
         stub_create_multipart_request
-        stub_const(UploadsController, "CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
+        stub_const(ExternalUploadHelpers, "CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/create-multipart.json", params: {
             file_name: "test.png",
             upload_type: "composer",
@@ -916,88 +914,6 @@ describe UploadsController do
             file_size: 1024
           }
           expect(response.status).to eq(429)
-        end
-      end
-
-      context "when the upload_type is backup" do
-        let(:upload_type) { "backup" }
-        let(:backup_file_exists_response) { { status: 404 } }
-
-        before do
-          stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
-          stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/default/test.tar.gz").to_return(
-            backup_file_exists_response
-          )
-        end
-
-        context "when the user is not admin" do
-          it "errors with invalid access error" do
-            post "/uploads/create-multipart.json", params: {
-              file_name: "test.tar.gz",
-              upload_type: upload_type,
-              file_size: 4098
-            }
-            expect(response.status).to eq(403)
-          end
-        end
-
-        context "when the user is admin" do
-          before do
-            user.update(admin: true)
-          end
-
-          def stub_create_multipart_backup_request
-            BackupRestore::S3BackupStore.any_instance.stubs(:temporary_upload_path).returns(
-              "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz"
-            )
-            create_multipart_result = <<~BODY
-        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
-        <InitiateMultipartUploadResult>
-           <Bucket>s3-backup-bucket</Bucket>
-           <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz</Key>
-           <UploadId>#{mock_multipart_upload_id}</UploadId>
-        </InitiateMultipartUploadResult>
-            BODY
-            stub_request(:post, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads").
-              to_return(status: 200, body: create_multipart_result)
-          end
-
-          it "creates the multipart upload" do
-            stub_create_multipart_backup_request
-            post "/uploads/create-multipart.json", params: {
-              file_name: "test.tar.gz",
-              upload_type: upload_type,
-              file_size: 4098
-            }
-            expect(response.status).to eq(200)
-            result = response.parsed_body
-
-            external_upload_stub = ExternalUploadStub.where(
-              unique_identifier: result["unique_identifier"],
-              original_filename: "test.tar.gz",
-              created_by: user,
-              upload_type: upload_type,
-              key: result["key"],
-              multipart: true
-            )
-            expect(external_upload_stub.exists?).to eq(true)
-          end
-
-          context "when backup of same filename already exists" do
-            let(:backup_file_exists_response) { { status: 200, body: "" } }
-
-            it "throws an error" do
-              post "/uploads/create-multipart.json", params: {
-                file_name: "test.tar.gz",
-                upload_type: upload_type,
-                file_size: 4098
-              }
-              expect(response.status).to eq(422)
-              expect(response.parsed_body["errors"]).to include(
-                I18n.t("backup.file_exists")
-              )
-            end
-          end
         end
       end
     end
@@ -1127,7 +1043,7 @@ describe UploadsController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        stub_const(UploadsController, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
+        stub_const(ExternalUploadHelpers, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
           stub_list_multipart_request
           post "/uploads/batch-presign-multipart-parts.json", params: {
             unique_identifier: external_upload_stub.unique_identifier,
@@ -1316,7 +1232,7 @@ describe UploadsController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        stub_const(UploadsController, "COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
+        stub_const(ExternalUploadHelpers, "COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
           post "/uploads/complete-multipart.json", params: {
             unique_identifier: "blah",
             parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }]

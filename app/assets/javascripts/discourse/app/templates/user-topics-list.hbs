@@ -6,7 +6,7 @@
     </div>
   </div>
 {{else}}
-  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list .topic-list-item" action=(action "loadMore")}}
     {{topic-dismiss-buttons
       position="top"
       selectedTopics=selected

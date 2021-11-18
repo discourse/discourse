@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { on } from "discourse-common/utils/decorators";
+import { bind, on } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import {
@@ -64,21 +64,23 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     let filterFn;
 
     if (inbox === "user") {
-      filterFn = this._isPersonal.bind(this);
+      filterFn = this._isPersonal;
     } else if (inbox === "group") {
-      filterFn = this._isGroup.bind(this);
+      filterFn = this._isGroup;
     }
 
     return Array.from(this.states.values()).filter((topic) => {
-      return (
-        typeFilterFn(topic) && (!filterFn || filterFn(topic, opts.groupName))
-      );
+      return typeFilterFn(topic) && filterFn?.(topic, opts.groupName);
     }).length;
   },
 
   trackIncoming(inbox, filter, group) {
-    this.setProperties({ inbox, filter, activeGroup: group });
-    this.set("isTrackingIncoming", true);
+    this.setProperties({
+      inbox,
+      filter,
+      activeGroup: group,
+      isTrackingIncoming: true,
+    });
   },
 
   resetIncomingTracking() {
@@ -130,6 +132,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     );
   },
 
+  @bind
   _isPersonal(topic) {
     const groups = this.currentUser?.groups;
 
@@ -142,6 +145,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     });
   },
 
+  @bind
   _isGroup(topic, activeGroupName) {
     return this.currentUser.groups.some((group) => {
       return (
@@ -151,6 +155,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     });
   },
 
+  @bind
   _processMessage(message) {
     switch (message.message_type) {
       case "new_topic":
@@ -212,7 +217,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _notifyIncoming(topicId) {
-    if (this.isTrackingIncoming && this.newIncoming.indexOf(topicId) === -1) {
+    if (this.isTrackingIncoming && !this.newIncoming.includes(topicId)) {
       this.newIncoming.pushObject(topicId);
     }
   },
