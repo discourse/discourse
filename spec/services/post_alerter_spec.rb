@@ -347,6 +347,7 @@ describe PostAlerter do
   context '@here' do
     let(:topic) { Fabricate(:topic) }
     let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
+    let(:other_post) { Fabricate(:post, topic: topic) }
 
     before do
       Jobs.run_immediately!
@@ -358,30 +359,23 @@ describe PostAlerter do
 
     it 'does not work if user here exists' do
       Fabricate(:user, username: SiteSetting.here_mention)
-      Fabricate(:topic_allowed_user, topic: topic, user: evil_trout)
-      expect { post }.to change(evil_trout.notifications, :count).by(0)
+      expect { post }.to change(other_post.user.notifications, :count).by(0)
     end
 
-    it 'notifies allowed users' do
-      Fabricate(:topic_allowed_user, topic: topic, user: evil_trout)
-      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    it 'notifies users who replied' do
+      post2 = Fabricate(:post, topic: topic)
+      post3 = Fabricate(:post, topic: topic)
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(1)
+        .and change(post3.user.notifications, :count).by(1)
     end
 
-    it 'notifies allowed groups' do
-      group = Fabricate(:group).tap { |g| g.add(evil_trout) }
-      Fabricate(:topic_allowed_group, topic: topic, group: group)
-      expect { post }.to change(evil_trout.notifications, :count).by(1)
-    end
-
-    it 'notifies users that liked posts' do
-      other_post = Fabricate(:post, topic: topic)
-      PostActionCreator.like(evil_trout, other_post)
-      expect { post }.to change(evil_trout.notifications, :count).by(1)
-    end
-
-    it 'notifies users that read the topic' do
-      Fabricate(:topic_user, topic: topic, user: evil_trout, total_msecs_viewed: 100)
-      expect { post }.to change(evil_trout.notifications, :count).by(1)
+    it 'notifies only last max_here_mentioned users' do
+      SiteSetting.max_here_mentioned = 2
+      3.times { Fabricate(:post, topic: topic) }
+      expect { post }.to change { Notification.count }.by(2)
     end
   end
 

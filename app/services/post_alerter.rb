@@ -133,10 +133,9 @@ class PostAlerter
       end
 
       if mentioned_here
-        expand_here_mention(post, exclude_ids: notified.map(&:id)) do |users|
-          users = only_allowed_users(users, post)
-          notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
-        end
+        users = expand_here_mention(post, exclude_ids: notified.map(&:id))
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
       end
     end
 
@@ -551,46 +550,18 @@ class PostAlerter
   end
 
   def expand_here_mention(post, exclude_ids: nil)
-    exclude_ids ||= []
-    user_ids = []
+    posts = Post.where(topic_id: post.topic_id)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
 
-    # users that liked posts in topic
-    if user_ids.size < SiteSetting.max_here_mentioned
-      user_ids += PostAction
-        .where(post_id: Post.select(:id).where(topic_id: post.topic_id))
-        .where(post_action_type_id: PostActionType.types[:like])
-        .group(:user_id)
-        .order('COUNT(user_id) DESC')
-        .pluck(:user_id)
-      user_ids = (user_ids - exclude_ids).uniq
+    if post.user.staff?
+      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
+    else
+      posts = posts.where(post_type: Post.types[:regular])
     end
 
-    # users that read the topic
-    if user_ids.size < SiteSetting.max_here_mentioned
-      user_ids += TopicUser
-        .where(topic_id: post.topic_id)
-        .order(total_msecs_viewed: :desc)
-        .pluck(:user_id)
-      user_ids = (user_ids - exclude_ids).uniq
-    end
-
-    # users that were allowed to topic
-    if user_ids.size < SiteSetting.max_here_mentioned
-      user_ids += TopicAllowedUser
-        .where(topic_id: post.topic_id)
-        .pluck(:user_id)
-      user_ids = (user_ids - exclude_ids).uniq
-    end
-
-    # users that are members of groups allowed to topic
-    if user_ids.size < SiteSetting.max_here_mentioned
-      user_ids += GroupUser
-        .where(group_id: TopicAllowedGroup.select(:group_id).where(topic_id: post.topic_id))
-        .pluck(:user_id)
-      user_ids = (user_ids - exclude_ids).uniq
-    end
-
-    yield User.real.where(id: user_ids[0..SiteSetting.max_here_mentioned])
+    User.real
+      .where(id: posts.distinct.select(:user_id))
+      .limit(SiteSetting.max_here_mentioned)
   end
 
   # TODO: Move to post-analyzer?

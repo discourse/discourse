@@ -876,6 +876,7 @@ posting:
   here_mention:
     default: "here"
     validator: "NotUsernameValidator"
+    client: true
   max_here_mentioned: 10
   min_trust_level_for_here_mention:
     default: "2"

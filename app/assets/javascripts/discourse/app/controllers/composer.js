@@ -723,7 +723,10 @@ export default Controller.extend({
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",
         templateName: "custom-body",
-        body: I18n.t("composer.here_mention", { count }),
+        body: I18n.t("composer.here_mention", {
+          here: this.siteSettings.here_mention,
+          count,
+        }),
       });
     },
 
