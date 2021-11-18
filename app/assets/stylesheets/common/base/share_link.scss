@@ -182,9 +182,10 @@
     }
   }
 
-  .show-advanced {
-    margin-left: auto;
-    margin-right: 0;
+  .invite-custom-message {
+    label {
+      margin-left: 1.75em;
+    }
   }
 
   .input-group {
@@ -197,6 +198,17 @@
     .future-date-input-time-picker {
       margin-left: 1.75em;
       width: calc(100% - 1.75em);
+    }
+
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
+      display: inline-block;
+      margin: 0em 0em 0em 1.75em;
+      width: calc(50% - 2em);
+
+      input {
+        height: 34px;
+      }
     }
   }
 }

@@ -1,22 +1,26 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import EmberObject from "@ember/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Service from "@ember/service";
 import I18n from "I18n";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { readOnly } from "@ember/object/computed";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
-const LogsNotice = EmberObject.extend({
+export default Service.extend({
   text: "",
 
-  @on("init")
-  _setup() {
-    if (!this.isActivated) {
+  isAdmin: readOnly("currentUser.admin"),
+
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.siteSettings.alert_admins_if_errors_per_hour === 0 &&
+      this.siteSettings.alert_admins_if_errors_per_minute === 0
+    ) {
       return;
     }
 
@@ -63,11 +67,6 @@ const LogsNotice = EmberObject.extend({
     return htmlSafe(text);
   },
 
-  @discourseComputed("currentUser")
-  isAdmin(currentUser) {
-    return currentUser && currentUser.admin;
-  },
-
   @discourseComputed("isEmpty", "isAdmin")
   hidden(thisIsEmpty, isAdmin) {
     return !isAdmin || thisIsEmpty;
@@ -77,14 +76,4 @@ const LogsNotice = EmberObject.extend({
   _updateKeyValueStore() {
     this.keyValueStore.setItem(LOGS_NOTICE_KEY, this.text);
   },
-
-  @discourseComputed(
-    "siteSettings.alert_admins_if_errors_per_hour",
-    "siteSettings.alert_admins_if_errors_per_minute"
-  )
-  isActivated(errorsPerHour, errorsPerMinute) {
-    return errorsPerHour > 0 || errorsPerMinute > 0;
-  },
 });
-
-export default LogsNotice;

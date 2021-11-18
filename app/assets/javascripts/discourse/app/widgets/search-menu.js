@@ -185,6 +185,7 @@ const SearchHelper = {
 
 export default createWidget("search-menu", {
   tagName: "div.search-menu",
+  services: ["search"],
   searchData,
 
   buildKey: () => "search-menu",
@@ -304,13 +305,6 @@ export default createWidget("search-menu", {
     searchInput.value = "";
     searchInput.focus();
     this.triggerSearch();
-  },
-
-  searchService() {
-    if (!this._searchService) {
-      this._searchService = this.register.lookup("search-service:main");
-    }
-    return this._searchService;
   },
 
   html(attrs, state) {
@@ -450,7 +444,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     if (SearchHelper.includesTopics()) {
       if (this.state.inTopicContext) {
-        this.searchService().set("highlightTerm", searchData.term);
+        this.search.set("highlightTerm", searchData.term);
       }
 
       searchData.loading = true;
@@ -500,7 +494,7 @@ export default createWidget("search-menu", {
 
   searchContext() {
     if (this.state.inTopicContext) {
-      return this.searchService().get("searchContext");
+      return this.search.searchContext;
     }
 
     return false;

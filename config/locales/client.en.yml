@@ -1613,7 +1613,7 @@ en:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
 
-          instructions: "Share this link to instantly grant access to this site"
+          instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
@@ -1621,20 +1621,20 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict to one email address"
+          restrict_email: "Restrict to email"
 
           max_redemptions_allowed: "Max uses"
 
           add_to_groups: "Add to groups"
-          invite_to_topic: "Arrive at this topic"
+          invite_to_topic: "Arrive at topic"
           expires_at: "Expire after"
           custom_message: "Optional personal message"
 
           send_invite_email: "Save and Send Email"
+          send_invite_email_instructions: "Restrict invite to email to send an invite email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite saved."
-          invite_copied: "Invite link copied."
 
         bulk_invite:
           none: "No invitations to display on this page."

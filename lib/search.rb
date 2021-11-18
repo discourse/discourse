@@ -252,7 +252,7 @@ class Search
 
   # Query a term
   def execute(readonly_mode: Discourse.readonly_mode?)
-    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode
+    if log_query?(readonly_mode)
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],
@@ -1294,4 +1294,10 @@ class Search
     end
   end
 
+  def log_query?(readonly_mode)
+    SiteSetting.log_search_queries? &&
+    @opts[:search_type].present? &&
+    !readonly_mode &&
+    @opts[:type_filter] != "exclude_topics"
+  end
 end

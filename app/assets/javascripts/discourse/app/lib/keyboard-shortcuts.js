@@ -104,7 +104,7 @@ export default {
     this.container = container;
     this._stopCallback();
 
-    this.searchService = this.container.lookup("search-service:main");
+    this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
     this.siteSettings = this.container.lookup("site-settings:main");
@@ -744,9 +744,7 @@ export default {
   },
 
   categoriesTopicsList() {
-    const setting = this.container.lookup("site-settings:main")
-      .desktop_category_page_style;
-    switch (setting) {
+    switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":
