@@ -199,7 +199,7 @@ protected
     Post
       .joins(:topic)
       .includes(:topic)
-      .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian&.user, false))
+      .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian&.user, include_moderator_actions: false))
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
   end
