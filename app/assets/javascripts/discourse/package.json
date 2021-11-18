@@ -22,6 +22,7 @@
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
     "@popperjs/core": "2.10.2",
+    "@uppy/utils": "^4.0.3",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/aws-s3-multipart": "^2.1.0",
     "@uppy/core": "^2.1.0",

@@ -6,9 +6,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend(UppyUploadMixin, {
   tagName: "span",
   type: "backup",
+  // local backups
   useChunkedUploads: true,
+
+  // s3 backups
   // useMultipartUploadsIfAvailable: true,
   uploadRootPath: "/admin/backups",
+  uploadUrl: "/admin/backups/upload",
 
   @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {
@@ -21,8 +25,7 @@ export default Component.extend(UppyUploadMixin, {
     return { skipValidation: true };
   },
 
-  // TODO (martin) THis is a bit weird, consistency of payload
   uploadDone(responseData) {
-    this.done(responseData.fileName);
+    this.done(responseData.fileName || responseData.file_name);
   },
 });

@@ -12,6 +12,7 @@
     "@json-editor/json-editor": "^2.5.2",
     "@popperjs/core": "v2.10.2",
     "@uppy/aws-s3": "^2.0.4",
+    "@uppy/utils": "^4.0.3",
     "@uppy/aws-s3-multipart": "^2.1.0",
     "@uppy/core": "^2.1.0",
     "@uppy/drop-target": "^1.1.0",

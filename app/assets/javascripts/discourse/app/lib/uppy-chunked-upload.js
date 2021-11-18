@@ -1,11 +1,12 @@
-// const { AbortController, createAbortError } = require('@uppy/utils/lib/AbortController')
 import { Promise } from "rsvp";
-// const delay = require('@uppy/utils/lib/delay')
+import delay from "@uppy/utils/lib/delay";
+import {
+  AbortController,
+  createAbortError,
+} from "@uppy/utils/lib/AbortController";
 
 const MB = 1024 * 1024;
 
-const createAbortError = (message = "Aborted") =>
-  new DOMException(message, "AbortError");
 const defaultOptions = {
   limit: 5,
   retryDelays: [0, 1000, 3000, 5000],
@@ -20,10 +21,16 @@ const defaultOptions = {
     throw err;
   },
 };
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
+/**
+ * Used mainly as a replacement for Resumable.js, using code cribbed from
+ * uppy's S3 Multipart class, which we mainly use the chunking algorithm
+ * and retry/abort functions of. The _buildFormData function is the one
+ * which shapes the data into the same parameters as Resumable.js used.
+ *
+ * See the UppyChunkedUploader class for the uppy uploader plugin which
+ * uses UppyChunkedUpload.
+ */
 export default class UppyChunkedUpload {
   constructor(file, options) {
     this.options = {
@@ -45,13 +52,6 @@ export default class UppyChunkedUpload {
     this._initChunks();
   }
 
-  /**
-   * Was this upload aborted?
-   *
-   * If yes, we may need to throw an AbortError.
-   *
-   * @returns {boolean}
-   */
   _aborted() {
     return this.abortController.signal.aborted;
   }
@@ -59,7 +59,6 @@ export default class UppyChunkedUpload {
   _initChunks() {
     const chunks = [];
 
-    // Upload zero-sized files in one zero-sized chunk
     if (this.file.size === 0) {
       chunks.push(this.file.data);
     } else {
@@ -138,6 +137,20 @@ export default class UppyChunkedUpload {
     });
   }
 
+  _shouldRetry(err) {
+    if (err.source && typeof err.source.status === "number") {
+      const { status } = err.source;
+      // 0 probably indicates network failure
+      return (
+        status === 0 ||
+        status === 409 ||
+        status === 423 ||
+        (status >= 500 && status < 600)
+      );
+    }
+    return false;
+  }
+
   _retryable({ before, attempt, after }) {
     const { retryDelays } = this.options;
     const { signal } = this.abortController;
@@ -146,27 +159,13 @@ export default class UppyChunkedUpload {
       before();
     }
 
-    function shouldRetry(err) {
-      if (err.source && typeof err.source.status === "number") {
-        const { status } = err.source;
-        // 0 probably indicates network failure
-        return (
-          status === 0 ||
-          status === 409 ||
-          status === 423 ||
-          (status >= 500 && status < 600)
-        );
-      }
-      return false;
-    }
-
     const doAttempt = (retryAttempt) =>
       attempt().catch((err) => {
         if (this._aborted()) {
           throw createAbortError();
         }
 
-        if (shouldRetry(err) && retryAttempt < retryDelays.length) {
+        if (this._shouldRetry(err) && retryAttempt < retryDelays.length) {
           return delay(retryDelays[retryAttempt], { signal }).then(() =>
             doAttempt(retryAttempt + 1)
           );
@@ -201,30 +200,6 @@ export default class UppyChunkedUpload {
       },
     });
   }
-  // filename = params.fetch(:resumableFilename)
-  // total_size = params.fetch(:resumableTotalSize).to_i
-  // identifier = params.fetch(:resumableIdentifier)
-  // file = params.fetch(:file)
-  // chunk_number = params.fetch(:resumableChunkNumber).to_i
-  // chunk_size = params.fetch(:resumableChunkSize).to_i
-  // current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
-  //
-  // these are sent in querystring params AND form data for some reason??
-  // http://localhost:4200/admin/backups/upload?resumableChunkNumber=16&resumableChunkSize=1048576&resumableCurrentChunkSize=1048576&resumableTotalSize=137951695&resumableType=application%2Fgzip&resumableIdentifier=137951695-testbackup1targz&resumableFilename=testbackup1.tar.gz&resumableRelativePath=testbackup1.tar.gz&resumableTotalChunks=131
-  //
-  // form data
-  // resumableChunkNumber: 66
-  // resumableChunkSize: 1048576
-  // resumableCurrentChunkSize: 1048576
-  // resumableTotalSize: 137951695
-  // resumableType: application/gzip
-  // resumableIdentifier: 137951695-testbackup1targz
-  // resumableFilename: testbackup1.tar.gz
-  // resumableRelativePath: testbackup1.tar.gz
-  // resumableTotalChunks: 131
-  // file: (binary)
-  //
-  // // TODO (martin) (Figure out how to build up this form data)
 
   _uploadChunk(index) {
     this.chunkState[index].busy = true;
@@ -244,12 +219,16 @@ export default class UppyChunkedUpload {
   _onChunkProgress(index, sent) {
     this.chunkState[index].uploaded = parseInt(sent, 10);
 
-    const totalUploaded = this.chunkState.reduce((n, c) => n + c.uploaded, 0);
+    const totalUploaded = this.chunkState.reduce(
+      (total, chunk) => total + chunk.uploaded,
+      0
+    );
     this.options.onProgress(totalUploaded, this.file.data.size);
   }
 
   _onChunkComplete(index) {
     this.chunkState[index].done = true;
+    this.options.onChunkComplete(index);
   }
 
   _uploadChunkBytes(index, url, headers) {
@@ -270,12 +249,12 @@ export default class UppyChunkedUpload {
     }
     xhr.responseType = "text";
 
+    function onabort() {
+      xhr.abort();
+    }
     function cleanup() {
       // eslint-disable-next-line no-use-before-define
       signal.removeEventListener("abort", onabort);
-    }
-    function onabort() {
-      xhr.abort();
     }
     signal.addEventListener("abort", onabort);
 
@@ -323,39 +302,29 @@ export default class UppyChunkedUpload {
       defer.reject(error);
     });
 
+    xhr.send(this._buildFormData(index + 1, body));
+
+    return promise;
+  }
+
+  async _completeUpload() {
+    this.options.onSuccess();
+  }
+
+  _buildFormData(currentChunkNumber, body) {
     const uniqueIdentifier =
       this.file.data.size +
       "-" +
       this.file.data.name.replace(/[^0-9a-zA-Z_-]/gim, "");
-
-    const chunkNumber = index + 1;
     const formData = new FormData();
     formData.append("file", body);
-    formData.append("resumableChunkNumber", chunkNumber);
+    formData.append("resumableChunkNumber", currentChunkNumber);
     formData.append("resumableCurrentChunkSize", body.size);
     formData.append("resumableChunkSize", this.chunkSize);
     formData.append("resumableTotalSize", this.file.data.size);
     formData.append("resumableFilename", this.file.data.name);
     formData.append("resumableIdentifier", uniqueIdentifier);
-    xhr.send(formData);
-
-    return promise;
-  }
-
-  // form data
-  // resumableChunkNumber: 66
-  // resumableChunkSize: 1048576
-  // resumableCurrentChunkSize: 1048576
-  // resumableTotalSize: 137951695
-  // resumableType: application/gzip
-  // resumableIdentifier: 137951695-testbackup1targz
-  // resumableFilename: testbackup1.tar.gz
-  // resumableRelativePath: testbackup1.tar.gz
-  // resumableTotalChunks: 131
-  // file: (binary)
-
-  async _completeUpload() {
-    this.options.onSuccess();
+    return formData;
   }
 
   _abortUpload() {

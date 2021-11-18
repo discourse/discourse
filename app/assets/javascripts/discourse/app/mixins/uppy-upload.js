@@ -153,7 +153,9 @@ export default Mixin.create(UppyS3Multipart, {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
           .then((completeResponse) => {
-            this.uploadDone(completeResponse);
+            this.uploadDone(
+              deepMerge(completeResponse, { file_name: file.name })
+            );
 
             if (this._inProgressUploads === 0) {
               this._reset();
@@ -166,7 +168,9 @@ export default Mixin.create(UppyS3Multipart, {
             }
           });
       } else {
-        this.uploadDone(response.body || { fileName: file.name });
+        this.uploadDone(
+          deepMerge(response?.body || {}, { file_name: file.name })
+        );
         if (this._inProgressUploads === 0) {
           this._reset();
         }
@@ -188,17 +192,17 @@ export default Mixin.create(UppyS3Multipart, {
       this.siteSettings.enable_direct_s3_uploads &&
       !this.preventDirectS3Uploads
     ) {
+      if (this.useMultipartUploadsIfAvailable) {
+        this._useS3MultipartUploads();
+      } else {
+        this._useS3Uploads();
+      }
+    } else {
       if (this.useChunkedUploads) {
         this._useChunkedUploads();
       } else {
-        if (this.useMultipartUploadsIfAvailable) {
-          this._useS3MultipartUploads();
-        } else {
-          this._useS3Uploads();
-        }
+        this._useXHRUploads();
       }
-    } else {
-      this._useXHRUploads();
     }
   },
 
@@ -214,7 +218,7 @@ export default Mixin.create(UppyS3Multipart, {
   _useChunkedUploads() {
     this.set("usingChunkedUploads", true);
     this._uppyInstance.use(UppyChunkedUploader, {
-      url: "/admin/backups/upload",
+      url: this._xhrUploadUrl(),
       headers: {
         "X-CSRF-Token": this.session.csrfToken,
       },
@@ -266,7 +270,7 @@ export default Mixin.create(UppyS3Multipart, {
 
   _xhrUploadUrl() {
     return (
-      getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
+      getUrl(this.getWithDefault("uploadUrl", this.uploadRootPath)) +
       ".json?client_id=" +
       this.messageBus?.clientId
     );
