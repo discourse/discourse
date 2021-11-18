@@ -3943,4 +3943,44 @@ describe Guardian do
       end
     end
   end
+
+  describe "can_mention_here?" do
+    it 'returns false if disabled' do
+      SiteSetting.max_here_mentioned = 0
+      expect(admin.guardian.can_mention_here?).to eq(false)
+    end
+
+    it 'returns false if disabled' do
+      SiteSetting.here_mention = ''
+      expect(admin.guardian.can_mention_here?).to eq(false)
+    end
+
+    it 'works with trust levels' do
+      SiteSetting.min_trust_level_for_here_mention = 2
+
+      expect(trust_level_0.guardian.can_mention_here?).to eq(false)
+      expect(trust_level_1.guardian.can_mention_here?).to eq(false)
+      expect(trust_level_2.guardian.can_mention_here?).to eq(true)
+      expect(trust_level_3.guardian.can_mention_here?).to eq(true)
+      expect(trust_level_4.guardian.can_mention_here?).to eq(true)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
+      expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+
+    it 'works with staff' do
+      SiteSetting.min_trust_level_for_here_mention = 'staff'
+
+      expect(trust_level_4.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
+      expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+
+    it 'works with admin' do
+      SiteSetting.min_trust_level_for_here_mention = 'admin'
+
+      expect(trust_level_4.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(false)
+      expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+  end
 end
