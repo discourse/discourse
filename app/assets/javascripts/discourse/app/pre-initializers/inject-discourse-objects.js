@@ -98,7 +98,6 @@ export default {
       app.inject(t, "store", "service:store");
       app.inject(t, "site", "site:main");
       app.inject(t, "searchService", "service:search");
-      app.inject(t, "keyValueStore", "key-value-store:main");
     });
 
     ALL_TARGETS.concat("service").forEach((t) => {
@@ -106,6 +105,7 @@ export default {
       app.inject(t, "messageBus", "message-bus:main");
       app.inject(t, "siteSettings", "site-settings:main");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
+      app.inject(t, "keyValueStore", "key-value-store:main");
     });
 
     if (currentUser) {
