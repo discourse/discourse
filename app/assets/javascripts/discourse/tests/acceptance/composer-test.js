@@ -379,11 +379,9 @@ acceptance("Composer", function (needs) {
 
     // at this point, request is in flight, so post is staged
     assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(
-      find(".topic-post:nth-of-type(1)")[0].className.includes("staged")
-    );
+    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
     assert.strictEqual(
-      find(".topic-post.staged .cooked").text().trim(),
+      query(".topic-post.staged .cooked").innerText.trim(),
       "will return empty json"
     );
 
@@ -394,26 +392,23 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
-  QUnit.skip(
-    "Editing a post can rollback to old content",
-    async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      await click(".topic-post:nth-of-type(1) button.show-more-actions");
-      await click(".topic-post:nth-of-type(1) button.edit");
+  skip("Editing a post can rollback to old content", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
 
-      await fillIn(".d-editor-input", "this will 409");
-      await fillIn("#reply-title", "This is the new text for the title");
-      await click("#reply-control button.create");
+    await fillIn(".d-editor-input", "this will 409");
+    await fillIn("#reply-title", "This is the new text for the title");
+    await click("#reply-control button.create");
 
-      assert.ok(!exists(".topic-post.staged"));
-      assert.strictEqual(
-        find(".topic-post .cooked")[0].innerText,
-        "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
-      );
+    assert.ok(!exists(".topic-post.staged"));
+    assert.strictEqual(
+      query(".topic-post .cooked").innerText,
+      "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
+    );
 
-      await click(".bootbox.modal .btn-primary");
-    }
-  );
+    await click(".bootbox.modal .btn-primary");
+  });
 
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");

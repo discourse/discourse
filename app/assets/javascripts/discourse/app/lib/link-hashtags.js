@@ -1,3 +1,4 @@
+import deprecated from "discourse-common/lib/deprecated";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
@@ -6,15 +7,23 @@ const categoryHashtags = {};
 const tagHashtags = {};
 const checkedHashtags = new Set();
 
-export function linkSeenHashtags($elem) {
-  const $hashtags = $elem.find("span.hashtag");
-  if ($hashtags.length === 0) {
-    return [];
+export function linkSeenHashtags(elem) {
+  // eslint-disable-next-line no-undef
+  if (elem instanceof jQuery) {
+    elem = elem[0];
+
+    deprecated("linkSeenHashtags now expects a DOM node as first parameter", {
+      since: "2.8.0.beta7",
+    });
   }
 
-  const slugs = [...$hashtags.map((_, hashtag) => hashtag.innerText.substr(1))];
+  const hashtags = [...(elem?.querySelectorAll("span.hashtag") || [])];
+  if (hashtags.length === 0) {
+    return [];
+  }
+  const slugs = [...hashtags.map((hashtag) => hashtag.innerText.substr(1))];
 
-  $hashtags.each((index, hashtag) => {
+  hashtags.forEach((hashtag, index) => {
     let slug = slugs[index];
     const hasTagSuffix = slug.endsWith(TAG_HASHTAG_POSTFIX);
     if (hasTagSuffix) {

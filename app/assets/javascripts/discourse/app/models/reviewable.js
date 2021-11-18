@@ -46,11 +46,6 @@ const Reviewable = RestModel.extend({
         updated.payload || {}
       );
 
-      if (updated.category_id) {
-        updated.category = Category.findById(updated.category_id);
-        delete updated.category_id;
-      }
-
       this.setProperties(updated);
     });
   },

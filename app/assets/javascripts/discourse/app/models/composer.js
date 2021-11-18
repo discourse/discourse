@@ -157,26 +157,9 @@ const Composer = RestModel.extend({
     return categoryId ? this.site.categories.findBy("id", categoryId) : null;
   },
 
-  @discourseComputed("category")
-  minimumRequiredTags(category) {
-    if (category) {
-      if (category.required_tag_groups) {
-        return category.min_tags_from_required_group;
-      } else {
-        return category.minimum_required_tags > 0
-          ? category.minimum_required_tags
-          : null;
-      }
-    }
-
-    return null;
-  },
-
-  @discourseComputed("category")
-  requiredTagGroups(category) {
-    return category && category.required_tag_groups
-      ? category.required_tag_groups
-      : null;
+  @discourseComputed("category.minimumRequiredTags")
+  minimumRequiredTags(minimumRequiredTags) {
+    return minimumRequiredTags || 0;
   },
 
   creatingTopic: equal("action", CREATE_TOPIC),

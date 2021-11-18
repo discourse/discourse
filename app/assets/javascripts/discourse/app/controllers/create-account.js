@@ -260,7 +260,7 @@ export default Controller.extend(
     },
 
     @observes("emailValidation", "accountEmail")
-    prefillUsername: function () {
+    prefillUsername() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.

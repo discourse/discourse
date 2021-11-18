@@ -7,7 +7,7 @@ import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import { alias } from "@ember/object/computed";
 import { highlightPost } from "discourse/lib/utilities";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 
@@ -40,12 +40,11 @@ export default Component.extend(
     _enteredTopic() {
       // Ember is supposed to only call observers when values change but something
       // in our view set up is firing this observer with the same value. This check
-      // prevents scrolled from being called twice.
-      const enteredAt = this.enteredAt;
-      if (enteredAt && this.lastEnteredAt !== enteredAt) {
+      // prevents scrolled from being called twice
+      if (this.enteredAt && this.lastEnteredAt !== this.enteredAt) {
         this._lastShowTopic = null;
-        schedule("afterRender", () => this.scrolled());
-        this.set("lastEnteredAt", enteredAt);
+        schedule("afterRender", this.scrolled);
+        this.set("lastEnteredAt", this.enteredAt);
       }
     },
 
@@ -83,7 +82,7 @@ export default Component.extend(
         return;
       }
 
-      const offset = window.pageYOffset || $("html").scrollTop();
+      const offset = window.pageYOffset || document.documentElement.scrollTop;
       this._lastShowTopic = this.shouldShowTopicInHeader(topic, offset);
 
       if (this._lastShowTopic) {
@@ -95,16 +94,14 @@ export default Component.extend(
 
     didInsertElement() {
       this._super(...arguments);
+
       this.bindScrolling({ name: "topic-view" });
-
-      $(window).on("resize.discourse-on-scroll", () => this.scrolled());
-
+      window.addEventListener("resize", this.scrolled);
       $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
         (e) => ClickTrack.trackClick(e, this.siteSettings)
       );
-
       this.appEvents.on("discourse:focus-changed", this, "gotFocus");
       this.appEvents.on("post:highlight", this, "_highlightPost");
       this.appEvents.on("header:update-topic", this, "_updateTopic");
@@ -112,8 +109,9 @@ export default Component.extend(
 
     willDestroyElement() {
       this._super(...arguments);
+
       this.unbindScrolling("topic-view");
-      $(window).unbind("resize.discourse-on-scroll");
+      window.removeEventListener("resize", this.scrolled);
 
       // Unbind link tracking
       $(this.element).off(
@@ -149,31 +147,36 @@ export default Component.extend(
         (!this.site.mobileView || this.mobileScrollDirection === "down")
       );
     },
+
     // The user has scrolled the window, or it is finished rendering and ready for processing.
+    @bind
     scrolled() {
       if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
         return;
       }
 
-      const offset = window.pageYOffset || $("html").scrollTop();
+      const offset = window.pageYOffset || document.documentElement.scrollTop;
       if (this.dockAt === 0) {
-        const title = $("#topic-title");
-        if (title && title.length === 1) {
-          this.set("dockAt", title.offset().top);
+        const title = document.querySelector("#topic-title");
+        if (title) {
+          this.set(
+            "dockAt",
+            title.getBoundingClientRect().top + window.scrollY
+          );
         }
       }
 
       this.set("hasScrolled", offset > 0);
 
-      const topic = this.topic;
-      const showTopic = this.shouldShowTopicInHeader(topic, offset);
+      const showTopic = this.shouldShowTopicInHeader(this.topic, offset);
 
       if (showTopic !== this._lastShowTopic) {
         if (showTopic) {
-          this._showTopicInHeader(topic);
+          this._showTopicInHeader(this.topic);
         } else {
           if (!DiscourseURL.isJumpScheduled()) {
-            const loadingNear = topic.get("postStream.loadingNearPost") || 1;
+            const loadingNear =
+              this.topic.get("postStream.loadingNearPost") || 1;
             if (loadingNear === 1) {
               this._hideTopicInHeader();
             }

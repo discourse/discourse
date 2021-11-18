@@ -9,7 +9,7 @@ import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import createStore from "discourse/tests/helpers/create-store";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import { test } from "qunit";
+import QUnit, { test } from "qunit";
 
 const LEGACY_ENV = !EmberSetupRenderingTest;
 

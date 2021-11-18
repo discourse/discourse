@@ -1882,7 +1882,6 @@ ja:
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
-    show_copy_button_on_codeblocks: "コードブロックのコンテンツをユーザーのクリップボードにコピーするためのボタンをコードブロックに追加する。この機能は Internet Explorer ではサポートされていません。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
     embed_topics_list: "トピックリストの HTML 埋め込みをサポートする"
     embed_set_canonical_url: "埋め込みトピックの正規 URL を埋め込みコンテンツの URL に設定する。"

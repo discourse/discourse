@@ -388,8 +388,20 @@ createWidget("post-group-request", {
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
-  defaultState() {
-    return { expandedFirstPost: false, repliesBelow: [] };
+  defaultState(attrs) {
+    const defaultState = {
+      expandedFirstPost: false,
+      repliesBelow: [],
+    };
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const topicController = this.register.lookup("controller:topic");
+
+      defaultState.filteredRepliesShown =
+        topicController.replies_to_post_number === attrs.post_number.toString();
+    }
+
+    return defaultState;
   },
 
   buildClasses(attrs) {

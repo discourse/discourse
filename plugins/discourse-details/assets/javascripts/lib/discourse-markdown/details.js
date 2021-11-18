@@ -1,6 +1,6 @@
 const rule = {
   tag: "details",
-  before: function (state, tagInfo) {
+  before(state, tagInfo) {
     const attrs = tagInfo.attrs;
     state.push("bbcode_open", "details", 1);
     state.push("bbcode_open", "summary", 1);
@@ -11,7 +11,7 @@ const rule = {
     state.push("bbcode_close", "summary", -1);
   },
 
-  after: function (state) {
+  after(state) {
     state.push("bbcode_close", "details", -1);
   },
 };

@@ -77,7 +77,7 @@ addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
-  buttonVisible: function () {
+  buttonVisible() {
     return this.currentUser.staff;
   },
 });
@@ -85,7 +85,7 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
-  buttonVisible: function () {
+  buttonVisible() {
     return this.currentUser.staff;
   },
 });
@@ -93,14 +93,14 @@ addBulkButton("removeTags", "remove_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
-  buttonVisible: function () {
+  buttonVisible() {
     return this.currentUser.staff;
   },
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger delete-topics",
-  buttonVisible: function () {
+  buttonVisible() {
     return this.currentUser.staff;
   },
 });

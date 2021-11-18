@@ -3704,7 +3704,6 @@ fi:
         delete: Poista pysyvästi
         not_shown_again: Tätä avainta ei näytetä uudelleen. Kopioi se ennen jatkamista.
         continue: Jatka
-        use_global_key: Globaali avain (sallii kaikki toiminnot)
         scopes:
           description: |
             Kun käytät näkyvyysalueita, voit rajoittaa API-avaimen tiettyyn joukkoon päätepisteitä. Voit myös määritellä mitkä parametrit ovat sallittuja. Erota eri arvot pilkuilla.

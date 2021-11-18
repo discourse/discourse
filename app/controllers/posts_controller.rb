@@ -776,7 +776,7 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     if recipients = result[:target_usernames]
-      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true, drop_from: '2.9.0')
     else
       recipients = result[:target_recipients]
     end

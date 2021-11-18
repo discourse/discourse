@@ -1,7 +1,7 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 
 acceptance("Poll in a post reply history", function (needs) {
   needs.user();

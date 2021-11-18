@@ -76,7 +76,7 @@ export default Component.extend({
 
     shareModal() {
       const { topic } = this.composer;
-      const controller = showModal("share-topic");
+      const controller = showModal("share-topic", { model: topic.category });
       controller.setProperties({
         allowInvites:
           topic.details.can_invite_to &&

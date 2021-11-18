@@ -6,7 +6,7 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`

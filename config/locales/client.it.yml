@@ -3767,6 +3767,7 @@ it:
         no_description: (nessuna descrizione)
         all_api_keys: Tutte le Chiavi API
         user_mode: Livello utente
+        scope_mode: Ambito
         impersonate_all_users: Impersona qualsiasi utente
         single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
@@ -3777,12 +3778,15 @@ it:
         delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
-        use_global_key: Chiave globale (consente tutte le azioni)
         scopes:
           description: |
             Quando si utilizzano gli ambiti, è possibile limitare una chiave API a un set specifico di endpoint.
             È inoltre possibile definire quali parametri saranno consentiti. Utilizzare le virgole per separare più valori.
           title: Ambiti
+          granular: Granulare
+          read_only: Sola lettura
+          global: Globale
+          global_description: La chiave API non ha restrizioni e tutti gli endpoint sono accessibili.
           resource: Risorsa
           action: Azione
           allowed_parameters: Parametri consentiti
@@ -3790,6 +3794,8 @@ it:
           any_parameter: (qualsiasi parametro)
           allowed_urls: URL consentiti
           descriptions:
+            global:
+              read: Limita la chiave API agli endpoint di sola lettura.
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.

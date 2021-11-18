@@ -392,9 +392,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def self.visible_post_types(viewed_by = nil)
+  def self.visible_post_types(viewed_by = nil, include_moderator_actions: true)
     types = Post.types
-    result = [types[:regular], types[:moderator_action], types[:small_action]]
+    result = [types[:regular]]
+    result += [types[:moderator_action], types[:small_action]] if include_moderator_actions
     result << types[:whisper] if viewed_by&.staff?
     result
   end
@@ -1775,6 +1776,10 @@ class Topic < ActiveRecord::Base
       time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
       I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
     end
+  end
+
+  def first_smtp_enabled_group
+    self.allowed_groups.where(smtp_enabled: true).first
   end
 
   private

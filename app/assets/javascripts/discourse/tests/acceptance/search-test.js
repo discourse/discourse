@@ -480,6 +480,31 @@ acceptance("Search - Authenticated", function (needs) {
       `${window.location.origin}${firstLink}`,
       "hitting A when focused on a search result copies link to composer"
     );
+
+    await click("#search-button");
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+
+    assert.ok(
+      exists(query(`${container} .search-result-topic`)),
+      "has topic results"
+    );
+
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+
+    assert.ok(
+      exists(query(`.search-container`)),
+      "second Enter hit goes to full page search"
+    );
+    assert.ok(
+      !exists(query(`.search-menu`)),
+      "search dropdown is collapsed after second Enter hit"
+    );
+
+    // new search launched, Enter key should be reset
+    await click("#search-button");
+    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
   });
 });
 

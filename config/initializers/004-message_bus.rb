@@ -119,8 +119,16 @@ else
 end
 MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
 
-MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
-MessageBus.long_polling_interval = SiteSetting.long_polling_interval
+if SiteSetting.table_exists? && SiteSetting.where(name: ['enable_long_polling', 'long_polling_interval']).exists?
+  Discourse.deprecate("enable_long_polling/long_polling_interval have switched from site settings to global settings. Remove the override from the Site Settings UI, and use a config file or environment variables to set the global settings.", drop_from: '2.9.0')
+
+  MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
+  MessageBus.long_polling_interval = SiteSetting.long_polling_interval
+else
+  MessageBus.long_polling_enabled = GlobalSetting.enable_long_polling.nil? ? true : GlobalSetting.enable_long_polling
+  MessageBus.long_polling_interval = GlobalSetting.long_polling_interval || 25000
+end
+
 MessageBus.cache_assets = !Rails.env.development?
 MessageBus.enable_diagnostics
 

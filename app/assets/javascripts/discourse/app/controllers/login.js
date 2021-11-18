@@ -160,6 +160,7 @@ export default Controller.extend(ModalFunctionality, {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
+            this.clearFlash();
 
             if (
               (result.security_key_enabled || result.totp_enabled) &&

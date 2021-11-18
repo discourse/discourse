@@ -438,6 +438,23 @@ export default {
           default_view: "latest",
           subcategory_list_style: "boxes",
         },
+        {
+          id: 2481,
+          name: "Restricted Group",
+          color: "0E78BD",
+          text_color: "FFFFFF",
+          slug: "restricted-group",
+          topic_count: 137,
+          post_count: 1142,
+          description: "A restricted group",
+          topic_url: "/t/category-definition-for-restricted-group/11",
+          read_restricted: true,
+          permission: 1,
+          notification_level: null,
+          show_subcategory_list: true,
+          default_view: "latest",
+          subcategory_list_style: "boxes",
+        },
       ],
       post_action_types: [
         {

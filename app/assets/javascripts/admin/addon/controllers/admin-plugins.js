@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed
-  adminRoutes: function () {
+  adminRoutes() {
     return this.model
       .map((p) => {
         if (p.get("enabled")) {

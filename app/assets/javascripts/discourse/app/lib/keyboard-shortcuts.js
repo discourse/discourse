@@ -104,7 +104,7 @@ export default {
     this.container = container;
     this._stopCallback();
 
-    this.searchService = this.container.lookup("search-service:main");
+    this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
     this.siteSettings = this.container.lookup("site-settings:main");

@@ -16,6 +16,7 @@ class Admin::EmojisController < Admin::AdminController
 
     hijack do
       # fix the name
+      name = File.basename(name, ".*")
       name = name.gsub(/[^a-z0-9]+/i, '_')
         .gsub(/_{2,}/, '_')
         .downcase

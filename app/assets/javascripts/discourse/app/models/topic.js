@@ -15,7 +15,7 @@ import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";

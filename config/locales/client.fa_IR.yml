@@ -2944,6 +2944,9 @@ fa_IR:
       changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
+      choose_for_topic_required:
+        one: "حداقل برچسب %{count} را انتخاب کنید..."
+        other: "حداقل برچسب %{count} را انتخاب کنید..."
       info: "اطلاعات"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
@@ -3192,6 +3195,8 @@ fa_IR:
         save: ذخیره
         continue: ادامه
         scopes:
+          read_only: فقط خواندنی
+          global: جهانی
           action: اقدام
       web_hooks:
         title: "webhook ها"
@@ -3482,8 +3487,12 @@ fa_IR:
           embedded_scss:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
+          head_tag:
+            text: "Head"
+            title: "کد HTML که قبل از برچسب head درج خواهد شد"
           body_tag:
-            text: "بدنه"
+            text: "Body"
+            title: "کد HTML که قبل از برچسب body درج خواهد شد"
           yaml:
             text: "YAML"
         colors:

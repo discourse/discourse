@@ -49,9 +49,9 @@ module Middleware
       ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
-      def initialize(env)
+      def initialize(env, request = nil)
         @env = env
-        @request = Rack::Request.new(@env)
+        @request = request || Rack::Request.new(@env)
       end
 
       def blocked_crawler?
@@ -315,7 +315,7 @@ module Middleware
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
         env[Rack::RACK_INPUT].size > 0
 
-        return [413, {}, []]
+        return [413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []]
       end
 
       helper = Helper.new(env)

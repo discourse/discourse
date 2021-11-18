@@ -1,6 +1,7 @@
 import config from "../config/environment";
 import { setEnvironment } from "discourse-common/config/environment";
 import { start } from "ember-qunit";
+import loadEmberExam from "ember-exam/test-support/load";
 
 setEnvironment("testing");
 
@@ -20,5 +21,7 @@ document.addEventListener("discourse-booted", () => {
   );
 
   setupTests(config.APP);
-  start({ setupTestContainer: false });
+  let loader = loadEmberExam();
+  loader.loadModules();
+  start({ setupTestContainer: false, loadTests: false });
 });

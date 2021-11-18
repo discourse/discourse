@@ -13,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 const FETCH_VOTERS_COUNT = 25;
 
@@ -567,7 +568,7 @@ function pieChartConfig(data, labels, opts = {}) {
       plugins: {
         legend: {
           labels: {
-            generateLabels: function () {
+            generateLabels() {
               return labels.map((text, index) => {
                 return {
                   fillStyle: getColors(data.length)[index],
@@ -791,7 +792,7 @@ export default createWidget("discourse-poll", {
       (attrs.post.get("topic.archived") && !staffOnly) ||
       (this.isClosed() && !staffOnly);
 
-    const newAttrs = jQuery.extend({}, attrs, {
+    const newAttrs = Object.assign({}, attrs, {
       canCastVotes: this.canCastVotes(),
       hasVoted: this.hasVoted(),
       isAutomaticallyClosed: this.isAutomaticallyClosed(),

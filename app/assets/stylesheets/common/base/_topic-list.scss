@@ -127,7 +127,7 @@
 
 // Topic list body
 
-.topic-list-item.visited,
+.topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   a.title:not(.badge-notification) {
@@ -169,7 +169,7 @@
   }
 }
 
-.sticky-header thead {
+.sticky-header .topic-list-header {
   @include sticky;
   top: var(--header-offset, 60px);
   background: var(--secondary);
@@ -180,7 +180,7 @@
   width: 100%;
   border-collapse: collapse;
 
-  > tbody > tr {
+  > .topic-list-body > .topic-list-item {
     &.has-excerpt .star {
       vertical-align: top;
       margin-top: 2px;
@@ -198,14 +198,14 @@
   .topic-list-item-separator {
     border: none;
 
-    td {
+    .topic-list-data {
       border-bottom: 1px solid var(--danger-medium);
-      line-height: 0.1em;
+      line-height: 0em;
       padding: 0;
       text-align: center;
     }
 
-    td span {
+    .topic-list-data span {
       position: relative; // Chrome needs this, otherwise the line is above the text
       background-color: var(--secondary);
       color: var(--danger-medium);
@@ -214,21 +214,21 @@
     }
   }
 
-  th,
-  td {
+  .topic-list-data {
     line-height: $line-height-large;
     text-align: left;
     vertical-align: middle;
   }
-  th .btn-flat .d-icon {
+  .btn-flat .d-icon {
     color: currentColor;
   }
+
   td {
     color: var(--primary-medium);
     font-size: $font-0;
   }
 
-  .main-link {
+  .topic-list-data.main-link {
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {
@@ -334,7 +334,7 @@
 .loading .topic-list {
   border: 0;
   box-shadow: none;
-  tr {
+  .topic-list-item {
     background-color: transparent;
   }
 }

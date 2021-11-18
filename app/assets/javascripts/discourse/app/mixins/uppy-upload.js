@@ -16,6 +16,7 @@ import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
+import bootbox from "bootbox";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
@@ -26,6 +27,7 @@ export default Mixin.create(UppyS3Multipart, {
   autoStartUploads: true,
   _inProgressUploads: 0,
   id: null,
+  uploadRootPath: "/uploads",
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -117,6 +119,13 @@ export default Mixin.create(UppyS3Multipart, {
           );
           this._reset();
           return false;
+        }
+
+        // for a single file, we want to override file meta with the
+        // data property (which may be computed), to override any keys
+        // specified by this.data (such as name)
+        if (fileCount === 1) {
+          deepMerge(Object.values(files)[0].meta, this.data);
         }
       },
     });
@@ -215,7 +224,7 @@ export default Mixin.create(UppyS3Multipart, {
           data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
         }
 
-        return ajax(getUrl("/uploads/generate-presigned-put"), {
+        return ajax(getUrl(`${this.uploadRootPath}/generate-presigned-put`), {
           type: "POST",
           data,
         })
@@ -269,7 +278,7 @@ export default Mixin.create(UppyS3Multipart, {
   },
 
   _completeExternalUpload(file) {
-    return ajax(getUrl("/uploads/complete-external-upload"), {
+    return ajax(getUrl(`${this.uploadRootPath}/complete-external-upload`), {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },

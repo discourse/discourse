@@ -2031,6 +2031,8 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image_alt_text:
+        aria_label: Texto alternativo para imagen
     notifications:
       tooltip:
         regular:
@@ -3461,6 +3463,9 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas (opcional)"
+      choose_for_topic_required:
+        one: "selecciona al menos %{count} etiqueta…"
+        other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -3822,11 +3827,13 @@ es:
         delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas las acciones)
         scopes:
           description: |
             Al usar ámbitos, puedes restringir una clave de API a una lista de terminales específicos. También puedes definir qué parámetros permitir. Usa comas para separar varios valores.
           title: Ámbitos
+          granular: Granular
+          read_only: Solo lectura
+          global: Global
           resource: Recurso
           action: Acción
           allowed_parameters: Parámetros permitidos

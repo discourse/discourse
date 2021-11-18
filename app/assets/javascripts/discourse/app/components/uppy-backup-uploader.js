@@ -7,6 +7,7 @@ export default Component.extend(UppyUploadMixin, {
   tagName: "span",
   type: "backup",
   useMultipartUploadsIfAvailable: true,
+  uploadRootPath: "/admin/backups",
 
   @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {
