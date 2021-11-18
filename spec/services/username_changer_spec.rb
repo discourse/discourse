@@ -627,7 +627,7 @@ describe UsernameChanger do
       [
         *common_test_cases,
         [
-          "overrides the username if a new name after unicode normalization is different only in case",
+          "does not change the username if a new name after unicode normalization is the same",
           "john", "john¥¥", "john"
         ],
       ].each do |testcase_name, current, new, overrode|
