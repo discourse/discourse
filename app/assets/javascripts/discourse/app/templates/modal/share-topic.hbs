@@ -13,12 +13,6 @@
       </div>
     </div>
 
-    {{#if hasRestrictedGroups}}
-      <div class="link-share-restricted-groups">
-        {{i18n "topic.share.restricted_groups" count=restrictedGroupsCount}}
-        {{restrictedGroupsDisplayText}}
-      </div>
-    {{/if}}
     <div class="link-share-actions">
       <div class="sources">
         {{#each sources as |s|}}

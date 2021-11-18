@@ -22,15 +22,7 @@ export default Controller.extend(
       this.set("showNotifyUsers", false);
 
       if (this.model && this.model.read_restricted) {
-        Category.reloadBySlugPath(this.model.slug).then((result) => {
-          this.setProperties({
-            restrictedGroups: result.category.group_permissions.map(
-              (g) => g.group_name
-            ),
-          });
-        });
-      } else {
-        this.setProperties({ restrictedGroups: null });
+        this.restrictedGroupWarning();
       }
     },
 
@@ -53,21 +45,6 @@ export default Controller.extend(
         this.siteSettings.share_links,
         privateContext
       );
-    },
-
-    @discourseComputed("restrictedGroups")
-    hasRestrictedGroups(groups) {
-      return !!groups;
-    },
-
-    @discourseComputed("restrictedGroups")
-    restrictedGroupsCount(groups) {
-      return groups.length;
-    },
-
-    @discourseComputed("restrictedGroups")
-    restrictedGroupsDisplayText(groups) {
-      return groups.join(", ");
     },
 
     @action
@@ -132,6 +109,25 @@ export default Controller.extend(
       controller.buffered.setProperties({
         topicId: this.topic.id,
         topicTitle: this.topic.title,
+      });
+    },
+
+    restrictedGroupWarning() {
+      this.appEvents.on("modal:body-shown", () => {
+        let restrictedGroups;
+        Category.reloadBySlugPath(this.model.slug).then((result) => {
+          restrictedGroups = result.category.group_permissions.map(
+            (g) => g.group_name
+          );
+
+          if (restrictedGroups) {
+            const message = I18n.t("topic.share.restricted_groups", {
+              count: restrictedGroups.length,
+              groupNames: restrictedGroups.join(", "),
+            });
+            this.flash(message, "warning");
+          }
+        });
       });
     },
   }
