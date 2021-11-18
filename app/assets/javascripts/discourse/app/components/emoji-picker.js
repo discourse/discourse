@@ -6,7 +6,7 @@ import {
   isSkinTonableEmoji,
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
@@ -115,10 +115,7 @@ export default Component.extend({
         this.set("isLoading", false);
 
         schedule("afterRender", () => {
-          if (
-            (!this.site.isMobileDevice || this.isEditorFocused) &&
-            !safariHacksDisabled()
-          ) {
+          if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
             filter && filter.focus();
 

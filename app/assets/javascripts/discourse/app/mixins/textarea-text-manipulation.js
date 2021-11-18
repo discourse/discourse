@@ -7,7 +7,6 @@ import { isTesting } from "discourse-common/config/environment";
 import {
   clipboardHelpers,
   determinePostReplaceSelection,
-  safariHacksDisabled,
 } from "discourse/lib/utilities";
 import { next, schedule } from "@ember/runloop";
 
@@ -87,7 +86,7 @@ export default Mixin.create({
       this._$textarea.trigger("change");
       if (opts.scroll) {
         const oldScrollPos = this._$textarea.scrollTop();
-        if (!this.capabilities.isIOS || safariHacksDisabled()) {
+        if (!this.capabilities.isIOS) {
           this._$textarea.focus();
         }
         this._$textarea.scrollTop(oldScrollPos);
