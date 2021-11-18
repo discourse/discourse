@@ -6,7 +6,7 @@ export default {
   name: "logs-notice",
   after: "message-bus",
 
-  initialize: function (container) {
+  initialize(container) {
     if (initializedOnce) {
       return;
     }

@@ -7,6 +7,7 @@ import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import { click, fillIn, visit } from "@ember/test-helpers";
 
 acceptance("Details Button", function (needs) {
   needs.user();

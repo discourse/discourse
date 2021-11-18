@@ -8,6 +8,7 @@ export default Component.extend(UppyUploadMixin, {
   type: "backup",
   useChunkedUploads: true,
   // useMultipartUploadsIfAvailable: true,
+  uploadRootPath: "/admin/backups",
 
   @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {

@@ -335,6 +335,7 @@ pl_PL:
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       not_bookmarked: "dodaj do zakładek"
+      remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
@@ -2190,6 +2191,8 @@ pl_PL:
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
       reload: "Przeładuj"
       ignore: "Ignoruj"
+      image_alt_text:
+        aria_label: Tekst alternatywny dla obrazu
     notifications:
       tooltip:
         regular:
@@ -2333,6 +2336,7 @@ pl_PL:
       tags: "Tagi"
       in: "w"
       in_this_topic: "w tym temacie"
+      in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
@@ -3095,6 +3099,7 @@ pl_PL:
           just_the_post: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
         permanently_delete: "Usuń bezpowrotnie"
+        permanently_delete_confirmation: "Czy na pewno chcesz usunąć ten post? Nie będziesz w stanie go odzyskać."
         wiki: "Włącz tryb Wiki"
         unwiki: "Wyłącz tryb Wiki"
         convert_to_moderator: "Włącz kolor moderatora"
@@ -3928,6 +3933,8 @@ pl_PL:
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
+    fullscreen_table:
+      expand_btn: "Rozwiń tabelę"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4135,12 +4142,13 @@ pl_PL:
         delete: Usuń bezpowrotnie
         not_shown_again: Ten klucz nie będzie ponownie wyświetlany. Upewnij się, że wykonałeś/łaś kopię, zanim przejdziesz dalej.
         continue: Kontynuuj
-        use_global_key: Klucz globalny (zezwala na wszystkie działania)
         scopes:
           description: |
             Korzystanie z interfejsu API o określonym zakresie umożliwia bardziej szczegółowe dostosowywanie uprawnień.
             Możesz określić, które parametry będą dozwolone. Użyj przecinków, aby oddzielić wiele wartości.
           title: Zakresy
+          read_only: Tylko do odczytu
+          global_description: Klucz API nie ma ograniczeń i wszystkie punkty końcowe są dostępne.
           resource: Zasób
           action: Akcja
           allowed_parameters: Dozwolone parametry
@@ -4148,6 +4156,8 @@ pl_PL:
           any_parameter: (dowolny parametr)
           allowed_urls: Dozwolone adresy URL
           descriptions:
+            global:
+              read: Ogranicz klucz API do punktów końcowych tylko do odczytu.
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
@@ -4538,8 +4548,11 @@ pl_PL:
               %{example}
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
+          head_tag:
+            title: "HTML, który zostanie wstawiony przed tagiem head"
           body_tag:
             text: "Body"
+            title: "HTML, który zostanie wstawiony przed tagiem body"
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
@@ -5403,6 +5416,7 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
+        help: "Dodaj nowe emoji, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie, bez wpisywania nazwy, aby utworzyć emotikony za pomocą ich nazw plików."
         add: "Dodaj nowe Emoji"
         uploading: "Przesyłanie…"
         name: "Nazwa"
@@ -5413,6 +5427,7 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
+        sample: "Wklej następujący kod HTML do swojej strony, aby utworzyć i osadzić tematy discourse. Zastąp <b>REPLACE_ME</b> kanonicznym adresem URL strony, na której go osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"

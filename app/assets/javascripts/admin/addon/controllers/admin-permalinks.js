@@ -37,7 +37,7 @@ export default Controller.extend({
       textArea.remove();
     },
 
-    destroy: function (record) {
+    destroy(record) {
       return bootbox.confirm(
         I18n.t("admin.permalink.delete_confirm"),
         I18n.t("no_value"),

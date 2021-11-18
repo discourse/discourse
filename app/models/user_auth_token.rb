@@ -4,7 +4,8 @@ require 'digest/sha1'
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
-  ROTATE_TIME = 10.minutes
+  ROTATE_TIME_MINS = 10
+  ROTATE_TIME = ROTATE_TIME_MINS.minutes
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 

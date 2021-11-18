@@ -4,6 +4,8 @@ require "backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
+  include ExternalUploadHelpers
+
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
@@ -181,36 +183,9 @@ class Admin::BackupsController < Admin::AdminController
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
-    # Uppy and Resumable slice up their chunks differently, which causes a difference
-    # in this algorithm. Let's take a 131.6MB file (137951695 bytes) with a 5MB (5242880 bytes)
-    # chunk size. For resumable, there are 26 chunks, and uppy there are 27. This is
-    # controlled by forceChunkSize in resumable which is false by default. The final
-    # chunk size is 6879695 whereas in uppy it is 1636815.
-    #
-    # This means that the current condition of uploaded_file_size + current_chunk_size >= total_size
-    # is hit twice by uppy, because it uses a more correct number of chunks. This
-    # can be solved for both uppy and resumable by checking the _previous_ chunk size
-    # * chunk_size as the uploaded_file_size.
-    #
-    # An example of what is happening before that change, using the current
-    # chunk number to calculate uploaded_file_size.
-    #
-    # chunk 26: resumable: uploaded_file_size (26 * 5242880) + current_chunk_size (6879695) = 143194575 >= total_size (137951695) ? YES
-    # chunk 26: uppy: uploaded_file_size (26 * 5242880) + current_chunk_size (5242880) = 141557760 >= total_size (137951695) ? YES
-    # chunk 27: uppy: uploaded_file_size (27 * 5242880) + current_chunk_size (1636815) = 143194575 >= total_size (137951695) ? YES
-    #
-    # An example of what this looks like after the change, using the previous
-    # chunk number to calculate uploaded_file_size:
-    #
-    # chunk 26: resumable: uploaded_file_size (25 * 5242880) + current_chunk_size (6879695) = 137951695 >= total_size (137951695) ? YES
-    # chunk 26: uppy: uploaded_file_size (25 * 5242880) + current_chunk_size (5242880) = 136314880 >= total_size (137951695) ? NO
-    # chunk 27: uppy: uploaded_file_size (26 * 5242880) + current_chunk_size (1636815) = 137951695 >= total_size (137951695) ? YES
-
-    # uploaded_file_size = chunk_number * chunk_size
-    uploaded_file_size = previous_chunk_number * chunk_size
     # when all chunks are uploaded
+    uploaded_file_size = previous_chunk_number * chunk_size
     if uploaded_file_size + current_chunk_size >= total_size
-      puts "merging backup chunks"
       # merge all the chunks in a background thread
       Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
     end
@@ -258,5 +233,25 @@ class Admin::BackupsController < Admin::AdminController
 
   def render_error(message_key)
     render json: failed_json.merge(message: I18n.t(message_key))
+  end
+
+  def validate_before_create_multipart(file_name:, file_size:, upload_type:)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
+  end
+
+  def self.serialize_upload(_upload)
+    {} # noop, the backup does not create an upload record
+  end
+
+  def create_direct_multipart_upload
+    begin
+      yield
+    rescue BackupRestore::BackupStore::StorageError => err
+      message = debug_upload_error(err, I18n.t("upload.create_multipart_failure", additional_detail: err.message))
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+    rescue BackupRestore::BackupStore::BackupFileExists
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
+    end
   end
 end

@@ -4,7 +4,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { skip, test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";

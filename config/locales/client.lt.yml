@@ -3564,6 +3564,8 @@ lt:
         delete: Ištrinti visam laikui
         continue: Tęsti
         scopes:
+          read_only: Tik skaityti
+          global: Pasaulinis
           resource: Ištekliai
           action: Veiksmas
           allowed_parameters: Leidžiami parametrai

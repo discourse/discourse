@@ -23,9 +23,9 @@ end:/\)/,contains:[e.inherit(r,{className:"meta-string"})]}]
 },o=a,b=e.COMMENT("/\\*","\\*/",{contains:[e.C_BLOCK_COMMENT_MODE]}),E={
 variants:[{className:"type",begin:e.UNDERSCORE_IDENT_RE},{begin:/\(/,end:/\)/,
 contains:[]}]},d=E;return d.variants[1].contains=[E],E.variants[1].contains=[d],
-{name:"Kotlin",aliases:["kt"],keywords:n,contains:[e.COMMENT("/\\*\\*","\\*/",{
-relevance:0,contains:[{className:"doctag",begin:"@[A-Za-z]+"}]
-}),e.C_LINE_COMMENT_MODE,b,{className:"keyword",
+{name:"Kotlin",aliases:["kt","kts"],keywords:n,
+contains:[e.COMMENT("/\\*\\*","\\*/",{relevance:0,contains:[{className:"doctag",
+begin:"@[A-Za-z]+"}]}),e.C_LINE_COMMENT_MODE,b,{className:"keyword",
 begin:/\b(break|continue|return|this)\b/,starts:{contains:[{className:"symbol",
 begin:/@\w+/}]}},i,l,c,{className:"function",beginKeywords:"fun",end:"[(]|$",
 returnBegin:!0,excludeEnd:!0,keywords:n,relevance:5,contains:[{

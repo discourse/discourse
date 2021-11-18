@@ -107,7 +107,7 @@ discourseModule(
 
         assert.strictEqual(
           this.subject.rows().length,
-          21,
+          22,
           "all categories are visible"
         );
 

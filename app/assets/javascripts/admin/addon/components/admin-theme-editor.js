@@ -114,7 +114,7 @@ export default Component.extend({
       this.fieldAdded(this.currentTargetName, name);
     },
 
-    toggleMaximize: function () {
+    toggleMaximize() {
       this.toggleProperty("maximized");
       next(() => this.appEvents.trigger("ace:resize"));
     },

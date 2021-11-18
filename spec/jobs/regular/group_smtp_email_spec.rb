@@ -160,6 +160,16 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.smtp_group_id).to eq(group.id)
   end
 
+  it "drops malformed cc addresses when sending the email" do
+    args2 = args.clone
+    args2[:cc_emails] << "somebadccemail@test.com<mailto:somebadccemail@test.com"
+    subject.execute(args2)
+    expect(ActionMailer::Base.deliveries.count).to eq(1)
+    last_email = ActionMailer::Base.deliveries.last
+    expect(last_email.subject).to eq("Re: Help I need support")
+    expect(last_email.cc).to match_array(["otherguy@test.com", "cormac@lit.com"])
+  end
+
   context "when there are cc_addresses" do
     it "has the cc_addresses and cc_user_ids filled in correctly" do
       subject.execute(args)

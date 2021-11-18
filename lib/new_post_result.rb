@@ -36,7 +36,8 @@ class NewPostResult
   def queued_post
     Discourse.deprecate(
       "NewPostManager#queued_post is deprecated. Please use #reviewable instead.",
-      output_in_test: true
+      output_in_test: true,
+      drop_from: '2.9.0',
     )
 
     reviewable

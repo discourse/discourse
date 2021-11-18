@@ -15,11 +15,11 @@ export default Controller.extend({
   },
 
   actions: {
-    revert: function (color) {
+    revert(color) {
       color.revert();
     },
 
-    undo: function (color) {
+    undo(color) {
       color.undo();
     },
 
@@ -68,7 +68,7 @@ export default Controller.extend({
       });
     },
 
-    save: function () {
+    save() {
       this.model.save();
     },
 
@@ -76,7 +76,7 @@ export default Controller.extend({
       this.model.updateUserSelectable(this.get("model.user_selectable"));
     },
 
-    destroy: function () {
+    destroy() {
       const model = this.model;
       return bootbox.confirm(
         I18n.t("admin.customize.colors.delete_confirm"),

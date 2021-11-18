@@ -1,6 +1,6 @@
 {{~raw-plugin-outlet name="topic-list-header-before"~}}
 {{#if bulkSelectEnabled}}
-  <th class="bulk-select">
+  <th class="bulk-select topic-list-data">
     {{#if canBulkSelect}}
       {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
     {{/if}}

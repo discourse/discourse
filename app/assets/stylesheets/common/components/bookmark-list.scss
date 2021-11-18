@@ -1,13 +1,13 @@
 $mobile-breakpoint: 700px;
 
 .bookmark-list {
-  th.post-metadata {
+  .topic-list-data.post-metadata {
     text-align: center;
   }
 }
 
 .bookmark-list-item {
-  td.post-metadata {
+  .topic-list-data.post-metadata {
     text-align: center;
   }
   @media (max-width: $mobile-breakpoint) {
@@ -15,7 +15,7 @@ $mobile-breakpoint: 700px;
       padding-right: 0.5em;
     }
   }
-  .main-link {
+  .main-link.topic-list-data {
     .bookmark-status-with-link {
       a.title {
         padding: 0;

@@ -89,7 +89,7 @@ export function createData(store) {
     topicId++;
     return store.createRecord(
       "topic",
-      $.extend(
+      Object.assign(
         {
           id: topicId,
           title: `Example Topic Title ${topicId}`,

@@ -7,7 +7,7 @@ export default Component.extend({
 
   @on("didInsertElement")
   @observes("highlight")
-  _highlightOnInsert: function () {
+  _highlightOnInsert() {
     const term = this.highlight;
     highlightSearch(this.element, term);
   },

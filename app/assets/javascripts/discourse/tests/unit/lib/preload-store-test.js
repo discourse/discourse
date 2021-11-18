@@ -54,4 +54,12 @@ module("Unit | Utility | preload-store", function (hooks) {
     const result = await PreloadStore.getAndRemove("bane");
     assert.strictEqual(result, "evil");
   });
+
+  test("returns falsy values without calling finder", async function (assert) {
+    PreloadStore.store("falsy", false);
+    const result = await PreloadStore.getAndRemove("falsy", () =>
+      assert.ok(false)
+    );
+    assert.strictEqual(result, false);
+  });
 });

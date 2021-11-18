@@ -12,7 +12,7 @@ export default Controller.extend({
   editRouteName: "adminCustomizeThemes.edit",
   showRouteName: "adminCustomizeThemes.show",
 
-  setTargetName: function (name) {
+  setTargetName(name) {
     const target = this.get("model.targets").find((t) => t.name === name);
     this.set("currentTarget", target && target.id);
   },

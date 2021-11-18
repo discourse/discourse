@@ -31,6 +31,24 @@ class UserApiKey < ActiveRecord::Base
     @key.present?
   end
 
+  def ensure_allowed!(env)
+    raise Discourse::InvalidAccess.new if !allow?(env)
+  end
+
+  def update_last_used(client_id)
+    update_args = { last_used_at: Time.zone.now }
+    if client_id.present? && client_id != self.client_id
+      # invalidate old dupe api key for client if needed
+      UserApiKey
+        .where(client_id: client_id, user_id: self.user_id)
+        .where('id <> ?', self.id)
+        .destroy_all
+
+      update_args[:client_id] = client_id
+    end
+    self.update_columns(**update_args)
+  end
+
   # Scopes allowed to be requested by external services
   def self.allowed_scopes
     Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))

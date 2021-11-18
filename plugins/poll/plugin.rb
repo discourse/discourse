@@ -5,6 +5,7 @@
 # version: 1.0
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
+# transpile_js: true
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop

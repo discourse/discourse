@@ -3621,7 +3621,6 @@ zh_CN:
         delete: 永久删除
         not_shown_again: 此密钥将不会再显示。在继续之前，请务必进行备份。
         continue: 继续
-        use_global_key: 全局密钥（允许所有操作）
         scopes:
           description: |
             使用范围时，您可以将一个 API 密钥限制到一组特定的端点。

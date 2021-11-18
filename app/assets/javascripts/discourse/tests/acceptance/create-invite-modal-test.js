@@ -4,6 +4,7 @@ import {
   count,
   exists,
   fakeTime,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -53,7 +54,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
     assert.strictEqual(
-      find("input.invite-link")[0].value,
+      query("input.invite-link").value,
       "http://example.com/invites/52641ae8878790bc7b79916247cfe6ba",
       "shows an invite link when modal is opened"
     );
@@ -102,7 +103,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await fillIn("#invite-email", "error");
     await click(".invite-link .btn");
     assert.strictEqual(
-      find("#modal-alert").text(),
+      query("#modal-alert").innerText,
       "error isn't a valid email address."
     );
   });

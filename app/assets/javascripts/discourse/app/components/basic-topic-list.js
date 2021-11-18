@@ -19,7 +19,7 @@ export default Component.extend({
   },
 
   @observes("topicList.[]")
-  _topicListChanged: function () {
+  _topicListChanged() {
     this._initFromTopicList(this.topicList);
   },
 

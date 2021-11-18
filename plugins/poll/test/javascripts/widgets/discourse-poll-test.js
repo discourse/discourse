@@ -11,6 +11,7 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import pretender from "discourse/tests/helpers/create-pretender";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 let requests = 0;
 

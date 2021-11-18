@@ -3701,7 +3701,6 @@ fr:
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
-        use_global_key: Clé globale (autorise toutes les actions)
         scopes:
           description: |
             En configurant des permissions, vous pouvez restreindre une clé d'API à certaines actions spécifiques.

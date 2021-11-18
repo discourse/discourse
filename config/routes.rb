@@ -304,6 +304,12 @@ Discourse::Application.routes.draw do
           post "restore" => "backups#restore", constraints: { id: RouteFormat.backup }
         end
         collection do
+          # multipart uploads
+          post "create-multipart" => "backups#create_multipart", format: :json
+          post "complete-multipart" => "backups#complete_multipart", format: :json
+          post "abort-multipart" => "backups#abort_multipart", format: :json
+          post "batch-presign-multipart-parts" => "backups#batch_presign_multipart_parts", format: :json
+
           get "logs" => "backups#logs"
           get "status" => "backups#status"
           delete "cancel" => "backups#cancel"

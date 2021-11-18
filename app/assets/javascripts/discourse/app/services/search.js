@@ -15,7 +15,7 @@ export default EmberObject.extend({
     },
     set(value, searchContext) {
       // a bit hacky, consider cleaning this up, need to work through all observers though
-      const context = $.extend({}, searchContext);
+      const context = Object.assign({}, searchContext);
       context.type = value;
       this.set("searchContext", context);
       return this.get("searchContext.type");

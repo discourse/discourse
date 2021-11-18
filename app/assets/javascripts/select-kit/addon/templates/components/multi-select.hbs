@@ -13,7 +13,7 @@
       id=(concat selectKit.uniqueID "-filter")
     }}
 
-    {{#if selectedContent}}
+    {{#if selectedContent.length}}
       <div class="selected-content">
         {{#each selectedContent as |item|}}
           {{component selectKit.options.selectedChoiceComponent

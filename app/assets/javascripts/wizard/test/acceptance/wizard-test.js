@@ -1,4 +1,4 @@
-import { currentRouteName, visit } from "@ember/test-helpers";
+import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";

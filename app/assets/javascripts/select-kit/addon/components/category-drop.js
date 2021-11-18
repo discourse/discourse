@@ -38,6 +38,7 @@ export default ComboBoxComponent.extend({
     autoInsertNoneItem: false,
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
+    parentCategory: false,
   },
 
   modifyComponentForRow() {

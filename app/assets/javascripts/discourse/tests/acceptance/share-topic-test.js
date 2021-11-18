@@ -48,6 +48,23 @@ acceptance("Share and Invite modal", function (needs) {
 
     assert.ok(exists("#share-link"), "it shows the share modal");
   });
+
+  test("Share topic in a restricted category", async function (assert) {
+    await visit("/t/topic-in-restricted-group/2481");
+
+    assert.ok(
+      exists("#topic-footer-button-share-and-invite"),
+      "the button exists"
+    );
+
+    await click("#topic-footer-button-share-and-invite");
+
+    assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.ok(
+      exists(".link-share-restricted-groups"),
+      "it shows restricted warning"
+    );
+  });
 });
 
 acceptance("Share and Invite modal - mobile", function (needs) {

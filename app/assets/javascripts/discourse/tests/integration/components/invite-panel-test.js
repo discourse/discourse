@@ -5,7 +5,11 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  discourseModule,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import hbs from "htmlbars-inline-precompile";
 
@@ -45,7 +49,7 @@ discourseModule("Integration | Component | invite-panel", function (hooks) {
       assert.ok(!exists(".send-invite:disabled"));
       await click(".generate-invite-link");
       assert.strictEqual(
-        find(".invite-link-input")[0].value,
+        query(".invite-link-input").value,
         "http://example.com/invites/92c297e886a0ca03089a109ccd6be155"
       );
     },
