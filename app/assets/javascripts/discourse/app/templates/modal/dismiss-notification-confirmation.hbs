@@ -1,0 +1,8 @@
+{{#d-modal-body headerClass="hidden" class="dismiss-notification-confirmation"}}
+    {{i18n "notifications.dismiss_confirmation.body" count=count}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button icon="check" class="btn-primary" action=(action "confirm") label="notifications.dismiss_confirmation.confirm"}}
+  {{d-button action=(route-action "closeModal") label="notifications.dismiss_confirmation.cancel" class="cancel"}}
+</div>
