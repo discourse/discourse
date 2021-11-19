@@ -67,7 +67,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :default_calendar,
-             :recent_searches,
+             :recent_searches
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -328,7 +328,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_recent_searches?
-    SiteSetting.log_search_queries
+    SiteSetting.log_search_queries && object.user_option.enable_recent_searches
   end
 
   def recent_searches
