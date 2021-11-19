@@ -3,7 +3,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
   actions: {
-    confirm() {
+    dismiss() {
       this.send("closeModal");
       this.dismissNotifications();
     },

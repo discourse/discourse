@@ -33,7 +33,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .modal-body").innerText,
-      "You have 2 important notifications, are you sure you would like to dismiss?"
+      "Are you sure? You have 2 important notifications."
     );
   });
 
@@ -47,7 +47,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .btn-primary").innerText,
-      "Confirm"
+      "Dismiss"
     );
     pretender.put("/notifications/mark-read", () => {
       return [200, { "Content-Type": "application/json" }, { success: true }];
@@ -67,11 +67,11 @@ acceptance("Dismiss notification confirmation", function (needs) {
     await click(".notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation-modal .cancel").innerText,
+      query(".dismiss-notification-confirmation-modal .btn-default").innerText,
       "Cancel"
     );
 
-    await click(".dismiss-notification-confirmation-modal .cancel");
+    await click(".dismiss-notification-confirmation-modal .btn-default");
 
     assert.notOk(exists(".dismiss-notification-confirmation"));
   });
