@@ -229,6 +229,7 @@ $search-pad-horizontal: 0.5em;
     .search-result-tag,
     .search-menu-assistant {
       .search-link {
+        @include ellipsis;
         .d-icon {
           margin-right: 5px;
           vertical-align: middle;
