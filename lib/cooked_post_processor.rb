@@ -23,6 +23,8 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
+    @with_secure_media = @post.with_secure_media?
+    @category_id = @post&.topic&.category_id
 
     cooked = post.cook(post.raw, @cooking_options)
     @doc = Loofah.fragment(cooked)
@@ -188,18 +190,6 @@ class CookedPostProcessor
     true
   end
 
-  def large_images
-    @large_images ||= @post.custom_fields[Post::LARGE_IMAGES].presence || []
-  end
-
-  def broken_images
-    @broken_images ||= @post.custom_fields[Post::BROKEN_IMAGES].presence || []
-  end
-
-  def downloaded_images
-    @downloaded_images ||= @post.downloaded_images
-  end
-
   def extract_images
     # all images with a src attribute
     @doc.css("img[src]") -
@@ -225,88 +215,16 @@ class CookedPostProcessor
     @doc.css(".onebox.githubfolder img")
   end
 
-  def oneboxed_images
-    @doc.css(".onebox-body img, .onebox img, img.onebox")
+  def large_images
+    @large_images ||= @post&.custom_fields[Post::LARGE_IMAGES].presence || []
   end
 
-  def limit_size!(img)
-    # retrieve the size from
-    #  1) the width/height attributes
-    #  2) the dimension from the preview (image_sizes)
-    #  3) the dimension of the original image (HTTP request)
-    w, h = get_size_from_attributes(img) ||
-           get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
-           get_size(img["src"])
-
-    # limit the size of the thumbnail
-    img["width"], img["height"] = ImageSizer.resize(w, h)
+  def broken_images
+    @broken_images ||= @post&.custom_fields[Post::BROKEN_IMAGES].presence || []
   end
 
-  def get_size_from_attributes(img)
-    w, h = img["width"].to_i, img["height"].to_i
-    return [w, h] unless w <= 0 || h <= 0
-    # if only width or height are specified attempt to scale image
-    if w > 0 || h > 0
-      w = w.to_f
-      h = h.to_f
-
-      return unless original_image_size = get_size(img["src"])
-      original_width, original_height = original_image_size.map(&:to_f)
-
-      if w > 0
-        ratio = w / original_width
-        [w.floor, (original_height * ratio).floor]
-      else
-        ratio = h / original_height
-        [(original_width * ratio).floor, h.floor]
-      end
-    end
-  end
-
-  def get_size_from_image_sizes(src, image_sizes)
-    return unless image_sizes.present?
-    image_sizes.each do |image_size|
-      url, size = image_size[0], image_size[1]
-      if url && url.include?(src) &&
-         size && size["width"].to_i > 0 && size["height"].to_i > 0
-        return [size["width"], size["height"]]
-      end
-    end
-    nil
-  end
-
-  def add_to_size_cache(url, w, h)
-    @size_cache[url] = [w, h]
-  end
-
-  def get_size(url)
-    return @size_cache[url] if @size_cache.has_key?(url)
-
-    absolute_url = url
-    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
-
-    return unless absolute_url
-
-    # FastImage fails when there's no scheme
-    absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
-
-    # we can't direct FastImage to our secure-media-uploads url because it bounces
-    # anonymous requests with a 404 error
-    if url && Upload.secure_media_url?(url)
-      absolute_url = Upload.signed_url_from_secure_media_url(absolute_url)
-    end
-
-    return unless is_valid_image_url?(absolute_url)
-
-    @size_cache[url] = FastImage.size(absolute_url)
-  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
-    # FastImage.size raises BufError for some gifs, leave it.
-  end
-
-  def is_valid_image_url?(url)
-    uri = URI.parse(url)
-    %w(http https).include? uri.scheme
-  rescue URI::Error
+  def downloaded_images
+    @downloaded_images ||= @post&.downloaded_images || []
   end
 
   def convert_to_link!(img)
