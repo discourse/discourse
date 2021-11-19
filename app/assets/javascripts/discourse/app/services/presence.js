@@ -221,15 +221,18 @@ class PresenceChannelState extends EmberObject {
 export default class PresenceService extends Service {
   init() {
     super.init(...arguments);
-    this._presentChannels = new Set();
     this._queuedEvents = [];
     this._presenceChannelStates = EmberObject.create();
-    this._presentProxies = {};
-    this._subscribedProxies = {};
-    this._initialDataRequests = {};
+    this._presentProxies = new Map();
+    this._subscribedProxies = new Map();
+    this._initialDataRequests = new Map();
 
     this._beforeUnloadCallback = () => this._beaconLeaveAll();
     window.addEventListener("beforeunload", this._beforeUnloadCallback);
+  }
+
+  get _presentChannels() {
+    return new Set(this._presentProxies.keys());
   }
 
   willDestroy() {
@@ -305,34 +308,39 @@ export default class PresenceService extends Service {
   }
 
   _addPresent(channelProxy) {
-    let present = this._presentProxies[channelProxy.name];
+    let present = this._presentProxies.get(channelProxy.name);
     if (!present) {
-      present = this._presentProxies[channelProxy.name] = new Set();
+      present = new Set();
+      this._presentProxies.set(channelProxy.name, present);
     }
     present.add(channelProxy);
     return present.size;
   }
 
   _removePresent(channelProxy) {
-    let present = this._presentProxies[channelProxy.name];
+    let present = this._presentProxies.get(channelProxy.name);
     present?.delete(channelProxy);
+    if (present?.size === 0) {
+      this._presentProxies.delete(channelProxy.name);
+    }
     return present?.size || 0;
   }
 
   _addSubscribed(channelProxy) {
-    let subscribed = this._subscribedProxies[channelProxy.name];
+    let subscribed = this._subscribedProxies.get(channelProxy.name);
     if (!subscribed) {
-      subscribed = this._subscribedProxies[channelProxy.name] = new Set();
+      subscribed = new Set();
+      this._subscribedProxies.set(channelProxy.name, subscribed);
     }
     subscribed.add(channelProxy);
     return subscribed.size;
   }
 
   _removeSubscribed(channelProxy) {
-    let subscribed = this._subscribedProxies[channelProxy.name];
+    let subscribed = this._subscribedProxies.get(channelProxy.name);
     subscribed?.delete(channelProxy);
     if (subscribed?.size === 0) {
-      delete this._subscribedProxies[channelProxy.name];
+      this._subscribedProxies.delete(channelProxy.name);
     }
     return subscribed?.size || 0;
   }
@@ -342,18 +350,15 @@ export default class PresenceService extends Service {
       throw "Must be logged in to enter presence channel";
     }
 
-    this._addPresent(channelProxy);
-
-    const channelName = channelProxy.name;
-    if (this._presentChannels.has(channelName)) {
+    const newCount = this._addPresent(channelProxy);
+    if (newCount > 1) {
       return;
     }
 
     const promiseProxy = createPromiseProxy();
 
-    this._presentChannels.add(channelName);
     this._queuedEvents.push({
-      channel: channelName,
+      channel: channelProxy.name,
       type: "enter",
       promiseProxy,
     });
@@ -373,16 +378,10 @@ export default class PresenceService extends Service {
       return;
     }
 
-    const channelName = channelProxy.name;
-    if (!this._presentChannels.has(channelName)) {
-      return;
-    }
-
     const promiseProxy = createPromiseProxy();
 
-    this._presentChannels.delete(channelName);
     this._queuedEvents.push({
-      channel: channelName,
+      channel: channelProxy.name,
       type: "leave",
       promiseProxy,
     });
@@ -539,7 +538,7 @@ export default class PresenceService extends Service {
       debounce(this, this._throttledUpdateServer, PRESENCE_DEBOUNCE_MS);
     } else if (
       !this._nextUpdateTimer &&
-      this._presentChannels.size > 0 &&
+      this._presentChannels.length > 0 &&
       !isTesting()
     ) {
       this._nextUpdateTimer = later(
