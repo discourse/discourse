@@ -2832,8 +2832,8 @@ en:
         instructions: "Share a link to this topic:"
         copied: "Topic link copied."
         restricted_groups:
-          one: "Only visible to members of group:"
-          other: "Only visible to members of groups:"
+          one: "Only visible to members of group: %{groupNames}"
+          other: "Only visible to members of groups: %{groupNames}"
         notify_users:
           title: "Notify"
           instructions: "Notify the following users about this topic:"
