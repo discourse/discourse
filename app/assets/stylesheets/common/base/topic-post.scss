@@ -432,6 +432,13 @@ aside.quote {
     color: var(--secondary-or-primary);
   }
 
+  .btn-primary,
+  .btn-primary:hover,
+  .btn-primary .d-icon,
+  .btn-primary:hover .d-icon {
+    color: var(--secondary);
+  }
+
   .insert-quote + .quote-sharing {
     border-left: 1px solid rgba(255, 255, 255, 0.3);
   }
