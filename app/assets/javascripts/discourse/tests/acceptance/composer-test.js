@@ -1,3 +1,10 @@
+import { run } from "@ember/runloop";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import LinkLookup from "discourse/lib/link-lookup";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { CREATE_TOPIC, NEW_TOPIC_KEY } from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import {
   acceptance,
   count,
@@ -8,24 +15,11 @@ import {
   updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  currentURL,
-  fillIn,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
-import { skip, test } from "qunit";
-import Draft from "discourse/models/draft";
-import I18n from "I18n";
-import { CREATE_TOPIC, NEW_TOPIC_KEY } from "discourse/models/composer";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { Promise } from "rsvp";
-import { run } from "@ember/runloop";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "I18n";
+import { skip, test } from "qunit";
+import { Promise } from "rsvp";
 import sinon from "sinon";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
-import LinkLookup from "discourse/lib/link-lookup";
 
 acceptance("Composer", function (needs) {
   needs.user();
@@ -808,14 +802,6 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  const assertImageResized = (assert, uploads) => {
-    assert.strictEqual(
-      queryAll(".d-editor-input").val(),
-      uploads.join("\n"),
-      "it resizes uploaded image"
-    );
-  };
-
   test("reply button has envelope icon when replying to private message", async function (assert) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
@@ -845,256 +831,6 @@ acceptance("Composer", function (needs) {
       count(".save-or-cancel button.create svg.d-icon-pencil-alt"),
       1,
       "save button has pencil icon"
-    );
-  });
-
-  test("Image resizing buttons", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-
-    let uploads = [
-      // 0 Default markdown with dimensions- should work
-      "<a href='https://example.com'>![test|690x313](upload://test.png)</a>",
-      // 1 Image with scaling percentage, should work
-      "![test|690x313,50%](upload://test.png)",
-      // 2 image with scaling percentage and a proceeding whitespace, should work
-      "![test|690x313, 50%](upload://test.png)",
-      // 3 No dimensions, should not work
-      "![test](upload://test.jpeg)",
-      // 4 Wrapped in backticks should not work
-      "`![test|690x313](upload://test.png)`",
-      // 5 html image - should not work
-      "<img src='/images/avatar.png' wight='20' height='20'>",
-      // 6 two images one the same line, but both are syntactically correct - both should work
-      "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
-      // 7 & 8 Identical images - both should work
-      "![identicalImage|300x300](upload://identicalImage.png)",
-      "![identicalImage|300x300](upload://identicalImage.png)",
-      // 9 Image with whitespaces in alt - should work
-      "![image with spaces in alt|690x220](upload://test.png)",
-      // 10 Image with markdown title - should work
-      `![image|690x220](upload://test.png "image title")`,
-      // 11 bbcode - should not work
-      "[img]/images/avatar.png[/img]",
-      // 12 Image with data attributes
-      "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)",
-    ];
-
-    await fillIn(".d-editor-input", uploads.join("\n"));
-
-    assert.strictEqual(
-      count(".button-wrapper"),
-      10,
-      "it adds correct amount of scaling button groups"
-    );
-
-    // Default
-    uploads[0] =
-      "<a href='https://example.com'>![test|690x313, 50%](upload://test.png)</a>";
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Targets the correct image if two on the same line
-    uploads[6] =
-      "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Try the other image on the same line
-    uploads[6] =
-      "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Make sure we target the correct image if there are duplicates
-    uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Try the other dupe
-    uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Don't mess with image titles
-    uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    // Keep data attributes
-    uploads[12] = `![test|foo=bar|690x313, 75%|bar=baz](upload://test.png)`;
-    await click(
-      queryAll(
-        ".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']"
-      )[0]
-    );
-    assertImageResized(assert, uploads);
-
-    await fillIn(
-      ".d-editor-input",
-      `
-![test|690x313](upload://test.png)
-
-\`<script>alert("xss")</script>\`
-    `
-    );
-
-    assert.ok(
-      !exists("script"),
-      "it does not unescape script tags in code blocks"
-    );
-  });
-
-  test("Editing alt text for single image in preview edits alt text in composer", async function (assert) {
-    const altText = ".image-wrapper .button-wrapper .alt-text";
-    const editAltTextButton =
-      ".image-wrapper .button-wrapper .alt-text-edit-btn";
-    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
-
-    await visit("/");
-
-    await click("#create-topic");
-    await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
-
-    // placement of elements
-
-    assert.ok(
-      exists(altText),
-      "shows alt text in the image wrapper's button wrapper"
-    );
-
-    assert.ok(
-      exists(editAltTextButton + " .d-icon-pencil"),
-      "alt text edit button with icon is in the image wrapper's button wrapper"
-    );
-
-    assert.ok(
-      exists(altTextInput),
-      "alt text input is in the image wrapper's button wrapper"
-    );
-
-    // logical
-
-    assert.equal(query(altText).innerText, "zorro", "correct alt text");
-    assert.ok(visible(altText), "alt text is visible");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is not visible");
-
-    await click(editAltTextButton);
-
-    assert.ok(invisible(altText), "readonly alt text is not visible");
-    assert.ok(
-      invisible(editAltTextButton),
-      "alt text edit button is not visible"
-    );
-    assert.ok(visible(altTextInput), "alt text input is visible");
-    assert.equal(
-      queryAll(altTextInput).val(),
-      "zorro",
-      "correct alt text in input"
-    );
-
-    await triggerKeyEvent(altTextInput, "keypress", "[".charCodeAt(0));
-    await triggerKeyEvent(altTextInput, "keypress", "]".charCodeAt(0));
-    assert.equal(
-      queryAll(altTextInput).val(),
-      "zorro",
-      "does not input [ ] keys"
-    );
-
-    await fillIn(altTextInput, "steak");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
-
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "![steak|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
-    assert.equal(query(altText).innerText, "steak", "shows the alt text");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is not visible");
-  });
-
-  test("Editing alt text for one of two images in preview updates correct alt text in composer", async function (assert) {
-    const editAltTextButton =
-      ".image-wrapper .button-wrapper .alt-text-edit-btn";
-    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
-
-    await visit("/");
-    await click("#create-topic");
-
-    await fillIn(
-      ".d-editor-input",
-      `![zorro|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`
-    );
-    await click(editAltTextButton);
-
-    await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
-
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
-      "the correct image's alt text updated"
-    );
-  });
-
-  test("Deleting alt text for image empties alt text in composer and allows further modification", async function (assert) {
-    const altText = ".image-wrapper .button-wrapper .alt-text";
-    const editAltTextButton =
-      ".image-wrapper .button-wrapper .alt-text-edit-btn";
-    const altTextInput = ".image-wrapper .button-wrapper .alt-text-input";
-
-    await visit("/");
-
-    await click("#create-topic");
-    await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
-
-    await click(editAltTextButton);
-
-    await fillIn(altTextInput, "");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
-
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "![|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
-    assert.equal(query(altText).innerText, "", "shows the alt text");
-
-    await click(editAltTextButton);
-
-    await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
-
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "![tomtom|200x200](upload://zorro.png)",
-      "alt text updated"
     );
   });
 

@@ -47,27 +47,26 @@ export default DiscourseRoute.extend(OpenComposer, {
 
   @action
   loading() {
-    this.controllerFor("discovery").set("loading", true);
+    this.controllerFor("discovery").loadingBegan();
+
+    // We don't want loading to bubble
     return true;
   },
 
   @action
   loadingComplete() {
-    this.controllerFor("discovery").set("loading", false);
+    this.controllerFor("discovery").loadingComplete();
     if (!this.session.get("topicListScrollPosition")) {
       scrollTop();
     }
-    return false;
   },
 
   @action
   didTransition() {
-    this.controllerFor("discovery")._showFooter();
     this.send("loadingComplete");
 
     const model = this.controllerFor("discovery/topics").get("model");
     setTopicList(model);
-    return false;
   },
 
   // clear a pinned topic

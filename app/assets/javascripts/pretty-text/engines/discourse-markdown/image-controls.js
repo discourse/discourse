@@ -67,16 +67,31 @@ function buildScaleButton(selectedScale, scale) {
   );
 }
 
-function buildImageAltTextButton(altText) {
+function buildImageShowAltTextControls(altText) {
   return `
-<span class="alt-text-readonly-container">
-  <span class="alt-text" aria-label="${I18n.t(
-    "composer.image_alt_text.aria_label"
-  )}">${altText}</span>
-  <span class="alt-text-edit-btn"><svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg></span>
-  <input class="alt-text-input" hidden="true" type="text" value="${altText}" />
-</span>
-`;
+  <span class="alt-text-readonly-container">
+    <span class="alt-text" aria-label="${I18n.t(
+      "composer.image_alt_text.aria_label"
+    )}">${altText}</span>
+    <span class="alt-text-edit-btn">
+      <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg>
+    </span>
+  </span>
+  `;
+}
+
+function buildImageEditAltTextControls(altText) {
+  return `
+  <span class="alt-text-edit-container" hidden="true">
+    <input class="alt-text-input" type="text" value="${altText}" />
+    <button class="alt-text-edit-ok btn-primary">
+        <svg class="fa d-icon d-icon-check svg-icon svg-string"><use href="#check"></use></svg>
+    </button>
+    <button class="alt-text-edit-cancel btn-default">
+        <svg class="fa d-icon d-icon-times svg-icon svg-string"><use href="#times"></use></svg>
+    </button>
+  </span>
+  `;
 }
 
 // We need this to load after `upload-protocol` which is priority 0
@@ -104,7 +119,12 @@ function ruleWithImageControls(oldRule) {
       ).join("");
       result += `</span>`;
 
-      result += buildImageAltTextButton(token.attrs[token.attrIndex("alt")][1]);
+      result += buildImageShowAltTextControls(
+        token.attrs[token.attrIndex("alt")][1]
+      );
+      result += buildImageEditAltTextControls(
+        token.attrs[token.attrIndex("alt")][1]
+      );
 
       result += "</span></span>";
 
@@ -128,14 +148,25 @@ export function setup(helper) {
       "span.scale-btn[data-scale]",
       "span.button-wrapper[data-image-index]",
       "span[aria-label]",
+
+      "span.alt-text-container",
+
       "span.alt-text-readonly-container",
       "span.alt-text-readonly-container.alt-text",
       "span.alt-text-readonly-container.alt-text-edit-btn",
       "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
       "use[href=#pencil-alt]",
+
+      "span.alt-text-edit-container",
+      "span[hidden=true]",
       "input[type=text]",
-      "input[hidden=true]",
       "input[class=alt-text-input]",
+      "button[class=alt-text-edit-ok btn-primary]",
+      "svg[class=fa d-icon d-icon-check svg-icon svg-string]",
+      "use[href=#check]",
+      "button[class=alt-text-edit-cancel btn-default]",
+      "svg[class=fa d-icon d-icon-times svg-icon svg-string]",
+      "use[href=#times]",
     ]);
 
     helper.registerPlugin((md) => {

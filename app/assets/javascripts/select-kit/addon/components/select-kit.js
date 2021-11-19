@@ -27,9 +27,7 @@ const SELECT_KIT_OPTIONS = Mixin.create({
 });
 
 function isDocumentRTL() {
-  return (
-    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
-  );
+  return document.documentElement.classList.contains("rtl");
 }
 
 export default Component.extend(
