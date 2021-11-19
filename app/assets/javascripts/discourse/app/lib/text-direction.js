@@ -15,11 +15,8 @@ export function isLTR(text) {
 
 export function setTextDirections(elem) {
   for (let e of elem.children) {
-    const textContent = e.textContent;
-    if (textContent) {
-      isRTL(textContent)
-        ? e.setAttribute("dir", "rtl")
-        : e.setAttribute("dir", "ltr");
+    if (e.textContent) {
+      e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
     }
   }
 }
