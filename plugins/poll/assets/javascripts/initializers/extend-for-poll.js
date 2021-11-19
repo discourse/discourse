@@ -69,7 +69,9 @@ function initializePolls(api) {
   });
 
   function attachPolls($elem, helper) {
-    const $polls = $(".poll", $elem);
+    const $polls = $(".poll", $elem).filter(function () {
+      return this.parentNode.tagName !== "BLOCKQUOTE";
+    });
     if (!$polls.length || !helper) {
       return;
     }
