@@ -5,6 +5,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 import { test } from "qunit";
 import pretender from "../helpers/create-pretender";
 
@@ -33,7 +34,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .modal-body").innerText,
-      "Are you sure? You have 2 important notifications."
+      I18n.t("notifications.dismiss_confirmation.body", { count: 2 })
     );
   });
 
@@ -47,7 +48,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .btn-primary").innerText,
-      "Dismiss"
+      I18n.t("notifications.dismiss_confirmation.dismiss")
     );
     pretender.put("/notifications/mark-read", () => {
       return [200, { "Content-Type": "application/json" }, { success: true }];
@@ -68,7 +69,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .btn-default").innerText,
-      "Cancel"
+      I18n.t("notifications.dismiss_confirmation.cancel")
     );
 
     await click(".dismiss-notification-confirmation-modal .btn-default");
