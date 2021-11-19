@@ -188,13 +188,21 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end

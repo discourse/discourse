@@ -27,6 +27,7 @@ export default Mixin.create(UppyS3Multipart, {
   autoStartUploads: true,
   _inProgressUploads: 0,
   id: null,
+  uploadRootPath: "/uploads",
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -223,7 +224,7 @@ export default Mixin.create(UppyS3Multipart, {
           data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
         }
 
-        return ajax(getUrl("/uploads/generate-presigned-put"), {
+        return ajax(getUrl(`${this.uploadRootPath}/generate-presigned-put`), {
           type: "POST",
           data,
         })
@@ -277,7 +278,7 @@ export default Mixin.create(UppyS3Multipart, {
   },
 
   _completeExternalUpload(file) {
-    return ajax(getUrl("/uploads/complete-external-upload"), {
+    return ajax(getUrl(`${this.uploadRootPath}/complete-external-upload`), {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },

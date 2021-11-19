@@ -49,9 +49,9 @@ module Middleware
       ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
-      def initialize(env)
+      def initialize(env, request = nil)
         @env = env
-        @request = Rack::Request.new(@env)
+        @request = request || Rack::Request.new(@env)
       end
 
       def blocked_crawler?

@@ -24,40 +24,35 @@ class UserStat < ActiveRecord::Base
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
       SELECT
-        Y.user_id,
-        Y.min_date
-      FROM (
+        u1.id user_id,
+        X.min_date
+      FROM users u1
+      LEFT JOIN (
         SELECT
-          u1.id user_id,
-          X.min_date
-        FROM users u1
-        LEFT JOIN (
-          SELECT
-            tau.user_id,
-            MIN(t.updated_at) min_date
-          FROM topic_allowed_users tau
-          INNER JOIN topics t ON t.id = tau.topic_id
-          INNER JOIN users u ON u.id = tau.user_id
-          LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
-          WHERE t.deleted_at IS NULL
-          AND t.archetype = :archetype
-          AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
-                                         THEN t.highest_staff_post_number
-                                         ELSE t.highest_post_number
-                                         END
-          AND (COALESCE(tu.notification_level, 1) >= 2)
-          GROUP BY tau.user_id
-        ) AS X ON X.user_id = u1.id
-      ) AS Y
-      WHERE Y.user_id IN (
-        SELECT id
-        FROM users
-        WHERE last_seen_at IS NOT NULL
-        AND last_seen_at > :last_seen
-        ORDER BY last_seen_at DESC
-        LIMIT :limit
-      )
+          tau.user_id,
+          MIN(t.updated_at) min_date
+        FROM topic_allowed_users tau
+        INNER JOIN topics t ON t.id = tau.topic_id
+        INNER JOIN users u ON u.id = tau.user_id
+        LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
+        WHERE t.deleted_at IS NULL
+        AND t.archetype = :archetype
+        AND tu.last_read_post_number < CASE
+                                       WHEN u.admin OR u.moderator
+                                       THEN t.highest_staff_post_number
+                                       ELSE t.highest_post_number
+                                       END
+        AND (COALESCE(tu.notification_level, 1) >= 2)
+        AND tau.user_id IN (
+          SELECT id
+          FROM users
+          WHERE last_seen_at IS NOT NULL
+          AND last_seen_at > :last_seen
+          ORDER BY last_seen_at DESC
+          LIMIT :limit
+        )
+        GROUP BY tau.user_id
+      ) AS X ON X.user_id = u1.id
     ) AS Z
     WHERE us.user_id = Z.user_id
     SQL

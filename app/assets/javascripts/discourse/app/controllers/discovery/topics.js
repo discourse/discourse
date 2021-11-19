@@ -66,15 +66,14 @@ const controllerOpts = {
       this.send("resetParams", options.skipResettingParams);
 
       // Don't refresh if we're still loading
-      if (this.get("discovery.loading")) {
+      if (this.discovery.loading) {
         return;
       }
 
       // If we `send('loading')` here, due to returning true it bubbles up to the
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
-      this.set("discovery.loading", true);
-      this.set("model.canLoadMore", true);
+      this.discovery.loadingBegan();
 
       this.topicTrackingState.resetTracking();
 

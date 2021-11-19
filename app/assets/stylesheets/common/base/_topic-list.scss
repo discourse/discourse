@@ -199,7 +199,7 @@
     border: none;
 
     .topic-list-data {
-      border-bottom: 1px solid var(--danger-medium);
+      border-top: 1px solid var(--danger-medium);
       line-height: 0em;
       padding: 0;
       text-align: center;
@@ -228,7 +228,7 @@
     font-size: $font-0;
   }
 
-  .topic-list-data.main-link {
+  .main-link {
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {

@@ -21,7 +21,7 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";

@@ -33,6 +33,7 @@ import bootbox from "bootbox";
 // functionality and event binding.
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+  uploadRootPath: "/uploads",
   uploadTargetBound: false,
 
   @observes("composerModel.uploadCancelled")

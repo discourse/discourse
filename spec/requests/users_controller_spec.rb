@@ -4857,11 +4857,18 @@ describe UsersController do
 
       it 'does not let user log out of current session' do
         token = UserAuthToken.generate!(user_id: user.id)
-        env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
-        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
+        cookie = create_auth_cookie(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          issued_at: 5.minutes.ago,
+        )
 
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: token.id },
+          headers: { "HTTP_COOKIE" => "_t=#{cookie}" }
 
+        expect(token.reload.id).to be_present
         expect(response.status).to eq(400)
       end
 
