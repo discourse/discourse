@@ -188,4 +188,27 @@ RSpec.describe CurrentUserSerializer do
       CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
     end
   end
+
+  context "#recent_searches" do
+    fab!(:user) { Fabricate(:user) }
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
+    end
+
+    it "is not included when search logging is disabled" do
+      SiteSetting.log_search_queries = false
+
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:recent_searches)
+    end
+
+    it "has the users last few searches" do
+      SiteSetting.log_search_queries = true
+      Search.execute("something", user_id: user.id, search_type: :header, ip_address: '192.168.0.1')
+      Search.execute("last keyword", user_id: user.id, search_type: :header, ip_address: '192.168.0.1')
+
+      payload = serializer.as_json
+      expect(payload[:recent_searches]).to eq(["last keyword", "something"])
+    end
+  end
 end

@@ -5,6 +5,7 @@ import {
   isValidSearchTerm,
   searchContextDescription,
   translateResults,
+  updateRecentSearches,
 } from "discourse/lib/search";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -345,6 +346,7 @@ export default Controller.extend({
           });
         break;
       default:
+        updateRecentSearches(this.currentUser, searchTerm);
         ajax("/search", { data: args })
           .then(async (results) => {
             const model = (await translateResults(results)) || {};

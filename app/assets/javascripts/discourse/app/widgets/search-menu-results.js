@@ -585,6 +585,9 @@ createWidget("search-menu-initial-options", {
 
     if (content.length === 0) {
       content.push(this.attach("random-quick-tip"));
+      if (this.currentUser?.recent_searches) {
+        content.push(this.attach("search-menu-recent-searches"));
+      }
     }
 
     return content;
@@ -612,7 +615,7 @@ createWidget("search-menu-assistant-item", {
     const attributes = {};
     attributes.href = "#";
 
-    let content = [iconNode("search")];
+    let content = [iconNode(attrs.icon || "search")];
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));
@@ -700,5 +703,24 @@ createWidget("random-quick-tip", {
         searchTopics: this.state.searchTopics,
       });
     }
+  },
+});
+
+createWidget("search-menu-recent-searches", {
+  tagName: "div.search-menu-recent",
+
+  html() {
+    const content = [];
+    content.push(h("div.heading", I18n.t("search.recent")));
+    this.currentUser?.recent_searches.forEach((slug) => {
+      content.push(
+        this.attach("search-menu-assistant-item", {
+          slug,
+          icon: "history",
+        })
+      );
+    });
+
+    return content;
   },
 });

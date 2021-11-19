@@ -230,3 +230,12 @@ export function applySearchAutocomplete($input, siteSettings) {
     );
   }
 }
+
+export function updateRecentSearches(currentUser, term) {
+  const recentSearches = currentUser?.recent_searches;
+
+  if (recentSearches && !recentSearches.includes(term)) {
+    recentSearches.popObject();
+    recentSearches.unshiftObject(term);
+  }
+}

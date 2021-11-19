@@ -1,4 +1,8 @@
-import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
+import {
+  isValidSearchTerm,
+  searchForTerm,
+  updateRecentSearches,
+} from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -456,6 +460,7 @@ export default createWidget("search-menu", {
       searchData.loading = true;
       cancel(this.state._debouncer);
       SearchHelper.perform(this);
+      updateRecentSearches(this.currentUser, searchData.term);
     } else {
       searchData.loading = false;
       if (!this.state.inTopicContext) {

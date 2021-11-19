@@ -246,8 +246,7 @@ $search-pad-horizontal: 0.5em;
 
   .browser-search-tip,
   .search-random-quick-tip {
-    padding: $search-pad-vertical $search-pad-horizontal;
-    padding-bottom: 0;
+    padding: $search-pad-vertical 1px;
     font-size: var(--font-down-2);
     color: var(--primary-medium);
     .tip-label {
@@ -257,6 +256,14 @@ $search-pad-horizontal: 0.5em;
       display: inline-block;
       &.tip-clickable {
         cursor: pointer;
+      }
+    }
+
+    .search-menu-recent {
+      @include separator;
+
+      .heading {
+        color: var(--primary-medium);
       }
     }
   }
