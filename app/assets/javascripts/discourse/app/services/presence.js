@@ -15,12 +15,21 @@ import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
+import userPresent, {
+  onPresenceChange,
+  removeOnPresenceChange,
+} from "discourse/lib/user-presence";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
 const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
+
+const USER_PRESENCE_ARGS = {
+  userUnseenTime: 60000,
+  browserHiddenTime: 10000,
+};
 
 function createPromiseProxy() {
   const promiseProxy = {};
@@ -51,7 +60,11 @@ class PresenceChannel extends EmberObject {
   }
 
   // Mark the current user as 'present' in this channel
-  async enter() {
+  // By default, the user will temporarily 'leave' the channel when
+  // the current tab is in the background, or has no interaction for more than 60 seconds.
+  // To override this behaviour, set onlyWhileActive: false
+  async enter({ onlyWhileActive = true } = {}) {
+    this.setProperties({ onlyWhileActive });
     await this.presenceService._enter(this);
     this.set("present", true);
   }
@@ -227,8 +240,16 @@ export default class PresenceService extends Service {
     this._subscribedProxies = new Map();
     this._initialDataRequests = new Map();
 
-    this._beforeUnloadCallback = () => this._beaconLeaveAll();
-    window.addEventListener("beforeunload", this._beforeUnloadCallback);
+    if (this.currentUser) {
+      this._beforeUnloadCallback = () => this._beaconLeaveAll();
+      window.addEventListener("beforeunload", this._beforeUnloadCallback);
+
+      this._presenceChangeCallback = () => this._throttledUpdateServer();
+      onPresenceChange({
+        ...USER_PRESENCE_ARGS,
+        callback: this._presenceChangeCallback,
+      });
+    }
   }
 
   get _presentChannels() {
@@ -238,6 +259,7 @@ export default class PresenceService extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
     window.removeEventListener("beforeunload", this._beforeUnloadCallback);
+    removeOnPresenceChange(this._presenceChangeCallback);
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -463,14 +485,31 @@ export default class PresenceService extends Service {
     this._queuedEvents = [];
 
     try {
+      const presentChannels = [];
       const channelsToLeave = queue
         .filter((e) => e.type === "leave")
         .map((e) => e.channel);
 
+      const userIsPresent = userPresent(USER_PRESENCE_ARGS);
+      for (const [channelName, proxies] of this._presentProxies) {
+        if (
+          !userIsPresent &&
+          Array.from(proxies).every((p) => p.onlyWhileActive)
+        ) {
+          channelsToLeave.push(channelName);
+        } else {
+          presentChannels.push(channelName);
+        }
+      }
+
+      if (queue.length === 0 && presentChannels.length === 0) {
+        return;
+      }
+
       const response = await ajax("/presence/update", {
         data: {
           client_id: this.messageBus.clientId,
-          present_channels: [...this._presentChannels],
+          present_channels: presentChannels,
           leave_channels: channelsToLeave,
         },
         type: "POST",
