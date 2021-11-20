@@ -18,14 +18,14 @@ end
 #
 # Table name: associated_groups
 #
-#  id              :bigint           not null, primary key
-#  name            :string           not null
-#  provider_name   :string           not null
-#  provider_id     :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id            :bigint           not null, primary key
+#  name          :string           not null
+#  provider_name :string           not null
+#  provider_id   :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #
-#  associated_groups_name_provider  (name,provider_name,provider_id) UNIQUE
+#  associated_groups_provider_id  (provider_name,provider_id) UNIQUE
 #
