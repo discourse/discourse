@@ -4,7 +4,7 @@ class GroupAssociatedGroup < ActiveRecord::Base
   belongs_to :associated_group
 
   after_commit :add_associated_users, on: [:create, :update]
-  after_commit :remove_associated_users, on: [:destroy]
+  before_destroy :remove_associated_users
 
   def add_associated_users
     DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
@@ -18,7 +18,15 @@ class GroupAssociatedGroup < ActiveRecord::Base
 
   def remove_associated_users
     DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
-      associated_group.users.in_batches do |users|
+      User.where("(
+        SELECT COUNT(user_id)
+        FROM user_associated_groups AS uag
+        WHERE uag.user_id = users.id
+        AND uag.associated_group_id IN (
+          SELECT associated_group_id FROM group_associated_groups AS gag
+          WHERE gag.group_id = ?
+        )
+      ) = 1", group.id).in_batches do |users|
         users.each do |user|
           group.remove_automatically(user, subject: associated_group.label)
         end

@@ -5,7 +5,7 @@ class UserAssociatedGroup < ActiveRecord::Base
   belongs_to :associated_group
 
   after_commit :add_to_associated_groups, on: [:create, :update]
-  after_commit :remove_from_associated_groups, on: [:destroy]
+  before_destroy :remove_from_associated_groups
 
   def add_to_associated_groups
     associated_group.groups.each do |group|
@@ -14,7 +14,15 @@ class UserAssociatedGroup < ActiveRecord::Base
   end
 
   def remove_from_associated_groups
-    associated_group.groups.each do |group|
+    Group.where("(
+      SELECT COUNT(group_id)
+      FROM group_associated_groups AS gag
+      WHERE gag.group_id = groups.id
+      AND gag.associated_group_id IN (
+        SELECT associated_group_id FROM user_associated_groups AS uag
+        WHERE uag.user_id = ?
+      )
+    ) = 1", user_id).each do |group|
       group.remove_automatically(user, subject: associated_group.label)
     end
   end
