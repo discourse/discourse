@@ -276,7 +276,9 @@ export default Controller.extend(ModalFunctionality, {
         .act(this.model, params)
         .then(() => {
           if (!params.skipClose) {
-            this.send("closeModal");
+            if (!this.isDestroying) {
+              this.send("closeModal");
+            }
           }
           if (params.message) {
             this.set("message", "");
