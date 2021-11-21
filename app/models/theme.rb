@@ -572,6 +572,8 @@ class Theme < ActiveRecord::Base
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
+
+    Discourse.request_refresh! if target_setting.requests_refresh?
   end
 
   def update_translation(translation_key, new_value)
