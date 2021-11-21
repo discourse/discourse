@@ -552,6 +552,95 @@ describe PrettyText do
         Discourse.redis.flushdb
       end
     end
+
+    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
+      code = <<~MD
+         X
+         ```js
+         var isAdmin = false;
+         /*‮ begin admin only */⁦ if (isAdmin) ⁩ ⁦ {
+         console.log("You are an admin.");
+         /* end admins only ‮*/⁦ }
+         ```
+      MD
+      cooked = PrettyText.cook(code)
+      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+
+      html = <<~HTML
+        <p>X</p>
+        <pre><code class="lang-auto">var isAdmin = false;
+        /*<span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span> begin admin only */<span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+2066&gt;</span> if (isAdmin) <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+2069&gt;</span> <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+2066&gt;</span> {
+        console.log("You are an admin.");
+        /* end admins only <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>*/<span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+2066&gt;</span> }
+        </code></pre>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
+      bad_bidi = [
+        "\u202A",
+        "\u202B",
+        "\u202C",
+        "\u202D",
+        "\u202E",
+        "\u2066",
+        "\u2067",
+        "\u2068",
+        "\u2069",
+      ]
+      bad_bidi.each do |bidi|
+        code = <<~MD
+        ```
+        #{bidi}
+        ```
+        MD
+        cooked = PrettyText.cook(code)
+        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
+        html = <<~HTML
+          <pre><code class="lang-auto"><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span>
+          </code></pre>
+        HTML
+        expect(cooked).to eq(html.strip)
+      end
+    end
+
+    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters in solo code and pre nodes, making sure they are replaced" do
+      bad_bidi = [
+        "\u202A",
+        "\u202B",
+        "\u202C",
+        "\u202D",
+        "\u202E",
+        "\u2066",
+        "\u2067",
+        "\u2068",
+        "\u2069",
+      ]
+      bad_bidi.each do |bidi|
+        code = <<~MD
+        <code>#{bidi}</code>
+        MD
+        cooked = PrettyText.cook(code)
+        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
+        html = <<~HTML
+          <p><code><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></code></p>
+        HTML
+        expect(cooked).to eq(html.strip)
+      end
+      bad_bidi.each do |bidi|
+        code = <<~MD
+        <pre>#{bidi}</pre>
+        MD
+        cooked = PrettyText.cook(code)
+        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
+        html = <<~HTML
+          <pre><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></pre>
+        HTML
+        expect(cooked).to eq(html.strip)
+      end
+    end
   end
 
   describe "rel attributes" do
