@@ -848,7 +848,7 @@ describe PostAlerter do
   end
 
   describe "create_notification_alert" do
-    it "does not nothing for suspended users" do
+    it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
       post = Fabricate(:post)
 
@@ -868,6 +868,35 @@ describe PostAlerter do
       expect(events.size).to eq(0)
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(0)
+    end
+
+    it "does not publish to MessageBus /notification-alert if the user has not been seen for > 30 days, but still sends a push notification" do
+      evil_trout.update_columns(last_seen_at: 31.days.ago)
+      post = Fabricate(:post)
+
+      SiteSetting.allowed_user_api_push_urls = "https://site2.com/push"
+      UserApiKey.create!(user_id: evil_trout.id,
+                         client_id: "xxx#1",
+                         application_name: "iPhone1",
+                         scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                         push_url: "https://site2.com/push")
+
+      events = nil
+      messages = MessageBus.track_publish do
+        events = DiscourseEvent.track_events do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:custom],
+            excerpt: "excerpt",
+            username: "username"
+          )
+        end
+      end
+
+      expect(events.size).to eq(2)
+      expect(messages.size).to eq(0)
+      expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
   end
 
