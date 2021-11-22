@@ -49,11 +49,7 @@ class UserAuthenticator
   private
 
   def confirm_email
-    if authenticated?
-      email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
-      EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
-      @user.set_automatic_groups
-    end
+    @user.activate if authenticated?
   end
 
   def authenticator
