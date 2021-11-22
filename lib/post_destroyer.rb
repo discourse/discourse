@@ -185,7 +185,6 @@ class PostDestroyer
       TopicUser.update_post_action_cache(post_id: @post.id)
 
       DB.after_commit do
-        # WE MAKE IT HERE
         if @opts[:reviewable]
           notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
         elsif reviewable = @post.reviewable_flag
