@@ -717,6 +717,7 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+    hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
