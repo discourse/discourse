@@ -72,6 +72,7 @@ export default {
 
       // Requirements met.
       session.set("showSignupCta", true);
+      appEvents.trigger("cta:shown");
     }
 
     screenTrack.registerAnonCallback(checkSignupCtaRequirements);
