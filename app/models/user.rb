@@ -1021,6 +1021,12 @@ class User < ActiveRecord::Base
     admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
   end
 
+  def has_trust_level_or_staff?(level)
+    return admin? if level.to_s == 'admin'
+    return staff? if level.to_s == 'staff'
+    has_trust_level?(level.to_i)
+  end
+
   # a touch faster than automatic
   def admin?
     admin

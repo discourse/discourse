@@ -56,6 +56,9 @@ class Guardian
     def has_trust_level?(level)
       false
     end
+    def has_trust_level_or_staff?(level)
+      false
+    end
     def email
       nil
     end
@@ -443,9 +446,7 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
-    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
-    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
+    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)
