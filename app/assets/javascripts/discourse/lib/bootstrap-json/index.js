@@ -17,13 +17,6 @@ function generateUID() {
   return firstPart + secondPart;
 }
 
-const IGNORE_PATHS = [
-  /tests\/index\.html$/,
-  /\/_lr\/livereload\.js/,
-  /\/ember-cli-live-reload\.js$/,
-  /\/session\/[^\/]+\/become$/,
-];
-
 function htmlTag(buffer, bootstrap) {
   let classList = "";
   if (bootstrap.html_classes) {
@@ -307,15 +300,17 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(req) {
-    if (IGNORE_PATHS.some((ip) => ip.test(req.path))) {
-      return false;
+  shouldHandleRequest(request) {
+    if (request.get("Accept")?.includes("text/html")) {
+      return true;
     }
 
-    if (/\.(json|js|map|ico)$/.test(req.path)) {
-      return false;
+    if (
+      request.get("Content-Type")?.includes("application/x-www-form-urlencoded")
+    ) {
+      return true;
     }
 
-    return /^\//.test(req.path);
+    return false;
   },
 };
