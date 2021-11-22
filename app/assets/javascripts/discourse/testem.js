@@ -27,10 +27,10 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
-  tap_failed_tests_only: process.env.CI,
+  tap_failed_tests_only: false,
   parallel: 1, // disable parallel tests for stability
   browser_start_timeout: 120,
-  browser_disconnect_timeout: 20,
+  browser_disconnect_timeout: 60,
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
@@ -48,7 +48,7 @@ module.exports = {
     "Headless Firefox": ["--width=1440", "--height=900"],
   },
   browser_paths: {
-    "Headless Firefox": "/opt/firefox-evergreen/firefox",
+    "Headless Firefox": "/Applications/FirefoxESR.app",
   },
   reporter: Reporter,
 };
