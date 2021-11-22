@@ -5,6 +5,19 @@ require 'nokogiri'
 require 'erb'
 
 module PrettyText
+  DANGEROUS_BIDI_CHARACTERS = [
+    "\u202A",
+    "\u202B",
+    "\u202C",
+    "\u202D",
+    "\u202E",
+    "\u2066",
+    "\u2067",
+    "\u2068",
+    "\u2069",
+  ].freeze
+  DANGEROUS_BIDI_REGEXP = Regexp.new(DANGEROUS_BIDI_CHARACTERS.join("|")).freeze
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -277,6 +290,7 @@ module PrettyText
 
     add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     add_rel_attributes_to_user_content(doc, add_nofollow)
+    strip_hidden_unicode_bidirectional_characters(doc)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -287,6 +301,24 @@ module PrettyText
     end
     loofah_fragment = Loofah.fragment(doc.to_html)
     loofah_fragment.scrub!(scrubber).to_html
+  end
+
+  def self.strip_hidden_unicode_bidirectional_characters(doc)
+    return if !DANGEROUS_BIDI_REGEXP.match?(doc.content)
+
+    doc.css("code,pre").each do |code_tag|
+      next if !DANGEROUS_BIDI_REGEXP.match?(code_tag.content)
+
+      DANGEROUS_BIDI_CHARACTERS.each do |bidi|
+        next if !code_tag.content.include?(bidi)
+
+        formatted = "&lt;U+#{bidi.ord.to_s(16).upcase}&gt;"
+        code_tag.inner_html = code_tag.inner_html.gsub(
+          bidi,
+          "<span class=\"bidi-warning\" title=\"#{I18n.t("post.hidden_bidi_character")}\">#{formatted}</span>"
+        )
+      end
+    end
   end
 
   def self.add_rel_attributes_to_user_content(doc, add_nofollow)

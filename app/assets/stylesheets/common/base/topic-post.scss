@@ -736,6 +736,14 @@ pre {
     background: var(--blend-primary-secondary-5);
     max-height: 500px;
   }
+
+  .bidi-warning,
+  .bidi-warning span {
+    font-style: normal;
+    background-color: var(--highlight);
+    color: var(--danger);
+    cursor: help;
+  }
 }
 
 .copy-codeblocks {
