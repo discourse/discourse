@@ -2811,6 +2811,11 @@ en:
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+    responder:
+      off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
+      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+      spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
+      notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
@@ -2908,6 +2913,24 @@ en:
         ```
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
+
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Reply removed from flagged post by staff"
+      subject_template: "Reply removed from flagged post by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that a [post](%{base_url}%{url}) you replied to was removed.
+
+        %{flag_reason}
+
+        This post was flagged by the community and a staff member opted to remove it.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
 
     usage_tips:
       text_body_template: |

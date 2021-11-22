@@ -43,7 +43,7 @@ class PostDestroyer
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply, defer_flags: defer_reply_flags).destroy }
+    replies.each { |reply| PostDestroyer.new(performed_by, reply, reviewable: reviewable, defer_flags: defer_reply_flags, notify_responders: true, parent_post: post).destroy }
   end
 
   def initialize(user, post, opts = {})
@@ -178,8 +178,9 @@ class PostDestroyer
       TopicUser.update_post_action_cache(post_id: @post.id)
 
       DB.after_commit do
+        # WE MAKE IT HERE
         if @opts[:reviewable]
-          notify_deletion(@opts[:reviewable])
+          notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
         elsif reviewable = @post.reviewable_flag
           @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
         end
@@ -315,7 +316,7 @@ class PostDestroyer
     reviewable.transition_to(:ignored, @user)
   end
 
-  def notify_deletion(reviewable)
+  def notify_deletion(reviewable, options = {})
     return if @post.user.blank?
 
     allowed_user = @user.human? && @user.staff?
@@ -324,12 +325,12 @@ class PostDestroyer
     Jobs.enqueue(
       :send_system_message,
       user_id: @post.user_id,
-      message_type: :flags_agreed_and_post_deleted,
+      message_type: options[:notify_responders] ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
       message_options: {
-        flagged_post_raw_content: @post.raw,
-        url: @post.url,
+        flagged_post_raw_content: options[:notify_responders] ? options[:parent_post].raw : @post.raw,
+        url: options[:notify_responders] ? options[:parent_post].url : @post.url,
         flag_reason: I18n.t(
-          "flag_reasons.#{PostActionType.types[rs.reviewable_score_type]}",
+          "flag_reasons#{".responder" if options[:notify_responders]}.#{PostActionType.types[rs.reviewable_score_type]}",
           locale: SiteSetting.default_locale,
           base_path: Discourse.base_path
         )
