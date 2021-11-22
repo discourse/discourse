@@ -1,17 +1,8 @@
 // Initializes an object that lets us know about browser's capabilities
 
-const APPLE_NAVIGATOR_PLATFORMS = [
-  "iPhone",
-  "iPod",
-  "iPad",
-  "iPhone Simulator",
-  "iPod Simulator",
-  "iPad Simulator",
-  "Macintosh",
-  "MacIntel",
-];
+const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 
-const APPLE_USERAGENTDATA_PLATFORM = ["macOS"];
+const APPLE_USERAGENTDATA_PLATFORM = /macOS/;
 
 export default {
   name: "sniff-capabilities",
@@ -43,11 +34,9 @@ export default {
       !window.MSStream;
 
     caps.isApple =
-      APPLE_NAVIGATOR_PLATFORMS.includes(navigator.platform) ||
+      APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
       (navigator.userAgentData &&
-        APPLE_USERAGENTDATA_PLATFORM.includes(
-          navigator.userAgentData.platform
-        ));
+        APPLE_USERAGENTDATA_PLATFORM.test(navigator.userAgentData.platform));
 
     caps.hasContactPicker =
       "contacts" in navigator && "ContactsManager" in window;
