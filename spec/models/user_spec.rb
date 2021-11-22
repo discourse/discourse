@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe User do
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
@@ -1920,6 +1920,18 @@ describe User do
       #       to be removed in 2.5
       expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
+    end
+
+    it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      user.update(last_seen_at: 31.days.ago)
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message).to eq(nil)
     end
   end
 

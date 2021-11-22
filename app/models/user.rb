@@ -590,6 +590,8 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    return if !self.allow_live_notifications?
+
     # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
@@ -691,6 +693,10 @@ class User < ActiveRecord::Base
 
   def seen_before?
     last_seen_at.present?
+  end
+
+  def seen_since?(datetime)
+    seen_before? && last_seen_at >= datetime
   end
 
   def create_visit_record!(date, opts = {})
@@ -1436,6 +1442,10 @@ class User < ActiveRecord::Base
 
   def shelved_notifications
     ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
+  end
+
+  def allow_live_notifications?
+    seen_since?(30.days.ago)
   end
 
   protected
