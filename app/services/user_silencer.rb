@@ -35,7 +35,7 @@ class UserSilencer
           @opts[:message_body]
         ).format
 
-        context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
+        context = "#{message_type}: #{@opts[:reason]}"
 
         if @by_user
           log_params = { context: context, details: details }
