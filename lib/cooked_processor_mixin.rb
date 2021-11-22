@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PostProcessorMixin
+module CookedProcessorMixin
 
   def post_process_oneboxes
     limit = SiteSetting.max_oneboxes_per_post
@@ -28,7 +28,7 @@ module PostProcessorMixin
       if is_onebox
         onebox = Oneboxer.onebox(url,
           invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-          user_id: @post&.user_id,
+          user_id: @model&.user_id,
           category_id: @category_id
         )
 
@@ -285,7 +285,7 @@ module PostProcessorMixin
     inline_onebox = InlineOneboxer.lookup(
       element.attributes["href"].value,
       invalidate: !!@opts[:invalidate_oneboxes],
-      user_id: @post&.user_id,
+      user_id: @model&.user_id,
       category_id: @category_id
     )
 

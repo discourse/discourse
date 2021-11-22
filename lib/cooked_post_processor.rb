@@ -4,7 +4,7 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 class CookedPostProcessor
-  include PostProcessorMixin
+  include CookedProcessorMixin
 
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
@@ -17,6 +17,7 @@ class CookedPostProcessor
     @dirty = false
     @opts = opts
     @post = post
+    @model = post
     @previous_cooked = (@post.cooked || "").dup
     # NOTE: we re-cook the post here in order to prevent timing issues with edits
     # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
