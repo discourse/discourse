@@ -70,7 +70,7 @@ export default class UppyChunkedUpload {
 
     this.chunks = chunks;
     this.chunkState = chunks.map(() => ({
-      uploaded: 0,
+      bytesUploaded: 0,
       busy: false,
       done: false,
     }));
@@ -215,10 +215,10 @@ export default class UppyChunkedUpload {
   }
 
   _onChunkProgress(index, sent) {
-    this.chunkState[index].uploaded = parseInt(sent, 10);
+    this.chunkState[index].bytesUploaded = parseInt(sent, 10);
 
     const totalUploaded = this.chunkState.reduce(
-      (total, chunk) => total + chunk.uploaded,
+      (total, chunk) => total + chunk.bytesUploaded,
       0
     );
     this.options.onProgress(totalUploaded, this.file.data.size);

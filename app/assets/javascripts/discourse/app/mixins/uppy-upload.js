@@ -190,7 +190,8 @@ export default Mixin.create(UppyS3Multipart, {
     // allow these other uploaders to go direct to S3.
     if (
       this.siteSettings.enable_direct_s3_uploads &&
-      !this.preventDirectS3Uploads
+      !this.preventDirectS3Uploads &&
+      !this.useChunkedUploads
     ) {
       if (this.useMultipartUploadsIfAvailable) {
         this._useS3MultipartUploads();
