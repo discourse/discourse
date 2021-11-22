@@ -128,4 +128,41 @@ describe DiscoursePoll::Poll do
       )
     end
   end
+
+  describe "post_created" do
+    it "publishes on message bus if a there are polls" do
+      first_post = Fabricate(:post)
+      topic = first_post.topic
+      creator = PostCreator.new(user,
+        topic_id: topic.id,
+        raw: <<~RAW
+          [poll]
+          * 1
+          * 2
+          [/poll]
+        RAW
+      )
+
+      messages = MessageBus.track_publish("/polls/#{topic.id}") do
+        creator.create!
+      end
+
+      expect(messages.count).to eq(1)
+    end
+
+    it "does not publish on message bus when a post with no polls is created" do
+      first_post = Fabricate(:post)
+      topic = first_post.topic
+      creator = PostCreator.new(user,
+        topic_id: topic.id,
+        raw: "Just a post with definitely no polls"
+      )
+
+      messages = MessageBus.track_publish("/polls/#{topic.id}") do
+        creator.create!
+      end
+
+      expect(messages.count).to eq(0)
+    end
+  end
 end
