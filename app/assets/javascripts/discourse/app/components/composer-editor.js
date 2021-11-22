@@ -688,6 +688,7 @@ export default Component.extend(ComposerUpload, {
 
     imageResize.removeAttribute("hidden");
     readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
     editContainer.setAttribute("hidden", "true");
   },
 
@@ -743,6 +744,7 @@ export default Component.extend(ComposerUpload, {
     );
     const editContainerInput = editContainer.querySelector(".alt-text-input");
 
+    buttonWrapper.setAttribute("editing", "true");
     imageResize.setAttribute("hidden", "true");
     readonlyContainer.setAttribute("hidden", "true");
     editContainerInput.value = altText.textContent;

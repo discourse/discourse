@@ -195,6 +195,10 @@
     z-index: 1; // needs to be higher than image
     background: var(--secondary); // for when images are wider than controls
 
+    &[editing] {
+      opacity: 1;
+    }
+
     .scale-btn-container,
     .alt-text-readonly-container,
     .alt-text-edit-container {
