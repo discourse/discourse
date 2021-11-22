@@ -5,34 +5,13 @@ import {
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerEvent, visit } from "@ember/test-helpers";
+import { setupApplicationTest as EMBER_CLI_ENV } from "ember-qunit";
 
 async function triggerSwipeStart(touchTarget) {
-  // some tests are shown in a zoom viewport.
-  // boundingClientRect is affected by the zoom and need to be multiplied by the zoom effect.
-  // EG: if the element has a zoom of 50%, this DOUBLES the x and y positions and offsets.
-  // The numbers you get from getBoundingClientRect are seen as twice as large... however, the
-  // touch input still deals with the base inputs, not doubled. This allows us to convert for those environments.
-  let zoom = parseFloat(
-    window.getComputedStyle(document.querySelector("#ember-testing")).zoom || 1
-  );
-
-  // Other tests are shown in a transformed viewport, and this is a multiple for the offsets
-  let scale = parseFloat(
-    window
-      .getComputedStyle(document.querySelector("#ember-testing"))
-      .transform.replace("matrix(", "") || 1
-  );
-
   const touchStart = {
     touchTarget,
-    x:
-      zoom *
-      (touchTarget.getBoundingClientRect().x +
-        (scale * touchTarget.offsetWidth) / 2),
-    y:
-      zoom *
-      (touchTarget.getBoundingClientRect().y +
-        (scale * touchTarget.offsetHeight) / 2),
+    x: touchTarget.getBoundingClientRect().x + touchTarget.offsetWidth / 2,
+    y: touchTarget.getBoundingClientRect().y + touchTarget.offsetHeight / 2,
   };
   const touch = new Touch({
     identifier: "test",
@@ -73,11 +52,15 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
   });
 }
 
-// new Touch() isn't availiable in Firefox, so this is skipped there
 acceptance("Mobile - menu swipes", function (needs) {
+  if (!EMBER_CLI_ENV) {
+    return; // helpers not available in legacy env
+  }
+
   needs.mobileView();
   needs.user();
 
+  // new Touch() isn't available in Firefox
   chromeTest("swipe to close hamburger", async function (assert) {
     await visit("/");
     await click(".hamburger-dropdown");

@@ -1,30 +1,25 @@
-import {
-  acceptance,
-  loggedInUser,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { find, scrollTo, visit, waitUntil } from "@ember/test-helpers";
+import { find, visit, waitUntil } from "@ember/test-helpers";
 import { setupApplicationTest as EMBER_CLI_ENV } from "ember-qunit";
+import { later } from "@ember/runloop";
 
 acceptance("Sticky Avatars", function (needs) {
   if (!EMBER_CLI_ENV) {
     return; // helpers not available in legacy env
   }
 
-  const container = document.getElementById("ember-testing-container");
   needs.user();
   needs.hooks.beforeEach(function () {
-    container.scrollTop = 0;
+    window.scrollTop = 0;
   });
 
   test("Adds sticky avatars when scrolling up", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const appEvents = loggedInUser().appEvents;
-    await scrollTo(container, 0, 800);
-    appEvents.trigger("topic:scrolled", 800);
-    await scrollTo(container, 0, 700);
-    appEvents.trigger("topic:scrolled", 700);
+    await window.scroll(0, 2050);
+    // delay necessary because scroll events are debounced
+    await later(() => window.scroll(0, 1900), 200);
 
     await waitUntil(() => find(".sticky-avatar"));
     assert.ok(

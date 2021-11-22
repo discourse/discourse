@@ -19,3 +19,27 @@ $love: #fa6c8d !default;
 @import "common/foundation/mixins";
 @import "desktop";
 @import "color_definitions";
+
+#qunit {
+  top: unset;
+  left: unset;
+  z-index: 99;
+  width: 70%;
+  height: 50%;
+  background: #fff;
+  border-top: 2px solid #ccc;
+  border-left: 2px solid #ccc;
+  border-top-left-radius: 5px;
+}
+
+#ember-testing-container.full-screen {
+  position: inherit;
+  width: 1200px;
+  height: unset;
+  overflow: unset;
+  #ember-testing {
+    position: inherit;
+    transform: none;
+    height: unset;
+  }
+}

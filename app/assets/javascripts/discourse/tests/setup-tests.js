@@ -298,8 +298,6 @@ function setupTestsCommon(application, container, config) {
     PreloadStore.reset();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
-    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
-    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};

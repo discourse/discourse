@@ -14,7 +14,7 @@ document.addEventListener("discourse-booted", () => {
     `
       <div id="qunit"></div>
       <div id="qunit-fixture"></div>
-      <div id="ember-testing-container" style="position: fixed">
+      <div id="ember-testing-container" class="full-screen">
         <div id="ember-testing"></div>
       </div>
     `
