@@ -167,6 +167,10 @@ module CookedProcessorMixin
     nil
   end
 
+  def add_to_size_cache(url, w, h)
+    @size_cache[url] = [w, h]
+  end
+
   def get_size(url)
     return @size_cache[url] if @size_cache.has_key?(url)
 
