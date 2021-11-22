@@ -25,6 +25,7 @@ class Reporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
+  debug: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
   tap_failed_tests_only: process.env.CI,
