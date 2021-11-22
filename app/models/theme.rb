@@ -94,6 +94,13 @@ class Theme < ActiveRecord::Base
     clear_cached_settings!
     DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
+
+    if theme_setting_requests_refresh
+      DB.after_commit do
+        Discourse.request_refresh!
+        self.theme_setting_requests_refresh = false
+      end
+    end
   end
 
   def update_child_components
@@ -574,7 +581,7 @@ class Theme < ActiveRecord::Base
     target_setting.value = new_value
 
     if target_setting.requests_refresh?
-      DB.after_commit { Discourse.request_refresh! }
+      self.theme_setting_requests_refresh = true
     end
   end
 
@@ -730,6 +737,8 @@ class Theme < ActiveRecord::Base
   end
 
   private
+
+  attr_accessor :theme_setting_requests_refresh
 
   def to_scss_variable(name, value)
     escaped = SassC::Script::Value::String.quote(value, sass: true)
