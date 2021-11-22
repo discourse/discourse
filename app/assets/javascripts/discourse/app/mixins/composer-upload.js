@@ -103,6 +103,10 @@ export default Mixin.create({
 
   _resetUpload(removePlaceholder) {
     next(() => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       if (this._validUploads > 0) {
         this._validUploads--;
       }
@@ -125,6 +129,10 @@ export default Mixin.create({
   },
 
   _bindUploadTarget() {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this._unbindUploadTarget(); // in case it's still bound, let's clean it up first
     this._pasted = false;
 
