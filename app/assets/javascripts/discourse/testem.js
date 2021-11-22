@@ -44,7 +44,7 @@ module.exports = {
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
-    Firefox: ["-headless", "--width=1440", "--height=900"],
+    Firefox: ["--width=1440", "--height=900"],
     "Headless Firefox": ["--width=1440", "--height=900"],
   },
   browser_paths: {
