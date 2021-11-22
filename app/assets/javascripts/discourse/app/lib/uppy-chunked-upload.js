@@ -45,10 +45,6 @@ export default class UppyChunkedUpload {
     }
 
     this.abortController = new AbortController();
-    this.chunksInProgress = 0;
-    this.chunks = null;
-    this.chunkState = null;
-
     this._initChunks();
   }
 
@@ -57,6 +53,10 @@ export default class UppyChunkedUpload {
   }
 
   _initChunks() {
+    this.chunksInProgress = 0;
+    this.chunks = null;
+    this.chunkState = null;
+
     const chunks = [];
 
     if (this.file.size === 0) {

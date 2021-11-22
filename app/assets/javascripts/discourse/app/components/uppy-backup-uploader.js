@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { not } from "@ember/object/computed";
+import { alias, not } from "@ember/object/computed";
 import I18n from "I18n";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -23,7 +23,7 @@ export default Component.extend(UppyUploadMixin, {
   useMultipartUploadsIfAvailable: not("localBackupStorage"),
 
   // local backups
-  useChunkedUploads: not("useMultipartUploadsIfAvailable"),
+  useChunkedUploads: alias("localBackupStorage"),
 
   @discourseComputed("uploading", "uploadProgress")
   uploadButtonText(uploading, progress) {
@@ -37,6 +37,6 @@ export default Component.extend(UppyUploadMixin, {
   },
 
   uploadDone(responseData) {
-    this.done(responseData.fileName || responseData.file_name);
+    this.done(responseData.file_name);
   },
 });
