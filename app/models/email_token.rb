@@ -32,8 +32,7 @@ class EmailToken < ActiveRecord::Base
 
   before_save do
     if self.scope.blank?
-      STDERR.puts "EmailToken has an empty scope"
-      caller.each { |x| STDERR.puts "    #{x}" if x.include?('discourse') }
+      Discourse.deprecate("EmailToken#scope cannot be empty.", output_in_test: true)
     end
   end
 
