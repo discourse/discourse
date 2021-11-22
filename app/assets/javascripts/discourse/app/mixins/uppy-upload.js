@@ -14,6 +14,7 @@ import XHRUpload from "@uppy/xhr-upload";
 import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
 import { on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 import bootbox from "bootbox";
@@ -152,7 +153,9 @@ export default Mixin.create(UppyS3Multipart, {
         this.setProperties({ uploading: false, processing: true });
         this._completeExternalUpload(file)
           .then((completeResponse) => {
-            this.uploadDone(completeResponse);
+            this.uploadDone(
+              deepMerge(completeResponse, { file_name: file.name })
+            );
 
             if (this._inProgressUploads === 0) {
               this._reset();
@@ -165,7 +168,9 @@ export default Mixin.create(UppyS3Multipart, {
             }
           });
       } else {
-        this.uploadDone(response.body);
+        this.uploadDone(
+          deepMerge(response?.body || {}, { file_name: file.name })
+        );
         if (this._inProgressUploads === 0) {
           this._reset();
         }
@@ -185,7 +190,8 @@ export default Mixin.create(UppyS3Multipart, {
     // allow these other uploaders to go direct to S3.
     if (
       this.siteSettings.enable_direct_s3_uploads &&
-      !this.preventDirectS3Uploads
+      !this.preventDirectS3Uploads &&
+      !this.useChunkedUploads
     ) {
       if (this.useMultipartUploadsIfAvailable) {
         this._useS3MultipartUploads();
@@ -193,13 +199,27 @@ export default Mixin.create(UppyS3Multipart, {
         this._useS3Uploads();
       }
     } else {
-      this._useXHRUploads();
+      if (this.useChunkedUploads) {
+        this._useChunkedUploads();
+      } else {
+        this._useXHRUploads();
+      }
     }
   },
 
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
+      headers: {
+        "X-CSRF-Token": this.session.csrfToken,
+      },
+    });
+  },
+
+  _useChunkedUploads() {
+    this.set("usingChunkedUploads", true);
+    this._uppyInstance.use(UppyChunkedUploader, {
+      url: this._xhrUploadUrl(),
       headers: {
         "X-CSRF-Token": this.session.csrfToken,
       },
@@ -251,7 +271,7 @@ export default Mixin.create(UppyS3Multipart, {
 
   _xhrUploadUrl() {
     return (
-      getUrl(this.getWithDefault("uploadUrl", "/uploads")) +
+      getUrl(this.getWithDefault("uploadUrl", this.uploadRootPath)) +
       ".json?client_id=" +
       this.messageBus?.clientId
     );
