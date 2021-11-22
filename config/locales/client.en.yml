@@ -2287,9 +2287,9 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "You have %{count} important notification, are you sure you would like to dismiss?"
-          other: "You have %{count} important notifications, are you sure you would like to dismiss?"
-        confirm: "Confirm"
+          one: "Are you sure? You have %{count} important notification."
+          other: "Are you sure? You have %{count} important notifications."
+        dismiss: "Dismiss"
         cancel: "Cancel"
 
       group_message_summary:
