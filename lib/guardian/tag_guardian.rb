@@ -3,11 +3,11 @@
 #mixin for all guardian methods dealing with tagging permissions
 module TagGuardian
   def can_create_tag?
-    SiteSetting.tagging_enabled && user&.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag)
+    SiteSetting.tagging_enabled && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag)
   end
 
   def can_tag_topics?
-    SiteSetting.tagging_enabled && user&.has_trust_level_or_staff?(SiteSetting.min_trust_level_to_tag_topics)
+    SiteSetting.tagging_enabled && @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_to_tag_topics)
   end
 
   def can_tag_pms?
