@@ -492,9 +492,9 @@ describe Guardian do
       expect(Guardian.new.can_invite_to_forum?).to be_falsey
     end
 
-    it 'returns true when the site requires approving users and is mod' do
+    it 'returns true when the site requires approving users' do
       SiteSetting.must_approve_users = true
-      expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
+      expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
     end
 
     it 'returns false when max_invites_per_day is 0' do

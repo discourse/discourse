@@ -362,7 +362,6 @@ class Guardian
 
   def can_invite_to_forum?(groups = nil)
     authenticated? &&
-    (is_staff? || !SiteSetting.must_approve_users?) &&
     (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
     (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
     (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
