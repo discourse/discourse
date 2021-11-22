@@ -228,7 +228,7 @@
     font-size: $font-0;
   }
 
-  .topic-list-data.main-link {
+  .main-link {
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {

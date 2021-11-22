@@ -61,7 +61,7 @@ acceptance("Share and Invite modal", function (needs) {
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
     assert.ok(
-      exists(".link-share-restricted-groups"),
+      exists("#modal-alert.alert-warning"),
       "it shows restricted warning"
     );
   });

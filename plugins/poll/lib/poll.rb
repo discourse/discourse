@@ -2,7 +2,10 @@
 
 class DiscoursePoll::Poll
   def self.vote(user, post_id, poll_name, options)
+    poll_id = nil
+
     serialized_poll = DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
+      poll_id = poll.id
       # remove options that aren't available in the poll
       available_options = poll.poll_options.map { |o| o.digest }.to_set
       options.select! { |o| available_options.include?(o) }
@@ -12,6 +15,8 @@ class DiscoursePoll::Poll
       new_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
         obj << option.id if options.include?(option.digest)
       end
+
+      self.validate_votes!(poll, new_option_ids)
 
       old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
         if option.poll_votes.where(user_id: user.id).exists?
@@ -30,6 +35,24 @@ class DiscoursePoll::Poll
         PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
       end
     end
+
+    # Ensure consistency here as we do not have a unique index to limit the
+    # number of votes per the poll's configuration.
+    DB.query(<<~SQL, poll_id: poll_id, user_id: user.id, offset: serialized_poll[:type] == "multiple" ? serialized_poll[:max] : 1)
+    DELETE FROM poll_votes
+    USING (
+      SELECT
+        poll_id,
+        user_id
+      FROM poll_votes
+      WHERE poll_id = :poll_id
+      AND user_id = :user_id
+      ORDER BY created_at DESC
+      OFFSET :offset
+    ) to_delete_poll_votes
+    WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
+    AND poll_votes.user_id = to_delete_poll_votes.user_id
+    SQL
 
     [serialized_poll, options]
   end
@@ -288,7 +311,26 @@ class DiscoursePoll::Poll
     end
   end
 
-  private
+  def self.validate_votes!(poll, options)
+    num_of_options = options.length
+
+    if poll.multiple?
+      if num_of_options < poll.min
+        raise DiscoursePoll::Error.new(I18n.t(
+          "poll.min_vote_per_user",
+          count: poll.min
+        ))
+      elsif num_of_options > poll.max
+        raise DiscoursePoll::Error.new(I18n.t(
+          "poll.max_vote_per_user",
+          count: poll.max
+        ))
+      end
+    elsif num_of_options > 1
+      raise DiscoursePoll::Error.new(I18n.t("poll.one_vote_per_user"))
+    end
+  end
+  private_class_method :validate_votes!
 
   def self.change_vote(user, post_id, poll_name)
     Poll.transaction do
