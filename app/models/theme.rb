@@ -573,7 +573,9 @@ class Theme < ActiveRecord::Base
 
     target_setting.value = new_value
 
-    Discourse.request_refresh! if target_setting.requests_refresh?
+    if target_setting.requests_refresh?
+      DB.after_commit { Discourse.request_refresh! }
+    end
   end
 
   def update_translation(translation_key, new_value)
