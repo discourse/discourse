@@ -6,6 +6,10 @@ export default DiscourseRoute.extend({
   model(_, transition) {
     const path = transition.intent.url;
 
+    if (!this.currentUser && this.siteSettings.login_required) {
+      return;
+    }
+
     return ajax("/permalink-check.json", {
       data: { path },
     }).then((results) => {
