@@ -54,6 +54,7 @@ import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { setTestPresence } from "discourse/lib/user-presence";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -297,6 +298,7 @@ export function acceptance(name, optionsOrCallback) {
       clearTopicFooterButtons();
       resetLastEditNotificationClick();
       clearAuthMethods();
+      setTestPresence(true);
 
       app._runInitializer("instanceInitializers", (_, initializer) => {
         initializer.teardown?.();
