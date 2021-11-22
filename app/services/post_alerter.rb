@@ -28,7 +28,11 @@ class PostAlerter
       }
 
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
-      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+
+      if user.allow_live_notifications?
+        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      end
+
       push_notification(user, payload)
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
