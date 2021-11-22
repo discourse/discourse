@@ -43,7 +43,14 @@ class PostDestroyer
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply, reviewable: reviewable, defer_flags: defer_reply_flags, notify_responders: true, parent_post: post).destroy }
+
+    options = { defer_flags: defer_reply_flags }
+    if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+      options[:reviewable] = reviewable
+      options[:notify_responders] = true
+      options[:parent_post] = post
+    end
+    replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
 
   def initialize(user, post, opts = {})
@@ -322,15 +329,17 @@ class PostDestroyer
     allowed_user = @user.human? && @user.staff?
     return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
 
+    notify_responders = options[:notify_responders]
+
     Jobs.enqueue(
       :send_system_message,
       user_id: @post.user_id,
-      message_type: options[:notify_responders] ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
+      message_type: notify_responders ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
       message_options: {
-        flagged_post_raw_content: options[:notify_responders] ? options[:parent_post].raw : @post.raw,
-        url: options[:notify_responders] ? options[:parent_post].url : @post.url,
+        flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
+        url: notify_responders ? options[:parent_post].url : @post.url,
         flag_reason: I18n.t(
-          "flag_reasons#{".responder" if options[:notify_responders]}.#{PostActionType.types[rs.reviewable_score_type]}",
+          "flag_reasons#{".responder" if notify_responders}.#{PostActionType.types[rs.reviewable_score_type]}",
           locale: SiteSetting.default_locale,
           base_path: Discourse.base_path
         )

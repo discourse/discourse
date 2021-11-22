@@ -1497,6 +1497,7 @@ en:
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
+    notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
