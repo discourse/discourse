@@ -111,16 +111,14 @@ export default class UppyChunkedUpload {
     const candidates = [];
     for (let i = 0; i < this.chunkState.length; i++) {
       const state = this.chunkState[i];
-      // eslint-disable-next-line no-continue
-      if (state.done || state.busy) {
-        continue;
-      }
-
-      candidates.push(i);
-      if (candidates.length >= need) {
-        break;
+      if (!state.done && !state.busy) {
+        candidates.push(i);
+        if (candidates.length >= need) {
+          break;
+        }
       }
     }
+
     if (candidates.length === 0) {
       return;
     }
@@ -235,76 +233,66 @@ export default class UppyChunkedUpload {
     const body = this.chunks[index];
     const { signal } = this.abortController;
 
-    let defer;
-    const promise = new Promise((resolve, reject) => {
-      defer = { resolve, reject };
-    });
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      function cleanup() {
+        signal.removeEventListener("abort", () => xhr.abort());
+      }
+      signal.addEventListener("abort", xhr.abort());
 
-    const xhr = new XMLHttpRequest();
-    xhr.open(this.options.method || "POST", url, true);
-    if (headers) {
-      Object.keys(headers).forEach((key) => {
-        xhr.setRequestHeader(key, headers[key]);
+      xhr.open(this.options.method || "POST", url, true);
+      if (headers) {
+        Object.keys(headers).forEach((key) => {
+          xhr.setRequestHeader(key, headers[key]);
+        });
+      }
+      xhr.responseType = "text";
+      xhr.upload.addEventListener("progress", (ev) => {
+        if (!ev.lengthComputable) {
+          return;
+        }
+
+        this._onChunkProgress(index, ev.loaded, ev.total);
       });
-    }
-    xhr.responseType = "text";
 
-    function onabort() {
-      xhr.abort();
-    }
-    function cleanup() {
-      // eslint-disable-next-line no-use-before-define
-      signal.removeEventListener("abort", onabort);
-    }
-    signal.addEventListener("abort", onabort);
+      xhr.addEventListener("abort", () => {
+        cleanup();
+        this.chunkState[index].busy = false;
 
-    xhr.upload.addEventListener("progress", (ev) => {
-      if (!ev.lengthComputable) {
-        return;
-      }
+        reject(createAbortError());
+      });
 
-      this._onChunkProgress(index, ev.loaded, ev.total);
-    });
+      xhr.addEventListener("load", (ev) => {
+        cleanup();
+        this.chunkState[index].busy = false;
 
-    xhr.addEventListener("abort", () => {
-      cleanup();
-      this.chunkState[index].busy = false;
+        if (ev.target.status < 200 || ev.target.status >= 300) {
+          const error = new Error("Non 2xx");
+          error.source = ev.target;
+          reject(error);
+          return;
+        }
 
-      defer.reject(createAbortError());
-    });
+        // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
+        this.chunks[index] = null;
 
-    xhr.addEventListener("load", (ev) => {
-      cleanup();
-      this.chunkState[index].busy = false;
+        this._onChunkProgress(index, body.size, body.size);
 
-      if (ev.target.status < 200 || ev.target.status >= 300) {
-        const error = new Error("Non 2xx");
+        this._onChunkComplete(index);
+        resolve();
+      });
+
+      xhr.addEventListener("error", (ev) => {
+        cleanup();
+        this.chunkState[index].busy = false;
+
+        const error = new Error("Unknown error");
         error.source = ev.target;
-        defer.reject(error);
-        return;
-      }
+        reject(error);
+      });
 
-      // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
-      this.chunks[index] = null;
-
-      this._onChunkProgress(index, body.size, body.size);
-
-      this._onChunkComplete(index);
-      defer.resolve();
+      xhr.send(this._buildFormData(index + 1, body));
     });
-
-    xhr.addEventListener("error", (ev) => {
-      cleanup();
-      this.chunkState[index].busy = false;
-
-      const error = new Error("Unknown error");
-      error.source = ev.target;
-      defer.reject(error);
-    });
-
-    xhr.send(this._buildFormData(index + 1, body));
-
-    return promise;
   }
 
   async _completeUpload() {

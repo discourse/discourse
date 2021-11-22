@@ -1,6 +1,6 @@
 <div class="backup-options">
   {{#if localBackupStorage}}
-    {{#if enableExperimentalBackupUploader}}
+    {{#if siteSettings.enable_experimental_backup_uploader}}
       {{uppy-backup-uploader done=(route-action "uploadSuccess") localBackupStorage=localBackupStorage}}
     {{else}}
       {{resumable-upload
@@ -12,7 +12,7 @@
         class="btn-default"}}
     {{/if}}
   {{else}}
-    {{#if enableExperimentalS3BackupUploader}}
+    {{#if (and siteSettings.enable_direct_s3_uploads siteSettings.enable_experimental_backup_uploader)}}
       {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
     {{else}}
       {{backup-uploader done=(route-action "remoteUploadSuccess")}}

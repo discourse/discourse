@@ -193,10 +193,6 @@ export default class UppyChunkedUploader extends UploaderPlugin {
   }
 
   _upload(fileIDs) {
-    if (fileIDs.length === 0) {
-      return Promise.resolve();
-    }
-
     const promises = fileIDs.map((id) => {
       const file = this.uppy.getFile(id);
       return this._uploadFile(file);

@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { alias, and, equal } from "@ember/object/computed";
+import { alias, equal } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
@@ -12,14 +12,6 @@ export default Controller.extend({
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),
   localBackupStorage: equal("backupLocation", "local"),
-  enableExperimentalBackupUploader: setting(
-    "enable_experimental_backup_uploader"
-  ),
-  enableDirectS3Uploads: setting("enable_direct_s3_uploads"),
-  enableExperimentalS3BackupUploader: and(
-    "enableExperimentalBackupUploader",
-    "enableDirectS3Uploads"
-  ),
 
   @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
