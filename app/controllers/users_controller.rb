@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :check_sso_email, :check_sso_payload
+    :bookmarks, :invited, :check_sso_email, :check_sso_payload, :reset_recent_searches
   ]
 
   skip_before_action :check_xhr, only: [
@@ -1299,6 +1299,12 @@ class UsersController < ApplicationController
       user.user_stat.save
     end
 
+    render json: success_json
+  end
+
+  def reset_recent_searches
+    current_user.user_option.oldest_search_log_date = 1.second.ago
+    current_user.user_option.save
     render json: success_json
   end
 

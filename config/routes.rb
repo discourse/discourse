@@ -428,6 +428,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/admin-login" => "users#admin_login"
       post "#{root_path}/toggle-anon" => "users#toggle_anon"
       post "#{root_path}/read-faq" => "users#read_faq"
+      post "#{root_path}/reset-recent-searches" => "users#reset_recent_searches", constraints: { format: 'json' }
       get "#{root_path}/search/users" => "users#search_users"
 
       get({ "#{root_path}/account-created/" => "users#account_created" }.merge(index == 1 ? { as: :users_account_created } : { as: :old_account_created }))

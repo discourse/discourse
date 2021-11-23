@@ -5125,6 +5125,24 @@ describe UsersController do
     end
   end
 
+  describe "#reset_recent_searches" do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'does nothing for anon' do
+      post "/u/reset-recent-searches.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'works for logged in user' do
+      sign_in(user)
+      post "/u/reset-recent-searches.json"
+
+      expect(response.status).to eq(200)
+      user.reload
+      expect(user.user_option.oldest_search_log_date).to be_within(5.seconds).of(1.second.ago)
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user)
     stub_secure_session_confirmed
