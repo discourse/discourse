@@ -25,7 +25,6 @@ class Reporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
-  debug: true,
   launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
   launch_in_dev: ["Chrome"],
   tap_failed_tests_only: process.env.CI,
@@ -45,7 +44,7 @@ module.exports = {
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
-    Firefox: ["-headless", "--width=1440", "--height=900"],
+    Firefox: ["--headless", "--width=1024", "--height=768"],
     "Headless Firefox": ["--width=1440", "--height=900"],
   },
   browser_paths: {
