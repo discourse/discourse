@@ -34,7 +34,7 @@ $love: #fa6c8d !default;
 
 #ember-testing-container.full-screen {
   position: inherit;
-  width: 1200px;
+  max-width: 1200px;
   height: unset;
   overflow: unset;
   #ember-testing {
