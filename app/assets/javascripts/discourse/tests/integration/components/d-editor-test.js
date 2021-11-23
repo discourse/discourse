@@ -805,6 +805,34 @@ third line`
     }
   );
 
+  testCase(
+    `pasting text that contains urls and other content will use default paste behavior`,
+    async function (assert, textarea) {
+      this.set("value", "a link example:");
+      setTextareaSelection(textarea, 0, 1);
+      const element = query(".d-editor");
+      const event = await paste(
+        element,
+        "Try out Discourse at: https://www.discourse.org/"
+      );
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "a link example:");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
+
+  testCase(
+    `pasting an email into a selection applies a link format`,
+    async function (assert, textarea) {
+      this.set("value", "team email");
+      setTextareaSelection(textarea, 5, 10);
+      const element = query(".d-editor");
+      const event = await paste(element, "mailto:team@discourse.org");
+      assert.strictEqual(this.value, "team [email](mailto:team@discourse.org)");
+      assert.strictEqual(event.defaultPrevented, true);
+    }
+  );
+
   (() => {
     // Tests to check cursor/selection after replace-text event.
     const BEFORE = "red green blue";
