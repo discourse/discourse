@@ -45,11 +45,7 @@ class PostDestroyer
     PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
 
     options = { defer_flags: defer_reply_flags }
-    if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options[:reviewable] = reviewable
-      options[:notify_responders] = true
-      options[:parent_post] = post
-    end
+    options.merge!({ reviewable: reviewable, notify_responders: true, parent_post: post }) if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
 
