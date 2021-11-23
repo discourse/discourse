@@ -1,5 +1,6 @@
 import { bind } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
@@ -17,6 +18,14 @@ const isInside = (text, regex) => {
 };
 
 export default Mixin.create({
+  init() {
+    this._super(...arguments);
+    generateLinkifyFunction(this.markdownOptions || {}).then((linkify) => {
+      // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
+      this._cachedLinkify = linkify;
+    });
+  },
+
   // ensures textarea scroll position is correct
   _focusTextArea() {
     schedule("afterRender", () => {
@@ -273,16 +282,22 @@ export default Mixin.create({
       }
     }
 
-    if (plainText && !handled && selected.end > selected.start) {
-      let isURL;
-      try {
-        isURL = !!new URL(plainText);
-      } catch {
-        isURL = false;
-      }
-      if (isURL) {
-        this._addText(selected, `[${selectedValue}](${plainText})`);
-        handled = true;
+    if (
+      this._cachedLinkify &&
+      plainText &&
+      !handled &&
+      selected.end > selected.start
+    ) {
+      if (this._cachedLinkify.test(plainText)) {
+        const match = this._cachedLinkify.match(plainText)[0];
+        if (
+          match &&
+          match.index === 0 &&
+          match.lastIndex === match.raw.length
+        ) {
+          this._addText(selected, `[${selectedValue}](${match.url})`);
+          handled = true;
+        }
       }
     }
 
