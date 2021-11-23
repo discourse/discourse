@@ -33,6 +33,14 @@ class GroupAssociatedGroup < ActiveRecord::Base
       end
     end
   end
+  
+  private
+  
+  def with_mutex
+    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
+      yield
+    end
+  end
 end
 
 # == Schema Information
