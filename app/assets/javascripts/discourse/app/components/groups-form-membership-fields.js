@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { computed } from "@ember/object";
-import { readOnly, not } from "@ember/object/computed";
+import { not, readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 
