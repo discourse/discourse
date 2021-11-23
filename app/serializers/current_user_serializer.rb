@@ -328,7 +328,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_recent_searches?
-    SiteSetting.log_search_queries && object.user_option.enable_recent_searches
+    SiteSetting.log_search_queries
   end
 
   def recent_searches

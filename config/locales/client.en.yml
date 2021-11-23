@@ -1487,7 +1487,6 @@ en:
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
-      enable_recent_searches: "Show recent searches"
 
       text_size:
         title: "Text Size"
