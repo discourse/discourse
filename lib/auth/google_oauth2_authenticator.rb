@@ -38,7 +38,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
         strategy.options[:skip_jwt] = true
         strategy.options[:request_groups] = provides_groups?
 
-        if request_groups
+        if provides_groups?
           strategy.options[:scope] = "#{strategy_class::DEFAULT_SCOPE},#{strategy_class::GROUPS_SCOPE}"
         end
       }
@@ -48,7 +48,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def after_authenticate(auth_token, existing_account: nil)
     result = super
-    if request_groups && (groups = auth_token[:extra][:raw_groups]).any?
+    if provides_groups? && (groups = auth_token[:extra][:raw_groups]).any?
       result.associated_groups = groups.map { |group| group.slice(:id, :name) }
     end
     result
