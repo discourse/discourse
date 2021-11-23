@@ -53,6 +53,14 @@ class UserStat < ActiveRecord::Base
         )
         GROUP BY tau.user_id
       ) AS X ON X.user_id = u1.id
+      WHERE u1.id IN (
+        SELECT id
+        FROM users
+        WHERE last_seen_at IS NOT NULL
+        AND last_seen_at > :last_seen
+        ORDER BY last_seen_at DESC
+        LIMIT :limit
+      )
     ) AS Z
     WHERE us.user_id = Z.user_id
     SQL
