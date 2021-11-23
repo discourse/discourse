@@ -1072,6 +1072,10 @@ User.reopenClass(Singleton, {
     return ajax(userPath("check_email"), { data: { email } });
   },
 
+  resetRecentSearches() {
+    return ajax(`/u/reset-recent-searches`, { type: "POST" });
+  },
+
   groupStats(stats) {
     const responses = UserActionStat.create({
       count: 0,

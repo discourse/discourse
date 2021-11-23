@@ -332,10 +332,16 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def recent_searches
-    SearchLog
+    query = SearchLog
       .select(:term)
       .where(user_id: object.id)
-      .group(:term)
+
+    if object.user_option.oldest_search_log_date
+      query = query
+        .where("created_at > ?", object.user_option.oldest_search_log_date)
+    end
+
+    query.group(:term)
       .order("max(id) DESC")
       .limit(5)
       .pluck(:term)

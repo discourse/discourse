@@ -12,6 +12,7 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
+import User from "discourse/models/user";
 
 const suggestionShortcuts = [
   "in:title",
@@ -585,7 +586,7 @@ createWidget("search-menu-initial-options", {
 
     if (content.length === 0) {
       content.push(this.attach("random-quick-tip"));
-      if (this.currentUser?.recent_searches) {
+      if (this.currentUser?.recent_searches.length) {
         content.push(this.attach("search-menu-recent-searches"));
       }
     }
@@ -604,6 +605,10 @@ createWidget("search-menu-initial-options", {
           : null,
       ],
     });
+  },
+
+  refreshSearchMenuResults() {
+    this.scheduleRerender();
   },
 });
 
@@ -711,8 +716,17 @@ createWidget("search-menu-recent-searches", {
 
   html() {
     const content = [];
-    content.push(h("div.heading", I18n.t("search.recent")));
-    this.currentUser?.recent_searches.forEach((slug) => {
+    content.push(
+      h("div.heading", [
+        h("h4", I18n.t("search.recent")),
+        this.attach("flat-button", {
+          action: "clearRecent",
+          icon: "times",
+          title: "search.clear_recent",
+        }),
+      ])
+    );
+    this.currentUser.recent_searches.forEach((slug) => {
       content.push(
         this.attach("search-menu-assistant-item", {
           slug,
@@ -722,5 +736,14 @@ createWidget("search-menu-recent-searches", {
     });
 
     return content;
+  },
+
+  clearRecent() {
+    User.resetRecentSearches().then((result) => {
+      if (result.success) {
+        this.currentUser.recent_searches.clear();
+        this.sendWidgetAction("refreshSearchMenuResults");
+      }
+    });
   },
 });
