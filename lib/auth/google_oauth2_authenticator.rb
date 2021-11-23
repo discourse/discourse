@@ -36,7 +36,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
         # the JWT can fail due to clock skew, so let's skip it completely.
         # https://github.com/zquestz/omniauth-google-oauth2/pull/392
         strategy.options[:skip_jwt] = true
-        strategy.options[:request_groups] = request_groups
+        strategy.options[:request_groups] = provides_groups?
 
         if request_groups
           strategy.options[:scope] = "#{strategy_class::DEFAULT_SCOPE},#{strategy_class::GROUPS_SCOPE}"
@@ -55,12 +55,6 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def provides_groups?
-    request_groups
-  end
-
-  protected
-
-  def request_groups
     SiteSetting.google_oauth2_hd.present? && SiteSetting.google_oauth2_hd_groups
   end
 end
