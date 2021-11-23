@@ -22,14 +22,14 @@ describe ThemeStore::GitImporter do
     end
 
     it "should import from http url" do
-      Discourse::Utils.expects(:execute_command).with("git", "clone", url, @temp_folder)
+      Discourse::Utils.expects(:execute_command).with({ "GIT_TERMINAL_PROMPT" => "0" }, "git", "clone", url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(url)
       importer.import!
     end
 
     it "should work with trailing slash url" do
-      Discourse::Utils.expects(:execute_command).with("git", "clone", url, @temp_folder)
+      Discourse::Utils.expects(:execute_command).with({ "GIT_TERMINAL_PROMPT" => "0" }, "git", "clone", url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(trailing_slash_url)
       importer.import!
@@ -45,7 +45,7 @@ describe ThemeStore::GitImporter do
     end
 
     it "should import branch from http url" do
-      Discourse::Utils.expects(:execute_command).with("git", "clone", "--single-branch", "-b", branch, url, @temp_folder)
+      Discourse::Utils.expects(:execute_command).with({ "GIT_TERMINAL_PROMPT" => "0" }, "git", "clone", "--single-branch", "-b", branch, url, @temp_folder)
 
       importer = ThemeStore::GitImporter.new(url, branch: branch)
       importer.import!
