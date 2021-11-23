@@ -19,7 +19,6 @@
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
 # type: enum     - A single value, chosen from a set of valid values in the choices option.
-# type: html     - A single value. It could contain HTML.
 #
 # A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
 #
@@ -268,11 +267,11 @@ basic:
     client: true
     default: true
     hidden: true
-  enable_experimental_image_uploader:
+  enable_experimental_composer_uploader:
     client: true
     default: false
     hidden: true
-  enable_experimental_composer_uploader:
+  enable_experimental_backup_uploader:
     client: true
     default: false
     hidden: true
@@ -283,6 +282,7 @@ basic:
   enable_upload_debug_mode:
     default: false
     hidden: true
+    client: true
   default_theme_id:
     default: -1
     hidden: true
@@ -365,9 +365,6 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
-  order_stylesheets:
-    default: false
-    hidden: true
 
 login:
   invite_only:
@@ -456,19 +453,24 @@ login:
     client: true
   auth_immediately:
     default: true
+  auth_overrides_email:
+    default: false
+    validator: "SsoOverridesEmailValidator"
+    client: true
+  auth_overrides_username: false
+  auth_overrides_name: false
   enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
   discourse_connect_allows_all_return_paths: false
-  enable_discourse_connect_provider: false
   verbose_discourse_connect_logging: false
   verbose_upload_logging:
     hidden: true
     default: false
   verbose_auth_token_logging:
     hidden: true
-    default: true
+    default: false
   max_suspicious_distance_km:
     hidden: true
     default: 500
@@ -478,22 +480,8 @@ login:
   discourse_connect_secret:
     default: ""
     secret: true
-  discourse_connect_provider_secrets:
-    default: ""
-    type: list
-    list_type: secret
-    secret: true
-    placeholder:
-      key: "sso_provider.key_placeholder"
-      value: "sso_provider.value_placeholder"
   discourse_connect_overrides_groups: false
   discourse_connect_overrides_bio: false
-  auth_overrides_email:
-    default: false
-    validator: "SsoOverridesEmailValidator"
-    client: true
-  auth_overrides_username: false
-  auth_overrides_name: false
   discourse_connect_overrides_avatar:
     default: false
     client: true
@@ -505,6 +493,15 @@ login:
   discourse_connect_csrf_protection:
     default: true
     hidden: true
+  enable_discourse_connect_provider: false
+  discourse_connect_provider_secrets:
+    default: ""
+    type: list
+    list_type: secret
+    secret: true
+    placeholder:
+      key: "sso_provider.key_placeholder"
+      value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
     type: list
@@ -589,6 +586,7 @@ users:
     default: true
   invite_expiry_days:
     default: 30
+    client: true
     max: 36500
   invites_per_page:
     client: true
@@ -688,6 +686,9 @@ users:
   max_bookmarks_per_user:
     default: 2000
     hidden: true
+  use_email_for_username_and_name_suggestions:
+    hidden: true
+    default: false
 
 groups:
   enable_group_directory:
@@ -837,7 +838,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: "com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
+    default: "com|net|org|io|onion|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
   markdown_typographer_quotation_marks:
     client: true
@@ -872,6 +873,14 @@ posting:
   max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
+  here_mention:
+    default: "here"
+    validator: "NotUsernameValidator"
+    client: true
+  max_here_mentioned: 10
+  min_trust_level_for_here_mention:
+    default: "2"
+    enum: "TrustLevelAndStaffSetting"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1012,6 +1021,9 @@ posting:
   enable_diffhtml_preview:
     default: false
     client: true
+  enable_fast_edit:
+    default: true
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500
@@ -1064,7 +1076,7 @@ email:
     min: 0
     max: 20
   suppress_digest_email_after_days:
-    default: 365
+    default: 180
     max: 36500
   digest_suppress_categories:
     type: category_list
@@ -1290,8 +1302,6 @@ files:
     default: "1|1.5|2"
     type: list
     list_type: compact
-  crawl_images:
-    default: true
   max_image_width:
     client: true
     default: 690
@@ -1365,7 +1375,8 @@ files:
   automatically_download_gravatars: true
   allow_uploaded_avatars:
     client: true
-    default: true
+    default: "0"
+    enum: "TrustLevelAndStaffAndDisabledSetting"
   default_avatars:
     default: ""
     type: url_list
@@ -1606,7 +1617,7 @@ security:
     list_type: compact
   browser_update_user_agents:
     hidden: true
-    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9|Xbox|PlayStation"
     type: list
     list_type: compact
   crawler_check_bypass_agents:
@@ -1635,7 +1646,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com"
     type: list
     list_type: simple
     client: true
@@ -1675,6 +1686,10 @@ security:
     hidden: true
   disable_onebox_media_download_controls:
     default: false
+    hidden: true
+  can_permanently_delete:
+    default: false
+    client: true
     hidden: true
 
 onebox:
@@ -1857,26 +1872,33 @@ developer:
     hidden: true
     default: ""
   enable_long_polling:
+    hidden: true
     client: true
     default: true
   enable_chunked_encoding:
+    hidden: true
     client: true
     default: true
   long_polling_interval:
+    hidden: true
     default: 25000
     max: 25000
   long_polling_base_url:
+    hidden: true
     client: true
     default: "/"
   background_polling_interval:
+    hidden: true
     client: true
     default: 60000
     max: 99000
   polling_interval:
+    hidden: true
     client: true
     default: 3000
     max: 99000
   anon_polling_interval:
+    hidden: true
     client: true
     default: 30000
     max: 99000
@@ -2101,6 +2123,9 @@ uncategorized:
   summary_likes_required: 1
   summary_percent_filter: 20
   summary_max_results: 100
+  summary_timeline_button:
+    client: true
+    default: false
 
   automatic_topic_heat_values: true
 
@@ -2198,7 +2223,16 @@ uncategorized:
   use_site_small_logo_as_system_avatar:
     default: true
 
+  enable_listing_suspended_users_on_search:
+    default: false
+
   disable_system_edit_notifications: true
+
+  disable_category_edit_notifications:
+    default: false
+
+  disable_tags_edit_notifications:
+    default: false
 
   notification_consolidation_threshold:
     default: 3

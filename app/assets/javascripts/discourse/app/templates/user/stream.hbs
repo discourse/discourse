@@ -1,4 +1,13 @@
-{{#if model.noContent}}
-  <div class="alert alert-info">{{html-safe model.noContentHelp}}</div>
+{{#if model.stream.noContent}}
+  {{#if model.isAnotherUsersPage}}
+    <div class="alert alert-info">{{model.emptyStateOthers}}</div>
+  {{else}}
+    <div class="empty-state">
+      <span class="empty-state-title">{{model.emptyState.title}}</span>
+      <div class="empty-state-body">
+        <p>{{model.emptyState.body}}</p>
+      </div>
+    </div>
+  {{/if}}
 {{/if}}
-{{user-stream stream=model}}
+{{user-stream stream=model.stream}}

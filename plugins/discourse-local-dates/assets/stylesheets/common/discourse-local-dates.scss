@@ -40,6 +40,12 @@
       }
     }
   }
+
+  .download-calendar {
+    text-align: right;
+    cursor: pointer;
+    margin-top: 0.5em;
+  }
 }
 
 .discourse-local-dates-create-modal-footer {
@@ -305,7 +311,8 @@
 
 html:not(.mobile-view) {
   .fixed-modal .discourse-local-dates-create-modal.modal-body {
-    width: 600px;
+    width: 40em; // using ems to scale with user font size
+    max-width: 100vw; // avoids overflow if someone has extreme font-sizes impacting width
     max-height: 400px !important;
   }
 }

@@ -6,11 +6,13 @@
                  save=(action "save")}}
   <div class="grippie"></div>
   {{#if visible}}
-    {{composer-messages composer=model
-                        messageCount=messageCount
-                        addLinkLookup=(action "addLinkLookup")}}
+    {{composer-messages
+      composer=model
+      messageCount=messageCount
+      addLinkLookup=(action "addLinkLookup")
+    }}
     {{#if model.viewOpenOrFullscreen}}
-      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags"}}">
+      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags" "without-tags"}}">
         <div class="composer-fields">
           {{plugin-outlet name="composer-open" args=(hash model=model)}}
           <div class="reply-to">
@@ -21,7 +23,7 @@
                   openComposer=(action "openComposer")
                   closeComposer=(action "closeComposer")
                   canWhisper=canWhisper
-                  tabindex=8}}
+                }}
                 {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                 {{#unless site.mobileView}}
@@ -37,15 +39,19 @@
 
                 {{#if canEdit}}
                   {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason icon="info-circle" class="display-edit-reason"}}
-                    {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                    {{text-field value=editReason id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
                   {{/link-to-input}}
                 {{/if}}
               </div>
             {{/unless}}
-            {{composer-toggles composeState=model.composeState showToolbar=showToolbar
-                      toggleComposer=(action "toggle")
-                      toggleToolbar=(action "toggleToolbar")
-                      toggleFullscreen=(action "fullscreenComposer")}}
+            {{composer-toggles
+              composeState=model.composeState
+              showToolbar=showToolbar
+              toggleComposer=(action "toggle")
+              toggleToolbar=(action "toggleToolbar")
+              toggleFullscreen=(action "fullscreenComposer")
+              disableTextarea=disableTextarea
+            }}
           </div>
           {{#unless model.viewFullscreen}}
             {{#if model.canEditTitle}}
@@ -56,12 +62,12 @@
                     recipients=model.targetRecipients
                     hasGroups=model.hasTargetGroups
                     focusTarget=focusTarget
-                    class="users-input"
+                    class=(concat "users-input" (if showWarning " can-warn"))
                   }}
                   {{#if showWarning}}
                     <label class="add-warning">
-                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
-                      {{i18n "composer.add_warning"}}
+                      {{input type="checkbox" checked=model.isWarning}}
+                      <span>{{i18n "composer.add_warning"}}</span>
                     </label>
                   {{/if}}
                 </div>
@@ -75,7 +81,6 @@
                   <div class="category-input">
                     {{category-chooser
                       value=model.categoryId
-                      tabindex="3"
                       onChange=(action (mut model.categoryId))
                       isDisabled=disableCategoryChooser
                       options=(hash
@@ -89,13 +94,11 @@
                 {{#if canEditTags}}
                   {{mini-tag-chooser
                     value=model.tags
-                    tabindex=4
                     isDisabled=disableTagsChooser
                     onChange=(action (mut model.tags))
                     options=(hash
                       categoryId=model.categoryId
                       minimum=model.minimumRequiredTags
-                      requiredTagGroups=model.requiredTagGroups
                     )
                   }}
                   {{popup-input-tip validation=tagValidation}}
@@ -109,29 +112,32 @@
         </div>
 
         {{component composerComponent
-                          topic=topic
-                          composer=model
-                          lastValidatedAt=lastValidatedAt
-                          canWhisper=canWhisper
-                          storeToolbarState=(action "storeToolbarState")
-                          onPopupMenuAction=(action "onPopupMenuAction")
-                          showUploadModal=(route-action "showUploadSelector")
-                          popupMenuOptions=popupMenuOptions
-                          draftStatus=model.draftStatus
-                          isUploading=isUploading
-                          isProcessingUpload=isProcessingUpload
-                          allowUpload=allowUpload
-                          uploadIcon=uploadIcon
-                          isCancellable=isCancellable
-                          uploadProgress=uploadProgress
-                          groupsMentioned=(action "groupsMentioned")
-                          cannotSeeMention=(action "cannotSeeMention")
-                          importQuote=(action "importQuote")
-                          togglePreview=(action "togglePreview")
-                          processPreview=showPreview
-                          showToolbar=showToolbar
-                          afterRefresh=(action "afterRefresh")
-                          focusTarget=focusTarget}}
+          topic=topic
+          composer=model
+          lastValidatedAt=lastValidatedAt
+          canWhisper=canWhisper
+          storeToolbarState=(action "storeToolbarState")
+          onPopupMenuAction=(action "onPopupMenuAction")
+          showUploadModal=(route-action "showUploadSelector")
+          popupMenuOptions=popupMenuOptions
+          draftStatus=model.draftStatus
+          isUploading=isUploading
+          isProcessingUpload=isProcessingUpload
+          allowUpload=allowUpload
+          uploadIcon=uploadIcon
+          isCancellable=isCancellable
+          uploadProgress=uploadProgress
+          groupsMentioned=(action "groupsMentioned")
+          cannotSeeMention=(action "cannotSeeMention")
+          hereMention=(action "hereMention")
+          importQuote=(action "importQuote")
+          togglePreview=(action "togglePreview")
+          processPreview=showPreview
+          showToolbar=showToolbar
+          afterRefresh=(action "afterRefresh")
+          focusTarget=focusTarget
+          disableTextarea=disableTextarea
+        }}
 
         {{plugin-outlet name="composer-after-composer-editor" connectorTagName="" args=(hash model=model)}}
         <div class="submit-panel">
@@ -139,14 +145,16 @@
 
           <div class="save-or-cancel">
             {{#unless model.viewFullscreen}}
-              {{composer-save-button action=(action "save")
-                                     icon=saveIcon
-                                     label=saveLabel
-                                     forwardEvent=true
-                                     disableSubmit=disableSubmit}}
+              {{composer-save-button
+                action=(action "save")
+                icon=saveIcon
+                label=saveLabel
+                forwardEvent=true
+                disableSubmit=disableSubmit
+              }}
 
               {{#if site.mobileView}}
-                <a href {{action "cancel"}} tabindex="6" title={{i18n "cancel"}} class="cancel">
+                <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
                   {{#if canEdit}}
                     {{d-icon "times"}}
                   {{else}}
@@ -154,7 +162,7 @@
                   {{/if}}
                 </a>
               {{else}}
-                <a href {{action "cancel"}} tabindex="6" class="cancel" >{{i18n "cancel"}}</a>
+                <a href {{action "cancel"}} class="cancel" >{{i18n "cancel"}}</a>
               {{/if}}
             {{/unless}}
 
@@ -218,7 +226,6 @@
             {{d-button
               action=(action "togglePreview")
               translatedTitle=toggleText
-              translatedAriaLabel=toggleText
               icon="angle-double-left"
               class=(concat "btn-flat btn-mini-toggle toggle-preview " (unless showPreview "active"))
               }}
@@ -244,11 +251,12 @@
         {{/if}}
       </div>
 
-      {{composer-toggles composeState=model.composeState
+      {{composer-toggles
+        composeState=model.composeState
         toggleFullscreen=(action "openIfDraft")
         toggleComposer=(action "toggle")
-        toggleToolbar=(action "toggleToolbar")}}
-
+        toggleToolbar=(action "toggleToolbar")
+      }}
     {{/if}}
 
   {{/if}}

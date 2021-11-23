@@ -241,7 +241,6 @@ da:
   topic_invite:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
-    muted_invitee: "Beklager, denne bruger har slukket for dig."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
     receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
     sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
@@ -257,6 +256,7 @@ da:
   not_found: "Den anmodede URL eller ressource kunne ikke findes."
   invalid_access: "Du har ikke tilladelse til at se den anmodede ressource."
   authenticator_not_found: "Autentificeringsmetode findes ikke eller er deaktiveret."
+  authenticator_no_connect: "Denne godkendelsesudbyder tillader ikke forbindelse til en eksisterende forumkonto."
   invalid_api_credentials: "Du har ikke tilladelse til at se den ønskede ressource. API-brugernavnet eller -nøglen er ugyldig."
   provider_not_enabled: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen er ikke aktiveret."
   provider_not_found: "Du har ikke tilladelse til at se den ønskede ressource. Godkendelsesudbyderen findes ikke."
@@ -471,14 +471,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    get_a_room: |
-      ### Opfordre alle til at blive involveret i samtalen
-
-      Du har svaret %{count} gange til @%{reply_username} i dette emne!
-
-      En god diskussion indeholder mange stemmer og perspektiver. Kan du få andre involveret?
-
-      Og glem ikke, hvis du gerne vil fortsætte din længereverende samtale med denne særlige bruger uden for den offentlige visning, [send dem en personlig besked](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
 
@@ -857,19 +849,10 @@ da:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
   user_activity:
-    no_default:
-      self: "Du har endnu ingen aktivitet."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har ingen bogmærkede indlæg; bogmærker giver dig mulighed for hurtigt at henvise til bestemte indlæg."
       search: "Ingen bogmærker fundet med den angivne søgeforespørgsel."
       others: "Ingen bogmærker"
-    no_likes_given:
-      self: "Du har ikke liket nogen indlæg."
-      others: "Ingen 'synes om'-beskeder."
-    no_replies:
-      self: "Du har ikke svaret på nogen indlæg."
-      others: "Ingen svar."
     no_drafts:
       self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
   email_settings:
@@ -927,7 +910,6 @@ da:
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: "E-mail-præferencer opdateret!"
-    description: "email præferencer for <b>%{email}</b> blev opdateret. For at ændre dine e-mail indstillinger, kan du <a href='%{url}'>besøg dine brugerindstillinger</a>."
     topic_description: "For at følge %{link}, brug notifikationsindstillinger i bunden, eller til højre for emnet."
     private_topic_description: "For at genabonnere skal du bruge notifikationskontrollen nederst eller til højre for emnet."
   uploads:
@@ -1318,6 +1300,7 @@ da:
     out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
     unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
   site_settings:
+    disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
@@ -1390,7 +1373,6 @@ da:
     summary_likes_required: "Minimum antal 'Synes godt om' i et emne, før 'Opsummer dette emne' er aktiveret. Ændringer af denne indstilling anvendes med tilbagevirkende kraft inden for en uge."
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     summary_max_results: "Maksimum antal indlæg returneret af 'Opsummer dette emne'"
-    enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_system_message_replies: "Tillader brugere at svare på systemmeddelelser, også selvom personlige meddelelser er deaktiveret"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
@@ -1600,7 +1582,6 @@ da:
     tos_url: "Hvis du hoster dine forretningsbetingelser et andet sted kan du indtaste den fulde URL her."
     privacy_policy_url: "Hvis du hoster din privatlivspolitik et andet sted kan du indtaste den fulde URL her."
     staff_like_weight: "Hvor meget vægt der gives for personalets 'Synes godt om' (ikke-personale har en vægt på 1.)"
-    max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal anmeldelser fra unikke brugere, der skal til for automatisk at sætte et emne på pause for ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en anmeldelse fjernes."
     high_trust_flaggers_auto_hide_posts: "Nye brugerindlæg skjules automatisk efter at være blevet anmeldt som spam af en TL3+ bruger"
@@ -1669,7 +1650,6 @@ da:
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     autohighlight_all_code: "Gennemtving anvendelsen af kodefremhævning på alle præformaterede kodeblokke, selv når de ikke eksplicit angiver sproget."
-    show_copy_button_on_codeblocks: "Tilføj en knap til kodeblokke for at kopiere blokindholdet til brugerens udklipsholder. Denne funktion understøttes ikke i Internet Explorer."
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
@@ -2014,47 +1994,6 @@ da:
       [Bekræft administratorkonto](%{admin_confirm_url})
   test_mailer:
     subject_template: "[%{email_prefix}] E-mail-leveringstest"
-    text_body_template: |
-      Dette er en test e-mail fra
-
-      [**%{base_url}**][0]
-
-      E-mail leverbarhed er kompliceret. Her er et par vigtige ting, du bør tjekke først:
-
-      - Vær *sikker* på at angive `notifikations e-mail` from: adressen korrekt i dine indstillinger for webstedet. **Domænet angivet i "fra" adressen på de e-mails, du sender, er domænet din e-mail vil blive valideret imod**.
-
-      - Vid, hvordan du kan se den rå kilde til e-mailen i din mail-klient, så du kan undersøge e-mail-headere for vigtige indikatorer. I Gmail er det "vis original" i rullemenuen øverst til højre for hver mail.
-
-      - **VIGTIGT:** Har din internetudbyder en omvendt DNS-registrering indtastet for at tilknytte domænenavne og IP-adresser, du sender mail fra? [Test din omvendte PTR-registrering][2] her. Hvis din internetudbyder ikke indtaster den korrekte omvendte DNS pege-registrering, er det meget usandsynligt, at nogen af dine e-mails vil blive leveret.
-
-      - Er dit domænes [SPF-registrering][8] korrekt? [Test din SPF-registrering][1] her. Bemærk, at TXT er den korrekte officielle registreringstype for SPF.
-
-      - Er dit domænes [DKIM-registrering][3] korrekt? Dette vil forbedre leveringen af e-mails betydeligt. [Test din DKIM-registrering][7] her.
-
-      - Hvis du kører din egen mailserver, tjek for at sikre, at IP'erne på din mailserver [ikke er på nogen e-mail-bloklister][4]. Kontroller også, at den helt sikkert sender et fuldt kvalificeret værtsnavn (FQDN), der kan slås op i DNS i sin HELO besked. Hvis ikke, vil dette gøre at din e-mail vil blive afvist af mange posttjenester.
-
-      - Vi anbefaler dig at **sende en test e-mail til [mail-tester.com][mt]** for at verificere, at alt ovenstående fungerer korrekt.
-
-      (Den *lette* måde er at oprette en konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har lave mail-omkostnings abonnementer og vil være fint til små fællesskaber. Du skal dog stadig oprette SPF og DKIM-registreringer i din DNS, selvfølgelig!)
-
-      Vi håber, at du har modtaget denne e-mail leveringstest OK!
-
-      Held og lykke,
-
-      Dine venner på [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup. spx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester. om/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www. parkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Ny Discourse version, opdatering tilgængelig"
   new_version_mailer_with_notes:
@@ -2681,6 +2620,26 @@ da:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Bruger oprettede indlæg"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2950,8 +2909,12 @@ da:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
     file_missing: "Beklager, Du skal vælge en fil at overføre."
+    failed: "Beklager, men din overførsel mislykkedes. Prøv venligst igen."
     png_to_jpg_conversion_failure_message: "Der opstod en fejl ved konvertering fra PNG til JPG."
     optimize_failure_message: "Der opstod en fejl under optimering af det overførte billede."
+    download_failure: "Hentning af filen fra den eksterne udbyder mislykkedes."
+    checksum_mismatch_failure: "Kontrolsummen af den fil du overførte stemmer ikke overens. Filens indhold kan have ændret sig under overførsel. Prøv venligst igen."
+    cannot_promote_failure: "Overførslen kan ikke fuldføres, den kan allerede være fuldført eller tidligere mislykkedes."
     attachments:
       too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:
@@ -3593,10 +3556,8 @@ da:
             label: "Dit fællesskabs navn"
             placeholder: "Janes Sted"
           site_description:
-            label: "Beskriv dit fællesskab med en kort sætning"
             placeholder: "Et sted hvor Jane og hendes venner kan diskutere fede emner"
           short_site_description:
-            label: "Beskriv dit fællesskab med nogle få ord"
             placeholder: "Bedste fællesskab nogensinde"
       introduction:
         title: "Introduktion"
@@ -3654,17 +3615,26 @@ da:
           city_for_disputes:
             label: "By for tvister"
             placeholder: "San Francisco, Californien"
-      colors:
-        title: "Farver"
-      fonts:
-        title: "Skrifttyper"
+      styling:
         fields:
           body_font:
             label: "Indholds skrifttype"
           heading_font:
             label: "Overskrifts skrifttype"
-          font_preview:
+          styling_preview:
             label: "Forhåndsvisning"
+          homepage_style:
+            choices:
+              latest:
+                label: "Seneste emner"
+              categories_only:
+                label: "Kun Kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med Fremhævede Emner"
+              categories_and_latest_topics:
+                label: "Kategorier og Seneste Emner"
+              categories_and_top_topics:
+                label: "Kategorier og top emner"
       logos:
         title: "Logoer"
         fields:
@@ -3679,22 +3649,6 @@ da:
             label: "Browser Ikon"
           large_icon:
             label: "Stort ikon"
-      homepage:
-        description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
-        title: "Hjemmeside"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
       invites:
         title: "Inviter hjælpere"
       finished:
@@ -3742,15 +3696,7 @@ da:
     missing_version: "Du skal angive en versionsparameter"
     conflict: "Der var en opdateringskonflikt, der forhindrede dig i at gøre dette."
     reasons:
-      post_count: "De første par indlæg fra hver bruger skal godkendes af personalet. Se `godkend_indlæg_antal`."
-      trust_level: "Brugere på lavt tillidsniveau skal have svar godkendt af personalet. Se `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Brugere på lavt tillidsniveau skal have emner godkendt af personalet. Se `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ny bruger skrev deres første indlæg mistænkeligt hurtigt, mistænkelig adfærd fra bot eller spammer. Se 'min_first_post_typing_time'."
-      category: "Indlæg i denne kategori kræver manuel godkendelse af personalet. Se kategoriindstillingerne."
-      must_approve_users: "Alle nye brugere skal godkendes af personalet. Se `must_approve_users`."
-      invite_only: "Alle nye brugere skal inviteres. Se `invite_only`."
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
-      email_spam: "Denne e-mail blev markeret som spam af headeren defineret i `email_in_spam_header`."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
@@ -3817,6 +3763,7 @@ da:
   notification_level:
     ignore_error: "Beklager, du kan ikke ignorere denne bruger."
     mute_error: "Beklager, du kan ikke gøre denne bruger tavs."
+  fallback_username: "bruger"
   activemodel:
     errors:
       <<: *errors

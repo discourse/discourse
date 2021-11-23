@@ -8,9 +8,14 @@ lt:
   site_settings:
     poll_enabled: "Visos apklausos?"
     poll_maximum_options: "Maskimalus įterpiamų įrašų skaičius"
+    poll_edit_window_mins: "Minutės po įrašo sukūrimo, per kurias galima redaguoti apklausas."
+    poll_minimum_trust_level_to_create: "Nustatykite minimalų patikimumo lygį, reikalingą apklausoms kurti."
   poll:
+    poll: "apklausa"
+    invalid_argument: "Netinkama argumento „%{argument}“ reikšmė „%{value}“."
     multiple_polls_without_name: "Yra keli baseinai be pavadinimo. Naudokite '<code> vardą </ code>' atributas vienareikšmiškai identifikuoti savo apklausas."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    default_poll_must_have_at_least_1_option: "Apklausoje turi būti bent 1 pasirinkimas."
     default_poll_must_have_less_options:
       one: "Apklausa turi turėti mažiau nei %{count} variantą."
       few: "Apklausa turi turėti mažiau nei %{count} variantų."
@@ -28,9 +33,13 @@ lt:
     requires_at_least_1_valid_option: "Jūs privalote pasirinkti bent 1 galiojantį variantą."
     no_poll_with_this_name: "Nėra baseinas pavadintas <strong>% {name} </ strong>, susijęs su šio pranešimo."
     post_is_deleted: "Negali veikti ištrintų paštu."
+    user_cant_post_in_topic: "Negalite balsuoti, nes negalite rašyti šioje temoje."
     topic_must_be_open_to_vote: "Apklausa turi būti atidaryta, kad būtų galima balsuoti."
     poll_must_be_open_to_vote: "Apklausa turi būti atidaryta, kad būtų galima balsuoti."
     topic_must_be_open_to_toggle_status: "Ši tema turi būti atvira perjungti statusą."
     only_staff_or_op_can_toggle_status: "Tik personalo narys arba originalą plakatas gali perjungti apklausos statusą."
+    insufficient_rights_to_create: "Jums neleidžiama kurti apklausų."
     email:
       link_to_poll: "Spauskite, kad peržiūrėtumėte apklausą."
+    user_field:
+      no_data: "Nėra duomenų"

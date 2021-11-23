@@ -42,7 +42,7 @@ end
 # in development do some fussing around, to automate config
 if !ARGV.include?("-E") &&
     !ARGV.include?("--env") &&
-    (ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"])
+    (["development", "test"].include?(ENV["RAILS_ENV"]) || !ENV["RAILS_ENV"])
 
   dev_mode = true
 

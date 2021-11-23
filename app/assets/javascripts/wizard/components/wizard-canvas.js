@@ -1,3 +1,4 @@
+import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 const MAX_PARTICLES = 150;
 
@@ -75,17 +76,19 @@ export default Component.extend({
     this.ready = true;
     this.paint();
 
-    $(window).on("resize.wizard", () => this.resized());
+    window.addEventListener("resize", this.resized);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off("resize.wizard");
+
+    window.removeEventListener("resize", this.resized);
   },
 
+  @bind
   resized() {
-    width = $(window).width();
-    height = $(window).height();
+    width = window.innerWidth;
+    height = window.innerHeight;
 
     const canvas = this.element;
     canvas.width = width;

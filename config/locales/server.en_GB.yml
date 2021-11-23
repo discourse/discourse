@@ -165,15 +165,10 @@ en_GB:
     step:
       corporate:
         title: "Organisation"
-      colors:
-        title: "Colours"
       finished:
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
           <p>It is easy to customise your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
-  reviewables:
-    reasons:
-      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behaviour. See `min_first_post_typing_time`."
   time:
     <<: *datetime_formats

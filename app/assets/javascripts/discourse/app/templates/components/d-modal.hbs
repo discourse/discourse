@@ -3,7 +3,12 @@
     <div class="modal-inner-container">
       <div class="modal-header {{headerClass}}">
         {{#if dismissable}}
-          {{d-button icon="times" action=(route-action "closeModal" "initiatedByCloseButton") class="btn-flat modal-close close" title="modal.close" ariaLabel="modal.close"}}
+          {{d-button
+            icon="times"
+            action=(route-action "closeModal" "initiatedByCloseButton")
+            class="btn-flat modal-close close"
+            title="modal.close"
+          }}
         {{/if}}
 
         {{#if title}}
@@ -30,7 +35,7 @@
         {{/if}}
       </div>
 
-      <div id="modal-alert"></div>
+      <div id="modal-alert" role="alert"></div>
 
       {{yield}}
 

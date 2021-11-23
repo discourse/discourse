@@ -73,7 +73,7 @@ echo "Using data in:   ${DATA_DIR}"
 mkdir -p "${DATA_DIR}"
 
 mount_plugin_symlinks=""
-for symlink in $(find $PLUGINS_DIR -depth 1 -type l); do
+for symlink in $(find $PLUGINS_DIR -maxdepth 1 -type l); do
     # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
     # > brew install coreutils
     # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
@@ -84,14 +84,14 @@ for symlink in $(find $PLUGINS_DIR -depth 1 -type l); do
 done
 [[ ! -z "$mount_plugin_symlinks" ]] && echo "Mounting symlinks for plugins: ${mount_plugin_symlinks}"
 
-# 1080 mailcatcher
+# 8025 mailhog
 # 3000 puma... if you must (but unicorn is preferred)
 # 9292 unicorn
 # 9405 prometheus exporter
 
 docker pull discourse/discourse_dev:release
 docker run -d \
-    -p $local_publish:1080:1080 \
+    -p $local_publish:8025:8025 \
     -p $local_publish:3000:3000 \
     -p $local_publish:4200:4200 \
     -p $local_publish:9292:9292 \

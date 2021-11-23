@@ -237,7 +237,6 @@ pt:
   topic_invite:
     failed_to_invite: "O usuário não pode ser convidado para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
-    muted_invitee: "Desculpe, esse usuário silenciou-te."
     muted_topic: "Desculpe, esse usuário silenciou este tópico."
     receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
     sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
@@ -672,9 +671,6 @@ pt:
     no_bookmarks:
       self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       others: "Sem marcadores."
-    no_likes_given:
-      self: "Ainda não gostou de nenhuma publicação."
-      others: "Sem publicações gostadas."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -963,6 +959,7 @@ pt:
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
+    disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
@@ -1011,7 +1008,6 @@ pt:
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
-    enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base utilizado para sondar o servidor (quando um CDN serve conteúdo dinâmico, certifique-se de definir isto para a \"pull\" original) por exemplo: http://origem.site.com"
     long_polling_interval: "O tempo que um servidor deverá aguardar antes de responder aos clientes quando não existirem dados para serem enviados (apenas utilizadores autenticados)"
@@ -1173,7 +1169,6 @@ pt:
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."
-    max_new_accounts_per_registration_ip: "Se já há (n) contas com nível de confiança 0 a partir deste IP (e nenhum é um membro do pessoal ou em nível de confiança 2 ou superior), parar de aceitar novos registos a partir desse IP."
     min_ban_entries_for_roll_up: "Ao clicar no botão Agrupar, irá criar uma nova entrada de sub-rede banida se houver pelo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de email não encontradas após (N) dias."
     max_age_unmatched_ips: "Eliminar entradas IP não encontradas após (N) dias."
@@ -1755,6 +1750,26 @@ pt:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       text_body_template: |2
 
@@ -2182,7 +2197,6 @@ pt:
             label: "O nome da sua comunidade"
             placeholder: "Reduto da Joana"
           site_description:
-            label: "Descreva a sua comunidade numa frase curta"
             placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
       introduction:
         title: "Introdução"
@@ -2214,25 +2228,10 @@ pt:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
-      colors:
-        title: "Cores"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Pré-visualização"
-      logos:
-        title: "Logos"
-        fields:
-          logo:
-            label: "Logo Primário"
-      icons:
-        title: "Ícones"
-        fields:
-          large_icon:
-            label: "Ícone Grande"
-      homepage:
-        title: "Página de início"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2245,6 +2244,16 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
+      logos:
+        title: "Logos"
+        fields:
+          logo:
+            label: "Logo Primário"
+      icons:
+        title: "Ícones"
+        fields:
+          large_icon:
+            label: "Ícone Grande"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:
@@ -2295,6 +2304,7 @@ pt:
           title: "Eliminar Utilizador"
       reject:
         title: "Rejeitar"
+  fallback_username: "utilizador"
   activemodel:
     errors:
       <<: *errors

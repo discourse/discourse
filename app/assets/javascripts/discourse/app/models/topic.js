@@ -2,6 +2,7 @@ import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
+import Bookmark from "discourse/models/bookmark";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
@@ -14,7 +15,7 @@ import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -376,17 +377,43 @@ const Topic = RestModel.extend({
     return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
   },
 
+  bookmarkCount: alias("bookmarks.length"),
+
+  removeBookmark(id) {
+    if (!this.bookmarks) {
+      this.set("bookmarks", []);
+    }
+    this.set(
+      "bookmarks",
+      this.bookmarks.filter((bookmark) => {
+        if (bookmark.id === id && bookmark.for_topic) {
+          // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
+          this.appEvents.trigger("topic:bookmark-toggled");
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            null,
+            bookmark.attachedTo()
+          );
+        }
+
+        return bookmark.id !== id;
+      })
+    );
+    this.set("bookmarked", this.bookmarks.length);
+    this.incrementProperty("bookmarksWereChanged");
+  },
+
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 
-    const postIds = this.bookmarked_posts.mapBy("post_id");
+    const postIds = this.bookmarks.mapBy("post_id");
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {
         loadedPost.clearBookmark();
       }
     });
-    this.set("bookmarked_posts", []);
+    this.set("bookmarks", []);
 
     return postIds;
   },
@@ -413,17 +440,19 @@ const Topic = RestModel.extend({
   },
 
   // Delete this topic
-  destroy(deleted_by) {
+  destroy(deleted_by, opts) {
     return ajax(`/t/${this.id}`, {
-      data: { context: window.location.pathname },
+      data: { context: window.location.pathname, ...opts },
       type: "DELETE",
     })
       .then(() => {
         this.setProperties({
           deleted_at: new Date(),
-          deleted_by: deleted_by,
+          deleted_by,
           "details.can_delete": false,
           "details.can_recover": true,
+          "details.can_permanently_delete":
+            this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (!deleted_by.staff) {
           DiscourseURL.redirectTo("/");
@@ -462,6 +491,11 @@ const Topic = RestModel.extend({
       }
     }
     keys.forEach((key) => this.set(key, json[key]));
+
+    if (this.bookmarks.length) {
+      this.bookmarks = this.bookmarks.map((bm) => Bookmark.create(bm));
+    }
+
     return this;
   },
 
@@ -593,7 +627,7 @@ const Topic = RestModel.extend({
 
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags: tags },
+      data: { tags },
     });
   },
 });
@@ -609,6 +643,7 @@ Topic.reopenClass({
   munge(json) {
     // ensure we are not overriding category computed property
     delete json.category;
+    json.bookmarks = json.bookmarks || [];
     return json;
   },
 

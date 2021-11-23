@@ -69,7 +69,7 @@
                   tagName=""
                 }}
               {{else}}
-                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -148,6 +148,7 @@
             jumpToPostPrompt=(action "jumpToPostPrompt")
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
+            showSummary=(action "showSummary")
             toggleMultiSelect=(action "toggleMultiSelect")
             showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
             deleteTopic=(action "deleteTopic")
@@ -216,6 +217,7 @@
                 showLogin=(route-action "showLogin")
                 showRawEmail=(route-action "showRawEmail")
                 deletePost=(action "deletePost")
+                permanentlyDeletePost=(action "permanentlyDeletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
                 toggleBookmark=(action "toggleBookmark")
@@ -404,5 +406,12 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
+  {{quote-button
+    quoteState=quoteState
+    selectText=(action "selectText")
+    editPost=(action "editPost")
+    topic=model
+    composerVisible=composer.visible
+
+  }}
 {{/discourse-topic}}

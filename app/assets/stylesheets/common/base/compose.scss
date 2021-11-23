@@ -264,6 +264,7 @@
     }
     .category-input {
       margin-left: 0;
+      margin-bottom: 0px;
       min-width: 0; // allows flex to shrink
       flex-wrap: wrap;
       max-width: 50%;
@@ -294,7 +295,7 @@
 
   .mini-tag-chooser {
     width: 49%;
-    margin: 0 0 5px auto;
+    margin: 0 0 0 auto;
     background: var(--secondary);
     z-index: z("composer", "dropdown");
   }
@@ -470,12 +471,6 @@ div.ac-wrap {
   }
 }
 
-.future-date-input {
-  .examples {
-    color: var(--primary-medium);
-  }
-}
-
 .md-table {
   overflow-y: auto;
   margin: 1em 0;
@@ -521,6 +516,13 @@ body.ios-safari-composer-hacks {
 
 body:not(.ios-safari-composer-hacks) {
   #reply-control.open {
+    --min-height: 255px;
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    &.composer-action-reply {
+      // we can let the reply composer get a little shorter
+      min-height: calc(var(--min-height) - 4em);
+    }
     padding-bottom: var(--composer-ipad-padding);
   }
 }

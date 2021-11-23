@@ -82,7 +82,7 @@ acceptance("User Preferences", function (needs) {
     await visit("/u/eviltrout/preferences");
 
     assert.ok($("body.user-preferences-page").length, "has the body class");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
       "defaults to account tab"
@@ -117,7 +117,11 @@ acceptance("User Preferences", function (needs) {
     await savePreferences();
 
     await click(".preferences-nav .nav-categories a");
-    await fillIn(".tracking-controls .category-selector input", "faq");
+    const categorySelector = selectKit(
+      ".tracking-controls .category-selector "
+    );
+    await categorySelector.expand();
+    await categorySelector.fillInFilter("faq");
     await savePreferences();
 
     assert.ok(
@@ -147,7 +151,7 @@ acceptance("User Preferences", function (needs) {
 
     await fillIn("#change-email", "invalidemail");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".tip.bad").text().trim(),
       I18n.t("user.email.invalid"),
       "it should display invalid email tip"
@@ -248,7 +252,7 @@ acceptance("User Preferences", function (needs) {
 
     await click(".avatar-selector-refresh-gravatar");
 
-    assert.equal(
+    assert.strictEqual(
       User.currentProp("gravatar_avatar_upload_id"),
       6543,
       "it should set the gravatar_avatar_upload_id property"
@@ -323,7 +327,7 @@ acceptance("User Preferences when badges are disabled", function (needs) {
   test("visit my preferences", async function (assert) {
     await visit("/u/eviltrout/preferences");
     assert.ok($("body.user-preferences-page").length, "has the body class");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
       "defaults to account tab"
@@ -414,7 +418,7 @@ acceptance("Custom User Fields", function (needs) {
     );
     await field.expand();
     await field.selectRowByValue("Cat");
-    assert.equal(
+    assert.strictEqual(
       field.header().value(),
       "Cat",
       "it sets the value of the field"
@@ -440,7 +444,7 @@ acceptance(
       await click(".save-changes");
       await visit("/");
       assert.ok(exists(".topic-list"), "The list of topics was rendered");
-      assert.equal(
+      assert.strictEqual(
         currentRouteName(),
         "discovery.bookmarks",
         "it navigates to bookmarks"
@@ -483,7 +487,7 @@ acceptance("Security", function (needs) {
   test("recently connected devices", async function (assert) {
     await visit("/u/eviltrout/preferences/security");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
         .text()
         .trim(),
@@ -491,12 +495,12 @@ acceptance("Security", function (needs) {
       "it should display active token first"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".pref-auth-tokens > a:nth-of-type(1)").text().trim(),
       I18n.t("user.auth_tokens.show_all", { count: 3 }),
       "it should display two tokens"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".pref-auth-tokens .auth-token"),
       2,
       "it should display two tokens"
@@ -504,20 +508,21 @@ acceptance("Security", function (needs) {
 
     await click(".pref-auth-tokens > a:nth-of-type(1)");
 
-    assert.equal(
+    assert.strictEqual(
       count(".pref-auth-tokens .auth-token"),
       3,
       "it should display three tokens"
     );
 
-    await click(".auth-token-dropdown button:nth-of-type(1)");
-    await click("li[data-value='notYou']");
+    const authTokenDropdown = selectKit(".auth-token-dropdown");
+    await authTokenDropdown.expand();
+    await authTokenDropdown.selectRowByValue("notYou");
 
-    assert.equal(count(".d-modal:visible"), 1, "modal should appear");
+    assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
     await click(".modal-footer .btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       count(".pref-password.highlighted"),
       1,
       "it should highlight password preferences"
@@ -538,7 +543,7 @@ acceptance(
       await visit("/u/staged/preferences");
 
       assert.ok($("body.user-preferences-page").length, "has the body class");
-      assert.equal(
+      assert.strictEqual(
         currentURL(),
         "/u/staged/preferences/account",
         "defaults to account tab"

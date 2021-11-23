@@ -2,7 +2,7 @@ import ComponentConnector from "discourse/widgets/component-connector";
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import { deepMerge } from "discourse-common/lib/object";
+import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { later } from "@ember/runloop";
@@ -76,7 +76,7 @@ function timelineDate(date) {
 
 createWidget("timeline-scroller", {
   tagName: "div.timeline-scroller",
-  buildKey: () => `timeline-scroller`,
+  buildKey: (attrs) => `timeline-scroller-${attrs.topicId}`,
 
   defaultState() {
     return { dragging: false };
@@ -144,7 +144,7 @@ createWidget("timeline-padding", {
 
 createWidget("timeline-scrollarea", {
   tagName: "div.timeline-scrollarea",
-  buildKey: () => `timeline-scrollarea`,
+  buildKey: (attrs) => `timeline-scrollarea-${attrs.topic.id}`,
 
   buildAttributes() {
     return { style: `height: ${scrollareaHeight()}px` };
@@ -225,10 +225,11 @@ createWidget("timeline-scrollarea", {
 
     let showButton = false;
     const hasBackPosition =
+      position.lastRead &&
       position.lastRead > 3 &&
+      position.lastRead > position.current &&
       Math.abs(position.lastRead - position.current) > 3 &&
       Math.abs(position.lastRead - position.total) > 1 &&
-      position.lastRead &&
       position.lastRead !== position.total;
 
     if (hasBackPosition) {
@@ -239,15 +240,15 @@ createWidget("timeline-scrollarea", {
         before + SCROLLER_HEIGHT - 5 < lastReadTop || before > lastReadTop + 25;
     }
 
+    let scrollerAttrs = position;
+    scrollerAttrs.showDockedButton =
+      !attrs.mobileView && hasBackPosition && !showButton;
+    scrollerAttrs.fullScreen = attrs.fullScreen;
+    scrollerAttrs.topicId = attrs.topic.id;
+
     const result = [
       this.attach("timeline-padding", { height: before }),
-      this.attach(
-        "timeline-scroller",
-        deepMerge(position, {
-          showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
-          fullScreen: attrs.fullScreen,
-        })
-      ),
+      this.attach("timeline-scroller", scrollerAttrs),
       this.attach("timeline-padding", { height: after }),
     ];
 
@@ -352,6 +353,23 @@ createWidget("timeline-footer-controls", {
     const controls = [];
     const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
+    if (
+      this.siteSettings.summary_timeline_button &&
+      !fullScreen &&
+      topic.has_summary &&
+      !topic.postStream.summary
+    ) {
+      controls.push(
+        this.attach("button", {
+          className: "show-summary btn-small",
+          icon: "layer-group",
+          label: "summary.short_label",
+          title: "summary.short_title",
+          action: "showSummary",
+        })
+      );
+    }
+
     if (currentUser && !fullScreen) {
       if (topic.get("details.can_create_post")) {
         controls.push(
@@ -410,8 +428,7 @@ createWidget("timeline-footer-controls", {
 
 export default createWidget("topic-timeline", {
   tagName: "div.topic-timeline",
-
-  buildKey: () => "topic-timeline-area",
+  buildKey: (attrs) => `topic-timeline-area-${attrs.topic.id}`,
 
   defaultState() {
     return { position: null, excerpt: null };
@@ -441,7 +458,16 @@ export default createWidget("topic-timeline", {
             excerpt = "<span class='username'>" + info.username + ":</span> ";
           }
 
-          this.state.excerpt = excerpt + info.excerpt;
+          if (info.excerpt) {
+            this.state.excerpt = excerpt + info.excerpt;
+          } else if (info.action_code) {
+            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+              info.action_code,
+              info.created_at,
+              info.username
+            )}`;
+          }
+
           this.scheduleRerender();
         }
       });
@@ -530,7 +556,7 @@ export default createWidget("topic-timeline", {
     if (!attrs.mobileView) {
       const streamLength = attrs.topic.get("postStream.stream.length");
 
-      if (streamLength < 2) {
+      if (streamLength === 1) {
         const postsWrapper = document.querySelector(".posts-wrapper");
         if (postsWrapper && postsWrapper.offsetHeight < 1000) {
           displayTimeLineScrollArea = false;

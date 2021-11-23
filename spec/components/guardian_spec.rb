@@ -492,9 +492,9 @@ describe Guardian do
       expect(Guardian.new.can_invite_to_forum?).to be_falsey
     end
 
-    it 'returns true when the site requires approving users and is mod' do
+    it 'returns true when the site requires approving users' do
       SiteSetting.must_approve_users = true
-      expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
+      expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
     end
 
     it 'returns false when max_invites_per_day is 0' do
@@ -548,11 +548,11 @@ describe Guardian do
         expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_truthy
 
         SiteSetting.max_invites_per_day = 0
 
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_truthy
         # staff should be immune to max_invites_per_day setting
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
       end
@@ -566,6 +566,7 @@ describe Guardian do
       end
 
       it 'returns true for a group owner' do
+        group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
 
@@ -574,9 +575,9 @@ describe Guardian do
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
 
-      it 'fails for normal users if must_approve_users' do
+      it 'return true for normal users even if must_approve_users' do
         SiteSetting.must_approve_users = true
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_truthy
         expect(Guardian.new(admin).can_invite_to?(topic)).to be_truthy
       end
 
@@ -595,6 +596,7 @@ describe Guardian do
         end
 
         it 'should return true for a group owner' do
+          group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
@@ -638,23 +640,6 @@ describe Guardian do
 
         it "doesn't allow a regular user to invite" do
           expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
-          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
-        end
-      end
-
-      context "when private messages are enabled" do
-        before do
-          SiteSetting.enable_personal_messages = true
-          SiteSetting.min_trust_level_to_allow_invite = 2
-        end
-
-        it "returns true if user has sufficient trust level" do
-          user.trust_level = 2
-          expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
-        end
-
-        it "returns false if user has sufficient trust level" do
-          user.trust_level = 1
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
         end
       end
@@ -2512,7 +2497,50 @@ describe Guardian do
       expect(Guardian.new(user).can_delete_all_posts?(coding_horror)).to be_falsey
     end
 
-    shared_examples "can_delete_all_posts examples" do
+    context "for moderators" do
+      let(:actor) { moderator }
+
+      it "is true if user has no posts" do
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago))).to be_truthy
+      end
+
+      it "is true if user's first post is newer than delete_user_max_post_age days old" do
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.user_stat.update!(first_post_created_at: 9.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
+      end
+
+      it "is false if user's first post is older than delete_user_max_post_age days old" do
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.user_stat.update!(first_post_created_at: 11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+      end
+
+      it "is false if user is an admin" do
+        expect(Guardian.new(actor).can_delete_all_posts?(admin)).to be_falsey
+      end
+
+      it "is true if number of posts is small" do
+        user = Fabricate(:user, created_at: 1.day.ago)
+        user.user_stat.update!(post_count: 1)
+        SiteSetting.delete_all_posts_max = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
+      end
+
+      it "is false if number of posts is not small" do
+        user = Fabricate(:user, created_at: 1.day.ago)
+        user.user_stat.update!(post_count: 11)
+        SiteSetting.delete_all_posts_max = 10
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+      end
+    end
+
+    context "for admins" do
+      let(:actor) { admin }
+
       it "is true if user has no posts" do
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago))).to be_truthy
@@ -2525,11 +2553,11 @@ describe Guardian do
         expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
       end
 
-      it "is false if user's first post is older than delete_user_max_post_age days old" do
+      it "is true if user's first post is older than delete_user_max_post_age days old" do
         user = Fabricate(:user, created_at: 100.days.ago)
         user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.delete_user_max_post_age = 10
-        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_falsey
+        expect(Guardian.new(actor).can_delete_all_posts?(user)).to be_truthy
       end
 
       it "is false if user is an admin" do
@@ -2543,22 +2571,12 @@ describe Guardian do
         expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
 
-      it "is false if number of posts is not small" do
+      it "is true if number of posts is not small" do
         u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(11)
         SiteSetting.delete_all_posts_max = 10
-        expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_falsey
+        expect(Guardian.new(actor).can_delete_all_posts?(u)).to be_truthy
       end
-    end
-
-    context "for moderators" do
-      let(:actor) { moderator }
-      include_examples "can_delete_all_posts examples"
-    end
-
-    context "for admins" do
-      let(:actor) { admin }
-      include_examples "can_delete_all_posts examples"
     end
   end
 
@@ -3178,12 +3196,7 @@ describe Guardian do
 
     context "allowlist mode" do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it "should respect theme allowlisting" do
@@ -3833,9 +3846,24 @@ describe Guardian do
   describe '#auth_token' do
     it 'returns the correct auth token' do
       token = UserAuthToken.generate!(user_id: user.id)
-      env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+      cookie = create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        issued_at: 5.minutes.ago,
+      )
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
 
-      guardian = Guardian.new(user, Rack::Request.new(env))
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
+    end
+
+    it 'supports v0 of auth cookie' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = token.unhashed_auth_token
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie};")
+
+      guardian = Guardian.new(user, ActionDispatch::Request.new(env))
       expect(guardian.auth_token).to eq(token.auth_token)
     end
   end
@@ -3913,6 +3941,46 @@ describe Guardian do
       it "is true for regular users" do
         expect(Guardian.new(user).can_see_site_contact_details?).to eq(true)
       end
+    end
+  end
+
+  describe "#can_mention_here?" do
+    it 'returns false if disabled' do
+      SiteSetting.max_here_mentioned = 0
+      expect(admin.guardian.can_mention_here?).to eq(false)
+    end
+
+    it 'returns false if disabled' do
+      SiteSetting.here_mention = ''
+      expect(admin.guardian.can_mention_here?).to eq(false)
+    end
+
+    it 'works with trust levels' do
+      SiteSetting.min_trust_level_for_here_mention = 2
+
+      expect(trust_level_0.guardian.can_mention_here?).to eq(false)
+      expect(trust_level_1.guardian.can_mention_here?).to eq(false)
+      expect(trust_level_2.guardian.can_mention_here?).to eq(true)
+      expect(trust_level_3.guardian.can_mention_here?).to eq(true)
+      expect(trust_level_4.guardian.can_mention_here?).to eq(true)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
+      expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+
+    it 'works with staff' do
+      SiteSetting.min_trust_level_for_here_mention = 'staff'
+
+      expect(trust_level_4.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
+      expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+
+    it 'works with admin' do
+      SiteSetting.min_trust_level_for_here_mention = 'admin'
+
+      expect(trust_level_4.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(false)
+      expect(admin.guardian.can_mention_here?).to eq(true)
     end
   end
 end

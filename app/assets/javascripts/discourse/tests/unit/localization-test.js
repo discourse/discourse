@@ -45,12 +45,12 @@ test("translation overrides", function (assert) {
   };
   LocalizationInitializer.initialize(getApplication());
 
-  assert.equal(
+  assert.strictEqual(
     I18n.t("composer.reply"),
     "WAT",
     "overrides existing translation in current locale"
   );
-  assert.equal(
+  assert.strictEqual(
     I18n.t("topic.reply.help"),
     "foobar",
     "overrides translation in default locale"
@@ -64,5 +64,5 @@ test("skip translation override if parent node is not an object", function (asse
   };
   LocalizationInitializer.initialize(getApplication());
 
-  assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
+  assert.strictEqual(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
 });

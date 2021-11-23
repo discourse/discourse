@@ -542,7 +542,7 @@ HTML
         default: ""
     YAML
 
-    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.url, name: "my_upload")
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.id.to_s, name: "my_upload")
     theme.save!
 
     json = JSON.parse(cached_settings(theme.id))
@@ -900,6 +900,46 @@ HTML
       new_content, new_digest = theme.baked_js_tests_with_digest
       expect(new_content).to eq(content)
       expect(new_digest).to eq(digest)
+    end
+  end
+
+  describe "#update_setting" do
+    it "requests clients to refresh if `refresh: true`" do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        super_feature_enabled:
+          type: bool
+          default: false
+          refresh: true
+      YAML
+
+      ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:bool], name: "super_feature_enabled")
+      theme.save!
+
+      messages = MessageBus.track_publish do
+        theme.update_setting(:super_feature_enabled, true)
+        theme.save!
+      end.filter { |m| m.channel == "/global/asset-version" }
+
+      expect(messages.count).to eq(1)
+    end
+
+    it "does not request clients to refresh if `refresh: false`" do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        super_feature_enabled:
+          type: bool
+          default: false
+          refresh: false
+      YAML
+
+      ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:bool], name: "super_feature_enabled")
+      theme.save!
+
+      messages = MessageBus.track_publish do
+        theme.update_setting(:super_feature_enabled, true)
+        theme.save!
+      end.filter { |m| m.channel == "/global/asset-version" }
+
+      expect(messages.count).to eq(0)
     end
   end
 end

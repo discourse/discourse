@@ -573,10 +573,6 @@ cs:
     no_bookmarks:
       self: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
       others: "Žádné záložky."
-    no_likes_given:
-      self: "Zatím se ti nelíbil žádný příspěvek."
-    no_replies:
-      others: "Žádné odpovědi."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1130,25 +1126,10 @@ cs:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizace"
-      colors:
-        title: "Barvy"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Náhled"
-      logos:
-        title: "Loga"
-        fields:
-          logo:
-            label: "Primární loga"
-      icons:
-        title: "Ikony"
-        fields:
-          large_icon:
-            label: "Velká ikona"
-      homepage:
-        title: "Domovská stránka"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1161,6 +1142,16 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
+      logos:
+        title: "Loga"
+        fields:
+          logo:
+            label: "Primární loga"
+      icons:
+        title: "Ikony"
+        fields:
+          large_icon:
+            label: "Velká ikona"
       invites:
         title: "Pozvi redakci"
       finished:
@@ -1213,6 +1204,7 @@ cs:
           title: "Smazat uživatele"
       reject:
         title: "Odmítnout"
+  fallback_username: "uživatel"
   activemodel:
     errors:
       <<: *errors

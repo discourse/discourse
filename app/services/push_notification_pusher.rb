@@ -7,7 +7,7 @@ class PushNotificationPusher
   def self.push(user, payload)
     I18n.with_locale(user.effective_locale) do
       message = {
-        title: I18n.t(
+        title: payload[:translated_title] || I18n.t(
           "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
           site_title: SiteSetting.title,
           topic: payload[:topic_title],
@@ -16,7 +16,7 @@ class PushNotificationPusher
         body: payload[:excerpt],
         badge: get_badge,
         icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
-        tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
+        tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
         url: payload[:post_url],
         hide_when_active: true

@@ -55,6 +55,12 @@ RSpec.describe ListController do
 
       get "/latest?search="
       expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids%5B%5D=14583&topic_ids%5B%5D=14584"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids=14583%2C14584"
+      expect(response.status).to eq(200)
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
@@ -703,10 +709,10 @@ RSpec.describe ListController do
       end
     end
 
-    it "returns 403 error when the user can't see private message" do
+    it "returns 404 when the user can't see private message" do
       sign_in(Fabricate(:user))
       get "/topics/private-messages-unread/#{pm_user.username}.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "succeeds when the user can see private messages" do

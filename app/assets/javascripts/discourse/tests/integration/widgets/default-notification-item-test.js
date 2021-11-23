@@ -48,7 +48,7 @@ discourseModule(
         pretender.put("/notifications/mark-read", (request) => {
           ++requests;
 
-          assert.equal(
+          assert.strictEqual(
             request.requestBody,
             `id=${this.args.id}`,
             "it sets correct request parameters"
@@ -72,8 +72,8 @@ discourseModule(
         );
         await settled();
 
-        assert.equal(count("li.read"), 1);
-        assert.equal(requests, 1);
+        assert.strictEqual(count("li.read"), 1);
+        assert.strictEqual(requests, 1);
       },
     });
   }

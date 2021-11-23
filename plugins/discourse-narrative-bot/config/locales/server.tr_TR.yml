@@ -138,7 +138,7 @@ tr_TR:
           Hey, cevabın için teşekkürler!
 
           Ne yazık ki, kötü programlanmış bir bot olarak bunu tam olarak anlayamıyorum. :frowning:
-        track_response: Tekrar deneyebilirsiniz veya bu adımı atlamak istiyorsanız, &quot;%{skip_trigger}&quot; komutunu girin. Aksi takdirde, baştan başlamak için &quot;%{reset_trigger}&quot; komutunu girin.
+        track_response: Tekrar deneyebilirsiniz veya bu adımı atlamak istiyorsanız, "%{skip_trigger}" komutunu girin. Aksi takdirde, baştan başlamak için "%{reset_trigger}" komutunu girin.
         second_response: |-
           Ah, üzgünüm. Hala anlamıyorum. :anguished:
           Ben sadece bir botum, ama gerçek bir kişiye ulaşmak istiyorsanız, [iletişim sayfamıza bakın] (%{base_path} / about).
@@ -151,13 +151,13 @@ tr_TR:
       hello:
         title: "Selamlar!"
         message: |-
-          %{title} başlığına katıldığınız için teşekkür ederiz!
+          %{title} topluluğuna katıldığın için teşekkür ederiz!
 
-          - Ben sadece bir robotum, ama [cana yakın personelimiz](%{base_uri}/about) bir kişiye ulaşmanız gerektiğinde size yardımcı olmak için burada.
+          - Ben sadece bir robotum, ama gerçek birine ulaşmak istersen [cana yakın personelimiz](%{base_uri}/about) sana yardımcı olmak için her zaman burada.
 
-          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Sizi tanıdıkça [yeni yetenekler] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [badges](%{base_uri}/badges) kazanacaksınız.
+          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Seni tanıdıkça [yeni yetenekler](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [rozetler](%{base_uri}/badges)) edinmeni sağlayacağız.
 
-          - Her zaman [medeni topluluk davranışına] (%{base_uri}/guidelines) inanıyoruz.
+          - Her ne olursa olsun doğru yöntemin [medeni topluluk davranışları](%{base_uri}/guidelines) sergilemek olduğuna inanıyoruz.
       onebox:
         instructions: |-
           Sonrasında bu bağlantılardan birini benimle paylaşabilir misiniz? **herhangi bir bağlantıyı tek başına** yanıtladığınızda, kutucuk açıklama ekleyebilmeniz için otomatik olarak genişler.
@@ -175,11 +175,11 @@ tr_TR:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Devam etmek istiyorsanız :heart: butonuna basın.
+          Devam etmek istiyorsanız (kim istemez ki) :heart: butonuna basın.
 
           **Bir resim ile cevap verebilir misiniz?** Herhangi bir resim yeterli! Sürükleyip bırakın, yükle düğmesine basın veya kopyalayıp yapıştırın.
         reply: |-
-          Şık resim -  :heart: :heart_eyes:
+          Şık resim - Ne kadar beğendiğimi :heart_eyes: sana anlatabilmek için :heart: düğmesini kullandım
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
         not_found: |-
@@ -203,7 +203,7 @@ tr_TR:
         instructions: |-
           Yanıtınızda bazı kelimeleri **kalın** veya _italic_ yapabilir misiniz?
 
-          - `**kalın** &#39;veya` _italic_` yazın
+          - `**kalın**` veya `_italic_` yazın
 
           - veya düzenleyicideki <kbd><b>B</b></kbd> veya <kbd><i>I</i></kbd> butonlarına basın
         reply: |-
@@ -222,7 +222,7 @@ tr_TR:
           >
           >Bazı insanların kelimelerle bir yolu vardır, diğer insanlar ... ah, ah, yolu yok.
 
-          Alıntılayacağınız metinin üzerine gelin. Sonrasında seçiminizin üzerine gelerek **Alıntı** butonuna veya bu yazının altındaki **Yanıtla** butonuna basın. Daha sonra neden o metni alıntıladığınız hakkında bir iki kelime yazın, çünkü merak ediyorum :thinking:
+          Alıntılayacağınız metinin &uarr; üzerine gelin. Sonrasında seçiminizin üzerine gelerek **Alıntı** butonuna veya bu yazının altındaki **Yanıtla** butonuna basın. Daha sonra neden o metni alıntıladığınız hakkında bir iki kelime yazın, çünkü merak ediyorum :thinking:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:
         not_found: |-
@@ -231,7 +231,7 @@ tr_TR:
           Yazımdaki herhangi bir metni seçtiğinizde <kbd>**Alıntı**</kbd> butonu görünür veya seçilen herhangi bir metinle **Yanıtla** tuşuna da basabilirsiniz! Tekrar dener misin?
       bookmark:
         instructions: |-
-          Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
+          Daha fazla bilgi edinmek istiyorsanız aşağıdan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ikonuna tıklayın ve **bu özel iletiyi yer imlerine <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ekleyin**. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
         reply: |-
           Mükemmel! Artık istediğiniz zaman doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) özel sohbetimize geri dönüş yolunu kolayca bulabilirsiniz. Sağ üstteki &#8599; profil resminizi seçmeniz yeterli
         not_found: |-

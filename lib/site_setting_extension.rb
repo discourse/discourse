@@ -2,6 +2,7 @@
 
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
+  include HasSanitizableFields
 
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
@@ -212,16 +213,12 @@ module SiteSettingExtension
       value = value.to_s if type == :upload
       value = value.map(&:to_s).join("|") if type == :uploaded_image_list
 
-      if should_sanitize?(value, type)
-        value = sanitize(value)
-      end
-
       [name, value]
     end.flatten])
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden: false, sanitize_plain_text_settings: false)
+  def all_settings(include_hidden: false)
 
     locale_setting_hash =
     {
@@ -250,8 +247,6 @@ module SiteSettingExtension
          default.to_i < Upload::SEEDED_ID_THRESHOLD
 
         default = default_uploads[default.to_i]
-      elsif sanitize_plain_text_settings && should_sanitize?(value, type_hash[:type].to_s)
-        value = sanitize(value)
       end
 
       opts = {
@@ -360,6 +355,9 @@ module SiteSettingExtension
     old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+
+    return if current[name] == old_val
+
     clear_uploads_cache(name)
     clear_cache!
     DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name]) if old_val != current[name]
@@ -368,8 +366,15 @@ module SiteSettingExtension
   def add_override!(name, val)
     old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
-    provider.save(name, val, type)
-    current[name] = type_supervisor.to_rb_value(name, val)
+
+    sanitize_override = val.is_a?(String) && client_settings.include?(name)
+
+    sanitized_val = sanitize_override ? sanitize_field(val) : val
+    provider.save(name, sanitized_val, type)
+    current[name] = type_supervisor.to_rb_value(name, sanitized_val)
+
+    return if current[name] == old_val
+
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
@@ -580,14 +585,6 @@ module SiteSettingExtension
     if (type_supervisor.get_type(name) == :upload || type_supervisor.get_type(name) == :uploaded_image_list) && uploads.has_key?(name)
       uploads.delete(name)
     end
-  end
-
-  def should_sanitize?(value, type)
-    value.is_a?(String) && type.to_s != 'html'
-  end
-
-  def sanitize(value)
-    CGI.unescapeHTML(Loofah.scrub_fragment(value, :strip).to_s)
   end
 
   def logger

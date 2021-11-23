@@ -9,6 +9,7 @@ describe 'invites' do
   path '/invites.json' do
     post 'Create an invite' do
       tags 'Invites'
+      operationId 'createInvite'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -23,7 +24,7 @@ describe 'invites' do
           topic_id: { type: :integer },
           group_id: { type: :integer, description: "optional, either this or `group_names`" },
           group_names: { type: :string, description: "optional, either this or `group_id`" },
-          expires_at: { type: :string, default: "controlled by invite_expiry_days site setting" },
+          expires_at: { type: :string, description: "optional, if not supplied, the invite_expiry_days site setting is used" },
         }
       }
 

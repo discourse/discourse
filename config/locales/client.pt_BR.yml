@@ -116,6 +116,7 @@ pt_BR:
       previous_month: "Mês anterior"
       next_month: "Próximo mês"
       placeholder: data
+      to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber}"
@@ -126,29 +127,29 @@ pt_BR:
       url: "Copiar e compartilhar a URL"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
-      private_topic: "tornou este tópico uma mensagem pessoal %{when} atrás"
+      private_topic: "tornou este tópico em uma mensagem pessoal %{when}"
       split_topic: "dividiu este tópico %{when}"
-      invited_user: "convidou %{who} %{when} atrás"
-      invited_group: "onvidou %{who} %{when} atrás"
-      user_left: "%{who} foi removido(a) desta mensagem %{when} atrás"
+      invited_user: "convidou %{who} %{when}"
+      invited_group: "convidou %{who} %{when}"
+      user_left: "%{who} se removeram desta mensagem %{when}"
       removed_user: "%{who} foi removido(a) %{when} atrás"
-      removed_group: "%{who} foi removido(a) %{when} atrás"
-      autobumped: "automaticamente promovido(a) %{when} atrás"
+      removed_group: "removido %{who} %{when}"
+      autobumped: "automaticamente promovido %{when}"
       autoclosed:
-        enabled: "fechou %{when} atrás"
-        disabled: "abriu %{when} atrás"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       closed:
-        enabled: "fechou %{when} atrás"
-        disabled: "abriu %{when} atrás"
+        enabled: "fechou %{when}"
+        disabled: "abriu %{when}"
       archived:
-        enabled: "arquivou %{when} atrás"
-        disabled: "desarquivou %{when} atrás"
+        enabled: "arquivou %{when}"
+        disabled: "desarquivou %{when}"
       pinned:
-        enabled: "fixou %{when} atrás"
-        disabled: "desafixou %{when} atrás"
+        enabled: "fixou %{when}"
+        disabled: "desafixou %{when}"
       pinned_globally:
-        enabled: "fixou globalmente %{when} atrás"
-        disabled: "desafixou %{when} atrás"
+        enabled: "fixou globalmente %{when}"
+        disabled: "desafixou %{when}"
       visible:
         enabled: "listou %{when} atrás"
         disabled: "removeu da lista %{when} atrás"
@@ -271,6 +272,7 @@ pt_BR:
       help:
         bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito neste tópico"
+        edit_bookmark_for_topic: "Clique para editar o favorito para este tópico"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
@@ -301,6 +303,7 @@ pt_BR:
     copy_codeblock:
       copied: "copiado!"
     drafts:
+      label: "Rascunhos"
       resume: "Retomar"
       remove: "Remover"
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
@@ -311,7 +314,13 @@ pt_BR:
         confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_categories:
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_latest:
+      one: "Veja %{count} tópico novo ou atualizado"
+      other: "Veja %{count} tópicos novos ou atualizados"
+    topic_count_unseen:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
     topic_count_unread:
@@ -965,7 +974,9 @@ pt_BR:
       use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste(a) usuário(a) está oculto."
       expand_profile: "Expandir"
+      sr_expand_profile: "Expandir detalhes do perfil"
       collapse_profile: "Recolher"
+      sr_collapse_profile: "Recolher detalhes do perfil"
       bookmarks: "Favoritos"
       bio: "Sobre mim"
       timezone: "Fuso horário"
@@ -992,9 +1003,11 @@ pt_BR:
       no_bookmarks_title: "Você ainda não adicionou nada aos favoritos"
       no_bookmarks_body: >
         Comece a adicionar postagens aos favoritos com o botão %{icon}, eles serão listados aqui para consulta rápida. Você pode agendar um lembrete também!
+      no_bookmarks_search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
       no_notifications_title: "Você ainda não tem nenhuma notificação"
       no_notifications_body: >
         Neste painel, você receberá notificações sobre atividades relevantes, inclusive respostas aos seus tópicos e postagens, quando você for citado(a) ou mencionado(a) (<b>@mentions</b>) por alguém e quando os tópicos que você estiver acompanhando receberem respostas. As notificações também serão enviadas por e-mail quando você passar algum tempo sem entrar com a conta. <br><br> Procure por %{icon} para decidir sobre quais tópicos, categorias e etiquetas específicas você quer receber notificações. Para obter mais informações, verifique suas <a href='%{preferencesUrl}'>preferências de notificações</a>.
+      no_notifications_page_title: "Você ainda não tem nenhuma notificação"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
       dynamic_favicon: "Exibir contagens no ícone do navegador"
       skip_new_user_tips:
@@ -1098,7 +1111,16 @@ pt_BR:
         rejected_posts: "postagens rejeitadas"
       messages:
         inbox: "Caixa de entrada"
+        latest: "Últimos"
         sent: "Enviadas"
+        unread: "Não lidos(as)"
+        unread_with_count:
+          one: "Não lido (%{count})"
+          other: "Não lido (%{count})"
+        new: "Novo"
+        new_with_count:
+          one: "Novo (%{count})"
+          other: "Novo (%{count})"
         archive: "Arquivo"
         groups: "Meus grupos"
         move_to_inbox: "Mover para caixa de entrada"
@@ -1437,22 +1459,19 @@ pt_BR:
         invite:
           new_title: "Criar convite"
           edit_title: "Editar convite"
-          instructions: "Compartilhar este link para conceder acesso imediato ao site"
+          instructions: "Compartilhar este link para conceder acesso imediato ao site:"
           copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
-          restrict_email: "Restringir a um endereço de e-mail"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Adicionar a grupos"
-          invite_to_topic: "Buscar tópico"
           expires_at: "Expira após"
           custom_message: "Mensagem pessoal opcional"
           send_invite_email: "Salvar e enviar e-mail"
           save_invite: "Salvar convite"
           invite_saved: "Convite salvo"
-          invite_copied: "Link de convite copiado"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -1786,6 +1805,7 @@ pt_BR:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
     select_kit:
+      delete_item: "Excluir %{name}"
       filter_by: "Filtrar por: %{name}"
       select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
@@ -1890,7 +1910,6 @@ pt_BR:
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
-      title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
@@ -2028,6 +2047,9 @@ pt_BR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensagem na caixa de entrada de %{group_name}"
         other: "%{count} mensagens na caixa de entrada de %{group_name}"
@@ -2086,8 +2108,8 @@ pt_BR:
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "pesquisar tópicos, postagens, usuários ou categorias"
-      full_page_title: "pesquisar tópicos ou postagens"
+      title: "Pesquisar"
+      full_page_title: "Pesquisar"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
       post_format: "#%{post_number} por %{username}"
@@ -2099,14 +2121,27 @@ pt_BR:
       search_google: "Tente pesquisar com o Google:"
       search_google_button: "Google"
       search_button: "Pesquisar"
+      categories: "Categorias"
+      tags: "Etiquetas"
+      in: "em"
+      in_this_topic: "neste tópico"
+      enter_hint: "ou pressione Enter"
+      in_posts_by: "em postagens por %{username}"
+      type:
+        default: "Tópicos/postagens"
+        users: "Usuários"
+        categories: "Categorias"
+        categories_and_tags: "Categorias/etiquetas"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
         tag: "Pesquisar a etiqueta #%{tag}"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
+      tips:
+        full_search_key: "%{modifier} + Enter"
       advanced:
-        title: Pesquisa avançada
+        title: Filtros avançados
         posted_by:
           label: Postado por
         in_category:
@@ -2159,7 +2194,6 @@ pt_BR:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -2191,9 +2225,11 @@ pt_BR:
           other: "Descartar novos(as) (%{count})"
         toggle: "alternar seleção de tópicos em massa"
         actions: "Ações em massa"
+        change_category: "Definir categoria..."
         close_topics: "Fechar tópicos"
         archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para caixa de entrada"
+        notification_level: "Notificações..."
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -2332,6 +2368,7 @@ pt_BR:
         time_frame_required: "Selecione um intervalo de tempo"
         min_duration: "A duração deve ser maior do que 0"
         max_duration: "A duração deve ser menor do que 20 anos"
+        duration: "Duração"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         now: "Agora"
@@ -2664,6 +2701,9 @@ pt_BR:
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
     post:
       quote_reply: "Citação"
+      quote_reply_shortcut: "Ou pressione q"
+      quote_edit: "Editar"
+      quote_edit_shortcut: "Ou pressione e"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -2755,6 +2795,7 @@ pt_BR:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta postagem"
         admin: "ações administrativas da postagem"
+        permanently_delete: "Excluir permanentemente"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar cor da equipe"
@@ -2841,7 +2882,9 @@ pt_BR:
             button: "HTML"
       bookmarks:
         create: "Criar favorito"
+        create_for_topic: "Criar favorito para o tópico"
         edit: "Editar favorito"
+        edit_for_topic: "Editar favorito para o tópico"
         created: "Criado"
         updated: "Atualizado"
         name: "Nome"
@@ -3124,7 +3167,8 @@ pt_BR:
       one: "usuário(a)"
       other: "usuários(as)"
     category_title: "Categoria"
-    history: "Histórico, últimas 100 revisões"
+    history_capped_revisions: "Histórico, últimas 100 revisões"
+    history: "Histórico"
     changed_by: "de %{author}"
     raw_email:
       title: "E-mails recebidos"
@@ -3332,6 +3376,8 @@ pt_BR:
       favorite_max_reached: "Não é possível adicionar mais emblemas aos favoritos."
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
+    download_calendar:
+      download: "Download"
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
@@ -3482,6 +3528,10 @@ pt_BR:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
+    user_activity:
+      no_activity_others: "Nenhuma atividade."
+      no_replies_others: "Sem respostas."
+      no_likes_others: "Nenhuma postagem curtida."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -3615,7 +3665,6 @@ pt_BR:
               description: "Administradores(as) podem ver todos os grupos."
             members_visibility_levels:
               title: "Quem pode ver os membros deste grupo?"
-              description: "Administradores(as) podem ver os membros de todos os grupos."
             publish_read_state: "Em mensagens de grupo, publique o estado de leitura do grupo"
           membership:
             automatic: Automático
@@ -3683,7 +3732,6 @@ pt_BR:
         delete: Excluir permanentemente
         not_shown_again: Esta chave não será exibida novamente. Faça uma cópia antes de continuar.
         continue: Continuar
-        use_global_key: Chave global (permite todas as ações)
         scopes:
           description: |
             Ao usar escopos, é possível restringir uma chave de API a um conjunto específico de pontos de extremidade.
@@ -4080,12 +4128,8 @@ pt_BR:
               %{example}
 
               É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plug-ins e/ou núcleo.
-          head_tag:
-            text: "</head>"
-            title: "O HTML que será inserido antes da</head> etiqueta"
           body_tag:
-            text: "</body>"
-            title: "O HTML que será inserido antes da</body> etiqueta"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"
@@ -4529,9 +4573,8 @@ pt_BR:
         silence_message_placeholder: "(deixe em branco para enviar a mensagem padrão)"
         suspended_until: "(até %{until})"
         cant_suspend: "Este(a) usuário(a) não pode ser suspenso(a)."
-        delete_all_posts: "Excluir todas postagens"
-        delete_posts_progress: "Excluindo postagens…"
         delete_posts_failed: "Houve um problema ao excluir as postagens."
+        post_edits: "Postar edições"
         penalty_post_actions: "O que você gostaria de fazer com a postagem associada?"
         penalty_post_delete: "Excluir a postagem"
         penalty_post_delete_replies: "Excluir a postagem + respostas"
@@ -4588,14 +4631,19 @@ pt_BR:
         approve_success: "Usuário(a) aprovado(a) e e-mail enviado com instruções de ativação."
         approve_bulk_success: "Sucesso! Todos os(as) usuários(as) selecionados(as) foram aprovados(as) e notificados(as)."
         time_read: "Tempo de leitura"
+        post_edits_count: "Postar edições"
         anonymize: "Tornar usuário(a) anônimo(a)"
         anonymize_confirm: "Você TEM CERTEZA de que gostaria de tornar esta conta anônima? Essa mudança irá alterar o nome do(a) usuário(a) e o e-mail, além de redefinir todas informações do perfil."
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Excluir usuário(a)"
         delete_posts:
+          button: "Excluir todas postagens"
           progress:
             title: "Progresso da exclusão de postagens"
+            description: "Excluindo postagens…"
+          confirmation:
+            cancel: "Cancelar"
         merge:
           button: "Mesclar"
           prompt:
@@ -4922,7 +4970,6 @@ pt_BR:
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
-        help: "Adicionar novo emoji que estará disponível para todos(as). (DICA: arraste e solte diversos arquivos de uma vez)"
         add: "Adicionar novo emoji"
         uploading: "Enviando..."
         name: "Nome"
@@ -4933,7 +4980,6 @@ pt_BR:
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         confirm_delete: "Você tem certeza que deseja excluir este host?"
-        sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Substitua <b>REPLACE_ME</b> pela URL canônica da página na qual você está incorporando."
         title: "Incorporar"
         host: "Hosts permitidos"
         class_name: "Nome da classe"
@@ -5004,7 +5050,5 @@ pt_BR:
           moderator: "Moderador(a)"
           regular: "Usuário regular"
       previews:
-        topic_title: "Tópico de discussão"
-        font_title: "Fonte %{font}"
         share_button: "Compartilhar"
         reply_button: "Responder"

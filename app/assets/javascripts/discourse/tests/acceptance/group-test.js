@@ -2,9 +2,10 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -40,7 +41,7 @@ acceptance("Group - Anonymous", function (needs) {
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
     assert.ok(queryAll(".topic-list"), "it shows the topic list");
-    assert.equal(count(".topic-list-item"), 2, "it lists stream items");
+    assert.strictEqual(count(".topic-list-item"), 2, "it lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
@@ -58,9 +59,9 @@ acceptance("Group - Anonymous", function (needs) {
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
 
-    assert.equal(groupDropdown.rowByIndex(1).name(), "discourse");
+    assert.strictEqual(groupDropdown.rowByIndex(1).name(), "discourse");
 
-    assert.equal(
+    assert.strictEqual(
       groupDropdown.rowByIndex(0).name(),
       I18n.t("groups.index.all")
     );
@@ -190,19 +191,19 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g");
     await click(".group-index-request");
 
-    assert.equal(
-      queryAll(".modal-header").text().trim(),
+    assert.strictEqual(
+      queryAll(".modal-header .title").text().trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".request-group-membership-form textarea").val(),
       "Please add me"
     );
 
     await click(".modal-footer .btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "Internationalization / localization"
     );
@@ -211,9 +212,10 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-message-button");
 
-    assert.equal(count("#reply-control"), 1, "it opens the composer");
-    assert.equal(
-      queryAll("#private-message-users .selected-name").text().trim(),
+    assert.strictEqual(count("#reply-control"), 1, "it opens the composer");
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(
+      privateMessageUsers.header().value(),
       "discourse",
       "it prefills the group name"
     );
@@ -225,10 +227,10 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/alternative-group");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.equal(
-      queryAll(".alert").text().trim(),
-      I18n.t("choose_topic.none_found"),
-      "it should display the right alert"
+    assert.strictEqual(
+      query("span.empty-state-title").innerText.trim(),
+      I18n.t("no_group_messages_title"),
+      "it should display the right text"
     );
   });
 
@@ -236,34 +238,39 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".topic-list-item .link-top-line").text().trim(),
       "This is a private message 1",
       "it should display the list of group topics"
     );
 
     await click("#search-button");
-    assert.ok(
-      exists(".search-context input:checked"),
-      "scope to message checkbox is checked"
+    await fillIn("#search-term", "smth");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results .search-menu-assistant-item:first-child"
+      ).innerText.trim(),
+      "smth in:personal",
+      "contextual search is available as first option"
     );
   });
 
   test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.equal(
+    assert.strictEqual(
       count(".nav-pills li a[title='Manage']"),
       1,
       "it should show manage group tab if user is admin"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-message-button"),
       1,
       "it displays show group message button"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-info-name").text(),
       "Awesome Team",
       "it should display the group name"
@@ -271,7 +278,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-details-button button.btn-danger");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".bootbox .modal-body").html(),
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: 2,
@@ -285,7 +292,7 @@ acceptance("Group - Authenticated", function (needs) {
   test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
-    assert.equal(
+    assert.strictEqual(
       count(".nav-pills li a[title='Manage']"),
       1,
       "it should show manage group tab if user can_admin_group"
@@ -303,11 +310,11 @@ acceptance("Group - Authenticated", function (needs) {
     const memberDropdown = selectKit(".group-member-dropdown:nth-of-type(1)");
     await memberDropdown.expand();
 
-    assert.equal(
+    assert.strictEqual(
       memberDropdown.rowByIndex(0).name(),
       I18n.t("groups.members.remove_member")
     );
-    assert.equal(
+    assert.strictEqual(
       memberDropdown.rowByIndex(1).name(),
       I18n.t("groups.members.make_owner")
     );

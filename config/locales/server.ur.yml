@@ -708,18 +708,9 @@ ur:
       description: " اِس پوسٹ کو لائیک کریں"
       short_description: " اِس پوسٹ کو لائیک کریں"
   user_activity:
-    no_default:
-      self: "ابھی تک آپ کی کوئی سرگرمی نہیں ہے."
-      others: "کوئی سرگرمی نہیں۔"
     no_bookmarks:
       self: "آپ کے پاس کوئی بُک مارک کی ہوئی پوسٹس نہیں ہیں؛ بُک مارکس آپ کو مخصوص پوسٹس کے فوری حوالہ فراہم کرتے ہیں۔"
       others: "کوئی بُک مارکس نہیں"
-    no_likes_given:
-      self: "آپ نے کوئی پوسٹس لائیک نہیں کیں۔"
-      others: "کوئی لائیک کردہ پوسٹس نہیں۔"
-    no_replies:
-      self: "آپ نے کسی بھی پوسٹ پر جواب نہیں دیا ہے۔"
-      others: "کوئی جوابات نہیں۔"
     no_drafts:
       self: "آپ کے پاس کوئی ڈرافٹس نہیں ہیں؛ کسی بھی ٹاپک میں جواب لکھنا شروع کریں اور یہ ایک نئے ڈرافٹ کے طور پر خود کار طریقے سے محفوظ کر لیا جائے گا۔"
   topic_flag_types:
@@ -755,7 +746,6 @@ ur:
         remove: "یہ ٹاپک اب بینر نہیں ہے۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
   unsubscribed:
     title: "ایمیل ترجیحات اَپ ڈیٹ کر دی گئیں!"
-    description: "<b>%{email}</b> کیلئے ایمیل ترجیحات اَپ ڈیٹ کر دی گئی تھیں۔ اپنی ایمیل ترتیبات کو تبدیل کرنے کیلئے <a href='%{url}'>اپنی صارفی ترجیحات پر جائیں</a>۔"
     topic_description: "%{link} پر دوبارہ سَبسکرائب کرنے کیلئے، ٹاپک کے نچلے حصے یا دائیں جانب اطلاعات کنٹرول کا استعمال کریں۔"
     private_topic_description: "دوبارہ سَبسکرائب کرنے کیلئے، ٹاپک کے نچلے حصے یا دائیں جانب اطلاعات کنٹرول کا استعمال کریں۔"
   unsubscribe:
@@ -1143,6 +1133,7 @@ ur:
     out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
     unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
   site_settings:
+    disabled: "غیر فعال"
     censored_words: "الفاظ جو خود بخود &#9632;&#9632;&#9632;&#9632; سے تبدیل ہوجائیں گے"
     delete_old_hidden_posts: "کوئی چھپی ہوئی پوسٹ جو 30 دن سے زائد عرصہ سے چھپا رکھی ہو اُس کو خود کار طریقے سے حذف کر دیں۔"
     default_locale: "اِس ڈِسکورس سَیٹ اپ کی پہلے سے طہ شدہ زبان۔ آپ سسٹم کی طرف سے بنائے گئے زُمرہ جات اور ٹاپکس کے متن کو <a href='%{base_path}/admin/customize/site_texts' target='_blank'>مرضی کے مطابق / ٹَیکسٹ</a> پر تبدیل کر سکتے ہیں۔"
@@ -1217,7 +1208,6 @@ ur:
     summary_score_threshold: "'اِس ٹاپک کا خلاصہ کریں' میں شامل ہونے کیلئے ایک پوسٹ کا کم از کم سکور"
     summary_percent_filter: "جب صارف 'اِس ٹاپک کا خلاصہ کریں' پر کلک کرتا ہے، تو سب سے اوپر % پوسٹس دکھائیں"
     summary_max_results: "'اِس ٹاپک کا خلاصہ کریں' کی طرف سے لوٹائی جانے والی زیادہ سے زیادہ پوسٹس"
-    enable_personal_messages: "ٹرسٹ لَیول 1 (پیغامات بھیجنے کیلئے کم از کم ٹرسٹ لَیول کے ذریعہ ترتیب دے سکتے ہیں) والے صارفین کو پیغامات بنانے اور پیغامات کا جواب دینے کی اجازت دیں۔ نوٹ کریں کہ جوبھی ہو، اسٹاف ہمیشہ پیغامات بھیج سکتا ہے۔"
     enable_system_message_replies: "صارفین کو سِسٹم پیغامات کا جواب دینے کی اجازت دیں، یہاں تک کہ اگر ذاتی پیغامات بھی غیر فعال ہوں"
     enable_long_polling: "نوٹیفکیشن کیلئے مَیسج بس استعمال ہو رہا ہے، لانگ پولِنگ کا استعمال کیا جا سکتا ہے"
     long_polling_base_url: "لانگ پولِنگ کیلئے استعمال ہونے والا بَیس URL (جب ایک CDN متحرک مواد فراہم کر رہا ہو، تو اِس کو اوریِجِن پُل پر سَیٹ کرنا یقینی بنائیں) مثال: http://origin.site.com"
@@ -1468,7 +1458,6 @@ ur:
     topic_view_duration_hours: "ہر ن گھنٹوں پر فی IP/صارف ایک نیا ٹاپک وِیو شمار کریں"
     user_profile_view_duration_hours: "ہر ن گھنٹوں پر فی IP/صارف ایک نیا صارف پروفائل وِیو شمار کریں"
     levenshtein_distance_spammer_emails: "سپَیمر ای میل کو مَیچ کرتے وقت، فرق حروف کی تعداد جس پر بھی ایک فزِّی میچ ہو سکے گا۔"
-    max_new_accounts_per_registration_ip: "اگر اِس IP کی طرف سے پہلے سے ہی (ن) ٹرسٹ لَیول 0 اکاؤنٹس موجود ہیں (اور کوئی بھی سٹاف کا رکن یا ٹ.ل.2 یا اُس سے زیادہ نہیں ہے)، اُس IP سے نئے سائن اَپ کو قبول کرنا روک دیں۔"
     min_ban_entries_for_roll_up: "رول اَپ بٹن پر کلک کرتے وقت اگر کم از کم (ن) اندراج موجود ہوں، تو ایک نیا ذیلی نیٹ بَین اندراج تخلیق ہو جائے گا۔"
     max_age_unmatched_emails: "غیر مَیچ شدہ سکرین کردہ ای میل اندراجات (ن) دنوں کے بعد حذف کر دیں۔"
     max_age_unmatched_ips: "غیر مَیچ شدہ سکرین کردہ IP اندراجات (ن) دنوں کے بعد حذف کر دیں۔"
@@ -2602,6 +2591,26 @@ ur:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [ذاتی پیغام] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [ذاتی پیغام] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "صارف نے شائع کیا"
       subject_template: "[%{email_prefix}]%{topic_title}"
@@ -3273,10 +3282,8 @@ ur:
             label: "آپ کی کمیونٹی کا نام"
             placeholder: "جمیلہ کے ٹھہرنے کی جگہ"
           site_description:
-            label: "اپنی کمیونٹی کو ایک مختصر جملہ میں بیان کریں"
             placeholder: "جمیلہ اور اس کی دوستوں کیلئے دلچسپ چیزوں پر بحث کرنے کی ایک جگہ"
           short_site_description:
-            label: "اپنی کمیونٹی کو چند الفاظ میں بیان کریں"
             placeholder: "ہمیشہ کی سب سے بہترین کمیونٹی"
       introduction:
         title: "تعارف"
@@ -3334,12 +3341,26 @@ ur:
           city_for_disputes:
             label: "تنازعات کیلئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
-      colors:
-        title: "رنگ"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "پیشگی دیکھیں"
+          homepage_style:
+            choices:
+              latest:
+                label: "تازہ ترین ٹاپک"
+              categories_only:
+                label: "صرف زمرہ جات"
+              categories_with_featured_topics:
+                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
+              categories_and_latest_topics:
+                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
+              categories_and_top_topics:
+                label: "زمرہ جات اور ٹاپ ٹاپکس"
+              categories_boxes:
+                label: "زُمرَہ جات بکسے"
+              categories_boxes_with_topics:
+                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       logos:
         title: "لَوگَو"
         fields:
@@ -3358,26 +3379,6 @@ ur:
           large_icon:
             label: "بڑا آئیکن"
             description: "آئیکن کی تصویر جو جدید ڈِیوائیسِز پر آپ کی ویب سائٹ کی نمائندگی کرنے کیلئے استعمال کی جاتی ہے اور جو بڑے سائزوں پر اچھی لگتی ہے۔ مثالی طور پر 512 × 512 سے زائد۔ ہم ڈیفالٹ کے طور پر چکور لَوگَو استعمال کریں گے۔"
-      homepage:
-        description: "ہم آپ کے ہَوم پَیج پر تازہ ترین ٹاپک پیش کرنے کو تجویز کرتے ہیں، لیکن اگر آپ چاہیں تو ہَوم پَیج پر زُمرہ جات (ٹاپکس کے گروپوں) کو بھی دکھا سکتے ہیں۔"
-        title: "ہَوم پَیج"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "تازہ ترین ٹاپک"
-              categories_only:
-                label: "صرف زمرہ جات"
-              categories_with_featured_topics:
-                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
-              categories_and_latest_topics:
-                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
-              categories_and_top_topics:
-                label: "زمرہ جات اور ٹاپ ٹاپکس"
-              categories_boxes:
-                label: "زُمرَہ جات بکسے"
-              categories_boxes_with_topics:
-                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
       invites:
         title: "سٹاف مدعو کریں"
         description: "آپ تقریباً کام مکمل کر چکے ہیں! چلیے لوگوں کو دعوت دیتے ہیں کہ <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>آپ کے مباحثوں میں</a> دلچسپ ٹاپک اور جوابات شامل کرنے میں آپ کی مدد کریں تاکہ آپ کی کمیونٹی کا آغاز ہو سکے۔"
@@ -3420,16 +3421,6 @@ ur:
     user_claimed: "یہ شے کسی اور صارف نے کََلیم کرلی ہے۔"
     missing_version: "آپ کا ایک ورژن پیرامیٹر فراہم کرنا ضروری ہے"
     conflict: "ایک اَپ ڈیٹ کا تنازع آپ کو ایسا کرنے سے روک رہا تھا۔"
-    reasons:
-      post_count: "ہر صارف کی پہلے چند پوسٹس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_post_count`۔"
-      trust_level: "کم ٹرسٹ لَیول پر صارفین کے جوابات کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_trust_level`۔"
-      new_topics_unless_trust_level: "کم ٹرسٹ لَیول پر صارفین کے ٹاپکس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_new_topics_unless_trust_level`۔"
-      fast_typer: "نِے صارف نے اپنی پہلی اشاعت مشکوک حد تک جلدی لکھی، مشتبہ بَوٹ یا سپَیمر رویہ۔ دیکھیے `min_first_post_typing_time`۔"
-      auto_silence_regexp: "نیا صارف جس کی پہلی اشاعت `auto_silence_first_post_regex` ترتیب سے ملتی ہے۔"
-      staged: "سٹَیجڈ صارفین کیلئے نئے ٹاپکس اور پوسٹس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_staged`۔"
-      category: "اِس زُمرہ میں پوسٹس کو سٹاف کی طرف سے دستی منظوری کی ضرورت ہوتی ہے۔ زُمرہ کی ترتیبات دیکھیے۔"
-      must_approve_users: "تمام نئے صارفین کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `must_approve_users`۔"
-      invite_only: "تمام نئے صارفین کو مدعو کیا جانا چاہئیے۔ `invite_only` دیکھیے۔"
     actions:
       agree:
         title: "اتفاق کریں..."
@@ -3501,6 +3492,7 @@ ur:
     html_missing_placeholder: "HTML ٹَیمپلیٹ میں %{placeholder} کا شامل ہونا لاذمی ہے۔"
   discord:
     not_in_allowed_guild: "تصدیق میں ناکامی۔ آپ کسی اجازت یافتہ ڈِسکَورڈ گِلڈ کے ممبر نہیں ہیں۔"
+  fallback_username: "صارف"
   activemodel:
     errors:
       <<: *errors

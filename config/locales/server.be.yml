@@ -507,18 +507,9 @@ be:
       description: "Упадабаць гэты пост"
       short_description: "Упадабаць гэты пост"
   user_activity:
-    no_default:
-      self: "У вас яшчэ няма актыўнасці."
-      others: "Няма актыўнасці."
     no_bookmarks:
       self: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       others: "Няма закладак."
-    no_likes_given:
-      self: "Вы не спадабаліся ні паведамленне."
-      others: "Не спадабалася паведамленні."
-    no_replies:
-      self: "Вы не адказалі на любыя пасады."
-      others: "Няма адказаў."
     no_drafts:
       self: "У вас няма скразнякоў; пачаць складанне адказу на любую тэму, і ён будзе аўтаматычна захаваны як новы праект."
   topic_flag_types:
@@ -890,6 +881,7 @@ be:
   dashboard:
     rails_env_warning: "Сервер працуе ў рэжыме %{env}."
   site_settings:
+    disabled: "адключана"
     search_recent_posts_size: "Колькі апошніх паведамленняў захваных у індэксе"
     log_search_queries: "Уваход пошукавых запытаў, што выконваюцца карыстальнікі"
     search_query_log_max_size: "Максімальную колькасць пошукавых запытаў, каб захаваць"
@@ -941,7 +933,6 @@ be:
     summary_score_threshold: "Мінімальная колькасць балаў, неабходныя для пасады, якія будуць уключаны ў «Сумаваць гэтую тэму»"
     summary_percent_filter: "Калі карыстальнік націскае «Сумаваць гэтую тэму», паказваюць верхнюю% паведамленняў"
     summary_max_results: "Максімум паведамлення якiя вяртаюцца «Абагульніць Гэтую тэму»"
-    enable_personal_messages: "Дазволіць траставы ўзровень 1 (наладжваецца праз мін ўзровень даверу для адпраўкі паведамленняў) карыстальнікам ствараць паведамленні і адказваць на паведамленні. Звярніце ўвагу, што супрацоўнікі заўсёды могуць адпраўляць паведамленні незалежна ад таго, што."
     enable_system_message_replies: "Дазваляе карыстальнікам адказваць на сістэмныя паведамленні, нават калі асабістыя паведамленні адключаныя"
     enable_long_polling: "Шына паведамленняў выкарыстоўваюцца для апавяшчэння можа выкарыстоўваць доўгі апытанне"
     long_polling_base_url: "Базавы URL выкарыстоўваецца для апытання (калі CDN абслугоўвае дынамічны кантэнт, не забудзьцеся ўсталяваць гэта паходжанне цягнуць), напрыклад: HTTP:"
@@ -1154,7 +1145,6 @@ be:
     topic_view_duration_hours: "Граф новага віду тэмы адзін раз у IP"
     user_profile_view_duration_hours: "Граф новы від профіляў карыстальнікаў адзін раз у IP"
     levenshtein_distance_spammer_emails: "Пры супастаўленні спамерскіх лістоў, колькасць знакаў розніцы, што будзе па-ранейшаму дазваляе невыразны матч."
-    max_new_accounts_per_registration_ip: "Калі ўжо ёсць (п) узровень даверу 0 рахункаў з гэтага IP (і ніхто не з'яўляецца супрацоўнікам або TL2 або вышэй), спыніць прыём новых падпісак з гэтага IP."
     min_ban_entries_for_roll_up: "Пры націску на кнопку Roll Up, створыць новую запіс аб забароне падсеткі, калі ёсць па меншай меры (N) запісаў."
     max_age_unmatched_emails: "Выдаліць няпарнага Экранаваныя запісу па электроннай пошце пасля (N) дзён."
     max_age_unmatched_ips: "Выдаліць няпарнага Экранаваныя запісу IP пасля (N) дзён."
@@ -1847,6 +1837,26 @@ be:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Карыстальнік Паведамленне"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2391,10 +2401,8 @@ be:
             label: "Імя вашага супольнасці"
             placeholder: "Hangout Джэйн"
           site_description:
-            label: "Апішыце сваю супольнасць у адным кароткім сказе"
             placeholder: "Месца для Джэйн і яе сяброў, каб абмеркаваць цікавыя рэчы"
           short_site_description:
-            label: "Апішыце сваю супольнасць у некалькіх словах"
             placeholder: "Лепшае супольнасць калі-небудзь"
       introduction:
         title: "ўвядзенне"
@@ -2452,12 +2460,26 @@ be:
           city_for_disputes:
             label: "Горад для спрэчак"
             placeholder: "Сан - Францыска, Каліфорнія"
-      colors:
-        title: "<......"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "папярэдні прагляд"
+          homepage_style:
+            choices:
+              latest:
+                label: "апошнія тэмы"
+              categories_only:
+                label: "Толькі катэгорыі"
+              categories_with_featured_topics:
+                label: "Катэгорыі з Выбранымі Тэмамі"
+              categories_and_latest_topics:
+                label: "Катэгорыі і Апошнія тэмы"
+              categories_and_top_topics:
+                label: "Катэгорыі і асноўныя тэмы"
+              categories_boxes:
+                label: "катэгорыі скрынкі"
+              categories_boxes_with_topics:
+                label: "Катэгорыі скрынка з Тэмай"
       logos:
         title: "лагатыпы"
         fields:
@@ -2476,26 +2498,6 @@ be:
           large_icon:
             label: "вялікая абразок"
             description: "Значок выява выкарыстоўваецца для прадстаўлення вашага сайта на сучасных прыладах, якія добра выглядаюць пры вялікіх памерах. У ідэале больш, чым 512 × 512. Мы будзем выкарыстоўваць квадратны лагатып па змаўчанні."
-      homepage:
-        description: "Мы рэкамендуем паказваць апошнія тэмы на галоўнай старонцы сайта, але вы можаце таксама паказаць катэгорыі (групы тэм) на хатняй старонцы, калі вы аддаеце перавагу."
-        title: "хатняя старонка"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "апошнія тэмы"
-              categories_only:
-                label: "катэгорыі толькі"
-              categories_with_featured_topics:
-                label: "Катэгорыі з Выбранымі Тэмамі"
-              categories_and_latest_topics:
-                label: "Катэгорыі і Апошнія тэмы"
-              categories_and_top_topics:
-                label: "Катэгорыі і асноўныя тэмы"
-              categories_boxes:
-                label: "катэгорыі скрынкі"
-              categories_boxes_with_topics:
-                label: "Катэгорыі скрынка з Тэмай"
       invites:
         title: "запрасіць Staff"
         description: "Вы амаль скончылі! Давайце запросім людзей, каб дапамагчы <HTTPS A HREF = ':"
@@ -2529,16 +2531,6 @@ be:
       disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
-    reasons:
-      post_count: "Першыя некалькі паведамленняў ад кожнага карыстальніка павінны быць зацверджаныя супрацоўнікамі. См `approve_post_count`."
-      trust_level: "Карыстальнікі на нізкім узроўні даверу павінны адказваць зацверджаным персанал. См `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Карыстальнікі на нізкім узроўні даверу павінны быць тэмы, ухваленыя супрацоўнікамі. См `approve_new_topics_unless_trust_level`."
-      fast_typer: "Новы карыстальнік ўводзіць іх першы пост падазрона хутка, падазраваны бот або спамер паводзіны. См `min_first_post_typing_time`."
-      auto_silence_regexp: "Новы карыстальнік, чый першы пост адпавядае `наладзе auto_silence_first_post_regex`."
-      staged: "Новыя тэмы і паведамленні для пастановачных карыстальнікаў павінны быць адобраны персаналам. См `approve_unless_staged`."
-      category: "Паведамленняў у гэтай катэгорыі патрабуюць ручнога адабрэння з боку персаналу. См параметраў катэгорыі."
-      must_approve_users: "Усе новыя карыстальнікі павінны быць адобраны персаналам. Глядзіце `must_approve_users`."
-      invite_only: "Усе новыя карыстальнікі павінны быць запрошаныя. Глядзіце `invite_only`."
     actions:
       agree:
         title: "Пагадзіцеся ..."
@@ -2602,6 +2594,7 @@ be:
         title: "адхіляць"
       delete_user:
         reason: "Выдаляецца з дапамогай чарзе на разгляд"
+  fallback_username: "карыстальнік"
   activemodel:
     errors:
       <<: *errors

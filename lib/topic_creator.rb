@@ -26,11 +26,13 @@ class TopicCreator
 
     category = find_category
     if category.present? && guardian.can_tag?(topic)
-      tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
+      tags = @opts[:tags].presence || []
+      existing_tags = tags.present? ? Tag.where(name: tags) : []
+      valid_tags = guardian.can_create_tag? ? tags : existing_tags
 
       # both add to topic.errors
-      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, tags)
-      DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, tags)
+      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, valid_tags)
+      DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, existing_tags)
     end
 
     DiscourseEvent.trigger(:after_validate_topic, topic, self)

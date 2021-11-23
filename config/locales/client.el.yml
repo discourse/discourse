@@ -115,6 +115,7 @@ el:
       previous_month: "Προηγούμενος μήνας"
       next_month: "Επόμενος μήνας"
       placeholder: ημερομηνία
+      to_placeholder: "μέχρι σήμερα"
     share:
       topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
       post: "ανάρτηση #%{postNumber}"
@@ -295,7 +296,13 @@ el:
       topic_reply: "Προσχέδιο απάντησης"
       abandon:
         yes_value: "Απόρριψη"
+    topic_count_categories:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
     topic_count_latest:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
+    topic_count_unseen:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
     topic_count_unread:
@@ -985,7 +992,13 @@ el:
         latest: "Πρόσφατες"
         sent: "Απεσταλμένα"
         unread: "Αδιάβαστα"
+        unread_with_count:
+          one: "Μη αναγνωσμένα (%{count})"
+          other: "Μη αναγνωσμένα (%{count})"
         new: "Νέα"
+        new_with_count:
+          one: "Νέα (%{count})"
+          other: "Νέα (%{count})"
         archive: "Αρχείο"
         groups: "Οι Ομάδες Μου"
         move_to_inbox: "Μετακίνηση στα Εισερχόμενα"
@@ -1574,6 +1587,7 @@ el:
         one: "+ %{count} υποκατηγορία"
         other: "+ %{count} υποκατηγορίες"
     select_kit:
+      delete_item: "Διαγραφή %{name}"
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
@@ -1661,7 +1675,6 @@ el:
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
-      title: "Ή πάτα Ctrl+Enter"
       users_placeholder: "Προσθήκη χρήστη"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
@@ -1788,6 +1801,9 @@ el:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
+      dismiss_confirmation:
+        dismiss: "Απόρριψη"
+        cancel: "Άκυρο"
       group_message_summary:
         one: "%{count} μήνυμα στα εισερχόμενα της ομάδας %{group_name}"
         other: "%{count} μηνύματα στα εισερχόμενα της ομάδας %{group_name} "
@@ -1845,8 +1861,8 @@ el:
       result_count:
         one: "<span>%{count} αποτέλεσμα για</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} αποτελέσματα για</span><span class='term'>%{term}</span>"
-      title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
-      full_page_title: "αναζήτηση θεμάτων ή αναρτήσεων"
+      title: "Αναζήτηση"
+      full_page_title: "Αναζήτηση"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
       post_format: "#%{post_number} από %{username}"
@@ -1858,6 +1874,11 @@ el:
       search_google: "Προσπαθήστε να κάνετε αναζήτηση με το Google:"
       search_google_button: "Google"
       search_button: "Αναζήτηση"
+      categories: "Κατηγορίες"
+      tags: "Ετικέτες"
+      type:
+        users: "Χρήστες"
+        categories: "Κατηγορίες"
       context:
         user: "Ψάξε στις αναρτήσεις του χρήστη @%{username}"
         category: "Αναζήτηση στην κατηγορία #%{category} "
@@ -1865,7 +1886,6 @@ el:
         topic: "Ψάξε σε αυτό το νήμα"
         private_messages: "Αναζήτηση στα μηνύματα"
       advanced:
-        title: Προηγμένη Αναζήτηση
         posted_by:
           label: Αναρτήθηκε από
         in_category:
@@ -1910,7 +1930,6 @@ el:
             after: μετά
         views:
           label: Προβολές
-    hamburger_menu: "πήγαινε σε άλλη καταχώρηση νήματος ή κατηγορία"
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
@@ -2045,6 +2064,7 @@ el:
         publish_to: "Δημοσίευση Σε:"
         when: "Πότε:"
         time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
+        duration: "Διάρκεια"
       auto_update_input:
         none: "Επιλέξτε χρονικό περιθώριο"
         now: "Τώρα"
@@ -2343,6 +2363,7 @@ el:
           other: "Έχεις επιλέξει <b>%{count}</b> αναρτήσεις."
     post:
       quote_reply: "Παράθεση"
+      quote_edit: "Επεξεργασία"
       quote_share: "Κοινοποίηση"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση %{number}"
@@ -2941,6 +2962,8 @@ el:
           name: Άλλο
         posting:
           name: Αναρτάται
+    download_calendar:
+      download: "Κατέβασμα"
     tagging:
       all_tags: "Όλες οι Ετικέτες"
       other_tags: "Άλλες ετικέτες"
@@ -3070,6 +3093,10 @@ el:
         member: "μέλος"
         regular: "τακτικός"
         leader: "αρχηγός"
+    user_activity:
+      no_activity_others: "Χωρίς δραστηριότητα."
+      no_replies_others: "Χωρίς απαντήσεις."
+      no_likes_others: "Καμία αρεστή ανάρτηση."
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:
@@ -3198,7 +3225,6 @@ el:
               description: "Οι διαχειριστές μπορούν να δουν όλες τις ομάδες."
             members_visibility_levels:
               title: "Ποιος μπορεί να δει τα μέλη αυτής της ομάδας;"
-              description: "Οι διαχειριστές μπορούν να δουν τα μέλη όλων των ομάδων."
             publish_read_state: "Σε ομαδικά μηνύματα δημοσιεύστε την ομαδική κατάσταση ανάγνωσης"
           membership:
             automatic: Αυτόματα
@@ -3258,7 +3284,6 @@ el:
         revoked: Ανακλήθηκε
         not_shown_again: Αυτό το κλειδί δε θα εμφανιστεί ξανά. Βεβαιωθείτε ότι έχετε λάβει ένα αντίγραφο πριν συνεχίσετε.
         continue: Συνεχίστε
-        use_global_key: Καθολικό κλειδί (επιτρέπει όλες τις ενέργειες)
         scopes:
           description: |
             Όταν χρησιμοποιείτε πεδία εφαρμογής, μπορείτε να περιορίσετε ένα κλειδί API σε ένα συγκεκριμένο σύνολο τελικών σημείων.
@@ -3620,12 +3645,8 @@ el:
           color_definitions:
             text: "Ορισμοί χρωμάτων"
             title: "Εισαγωγή προσαρμοσμένων ορισμών χρωμάτων (μόνο για προχωρημένους χρήστες)"
-          head_tag:
-            text: "</head>"
-            title: "HTML το οποίο θα προστίθεται πριν το </head> tag"
           body_tag:
-            text: "</body>"
-            title: "HTML το οποίο θα προστίθεται πριν το </body> tag"
+            text: "Body"
           yaml:
             text: "YAML"
             title: "Ορισμός ρυθμίσεων θέματος σε μορφή YAML"
@@ -4028,8 +4049,6 @@ el:
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
-        delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
-        delete_posts_progress: "Διαγραφή αναρτήσεων..."
         delete_posts_failed: "Παρουσιάστηκε πρόβλημα κατά τη διαγραφή των αναρτήσεων."
         penalty_post_actions: "Τι θα θέλατε να κάνετε με τη σχετική ανάρτηση;"
         penalty_post_delete: "Διαγραφή ανάρτησης"
@@ -4087,6 +4106,12 @@ el:
         anonymize_yes: "Ναι, ανωνυμοποίησε αυτόν τον λογαριασμό"
         anonymize_failed: "Παρουσιάστηκε ένα σφάλμα κατά την ανωνυμοποίηση του λογαριασμού."
         delete: "Διαγραφή χρήστη"
+        delete_posts:
+          button: "Σβήσε όλες τις αναρτήσεις"
+          progress:
+            description: "Διαγραφή αναρτήσεων..."
+          confirmation:
+            cancel: "Άκυρο"
         merge:
           button: "Συγχώνευση"
           prompt:
@@ -4382,7 +4407,6 @@ el:
           replace_owners: Αφαιρέστε το σήμα από προηγούμενους κατόχους
       emoji:
         title: "Emoji"
-        help: "Πρόσθεσε ένα νέο emoji που θα είναι διαθέσιμο σε όλους. (Συμβουλή: μπορείς να σύρεις πολλά αρχεία ταυτόχρονα)"
         add: "Προσθήκη νέου emoji"
         uploading: "Ανεβαίνει..."
         name: "Όνομα"
@@ -4393,7 +4417,6 @@ el:
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
-        sample: "Χρησιμοποιήστε τον ακόλουθο HTML κώδικα στον ιστότοπό σας για να ενθέσετε θέματα. Αντικαταστήστε <b>REPLACE_ME</b> με το κανονικό URL της σελίδας στην οποία θα ενθέσετε το θέμα. "
         title: "Ενσωμάτωση"
         host: "Επιτρεπόμενα hosts"
         class_name: "Class Name"
@@ -4464,6 +4487,5 @@ el:
           moderator: "Συντονιστής"
           regular: "Τακτικός χρήστης"
       previews:
-        topic_title: "Θέμα συζήτησης"
         share_button: "Κοινοποίηση"
         reply_button: "Απάντηση"

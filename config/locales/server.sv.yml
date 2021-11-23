@@ -16,6 +16,7 @@ sv:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -249,7 +250,6 @@ sv:
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
-    muted_invitee: "Tyvärr tystade den användaren dig."
     muted_topic: "Tyvärr tystade den användaren detta ämne."
     receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
     sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
@@ -265,6 +265,7 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   authenticator_not_found: "Autentiseringsmetod finns inte eller har inaktiverats."
+  authenticator_no_connect: "Denna autentiseringsleverantör tillåter inte anslutning till ett befintligt forumkonto."
   invalid_api_credentials: "Du har inte behörighet att se den begärda resursen. API-användarnamnet eller -nyckeln är ogiltig(t)."
   provider_not_enabled: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören är inte aktiverad."
   provider_not_found: "Du har inte behörighet att se den begärda resursen. Autentiseringsleverantören finns inte."
@@ -394,6 +395,7 @@ sv:
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste anges för alla påminnelser"
+      for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -482,14 +484,7 @@ sv:
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
     dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
-    get_a_room: |
-      ### Uppmuntra alla att delta i samtalet
-
-      Du svarade @%{reply_username} %{count} gånger i just detta ämne!
-
-      En riktigt bra diskussion involverar flera röster och perspektiv. Kan du få någon annan involverad?
-
-      Glöm inte att om du vill fortsätta diskussionen med just denna användare, utan att alla andra ser det, kan du [skicka ett personligt meddelande](%{base_path}/u/%{reply_username}).
+    get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
 
@@ -644,9 +639,13 @@ sv:
   post:
     image_placeholder:
       broken: "Den här bilden är trasig"
+    hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
+    cannot_permanently_delete:
+      many_posts: "Du kan inte ta bort detta ämne permanent eftersom det finns andra inlägg."
+      wait_or_different_admin: "Du måste vänta %{time_left} innan du tar bort detta inlägg permanent eller så måste en annan administratör göra det."
   rate_limiter:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
     too_many_requests: "Du har utfört den här åtgärden för många gånger. Vänta %{time_left} innan du försöker igen."
@@ -871,19 +870,10 @@ sv:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
   user_activity:
-    no_default:
-      self: "Du har ingen aktivitet ännu."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
       search: "Det hittades inga bokmärken med den angivna sökfrågan."
       others: "Inga bokmärken."
-    no_likes_given:
-      self: "Du har inte gillat några inlägg."
-      others: "Inga gillade inlägg."
-    no_replies:
-      self: "Du har inte svarat på några inlägg."
-      others: "Inga svar."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
   email_settings:
@@ -946,7 +936,7 @@ sv:
         remove: "Detta ämne är inte längre en banderoll. Den kommer inte att visas överst på varje sida."
   unsubscribed:
     title: "E-postinställningar uppdaterade!"
-    description: "e-postinställningarna för <b>%{email}</b> uppdaterades. Du kan ändra dina e-postinställningar <a href='%{url}'>i dina användarinställningar</a>."
+    description: "E-postinställningar för <b>%{email}</b> uppdaterades. Du kan ändra dina e-postinställningar <a href='%{url}'>i dina användarinställningar</a>."
     topic_description: "För att prenumerera på %{link} igen använder du aviseringsreglaget nederst i, eller till höger om, ämnet."
     private_topic_description: "För att prenumerera igen använder du aviseringsreglaget nederst i, eller till höger om, ämnet."
   uploads:
@@ -1353,6 +1343,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
+    disabled: "inaktiverade"
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -1447,7 +1438,8 @@ sv:
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
+    summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
@@ -1662,6 +1654,7 @@ sv:
     external_emoji_url: "URL till den externa tjänsten för emoji-bilder. Lämna tomt om du vill inaktivera den."
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
+    enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
@@ -1777,7 +1770,7 @@ sv:
     topic_view_duration_hours: "Räkna en ny ämnesgranskning en gång per IP/Användare per N timmar"
     user_profile_view_duration_hours: "Räkna en ny användarprofilgranskning en gång per IP/Användare per N timmar"
     levenshtein_distance_spammer_emails: "Skillnad i antal tecken vid matchning av e-postadresser som används för skräppostutskick som fortfarande tillåter en suddig matchning."
-    max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre)."
+    max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre). Ange värde 0 för att inaktivera begränsningen."
     min_ban_entries_for_roll_up: "När upprullningsknappen klickas skapas en ny delnätspost om det finns minst (N) poster."
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
@@ -1911,8 +1904,10 @@ sv:
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     header_dropdown_category_count: "Hur många kategorier kan visas i rubrikens rullgardinsmeny."
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till tomt för att dölja det (HTML tillåts)."
+    global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
+    disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
+    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -1936,7 +1931,7 @@ sv:
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "Lägg till en knapp i Codeblocks som kopierar blockinnehållet till användarens urklipp. Denna funktion stöds inte av Internet Explorer."
+    show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
@@ -1974,6 +1969,7 @@ sv:
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
+    enable_fast_edit: "Gör det möjligt att redigera ett litet urval av en inläggstext på plats."
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -2428,51 +2424,10 @@ sv:
   test_mailer:
     title: "Test per e-post"
     subject_template: "[%{email_prefix}] Leveranstest för e-post"
-    text_body_template: |
-      Detta är ett e-posttest från
-
-      [**%{base_url}**][0]
-
-      E-postleverans är komplicerat. Här är några viktiga saker som du bör kontrollera först:
-
-      - Var *säker* på att ange från-adressen för `notification email` korrekt i dina webbplatsinställningar. **Den domän som anges i "från"-adressen för e-postmeddelanden du skickar är den domän som din e-post kommer att valideras mot**.
-
-      - Ha kunskap om hur du ser e-postmeddelandets i rå-text för din e-postklient, så att du kan undersöka e-posthuvudena efter viktiga ledtrådar. I Gmail görs detta genom alternativet "visa original" i rullgardinsmenyn längst upp till höger i varje e-post.
-
-      - **VIKTIGT:** Har din ISP en omvänd DNS-post angiven för att koppla de domännamn och IP-adresser som du skickar e-post från? [Testa din omvända PTR-data][2] här. Om din ISP inte anger rätt omvänd DNS-pekardata är det mycket osannolikt att något av dina e-postmeddelanden kommer att levereras.
-
-      - Är din domäns [SPF-data][8] korrekt? [Testa din SPF-data][1] här. Observera att TXT är rätt officiell posttyp för SPF.
-
-      - Är din domäns [DKIM-data][3] korrekt? Detta kommer att förbättra e-postleveransen avsevärt. [Testa din DKIM-data][7] här.
-
-      - Om du kör din egen e-postserver, kontrollera att din e-postservers IP-adresser inte är [svartlistade][4]. Kontrollera också att den definitivt skickar ett fullt kvalificerat värdnamn som omvandlas till DNS i HELO-meddelandet. Annars kommer din e-post att avvisas av många e-posttjänster.
-
-      - Vi rekommenderar starkt att du **skickar ett testmeddelande till [mail-tester.com][mt]** för att verifiera att allt ovan fungerar korrekt.
-
-       (Det *enkla* sättet är att skapa ett konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har billiga e-postpaket och är tillräckligt för mindre gemenskaper. Du måste dock ställa in SPF- och DKIM-data för din DNS!)
-
-      Vi hoppas att detta e-postleveranstest kom fram!
-
-      Lycka till!
-
-      Dina vänner på [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: "Hurra, det finns en ny version av [Discourse](http://www.discourse.org) tillgänglig!\n\nDin version: %{installed_version}\nNy version: **%{new_version}**\n\n- Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** \n\n- Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/main)\n\n- Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse\n"
+    text_body_template: "Hurra, det finns en ny version av [Discourse](http://www.discourse.org) tillgänglig!\n\nDin version: %{installed_version}\nNy version: **%{new_version}**\n\n- Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** \n\n- Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs obearbetade ändringslogg](https://github.com/discourse/discourse/commits/main)\n\n- Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse\n"
   new_version_mailer_with_notes:
     title: "E-post om ny version med anteckningar"
     subject_template: "[%{email_prefix}] Uppdatering tillgänglig"
@@ -2484,7 +2439,7 @@ sv:
 
       - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)**
 
-      - Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs råa ändringslogg](https://github.com/discourse/discourse/commits/main)
+      - Se vad som är nytt i [uppdateringsnoteringarna](https://meta.discourse.org/tag/release-notes) eller läs i [GitHubs obearbetade ändringslogg](https://github.com/discourse/discourse/commits/main)
 
       - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera eller få hjälp angående Discourse
 
@@ -3124,6 +3079,28 @@ sv:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Användargrupp nämnd i PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Användare publicerade"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3388,16 +3365,24 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
+    abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
+    complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
+    external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
+      too_large_humanized: "Tyvärr är filen som du försöker ladda upp för stor (maximal storlek är %{max_size})."
     images:
       too_large: "Tyvärr är bilden som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB). Ändra storleken och försök igen."
+      too_large_humanized: "Tyvärr är bilden som du försöker ladda upp för stor (maximal storlek är %{max_size}). Ändra storlek på den och försök igen."
       larger_than_x_megapixels: "Tyvärr är bilden som du försöker ladda upp för stor (maximal dimension är %{max_image_megapixels} megapixlar). Ändra storleken och försök igen."
       size_not_found: "Tyvärr kunde vi inte avgöra bildens storlek. Kanske är din bildfil skadad?"
     placeholders:
       too_large: "(bild större än %{max_size_kb} kB)"
+      too_large_humanized: "(bild större än %{max_size})"
   avatar:
     missing: "Tyvärr kunde vi inte hitta någon avatar kopplad till den e-postadressen. Kan du försöka ladda upp den igen?"
   flag_reason:
@@ -3966,10 +3951,10 @@ sv:
             label: "Ditt forums namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv ditt forum med en kort mening"
+            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
           short_site_description:
-            label: "Beskriv ditt forum med ett par ord"
+            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
             placeholder: "Bästa forumet någonsin"
       introduction:
         title: "Introduktion"
@@ -4028,17 +4013,34 @@ sv:
           city_for_disputes:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
-      colors:
-        title: "Färger"
-      fonts:
-        title: "Typsnitt"
+      styling:
+        title: "Formatering"
         fields:
+          color_scheme:
+            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:
             label: "Typsnitt för rubrik"
-          font_preview:
+          styling_preview:
             label: "Förhandsgranska"
+          homepage_style:
+            label: "Hemsidans stil"
+            choices:
+              latest:
+                label: "Senaste ämnen"
+              categories_only:
+                label: "Endast kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med utvalda ämnen"
+              categories_and_latest_topics:
+                label: "Kategorier med senaste ämnen"
+              categories_and_top_topics:
+                label: "Kategorier och toppämnen"
+              categories_boxes:
+                label: "Kategorilådor"
+              categories_boxes_with_topics:
+                label: "Kategorilådor med ämnen"
       logos:
         title: "Logotyper"
         fields:
@@ -4057,26 +4059,6 @@ sv:
           large_icon:
             label: "Stor ikon"
             description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
-      homepage:
-        description: "Vi rekommenderar att du visar de senaste ämnena på din hemsida, men du kan också visa kategorier (grupper av ämnen) där, om du föredrar det."
-        title: "Hemsida"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategorilådor"
-              categories_boxes_with_topics:
-                label: "Kategorilådor med ämnen"
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."
@@ -4132,21 +4114,24 @@ sv:
     missing_version: "Du måste ange en versionsparameter"
     conflict: "Det uppstod en uppdateringskonflikt som hindrade dig från att göra det."
     reasons:
-      post_count: "De första inläggen från alla användare måste godkännas av personalen. Se `approve_post_count`."
-      trust_level: "Användare med låg förtroendenivå måste få svar godkända av personalen. Se `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Användare med låg förtroendenivå måste få ämnen godkända av personalen. Se `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, alltså misstänkt bot eller skräppostarbeteende. Se `min_first_post_typing_time`."
-      auto_silence_regexp: "Ny användare vars första inlägg matchar inställningen `auto_silence_first_post_regex`."
-      watched_word: "Detta inlägg innehöll ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
-      staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas av personalen. Se `approve_unless_staged`."
-      category: "Inlägg i denna kategori kräver manuellt godkännande av personalen. Se kategoriinställningarna."
-      must_approve_users: "Alla nya användare måste godkännas av personalen. Se `must_approve_users`."
-      invite_only: "Alla nya användare ska bjudas in. Se `invite_only`."
+      post_count: "De första inläggen från varje användare måste godkännas av personal. Se %{link}."
+      trust_level: "Användare på låga förtroendenivåer måste ha svar godkända av personal. Se %{link}."
+      new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
+      fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
+      auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
+      watched_word: "Detta inlägg innehöll ett bevakat ord. Se ditt %{link}."
+      staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
+      category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."
+      must_approve_users: "Alla nya användare måste godkännas av personal. Se %{link}."
+      invite_only: "Alla nya användare ska bjudas in. Se %{link}."
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
-      email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
-      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
-      contains_media: "Detta inlägg omfattar inbäddade medier. Se `review_media_unless_trust_level`."
+      email_spam: "Det här e -postmeddelandet flaggades som skräppost av rubriken som definierats i %{link}."
+      suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se %{link}."
+      contains_media: "Detta inlägg innehåller inbäddade media. Se %{link}."
       queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
+      links:
+        watched_word: lista över bevakade ord
+        category: kategori inställningar
     actions:
       agree:
         title: "Godkänn..."
@@ -4241,6 +4226,7 @@ sv:
       other: "%{topic_title} (del %{count})"
     post_raw: "Fortsätter diskussionen från %{parent_url}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
     small_action_post_raw: "Fortsätt diskussionen vid %{new_title}."
+  fallback_username: "användare"
   activemodel:
     errors:
       <<: *errors

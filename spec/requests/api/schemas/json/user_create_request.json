@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "approved": {
+      "type": "boolean"
+    },
+    "user_fields[1]": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "password",
+    "username"
+  ]
+}

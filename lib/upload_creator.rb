@@ -32,6 +32,9 @@ class UploadCreator
     @opts = opts
     @filesize = @opts[:filesize] if @opts[:external_upload_too_big]
     @opts[:validate] = opts[:skip_validations].present? ? !ActiveRecord::Type::Boolean.new.cast(opts[:skip_validations]) : true
+
+    # TODO (martin) Validate @opts[:type] to make sure only blessed types are passed
+    # in, since the clientside can pass any type it wants.
   end
 
   def create_for(user_id)
@@ -50,6 +53,11 @@ class UploadCreator
     # so we have not downloaded it to a tempfile. no modifications can be made to the
     # file in this case because it does not exist; we simply move it to its new location
     # in S3
+    #
+    # TODO (martin) I've added a bunch of external_upload_too_big checks littered
+    # throughout the UploadCreator code. It would be better to have two seperate
+    # classes with shared methods, rather than doing all these checks all over the
+    # place. Needs a refactor.
     external_upload_too_big = @opts[:external_upload_too_big]
     sha1_before_changes = Upload.generate_digest(@file) if @file
 
@@ -192,7 +200,10 @@ class UploadCreator
 
       if should_move
         # move the file in the store instead of reuploading
-        url = Discourse.store.move_existing_stored_upload(@opts[:existing_external_upload_key], @upload)
+        url = Discourse.store.move_existing_stored_upload(
+          existing_external_upload_key: @opts[:existing_external_upload_key],
+          upload: @upload
+        )
       else
         # store the file and update its url
         File.open(@file.path) do |f|
@@ -378,7 +389,9 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
       true
     elsif max_image_size > 0 && filesize >= max_image_size
-      @upload.errors.add(:base, I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb))
+      @upload.errors.add(:base, I18n.t(
+        "upload.images.too_large_humanized", max_size: ActiveSupport::NumberHelper.number_to_human_size(max_image_size)
+      ))
       true
     else
       false

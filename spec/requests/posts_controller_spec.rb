@@ -72,7 +72,7 @@ end
 
 shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
-    self.public_send(method, url, params)
+    self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -223,6 +223,65 @@ describe PostsController do
         destroyer.expects(:destroy)
 
         delete "/posts/#{post.id}.json"
+      end
+
+      context "permanently destroy" do
+        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+
+        before do
+          SiteSetting.can_permanently_delete = true
+        end
+
+        it "does not work for a post that was not deleted yet" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
+
+        it "needs some time to pass to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "needs two users to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(Fabricate(:admin))
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "moderators cannot permanently delete topics" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(moderator)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
       end
     end
   end
@@ -564,7 +623,7 @@ describe PostsController do
 
   describe "#destroy_bookmark" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
 
     before do
       sign_in(user)
@@ -578,7 +637,7 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
       end
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
@@ -1702,6 +1761,44 @@ describe PostsController do
       get "/posts/#{post.id}/expand-embed.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body['cooked']).to eq("full content")
+    end
+  end
+
+  describe '#flagged_posts' do
+    include_examples "action requires login", :get, "/posts/system/flagged.json"
+
+    describe "when logged in" do
+      it "raises an error if the user doesn't have permission to see the flagged posts" do
+        sign_in(user)
+        get "/posts/system/flagged.json"
+        expect(response).to be_forbidden
+      end
+
+      it "can see the flagged posts when authorized" do
+        sign_in(moderator)
+        get "/posts/system/flagged.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "only shows agreed and deferred flags" do
+        post_agreed = create_post(user: user)
+        post_deferred = create_post(user: user)
+        post_disagreed = create_post(user: user)
+
+        r0 = PostActionCreator.spam(moderator, post_agreed).reviewable
+        r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
+        r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
+
+        r0.perform(admin, :agree_and_keep)
+        r1.perform(admin, :ignore)
+        r2.perform(admin, :disagree)
+
+        sign_in(Fabricate(:moderator))
+        get "/posts/#{user.username}/flagged.json"
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body.length).to eq(2)
+      end
     end
   end
 

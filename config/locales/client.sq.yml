@@ -604,7 +604,13 @@ sq:
         latest: "Të fundit"
         sent: "Të dërguara"
         unread: "Të palexuara"
+        unread_with_count:
+          one: "Të palexuara (%{count})"
+          other: "Të palexuara (%{count})"
         new: "Të reja"
+        new_with_count:
+          one: "Të reja (%{count})"
+          other: "Të reja (%{count})"
         archive: "Arkivi"
         groups: "Grupet e mia"
         move_to_inbox: "Transfero në inbox"
@@ -1004,6 +1010,8 @@ sq:
       alt: "Alt"
     conditional_loading_section:
       loading: Duke ngarkuar...
+    select_kit:
+      delete_item: "Fshi %{name}"
     date_time_picker:
       from: Nga
       to: Për
@@ -1037,7 +1045,6 @@ sq:
       cancel: "Anulo"
       create_topic: "Krijo temën"
       create_pm: "Mesazh"
-      title: "Ose shtyp Ctrl+Enter"
       users_placeholder: "Shto një anëtar"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
@@ -1085,6 +1092,9 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      dismiss_confirmation:
+        dismiss: "Hiqe"
+        cancel: "Anulo"
       popup:
         mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
         group_mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1108,19 +1118,24 @@ sq:
       select_all: "Zgjidhni Gjithçka"
       clear_all: "Pastro kriteret"
       too_short: "Fraza e kërkuar është shumë e shkurtër. "
-      title: "kërko në faqe"
+      title: "Kërko"
+      full_page_title: "Kërko"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
       post_format: "#%{post_number} nga %{username}"
       search_google_button: "Google"
       search_button: "Kërko"
+      categories: "Kategoritë"
+      tags: "Etiketat"
+      type:
+        users: "Anëtarët"
+        categories: "Kategoritë"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
         topic: "Kërko tek kjo temë"
         private_messages: "Kërko mesazhet"
       advanced:
-        title: Kërkim i avancuar
         posted_by:
           label: Postuar nga
         in_group:
@@ -1132,7 +1147,6 @@ sq:
             label: Postime
         views:
           label: Shikimet
-    hamburger_menu: "shko tek një kategori ose një listë e re temash"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -1431,6 +1445,7 @@ sq:
           one: Keni përzgjedhur <b>%{count}</b> postim.
           other: "Keni përzgjedhur <b>%{count}</b> postime."
     post:
+      quote_edit: "Redakto"
       quote_share: "Shpërndaje"
       edit_reason: "Arsyeja:"
       post_number: "postimi %{number}"
@@ -1859,6 +1874,8 @@ sq:
           name: Tjetër
         posting:
           name: Postimet
+    download_calendar:
+      download: "Shkarko"
     tagging:
       all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"
@@ -2166,12 +2183,8 @@ sq:
             text: "Fundi i faqes"
           embedded_scss:
             text: "CSS e ngjitur"
-          head_tag:
-            text: "</head>"
-            title: "HTML që do të vendoset para mbylles së tagut <head>"
           body_tag:
-            text: "</body>"
-            title: "HTML që do të vendoset para mbylljes së tagut <body>"
+            text: "Trupi"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -2421,7 +2434,6 @@ sq:
         suspend_reason: "Arsye"
         suspended_by: "Përjashtuar nga:"
         silence_reason: "Arsye"
-        delete_all_posts: "Fshi gjithë postimet"
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Pezulluar?"
@@ -2461,6 +2473,10 @@ sq:
         anonymize_yes: "Po, anonimizo këtë llogari"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Fshi Përdoruesin"
+        delete_posts:
+          button: "Fshi gjithë postimet"
+          confirmation:
+            cancel: "Anulo"
         merge:
           prompt:
             cancel: "Anulo"
@@ -2687,7 +2703,6 @@ sq:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
         add: "Add New Emoji"
         uploading: "Duke ngarkuar..."
         name: "Emri"

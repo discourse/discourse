@@ -24,6 +24,15 @@ import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throwAjaxError } from "discourse/lib/ajax-error";
 
+let _customizations = [];
+export function registerCustomizationCallback(cb) {
+  _customizations.push(cb);
+}
+
+export function resetComposerCustomizations() {
+  _customizations = [];
+}
+
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
   CREATE_SHARED_DRAFT = "createSharedDraft",
@@ -148,26 +157,9 @@ const Composer = RestModel.extend({
     return categoryId ? this.site.categories.findBy("id", categoryId) : null;
   },
 
-  @discourseComputed("category")
-  minimumRequiredTags(category) {
-    if (category) {
-      if (category.required_tag_groups) {
-        return category.min_tags_from_required_group;
-      } else {
-        return category.minimum_required_tags > 0
-          ? category.minimum_required_tags
-          : null;
-      }
-    }
-
-    return null;
-  },
-
-  @discourseComputed("category")
-  requiredTagGroups(category) {
-    return category && category.required_tag_groups
-      ? category.required_tag_groups
-      : null;
+  @discourseComputed("category.minimumRequiredTags")
+  minimumRequiredTags(minimumRequiredTags) {
+    return minimumRequiredTags || 0;
   },
 
   creatingTopic: equal("action", CREATE_TOPIC),
@@ -831,22 +823,13 @@ const Composer = RestModel.extend({
       this.setProperties(topicProps);
 
       promise = promise.then(() => {
-        let rawPromise = Promise.resolve();
-
-        if (!this.post.raw) {
-          rawPromise = this.store.find("post", opts.post.id).then((post) => {
-            this.setProperties({
-              post,
-              reply: post.raw,
-              originalText: post.raw,
-            });
-          });
-        } else {
+        let rawPromise = this.store.find("post", opts.post.id).then((post) => {
           this.setProperties({
-            reply: this.post.raw,
-            originalText: this.post.raw,
+            post,
+            reply: post.raw,
+            originalText: post.raw,
           });
-        }
+        });
 
         // edge case ... make a post then edit right away
         // store does not have topic for the post
@@ -1313,6 +1296,18 @@ const Composer = RestModel.extend({
       .finally(() => {
         this.set("draftSaving", false);
       });
+  },
+
+  customizationFor(type) {
+    for (let i = 0; i < _customizations.length; i++) {
+      let cb = _customizations[i][type];
+      if (cb) {
+        let result = cb(this);
+        if (result) {
+          return result;
+        }
+      }
+    }
   },
 });
 

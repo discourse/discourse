@@ -25,7 +25,7 @@ class Category < ActiveRecord::Base
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
   register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
-  belongs_to :topic, dependent: :destroy
+  belongs_to :topic
   belongs_to :topic_only_relative_url,
               -> { select "id, title, slug" },
               class_name: "Topic",
@@ -67,6 +67,7 @@ class Category < ActiveRecord::Base
   validates :slug, exclusion: { in: RESERVED_SLUGS }
 
   after_create :create_category_definition
+  after_destroy :trash_category_definition
 
   before_save :apply_permissions
   before_save :downcase_email
@@ -138,7 +139,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :subcategory_list, :notification_level, :has_children
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
@@ -294,6 +295,10 @@ class Category < ActiveRecord::Base
 
       t
     end
+  end
+
+  def trash_category_definition
+    self.topic&.trash!
   end
 
   def topic_url
@@ -742,7 +747,7 @@ class Category < ActiveRecord::Base
   end
 
   def url_with_id
-    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true)
+    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true, drop_from: '2.9.0')
 
     url
   end
@@ -912,6 +917,21 @@ class Category < ActiveRecord::Base
       slug_path
     else
       [self.slug_for_url]
+    end
+  end
+
+  def cannot_delete_reason
+    return I18n.t('category.cannot_delete.uncategorized') if self.uncategorized?
+    return I18n.t('category.cannot_delete.has_subcategories') if self.has_children?
+
+    if self.topic_count != 0
+      oldest_topic = self.topics.where.not(id: self.topic_id).order('created_at ASC').limit(1).first
+      if oldest_topic
+        I18n.t('category.cannot_delete.topic_exists', count: self.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{CGI.escapeHTML(oldest_topic.title)}</a>")
+      else
+        # This is a weird case, probably indicating a bug.
+        I18n.t('category.cannot_delete.topic_exists_no_oldest', count: self.topic_count)
+      end
     end
   end
 

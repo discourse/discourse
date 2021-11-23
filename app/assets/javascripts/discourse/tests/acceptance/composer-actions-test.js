@@ -23,7 +23,6 @@ acceptance("Composer Actions", function (needs) {
   test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
     await visit("/");
     await click("button#create-topic");
-
     await fillIn("#reply-title", "this is the title");
     await fillIn(".d-editor-input", "this is the reply");
 
@@ -42,15 +41,21 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
-    assert.equal(
+    assert.strictEqual(
+      composerActions.rowByIndex(0).value(),
+      "reply_as_new_topic"
+    );
+    assert.strictEqual(
       composerActions.rowByIndex(1).value(),
       "reply_as_private_message"
     );
-    assert.equal(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.equal(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
-    assert.equal(composerActions.rowByIndex(5).value(), undefined);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(4).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rowByIndex(5).value(), null);
   });
 
   test("replying to post - reply_as_private_message", async function (assert) {
@@ -62,12 +67,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(
-      queryAll("#private-message-users .selected-name:nth-of-type(1)")
-        .text()
-        .trim(),
-      "codinghorror"
-    );
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0
@@ -87,15 +88,15 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title .topic-link").text().trim(),
       "Internationalization / localization"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title .topic-link").attr("href"),
       "/t/internationalization-localization/280"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "test replying to topic when initially replied to post"
     );
@@ -115,7 +116,7 @@ acceptance("Composer Actions", function (needs) {
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
       "whisper icon is not visible"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
       "reply icon is visible"
@@ -124,7 +125,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
       1,
       "whisper icon is visible"
@@ -157,8 +158,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
 
-    assert.equal(categoryChooserReplyArea.header().name(), "faq");
-    assert.equal(
+    assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
+    assert.strictEqual(
       queryAll(".action-title").text().trim(),
       I18n.t("topic.create_long")
     );
@@ -182,12 +183,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_group_message");
 
-    const items = [];
-    queryAll("#private-message-users .selected-name").each((_, item) =>
-      items.push(item.textContent.trim())
-    );
-
-    assert.deepEqual(items, ["foo", "foo_group"]);
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
   test("hide component if no content", async function (assert) {
@@ -199,11 +196,11 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.ok(composerActions.el().hasClass("is-hidden"));
-    assert.equal(composerActions.el().children().length, 0);
+    assert.strictEqual(composerActions.el().children().length, 0);
 
     await click("button#create-topic");
     await composerActions.expand();
-    assert.equal(composerActions.rows().length, 2);
+    assert.strictEqual(composerActions.rows().length, 2);
   });
 
   test("interactions", async function (assert) {
@@ -216,64 +213,76 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title").text().trim(),
       "Internationalization / localization"
     );
-    assert.equal(queryAll(".d-editor-input").val(), quote);
+    assert.strictEqual(queryAll(".d-editor-input").val(), quote);
 
     await composerActions.expand();
 
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
-    assert.equal(composerActions.rowByIndex(1).value(), "reply_to_post");
-    assert.equal(
+    assert.strictEqual(
+      composerActions.rowByIndex(0).value(),
+      "reply_as_new_topic"
+    );
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
+    assert.strictEqual(
       composerActions.rowByIndex(2).value(),
       "reply_as_private_message"
     );
-    assert.equal(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
-    assert.equal(composerActions.rows().length, 5);
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(4).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rows().length, 5);
 
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
     assert.ok(exists(".action-title img.avatar"));
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
       "codinghorror"
     );
-    assert.equal(queryAll(".d-editor-input").val(), quote);
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
-    assert.equal(
+    assert.strictEqual(queryAll(".d-editor-input").val(), quote);
+    assert.strictEqual(
+      composerActions.rowByIndex(0).value(),
+      "reply_as_new_topic"
+    );
+    assert.strictEqual(
       composerActions.rowByIndex(1).value(),
       "reply_as_private_message"
     );
-    assert.equal(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.equal(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
-    assert.equal(composerActions.rows().length, 5);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
+    assert.strictEqual(
+      composerActions.rowByIndex(4).value(),
+      "toggle_topic_bump"
+    );
+    assert.strictEqual(composerActions.rows().length, 5);
 
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title").text().trim(),
       I18n.t("topic.create_long")
     );
     assert.ok(queryAll(".d-editor-input").val().includes(quote));
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
-    assert.equal(
+    assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
+    assert.strictEqual(
       composerActions.rowByIndex(1).value(),
       "reply_as_private_message"
     );
-    assert.equal(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.equal(composerActions.rowByIndex(3).value(), "shared_draft");
-    assert.equal(composerActions.rows().length, 4);
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "shared_draft");
+    assert.strictEqual(composerActions.rows().length, 4);
 
     await composerActions.selectRowByValue("reply_as_private_message");
     await composerActions.expand();
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".action-title").text().trim(),
       I18n.t("topic.private_message")
     );
@@ -281,10 +290,13 @@ acceptance("Composer Actions", function (needs) {
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") ===
         0
     );
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
-    assert.equal(composerActions.rowByIndex(1).value(), "reply_to_post");
-    assert.equal(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.equal(composerActions.rows().length, 3);
+    assert.strictEqual(
+      composerActions.rowByIndex(0).value(),
+      "reply_as_new_topic"
+    );
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rows().length, 3);
   });
 
   test("replying to post - toggle_topic_bump", async function (assert) {
@@ -297,7 +309,7 @@ acceptance("Composer Actions", function (needs) {
       !exists(".composer-actions svg.d-icon-anchor"),
       "no-bump icon is not visible"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
       "reply icon is visible"
@@ -306,7 +318,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
 
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-anchor"),
       1,
       "no-bump icon is visible"
@@ -323,7 +335,7 @@ acceptance("Composer Actions", function (needs) {
       !exists(".composer-actions svg.d-icon-anchor"),
       "no-bump icon is not visible"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
       "reply icon is visible"
@@ -344,7 +356,7 @@ acceptance("Composer Actions", function (needs) {
       !exists(".composer-fields .whisper .d-icon-anchor"),
       "no-bump icon is not visible"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
       "reply icon is visible"
@@ -355,12 +367,12 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.equal(
+    assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
       1,
       "whisper icon is visible"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".composer-fields .no-bump .d-icon-anchor"),
       1,
       "no-bump icon is visible"
@@ -379,8 +391,11 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.equal(composerActions.rows().length, 5);
-    assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
+    assert.strictEqual(composerActions.rows().length, 5);
+    assert.strictEqual(
+      composerActions.rowByIndex(4).value(),
+      "toggle_topic_bump"
+    );
   });
 
   test("replying to post as TL3 user", async function (assert) {
@@ -391,9 +406,9 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.equal(composerActions.rows().length, 3);
+    assert.strictEqual(composerActions.rows().length, 3);
     Array.from(composerActions.rows()).forEach((row) => {
-      assert.notEqual(
+      assert.notStrictEqual(
         row.value,
         "toggle_topic_bump",
         "toggle button is not visible"
@@ -409,8 +424,11 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.equal(composerActions.rows().length, 4);
-    assert.equal(composerActions.rowByIndex(3).value(), "toggle_topic_bump");
+    assert.strictEqual(composerActions.rows().length, 4);
+    assert.strictEqual(
+      composerActions.rowByIndex(3).value(),
+      "toggle_topic_bump"
+    );
   });
 
   test("replying to first post - reply_as_private_message", async function (assert) {
@@ -422,12 +440,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(
-      queryAll("#private-message-users .selected-name:nth-of-type(1)")
-        .text()
-        .trim(),
-      "uwe_keim"
-    );
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(privateMessageUsers.header().value(), "uwe_keim");
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0
@@ -442,8 +456,8 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_1 button.edit");
     await composerActions.expand();
 
-    assert.equal(composerActions.rows().length, 1);
-    assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
+    assert.strictEqual(composerActions.rows().length, 1);
+    assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
   });
 });
 
@@ -490,24 +504,24 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       await composerActions.expand();
       await composerActions.selectRowByValue("shared_draft");
 
-      assert.equal(tags.header().value(), "monkey", "tags are not reset");
+      assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#reply-title").val(),
         "This is the new text for the title using 'quotes'"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("#reply-control .btn-primary.create .d-button-label").text(),
         I18n.t("composer.create_shared_draft")
       );
-      assert.equal(
+      assert.strictEqual(
         count(".composer-actions svg.d-icon-far-clipboard"),
         1,
         "shared draft icon is visible"
       );
 
-      assert.equal(count("#reply-control.composing-shared-draft"), 1);
+      assert.strictEqual(count("#reply-control.composing-shared-draft"), 1);
       await click(".modal-footer .btn.btn-default");
     } finally {
       toggleCheckDraftPopup(false);
@@ -522,7 +536,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     await composerActions.expand();
     stubDraftResponse();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".bootbox .modal-body").text(),
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );

@@ -1107,7 +1107,7 @@ describe Search do
     it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
       data = Search.prepare_data(sentence).split(' ')
-      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
     end
 
     it 'splits for indexing and filter out stop words' do
@@ -1119,12 +1119,6 @@ describe Search do
     it 'splits English / Traditional Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_TW'
       data = Search.prepare_data(sentence_t).split(' ')
-      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
-    end
-
-    it 'splits for indexing and filter out stop words' do
-      SiteSetting.default_locale = 'zh_TW'
-      data = Search.prepare_data(sentence_t, :index).split(' ')
       expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 
@@ -1919,6 +1913,35 @@ describe Search do
       end
 
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
+
+  context 'exclude_topics filter' do
+    before { SiteSetting.tagging_enabled = true }
+    let!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, name: 'bruce-world-fans') }
+    fab!(:topic) { Fabricate(:topic, title: 'Bruce topic not a result') }
+
+    it 'works' do
+      category = Fabricate(:category_with_definition, name: 'bruceland', user: user)
+      tag = Fabricate(:tag, name: 'brucealicious')
+
+      result = Search.execute('bruce', type_filter: 'exclude_topics')
+
+      expect(result.users.map(&:id)).to contain_exactly(user.id)
+
+      expect(result.categories.map(&:id)).to contain_exactly(category.id)
+
+      expect(result.groups.map(&:id)).to contain_exactly(group.id)
+
+      expect(result.tags.map(&:id)).to contain_exactly(tag.id)
+
+      expect(result.posts.length).to eq(0)
+    end
+
+    it 'does not fail when parsed term is empty' do
+      result = Search.execute('#cat ', type_filter: 'exclude_topics')
+      expect(result.categories.length).to eq(0)
     end
   end
 end

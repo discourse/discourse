@@ -20,6 +20,7 @@
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
+    min-width: 160px;
     order: 2;
 
     &:focus-within,
@@ -99,13 +100,12 @@
 .login-modal:not(.hidden) {
   padding: 0 !important;
   .login-modal-body.has-alt-auth {
-    min-width: 700px;
+    min-width: 100%;
     .login-left-side {
       align-self: stretch;
-      width: calc(60% - 4em);
     }
     .login-right-side {
-      width: 35%;
+      padding: 0 3em;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -140,8 +140,8 @@
         line-height: $line-height-small;
         font-size: $font-up-6;
       }
-      .login-subheader {
-        font-size: 1.125em !important;
+      p.login-subheader {
+        font-size: var(--font-up-1);
       }
     }
     #credentials {
@@ -204,10 +204,9 @@
 // modal only
 .d-modal.create-account {
   .create-account-body {
-    min-width: 700px !important;
+    min-width: 100%;
   }
-  .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-    max-height: 70vh !important;
+  .modal-body {
     overflow: hidden;
   }
   .has-alt-auth .create-account-form {
@@ -259,9 +258,9 @@
       position: absolute;
       width: 100%;
       pointer-events: none;
-      top: calc(-1em - 1px);
+      top: calc(-2em - 1px);
       left: 0;
-      height: 1em;
+      height: 2em;
       background-image: linear-gradient(
         to bottom,
         rgba(var(--secondary-rgb), 0),
@@ -277,8 +276,8 @@
       font-size: $font-up-6;
       line-height: $line-height-medium;
     }
-    .login-subheader {
-      font-size: 1.125em !important;
+    p.login-subheader {
+      font-size: var(--font-up-1);
       align-self: start;
     }
   }
@@ -396,6 +395,7 @@
 .invites-show {
   .col-form {
     padding-left: 20px;
+    width: 400px;
   }
   .col-image {
     width: 175px;
@@ -416,5 +416,53 @@
 .email-login {
   .col-form {
     padding-top: 40px;
+  }
+}
+
+// styling for small-width desktop screens
+// when editing, test with DiscourseHub auth window on iPadOS
+// it has a window width of ~650px
+@media screen and (max-width: 700px) {
+  .d-modal.create-account,
+  .d-modal.login-modal {
+    .modal-inner-container {
+      width: 100%;
+    }
+
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+      max-height: 90vh !important; // overrides base/modal.scss
+    }
+    .login-welcome-header,
+    .login-left-side .login-welcome-header {
+      padding-top: 1em;
+      .login-title {
+        font-size: var(--font-up-4);
+      }
+      p.login-subheader {
+        font-size: var(--font-0);
+      }
+    }
+
+    .modal-footer .btn:last-of-type {
+      margin-right: 0;
+    }
+  }
+
+  .d-modal.login-modal .login-modal-body.has-alt-auth {
+    .login-left-side {
+      padding-left: 1.5em;
+      padding-right: 1em;
+      padding-top: 1em;
+      .modal-footer {
+        width: auto;
+        .btn-large {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+      }
+    }
+    .login-right-side {
+      padding: 1em;
+    }
   }
 }

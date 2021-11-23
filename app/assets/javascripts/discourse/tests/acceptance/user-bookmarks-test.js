@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -21,6 +17,11 @@ acceptance("User's bookmarks", function (needs) {
     await dropdown.selectRowByValue("remove");
 
     assert.not(exists(".bootbox.modal"), "it should not show the modal");
+  });
+
+  test("it renders search controls if there are bookmarks", async function (assert) {
+    await visit("/u/eviltrout/activity/bookmarks");
+    assert.ok(exists("div.bookmark-search-form"));
   });
 });
 
@@ -55,13 +56,16 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
     server.get("/u/eviltrout/bookmarks.json", () =>
       helper.response({
         bookmarks: [],
-        no_results_help: "no bookmarks",
       })
     );
   });
 
   test("listing users bookmarks - no bookmarks", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.equal(queryAll(".alert.alert-info").text(), "no bookmarks");
+    assert.notOk(
+      exists("div.bookmark-search-form"),
+      "does not render search controls"
+    );
+    assert.ok(exists("div.empty-state", "renders the empty-state message"));
   });
 });

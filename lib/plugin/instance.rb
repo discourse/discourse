@@ -210,6 +210,16 @@ class Plugin::Instance
     TopicView.add_custom_filter(trigger, &block)
   end
 
+  # Allows to add more user IDs to the list of preloaded users. This can be
+  # useful to efficiently change the list of posters or participants.
+  # Example usage:
+  #   register_topic_list_preload_user_ids do |topics, user_ids, topic_list|
+  #     user_ids << Discourse::SYSTEM_USER_ID
+  #   end
+  def register_topic_list_preload_user_ids(&block)
+    TopicList.on_preload_user_ids(&block)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|
@@ -316,8 +326,8 @@ class Plugin::Instance
   # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_allowlister do |user|
-        plugin.enabled? ? block.call(user) : []
+      ::TopicView.add_post_custom_fields_allowlister do |user, topic|
+        plugin.enabled? ? block.call(user, topic) : []
       end
     end
   end
@@ -357,6 +367,27 @@ class Plugin::Instance
     reloadable_patch do |plugin|
       ::Post.plugin_permitted_update_params[attribute] = { plugin: plugin, handler: block }
     end
+  end
+
+  # Add a permitted_param to Group, respecting if the plugin is enabled
+  # Used in GroupsController#update and Admin::GroupsController#create
+  def register_group_param(param)
+    DiscoursePluginRegistry.register_group_param(param, self)
+  end
+
+  # Add a custom callback for search to Group
+  # Callback is called in UsersController#search_users
+  # Block takes groups and optional current_user
+  # For example:
+  # plugin.register_groups_callback_for_users_search_controller_action(:admins_filter) do |groups, user|
+  #   groups.where(name: "admins")
+  # end
+  def register_groups_callback_for_users_search_controller_action(callback, &block)
+    if DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.key?(callback)
+      raise "groups_callback_for_users_search_controller_action callback already registered"
+    end
+
+    DiscoursePluginRegistry.groups_callback_for_users_search_controller_action[callback] = block
   end
 
   # Add validation method but check that the plugin is enabled
@@ -713,9 +744,9 @@ class Plugin::Instance
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.", drop_from: '2.9.0')
           return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
-          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.", drop_from: '2.9.0')
           true
         end
       end
@@ -911,6 +942,38 @@ class Plugin::Instance
       type: type,
       param: param
       }, self)
+  end
+
+  # Register a new PresenceChannel prefix. See {PresenceChannel.register_prefix}
+  # for usage instructions
+  def register_presence_channel_prefix(prefix, &block)
+    DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
+  end
+
+  # Registers a new push notification filter. User and notification payload are passed into block, and if all
+  # filters return `true`, the push notification will be sent.
+  def register_push_notification_filter(&block)
+    DiscoursePluginRegistry.register_push_notification_filter(block, self)
+  end
+
+  # Register a ReviewableScore setting_name associated with a reason.
+  # We'll use this to build a site setting link and add it to the reason's translation.
+  #
+  # If your plugin has a reason translation looking like this:
+  #
+  #   my_plugin_reason: "This is the reason this post was flagged. See %{link}."
+  #
+  # And you associate the reason with a setting:
+  #
+  #   add_reviewable_score_link(:my_plugin_reason, 'a_plugin_setting')
+  #
+  # We'll generate the following link and attach it to the translation:
+  #
+  #   <a href="/admin/site_settings/category/all_results?filter=a_plugin_setting">
+  #     a plugin setting
+  #   </a>
+  def add_reviewable_score_link(reason, setting_name)
+    DiscoursePluginRegistry.register_reviewable_score_link({ reason: reason.to_sym, setting: setting_name }, self)
   end
 
   protected

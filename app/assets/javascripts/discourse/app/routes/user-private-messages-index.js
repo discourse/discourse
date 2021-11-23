@@ -1,3 +1,5 @@
-import createPMRoute from "discourse/routes/build-private-messages-route";
+import createPMRoute, {
+  INBOX_FILTER,
+} from "discourse/routes/build-private-messages-route";
 
-export default createPMRoute("all", "private-messages-all", "inbox");
+export default createPMRoute("user", "private-messages", INBOX_FILTER);

@@ -213,74 +213,45 @@ input {
   &[type="tel"],
   &[type="color"] {
     @include appearance-none;
+    @include form-item-sizing;
     display: inline-block;
-    padding: $input-padding;
     margin-bottom: 9px;
-    font-size: $font-0;
-    line-height: $line-height-small;
     color: var(--primary);
     background-color: var(--secondary);
     border: 1px solid var(--primary-medium);
     border-radius: 0;
-    box-sizing: border-box;
-    min-height: 30px;
     &:focus {
       @include default-focus;
     }
   }
+
+  &[type="time"] {
+    max-width: 140px;
+  }
+}
+
+// Fixes Safari height inconsistency
+::-webkit-datetime-edit {
+  display: inline;
+}
+
+// Fixes Webkit inconsistencies (Safari/Chrome)
+::-webkit-datetime-edit-fields-wrapper,
+::-webkit-datetime-edit-text,
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 ::placeholder {
   text-overflow: ellipsis;
 }
 
-.input {
-  &-prepend,
-  &-append {
-    margin-bottom: 5px;
-    input[class*="span"] {
-      display: inline-block;
-    }
-    input,
-    select {
-      position: relative;
-      margin-bottom: 0;
-      vertical-align: middle;
-      border-radius: 0;
-      &:focus {
-        z-index: z("base") + 1;
-      }
-    }
-    .add-on {
-      display: inline-flex;
-      align-items: center;
-      width: auto;
-      padding: 0 0.5em;
-      height: 28px;
-      background-color: var(--primary-low);
-      border: 1px solid var(--primary-medium);
-    }
-    .add-on,
-    .btn {
-      &:first-child {
-        margin-right: -1px;
-      }
-      &:last-child {
-        margin-left: -1px;
-        border-radius: 0 3px 3px 0;
-      }
-    }
-  }
-
-  &-prepend {
-    .add-on,
-    .btn {
-      margin-right: -1px;
-    }
-  }
-}
-
 textarea {
+  padding: $vpad $hpad;
+  box-sizing: border-box;
   height: auto;
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);
@@ -643,9 +614,7 @@ table {
 .form-vertical {
   input,
   textarea,
-  select,
-  .input-prepend,
-  .input-append {
+  select {
     display: inline-block;
     margin-bottom: 0;
     flex: 0 0 auto;
@@ -829,19 +798,16 @@ table {
 }
 
 .topic-statuses {
-  display: inline;
+  // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
-  margin-right: 0.15em;
   .topic-status {
     margin: 0;
     display: inline-flex;
     color: var(--primary-medium);
+    margin-right: 0.2em;
     .d-icon {
       height: 0.74em;
       width: 0.75em;
-    }
-    &:not(:last-child) {
-      margin-right: 0.15em;
     }
   }
 
@@ -878,5 +844,20 @@ table {
         margin: 0;
       }
     }
+  }
+}
+
+a#skip-link {
+  padding: 0.25em 0.5em;
+  position: fixed;
+  top: -50px;
+  left: 1em;
+  color: var(--secondary);
+  background: var(--tertiary);
+  transition: top 0.3s ease-out;
+  z-index: z("header") + 1;
+  &:focus {
+    top: 0px;
+    transition: top 0.15s ease-in;
   }
 }

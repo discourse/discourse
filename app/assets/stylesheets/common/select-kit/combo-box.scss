@@ -2,7 +2,6 @@
   &.combo-box {
     .select-kit-body {
       border-radius: 0;
-      box-shadow: shadow("dropdown");
     }
 
     .select-kit-row {
@@ -28,10 +27,7 @@
 
     .select-kit-header {
       background: var(--secondary);
-      border: 1px solid var(--primary-medium);
-      padding: 0 0.25em 0 0.5em;
-      font-weight: 500;
-      font-size: $font-0;
+      border-color: var(--primary-medium);
 
       &.is-focused {
         @include default-focus;
@@ -78,13 +74,6 @@
       }
     }
 
-    &.is-expanded {
-      .select-kit-wrapper {
-        display: block;
-        @include default-focus;
-      }
-    }
-
     &.tag-drop,
     &.group-dropdown {
       min-width: auto;
@@ -98,11 +87,6 @@
       .select-kit-row {
         font-weight: bold;
       }
-    }
-
-    &.is-expanded .select-kit-wrapper,
-    .select-kit-wrapper {
-      display: none;
     }
   }
 }

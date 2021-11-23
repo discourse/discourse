@@ -58,6 +58,7 @@ export function avatarImg(wanted, attrs) {
       src: getURLWithCDN(url),
       title,
       "aria-label": title,
+      loading: "lazy",
     },
     className,
   };
@@ -387,8 +388,20 @@ createWidget("post-group-request", {
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
-  defaultState() {
-    return { expandedFirstPost: false, repliesBelow: [] };
+  defaultState(attrs) {
+    const defaultState = {
+      expandedFirstPost: false,
+      repliesBelow: [],
+    };
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const topicController = this.register.lookup("controller:topic");
+
+      defaultState.filteredRepliesShown =
+        topicController.replies_to_post_number === attrs.post_number.toString();
+    }
+
+    return defaultState;
   },
 
   buildClasses(attrs) {
@@ -470,9 +483,11 @@ createWidget("post-contents", {
     ) {
       controller.send("cancelFilter", currentFilterPostNumber);
       this.state.filteredRepliesShown = false;
+      return Promise.resolve();
     } else {
       this.state.filteredRepliesShown = true;
-      post
+
+      return post
         .get("topic.postStream")
         .filterReplies(post.post_number, post.id)
         .then(() => {
@@ -499,7 +514,16 @@ createWidget("post-contents", {
       .then((posts) => {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
-          result.shareUrl = `${topicUrl}/${p.post_number}`;
+
+          // these would conflict with computed properties with identical names
+          // in the post model if we kept them.
+          delete result.new_user;
+          delete result.deleted;
+          delete result.shareUrl;
+          delete result.firstPost;
+          delete result.usernameUrl;
+
+          result.customShare = `${topicUrl}/${p.post_number}`;
           result.asPost = this.store.createRecord("post", result);
           return result;
         });

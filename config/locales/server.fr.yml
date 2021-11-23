@@ -164,6 +164,9 @@ fr:
       max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émojis"
       emojis_disabled: "ne peut pas contenir des émojis"
       ip_address_already_screened: "est déjà inclus dans une règle existante"
+      restrict_dependent_destroy:
+        one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
+        other: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
         one: 'est trop long (nombre maximal de caractères : %{count})'
         other: 'est trop long (nombre maximal de caractères : %{count})'
@@ -246,7 +249,6 @@ fr:
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
     user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
-    muted_invitee: "Nous sommes désolés, cet utilisateur vous a mis(e) en sourdine."
     muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
     receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
     sender_does_not_allow_pm: "Nous sommes désolés, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
@@ -478,14 +480,6 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    get_a_room: |
-      ### Encouragez tout le monde à intervenir dans la discussion
-
-      Vous avez répondu %{count} fois à @%{reply_username} dans ce sujet !
-
-      Une bonne discussion implique plusieurs avis et points de vue. Pourriez-vous impliquer quelqu'un d'autre ?
-
-      Et n'oubliez pas, si vous souhaitez prolonger la discussion avec cette personne en particulier à l'abri du regard des autres, vous pouvez lui [envoyer un message direct](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Vous avez atteint le nombre maximal de réponses dans ce sujet
 
@@ -887,19 +881,10 @@ fr:
     pm_title: "Brouillons relatifs à des sujets en cours de discussion."
     pm_body: "Sujet contenant des brouillons enregistrés"
   user_activity:
-    no_default:
-      self: "Vous n'avez aucune activité pour le moment."
-      others: "Aucune activité."
     no_bookmarks:
       self: "Vous n'avez pas de sujet dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
       search: "Aucun signet trouvé avec la requête de recherche fournie."
       others: "Aucun signet."
-    no_likes_given:
-      self: "Vous n'avez aimé aucun message."
-      others: "Aucun message aimé."
-    no_replies:
-      self: "Vous n'avez répondu à aucun message."
-      others: "Aucune réponse."
     no_drafts:
       self: "Vous n'avez pas de brouillons. Lorsque vous commencerez à répondre à un sujet, cette réponse sera automatiquement enregistrée sous forme de nouveau brouillon."
   email_settings:
@@ -962,7 +947,6 @@ fr:
         remove: "Ce sujet n'est plus à la une. Il ne sera plus affiché en haut de chaque page."
   unsubscribed:
     title: "Préférences de courriel enregistrées !"
-    description: "les préférences de courriel pour <b>%{email}</b> ont été mises à jour. Pour modifier vos paramètres de messagerie, <a href='%{url}'>consultez vos préférences utilisateur</a>."
     topic_description: "Pour vous réabonner à %{link}, utilisez le contrôle des notifications en bas ou à droite du sujet."
     private_topic_description: "Pour vous réabonner, utilisez le contrôle des notifications en bas ou à droite du sujet."
   uploads:
@@ -1368,6 +1352,7 @@ fr:
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
   site_settings:
+    disabled: "désactivé"
     display_local_time_in_user_card: "Afficher l'heure locale en fonction du fuseau horaire de l'utilisateur quand sa carte est ouverte."
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages masqués pendant plus de 30 jours."
@@ -1460,7 +1445,6 @@ fr:
     summary_likes_required: "Nombre minimal de « J'aime » dans un sujet avant que la fonctionnalité « Résumer ce sujet » soit activée. Les modifications de ce paramètre sont appliquées rétroactivement sur une semaine."
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
-    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages directs et à y répondre (configurable via le niveau de confiance minimal pour envoyer des messages directs). Notez que les responsables peuvent toujours envoyer des messages directs."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne dans la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon et risquent donc de les retarder"
@@ -1677,6 +1661,7 @@ fr:
     allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages directs."
     strip_image_metadata: "Enlever les métadonnées de l'image."
     composer_media_optimization_image_enabled: "Permet l'optimisation multimédia côté client des fichiers image téléversés."
+    composer_media_optimization_image_bytes_optimization_threshold: "Taille minimale du fichier image pour déclencher l'optimisation côté client"
     composer_media_optimization_image_resize_dimensions_threshold: "Largeur d'image minimale pour déclencher le redimensionnement côté client"
     composer_media_optimization_image_resize_width_target: "Les images dont la largeur est supérieure à « composer_media_optimization_image_dimensions_resize_threshold » seront redimensionnées à cette largeur. Doit être >= à « composer_media_optimization_image_dimensions_resize_threshold »."
     composer_media_optimization_image_encode_quality: "Qualité d'encodage JPEG utilisée dans le processus de réencodage."
@@ -1782,7 +1767,6 @@ fr:
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse courriel sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
-    max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance 0 en provenance de cette adresse IP (et aucun n'est un responsable ou avec un niveau de confiance 2 et plus), ne plus accepter de nouvelles inscriptions depuis cette adresse IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses courriel sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
@@ -1940,7 +1924,6 @@ fr:
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Forcer la coloration syntaxique dans tous les blocs de codes, même si aucun langage de programmation n'est défini explicitement."
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances.) Voir : <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo/</a> pour une démonstration."
-    show_copy_button_on_codeblocks: "Ajouter un bouton aux blocs de codes pour copier leur contenu dans le presse-papier de l'utilisateur. Cette fonctionnalité n'est pas disponible avec Internet Explorer."
     embed_any_origin: "Autoriser le contenu intégré, quelle que soit son origine. Cela est nécessaire pour les applications mobiles utilisant du HTML statique."
     embed_topics_list: "Permettre l'intégration HTML des listes de sujets"
     embed_set_canonical_url: "Configurer l'URL canonique des sujets intégrés à l'URL du contenu intégré."
@@ -2452,47 +2435,6 @@ fr:
   test_mailer:
     title: "Envoyer un courriel de test"
     subject_template: "[%{email_prefix}] Test de délivrabilité du courriel"
-    text_body_template: |
-      Ceci est un message de test envoyé par
-
-      [**%{base_url}**][0]
-
-      La bonne remise des courriels est une affaire un peu compliquée. Voici quelques points importants qu'il vous faudra examiner en premier lieu :
-
-      - Assurez-vous de définir l'adresse de l'expéditeur (le champ « from: ») utilisé par les courriels de notification dans les paramètres de votre site. **Le nom de domaine indiqué dans le champ « from: » des courriels que vous émettez est examiné par des entités tierces pour déterminer si ces courriels sont légitimes ou non**.
-
-      - Assurez-vous de savoir afficher la source d'un courriel dans votre client de messagerie, afin d'en inspecter les en-têtes et d'y chercher des indices importants. Dans Gmail, la fonctionnalité « afficher l'original » (accessible depuis le menu déroulant situé en haut à droite lorsque vous affichez un message) vous permet de le faire.
-
-      - **IMPORTANT :** Votre fournisseur d'accès à Internet a-t-il créé un enregistrement dans le DNS inversé qui permette de faire correspondre le nom de domaine avec les adresses IP depuis lesquels vos courriels sont expédiés ? Vous pouvez [examiner les enregistrements de DNS inversé][2] ici. Si votre fournisseur d'accès n'a pas défini les enregistrements de DNS inversé requis, il est très peu probable que le moindre de vos courriels soit remis à son destinataire.
-
-      - L'[enregistrement SPF][8] de votre nom de domaine est-il valable ? [Examinez votre enregistrement SPF][1] ici. Notez que le type d'enregistrement TXT est celui qui est officiellement requis par le système SPF.
-
-      - L'[enregistrement DKIM][3] de votre nom de domaine est-il valable ? Cela entraînera une amélioration significative de la bonne remise des courriels. [Examinez votre enregistrement DKIM][7] ici.
-
-      - Si vous exploitez votre propre serveur de courriel, assurez-vous que les adresses IP de celui-ci [ne soient pas inscrites sur une ou plusieurs listes de blocage][4]. Assurez-vous aussi que votre serveur, lorsqu'il émet son message HELO, indique un nom d'hôte pleinement qualifié qu'une requête DNS permette de résoudre en adresse IP. Si cette condition n'est pas satisfaite, de nombreux services de courriel rejetteront vos courriels.
-
-      - Nous vous recommandons fortement d'**expédier un courriel de test à l'adresse [mail-tester.com][mt]** pour vous assurer que l'ensemble des éléments indiqués ci-dessus fonctionnent correctement.
-
-      (*Le plus simple* est de créer un compte chez [SendGrid][sg], chez [SparkPost][sp], chez [Mailgun][mg] ou chez [Mailjet][mj]. Ces fournisseurs proposent des forfaits d'envoi de courriel à faible coût, qui suffiront aux petites communautés. Néanmoins, il vous faudra tout de même configurer les enregistrement DNS ayant trait à SPF et à DKIM !)
-
-      En espérant que ce courriel de test de bonne remise vous sera bien parvenu !
-
-      Bonne chance,
-
-      Vos comparses du projet [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
@@ -3213,6 +3155,26 @@ fr:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MD] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Publié par l'utilisateur"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3259,6 +3221,9 @@ fr:
         Votre compte sur le forum a été suspendu jusqu'à %{suspended_till}.
 
         Motif : %{reason}
+    account_suspended_forever:
+      title: "Compte suspendu"
+      subject_template: "[%{email_prefix}] Votre compte a été suspendu"
     account_silenced:
       title: "Compte mis en sourdine"
       subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
@@ -3266,6 +3231,9 @@ fr:
         Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
 
         Motif : %{reason}
+    account_silenced_forever:
+      title: "Compte mis en sourdine"
+      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
@@ -4260,10 +4228,8 @@ fr:
             label: "Nom de votre communauté"
             placeholder: "Le repaire de Jeanne"
           site_description:
-            label: "Décrivez votre communauté en une courte phrase"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
           short_site_description:
-            label: "Décrivez votre communauté en quelques mots"
             placeholder: "Meilleure communauté de tous les temps"
       introduction:
         title: "Introduction"
@@ -4322,17 +4288,30 @@ fr:
           city_for_disputes:
             label: "Ville pour les litiges"
             placeholder: "San Francisco, Californie"
-      colors:
-        title: "Couleurs"
-      fonts:
-        title: "Polices"
+      styling:
         fields:
           body_font:
             label: "Police de contenu"
           heading_font:
             label: "Police de titre"
-          font_preview:
-            label: "Aperçu"
+          styling_preview:
+            label: "Prévisualiser"
+          homepage_style:
+            choices:
+              latest:
+                label: "Sujets récents"
+              categories_only:
+                label: "Catégories seules"
+              categories_with_featured_topics:
+                label: "Catégories avec sujets à la une"
+              categories_and_latest_topics:
+                label: "Catégories et sujets récents"
+              categories_and_top_topics:
+                label: "Catégories et meilleurs sujets"
+              categories_boxes:
+                label: "Boîtes catégories"
+              categories_boxes_with_topics:
+                label: "Boîtes catégorie avec sujets"
       logos:
         title: "Logos"
         fields:
@@ -4351,26 +4330,6 @@ fr:
           large_icon:
             label: "Grande icône"
             description: "Icône d’image utilisée pour représenter votre site sur des appareils modernes et qui s'affiche correctement en grandes tailles. Idéalement plus grand que 512 × 512. Nous utiliserons le logo carré par défaut."
-      homepage:
-        description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
-        title: "Page d'accueil"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Sujets récents"
-              categories_only:
-                label: "Catégories seules"
-              categories_with_featured_topics:
-                label: "Catégories avec sujets à la une"
-              categories_and_latest_topics:
-                label: "Catégories et sujets récents"
-              categories_and_top_topics:
-                label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes catégorie avec sujets"
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."
@@ -4426,20 +4385,7 @@ fr:
     missing_version: "Vous devez fournir un paramètre de version"
     conflict: "Un conflit de mise à jour vous empêche de faire cette action."
     reasons:
-      post_count: "Les premiers messages de chaque utilisateur doivent être approuvés par un responsable. Voir « approve_post_count »."
-      trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est faible doivent être approuvées par un responsable. Voir « approve_unless_trust_level »."
-      new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est faible doivent être approuvées par un responsable. Voir « approve_new_topics_unless_trust_level »."
-      fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir « min_first_post_typing_time »."
-      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond à la règle « auto_silence_first_post_regex »."
-      watched_word: "Ce message contient un Mot Surveillé. Vous pouvez consulter la <a href='%{base_url}/admin/customize/watched_words'>liste des mots surveillés</a>."
-      staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir « approve_unless_staged »."
-      category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."
-      must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir « must_approve_users »."
-      invite_only: "Tous les nouveaux utilisateurs doivent être invités. Voir « invite_only »."
       email_auth_res_enqueue: "Ce courriel n'a pas passé une vérification DMARC, il est fort probable qu'il ne provienne pas de l'expéditeur annoncé. Vérifiez les en-têtes du courriel brut pour plus d'informations."
-      email_spam: "Ce courriel a été signalé comme spam par l'en-tête défini dans « email_in_spam_header »."
-      suspect_user: "Ce nouvel utilisateur a renseigné des informations sur son profil sans lire de sujets ou messages, ce qui indique qu'il pourrait être un spammeur. Voir « approve_suspect_users »."
-      contains_media: "Ce message contient un média intégré. Voir « review_media_unless_trust_level »."
       queued_by_staff: "Un responsable a estimé que ce message devait être examiné avant sa publication. Il restera masqué jusqu'à son approbation par un modérateur."
     actions:
       agree:
@@ -4542,6 +4488,7 @@ fr:
       other: "%{topic_title} (partie %{count})"
     post_raw: "Suite de la discussion depuis %{parent_url}.\n\nDiscussions précédentes :\n\n%{previous_topics}"
     small_action_post_raw: "Poursuivre la discussion dans %{new_title}."
+  fallback_username: "utilisateur"
   activemodel:
     errors:
       <<: *errors

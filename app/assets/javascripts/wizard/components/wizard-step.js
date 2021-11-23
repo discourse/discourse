@@ -5,6 +5,7 @@ import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 
+// eslint-disable-next-line no-undef
 jQuery.fn.wiggle = function (times, duration) {
   if (times > 0) {
     this.animate(
@@ -26,6 +27,11 @@ const alreadyWarned = {};
 export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
+
+  init() {
+    this._super(...arguments);
+    this.set("stylingDropdown", {});
+  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -96,6 +102,11 @@ export default Component.extend({
     return htmlSafe(`width: ${ratio * 200}px`);
   },
 
+  @discourseComputed("step.fields")
+  includeSidebar(fields) {
+    return !!fields.findBy("show_in_sidebar");
+  },
+
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
@@ -128,6 +139,10 @@ export default Component.extend({
   actions: {
     quit() {
       document.location = getUrl("/");
+    },
+
+    stylingDropdownChanged(id, value) {
+      this.set("stylingDropdown", { id, value });
     },
 
     exitEarly() {

@@ -16,24 +16,24 @@ class Auth::AuthProvider
   attr_accessor(*auth_attributes)
 
   def enabled_setting=(val)
-    Discourse.deprecate("(#{authenticator.name}) enabled_setting is deprecated. Please define authenticator.enabled? instead")
+    Discourse.deprecate("(#{authenticator.name}) enabled_setting is deprecated. Please define authenticator.enabled? instead", drop_from: '2.9.0')
     @enabled_setting = val
   end
 
   def background_color=(val)
-    Discourse.deprecate("(#{authenticator.name}) background_color is no longer functional. Please use CSS instead")
+    Discourse.deprecate("(#{authenticator.name}) background_color is no longer functional. Please use CSS instead", drop_from: '2.9.0')
   end
 
   def full_screen_login=(val)
-    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login parameter can be removed from the auth_provider.")
+    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login parameter can be removed from the auth_provider.", drop_from: '2.9.0')
   end
 
   def full_screen_login_setting=(val)
-    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login_setting parameter can be removed from the auth_provider.")
+    Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login_setting parameter can be removed from the auth_provider.", drop_from: '2.9.0')
   end
 
   def message=(val)
-    Discourse.deprecate("(#{authenticator.name}) message is no longer used because all logins are full screen. It should be removed from the auth_provider")
+    Discourse.deprecate("(#{authenticator.name}) message is no longer used because all logins are full screen. It should be removed from the auth_provider", drop_from: '2.9.0')
   end
 
   def name

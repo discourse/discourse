@@ -76,15 +76,21 @@ export default Component.extend({
 
     shareModal() {
       const { topic } = this.composer;
-      const controller = showModal("share-topic");
+      const controller = showModal("share-topic", { model: topic.category });
       controller.setProperties({
         allowInvites:
           topic.details.can_invite_to &&
           !topic.archived &&
           !topic.closed &&
           !topic.deleted,
-        topic: topic,
+        topic,
       });
+    },
+
+    switchPM(message) {
+      this.composer.set("action", "privateMessage");
+      this.composer.set("targetRecipients", message.reply_username);
+      this._removeMessage(message);
     },
   },
 
@@ -130,7 +136,12 @@ export default Component.extend({
       }
     }
 
-    this.queuedForTyping.forEach((msg) => this.send("popup", msg));
+    this.queuedForTyping.forEach((msg) => {
+      if (composer.whisper && msg.hide_if_whisper) {
+        return;
+      }
+      this.send("popup", msg);
+    });
   },
 
   _create(info) {

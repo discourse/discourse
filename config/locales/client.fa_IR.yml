@@ -116,6 +116,8 @@ fa_IR:
       previous_month: "ماه قبل"
       next_month: "ماه بعد"
       placeholder: تاریخ
+      from_placeholder: "از تاریخ"
+      to_placeholder: "تا تاریخ"
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "ارسال #%{postNumber}"
@@ -310,7 +312,13 @@ fa_IR:
         confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
         yes_value: "حذف"
         no_value: "ادامه"
+    topic_count_categories:
+      one: "%{count} موضوع تازه یا به‌ روز شده."
+      other: "%{count} موضوع تازه یا به‌ روز شده."
     topic_count_latest:
+      one: "%{count} موضوع تازه یا به‌ روز شده."
+      other: "%{count} موضوع تازه یا به‌ روز شده."
+    topic_count_unseen:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
     topic_count_unread:
@@ -618,6 +626,7 @@ fa_IR:
         title: "مدیریت"
         name: "نام"
         full_name: "نام کامل"
+        add_members: "افزودن کاربران"
         invite_members: "دعوت"
         delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
         profile:
@@ -628,7 +637,12 @@ fa_IR:
           notification: اعلان‌ها
         email:
           title: "ایمیل"
+          enable_smtp: "فعال کردن SMTP"
+          enable_imap: "فعال کردن IMAP"
+          save_settings: "ذخیره تنظیمات"
           last_updated_by: "توسط"
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
           prefill:
             gmail: "جی‌میل"
           credentials:
@@ -855,6 +869,7 @@ fa_IR:
           all: "همه"
           read: "خواندن"
           unread: "خوانده‌ نشده‌"
+          unseen: "دیده نشده"
         ignore_duration_username: "نام‌کاربری"
         ignore_duration_when: "مدت زمان:"
         ignore_duration_save: "چشم پوشی"
@@ -916,8 +931,11 @@ fa_IR:
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       no_messages_title: "پیامی ندارید"
+      no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
+      skip_new_user_tips:
+        read_later: "بعدا می‌خوانم"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_schemes:
         undo: "بازنشانی"
@@ -1002,10 +1020,17 @@ fa_IR:
         rejected_posts: "پست های رد شده"
       messages:
         inbox: "صندوق دریافت"
+        personal: "شخصی"
         latest: "آخرین"
         sent: "ارسال شد"
         unread: "خوانده‌ نشده‌"
+        unread_with_count:
+          one: " (%{count}) خوانده‌ نشده‌"
+          other: " (%{count}) خوانده‌ نشده‌"
         new: "جدید"
+        new_with_count:
+          one: "(%{count}) جدید"
+          other: "(%{count}) جدید"
         archive: "بایگانی"
         groups: "گروه‌های من"
         move_to_inbox: "انتقال به صندوق دریافت"
@@ -1301,16 +1326,18 @@ fa_IR:
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
-          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید"
+          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          restrict_email: "محدود کردن به ایمیل"
           add_to_groups: "افزودن به گروه‌ها"
+          invite_to_topic: "وارد شدن به موضوع"
           expires_at: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
+          send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوتنامه ذخیره شد."
-          invite_copied: "لینک دعوت کپی شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -1617,6 +1644,7 @@ fa_IR:
     conditional_loading_section:
       loading: بارگذاری...
     select_kit:
+      delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"
       select_to_filter: "مقداری برای فیلتر کردن انتخاب کنید"
       default_header_text: انتخاب...
@@ -1707,7 +1735,6 @@ fa_IR:
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
-      title: "یا Ctrl+Enter را بفشارید"
       users_placeholder: "افزودن یک کاربر"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
@@ -1782,6 +1809,8 @@ fa_IR:
           label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
       ignore: "چشم پوشی"
+      image_alt_text:
+        aria_label: متن Alt برای عکس
     notifications:
       tooltip:
         regular:
@@ -1823,6 +1852,12 @@ fa_IR:
       membership_request_accepted: "عضویت در %{group_name} پذیرفته‌شد"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        body:
+          one: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+          other: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+        dismiss: "نادیده گرفتن"
+        cancel: "انصراف"
       group_message_summary:
         one: "%{count}پیام در اینباکس %{group_name}"
         other: "%{count}پیام در اینباکس %{group_name}"
@@ -1872,8 +1907,8 @@ fa_IR:
       select_all: "انتخاب همه"
       clear_all: "پاک کردن همه"
       too_short: "کلمه جستجو شده بسیار کوتاه است"
-      title: "جستجوی موضوعات، نوشته‌ها، کاربران یا دسته‌‌بندی‌ها"
-      full_page_title: "جستجوی مبحث یا نوشته"
+      title: "جستجو"
+      full_page_title: "جستجو"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
       post_format: "#%{post_number} توسط %{username}"
@@ -1885,13 +1920,18 @@ fa_IR:
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
       search_button: "جسنجو"
+      categories: "دسته‌بندی‌ها"
+      tags: "برچسب‌ها"
+      browser_tip: "%{modifier} + f"
+      type:
+        users: "کاربران"
+        categories: "دسته‌بندی‌ها"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
         topic: "جستجوی این موضوع"
         private_messages: "جستجوی پیام‌ها"
       advanced:
-        title: جستجوی پیشرفته
         posted_by:
           label: فرستنده
         in_category:
@@ -1943,7 +1983,6 @@ fa_IR:
           placeholder: حداقل
         max_views:
           placeholder: حداکثر
-    hamburger_menu: "به فهرست مبحث یا دسته بندی دیگر بروید"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -2081,6 +2120,7 @@ fa_IR:
         when: "در زمان:"
         time_frame_required: "یک بازه ی زمانی انتخاب کنید"
         min_duration: "مدت زمان باید بیشتر از ۰ باشد"
+        duration: "مدت زمان"
       auto_update_input:
         none: "انتخاب یک دوره‌زمانی"
         now: "اکنون"
@@ -2361,6 +2401,7 @@ fa_IR:
           other: "شما <b>%{count}</b> نوشته انتخاب کرده اید"
     post:
       quote_reply: "نقل‌قول"
+      quote_edit: "ویرایش"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -2870,6 +2911,8 @@ fa_IR:
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
         defer: "تاپیک‌های به تعویق افتاده %{shortcut}"
+      search_menu:
+        full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -2902,6 +2945,8 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
+    download_calendar:
+      download: "دانلود"
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
@@ -2910,6 +2955,9 @@ fa_IR:
       changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
+      choose_for_topic_required:
+        one: "حداقل برچسب %{count} را انتخاب کنید..."
+        other: "حداقل برچسب %{count} را انتخاب کنید..."
       info: "اطلاعات"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
@@ -3001,6 +3049,9 @@ fa_IR:
         member: "عضو"
         regular: "عادی"
         leader: "راهبر"
+    user_activity:
+      no_replies_others: "بدون پاسخ"
+      no_likes_others: "فرسته‌ی موردپسندیدی نیست."
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -3155,7 +3206,12 @@ fa_IR:
         save: ذخیره
         continue: ادامه
         scopes:
+          read_only: فقط خواندنی
+          global: جهانی
           action: اقدام
+          descriptions:
+            uploads:
+              create: یک پرونده جدید بارگذاری کنید.
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"
@@ -3446,11 +3502,11 @@ fa_IR:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
           head_tag:
-            text: "</‎head>"
-            title: "کد HTML که قبل از برچسب </head> اضافه می‌شود"
+            text: "Head"
+            title: "کد HTML که قبل از برچسب head درج خواهد شد"
           body_tag:
-            text: "</‎body>"
-            title: "کد HTML که قبل از برچسب </body> اضافه می‌شود"
+            text: "Body"
+            title: "کد HTML که قبل از برچسب body درج خواهد شد"
           yaml:
             text: "YAML"
         colors:
@@ -3745,8 +3801,6 @@ fa_IR:
         silence_reason: "دلیل"
         suspended_until: "(تا %{until})"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."
-        delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
-        delete_posts_progress: "درحال حذف فرسته‌ها..."
         penalty_post_edit: "ویرایش فرسته"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
@@ -3789,6 +3843,12 @@ fa_IR:
         anonymize_yes: "بله، حساب‌کاربری را بینام کن"
         anonymize_failed: "یک مشکل با حساب‌کاربری بینام وجود دارد"
         delete: "حذف کاربر"
+        delete_posts:
+          button: "پاک کردن همه‌ی نوشته‌ها"
+          progress:
+            description: "درحال حذف فرسته‌ها..."
+          confirmation:
+            cancel: "لغو کردن"
         merge:
           prompt:
             cancel: "لغو کردن"
@@ -3990,7 +4050,7 @@ fa_IR:
         delete_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
         revoke: ابطال
         reason: دلیل
-        expand: گستردن hellip&;
+        expand: گستردن &hellip;
         revoke_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
         edit_badges: ویرایش نشان
         grant_badge: اعطای نشان
@@ -4037,7 +4097,6 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
-        help: "اضافه کردن شکلک های جدید که در دسترس همگان خواهد بود.(PROTIP: کشیدن و رها کردن چند فایل در یک بار)"
         add: "افزودن شکلک جدید"
         uploading: "در حال بار گذاری ..."
         name: "نام"
@@ -4047,7 +4106,6 @@ fa_IR:
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"
-        sample: "از این کد HTML در سایت خود استفاده کنید تا بتوانید مبحث های Discourse ایجاد کنید یا جاساز کنید, این کد <b>REPLACE_ME</b> را به URL استاندارد صفحه ای که بر روی آن جاسازی میکنید تغییر دهید."
         title: "جاسازی"
         host: "میزبان های مجاز"
         class_name: "نام کلاس"

@@ -140,16 +140,19 @@ export default Controller.extend(
       "serverAccountEmail",
       "serverEmailValidation",
       "accountEmail",
-      "rejectedEmails.[]"
+      "rejectedEmails.[]",
+      "forceValidationReason"
     )
     emailValidation(
       serverAccountEmail,
       serverEmailValidation,
       email,
-      rejectedEmails
+      rejectedEmails,
+      forceValidationReason
     ) {
       const failedAttrs = {
         failed: true,
+        ok: false,
         element: document.querySelector("#new-account-email"),
       };
 
@@ -162,6 +165,9 @@ export default Controller.extend(
         return EmberObject.create(
           Object.assign(failedAttrs, {
             message: I18n.t("user.email.required"),
+            reason: forceValidationReason
+              ? I18n.t("user.email.required")
+              : null,
           })
         );
       }
@@ -254,7 +260,7 @@ export default Controller.extend(
     },
 
     @observes("emailValidation", "accountEmail")
-    prefillUsername: function () {
+    prefillUsername() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
@@ -426,6 +432,7 @@ export default Controller.extend(
       createAccount() {
         this.clearFlash();
 
+        this.set("forceValidationReason", true);
         const validation = [
           this.emailValidation,
           this.usernameValidation,
@@ -435,23 +442,22 @@ export default Controller.extend(
         ].find((v) => v.failed);
 
         if (validation) {
-          if (validation.message) {
-            this.flash(validation.message, "error");
-          }
-
           const element = validation.element;
-          if (element.tagName === "DIV") {
-            if (element.scrollIntoView) {
-              element.scrollIntoView();
+          if (element) {
+            if (element.tagName === "DIV") {
+              if (element.scrollIntoView) {
+                element.scrollIntoView();
+              }
+              element.click();
+            } else {
+              element.focus();
             }
-            element.click();
-          } else {
-            element.focus();
           }
 
           return;
         }
 
+        this.set("forceValidationReason", false);
         this.performAccountCreation();
       },
     },

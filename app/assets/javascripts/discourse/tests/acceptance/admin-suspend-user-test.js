@@ -35,7 +35,7 @@ acceptance("Admin - Suspend User", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(count(".suspend-user-modal:visible"), 1);
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
 
     await click(".d-modal-cancel");
 
@@ -46,24 +46,24 @@ acceptance("Admin - Suspend User", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(count(".suspend-user-modal:visible"), 1);
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
 
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     await click(".d-modal-cancel");
 
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-default");
-    assert.equal(count(".suspend-user-modal:visible"), 1);
-    assert.equal(
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
+    assert.strictEqual(
       query(".suspend-message").value,
       "this is an email reason why"
     );
 
     await click(".d-modal-cancel");
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
     assert.ok(!exists(".suspend-user-modal:visible"));
 
     await click(".modal-footer .btn-primary");
@@ -81,7 +81,11 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".suspend-user");
 
-    assert.equal(count(".perform-suspend[disabled]"), 1, "disabled by default");
+    assert.strictEqual(
+      count(".perform-suspend[disabled]"),
+      1,
+      "disabled by default"
+    );
 
     await suspendUntilCombobox.expand();
     await suspendUntilCombobox.selectRowByValue("tomorrow");
@@ -119,12 +123,6 @@ acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
     await click(".future-date-input-selector-header");
-
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
 
     const options = Array.from(
       queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>

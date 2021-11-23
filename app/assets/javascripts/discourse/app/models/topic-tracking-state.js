@@ -1,11 +1,12 @@
 import EmberObject, { get } from "@ember/object";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import { isEmpty } from "@ember/utils";
 
 function isNew(topic) {
@@ -64,15 +65,12 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels() {
-    this.messageBus.subscribe("/new", this._processChannelPayload.bind(this));
-    this.messageBus.subscribe(
-      "/latest",
-      this._processChannelPayload.bind(this)
-    );
+    this.messageBus.subscribe("/new", this._processChannelPayload);
+    this.messageBus.subscribe("/latest", this._processChannelPayload);
     if (this.currentUser) {
       this.messageBus.subscribe(
-        "/unread/" + this.currentUser.get("id"),
-        this._processChannelPayload.bind(this)
+        `/unread/${this.currentUser.id}`,
+        this._processChannelPayload
       );
     }
 
@@ -240,6 +238,17 @@ const TopicTrackingState = EmberObject.extend({
       this._addIncoming(data.topic_id);
     }
 
+    // Add incoming to the 'categories and latest topics' desktop view
+    if (
+      filter === "categories" &&
+      data.message_type === "latest" &&
+      !Site.current().mobileView &&
+      this.siteSettings.desktop_category_page_style ===
+        "categories_and_latest_topics"
+    ) {
+      this._addIncoming(data.topic_id);
+    }
+
     // hasIncoming relies on this count
     this.set("incomingCount", this.newIncoming.length);
   },
@@ -272,13 +281,15 @@ const TopicTrackingState = EmberObject.extend({
   trackIncoming(filter) {
     this.newIncoming = [];
 
-    const split = filter.split("/");
-    if (split.length >= 4) {
-      filter = split[split.length - 1];
-      let category = Category.findSingleBySlug(
-        split.splice(1, split.length - 4).join("/")
-      );
+    if (filter.startsWith("c/")) {
+      const categoryId = filter.match(/\/(\d*)\//);
+      const category = Category.findById(parseInt(categoryId[1], 10));
       this.set("filterCategory", category);
+
+      const split = filter.split("/");
+      if (split.length >= 4) {
+        filter = split[split.length - 1];
+      }
     } else {
       this.set("filterCategory", null);
     }
@@ -400,7 +411,7 @@ const TopicTrackingState = EmberObject.extend({
 
     // make sure all the state is up to date with what is accurate
     // from the server
-    list.topics.forEach(this._syncStateFromListTopic.bind(this));
+    list.topics.forEach(this._syncStateFromListTopic);
 
     // correct missing states, safeguard in case message bus is corrupt
     if (this._shouldCompensateState(list, filter, queryParams)) {
@@ -637,6 +648,7 @@ const TopicTrackingState = EmberObject.extend({
   // this updates the topic in the state to match the
   // topic from the list (e.g. updates category, highest read post
   // number, tags etc.)
+  @bind
   _syncStateFromListTopic(topic) {
     const state = this.findState(topic.id) || {};
 
@@ -725,6 +737,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   // processes the data sent via messageBus, called by establishChannels
+  @bind
   _processChannelPayload(data) {
     if (["muted", "unmuted"].includes(data.message_type)) {
       this.trackMutedOrUnmutedTopic(data);

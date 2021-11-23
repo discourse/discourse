@@ -3,9 +3,13 @@ import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { action } from "@ember/object";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import getURL from "discourse-common/lib/get-url";
 
 export const NEW_FILTER = "new";
 export const UNREAD_FILTER = "unread";
+export const INBOX_FILTER = "inbox";
+export const ARCHIVE_FILTER = "archive";
 
 // A helper to build a user topic list route
 export default (inboxType, path, filter) => {
@@ -36,36 +40,56 @@ export default (inboxType, path, filter) => {
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter: topicListFilter });
+        : this.store
+            .findFiltered("topicList", { filter: topicListFilter })
+            .then((model) => {
+              // andrei: we agreed that this is an anti pattern,
+              // it's better to avoid mutating a rest model like this
+              // this place we'll be refactored later
+              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+              model.set("emptyState", this.emptyState());
+              return model;
+            });
     },
 
     setupController() {
       this._super.apply(this, arguments);
 
-      if (filter) {
-        this.controllerFor("user-topics-list").subscribe(
-          `/private-messages/${filter}`
-        );
-      }
+      const userPrivateMessagesController = this.controllerFor(
+        "user-private-messages"
+      );
 
-      this.controllerFor("user-topics-list").setProperties({
+      const userTopicsListController = this.controllerFor("user-topics-list");
+
+      userTopicsListController.setProperties({
         hideCategory: true,
         showPosters: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
         selected: [],
         showToggleBulkSelect: true,
-        filter: filter,
+        filter,
         group: null,
         inbox: inboxType,
       });
 
-      this.controllerFor("user-private-messages").setProperties({
+      userTopicsListController.subscribe();
+
+      userPrivateMessagesController.setProperties({
         archive: false,
         pmView: inboxType,
         group: null,
       });
 
       this.searchService.set("contextType", "private_messages");
+    },
+
+    emptyState() {
+      const title = I18n.t("user.no_messages_title");
+      const body = I18n.t("user.no_messages_body", {
+        aboutUrl: getURL("/about"),
+        icon: iconHTML("envelope"),
+      }).htmlSafe();
+      return { title, body };
     },
 
     deactivate() {

@@ -28,8 +28,8 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().value(), 2);
-        assert.equal(this.subject.header().label(), "feature");
+        assert.strictEqual(this.subject.header().value(), "2");
+        assert.strictEqual(this.subject.header().label(), "feature");
       },
     });
 
@@ -63,17 +63,11 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(
-          this.subject.rowByIndex(0).title(),
-          "Discussion about features or potential features of Discourse: how they work, why they work, etc."
-        );
-        assert.equal(this.subject.rowByIndex(0).value(), 2);
-        assert.equal(
-          this.subject.rowByIndex(1).title(),
-          "My idea here is to have mini specs for features we would like built but have no bandwidth to build"
-        );
-        assert.equal(this.subject.rowByIndex(1).value(), 26);
-        assert.equal(
+        assert.strictEqual(this.subject.rowByIndex(0).title(), "feature");
+        assert.strictEqual(this.subject.rowByIndex(0).value(), "2");
+        assert.strictEqual(this.subject.rowByIndex(1).title(), "spec");
+        assert.strictEqual(this.subject.rowByIndex(1).value(), "26");
+        assert.strictEqual(
           this.subject.rows().length,
           2,
           "default content is scoped"
@@ -81,7 +75,7 @@ discourseModule(
 
         await this.subject.fillInFilter("bug");
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.rowByIndex(0).name(),
           "bug",
           "search finds outside of scope"
@@ -103,23 +97,23 @@ discourseModule(
         await this.subject.expand();
 
         // The prioritized category
-        assert.equal(this.subject.rowByIndex(0).value(), 5);
+        assert.strictEqual(this.subject.rowByIndex(0).value(), "5");
         // The prioritized category's child
-        assert.equal(this.subject.rowByIndex(1).value(), 22);
+        assert.strictEqual(this.subject.rowByIndex(1).value(), "22");
         // Other categories in the default order
-        assert.equal(this.subject.rowByIndex(2).value(), 6);
-        assert.equal(this.subject.rowByIndex(3).value(), 21);
-        assert.equal(this.subject.rowByIndex(4).value(), 1);
+        assert.strictEqual(this.subject.rowByIndex(2).value(), "6");
+        assert.strictEqual(this.subject.rowByIndex(3).value(), "21");
+        assert.strictEqual(this.subject.rowByIndex(4).value(), "1");
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.rows().length,
-          20,
+          22,
           "all categories are visible"
         );
 
         await this.subject.fillInFilter("bug");
 
-        assert.equal(
+        assert.strictEqual(
           this.subject.rowByIndex(0).name(),
           "bug",
           "search still finds categories"
@@ -142,8 +136,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "category…");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "category…");
       },
     });
 
@@ -163,8 +157,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "(no category)");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "(no category)");
       },
     });
 
@@ -185,8 +179,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "root none label");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "root none label");
       },
     });
 
@@ -205,8 +199,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "uncategorized");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "uncategorized");
       },
     });
 
@@ -226,8 +220,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "(no category)");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "(no category)");
       },
     });
 
@@ -248,8 +242,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(this.subject.header().value(), null);
-        assert.equal(this.subject.header().label(), "root none label");
+        assert.strictEqual(this.subject.header().value(), null);
+        assert.strictEqual(this.subject.header().label(), "root none label");
       },
     });
 
@@ -264,14 +258,14 @@ discourseModule(
         await this.subject.expand();
         await this.subject.fillInFilter("bug");
 
-        assert.ok(this.subject.rows().length, 1);
-        assert.equal(this.subject.rowByIndex(0).name(), "bug");
+        assert.strictEqual(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
 
         await this.subject.emptyFilter();
         await this.subject.fillInFilter("Bug");
 
-        assert.ok(this.subject.rows().length, 1);
-        assert.equal(this.subject.rowByIndex(0).name(), "bug");
+        assert.strictEqual(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
       },
     });
 
@@ -292,10 +286,10 @@ discourseModule(
 
       async test(assert) {
         await this.subject.expand();
-        await this.subject.fillInFilter("hữ");
+        await this.subject.fillInFilter("gữ");
 
-        assert.ok(this.subject.rows().length, 1);
-        assert.equal(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
+        assert.strictEqual(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
       },
     });
 
@@ -319,8 +313,9 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
 
-        assert.equal(
-          this.subject.rowByIndex(0).el()[0].title,
+        assert.strictEqual(
+          this.subject.rowByIndex(0).el()[0].querySelector(".category-desc")
+            .innerText,
           'baz "bar ‘foo’'
         );
       },

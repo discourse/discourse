@@ -151,6 +151,34 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#suggested_group_name' do
+    fab!(:pm) { Fabricate(:private_message_post).topic }
+    fab!(:group) { Fabricate(:group) }
+
+    it 'is nil for a regular topic' do
+      json = serialize_topic(topic, user)
+
+      expect(json[:suggested_group_name]).to eq(nil)
+    end
+
+    it 'is nil if user is an allowed user of the private message' do
+      pm.allowed_users << user
+
+      json = serialize_topic(pm, user)
+
+      expect(json[:suggested_group_name]).to eq(nil)
+    end
+
+    it 'returns the right group name if user is part of allowed group in the private message' do
+      pm.allowed_groups << group
+      group.add(user)
+
+      json = serialize_topic(pm, user)
+
+      expect(json[:suggested_group_name]).to eq(group.name)
+    end
+  end
+
   describe 'when tags added to private message topics' do
     fab!(:moderator) { Fabricate(:moderator) }
     fab!(:tag) { Fabricate(:tag) }
@@ -482,6 +510,28 @@ describe TopicViewSerializer do
 
         expect(json[:user_last_posted_at]).to be_present
       end
+    end
+  end
+
+  describe '#requested_group_name' do
+    fab!(:pm) { Fabricate(:private_message_post).topic }
+    fab!(:group) { Fabricate(:group) }
+
+    it 'should return the right group name when PM is a group membership request' do
+      pm.custom_fields[:requested_group_id] = group.id
+      pm.save!
+
+      user = pm.first_post.user
+      group.add_owner(user)
+      json = serialize_topic(pm, user)
+
+      expect(json[:requested_group_name]).to eq(group.name)
+    end
+
+    it 'should not include the attribute for a non group membership request PM' do
+      json = serialize_topic(pm, pm.first_post.user)
+
+      expect(json[:requested_group_name]).to eq(nil)
     end
   end
 end

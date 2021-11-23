@@ -42,10 +42,12 @@ describe Jobs::ExportUserArchive do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
       # force a UserAuthTokenLog entry
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
 
       # force a nonstandard post action
       PostAction.new(user: user, post: post, post_action_type_id: 5).save
@@ -198,10 +200,12 @@ describe Jobs::ExportUserArchive do
     let(:component) { 'auth_tokens' }
 
     before do
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
     end
 
     it 'properly includes session records' do
@@ -264,7 +268,6 @@ describe Jobs::ExportUserArchive do
     let(:post3) { Fabricate(:post) }
     let(:message) { Fabricate(:private_message_topic) }
     let(:post4) { Fabricate(:post, topic: message) }
-    let(:reminder_type) { Bookmark.reminder_types[:tomorrow] }
     let(:reminder_at) { 1.day.from_now }
 
     it 'properly includes bookmark records' do
@@ -274,9 +277,9 @@ describe Jobs::ExportUserArchive do
       update1_at = now + 1.hours
       bkmk1.update(name: 'great food recipe', updated_at: update1_at)
 
-      manager.create(post_id: post2.id, name: name, reminder_type: :tomorrow, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+      manager.create(post_id: post2.id, name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
       twelve_hr_ago = freeze_time now - 12.hours
-      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_type: :later_today, reminder_at: now - 8.hours)
+      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_at: now - 8.hours)
       freeze_time now
 
       tau_record = message.topic_allowed_users.create!(user_id: user.id)
@@ -296,7 +299,6 @@ describe Jobs::ExportUserArchive do
       expect(DateTime.parse(data[0]['updated_at'])).to eq(DateTime.parse(update1_at.to_s))
 
       expect(data[1]['name']).to eq(name)
-      expect(data[1]['reminder_type']).to eq('tomorrow')
       expect(DateTime.parse(data[1]['reminder_at'])).to eq(DateTime.parse(reminder_at.to_s))
       expect(data[1]['auto_delete_preference']).to eq('when_reminder_sent')
 

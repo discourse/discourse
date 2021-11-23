@@ -8,6 +8,22 @@
   }}
 
   {{#select-kit/select-kit-body selectKit=selectKit id=(concat selectKit.uniqueID "-body")}}
+    {{component selectKit.options.filterComponent
+      selectKit=selectKit
+      id=(concat selectKit.uniqueID "-filter")
+    }}
+
+    {{#if selectedContent.length}}
+      <div class="selected-content">
+        {{#each selectedContent as |item|}}
+          {{component selectKit.options.selectedChoiceComponent
+            item=item
+            selectKit=selectKit
+          }}
+        {{/each}}
+      </div>
+    {{/if}}
+
     {{#if selectKit.isLoading}}
       <span class="is-loading">
         {{#if site}}
@@ -15,14 +31,6 @@
         {{/if}}
       </span>
     {{else}}
-      {{#if selectKit.filter}}
-        {{#if selectKit.hasNoContent}}
-          <span class="no-content">
-            {{i18n "select_kit.no_content"}}
-          </span>
-        {{/if}}
-      {{/if}}
-
       {{#each collections as |collection|}}
         {{component (component-for-collection collection.identifier selectKit)
           collection=collection
@@ -30,8 +38,18 @@
           value=value
         }}
       {{/each}}
+
+      {{#if selectKit.filter}}
+        {{#if selectKit.hasNoContent}}
+          <span class="no-content" role="alert">
+            {{i18n "select_kit.no_content"}}
+          </span>
+        {{else}}
+          <span class="results-count" role="alert">
+            {{i18n "select_kit.results_count" count=mainCollection.length}}
+          </span>
+        {{/if}}
+      {{/if}}
     {{/if}}
   {{/select-kit/select-kit-body}}
-
-  <div class="select-kit-wrapper"></div>
 {{/unless}}

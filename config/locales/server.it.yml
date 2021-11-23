@@ -16,6 +16,7 @@ it:
       date_only: "%B %-d, %Y"
       long: "%-d %B %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%d%m%YT%H%M%SZ"
   date:
     month_names:
     - null
@@ -249,7 +250,6 @@ it:
   topic_invite:
     failed_to_invite: "L'utente non può essere invitato in questo argomento senza essere membro di uno dei seguenti gruppi: %{group_names}."
     user_exists: "Spiacenti, l'utente è stato già invitato. Puoi invitare un utente ad uno stesso argomento solo una volta."
-    muted_invitee: "Spiacenti, quell'utente ti ha silenziato."
     muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
     receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
     sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
@@ -394,6 +394,7 @@ it:
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
+      for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -481,7 +482,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [puoi inviargli un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -656,9 +656,13 @@ it:
   post:
     image_placeholder:
       broken: "Questa immagine è assente"
+    hidden_bidi_character: "I caratteri bidirezionali possono cambiare l'ordine di visualizzazione del testo. Ciò potrebbe essere utilizzato per nascondere del codice maligno."
     has_likes:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
+    cannot_permanently_delete:
+      many_posts: "Non è possibile eliminare definitivamente questo argomento perché ci sono altri messaggi."
+      wait_or_different_admin: "Devi aspettare %{time_left} per poter eliminare definitivamente questo messaggio, oppure dovrà farlo un diverso amministratore."
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "Hai eseguito questa operazione troppe volte. Attendi %{time_left} prima di riprovare."
@@ -883,19 +887,10 @@ it:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
   user_activity:
-    no_default:
-      self: "Non hai ancora nessuna attività."
-      others: "Nessuna attività."
     no_bookmarks:
       self: "Non hai aggiunto messaggi nei segnalibri. I segnalibri ti consentono di accedere velocemente a specifici messaggi."
       search: "Nessun segnalibro trovato con la query di ricerca fornita."
       others: "Nessun segnalibro."
-    no_likes_given:
-      self: "Non hai messo \"Mi piace\" ad alcun messaggio."
-      others: "Nessun messaggio con \"Mi piace\"."
-    no_replies:
-      self: "Non hai risposto a nessun messaggio."
-      others: "Nessuna risposta."
     no_drafts:
       self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
   email_settings:
@@ -958,7 +953,7 @@ it:
         remove: "Questo argomento non è più un banner. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
     title: "Preferenze email aggiornate!"
-    description: "le preferenze email per <b>%{email}</b> sono state aggiornate. Per cambiare le tue impostazioni email <a href='%{url}'>accedi alle tue preferenze utente</a>."
+    description: "Le impostazioni email per <b>%{email}</b> sono state aggiornate. Per modificarle <a href='%{url}'>visita le preferenze utente</a>."
     topic_description: "Per iscriverti di nuovo a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
     private_topic_description: "Per iscriverti di nuovo, usa il controllo notifica in fondo o sulla destra dell'argomento."
   uploads:
@@ -1365,6 +1360,7 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
   site_settings:
+    disabled: "disabilitata"
     display_local_time_in_user_card: "Visualizza l'ora locale in base al fuso orario di un utente quando viene aperta la sua scheda utente."
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -1788,7 +1784,7 @@ it:
     topic_view_duration_hours: "Conteggia una nuova visita dell'argomento una volta per IP/Utente ogni N ore"
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
-    max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di attendibilità 0 da questo IP (e nessuno è membro dello staff o a livello TL2 o superiore), non accettare nuove iscrizioni utente da questo IP."
+    max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di attendibilità 0 da questo IP (e nessuno è membro dello staff o a livello 2 o superiore), non accettare nuove iscrizioni da questo IP. Impostare a 0 per disabilitare il limite."
     min_ban_entries_for_roll_up: "Quando si clicca il pulsante Roll up, verrà creato un nuovo elenco di IP interdetti se sono presenti almeno (N) elementi."
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
@@ -1924,6 +1920,8 @@ it:
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, impostare l'opzione vuota per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
+    disable_category_edit_notifications: "Disabilita le notifiche di modifica delle categorie negli argomenti."
+    disable_tags_edit_notifications: "Disabilita le notifiche di modifica delle etichette sugli argomenti."
     notification_consolidation_threshold: "Il numero di notifiche per richieste di adesione o di \"Mi piace\" ricevuti prima che le notifiche vengano raccolte in una sola. Impostare il valore a 0 per disabilitare l'opzione."
     likes_notification_consolidation_window_mins: "Durata in minuti del periodo in cui le notifiche dei \"mi piace\" sono raccolte in un'unica notifica una volta raggiunta la soglia definita. La soglia può essere configurata tramite l'impostazione `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Spunta automaticamente gli argomenti quando l'utente arriva in fondo."
@@ -1947,7 +1945,7 @@ it:
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
-    show_copy_button_on_codeblocks: "Aggiungi un pulsante ai blocchi di codice per copiare il contenuto del blocco negli appunti dell'utente. Questa funzione non è supportata su Internet Explorer."
+    show_copy_button_on_codeblocks: "Aggiungi un pulsante ai blocchi di codice per copiare il contenuto del blocco negli appunti dell'utente."
     embed_any_origin: "Consenti contenuti incorporabili indipendentemente dall'origine. Questa impostazione è richiesta dalle app mobili con HTML statico."
     embed_topics_list: "Supporta l'inclusione delle liste di argomenti nell'HTML"
     embed_set_canonical_url: "Imposta come URL canonico per gli argomenti incorporati l'URL del contenuto incorporato."
@@ -1985,6 +1983,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
+    enable_fast_edit: "Abilita la modifica in linea della breve selezione del testo di un messaggio."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -2436,47 +2435,6 @@ it:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
-    text_body_template: |
-      Questa è un'e-mail di prova da
-
-      [**%{base_url}**][0]
-
-      La consegna delle e-mail è complicata. Ecco alcune cose importanti da controllare prima:
-
-      - *Assicurati* di impostare correttamente l'indirizzo da: `notification email` nelle impostazioni del sito. **Il dominio specificato nell'indirizzo "da" delle e-mail inviate è il dominio rispetto al quale avverrà la convalida delle tue e-mail**.
-
-      - Mettiti in condizione di poter analizzare il sorgente non elaborato dell'e-mail nel client di posta, in modo da poter esaminare le intestazioni e-mail per individuare indizi importanti. In Gmail, puoi usare l'opzione "mostra originale" nel menu a discesa in alto a destra di ogni messaggio email.
-
-      - **IMPORTANTE: ** Il tuo ISP ha inserito un record DNS inverso per associare i nomi di dominio e gli indirizzi IP da cui invii la posta? [Prova il tuo record PTR inverso][2] qui. Se il tuo ISP non inserisce il record del puntatore DNS inverso corretto, l'e-mail molto probabilmente non verrà recapitata.
-
-      - Il [record SPF][8] del tuo dominio è corretto? [Prova il tuo record SPF][1] qui. Si noti che TXT è il tipo di record ufficiale corretto per SPF.
-
-      - Il [record DKIM][3] del tuo dominio è corretto? Ciò migliorerà significativamente il corretto recapito delle e-mail. [Prova il tuo record DKIM][7] qui.
-
-      - Se gestisci personalmente il tuo server di posta elettronica, verifica che gli IP del tuo server di posta [non si trovino in elenchi di e-mail bloccate][4]. Verifica inoltre che il server stia inviando un nome host completo traducibile in DNS nel suo messaggio HELO. In caso contrario, si verificherà il rifiuto della tua e-mail da parte di molti servizi di posta elettronica.
-
-      - Consigliamo vivamente di **inviare un'e-mail di prova a [mail-tester.com][mt]** per verificare che tutto quanto sopra indicato funzioni correttamente.
-
-      (Il modo *facile* consiste nel creare un account su [SendGrid],[sg], [SparkPost],[sp], [Mailgun],[mg] o [Mailjet][mj], che offrono piani di abbonamento a servizi e-mail a basso costo e adatti a piccole comunità di utenti. Dovrai comunque configurare i record SPF e DKIM nel tuo DNS!)
-
-      Ci auguriamo che tu abbia ricevuto correttamente questa e-mail di verifica della consegna dei messaggi!
-
-      Cordiali saluti,
-
-      I tuoi amici del team [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
@@ -3140,6 +3098,26 @@ it:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}][MP]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Messaggio utente"
       subject_template: "[%{email_prefix}]%{topic_title}"
@@ -3186,6 +3164,9 @@ it:
         Sei stato sospeso dal forum fino a %{suspended_till}.
 
         Motivo: %{reason}
+    account_suspended_forever:
+      title: "Account Sospeso"
+      subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
@@ -3193,6 +3174,9 @@ it:
         Sei stato silenziato nel forum fino a %{silenced_till}.
 
         Motivo: %{reason}
+    account_silenced_forever:
+      title: "Account Silenziato"
+      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
@@ -3406,14 +3390,20 @@ it:
     empty: "Spiacenti, ma il file che hai fornito è vuoto."
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
+    create_multipart_failure: "Errore nel creare il caricamento multipart nell'archivio esterno."
+    abort_multipart_failure: "Errore nell’annullare il caricamento multipart nell'archivio esterno."
+    complete_multipart_failure: "Errore nel completare il caricamento multipart nell'archivio esterno."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
+      too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
+      too_large_humanized: "Purtroppo l'immagine che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size}), per favore ridimensionala e prova di nuovo."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. Forse è danneggiata?"
     placeholders:
       too_large: "(immagine più grande di %{max_size_kb}KB)"
+      too_large_humanized: "(immagine più grandi di %{max_size})"
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:
@@ -3885,10 +3875,8 @@ it:
             label: "Il nome della tua comunità"
             placeholder: "Il Ritrovo di Jane"
           site_description:
-            label: "Descrivi la tua comunità in una breve frase"
             placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
           short_site_description:
-            label: "Descrivi la tua comunità in poche parole"
             placeholder: "La miglior comunità di sempre"
       introduction:
         title: "Introduzione"
@@ -3947,17 +3935,30 @@ it:
           city_for_disputes:
             label: "Sede per eventuali controversie"
             placeholder: "San Francisco, California"
-      colors:
-        title: "Colori"
-      fonts:
-        title: "Caratteri"
+      styling:
         fields:
           body_font:
             label: "Carattere Corpo"
           heading_font:
             label: "Carattere Intestazione"
-          font_preview:
+          styling_preview:
             label: "Anteprima"
+          homepage_style:
+            choices:
+              latest:
+                label: "Ultimi Argomenti"
+              categories_only:
+                label: "Solo Categorie"
+              categories_with_featured_topics:
+                label: "Categorie con argomenti in evidenza"
+              categories_and_latest_topics:
+                label: "Categorie e Argomenti Recenti"
+              categories_and_top_topics:
+                label: "Categorie e Argomenti Popolari"
+              categories_boxes:
+                label: "Riquadri Categorie"
+              categories_boxes_with_topics:
+                label: "Riquadri Categorie con Argomenti"
       logos:
         title: "Loghi"
         fields:
@@ -3976,26 +3977,6 @@ it:
           large_icon:
             label: "Icona Grande"
             description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita useremo il logo quadrato."
-      homepage:
-        description: "Ti consigliamo di mostrare gli ultimi argomenti sulla tua homepage, ma se preferisci puoi anche mostrare le categorie (gruppi di argomenti)."
-        title: "Homepage"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Ultimi Argomenti"
-              categories_only:
-                label: "Solo Categorie"
-              categories_with_featured_topics:
-                label: "Categorie con Argomenti in Evidenza"
-              categories_and_latest_topics:
-                label: "Categorie e Argomenti Recenti"
-              categories_and_top_topics:
-                label: "Categorie e Argomenti Popolari"
-              categories_boxes:
-                label: "Riquadri Categorie"
-              categories_boxes_with_topics:
-                label: "Riquadri Categorie con Argomenti"
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."
@@ -4051,21 +4032,17 @@ it:
     missing_version: "Devi fornire un parametro versione"
     conflict: "C'è stato un conflitto di aggiornamento che ti impedisce di compiere questa azione."
     reasons:
-      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi 'approve_post_count'."
-      trust_level: "Le risposte degli utenti con un basso livello di attendibilità devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Gli Argomenti di utenti con basso livello di attendibilità devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
-      fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
-      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione `auto_silence_first_post_regex`."
-      watched_word: "Questo messaggio include una parola osservata. Guarda il tuo <a href='%{base_url}/admin/customize/watched_words'>elenco di parole osservate</a> ."
-      staged: "Nuovi argomenti e messaggi per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
-      category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
-      must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."
-      invite_only: "Tutti i nuovi utenti dovrebbero essere invitati. Vedi `invite_only`."
+      post_count: "I primi messaggi di ogni utente devono essere approvati dallo staff. Vedi %{link}"
+      trust_level: "Le risposte degli utenti con un basso livello di fiducia devono essere approvate dallo staff. Vedi %{link}"
+      new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di fiducia devono essere approvati dallo staff. Vedi %{link}"
+      fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
+      watched_word: "Questo post includeva una parola osservata. Vedi il tuo %{link}."
       email_auth_res_enqueue: "Questa email ha fallito un controllo DMARC, molto probabilmente non arriva da chi sembra provenire. Controlla le intestazioni email non elaborate per ulteriori informazioni."
-      email_spam: "Questa email è stata contrassegnata come spam dall'intestazione definita in `email_in_spam_header`."
-      suspect_user: "Questo nuovo utente ha inserito le informazioni del profilo senza leggere alcun argomento o messaggio, il che suggerisce fortemente che potrebbe essere uno spammer. Vedi `approve_suspect_users`."
-      contains_media: "Questo post include i contenuti multimediali incorporati. Vedi `review_media_unless_trust_level`."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
+      links:
+        watched_word: lista delle parole osservate
+        category: impostazioni della categoria
     actions:
       agree:
         title: "Acconsenti..."
@@ -4160,6 +4137,7 @@ it:
       other: "%{topic_title} (Parti %{count})"
     post_raw: "La discussione prosegue da %{parent_url}.\n\nDiscussioni precedenti:\n\n%{previous_topics}"
     small_action_post_raw: "Continua la discussione su %{new_title}."
+  fallback_username: "utente"
   activemodel:
     errors:
       <<: *errors

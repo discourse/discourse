@@ -189,7 +189,8 @@ export default createWidget("post-stream", {
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
     const postArrayLength = postArray.length;
-    const maxPostNumber = postArray[postArrayLength - 1].post_number;
+    const maxPostNumber =
+      postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
     const result = [];
     const before = attrs.gaps && attrs.gaps.before ? attrs.gaps.before : {};
     const after = attrs.gaps && attrs.gaps.after ? attrs.gaps.after : {};

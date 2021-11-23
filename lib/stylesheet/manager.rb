@@ -231,7 +231,7 @@ class Stylesheet::Manager
           stylesheets << data
         end
 
-        if SiteSetting.order_stylesheets && stylesheets.size > 1
+        if stylesheets.size > 1
           stylesheets = stylesheets.sort_by do |s|
             [
               s[:remote] ? 0 : 1,

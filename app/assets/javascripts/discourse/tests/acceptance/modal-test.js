@@ -36,20 +36,20 @@ acceptance("Modal", function (needs) {
     assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
 
     await click(".login-button");
-    assert.equal(count(".d-modal:visible"), 1, "modal should appear");
+    assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
     let controller = controllerFor("modal");
-    assert.equal(controller.name, "login");
+    assert.strictEqual(controller.name, "login");
 
     await click(".modal-outer-container");
     assert.ok(
       !exists(".d-modal:visible"),
       "modal should disappear when you click outside"
     );
-    assert.equal(controller.name, null);
+    assert.strictEqual(controller.name, null);
 
     await click(".login-button");
-    assert.equal(count(".d-modal:visible"), 1, "modal should reappear");
+    assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
     await triggerKeyEvent("#main-outlet", "keyup", 27);
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
@@ -60,16 +60,16 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("not-dismissable", {}));
 
-    assert.equal(count(".d-modal:visible"), 1, "modal should appear");
+    assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
     await click(".modal-outer-container");
-    assert.equal(
+    assert.strictEqual(
       count(".d-modal:visible"),
       1,
       "modal should not disappear when you click outside"
     );
     await triggerKeyEvent("#main-outlet", "keyup", 27);
-    assert.equal(
+    assert.strictEqual(
       count(".d-modal:visible"),
       1,
       "ESC should not close the modal"
@@ -86,7 +86,7 @@ acceptance("Modal", function (needs) {
     await visit("/");
     run(() => showModal("test-raw-title-panels", { panels }));
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-modal .modal-tab:first-child").text().trim(),
       "Test 1",
       "it should display the raw title"
@@ -102,7 +102,7 @@ acceptance("Modal", function (needs) {
     await visit("/");
 
     run(() => showModal("test-title", { title: "test_title" }));
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
       "it should display the title"
@@ -111,7 +111,7 @@ acceptance("Modal", function (needs) {
     await click(".d-modal .close");
 
     run(() => showModal("test-title-with-body", { title: "test_title" }));
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
       "it should display the title when used with d-modal-body"
@@ -132,30 +132,31 @@ acceptance("Modal Keyboard Events", function (needs) {
 
   test("modal-keyboard-events", async function (assert) {
     await visit("/t/internationalization-localization/280");
-
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    await triggerKeyEvent(".d-modal", "keyup", 13);
+    await triggerKeyEvent(".d-modal", "keydown", 13);
 
-    assert.equal(
+    assert.strictEqual(
       count("#modal-alert:visible"),
       1,
       "hitting Enter triggers modal action"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".d-modal:visible"),
       1,
       "hitting Enter does not dismiss modal due to alert error"
     );
 
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    assert.ok(exists(".d-modal:visible"), "modal should be visible");
+
+    await triggerKeyEvent("#main-outlet", "keydown", 27);
+
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
-
     await click(".d-editor-button-bar .btn.link");
+    await triggerKeyEvent(".d-modal", "keydown", 13);
 
-    await triggerKeyEvent(".d-modal", "keyup", 13);
     assert.ok(
       !exists(".d-modal:visible"),
       "modal should disappear on hitting Enter"

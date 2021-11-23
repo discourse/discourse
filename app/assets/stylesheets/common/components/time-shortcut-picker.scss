@@ -18,16 +18,11 @@
   .tap-tile-time-input {
     display: flex;
     align-items: center;
-    input {
-      width: 100%;
-      min-width: unset;
-    }
   }
 
   .date-picker,
   .time-input {
     text-align: left;
-    padding-top: 5px;
   }
 
   .time-input,

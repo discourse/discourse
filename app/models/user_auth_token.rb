@@ -4,7 +4,8 @@ require 'digest/sha1'
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
 
-  ROTATE_TIME = 10.minutes
+  ROTATE_TIME_MINS = 10
+  ROTATE_TIME = ROTATE_TIME_MINS.minutes
   # used when token did not arrive at client
   URGENT_ROTATE_TIME = 1.minute
 
@@ -15,17 +16,23 @@ class UserAuthToken < ActiveRecord::Base
   attr_accessor :unhashed_auth_token
 
   before_destroy do
-    UserAuthToken.log(action: 'destroy',
-                      user_auth_token_id: self.id,
-                      user_id: self.user_id,
-                      user_agent: self.user_agent,
-                      client_ip: self.client_ip,
-                      auth_token: self.auth_token)
+    UserAuthToken.log_verbose(
+      action: 'destroy',
+      user_auth_token_id: self.id,
+      user_id: self.user_id,
+      user_agent: self.user_agent,
+      client_ip: self.client_ip,
+      auth_token: self.auth_token,
+    )
   end
 
   def self.log(info)
+    UserAuthTokenLog.create!(info)
+  end
+
+  def self.log_verbose(info)
     if SiteSetting.verbose_auth_token_logging
-      UserAuthTokenLog.create!(info)
+      log(info)
     end
   end
 
@@ -78,13 +85,15 @@ class UserAuthToken < ActiveRecord::Base
     )
     user_auth_token.unhashed_auth_token = token
 
-    log(action: 'generate',
-        user_auth_token_id: user_auth_token.id,
-        user_id: user_id,
-        user_agent: user_agent,
-        client_ip: client_ip,
-        path: path,
-        auth_token: hashed_token)
+    log(
+      action: 'generate',
+      user_auth_token_id: user_auth_token.id,
+      user_id: user_id,
+      user_agent: user_agent,
+      client_ip: client_ip,
+      path: path,
+      auth_token: hashed_token,
+    )
 
     if staff && !impersonate
       Jobs.enqueue(:suspicious_login,
@@ -108,12 +117,14 @@ class UserAuthToken < ActiveRecord::Base
 
     if !user_token
 
-      log(action: "miss token",
-          user_id: user_token&.user_id,
-          auth_token: token,
-          user_agent: opts && opts[:user_agent],
-          path: opts && opts[:path],
-          client_ip: opts && opts[:client_ip])
+      log_verbose(
+        action: "miss token",
+        user_id: nil,
+        auth_token: token,
+        user_agent: opts && opts[:user_agent],
+        path: opts && opts[:path],
+        client_ip: opts && opts[:client_ip],
+      )
 
       return nil
     end
@@ -126,7 +137,7 @@ class UserAuthToken < ActiveRecord::Base
 
       # not updating AR model cause we want to give it one more req
       # with wrong cookie
-      UserAuthToken.log(
+      UserAuthToken.log_verbose(
         action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
         user_auth_token_id: user_token.id,
         user_id: user_token.user_id,
@@ -149,13 +160,15 @@ class UserAuthToken < ActiveRecord::Base
         user_token.seen_at = Time.zone.now
       end
 
-      log(action: changed_rows == 0 ? "seen wrong token" : "seen token",
-          user_auth_token_id: user_token.id,
-          user_id: user_token.user_id,
-          auth_token: user_token.auth_token,
-          user_agent: opts && opts[:user_agent],
-          path: opts && opts[:path],
-          client_ip: opts && opts[:client_ip])
+      log_verbose(
+        action: changed_rows == 0 ? "seen wrong token" : "seen token",
+        user_auth_token_id: user_token.id,
+        user_id: user_token.user_id,
+        auth_token: user_token.auth_token,
+        user_agent: opts && opts[:user_agent],
+        path: opts && opts[:path],
+        client_ip: opts && opts[:client_ip],
+      )
     end
 
     user_token

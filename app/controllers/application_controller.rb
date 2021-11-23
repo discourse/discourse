@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyHeader
+  include VaryHeader
 
   attr_reader :theme_id
 
@@ -46,6 +47,7 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
+  after_action  :ensure_vary_header
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -186,13 +188,21 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end
@@ -534,11 +544,16 @@ class ApplicationController < ActionController::Base
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')
-      find_opts = { username_lower: username_lower }
-      find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-      result = User
-      (result = result.includes(*eager_load)) if !eager_load.empty?
-      result.find_by(find_opts)
+
+      if current_user && current_user.username_lower == username_lower
+        current_user
+      else
+        find_opts = { username_lower: username_lower }
+        find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
+        result = User
+        (result = result.includes(*eager_load)) if !eager_load.empty?
+        result.find_by(find_opts)
+      end
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
       if provider_name = params[:external_provider]
@@ -921,8 +936,11 @@ class ApplicationController < ActionController::Base
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ',')
-    if params[key]
+    case params[key]
+    when String
       params[key].split(delimiter).map(&:to_i)
+    when Array
+      params[key].map(&:to_i)
     end
   end
 

@@ -1,6 +1,6 @@
 <div class="d-editor-container">
   <div class="d-editor-textarea-wrapper {{if disabled "disabled"}} {{if isEditorFocused "in-focus"}}">
-    <div class="d-editor-button-bar">
+    <div class="d-editor-button-bar" role="toolbar">
       {{#each toolbar.groups as |group|}}
         {{#each group.buttons as |b|}}
           {{#if b.popupMenu}}
@@ -9,6 +9,8 @@
               onChange=onPopupMenuAction
               onOpen=(action b.action b)
               class=b.className
+              tabindex=-1
+              onKeydown=rovingButtonBar
               options=(hash
                 icon=b.icon
                 focusAfterOnChange=false
@@ -24,6 +26,8 @@
               icon=b.icon
               class=b.className
               preventFocus=b.preventFocus
+              tabindex=b.tabindex
+              onKeyDown=rovingButtonBar
             }}
           {{/if}}
         {{/each}}
@@ -45,7 +49,8 @@
       disabled=disabled
       input=change
       focusIn=(action "focusIn")
-      focusOut=(action "focusOut")}}
+      focusOut=(action "focusOut")
+    }}
     {{popup-input-tip validation=validation}}
     {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>

@@ -44,7 +44,11 @@ class RspecErrorTracker
   def call(env)
     begin
       @app.call(env)
-    rescue => e
+
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
       RspecErrorTracker.last_exception = e
       raise e
     end
@@ -182,6 +186,7 @@ RSpec.configure do |config|
   config.include SidekiqHelpers
   config.include UploadsHelpers
   config.include OneboxHelpers
+  config.include FastImageHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!
@@ -285,6 +290,10 @@ RSpec.configure do |config|
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
   end
+
+  # Match the request hostname to the value in `database.yml`
+  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
@@ -448,6 +457,44 @@ def track_log_messages(level: nil)
   logger.messages
 ensure
   Rails.logger = old_logger
+end
+
+# this takes a string and returns a copy where 2 different
+# characters are swapped.
+# e.g.
+#   swap_2_different_characters("abc") => "bac"
+#   swap_2_different_characters("aac") => "caa"
+def swap_2_different_characters(str)
+  swap1 = 0
+  swap2 = str.split("").find_index { |c| c != str[swap1] }
+  # if the string is made up of 1 character
+  return str if !swap2
+  str = str.dup
+  str[swap1], str[swap2] = str[swap2], str[swap1]
+  str
+end
+
+def create_request_env(path: nil)
+  env = Rails.application.env_config.dup
+  env.merge!(Rack::MockRequest.env_for(path)) if path
+  env
+end
+
+def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.zone.now)
+  request = ActionDispatch::Request.new(create_request_env)
+  data = {
+    token: token,
+    user_id: user_id,
+    trust_level: trust_level,
+    issued_at: issued_at.to_i
+  }
+  cookie = request.cookie_jar.encrypted["_t"] = { value: data }
+  cookie[:value]
+end
+
+def decrypt_auth_cookie(cookie)
+  request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
+  request.cookie_jar.encrypted["_t"]
 end
 
 class SpecSecureRandom

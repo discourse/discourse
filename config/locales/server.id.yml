@@ -32,6 +32,10 @@ id:
     - November
     - Desember
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
   posts: "post"
@@ -549,6 +553,7 @@ id:
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
     memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
   site_settings:
+    disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
@@ -670,7 +675,7 @@ id:
                 label: "Pribadi"
       corporate:
         title: "Organisasi"
-      homepage:
+      styling:
         fields:
           homepage_style:
             choices:
@@ -702,8 +707,7 @@ id:
           title: "Hapus Pengguna"
       reject:
         title: "Tolak"
-  time:
-    <<: *datetime_formats
+  fallback_username: "pengguna"
   activemodel:
     errors:
       <<: *errors

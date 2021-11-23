@@ -1,7 +1,7 @@
 export default {
   name: "register-discourse-dom-templates",
 
-  initialize: function () {
+  initialize() {
     $('script[type="text/x-handlebars"]').each(function () {
       let $this = $(this);
       let name = $this.attr("name") || $this.data("template-name");

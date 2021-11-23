@@ -22,6 +22,7 @@
   }
   .user-additional-controls {
     grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 2;
   }
   .user-content,
@@ -41,15 +42,6 @@
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 
-    &.user-messages-inboxes {
-      // when there are multiple inboxes
-      .messages-nav {
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 1;
-      }
-    }
-
     + .user-additional-controls {
       grid-row-start: 2;
       grid-column-start: 1;
@@ -58,18 +50,6 @@
 
   .inboxes-controls {
     display: flex;
-  }
-
-  .user-messages-inboxes-drop {
-    padding: 0;
-    flex: 1 1 auto;
-    .select-kit-header {
-      padding: 8px 10px;
-
-      .caret-icon {
-        color: var(--primary-medium);
-      }
-    }
   }
 
   .new-private-message {
@@ -81,8 +61,6 @@
     margin-left: 8px;
 
     .select-kit-header {
-      height: 100%;
-
       .selected-name .name {
         display: none;
       }
@@ -242,7 +220,6 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        margin-left: -1em;
         li,
         > span {
           display: flex;
@@ -260,6 +237,10 @@
             }
           }
         }
+      }
+
+      > ul {
+        margin-left: -1em; // negates left button margin, for alignment
       }
 
       .user-profile-controls-outlet {
@@ -307,10 +288,6 @@
   .user-profile-names {
     text-align: left;
   }
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
 }
 
 .paginated-topics-list {
@@ -378,12 +355,25 @@
     width: 100%;
   }
 
-  .admin-controls {
+  .user-additional-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    .pull-right {
-      flex: 1 1 100%;
-      font-size: $font-down-1;
-      padding: 5px 0;
+    .user-invite-search {
+      width: 100%;
+    }
+    .user-invite-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .btn {
+        margin-bottom: 0.5em;
+      }
+      .btn:not(:last-of-type) {
+        margin-right: 0.5em;
+      }
     }
   }
 
@@ -432,6 +422,10 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
+    }
+
+    td.invite-actions {
+      display: flex;
     }
   }
 

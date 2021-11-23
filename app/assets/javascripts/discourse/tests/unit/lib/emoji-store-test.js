@@ -13,12 +13,12 @@ discourseModule("Unit | Utility | emoji-emojiStore", function (hooks) {
 
   test("defaults", function (assert) {
     assert.deepEqual(this.emojiStore.favorites, []);
-    assert.equal(this.emojiStore.diversity, 1);
+    assert.strictEqual(this.emojiStore.diversity, 1);
   });
 
   test("diversity", function (assert) {
     this.emojiStore.diversity = 2;
-    assert.equal(this.emojiStore.diversity, 2);
+    assert.strictEqual(this.emojiStore.diversity, 2);
   });
 
   test("favorites", function (assert) {

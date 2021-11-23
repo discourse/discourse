@@ -735,9 +735,7 @@ te:
             placeholder: "name@example.com"
       corporate:
         title: "సంస్థ"
-      colors:
-        title: "రంగులు"
-      homepage:
+      styling:
         fields:
           homepage_style:
             choices:
@@ -759,6 +757,7 @@ te:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
+  fallback_username: "సభ్యుడు"
   activemodel:
     errors:
       <<: *errors

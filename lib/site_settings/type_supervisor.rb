@@ -37,7 +37,7 @@ class SiteSettings::TypeSupervisor
       color: 22,
       simple_list: 23,
       emoji_list: 24,
-      html: 25
+      html_deprecated: 25,
     )
   end
 
@@ -92,7 +92,7 @@ class SiteSettings::TypeSupervisor
     end
 
     if (new_choices = opts[:choices])
-      new_choices = eval(new_choices) if new_choices.is_a?(String)
+      new_choices = eval(new_choices) if new_choices.is_a?(String) # rubocop:disable Security/Eval
 
       if @choices.has_key?(name)
         @choices[name].concat(new_choices)

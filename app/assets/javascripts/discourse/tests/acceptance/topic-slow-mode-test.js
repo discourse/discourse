@@ -1,3 +1,4 @@
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   exists,
@@ -38,16 +39,9 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-slow-mode button");
 
-    await click(".future-date-input-selector-header");
-
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
-
-    assert.equal(
-      query("div.slow-mode-type span.name").innerText,
+    const slowModeType = selectKit(".slow-mode-type");
+    assert.strictEqual(
+      slowModeType.header().name(),
       I18n.t("topic.slow_mode_update.durations.10_minutes"),
       "slow mode interval is rendered"
     );
@@ -56,7 +50,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     // but at least we can make sure that components for choosing date and time are rendered
     // (in case of inactive slow mode it would be only a combo box with text "Select a timeframe",
     // and date picker and time picker wouldn't be rendered)
-    assert.equal(
+    assert.strictEqual(
       query("div.enabled-until span.name").innerText,
       I18n.t("topic.auto_update_input.pick_date_and_time"),
       "enabled until combobox is switched to the option Pick Date and Time"
@@ -72,7 +66,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".topic-admin-slow-mode button");
     await click(".future-date-input-selector-header");
 
-    assert.equal(
+    assert.strictEqual(
       query("div.modal-footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.enable"),
       "shows 'Enable' button when slow mode is disabled"
@@ -83,7 +77,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".topic-admin-slow-mode button");
     await click(".future-date-input-selector-header");
 
-    assert.equal(
+    assert.strictEqual(
       query("div.modal-footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.update"),
       "shows 'Update' button when slow mode is enabled"

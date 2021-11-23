@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, gt, or } from "@ember/object/computed";
+import { equal, filterBy, gt, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -97,6 +97,7 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "default_calendar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -381,7 +382,7 @@ const User = RestModel.extend({
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
-      data: data,
+      data,
       type: "PUT",
     })
       .then((result) => {
@@ -561,6 +562,8 @@ const User = RestModel.extend({
       return !group.automatic || group.name === "moderators";
     });
   },
+
+  groupsWithMessages: filterBy("groups", "has_messages", true),
 
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {
@@ -758,7 +761,7 @@ const User = RestModel.extend({
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
-  delete: function () {
+  delete() {
     if (this.can_delete_account) {
       return ajax(userPath(this.username + ".json"), {
         type: "DELETE",
@@ -1034,7 +1037,7 @@ User.reopenClass(Singleton, {
 
   // Find a `User` for a given username.
   findByUsername(username, options) {
-    const user = User.create({ username: username });
+    const user = User.create({ username });
     return user.findDetails(options);
   },
 
@@ -1122,6 +1125,7 @@ User.reopenClass(Singleton, {
 
 if (typeof Discourse !== "undefined") {
   let warned = false;
+  // eslint-disable-next-line no-undef
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {

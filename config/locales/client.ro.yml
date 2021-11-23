@@ -328,7 +328,15 @@ ro:
         confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
+    topic_count_categories:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
     topic_count_latest:
+      one: "Un subiect nou sau actualizat."
+      few: "%{count} subiecte noi sau actualizate."
+      other: "%{count} de subiecte noi sau actualizate."
+    topic_count_unseen:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
       other: "%{count} de subiecte noi sau actualizate."
@@ -1001,7 +1009,15 @@ ro:
         latest: "Cele mai recente"
         sent: "Trimise"
         unread: "Necitite"
+        unread_with_count:
+          one: "Necitit (%{count})"
+          few: "Necitit (%{count})"
+          other: "Necitit (%{count})"
         new: "Noi"
+        new_with_count:
+          one: "Nou (%{count})"
+          few: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arhivă"
         groups: "Grupurile mele"
         move_to_inbox: "Mută în „Primite”"
@@ -1526,6 +1542,7 @@ ro:
     conditional_loading_section:
       loading: Se încarcă...
     select_kit:
+      delete_item: "Șterge %{name}"
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...
@@ -1574,7 +1591,6 @@ ro:
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
-      title: "Sau apasă Ctrl+Enter"
       users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
@@ -1668,6 +1684,9 @@ ro:
       watching_first_post: "<span>Subiect nou</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Înlătură"
+        cancel: "Anulează"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
         group_mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
@@ -1693,7 +1712,8 @@ ro:
       select_all: "Selectează tot"
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
-      title: "Caută subiecte, postări, utilizatori sau categorii"
+      title: "Caută"
+      full_page_title: "Caută"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
       post_format: "#%{post_number} de %{username}"
@@ -1702,13 +1722,17 @@ ro:
       or_search_google: "Sau încearcă să cauți cu Google:"
       search_google_button: "Google"
       search_button: "Caută"
+      categories: "Categorii"
+      tags: "Etichete"
+      type:
+        users: "Utilizatori"
+        categories: "Categorii"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
         topic: "Caută în acest subiect"
         private_messages: "Caută mesaje"
       advanced:
-        title: Căutare avansată
         posted_by:
           label: Postat de
         in_category:
@@ -1757,7 +1781,6 @@ ro:
           placeholder: minim
         max_views:
           placeholder: maxim
-    hamburger_menu: "Du-te la o altă categorie saulistă de subiecte"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
@@ -1881,6 +1904,7 @@ ro:
         publish_to: "Publică la:"
         when: "Când:"
         time_frame_required: "Te rog selectează un interval de timp"
+        duration: "Durată"
       auto_update_input:
         none: "Alege un interval de timp"
         later_today: "Mai târziu azi"
@@ -2124,6 +2148,7 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post:
       quote_reply: "Citează"
+      quote_edit: "Editează"
       quote_share: "Distribuie"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
@@ -2664,6 +2689,8 @@ ro:
           name: Altele
         posting:
           name: Care postează
+    download_calendar:
+      download: "Descărcare"
     tagging:
       all_tags: "Toate etichetele"
       other_tags: "Alte etichete"
@@ -2748,6 +2775,8 @@ ro:
         member: "membru"
         regular: "utilizator frecvent"
         leader: "lider"
+    user_activity:
+      no_likes_others: "Nu există postări apreciate."
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -3083,12 +3112,8 @@ ro:
             text: "Subsol"
           embedded_scss:
             text: "CSS încorporat"
-          head_tag:
-            text: "1"
-            title: "HTML care va fi inserat înainte de 1 tag"
           body_tag:
-            text: "1"
-            title: "HTML care va fi inserat înaintea de tag-ul </body>"
+            text: "Corp"
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"
@@ -3387,7 +3412,6 @@ ro:
         silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
-        delete_all_posts: "Șterge toate postările"
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"
         penalty_post_delete: "Șterge postarea"
         penalty_post_edit: "Modifică postarea"
@@ -3432,6 +3456,10 @@ ro:
         anonymize_yes: "Da, transformă acest cont în cont anonim"
         anonymize_failed: "A apărut o problemă în timpul transformării contului în cont anonim."
         delete: "Ștergere utilizator"
+        delete_posts:
+          button: "Șterge toate postările"
+          confirmation:
+            cancel: "Anulează"
         merge:
           prompt:
             target_username_placeholder: "Numele de utilizator al noului proprietar"
@@ -3675,7 +3703,6 @@ ro:
             with_time: <span class="username">%{username}</span> la <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
         add: "Adaugă un emoji nou"
         uploading: "Se încarcă..."
         name: "Nume"
@@ -3685,7 +3712,6 @@ ro:
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         confirm_delete: "Ești sigur că vrei să ștergi acest host?"
-        sample: "Folosește următorul cod HTML în site-ul tău pentru a crea și pentru a încorpora subiecte Discourse. Înlocuiește <b>ÎNLOCUIEȘTE_MĂ</b> cu URL-ul canonic al paginii pe care dorești să o încorporezi."
         title: "Embedding"
         host: "Host-uri permise"
         class_name: "Numele clasei"
@@ -3743,6 +3769,5 @@ ro:
           moderator: "Moderator"
           regular: "Utilizator frecvent"
       previews:
-        topic_title: "Subiectul discuției"
         share_button: "Distribuie"
         reply_button: "Răspunde"

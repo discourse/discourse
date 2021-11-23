@@ -62,7 +62,10 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(query("button span.d-button-label").innerText, "foo bar");
+      assert.strictEqual(
+        query("button span.d-button-label").innerText,
+        "foo bar"
+      );
     },
   });
 
@@ -74,8 +77,7 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(query("button").title, "foo bar");
-      assert.equal(query("button").getAttribute("aria-label"), "foo bar");
+      assert.strictEqual(query("button").title, "foo bar");
     },
   });
 });

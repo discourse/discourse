@@ -38,7 +38,7 @@ export function getWebauthnCredential(
     .get({
       publicKey: {
         challenge: challengeBuffer,
-        allowCredentials: allowCredentials,
+        allowCredentials,
         timeout: 60000,
 
         // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why

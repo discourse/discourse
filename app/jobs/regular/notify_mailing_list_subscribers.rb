@@ -28,7 +28,8 @@ module Jobs
       post_id = args[:post_id]
       post = post_id ? Post.with_deleted.find_by(id: post_id) : nil
 
-      return if !post || post.trashed? || post.user_deleted? || !post.topic || post.raw.blank?
+      return if !post || post.trashed? || post.user_deleted? ||
+                  !post.topic || post.raw.blank? || post.topic.private_message?
 
       users =
           User.activated.not_silenced.not_suspended.real

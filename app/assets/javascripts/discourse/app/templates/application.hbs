@@ -1,4 +1,5 @@
 {{#discourse-root}}
+  <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   {{d-document}}
   {{plugin-outlet name="above-site-header" tagName=""}}
   {{site-header canSignUp=canSignUp
@@ -14,7 +15,7 @@
 
   <div id="main-outlet" class="wrap" role="main">
     {{plugin-outlet name="above-main-container" tagName=""}}
-    <div class="container">
+    <div class="container" id="main-container">
       {{#if showTop}}
         {{custom-html name="top"}}
       {{/if}}

@@ -53,6 +53,9 @@ pl_PL:
       show-results:
         title: "Wyświetl wyniki ankiety"
         label: "Pokaż wyniki"
+      remove-vote:
+        title: "Usuń swój głos"
+        label: "Usuń głos"
       hide-results:
         title: "Wróć do oddanych głosów"
         label: "Pokaż głos"

@@ -1,10 +1,10 @@
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function triggerSwipeStart(touchTarget) {
   // some tests are shown in a zoom viewport.
@@ -24,7 +24,7 @@ async function triggerSwipeStart(touchTarget) {
   );
 
   const touchStart = {
-    touchTarget: touchTarget,
+    touchTarget,
     x:
       zoom *
       (touchTarget.getBoundingClientRect().x +
@@ -73,11 +73,12 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
   });
 }
 
+// new Touch() isn't availiable in Firefox, so this is skipped there
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
   needs.user();
 
-  test("swipe to close hamburger", async function (assert) {
+  chromeTest("swipe to close hamburger", async function (assert) {
     await visit("/");
     await click(".hamburger-dropdown");
 
@@ -93,26 +94,29 @@ acceptance("Mobile - menu swipes", function (needs) {
     );
   });
 
-  test("swipe back and flick to re-open hamburger", async function (assert) {
-    await visit("/");
-    await click(".hamburger-dropdown");
+  chromeTest(
+    "swipe back and flick to re-open hamburger",
+    async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
 
-    const touchTarget = document.querySelector(".panel-body");
-    let swipe = await triggerSwipeStart(touchTarget);
-    swipe.x -= 100;
-    await triggerSwipeMove(swipe);
-    swipe.x += 20;
-    await triggerSwipeMove(swipe);
-    await triggerSwipeEnd(swipe);
+      const touchTarget = document.querySelector(".panel-body");
+      let swipe = await triggerSwipeStart(touchTarget);
+      swipe.x -= 100;
+      await triggerSwipeMove(swipe);
+      swipe.x += 20;
+      await triggerSwipeMove(swipe);
+      await triggerSwipeEnd(swipe);
 
-    assert.equal(
-      count(".panel-body"),
-      1,
-      "it should re-open hamburger on a right swipe"
-    );
-  });
+      assert.strictEqual(
+        count(".panel-body"),
+        1,
+        "it should re-open hamburger on a right swipe"
+      );
+    }
+  );
 
-  test("swipe to user menu", async function (assert) {
+  chromeTest("swipe to user menu", async function (assert) {
     await visit("/");
     await click("#current-user");
 

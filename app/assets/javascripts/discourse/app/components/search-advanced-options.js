@@ -80,7 +80,9 @@ export function addAdvancedSearchOptions(options) {
 }
 
 export default Component.extend({
-  classNames: ["search-advanced-options"],
+  tagName: "details",
+  attributeBindings: ["expandFilters:open"],
+  classNames: ["advanced-filters"],
   category: null,
 
   init() {
@@ -116,6 +118,7 @@ export default Component.extend({
         : inOptionsForAll(),
       statusOptions: statusOptions(),
       postTimeOptions: postTimeOptions(),
+      showAllTagsCheckbox: false,
     });
   },
 
@@ -313,10 +316,10 @@ export default Component.extend({
       const userInput = match[0].replace(REGEXP_TAGS_REPLACE, "");
 
       if (existingInput !== userInput) {
-        this.set(
-          "searchedTerms.tags",
-          userInput.length !== 0 ? userInput.split(joinChar) : null
-        );
+        const updatedTags = userInput?.split(joinChar);
+
+        this.set("searchedTerms.tags", updatedTags);
+        this.set("showAllTagsCheckbox", !!(updatedTags.length > 1));
       }
     } else if (!tags) {
       this.set("searchedTerms.tags", null);
@@ -496,6 +499,9 @@ export default Component.extend({
         searchTerm += ` tags:${tags}`;
       }
 
+      if (tagFilter.length > 1) {
+        this.set("showAllTagsCheckbox", true);
+      }
       this._updateSearchTerm(searchTerm);
     } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match[0], "");
@@ -527,8 +533,10 @@ export default Component.extend({
             idCategoryMatches[0],
             `category:${id}`
           );
-        } else {
+        } else if (slug) {
           searchTerm += ` #${parentSlug}:${slug}`;
+        } else {
+          searchTerm += ` category:${id}`;
         }
 
         this._updateSearchTerm(searchTerm);
@@ -540,8 +548,10 @@ export default Component.extend({
             idCategoryMatches[0],
             `category:${id}`
           );
-        } else {
+        } else if (slug) {
           searchTerm += ` #${slug}`;
+        } else {
+          searchTerm += ` category:${id}`;
         }
 
         this._updateSearchTerm(searchTerm);

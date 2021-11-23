@@ -600,18 +600,9 @@ nb_NO:
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
   user_activity:
-    no_default:
-      self: "Du har ingen aktivitet enda."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       others: "Ingen bokmerker."
-    no_likes_given:
-      self: "Du har ikke likt noen innlegg."
-      others: "Ingen likte innlegg. "
-    no_replies:
-      self: "Du har ikke svart på noen innlegg."
-      others: "Ingen svar."
     no_drafts:
       self: "Du har ingen utkast; når du begynner å forfatte et svar på et emne vil det automatisk lagres som et nytt utkast."
   topic_flag_types:
@@ -934,6 +925,7 @@ nb_NO:
     force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
     out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
+    disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
@@ -1161,6 +1153,10 @@ nb_NO:
       title: "Bruker svarte i privat samtale"
       subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
     user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
+    user_group_mentioned_pm_group:
       subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
     user_posted_pm:
       title: "Bruker opprettet privat samtale"
@@ -1433,25 +1429,10 @@ nb_NO:
             label: "Automatiserte meldinger"
       corporate:
         title: "Organisasjon"
-      colors:
-        title: "Farger"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Forhåndsvis"
-      logos:
-        title: "Logoer"
-        fields:
-          logo:
-            label: "Primær logo"
-      icons:
-        title: "Ikoner"
-        fields:
-          large_icon:
-            label: "Stort ikon"
-      homepage:
-        title: "Hjemmeside"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1464,6 +1445,16 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+      logos:
+        title: "Logoer"
+        fields:
+          logo:
+            label: "Primær logo"
+      icons:
+        title: "Ikoner"
+        fields:
+          large_icon:
+            label: "Stort ikon"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:
@@ -1508,6 +1499,7 @@ nb_NO:
           title: "Slett bruker"
       reject:
         title: "Avvis"
+  fallback_username: "bruker"
   activemodel:
     errors:
       <<: *errors

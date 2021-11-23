@@ -129,6 +129,11 @@ module UserGuardian
     true
   end
 
+  def can_see_user_actions?(user, action_types)
+    return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    (action_types & UserAction.private_types).empty?
+  end
+
   def allowed_user_field_ids(user)
     @allowed_user_field_ids ||= {}
 
@@ -174,6 +179,10 @@ module UserGuardian
 
   def can_upload_user_card_background?(user)
     (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
+  end
+
+  def can_upload_external?
+    !ExternalUploadManager.user_banned?(user)
   end
 
   def can_delete_sso_record?(user)

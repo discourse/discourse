@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative '../components/imap/imap_helper'
 
 describe Group do
   let(:admin) { Fabricate(:admin) }
@@ -198,11 +197,18 @@ describe Group do
   end
 
   describe '#primary_group=' do
-    it "updates all members' #primary_group" do
+    before do
       group.add(user)
+    end
 
+    it "updates all members' #primary_group" do
       expect { group.update(primary_group: true) }.to change { user.reload.primary_group }.from(nil).to(group)
       expect { group.update(primary_group: false) }.to change { user.reload.primary_group }.from(group).to(nil)
+    end
+
+    it "updates all members' #flair_group" do
+      expect { group.update(primary_group: true) }.to change { user.reload.flair_group }.from(nil).to(group)
+      expect { group.update(primary_group: false) }.to change { user.reload.flair_group }.from(group).to(nil)
     end
   end
 
@@ -920,6 +926,7 @@ describe Group do
 
   describe '.search_groups' do
     fab!(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
+    let(:messageable_group) { Fabricate(:group, name: "MessageableGroup", messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     it 'should return the right groups' do
       group

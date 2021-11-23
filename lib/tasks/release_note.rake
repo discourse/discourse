@@ -17,7 +17,7 @@ task "release_note:generate", :from, :to, :repo do |t, args|
   changes = find_changes(repo, args[:from], args[:to])
 
   CHANGE_TYPES.each do |ct|
-    print_changes(ct[:heading], changes[ct])
+    print_changes(ct[:heading], changes[ct], "###")
   end
 
   if changes.values.all?(&:empty?)
@@ -54,11 +54,10 @@ task "release_note:plugins:generate", :from, :to, :plugin_glob, :org do |t, args
       next
     end
 
-    puts "## #{name}\n\n"
+    puts "### #{name}\n\n"
     CHANGE_TYPES.each do |ct|
-      print_changes(ct[:heading], changes[ct])
+      print_changes(ct[:heading], changes[ct], "####")
     end
-    puts "---", ""
   end
 
   puts "(No changes found in #{no_changes_repos.join(", ")})"
@@ -99,10 +98,10 @@ def find_changes(repo, from, to)
   changes
 end
 
-def print_changes(heading, changes)
+def print_changes(heading, changes, importance)
   return if changes.length == 0
 
-  puts "### #{heading}", ""
+  puts "#{importance} #{heading}", ""
   puts changes.to_a, ""
 end
 

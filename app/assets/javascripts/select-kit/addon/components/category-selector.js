@@ -1,4 +1,4 @@
-import EmberObject, { computed, get } from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import Category from "discourse/models/category";
 import I18n from "I18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -17,7 +17,7 @@ export default MultiSelectComponent.extend({
     allowAny: false,
     allowUncategorized: "allowUncategorized",
     displayCategoryDescription: false,
-    selectedNameComponent: "multi-select/selected-category",
+    selectedChoiceComponent: "selected-choice-category",
   },
 
   init() {
@@ -42,13 +42,6 @@ export default MultiSelectComponent.extend({
   }),
 
   value: mapBy("categories", "id"),
-
-  filterComputedContent(computedContent, filter) {
-    const regex = new RegExp(filter, "i");
-    return computedContent.filter((category) =>
-      this._normalize(get(category, "name")).match(regex)
-    );
-  },
 
   modifyComponentForRow() {
     return "category-row";

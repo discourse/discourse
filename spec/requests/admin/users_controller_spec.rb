@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 'discourse_ip_info'
+require 'rotp'
 
 RSpec.describe Admin::UsersController do
   fab!(:admin) { Fabricate(:admin) }
@@ -327,6 +328,14 @@ RSpec.describe Admin::UsersController do
       another_admin.reload
       expect(another_admin.admin).to eq(false)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_admin.id}/revoke_admin.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_deleted']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
+      expect(response.parsed_body['can_delete_all_posts']).to eq(true)
+    end
   end
 
   describe '#grant_admin' do
@@ -353,6 +362,27 @@ RSpec.describe Admin::UsersController do
       put "/admin/users/#{another_user.id}/grant_admin.json"
       expect(response.status).to eq(200)
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(true)
+    end
+
+    it 'asks user for second factor if it is enabled' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(another_user.reload.admin).to eq(false)
+    end
+
+    it 'grants admin if second factor is correct' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json", params: {
+        second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+        second_factor_method: UserSecondFactor.methods[:totp]
+      }
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(another_user.reload.admin).to eq(true)
     end
   end
 
@@ -505,6 +535,12 @@ RSpec.describe Admin::UsersController do
       another_user.reload
       expect(another_user.moderator).to eq(true)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_user.id}/grant_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(false)
+      expect(response.parsed_body['can_be_anonymized']).to eq(false)
+    end
   end
 
   describe '#revoke_moderation' do
@@ -523,6 +559,12 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       moderator.reload
       expect(moderator.moderator).to eq(false)
+    end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{moderator.id}/revoke_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
     end
   end
 
@@ -644,6 +686,16 @@ RSpec.describe Admin::UsersController do
         expect(Post.where(id: post.id).count).to eq(0)
         expect(Topic.where(id: topic.id).count).to eq(0)
         expect(User.where(id: delete_me.id).count).to eq(0)
+      end
+
+      context "user has reviewable flagged post which was handled" do
+        let!(:reviewable) { Fabricate(:reviewable_flagged_post, created_by: admin, target_created_by: delete_me, target: post, topic: topic, status: 4) }
+
+        it "deletes the user record" do
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, delete_as_spammer: true }
+          expect(response.status).to eq(200)
+          expect(User.where(id: delete_me.id).count).to eq(0)
+        end
       end
     end
 

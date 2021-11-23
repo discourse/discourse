@@ -1,22 +1,36 @@
-<div class="form-horizontal bookmark-search-form">
-  {{input type="text"
-          value=searchTerm
-          placeholder=(i18n "bookmarks.search_placeholder")
-          enter=(action "search")
-          id="bookmark-search" autocomplete="discourse"}}
-  {{d-button
-      class="btn-primary"
-      action=(action "search")
-      type="button"
-      icon="search"}}
-</div>
-{{#if noContent}}
-  <div class="alert alert-info">{{noResultsHelpMessage}}</div>
-{{else}}
-  {{bookmark-list
-    loadMore=(action "loadMore")
-    reload=(action "reload")
-    loading=loading
-    loadingMore=loadingMore
-    content=content}}
-{{/if}}
+{{#conditional-loading-spinner condition=loading}}
+  {{#if permissionDenied}}
+    <div class="alert alert-info">{{i18n "bookmarks.list_permission_denied"}}</div>
+  {{else if userDoesNotHaveBookmarks}}
+    <div class="empty-state">
+      <span class="empty-state-title">{{i18n "user.no_bookmarks_title"}}</span>
+      <div class="empty-state-body">
+        <p>{{emptyStateBody}}</p>
+      </div>
+    </div>
+  {{else}}
+    <div class="inline-form full-width bookmark-search-form">
+      {{input type="text"
+        value=searchTerm
+        placeholder=(i18n "bookmarks.search_placeholder")
+        enter=(action "search")
+        id="bookmark-search" autocomplete="discourse"}}
+      {{d-button
+        class="btn-primary"
+        action=(action "search")
+        type="button"
+        icon="search"
+      }}
+    </div>
+    {{#if nothingFound}}
+      <div class="alert alert-info">{{i18n "user.no_bookmarks_search"}}</div>
+    {{else}}
+      {{bookmark-list
+        loadMore=(action "loadMore")
+        reload=(action "reload")
+        loadingMore=loadingMore
+        content=model.bookmarks
+      }}
+    {{/if}}
+  {{/if}}
+{{/conditional-loading-spinner}}

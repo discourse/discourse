@@ -132,6 +132,8 @@ en:
       previous_month: "Previous Month"
       next_month: "Next Month"
       placeholder: date
+      from_placeholder: "from date"
+      to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -175,6 +177,7 @@ en:
       forwarded: "forwarded the above email"
 
     topic_admin_menu: "topic actions"
+    skip_to_main_content: "Skip to main content"
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -205,6 +208,7 @@ en:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
@@ -263,6 +267,8 @@ en:
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
+    period_chooser:
+      aria_label: "Filter by period"
 
     related_messages:
       title: "Related Messages"
@@ -299,12 +305,14 @@ en:
       help:
         bookmark: "Click to bookmark the first post on this topic"
         edit_bookmark: "Click to edit the bookmark on this topic"
+        edit_bookmark_for_topic: "Click to edit the bookmark for this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
       not_bookmarked: "bookmark this post"
+      remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
@@ -344,6 +352,10 @@ en:
         confirm: "You have a draft in progress for this topic. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+
+    topic_count_categories:
+      one: "See %{count} new or updated topic"
+      other: "See %{count} new or updated topics"
 
     topic_count_latest:
       one: "See %{count} new or updated topic"
@@ -410,6 +422,7 @@ en:
 
     review:
       order_by: "Order by"
+      date_filter: "Posted between"
       in_reply_to: "in reply to"
       explain:
         why: "explain why this item ended up in the queue"
@@ -1039,7 +1052,9 @@ en:
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
       expand_profile: "Expand"
+      sr_expand_profile: "Expand profile details"
       collapse_profile: "Collapse"
+      sr_collapse_profile: "Collapse profile details"
       bookmarks: "Bookmarks"
       bio: "About me"
       timezone: "Timezone"
@@ -1067,9 +1082,15 @@ en:
       no_bookmarks_title: "You haven’t bookmarked anything yet"
       no_bookmarks_body: >
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_bookmarks_search: "No bookmarks found with the provided search query."
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
+        <br><br>
+        Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_notifications_page_title: "You don’t have any notifications yet"
+      no_notifications_page_body: >
+        You will be notified about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
       first_notification: "Your first notification! Select it to begin."
@@ -1183,7 +1204,13 @@ en:
         latest: "Latest"
         sent: "Sent"
         unread: "Unread"
+        unread_with_count:
+          one: "Unread (%{count})"
+          other: "Unread (%{count})"
         new: "New"
+        new_with_count:
+          one: "New (%{count})"
+          other: "New (%{count})"
         archive: "Archive"
         groups: "My Groups"
         move_to_inbox: "Move to Inbox"
@@ -1191,6 +1218,38 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         tags: "Tags"
         warnings: "Official Warnings"
+        read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
+        read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages'>personal messages</a>."
+
+        read_more_group_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages}
+          } remaining, or browse other messages in {groupLink}"
+
+        read_more_personal_pm_MF: "There {
+          UNREAD, plural,
+          =0 {}
+          one {
+          is <a href='{basePath}/u/{username}/messages/unread'># unread</a>
+          } other {
+          are <a href='{basePath}/u/{username}/messages/unread'># unread</a>
+          }
+          } {
+          NEW, plural,
+          =0 {}
+          one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> message}
+          other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># new</a> messages}
+          } remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>"
 
       preferences_nav:
         account: "Account"
@@ -1554,7 +1613,7 @@ en:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
 
-          instructions: "Share this link to instantly grant access to this site"
+          instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
@@ -1562,20 +1621,20 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict to one email address"
+          restrict_email: "Restrict to email"
 
           max_redemptions_allowed: "Max uses"
 
           add_to_groups: "Add to groups"
-          invite_to_topic: "Arrive at this topic"
+          invite_to_topic: "Arrive at topic"
           expires_at: "Expire after"
           custom_message: "Optional personal message"
 
           send_invite_email: "Save and Send Email"
+          send_invite_email_instructions: "Restrict invite to email to send an invite email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite saved."
-          invite_copied: "Invite link copied."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -1769,6 +1828,8 @@ en:
       description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
+      short_label: "Summarize"
+      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -1884,21 +1945,27 @@ en:
       google_oauth2:
         name: "Google"
         title: "with Google"
+        sr_title: "Login with Google"
       twitter:
         name: "Twitter"
         title: "with Twitter"
+        sr_title: "Login with Twitter"
       instagram:
         name: "Instagram"
         title: "with Instagram"
+        sr_title: "Login with Instagram"
       facebook:
         name: "Facebook"
         title: "with Facebook"
+        sr_title: "Login with Facebook"
       github:
         name: "GitHub"
         title: "with GitHub"
+        sr_title: "Login with GitHub"
       discord:
         name: "Discord"
         title: "with Discord"
+        sr_title: "Login with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -1955,10 +2022,14 @@ en:
         other: "+ %{count} subcategories"
 
     select_kit:
+      delete_item: "Delete %{name}"
       filter_by: "Filter by: %{name}"
       select_to_filter: "Select a value to filter"
       default_header_text: Select...
       no_content: No matches found
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
       filter_placeholder: Search...
       filter_placeholder_with_any: Search or create...
       create: "Create: '%{content}'"
@@ -2034,6 +2105,9 @@ en:
       cannot_see_mention:
         category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+      here_mention:
+        one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
+        other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 
@@ -2067,7 +2141,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press Ctrl+Enter"
+      title: "Or press %{modifier}Enter"
 
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -2163,6 +2237,9 @@ en:
       reload: "Reload"
       ignore: "Ignore"
 
+      image_alt_text:
+        aria_label: Alt text for image
+
     notifications:
       tooltip:
         regular:
@@ -2211,6 +2288,12 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      dismiss_confirmation:
+        body:
+          one: "Are you sure? You have %{count} important notification."
+          other: "Are you sure? You have %{count} important notifications."
+        dismiss: "Dismiss"
+        cancel: "Cancel"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -2271,11 +2354,14 @@ en:
       select_all: "Select All"
       clear_all: "Clear All"
       too_short: "Your search term is too short."
+      open_advanced: "Open advanced search"
+      clear_search: "Clear search"
+      sort_or_bulk_actions: "Sort or bulk select results"
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
-      title: "search topics, posts, users, or categories"
-      full_page_title: "search topics or posts"
+      title: "Search"
+      full_page_title: "Search"
       no_results: "No results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
@@ -2287,6 +2373,23 @@ en:
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
       search_button: "Search"
+      search_term_label: "enter search keyword"
+      categories: "Categories"
+      tags: "Tags"
+      in: "in"
+      in_this_topic: "in this topic"
+      in_this_topic_tooltip: "switch to searching all topics"
+      in_topics_posts: "in all topics and posts"
+      enter_hint: "or press Enter"
+      in_posts_by: "in posts by %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "again to use native browser search"
+
+      type:
+        default: "Topics/posts"
+        users: "Users"
+        categories: "Categories"
+        categories_and_tags: "Categories/tags"
 
       context:
         user: "Search posts by @%{username}"
@@ -2295,10 +2398,19 @@ en:
         topic: "Search this topic"
         private_messages: "Search messages"
 
+      tips:
+        category_tag: "filters by category or tag"
+        author: "filters by post author"
+        in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
+        status: "filters by topic status"
+        full_search: "launches full page search"
+        full_search_key: "%{modifier} + Enter"
+
       advanced:
-        title: Advanced Search
+        title: Advanced filters
         posted_by:
           label: Posted by
+          aria_label: Filter by post author
         in_category:
           label: Categorized
         in_group:
@@ -2307,6 +2419,7 @@ en:
           label: With Badge
         with_tags:
           label: Tagged
+          aria_label: Filter using tags
         filters:
           label: Only return topics/posts...
           title: Matching in title only
@@ -2337,20 +2450,27 @@ en:
             label: Posts
           min:
             placeholder: minimum
+            aria_label: filter by minimum number of posts
           max:
             placeholder: maximum
+            aria_label: filter by maximum number of posts
           time:
             label: Posted
+            aria_label: Filter by posted date
             before: before
             after: after
         views:
           label: Views
         min_views:
           placeholder: minimum
+          aria_label: filter by minimum views
         max_views:
           placeholder: maximum
+          aria_label: filter by maximum views
+        additional_options:
+          label: "Filter by post count and topic views"
 
-    hamburger_menu: "go to another topic list or category"
+    hamburger_menu: "menu"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -2550,6 +2670,7 @@ en:
         time_frame_required: "Please select a time frame"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
+        duration: "Duration"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -2715,6 +2836,9 @@ en:
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
         copied: "Topic link copied."
+        restricted_groups:
+          one: "Only visible to members of group: %{groupNames}"
+          other: "Only visible to members of groups: %{groupNames}"
         notify_users:
           title: "Notify"
           instructions: "Notify the following users about this topic:"
@@ -2913,6 +3037,9 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_reply_shortcut: "Or press q"
+      quote_edit: "Edit"
+      quote_edit_shortcut: "Or press e"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -2969,6 +3096,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files:
           one: "Sorry, you can only upload %{count} file at a time."
@@ -3017,6 +3145,8 @@ en:
             other: "Yes, and all %{count} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
+        permanently_delete: "Permanently Delete"
+        permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
@@ -3113,7 +3243,9 @@ en:
 
       bookmarks:
         create: "Create bookmark"
+        create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
+        edit_for_topic: "Edit bookmark for topic"
         created: "Created"
         updated: "Updated"
         name: "Name"
@@ -3238,6 +3370,7 @@ en:
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
+        title: "change notification level for this category"
         watching:
           title: "Watching"
           description: "You will automatically watch all topics in this category. You will be notified of every new post in every topic, and a count of new replies will be shown."
@@ -3444,6 +3577,7 @@ en:
       unseen:
         title: "Unseen"
         lower_title: "unseen"
+        help: "new topics and topics you are currently watching or tracking with unread posts"
       new:
         lower_title_with_count:
           one: "%{count} new"
@@ -3591,6 +3725,7 @@ en:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
         insert_url: "%{shortcut} Insert selection into open composer"
+        full_page_search: "%{shortcut} Launches full page search"
 
     badges:
       earned_n_times:
@@ -3628,6 +3763,18 @@ en:
       favorite_max_not_reached: "Mark this badge as favorite"
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
+    download_calendar:
+      title: "Download calendar"
+      save_ics: "Download .ics file"
+      save_google: "Add to Google calendar"
+      remember: "Don’t ask me again"
+      remember_explanation: "(you can change this preference in your user prefs)"
+      download: "Download"
+      default_calendar: "Default calendar"
+      default_calendar_instruction: "Determine which calendar should be used when dates are saved"
+      add_to_calendar: "Add to calendar"
+      google: "Google Calendar"
+      ics: "ICS"
     tagging:
       all_tags: "All Tags"
       other_tags: "Other Tags"
@@ -3636,6 +3783,9 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      choose_for_topic_required:
+        one: "select at least %{count} tag..."
+        other: "select at least %{count} tags..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -3791,6 +3941,26 @@ en:
 
     pick_files_button:
       unsupported_file_picked: "You have picked an unsupported file. Supported file types – %{types}."
+
+    user_activity:
+      no_activity_title: "No activity yet"
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_others: "No activity."
+      no_replies_title: "You have not replied to any topics yet"
+      no_replies_others: "No replies."
+      no_drafts_title: "You haven’t started any drafts"
+      no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
+      no_likes_title: "You haven’t liked any topics yet"
+      no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
+      no_likes_others: "No liked posts."
+      no_topics_title: "You have not started any topics yet"
+      no_read_topics_title: "You haven’t read any topics yet"
+      no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
+
+    no_group_messages_title: "No group messages found"
+
+    fullscreen_table:
+      expand_btn: "Expand Table"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -3992,6 +4162,7 @@ en:
         no_description: (no description)
         all_api_keys: All API Keys
         user_mode: User Level
+        scope_mode: Scope
         impersonate_all_users: Impersonate any user
         single_user: "Single User"
         user_placeholder: Enter username
@@ -4002,12 +4173,15 @@ en:
         delete: Permanently Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
-        use_global_key: Global Key (allows all actions)
         scopes:
           description: |
             When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
+          granular: Granular
+          read_only: Read-only
+          global: Global
+          global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
@@ -4015,6 +4189,8 @@ en:
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
+            global:
+              read: Restrict API key to read-only endpoints.
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
@@ -4022,6 +4198,8 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            uploads:
+              create: Upload a new file.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
@@ -4406,11 +4584,11 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "</head>"
-            title: "HTML that will be inserted before the </head> tag"
+            text: "Head"
+            title: "HTML that will be inserted before the head tag"
           body_tag:
-            text: "</body>"
-            title: "HTML that will be inserted before the </body> tag"
+            text: "Body"
+            title: "HTML that will be inserted before the body tag"
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"
@@ -4866,8 +5044,7 @@ en:
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
-        delete_all_posts: "Delete all posts"
-        delete_posts_progress: "Deleting posts..."
+
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
         view_edits: "View Edits"
@@ -4900,6 +5077,7 @@ en:
         logged_out: "User was logged out on all devices"
         revoke_admin: "Revoke Admin"
         grant_admin: "Grant Admin"
+        grant_admin_success: "New administrator was confirmed."
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: "Revoke Moderation"
         grant_moderation: "Grant Moderation"
@@ -4936,8 +5114,22 @@ en:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         delete_posts:
+          button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
+            description: "Deleting posts..."
+          confirmation:
+            title: "Delete all posts by @%{username}"
+            description: |
+              <p>Are you sure you would like to delete <b>%{post_count}</b> posts by @%{username}?
+
+              <p><b>This can not be undone!</b></p>
+
+              <p>To continue type: <code>%{text}</code></p>
+
+            text: "delete posts by @%{username}"
+            delete: "Delete posts by @%{username}"
+            cancel: "Cancel"
         merge:
           button: "Merge"
           prompt:
@@ -5274,7 +5466,7 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
         add: "Add New Emoji"
         uploading: "Uploading..."
         name: "Name"
@@ -5286,7 +5478,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
@@ -5365,7 +5557,8 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "Discussion topic"
-        font_title: "%{font} Font"
+        topic_title: "A discussion topic heading"
         share_button: "Share"
         reply_button: "Reply"
+        topic_preview: "Topic preview"
+        homepage_preview: "Homepage preview"

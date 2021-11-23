@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 
 createWidget(
   "post-admin-menu-button",
-  jQuery.extend(ButtonClass, { tagName: "li.btn" })
+  Object.assign(ButtonClass, { tagName: "li.btn" })
 );
 
 createWidget("post-admin-menu-button", {
@@ -34,6 +34,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       className: "popup-menu-button moderation-history",
       label: "review.moderation_history",
       url: `/review?topic_id=${attrs.topicId}&status=all`,
+    });
+  }
+
+  if (attrs.canPermanentlyDelete) {
+    contents.push({
+      icon: "trash-alt",
+      className: "popup-menu-button permanently-delete",
+      label: "post.controls.permanently_delete",
+      action: "permanentlyDeletePost",
     });
   }
 

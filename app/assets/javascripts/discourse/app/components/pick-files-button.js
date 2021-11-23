@@ -1,8 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import { bind, default as computed } from "discourse-common/utils/decorators";
+import computed, { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["pick-files-button"],
@@ -79,7 +80,7 @@ export default Component.extend({
   _haveAcceptedTypes(files) {
     for (const file of files) {
       if (
-        !(this._hasAcceptedExtension(file) && this._hasAcceptedMimeType(file))
+        !(this._hasAcceptedExtension(file) || this._hasAcceptedMimeType(file))
       ) {
         return false;
       }

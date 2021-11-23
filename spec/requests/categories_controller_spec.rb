@@ -68,6 +68,55 @@ describe CategoriesController do
       )
     end
 
+    it 'does not returns subcatgories without permission' do
+      subcategory = Fabricate(:category,  user: admin, parent_category: category)
+      subcategory.set_permissions(admins: :full)
+      subcategory.save!
+
+      sign_in(user)
+
+      get "/categories.json?include_subcategories=true"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category).to eq(nil)
+    end
+
+    it 'returns the right subcategory response with permission' do
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      sign_in(user)
+
+      get "/categories.json?include_subcategories=true"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category.count).to eq(1)
+      expect(subcategories_for_category.first["parent_category_id"]).to eq(category.id)
+      expect(subcategories_for_category.first["id"]).to eq(subcategory.id)
+    end
+
+    it 'does not return subcategories without query param' do
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      sign_in(user)
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      subcategories_for_category = category_list["categories"][1]["subcategory_list"]
+      expect(subcategories_for_category).to eq(nil)
+    end
+
     it 'does not show uncategorized unless allow_uncategorized_topics' do
       SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
 
@@ -437,12 +486,50 @@ describe CategoriesController do
             color: category.color,
             text_color: category.text_color,
             allow_global_tags: 'false',
-            min_tags_from_required_group: 1
+            min_tags_from_required_group: 1,
+            required_tag_group_name: ''
           }
 
           expect(response.status).to eq(200)
           category.reload
           expect(category.required_tag_group).to be_nil
+        end
+
+        it "does not update other fields" do
+          SiteSetting.tagging_enabled = true
+          tag_group_1 = Fabricate(:tag_group)
+          tag_group_2 = Fabricate(:tag_group)
+
+          category.update!(
+            allowed_tags: ["hello", "world"],
+            allowed_tag_groups: [tag_group_1.name],
+            required_tag_group_name: tag_group_2.name,
+            custom_fields: { field_1: 'hello', field_2: 'hello' }
+          )
+
+          put "/categories/#{category.id}.json"
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
+          expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
+          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
+
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.tags).to be_blank
+          expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
+          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
+
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil, custom_fields: { field_1: 'hi', field_2: nil } }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.tags).to be_blank
+          expect(category.tag_groups).to be_blank
+          expect(category.required_tag_group).to eq(nil)
+          expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
         end
       end
     end
@@ -545,6 +632,24 @@ describe CategoriesController do
 
       get "/categories_and_latest.json"
       expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
+    end
+
+    describe 'Showing top topics from private categories' do
+      it 'returns the top topic from the private category when the user is a member' do
+        restricted_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: restricted_group)
+        private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
+        TopTopic.refresh!
+        restricted_group.add(user)
+        sign_in(user)
+
+        get "/categories_and_top.json"
+        parsed_topic = response.parsed_body.dig('topic_list', 'topics').detect do |t|
+          t.dig('id') == private_topic.id
+        end
+
+        expect(parsed_topic).to be_present
+      end
     end
   end
 end

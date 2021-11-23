@@ -303,14 +303,24 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    guardian.ensure_can_delete!(post)
+
+    force_destroy = false
+    if params[:force_destroy].present?
+      if !guardian.can_permanently_delete?(post)
+        return render_json_error post.cannot_permanently_delete_reason(current_user), status: 403
+      end
+
+      force_destroy = true
+    else
+      guardian.ensure_can_delete!(post)
+    end
 
     unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
-    destroyer = PostDestroyer.new(current_user, post, context: params[:context])
+    destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
     destroyer.destroy
 
     render body: nil
@@ -555,10 +565,24 @@ class PostsController < ApplicationController
   end
 
   def flagged_posts
-    deprecate('posts#flagged_posts is deprecated. Please use /review instead.', since: '2.8.0.beta4', drop_from: '2.9')
-    review_queue_url = path("/review?status=all&type=ReviewableFlaggedPost&username=#{params[:username]}")
+    Discourse.deprecate(
+      'PostsController#flagged_posts is deprecated. Please use /review instead.',
+      since: '2.8.0.beta4', drop_from: '2.9'
+    )
 
-    redirect_to review_queue_url, status: 301
+    params.permit(:offset, :limit)
+    guardian.ensure_can_see_flagged_posts!
+
+    user = fetch_user_from_params
+    offset = [params[:offset].to_i, 0].max
+    limit = [(params[:limit] || 60).to_i, 100].min
+
+    posts = user_posts(guardian, user.id, offset: offset, limit: limit)
+      .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                                   .where(disagreed_at: nil)
+                                   .select(:post_id))
+
+    render_serialized(posts, AdminUserActionSerializer)
   end
 
   def deleted_posts
@@ -752,7 +776,7 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     if recipients = result[:target_usernames]
-      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true, drop_from: '2.9.0')
     else
       recipients = result[:target_recipients]
     end

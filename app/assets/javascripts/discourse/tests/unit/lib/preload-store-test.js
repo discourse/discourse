@@ -9,7 +9,7 @@ module("Unit | Utility | preload-store", function (hooks) {
 
   test("get", function (assert) {
     assert.blank(PreloadStore.get("joker"), "returns blank for a missing key");
-    assert.equal(
+    assert.strictEqual(
       PreloadStore.get("bane"),
       "evil",
       "returns the value for that key"
@@ -32,26 +32,34 @@ module("Unit | Utility | preload-store", function (hooks) {
     const finder = () => "batdance";
     const result = await PreloadStore.getAndRemove("joker", finder);
 
-    assert.equal(result, "batdance");
+    assert.strictEqual(result, "batdance");
   });
 
   test("getAndRemove returns a promise that resolves to the result of the finder's promise", async function (assert) {
     const finder = () => Promise.resolve("hahahah");
     const result = await PreloadStore.getAndRemove("joker", finder);
 
-    assert.equal(result, "hahahah");
+    assert.strictEqual(result, "hahahah");
   });
 
   test("returns a promise that rejects with the result of the finder's rejected promise", async function (assert) {
     const finder = () => Promise.reject("error");
 
     await PreloadStore.getAndRemove("joker", finder).catch((result) => {
-      assert.equal(result, "error");
+      assert.strictEqual(result, "error");
     });
   });
 
   test("returns a promise that resolves to 'evil'", async function (assert) {
     const result = await PreloadStore.getAndRemove("bane");
-    assert.equal(result, "evil");
+    assert.strictEqual(result, "evil");
+  });
+
+  test("returns falsy values without calling finder", async function (assert) {
+    PreloadStore.store("falsy", false);
+    const result = await PreloadStore.getAndRemove("falsy", () =>
+      assert.ok(false)
+    );
+    assert.strictEqual(result, false);
   });
 });

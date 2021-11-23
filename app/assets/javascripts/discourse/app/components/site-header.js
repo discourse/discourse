@@ -5,7 +5,7 @@ import PanEvents, {
 import { cancel, later, schedule } from "@ember/runloop";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
-import Mousetrap from "mousetrap";
+import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -24,7 +24,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _panMenuOffset: 0,
     _scheduledRemoveAnimate: null,
     _topic: null,
-    _mousetrap: null,
+    _itsatrap: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -183,16 +183,21 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const offset = info.offset();
+      const headerRect = header.getBoundingClientRect(),
+        headerOffset = headerRect.top + headerRect.height,
+        doc = document.documentElement;
       if (offset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
+          doc.style.setProperty("--header-offset", `${headerOffset}px`);
         }
       } else {
         if (this.dockedHeader) {
           document.body.classList.remove("docked");
           this.dockedHeader = false;
         }
+        doc.style.setProperty("--header-offset", `${headerOffset}px`);
       }
     },
 
@@ -258,8 +263,8 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const header = document.querySelector("header.d-header");
-      this._mousetrap = new Mousetrap(header);
-      this._mousetrap.bind(["right", "left"], (e) => {
+      this._itsatrap = new ItsATrap(header);
+      this._itsatrap.bind(["right", "left"], (e) => {
         const activeTab = document.querySelector(".glyphs .menu-link.active");
 
         if (activeTab) {
@@ -294,7 +299,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       cancel(this._scheduledRemoveAnimate);
 
-      this._mousetrap.reset();
+      this._itsatrap?.destroy();
+      this._itsatrap = null;
 
       document.removeEventListener("click", this._dismissFirstNotification);
     },

@@ -40,3 +40,4 @@ es:
             every_three_months: "Cada tres meses"
             every_six_months: "Cada seis meses"
             every_year: "Cada año"
+      default_title: "Evento de %{site_name}"

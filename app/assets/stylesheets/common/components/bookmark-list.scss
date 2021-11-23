@@ -1,29 +1,13 @@
 $mobile-breakpoint: 700px;
 
 .bookmark-list {
-  th.post-metadata {
+  .topic-list-data.post-metadata {
     text-align: center;
   }
 }
 
-.bookmark-search-form {
-  margin-bottom: 1em;
-  display: flex;
-
-  input[type="text"] {
-    flex: 1;
-    margin-right: 1em;
-  }
-
-  @media (max-width: $mobile-breakpoint) {
-    input[type="text"] {
-      margin-bottom: 0;
-    }
-  }
-}
-
 .bookmark-list-item {
-  td.post-metadata {
+  .topic-list-data.post-metadata {
     text-align: center;
   }
   @media (max-width: $mobile-breakpoint) {
@@ -31,7 +15,7 @@ $mobile-breakpoint: 700px;
       padding-right: 0.5em;
     }
   }
-  .main-link {
+  .main-link.topic-list-data {
     .bookmark-status-with-link {
       a.title {
         padding: 0;
@@ -70,10 +54,6 @@ $mobile-breakpoint: 700px;
     }
     .topic-statuses {
       float: none;
-      &:empty {
-        // avoids extra margin
-        display: none;
-      }
     }
   }
 

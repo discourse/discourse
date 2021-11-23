@@ -3,10 +3,10 @@
 import { Promise } from "rsvp";
 
 export default {
-  data: {},
+  data: new Map(),
 
   store(key, value) {
-    this.data[key] = value;
+    this.data.set(key, value);
   },
 
   /**
@@ -16,9 +16,9 @@ export default {
     So, for example, you can't load a preloaded topic more than once.
   **/
   getAndRemove(key, finder) {
-    if (this.data[key]) {
-      let promise = Promise.resolve(this.data[key]);
-      delete this.data[key];
+    if (this.data.has(key)) {
+      let promise = Promise.resolve(this.data.get(key));
+      this.data.delete(key);
       return promise;
     }
 
@@ -41,16 +41,14 @@ export default {
   },
 
   get(key) {
-    return this.data[key];
+    return this.data.get(key);
   },
 
   remove(key) {
-    if (this.data[key]) {
-      delete this.data[key];
-    }
+    this.data.delete(key);
   },
 
   reset() {
-    this.data = {};
+    this.data = new Map();
   },
 };

@@ -141,7 +141,7 @@ class Wizard
         end
       end
 
-      @wizard.append_step('colors') do |step|
+      @wizard.append_step('styling') do |step|
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
@@ -151,29 +151,68 @@ class Wizard
         scheme_id = default_theme_override ? (base_scheme || color_scheme_name) : ColorScheme::LIGHT_THEME_ID
 
         themes = step.add_field(
-          id: 'theme_previews',
-          type: 'component',
+          id: 'color_scheme',
+          type: 'dropdown',
           required: !default_theme_override,
-          value: scheme_id || ColorScheme::LIGHT_THEME_ID
+          value: scheme_id || ColorScheme::LIGHT_THEME_ID,
+          show_in_sidebar: true
         )
 
         # fix for the case when base_scheme is nil
         if scheme_id && default_theme_override && base_scheme.nil?
           scheme = default_theme.color_scheme
-          default_colors = scheme.colors.select(:name, :hex)
-          choice_hash = default_colors.reduce({}) { |choice, color| choice[color.name] = "##{color.hex}"; choice }
-          themes.add_choice(scheme_id, data: { colors: choice_hash })
+          themes.add_choice(scheme_id, data: { colors: scheme.colors_hashes })
         end
 
         ColorScheme.base_color_scheme_colors.each do |t|
-          with_hash = t[:colors].dup
-          with_hash.map { |k, v| with_hash[k] = "##{v}" }
-          themes.add_choice(t[:id], data: { colors: with_hash })
+          themes.add_choice(t[:id], data: { colors: t[:colors] })
         end
 
+        body_font = step.add_field(
+          id: 'body_font',
+          type: 'dropdown',
+          value: SiteSetting.base_font,
+          show_in_sidebar: true
+        )
+
+        heading_font = step.add_field(
+          id: 'heading_font',
+          type: 'dropdown',
+          value: SiteSetting.heading_font,
+          show_in_sidebar: true
+        )
+
+        DiscourseFonts.fonts.each do |font|
+          body_font.add_choice(font[:key], label: font[:name])
+          heading_font.add_choice(font[:key], label: font[:name])
+        end
+
+        current = SiteSetting.top_menu.starts_with?("categories") ? SiteSetting.desktop_category_page_style : "latest"
+        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true, value: current, show_in_sidebar: true)
+        style.add_choice('latest')
+        CategoryPageStyle.values.each do |page|
+          style.add_choice(page[:value])
+        end
+
+        step.add_field(
+          id: 'styling_preview',
+          type: 'component'
+        )
+
         step.on_update do |updater|
+          updater.update_setting(:base_font, updater.fields[:body_font])
+          updater.update_setting(:heading_font, updater.fields[:heading_font])
+
+          if updater.fields[:homepage_style] == 'latest'
+            top_menu = "latest|new|unread|top|categories"
+          else
+            top_menu = "categories|latest|new|unread|top"
+            updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
+          end
+          updater.update_setting(:top_menu, top_menu)
+
           scheme_name = (
-            (updater.fields[:theme_previews] || "") ||
+            (updater.fields[:color_scheme] || "") ||
             ColorScheme::LIGHT_THEME_ID
           )
 
@@ -189,33 +228,17 @@ class Wizard
             default_theme.save!
           else
             theme = Theme.create!(
-              name: name,
+              name: I18n.t("color_schemes.default_theme_name"),
               user_id: @wizard.user.id,
               color_scheme_id: scheme.id
             )
 
             theme.set_default!
           end
-        end
-      end
 
-      @wizard.append_step('fonts') do |step|
-        body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
-        heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
-
-        DiscourseFonts.fonts.each do |font|
-          body_font.add_choice(font[:key], label: font[:name])
-          heading_font.add_choice(font[:key], label: font[:name])
-        end
-
-        step.add_field(
-          id: 'font_preview',
-          type: 'component'
-        )
-
-        step.on_update do |updater|
-          updater.update_setting(:base_font, updater.fields[:body_font])
-          updater.update_setting(:heading_font, updater.fields[:heading_font])
+          if scheme.is_dark?
+            updater.update_setting(:default_dark_mode_color_scheme_id, -1)
+          end
         end
       end
 
@@ -239,29 +262,6 @@ class Wizard
         step.on_update do |updater|
           updater.apply_settings(:favicon) if SiteSetting.site_favicon_url != updater.fields[:favicon]
           updater.apply_settings(:large_icon) if SiteSetting.site_large_icon_url != updater.fields[:large_icon]
-        end
-      end
-
-      @wizard.append_step('homepage') do |step|
-
-        current = SiteSetting.top_menu.starts_with?("categories") ? SiteSetting.desktop_category_page_style : "latest"
-
-        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true, value: current)
-        style.add_choice('latest')
-        CategoryPageStyle.values.each do |page|
-          style.add_choice(page[:value])
-        end
-
-        step.add_field(id: 'homepage_preview', type: 'component')
-
-        step.on_update do |updater|
-          if updater.fields[:homepage_style] == 'latest'
-            top_menu = "latest|new|unread|top|categories"
-          else
-            top_menu = "categories|latest|new|unread|top"
-            updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
-          end
-          updater.update_setting(:top_menu, top_menu)
         end
       end
 

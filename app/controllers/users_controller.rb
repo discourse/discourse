@@ -316,6 +316,21 @@ class UsersController < ApplicationController
     render json: MultiJson.dump(serializer)
   end
 
+  def private_message_topic_tracking_state
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    report = PrivateMessageTopicTrackingState.report(user)
+
+    serializer = ActiveModel::ArraySerializer.new(
+      report,
+      each_serializer: PrivateMessageTopicTrackingStateSerializer,
+      scope: guardian
+    )
+
+    render json: MultiJson.dump(serializer)
+  end
+
   def badge_title
     params.require(:user_badge_id)
 
@@ -479,10 +494,19 @@ class UsersController < ApplicationController
     usernames.each(&:downcase!)
 
     cannot_see = []
+    here_count = nil
+
     topic_id = params[:topic_id]
-    unless topic_id.blank?
-      topic = Topic.find_by(id: topic_id)
-      usernames.each { |username| cannot_see.push(username) unless Guardian.new(User.find_by_username(username)).can_see?(topic) }
+    if topic_id.present? && topic = Topic.find_by(id: topic_id)
+      usernames.each do |username|
+        if !Guardian.new(User.find_by_username(username)).can_see?(topic)
+          cannot_see.push(username)
+        end
+      end
+
+      if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
+        here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
+      end
     end
 
     result = User.where(staged: false)
@@ -494,6 +518,7 @@ class UsersController < ApplicationController
       valid_groups: groups,
       mentionable_groups: mentionable_groups,
       cannot_see: cannot_see,
+      here_count: here_count,
       max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
     }
   end
@@ -1080,7 +1105,10 @@ class UsersController < ApplicationController
 
     options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(params[:include_staged_users])
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
-    options[:limit] = params[:limit].to_i if params[:limit].present?
+    if params[:limit].present?
+      options[:limit] = params[:limit].to_i
+      raise Discourse::InvalidParameters.new(:limit) if options[:limit] <= 0
+    end
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
@@ -1105,6 +1133,12 @@ class UsersController < ApplicationController
       end
 
     if groups
+      DiscoursePluginRegistry.groups_callback_for_users_search_controller_action.each do |param_name, block|
+        if params[param_name.to_s]
+          groups = block.call(groups, current_user)
+        end
+      end
+
       groups = Group.search_groups(term, groups: groups)
       groups = groups.order('groups.name asc')
 
@@ -1135,7 +1169,7 @@ class UsersController < ApplicationController
 
     if type.blank? || type == 'system'
       upload_id = nil
-    elsif !SiteSetting.allow_uploaded_avatars
+    elsif !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, user)
       return render json: failed_json, status: 422
     else
       upload_id = params[:upload_id]
@@ -1574,7 +1608,10 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
-        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+        @bookmark_reminders = Bookmark.with_reminders
+          .where(user_id: user.id)
+          .includes(:topic)
+          .order(:reminder_at)
       end
     end
   end
@@ -1589,6 +1626,7 @@ class UsersController < ApplicationController
     if field.field_type == "dropdown"
       field.user_field_options.find_by_value(field_values)&.value
     elsif field.field_type == "multiselect"
+      field_values = Array.wrap(field_values)
       bad_values = field_values - field.user_field_options.map(&:value)
       field_values - bad_values
     else

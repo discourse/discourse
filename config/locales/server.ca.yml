@@ -734,18 +734,9 @@ ca:
     pm_title: "Esborranys de còpia de seguretat de temes en curs"
     pm_body: "Tema que conté esborranys de còpia de seguretat"
   user_activity:
-    no_default:
-      self: "Encara no teniu activitat."
-      others: "No hi ha activitat."
     no_bookmarks:
       self: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
       others: "Sense preferits."
-    no_likes_given:
-      self: "Encara no us ha agradat cap publicació."
-      others: "Publicacions sense 'm'agrada'."
-    no_replies:
-      self: "No heu respost a cap publicació."
-      others: "No hi ha respostes."
     no_drafts:
       self: "No teniu cap esborrany. Comenceu a redactar una resposta en qualsevol tema i es desarà com a esborrany nou."
   webauthn:
@@ -795,7 +786,6 @@ ca:
         remove: "Aquest tema ja no és un bàner. Ja no apareixerà més al començament de cada pàgina."
   unsubscribed:
     title: "S'han actualitzat les preferències de correu electrònic."
-    description: "S'han actualitzat les preferències de correu electrònic per a <b>%{email}</b>. Per a canviar la configuració de correu electrònic, <a href='%{url}'>aneu a les vostres preferències d'usuari</a>."
     topic_description: "Per a tornar a subscriure-us a %{link}, feu servir el control de notificacions a baix o a la dreta del tema."
     private_topic_description: "Per a tornar a subscriure-us, utilitzeu el control de notificació a baix o la dreta del tema."
   unsubscribe:
@@ -1183,6 +1173,7 @@ ca:
     out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
     unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
   site_settings:
+    disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
     default_locale: "L'idioma per defecte d'aquesta instància de Discourse. Podeu substituir el text de les categories i els temes generats pel sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalitza / Text</a>."
@@ -1260,7 +1251,6 @@ ca:
     summary_likes_required: "Nombre mínim de 'M'agrada' en un tema abans que sigui activat 'Resumeix aquest tema'. Els canvis en aquesta configuració s'aplicaran retroactivament dins d'una setmana."
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
     summary_max_results: "Nombre màxim de publicacions retornades per \"Resumeix aquest tema\""
-    enable_personal_messages: "Permet que els usuaris amb nivell de confiança 1 puguin crear missatges i respondre-hi (configurable amb nivell de confiança mínim per a enviar missatges). Observeu que l'equip responsable sempre pot enviar tota mena de missatges."
     enable_system_message_replies: "Permet als usuaris respondre als missatges del sistema, fins i tot si els missatges personals estan desactivats"
     enable_long_polling: "El bus de missatges emprat per a notificar pot utilitzar 'long polling'"
     long_polling_base_url: "URL base emprat per a 'long polling' (quan una xarxa de CDN serveix contingut dinàmic, assegureu-vos que ho heu configurat com a 'origin pull'), p. ex. http://origin.site.com"
@@ -1514,7 +1504,6 @@ ca:
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
-    max_new_accounts_per_registration_ip: "Si ja hi ha (n) comptes amb nivell de confiança o d'aquesta IP (i cap no és membre de l'equip responsable o té nivell 2 o superior), deixa d'acceptar registres des d'aquesta IP."
     min_ban_entries_for_roll_up: "En clicar el botó Agrupa es crearà una nova entrada de prohibició de subxarxa si hi ha almenys (N) entrades."
     max_age_unmatched_emails: "Suprimeix entrades no coincidents de correus sota supervisió després de (N) dies."
     max_age_unmatched_ips: "Suprimeix entrades no coincidents d'entrades IP sota supervisió després de (N) dies."
@@ -2468,6 +2457,26 @@ ca:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "L'usuari ha publicat"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2995,10 +3004,8 @@ ca:
             label: "El nom de la vostra comunitat"
             placeholder: "Cau de la Jane"
           site_description:
-            label: "Descriviu la vostra comunitat amb una frase curta"
             placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
           short_site_description:
-            label: "Descriviu la vostra comunitat en poques paraules"
             placeholder: "La millor comunitat de tots els temps"
       introduction:
         title: "Introducció"
@@ -3056,12 +3063,26 @@ ca:
           city_for_disputes:
             label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
-      colors:
-        title: "Colors"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previsualitza"
+          homepage_style:
+            choices:
+              latest:
+                label: "Temes més recents"
+              categories_only:
+                label: "Només categories"
+              categories_with_featured_topics:
+                label: "Categories amb temes destacats"
+              categories_and_latest_topics:
+                label: "Categories i temes més recents"
+              categories_and_top_topics:
+                label: "Categories i temes principals"
+              categories_boxes:
+                label: "Quadres de categories"
+              categories_boxes_with_topics:
+                label: "Quadres de categories amb temes"
       logos:
         title: "Logos"
         fields:
@@ -3080,26 +3101,6 @@ ca:
           large_icon:
             label: "Icona gran"
             description: "Icona utilitzada per a representar el vostre lloc web en dispositius moderns que tingui un bon aspecte en mides més grans. Idealment més gran que 512 × 512. Utilitzarem el logotip quadrat per defecte."
-      homepage:
-        description: "Us suggerim que mostreu els temes més recents en la vostra pàgina principal, però si us ho estimeu més, també podeu mostrar-hi categories (grups o temes)."
-        title: "Pàgina principal"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Temes més recents"
-              categories_only:
-                label: "Només categories"
-              categories_with_featured_topics:
-                label: "Categories amb temes destacats"
-              categories_and_latest_topics:
-                label: "Categories i temes més recents"
-              categories_and_top_topics:
-                label: "Categories i temes principals"
-              categories_boxes:
-                label: "Quadres de categories"
-              categories_boxes_with_topics:
-                label: "Quadres de categories amb temes"
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
@@ -3148,16 +3149,6 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
-    reasons:
-      post_count: "L'equip responsable ha d'aprovar les primeres publicacions de tots els usuaris. Vegeu `approve_post_count`."
-      trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
-      fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
-      staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
-      category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."
-      must_approve_users: "Tots els usuaris nous han de ser aprovats per l'equip responsable. Vegeu `must_approve_users`."
-      invite_only: "Cal convidar tots els usuaris nous. Vegeu `invite_only`."
     actions:
       agree:
         title: "D'acord..."
@@ -3229,6 +3220,7 @@ ca:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:
     not_in_allowed_guild: "L'autenticació ha fallat. No sou membre d’un gremi de Discord autoritzat."
+  fallback_username: "usuari"
   activemodel:
     errors:
       <<: *errors

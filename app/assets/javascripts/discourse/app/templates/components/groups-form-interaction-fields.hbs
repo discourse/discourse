@@ -8,9 +8,11 @@
       valueProperty="value"
       value=model.visibility_level
       content=visibilityLevelOptions
-      castInteger=true
       class="groups-form-visibility-level"
       onChange=(action (mut model.visibility_level))
+      options=(hash
+        castInteger=true
+      )
     }}
 
     <div class="control-instructions">
@@ -104,3 +106,5 @@
     onChange=(action (mut model.default_notification_level))
   }}
 </div>
+
+{{plugin-outlet name="groups-interaction-custom-options" args=(hash model=model)}}

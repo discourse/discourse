@@ -18,7 +18,7 @@ acceptance("Admin - Search Logs", function (needs) {
     await click(".term a");
 
     assert.ok(
-      exists("div.search-logs-filter"),
+      exists(".search-logs-filter"),
       "it should show the search log term page"
     );
   });

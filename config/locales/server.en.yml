@@ -19,6 +19,8 @@ en:
       long: "%B %-d, %Y, %l:%M%P"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
+      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:
@@ -268,7 +270,6 @@ en:
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
-    muted_invitee: "Sorry, that user muted you."
     muted_topic: "Sorry, that user muted this topic."
     receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
     sender_does_not_allow_pm: "Sorry, you do not allow that user to send you private messages."
@@ -429,6 +430,7 @@ en:
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
       time_must_be_provided: "time must be provided for all reminders"
+      for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
@@ -526,14 +528,7 @@ en:
 
     dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
 
-    get_a_room: |
-      ### Encourage everyone to get involved in the conversation
-
-      You’ve replied %{count} times to @%{reply_username} in this particular topic!
-
-      A great discussion includes many voices and perspectives. Can you get anybody else involved?
-
-      And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
+    get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
@@ -722,9 +717,13 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+    hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
+    cannot_permanently_delete:
+      many_posts: "You can not permanently delete this topic because there are other posts."
+      wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
     slow_down: "You’ve performed this action too many times, please try again later."
@@ -963,19 +962,10 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_default:
-      self: "You have no activity yet."
-      others: "No activity."
     no_bookmarks:
       self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       search: "No bookmarks found with the provided search query."
       others: "No bookmarks."
-    no_likes_given:
-      self: "You have not liked any posts."
-      others: "No liked posts."
-    no_replies:
-      self: "You have not replied to any posts."
-      others: "No replies."
     no_drafts:
       self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
 
@@ -1044,7 +1034,7 @@ en:
 
   unsubscribed:
     title: "Email preferences updated!"
-    description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    description: "Email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
@@ -1427,19 +1417,25 @@ en:
         ignores_count: Ignores count
         mutes_count: Mutes count
       description: "Users who have been muted and/or ignored by many other users."
-    top_users_by_received_likes:
-      title: "Top Users by received likes"
+    top_users_by_likes_received:
+      title: "Top Users by likes received"
       labels:
         user: User
-        qtt_like: Received Likes
+        qtt_like: Likes Received
       description: "Top 10 users who have been received more likes."
-    top_users_by_received_likes_from_inferior_trust_level:
+    top_users_by_likes_received_from_inferior_trust_level:
       title: "Top Users by likes received from a user with a lower trust level"
       labels:
         user: User
         trust_level: Trust level
-        qtt_like: Received Likes
+        qtt_like: Likes Received
       description: "Top 10 users in a higher trust level being liked by people in a lower trust level."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Top Users by likes received from a variety of people"
+      labels:
+        user: User
+        qtt_like: Likes Received
+      description: "Top 10 users who have had the likes from a wide range of people."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1470,6 +1466,7 @@ en:
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
+    disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -1562,13 +1559,15 @@ en:
     enforce_second_factor: "Forces users to enable two-factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all Cross Site Request Forgery vectors on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
+
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
+    summary_timeline_button: "Show a 'Summarize' button in the timeline"
 
-    enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
@@ -1820,7 +1819,7 @@ en:
     external_emoji_url: "URL of the external service for emoji images. Leave blank to disable."
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
-
+    enable_listing_suspended_users_on_search: "Enable regular users to find suspended users."
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
     selectable_avatars: "List of avatars users can choose from."
 
@@ -1903,6 +1902,9 @@ en:
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
     enable_mentions: "Allow users to mention other users."
+    here_mention: "Name used for @here mention. Must not be an existent username."
+    max_here_mentioned: "Maximum number of mentioned people by @here."
+    min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1970,7 +1972,7 @@ en:
     user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
+    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
@@ -2149,6 +2151,10 @@ en:
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
+    disable_category_edit_notifications: "Disable category edit notifications on topics."
+
+    disable_tags_edit_notifications: "Disable tags edit notifications on topics."
+
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
@@ -2182,7 +2188,7 @@ en:
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
-    show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard. This feature is not supported on Internet Explorer."
+    show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
@@ -2229,6 +2235,7 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
+    enable_fast_edit: "Enables small selection of a post text to be edited inline."
 
     old_post_notice_days: "Days before post notice becomes old"
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
@@ -2340,6 +2347,7 @@ en:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
+      valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
@@ -2751,42 +2759,16 @@ en:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. In Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blocklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
-
-      (The *easy* way is to create an account on [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] or [Mailjet][mj], which have low cost mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
       We hope you received this email deliverability test OK!
+
+      Here is a [handy checklist for verifying email delivery configuration][1].
 
       Good luck,
 
       Your friends at [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
 
   new_version_mailer:
     title: "New Version Mailer"
@@ -3654,6 +3636,30 @@ en:
 
         %{respond_instructions}
 
+    user_group_mentioned_pm:
+      title: "User Group Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_group_mentioned_pm_group:
+      title: "User Group Mentioned PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
     user_posted:
       title: "User Posted"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4028,16 +4034,24 @@ en:
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
+    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload stub's intended size. %{additional_detail}"
+    create_multipart_failure: "Failed to create multipart upload in the external store."
+    abort_multipart_failure: "Failed to abort multipart upload in the external store."
+    complete_multipart_failure: "Failed to complete multipart upload in the external store."
+    external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
+      too_large_humanized: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size})."
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
+      too_large_humanized: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size}), please resize it and try again."
       larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
     placeholders:
       too_large: "(image larger than %{max_size_kb}KB)"
+      too_large_humanized: "(image larger than %{max_size})"
 
   avatar:
     missing: "Sorry, we can't find any avatar associated with that email address. Can you try uploading it again?"
@@ -4795,10 +4809,10 @@ en:
             label: "Your community’s name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your community in one short sentence"
+            label: "Describe your community in one short sentence (used in search results and social media)"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
           short_site_description:
-            label: "Describe your community in few words"
+            label: "Describe your community in few words (used for the homepage title)"
             placeholder: "Best community ever"
 
       introduction:
@@ -4877,18 +4891,34 @@ en:
             label: "City for Disputes"
             placeholder: "San Francisco, California"
 
-      colors:
-        title: "Colors"
-
-      fonts:
-        title: "Fonts"
+      styling:
+        title: "Styling"
         fields:
+          color_scheme:
+            label: "Color scheme"
           body_font:
             label: "Body font"
           heading_font:
             label: "Heading font"
-          font_preview:
+          styling_preview:
             label: "Preview"
+          homepage_style:
+            label: "Homepage style"
+            choices:
+              latest:
+                label: "Latest Topics"
+              categories_only:
+                label: "Categories Only"
+              categories_with_featured_topics:
+                label: "Categories with Featured Topics"
+              categories_and_latest_topics:
+                label: "Categories and Latest Topics"
+              categories_and_top_topics:
+                label: "Categories and Top Topics"
+              categories_boxes:
+                label: "Categories boxes"
+              categories_boxes_with_topics:
+                label: "Categories boxes with Topics"
 
       logos:
         title: "Logos"
@@ -4909,28 +4939,6 @@ en:
           large_icon:
             label: "Large Icon"
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
-
-      homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
-        title: "Homepage"
-
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
-              categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
-              categories_boxes:
-                label: "Categories boxes"
-              categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
 
       invites:
         title: "Invite Staff"
@@ -4993,21 +5001,24 @@ en:
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
     reasons:
-      post_count: "The first few posts from every user must be approved by staff. See `approve_post_count`."
-      trust_level: "Users at low trust levels must have replies approved by staff. See `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
-      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
-      auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
-      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/customize/watched_words'>list of watched words</a>."
-      staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
-      category: "Posts in this category require manual approval by staff. See the category settings."
-      must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
-      invite_only: "All new users should be invited. See `invite_only`."
+      post_count: "The first few posts from every user must be approved by staff. See %{link}."
+      trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
+      new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
+      fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      auto_silence_regex: "New user whose first post matches the %{link} setting."
+      watched_word: "This post included a Watched Word. See your %{link}."
+      staged: "New topics and posts for staged users must be approved by staff. See %{link}."
+      category: "Posts in this category require manual approval by staff. See the %{link}."
+      must_approve_users: "All new users must be approved by staff. See %{link}."
+      invite_only: "All new users should be invited. See %{link}."
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
-      email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
-      suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
-      contains_media: "This post includes embedded media. See `review_media_unless_trust_level`."
+      email_spam: "This email was flagged as spam by the header defined in %{link}."
+      suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See %{link}."
+      contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
+      links:
+        watched_word: list of watched words
+        category: category settings
 
     actions:
       agree:
@@ -5115,3 +5126,5 @@ en:
       other: "%{topic_title} (Part %{count})"
     post_raw: "Continuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
     small_action_post_raw: "Continue discussion at %{new_title}."
+
+  fallback_username: "user"

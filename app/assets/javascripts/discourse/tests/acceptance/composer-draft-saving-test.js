@@ -13,7 +13,7 @@ acceptance("Composer - Draft saving", function (needs) {
   const draftThatWillBeSaved = "This_will_be_saved_successfully";
 
   needs.pretender((server, helper) => {
-    server.post("/draft.json", (request) => {
+    server.post("/drafts.json", (request) => {
       const success = request.requestBody.includes(draftThatWillBeSaved);
       return success
         ? helper.response({ success: true })
@@ -34,7 +34,7 @@ acceptance("Composer - Draft saving", function (needs) {
     );
 
     await fillIn(".d-editor-input", "This won't be saved because of error");
-    assert.equal(
+    assert.strictEqual(
       query("div#draft-status span").innerText.trim(),
       I18n.t("composer.drafts_offline"),
       "the draft wasn't saved, a warning is rendered"

@@ -14,7 +14,7 @@
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <form class="form-horizontal">
-        <div>
+        <div class="control-group">
           <label>{{i18n "admin.badges.badge"}}</label>
           {{combo-box
             filterable=true
@@ -23,7 +23,7 @@
             onChange=(action (mut selectedBadgeId))
           }}
         </div>
-        <div>
+        <div class="control-group">
           <label>{{i18n "admin.badges.reason"}}</label>
           {{input type="text" value=badgeReason}}<br><small>{{i18n "admin.badges.reason_help"}}</small>
         </div>

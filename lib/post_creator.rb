@@ -480,7 +480,7 @@ class PostCreator
     end
 
     GroupArchivedMessage.where(topic_id: @topic.id).pluck(:group_id).each do |group_id|
-      GroupArchivedMessage.move_to_inbox!(group_id, @topic)
+      GroupArchivedMessage.move_to_inbox!(group_id, @topic, acting_user_id: @user.id)
     end
   end
 

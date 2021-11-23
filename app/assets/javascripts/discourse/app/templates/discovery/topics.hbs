@@ -16,8 +16,6 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
     discoveryList=true}}
 {{/if}}
 
-{{bulk-select-button selected=selected action=(action "refresh") category=category}}
-
 {{#discovery-topics-list
   model=model
   refresh=(action "refresh")
@@ -55,6 +53,7 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
       order=order
       ascending=ascending
       bulkSelectEnabled=bulkSelectEnabled
+      bulkSelectAction=(action "refresh")
       selected=selected
       expandGloballyPinned=expandGloballyPinned
       expandAllPinned=expandAllPinned

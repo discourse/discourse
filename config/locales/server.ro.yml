@@ -506,9 +506,6 @@ ro:
     no_bookmarks:
       self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       others: "Nu există semne de carte."
-    no_likes_given:
-      self: "Nu ai apreciat nicio postare."
-      others: "Nu există postări apreciate."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -533,7 +530,6 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
-    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -792,6 +788,7 @@ ro:
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
+    disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
@@ -837,7 +834,6 @@ ro:
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
-    enable_personal_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
     long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
@@ -998,7 +994,6 @@ ro:
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
     user_profile_view_duration_hours: "Contorizează câte vizualizare de profil utilizator o singură dată per IP/Utilizator la fiecare N ore"
     levenshtein_distance_spammer_emails: "Când se face detectarea spam pe bază de potrivire cu un set de criterii, care este diferența de numere de caractere care încă mai permite o potrivire aproximativă (fuzzy match)."
-    max_new_accounts_per_registration_ip: "Dacă există deja (n) conturi cu nivelul de încredere 0 de la acest IP (și nici unul nu este un membru al echipei sau la NÎ2 sau mai mare), blochează acceptarea de noi înregistrări de la acest IP."
     min_ban_entries_for_roll_up: "Când apeși pe butonul Consolidare, dacă există cel puțin (N) înregistrări, se va crea o nouă înregistrare de subrețea blocată"
     max_age_unmatched_emails: "șterge înregistrările emailurilor verificate, care nu corespund, după (N) zile."
     max_age_unmatched_ips: "șterge adresele de IP verificate, care nu corespund, după (N) zile."
@@ -1531,6 +1526,26 @@ ro:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
@@ -1932,7 +1947,6 @@ ro:
             label: "Numele comunității tale"
             placeholder: "Bârlogul Mariei"
           site_description:
-            label: "Descrie-ți comunitatea într-o singură frază scurtă"
             placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
       introduction:
         title: "Introducere"
@@ -1964,12 +1978,22 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-      colors:
-        title: "Culori"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previzualizează"
+          homepage_style:
+            choices:
+              latest:
+                label: "Subiecte recente"
+              categories_only:
+                label: "Numai categorii"
+              categories_with_featured_topics:
+                label: "Categorii cu subiecte promovate"
+              categories_and_latest_topics:
+                label: "Categorii și subiecte recente"
+              categories_and_top_topics:
+                label: "Categorii și discuții în top"
       logos:
         title: "Logo-uri"
         fields:
@@ -1980,21 +2004,6 @@ ro:
         fields:
           large_icon:
             label: "Iconiță mare"
-      homepage:
-        title: "Pagina principală"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu discuții promovate"
-              categories_and_latest_topics:
-                label: "Categorii și cele mai noi discuții"
-              categories_and_top_topics:
-                label: "Categorii și discuții de top"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
@@ -2043,6 +2052,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
+  fallback_username: "utilizatori"
   activemodel:
     errors:
       <<: *errors

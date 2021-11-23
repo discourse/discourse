@@ -12,7 +12,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_11 .select-below");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
@@ -91,7 +91,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_1 .select-post");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
@@ -127,7 +127,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_2 .select-below");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"

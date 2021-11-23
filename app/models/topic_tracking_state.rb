@@ -16,8 +16,8 @@
 #
 # See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
-
   include ActiveModel::SerializerSupport
+  include TopicTrackingStatePublishable
 
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
@@ -62,7 +62,7 @@ class TopicTrackingState
     group_ids = topic.category && topic.category.secure_group_ids
 
     MessageBus.publish("/new", message.as_json, group_ids: group_ids)
-    publish_read(topic.id, 1, topic.user_id)
+    publish_read(topic.id, 1, topic.user)
   end
 
   def self.publish_latest(topic, staff_only = false)
@@ -171,7 +171,7 @@ class TopicTrackingState
         category_id: post.topic.category_id,
         notification_level: tu.notification_level,
         archetype: post.topic.archetype,
-        first_unread_at: tu.user.user_stat.first_unread_at,
+        first_unread_at: tu.user.user_stat&.first_unread_at,
         unread_not_too_old: true
       }
 
@@ -227,20 +227,15 @@ class TopicTrackingState
     MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
   end
 
-  def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-    highest_post_number = DB.query_single("SELECT highest_post_number FROM topics WHERE id = ?", topic_id).first
-
-    message = {
-      topic_id: topic_id,
+  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+    self.publish_read_message(
       message_type: READ_MESSAGE_TYPE,
-      payload: {
-        last_read_post_number: last_read_post_number,
-        highest_post_number: highest_post_number,
-        notification_level: notification_level
-      }
-    }
-
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+      channel_name: self.unread_channel_key(user.id),
+      topic_id: topic_id,
+      user: user,
+      last_read_post_number: last_read_post_number,
+      notification_level: notification_level
+    )
   end
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
@@ -475,8 +470,8 @@ class TopicTrackingState
       JOIN user_options AS uo ON uo.user_id = u.id
       JOIN categories c ON c.id = topics.category_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
-      LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
+      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = :user_id
+      #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = :user_id"}
       #{additional_join_sql}
       WHERE u.id = :user_id AND
             #{filter_old_unread_sql}
@@ -508,60 +503,6 @@ class TopicTrackingState
 
   def self.highest_post_number_column_select(staff)
     "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
-  end
-
-  def self.publish_private_message(topic, archive_user_id: nil,
-                                          post: nil,
-                                          group_archive: false)
-
-    return unless topic.private_message?
-    channels = {}
-
-    allowed_user_ids = topic.allowed_users.pluck(:id)
-
-    if post && allowed_user_ids.include?(post.user_id)
-      channels["/private-messages/sent"] = [post.user_id]
-    end
-
-    if archive_user_id
-      user_ids = [archive_user_id]
-
-      [
-        "/private-messages/archive",
-        "/private-messages/inbox",
-        "/private-messages/sent",
-      ].each do |channel|
-        channels[channel] = user_ids
-      end
-    end
-
-    if channels.except("/private-messages/sent").blank?
-      channels["/private-messages/inbox"] = allowed_user_ids
-    end
-
-    topic.allowed_groups.each do |group|
-      group_user_ids = group.users.pluck(:id)
-      next if group_user_ids.blank?
-      group_channels = []
-      channel_prefix = "/private-messages/group/#{group.name.downcase}"
-      group_channels << "#{channel_prefix}/inbox"
-      group_channels << "#{channel_prefix}/archive" if group_archive
-      group_channels.each { |channel| channels[channel] = group_user_ids }
-    end
-
-    message = {
-      topic_id: topic.id
-    }
-
-    channels.each do |channel, ids|
-      if ids.present?
-        MessageBus.publish(
-          channel,
-          message.as_json,
-          user_ids: ids
-        )
-      end
-    end
   end
 
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)

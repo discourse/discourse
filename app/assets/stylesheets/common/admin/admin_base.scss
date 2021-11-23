@@ -414,14 +414,7 @@ $mobile-breakpoint: 700px;
     clear: both;
     padding: 4px;
   }
-  @include breakpoint(tablet) {
-    .select-kit.period-chooser
-      .period-chooser-header
-      h2.selected-name
-      .top-date-string {
-      font-size: $font-down-3;
-    }
-  }
+
   .controls {
     @include clearfix;
   }
@@ -534,15 +527,18 @@ $mobile-breakpoint: 700px;
     padding: 10px;
     display: flex;
     align-items: center;
+    .inline-form {
+      // Hacky, but fixes email preview summary
+      margin-bottom: -0.5em;
+      > div {
+        margin-right: 0.5em;
+      }
+    }
+
     @include breakpoint(mobile-extra-large) {
       margin: 0 -10px;
     }
-    label {
-      margin-bottom: 0;
-    }
     input {
-      margin-right: 5px;
-      margin-bottom: 0;
       @include breakpoint(tablet) {
         max-width: 150px;
       }
@@ -560,50 +556,37 @@ $mobile-breakpoint: 700px;
       }
     }
   }
-  .controls .menu-toggle {
-    display: none;
-    float: left;
-    padding: 5px 10px;
-    margin-right: 15px;
-    border: 1px solid var(--primary-medium);
+  .menu-toggle {
+    border-color: var(--primary-medium);
     border-radius: 3px;
     background: transparent;
     color: var(--primary);
     &:hover {
       background-color: var(--primary-low-mid);
     }
-    @media (max-width: $mobile-breakpoint) {
-      display: inline-block;
+
+    .not-mobile-device & {
+      display: none;
     }
   }
-  button {
-    margin-right: 5px;
-  }
-  input[type="text"] {
-    display: inline-block;
-    float: left;
-  }
+
   .result-message {
     display: inline-block;
     padding-left: 10px;
   }
-  .username {
-    input[type="text"] {
-      width: 240px;
-    }
-  }
+
   .search {
     label {
-      margin-top: 5px;
+      margin-bottom: 0px;
     }
-    .controls {
-      margin-left: 0;
-    } // Hide the search checkbox for very small screens
+
+    // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
     @media (max-width: 550px) {
       display: none;
     }
   }
+
   .toggle {
     span {
       font-weight: bold;
@@ -613,39 +596,13 @@ $mobile-breakpoint: 700px;
     display: inline-block;
     margin-right: 5px;
   }
-  .pull-right {
-    padding-right: 10px;
-  }
 }
 
-.paste-users {
-  width: 400px;
-  height: 150px;
-}
-
-.groups,
 .badges,
 .web-hook-container {
-  .form-horizontal {
-    & > div {
-      margin-bottom: 20px;
-    }
-    .d-editor-textarea-wrapper {
-      max-width: 60%;
-      .d-editor-button-bar {
-        overflow: hidden;
-      }
-    }
-    input,
-    textarea,
-    select,
-    .select-box {
-      width: 350px;
-    }
-    input[type="checkbox"],
-    input[type="radio"] {
-      width: 20px;
-    }
+  input[type="text"],
+  textarea {
+    min-width: 350px;
   }
 }
 
@@ -889,13 +846,14 @@ table#user-badges {
   margin-left: 0;
 
   .emoji-details {
+    @include form-item-sizing;
     display: flex;
     align-items: center;
     min-height: 30px;
-    padding: $input-padding;
-    line-height: 1;
     color: var(--primary);
-    border: 1px solid var(--primary-low);
+    border-color: var(--primary-low);
+    padding-left: 10px;
+    padding-right: 10px;
 
     .emoji-name {
       margin-left: 0.5em;
@@ -985,13 +943,6 @@ table#user-badges {
   }
 }
 
-// Mobile view text-inputs need some padding
-.mobile-view .admin-contents {
-  input[type="text"] {
-    padding: 4px;
-  }
-}
-
 .mobile-view .full-width {
   margin: 0;
 }
@@ -1034,3 +985,4 @@ a.inline-editable-field {
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
+@import "common/admin/mini_profiler";

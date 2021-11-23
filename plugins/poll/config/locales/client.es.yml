@@ -43,6 +43,9 @@ es:
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
+      remove-vote:
+        title: "Retirar tu voto"
+        label: "Retirar voto"
       hide-results:
         title: "Volver a tus votos"
         label: "Mostrar votos"

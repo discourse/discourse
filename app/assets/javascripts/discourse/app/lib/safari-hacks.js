@@ -98,7 +98,7 @@ function positioningWorkaround($fixedElement) {
 
   positioningWorkaround.blur = function (evt) {
     if (workaroundActive) {
-      $("body").removeClass("ios-safari-composer-hacks");
+      document.body.classList.remove("ios-safari-composer-hacks");
       window.scrollTo(0, originalScrollTop);
 
       if (evt && evt.target) {
@@ -188,7 +188,7 @@ function positioningWorkaround($fixedElement) {
         return;
       }
 
-      $("body").addClass("ios-safari-composer-hacks");
+      document.body.classList.add("ios-safari-composer-hacks");
       window.scrollTo(0, 0);
 
       if (!iOSWithVisualViewport()) {

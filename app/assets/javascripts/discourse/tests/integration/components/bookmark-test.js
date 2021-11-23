@@ -10,6 +10,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | bookmark", function (hooks) {
   setupRenderingTest(hooks);
@@ -180,9 +181,12 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(query("#bookmark-name").value, "test");
-      assert.equal(query("#custom-date > .date-picker").value, "2020-05-15");
-      assert.equal(query("#custom-time").value, "09:45");
+      assert.strictEqual(query("#bookmark-name").value, "test");
+      assert.strictEqual(
+        query("#custom-date > .date-picker").value,
+        "2020-05-15"
+      );
+      assert.strictEqual(query("#custom-time").value, "09:45");
     },
   });
 
@@ -191,7 +195,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
     async test(assert) {
       await click("#tap_tile_custom");
-      assert.equal(query("#custom-time").value, "08:00");
+      assert.strictEqual(query("#custom-time").value, "08:00");
     },
   });
 
@@ -207,7 +211,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     },
 
     async test(assert) {
-      assert.equal(
+      assert.strictEqual(
         query("div#tap_tile_next_month div.tap-tile-date").innerText,
         "Feb 1, 8:00 am"
       );

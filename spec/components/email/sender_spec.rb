@@ -181,6 +181,43 @@ describe Email::Sender do
       end
     end
 
+    context "replaces reply_key in custom headers" do
+      fab!(:user) { Fabricate(:user) }
+      let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
+      let(:reply_key) { PostReplyKey.find_by!(post_id: post.id, user_id: user.id).reply_key }
+
+      before do
+        SiteSetting.reply_by_email_address = 'replies+%{reply_key}@test.com'
+        SiteSetting.email_custom_headers = 'Auto-Submitted: auto-generated|Mail-Reply-To: sender-name+%{reply_key}@domain.net'
+
+        message.header['X-Discourse-Post-Id'] = post.id
+      end
+
+      it 'replaces headers with reply_key if present' do
+        message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = 'test-%{reply_key}@test.com'
+        message.header['Reply-To'] = 'Test <test-%{reply_key}@test.com>'
+        message.header['Auto-Submitted'] = 'auto-generated'
+        message.header['Mail-Reply-To'] = 'sender-name+%{reply_key}@domain.net'
+
+        email_sender.send
+
+        expect(message.header['Reply-To'].to_s).to eq("Test <test-#{reply_key}@test.com>")
+        expect(message.header['Auto-Submitted'].to_s).to eq('auto-generated')
+        expect(message.header['Mail-Reply-To'].to_s).to eq("sender-name+#{reply_key}@domain.net")
+      end
+
+      it 'removes headers with reply_key if absent' do
+        message.header['Auto-Submitted'] = 'auto-generated'
+        message.header['Mail-Reply-To'] = 'sender-name+%{reply_key}@domain.net'
+
+        email_sender.send
+
+        expect(message.header['Reply-To'].to_s).to eq('')
+        expect(message.header['Auto-Submitted'].to_s). to eq('auto-generated')
+        expect(message.header['Mail-Reply-To'].to_s).to eq('')
+      end
+    end
+
     context "adds Precedence header" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
@@ -373,7 +410,6 @@ describe Email::Sender do
           email_sender.send
 
           expect(message.header['List-ID']).to eq(nil)
-          expect(message.header['List-Post']).to eq(nil)
           expect(message.header['List-Archive']).to eq(nil)
           expect(message.header['Precedence']).to eq(nil)
           expect(message.header['List-Unsubscribe']).to eq(nil)

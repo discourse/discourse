@@ -20,12 +20,11 @@ function updateCache(term, results) {
 
 function searchTags(term, categories, limit) {
   return new Promise((resolve) => {
-    const clearPromise = later(
-      () => {
-        resolve(CANCELLED_STATUS);
-      },
-      isTesting() ? 50 : 5000
-    );
+    let clearPromise = isTesting()
+      ? null
+      : later(() => {
+          resolve(CANCELLED_STATUS);
+        }, 5000);
 
     const debouncedSearch = (q, cats, resultFunc) => {
       discourseDebounce(
@@ -33,7 +32,7 @@ function searchTags(term, categories, limit) {
         function () {
           oldSearch = $.ajax(getURL("/tags/filter/search"), {
             type: "GET",
-            data: { limit: limit, q },
+            data: { limit, q },
           });
 
           let returnVal = CANCELLED_STATUS;

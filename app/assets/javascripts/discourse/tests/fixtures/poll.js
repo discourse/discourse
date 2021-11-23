@@ -234,7 +234,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/14.json": {
     post_stream: {
@@ -390,7 +391,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/15.json": {
     post_stream: {
@@ -543,7 +545,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/topic_with_pie_chart_poll.json": {
     post_stream: {
@@ -691,6 +694,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     topic_timer: null,
     message_bus_last_id: 1,
     participant_count: 1,

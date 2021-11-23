@@ -1,5 +1,4 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import { warn } from "@ember/debug";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -193,10 +192,13 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
+    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
+      return false;
+    }
+
     return (
       this.site.can_tag_topics &&
       canEditTitle &&
-      !creatingPrivateMessage &&
       (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
     );
   },
@@ -241,13 +243,22 @@ export default Controller.extend({
     return SAVE_ICONS[modelAction];
   },
 
+  // Note we update when some other attributes like tag/category change to allow
+  // text customizations to use those.
   @discourseComputed(
     "model.action",
     "isWhispering",
     "model.editConflict",
-    "model.privateMessage"
+    "model.privateMessage",
+    "model.tags",
+    "model.category"
   )
   saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+    let result = this.model.customizationFor("saveLabel");
+    if (result) {
+      return result;
+    }
+
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {
@@ -285,20 +296,18 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed("model.isEncrypted")
-  composerComponent(isEncrypted) {
+  @discourseComputed()
+  composerComponent() {
     const defaultComposer = "composer-editor";
     if (this.siteSettings.enable_experimental_composer_uploader) {
-      if (isEncrypted) {
-        warn(
-          "Uppy cannot be used for composer uploads until upload handlers are developed, falling back to composer-editor.",
-          { id: "composer" }
-        );
-        return defaultComposer;
-      }
       return "composer-editor-uppy";
     }
     return defaultComposer;
+  },
+
+  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
   },
 
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
@@ -316,6 +325,28 @@ export default Controller.extend({
           };
         })
       );
+
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
 
       options.push(
         this._setupPopupMenuOption(() => {
@@ -474,6 +505,11 @@ export default Controller.extend({
       $links.each((idx, l) => {
         const href = l.href;
         if (href && href.length) {
+          // skip links added by watched words
+          if (l.dataset.word !== undefined) {
+            return true;
+          }
+
           // skip links in quotes and oneboxes
           for (let element = l; element; element = element.parentElement) {
             if (
@@ -501,7 +537,7 @@ export default Controller.extend({
 
           const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-          if (linkWarn) {
+          if (linkWarn && !this.get("isWhispering")) {
             const body = I18n.t("composer.duplicate_link", {
               domain: linkInfo.domain,
               username: linkInfo.username,
@@ -604,7 +640,9 @@ export default Controller.extend({
     },
 
     save(ignore, event) {
-      this.save(false, { jump: !(event && event.shiftKey) });
+      this.save(false, {
+        jump: !event?.shiftKey && !this.skipJumpOnSave,
+      });
     },
 
     displayEditReason() {
@@ -637,17 +675,19 @@ export default Controller.extend({
         groups.forEach((group) => {
           let body;
           const groupLink = getURL(`/g/${group.name}/members`);
+          const maxMentions = parseInt(group.max_mentions, 10);
+          const userCount = parseInt(group.user_count, 10);
 
-          if (group.max_mentions < group.user_count) {
+          if (maxMentions < userCount) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              count: group.max_mentions,
+              count: maxMentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
             body = I18n.t("composer.group_mentioned", {
               group: `@${group.name}`,
-              count: group.user_count,
+              count: userCount,
               group_link: groupLink,
             });
           }
@@ -677,6 +717,28 @@ export default Controller.extend({
           body,
         });
       });
+    },
+
+    hereMention(count) {
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        body: I18n.t("composer.here_mention", {
+          here: this.siteSettings.here_mention,
+          count,
+        }),
+      });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
     },
   },
 
@@ -917,6 +979,7 @@ export default Controller.extend({
       @param {Number} [opts.prioritizedCategoryId]
       @param {String} [opts.draftSequence]
       @param {Boolean} [opts.skipDraftCheck]
+      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
   open(opts) {
     opts = opts || {};
@@ -942,6 +1005,8 @@ export default Controller.extend({
       prioritizedCategoryId: null,
       skipAutoSave: true,
     });
+
+    this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {

@@ -1,7 +1,9 @@
-import createPMRoute from "discourse/routes/build-private-messages-route";
+import createPMRoute, {
+  ARCHIVE_FILTER,
+} from "discourse/routes/build-private-messages-route";
 
 export default createPMRoute(
-  "archive",
-  "private-messages-all-archive",
-  "archive"
+  "user",
+  "private-messages-archive",
+  ARCHIVE_FILTER
 );

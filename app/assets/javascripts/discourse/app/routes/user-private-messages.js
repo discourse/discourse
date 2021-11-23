@@ -1,6 +1,7 @@
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   renderTemplate() {
@@ -11,8 +12,12 @@ export default DiscourseRoute.extend({
     return this.modelFor("user");
   },
 
-  setupController(controller, user) {
-    controller.set("model", user);
+  afterModel() {
+    return this.pmTopicTrackingState.startTracking();
+  },
+
+  setupController(controller, model) {
+    controller.set("model", model);
 
     if (this.currentUser) {
       const composerController = this.controllerFor("composer");
@@ -30,15 +35,15 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    refresh() {
-      this.refresh();
-    },
+  @action
+  triggerRefresh() {
+    this.refresh();
+  },
 
-    willTransition: function () {
-      this._super(...arguments);
-      this.controllerFor("user").set("pmView", null);
-      return true;
-    },
+  @action
+  willTransition() {
+    this._super(...arguments);
+    this.controllerFor("user").set("pmView", null);
+    return true;
   },
 });

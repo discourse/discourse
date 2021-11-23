@@ -100,8 +100,9 @@ module PostGuardian
     is_staff? &&
     user &&
     !user.admin? &&
-    (user.first_post_created_at.nil? || user.first_post_created_at >= SiteSetting.delete_user_max_post_age.days.ago) &&
-    user.post_count <= SiteSetting.delete_all_posts_max.to_i
+    (is_admin? ||
+      ((user.first_post_created_at.nil? || user.first_post_created_at >= SiteSetting.delete_user_max_post_age.days.ago) &&
+      user.post_count <= SiteSetting.delete_all_posts_max.to_i))
   end
 
   def can_create_post?(parent)
@@ -202,6 +203,16 @@ module PostGuardian
     end
 
     false
+  end
+
+  def can_permanently_delete_post?(post)
+    return false if !SiteSetting.can_permanently_delete
+    return false if !post
+    return false if post.is_first_post?
+    return false if !is_admin? || !can_edit_post?(post)
+    return false if !post.deleted_at
+    return false if post.deleted_by_id == @user.id && post.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    true
   end
 
   def can_recover_post?(post)

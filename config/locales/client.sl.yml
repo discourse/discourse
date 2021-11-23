@@ -159,6 +159,7 @@ sl:
       previous_month: "Prejšnji mesec"
       next_month: "Naslednji mesec"
       placeholder: datum
+      to_placeholder: "na datum"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "prispevek #%{postNumber}"
@@ -350,7 +351,17 @@ sl:
       topic_reply: "Osnutek odgovora"
       abandon:
         yes_value: "Zavrzi"
+    topic_count_categories:
+      one: "Poglej %{count} novo ali posodobljeno temo"
+      two: "Poglej %{count} novi ali posodobljeni temi"
+      few: "Poglej %{count} nove ali posodobljene teme"
+      other: "Poglej %{count} novih ali posodobljenih tem"
     topic_count_latest:
+      one: "Poglej %{count} novo ali posodobljeno temo"
+      two: "Poglej %{count} novi ali posodobljeni temi"
+      few: "Poglej %{count} nove ali posodobljene teme"
+      other: "Poglej %{count} novih ali posodobljenih tem"
+    topic_count_unseen:
       one: "Poglej %{count} novo ali posodobljeno temo"
       two: "Poglej %{count} novi ali posodobljeni temi"
       few: "Poglej %{count} nove ali posodobljene teme"
@@ -1088,7 +1099,17 @@ sl:
         latest: "Najnovejše"
         sent: "Poslano"
         unread: "Neprebrane"
+        unread_with_count:
+          one: "Neprebrana (%{count})"
+          two: "Neprebrana (%{count})"
+          few: "Neprebrana (%{count})"
+          other: "Neprebrana (%{count})"
         new: "Nove"
+        new_with_count:
+          one: "Nova (%{count})"
+          two: "Nova (%{count})"
+          few: "Nova (%{count})"
+          other: "Nova (%{count})"
         archive: "Arhiv"
         groups: "Moje Skupine"
         move_to_inbox: "Prestavi v Prejeto"
@@ -1406,7 +1427,7 @@ sl:
           expires_at: "Kdaj bo ta povezava povabila potekla?"
         invite:
           new_title: "Ustvari povabilo"
-          instructions: "Delite to povezavo in takoj omogočite dostop do te strani"
+          instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
           show_advanced: "Pokaži dodatne možnosti"
           add_to_groups: "Dodaj v skupine"
           expires_at: "Poteče po"
@@ -1726,6 +1747,7 @@ sl:
     conditional_loading_section:
       loading: Nalagam...
     select_kit:
+      delete_item: "Izbriši %{name}"
       filter_by: "Filtriraj po: %{name}"
       select_to_filter: "Izberite vrednost za filtriranje"
       default_header_text: Izberi...
@@ -1832,7 +1854,6 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
-      title: "Ali pritisnite Ctrl+Enter"
       users_placeholder: "Dodaj uporabnika"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
@@ -1962,6 +1983,9 @@ sl:
       membership_request_accepted: "Sprejeti v članstvo v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Opusti"
+        cancel: "Prekliči"
       group_message_summary:
         one: "%{count} sporočilo v%{group_name} predalu"
         two: "%{count} sporočili v %{group_name} predalu"
@@ -2018,8 +2042,8 @@ sl:
         two: "<span>%{count}%{plus} zadetka za</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} zadetki za</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} zadetkov za</span><span class='term'>%{term}</span>"
-      title: "išči po temah, prispevkih, uporabnikih ali kategorijah"
-      full_page_title: "išči teme ali prispevke"
+      title: "Išči"
+      full_page_title: "Išči"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
       post_format: "#%{post_number} od %{username}"
@@ -2031,13 +2055,17 @@ sl:
       search_google: "Poskusite iskati z Googlom:"
       search_google_button: "Google"
       search_button: "Išči"
+      categories: "Kategorije"
+      tags: "Oznake"
+      type:
+        users: "Uporabniki"
+        categories: "Kategorije"
       context:
         user: "Išči prispevke od @%{username}"
         category: "Išči po #%{category} kategoriji"
         topic: "Išči po tej temi"
         private_messages: "Išči po zasebnih sporočilih"
       advanced:
-        title: Napredno iskanje
         posted_by:
           label: Avtor
         in_category:
@@ -2089,7 +2117,6 @@ sl:
           placeholder: najmanj
         max_views:
           placeholder: največ
-    hamburger_menu: "pojdi na drug seznam tem ali kategorijo"
     new_item: "nov"
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
@@ -2252,6 +2279,7 @@ sl:
         time_frame_required: "Izberite časovni okvir"
         min_duration: "Trajanje mora biti večje od 0"
         max_duration: "Trajanje mora biti krajše od 20 let"
+        duration: "Trajanje"
       auto_update_input:
         none: "Izberi časovni okvir"
         now: "Zdaj"
@@ -2571,6 +2599,7 @@ sl:
           other: "Izbrali ste <b>%{count}</b> prispevkov."
     post:
       quote_reply: "Citiraj"
+      quote_edit: "Uredi"
       quote_share: "Deli"
       edit_reason: "Razlog: "
       post_number: "prispevek %{number}"
@@ -2665,6 +2694,7 @@ sl:
             other: "Da, in vseh %{count} odgovorov"
           just_the_post: "Ne, samo ta prispevek"
         admin: "ukrepi administratorja"
+        permanently_delete: "Trajno izbriši"
         wiki: "Naredi wiki"
         unwiki: "Odstrani wiki"
         convert_to_moderator: "Dodaj barvo osebja"
@@ -3226,6 +3256,8 @@ sl:
           name: Druge
         posting:
           name: Prispevki
+    download_calendar:
+      download: "Naloži"
     tagging:
       all_tags: "Vse oznake"
       other_tags: "Druge oznake"
@@ -3547,7 +3579,6 @@ sl:
         delete: Trajno izbriši
         not_shown_again: Ta ključ ne bo več prikazan. Preden nadaljujete, si ustvarite kopijo.
         continue: Nadaljuj
-        use_global_key: Globalni ključ (omogoča vsa dejanja)
         scopes:
           action: Dejanje
           descriptions:
@@ -3692,12 +3723,6 @@ sl:
             text: "CSS"
           header:
             text: "Glava"
-          head_tag:
-            text: "</head>"
-            title: "HTML, ki bo vstavljen pred </head> oznako"
-          body_tag:
-            text: "</body>"
-            title: "HTML, ki bo vstavljen pred </body> oznako"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"
@@ -3956,7 +3981,6 @@ sl:
         silence_message_placeholder: "(pustite prazno, če hočete poslati privzeto sporočilo)"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
-        delete_all_posts: "Izbriši vse prispevke"
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"
         penalty_post_delete: "Izbriši prispevek"
         penalty_post_edit: "Uredi prispevek"
@@ -4007,8 +4031,11 @@ sl:
         anonymize_yes: "Da, anonimiziraj tega uporabnika"
         delete: "Izbriši uporabnika"
         delete_posts:
+          button: "Izbriši vse prispevke"
           progress:
             title: "Napredek pri brisanju objav"
+          confirmation:
+            cancel: "Prekliči"
         merge:
           prompt:
             cancel: "Prekliči"
@@ -4244,7 +4271,6 @@ sl:
           badge_query_examples_title: "Primeri poizvedb SQL za značke"
       emoji:
         title: "Emoji"
-        help: "Dodaj nov emoji, ki bo na voljo vsem. (lahko prestavite in spustite več datotek naenkrat)"
         add: "Dodaj nov emoji"
         uploading: "Nalagam..."
         name: "Ime"
@@ -4299,6 +4325,5 @@ sl:
           moderator: "Moderator"
           regular: "Običajni uporabnik"
       previews:
-        topic_title: "Tema pogovora"
         share_button: "Deli"
         reply_button: "Odgovori"

@@ -53,6 +53,9 @@ he:
       show-results:
         title: "הצגת תוצאות הסקר"
         label: "הצגת תוצאות"
+      remove-vote:
+        title: "הסרת הצבעתך"
+        label: "הסרת הצבעה"
       hide-results:
         title: "חזרה להצבעות שלך"
         label: "הצגת הצבעה"

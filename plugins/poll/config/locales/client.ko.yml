@@ -38,6 +38,9 @@ ko:
       show-results:
         title: "투표 결과 표시"
         label: "결과 보기"
+      remove-vote:
+        title: "내 투표 삭제"
+        label: "투표 삭제"
       hide-results:
         title: "투표로 돌아가기"
         label: "투표 표시"

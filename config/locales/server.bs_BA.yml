@@ -359,8 +359,6 @@ bs_BA:
   user_activity:
     no_bookmarks:
       self: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
-    no_replies:
-      others: "Nema odgovora."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -595,6 +593,7 @@ bs_BA:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
+    disabled: "deaktiviran"
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -1060,24 +1059,20 @@ bs_BA:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Colors"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Pregled"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
                 label: "Samo kategorije"
               categories_with_featured_topics:
-                label: "Kategorije sa Izdvojenim temama"
+                label: "Kategorije s istaknutim temama"
               categories_and_latest_topics:
-                label: "Kategorije i Novije teme"
+                label: "Kategorije i zadnje teme"
               categories_and_top_topics:
-                label: "Kategorije i Top teme"
+                label: "Kategorije i top teme"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
@@ -1123,6 +1118,7 @@ bs_BA:
           title: "Delete User"
       reject:
         title: "Odbij"
+  fallback_username: "user"
   activemodel:
     errors:
       <<: *errors

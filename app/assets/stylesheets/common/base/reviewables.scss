@@ -121,18 +121,6 @@
     .category-chooser {
       width: 100%;
     }
-
-    .d-date-time-input-range {
-      width: inherit;
-      border: none;
-      padding: 0;
-      flex-direction: column;
-
-      .d-date-input {
-        flex: 1 1 auto;
-        border: 1px solid var(--primary-medium);
-      }
-    }
   }
 }
 
@@ -464,11 +452,6 @@
       display: block;
       font-size: $font-up-2;
       margin-right: 0.75em;
-    }
-    .topic-statuses {
-      &:empty {
-        display: none;
-      }
     }
   }
 }

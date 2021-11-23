@@ -304,6 +304,12 @@ Discourse::Application.routes.draw do
           post "restore" => "backups#restore", constraints: { id: RouteFormat.backup }
         end
         collection do
+          # multipart uploads
+          post "create-multipart" => "backups#create_multipart", format: :json
+          post "complete-multipart" => "backups#complete_multipart", format: :json
+          post "abort-multipart" => "backups#abort_multipart", format: :json
+          post "batch-presign-multipart-parts" => "backups#batch_presign_multipart_parts", format: :json
+
           get "logs" => "backups#logs"
           get "status" => "backups#status"
           delete "cancel" => "backups#cancel"
@@ -386,7 +392,7 @@ Discourse::Application.routes.draw do
     end
 
     get "my/*path", to: 'users#my_redirect'
-    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
+    get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/security', status: 302)
 
     get "user-cards" => "users#cards", format: :json
     get "directory-columns" => "directory_columns#index", format: :json
@@ -449,8 +455,6 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/messages/personal" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/messages/personal/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
@@ -509,6 +513,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/private-message-topic-tracking-state" => "users#private_message_topic_tracking_state", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
       put "#{root_path}/:username/feature-topic" => "users#feature_topic", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic", constraints: { username: RouteFormat.username }
@@ -541,8 +546,15 @@ Discourse::Application.routes.draw do
     post "uploads" => "uploads#create"
     post "uploads/lookup-urls" => "uploads#lookup_urls"
 
-    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put"
-    post "uploads/complete-external-upload" => "uploads#complete_external_upload"
+    # direct to s3 uploads
+    post "uploads/generate-presigned-put" => "uploads#generate_presigned_put", format: :json
+    post "uploads/complete-external-upload" => "uploads#complete_external_upload", format: :json
+
+    # multipart uploads
+    post "uploads/create-multipart" => "uploads#create_multipart", format: :json
+    post "uploads/complete-multipart" => "uploads#complete_multipart", format: :json
+    post "uploads/abort-multipart" => "uploads#abort_multipart", format: :json
+    post "uploads/batch-presign-multipart-parts" => "uploads#batch_presign_multipart_parts", format: :json
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
@@ -769,11 +781,6 @@ Discourse::Application.routes.draw do
 
     scope "/topics", username: RouteFormat.username do
       get "created-by/:username" => "list#topics_by", as: "topics_by", defaults: { format: :json }
-      get "private-messages-all/:username" => "list#private_messages_all", as: "topics_private_messages_all", defaults: { format: :json }
-      get "private-messages-all-sent/:username" => "list#private_messages_all_sent", as: "topics_private_messages_all_sent", defaults: { format: :json }
-      get "private-messages-all-new/:username" => "list#private_messages_all_new", as: "topics_private_messages_all_new", defaults: { format: :json }
-      get "private-messages-all-unread/:username" => "list#private_messages_all_unread", as: "topics_private_messages_all_unread", defaults: { format: :json }
-      get "private-messages-all-archive/:username" => "list#private_messages_all_archive", as: "topics_private_messages_all_archive", defaults: { format: :json }
       get "private-messages/:username" => "list#private_messages", as: "topics_private_messages", defaults: { format: :json }
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
@@ -879,10 +886,7 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: [:index]
-    get "draft" => "draft#show"
-    post "draft" => "draft#update"
-    delete "draft" => "draft#destroy"
+    resources :drafts, only: [:index, :create, :show, :destroy]
 
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
@@ -997,6 +1001,9 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
+
+    post "/presence/update" => "presence#update"
+    get "/presence/get" => "presence#get"
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

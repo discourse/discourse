@@ -237,7 +237,13 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    topic_count_categories:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_latest:
+      one: "Angalia Topiki Mpya au Masahisho %{count}"
+      other: "Angalia Topiki Mpya au Masahisho %{count}"
+    topic_count_unseen:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
     topic_count_unread:
@@ -700,6 +706,9 @@ sw:
         latest: "Hivi Karibuni"
         sent: "Imetumwa"
         unread: "Haijasomwa"
+        unread_with_count:
+          one: "Haijasomwa (%{count})"
+          other: "Haijasomwa (%{count})"
         new: "Mpya"
         archive: "Hifadhi"
         groups: "Makundi yangu"
@@ -1152,6 +1161,7 @@ sw:
     conditional_loading_section:
       loading: Inaandaa....
     select_kit:
+      delete_item: "Futa %{name}"
       default_header_text: Chagua
       no_content: Hakuna uwiano uliopatikana
       filter_placeholder: Tafuta
@@ -1216,7 +1226,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      title: "Au bonyeza Ctrl+Enter"
       users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
@@ -1317,6 +1326,9 @@ sw:
       topic_reminder: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       watching_first_post: "<span>Mada Mpya</span> %{maelezo}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Ondosha"
+        cancel: "Ghairi"
       group_message_summary:
         one: "Kuna meseji %{count} kwenye %{group_name} inbox"
         other: "kuna meseji %{count} kwenye %{group_name} inbox"
@@ -1350,8 +1362,8 @@ sw:
       result_count:
         one: "<span>jibu kwa</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} majibu kwa</span><span class='term'>%{term}</span>"
-      title: "Tafuta mada, machapisho, watumiaji, au kategoria"
-      full_page_title: "tafuta mada au machapisho"
+      title: "Tafuta"
+      full_page_title: "Tafuta"
       no_results: "Hakuna Majibu Yaliyopatikana."
       no_more_results: "Hakuna majibu zaidi yaliyopatikana."
       post_format: "#%{post_number} za %{username}"
@@ -1363,13 +1375,17 @@ sw:
       search_google: "Jaribu kutafuta kwa kutumia Google kama njia mbadala:"
       search_google_button: "Google"
       search_button: "Tafuta"
+      categories: "Vikundi"
+      tags: "Lebo"
+      type:
+        users: "Watumiaji"
+        categories: "Vikundi"
       context:
         user: "Tafuta machapisho kwa kutumia @%{jina la mtumiaji}"
         category: "Tafuta kategoria #%{category} "
         topic: "Tafuta hii mada"
         private_messages: "Tafuta ujumbe"
       advanced:
-        title: Utafiti wa Hali ya juu
         posted_by:
           label: Imechapishwa na
         in_category:
@@ -1412,7 +1428,6 @@ sw:
             after: baada
         views:
           label: Imeonwa
-    hamburger_menu: "nenda kwenye orodha ya mada au kategoria nyingine"
     new_item: "mpya"
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"
@@ -1753,6 +1768,7 @@ sw:
           other: "Umechagua machapisho<b>%{count}</b>."
     post:
       quote_reply: "Nukulu"
+      quote_edit: "Hariri"
       quote_share: "Gawiza"
       edit_reason: "Sababu:"
       post_number: "%{namba} chapisho"
@@ -2182,6 +2198,8 @@ sw:
           name: Nyingine
         posting:
           name: Kuchapisha
+    download_calendar:
+      download: "Pakua"
     tagging:
       all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"
@@ -2258,6 +2276,10 @@ sw:
         member: "mwanachama"
         regular: "kawaida"
         leader: "kiongozi"
+    user_activity:
+      no_activity_others: "Hakuna shughuli."
+      no_replies_others: "Hakuna majibu."
+      no_likes_others: "Hakuna machapisho yaliyopendwa."
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -2613,12 +2635,8 @@ sw:
             title: "Ruhusu HTLM kuonekana kwenye ukurasa wa kijachini"
           embedded_scss:
             text: "CSS Iliyoambatanishwa"
-          head_tag:
-            text: "</head>"
-            title: "HTML itakayowekwa kabla ya lebo </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML itakayowekwa kabla ya lebo </body>"
+            text: "Mwili"
           yaml:
             text: "YAML"
             title: "Tambulisha mipangilio ya mpango kwenye umbiza wa YAML"
@@ -2933,7 +2951,6 @@ sw:
         silence_message_placeholder: "(acha wazi kutuma ujumbe halisi au msingi)"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
-        delete_all_posts: "Futa machapisho yote"
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"
         penalty_post_delete: "Futa taarifa"
         penalty_post_edit: "Hariri Taarifa"
@@ -2985,6 +3002,10 @@ sw:
         anonymize_yes: "Ndio, fanya hii akaunti iwe ya mtu asiyejulikana"
         anonymize_failed: "Tatizo limetokea wakati wa kufanya akaunti iwe ya mtu asiyejulikana."
         delete: "Futa Mtumiaji"
+        delete_posts:
+          button: "Futa machapisho yote"
+          confirmation:
+            cancel: "Ghairi"
         merge:
           prompt:
             cancel: "Ghairi"
@@ -3220,7 +3241,6 @@ sw:
             with_time: <span class="username">%{username}</span> kwenye %{time}<span class="time">
       emoji:
         title: "Emoji"
-        help: "Ongeza emoji mpya ambayo itapatikana kwa kila mtu. (USHAURI: unaweza kuweka zaidi ya faili moja mara moja)"
         add: "Ongeza Emoji Mpya"
         uploading: "Inaongezwa"
         name: "Jina"
@@ -3281,6 +3301,5 @@ sw:
           moderator: "Msimamizi"
           regular: "Mtumiaji wa Kawaida"
       previews:
-        topic_title: "Mada inayojadiliwa"
         share_button: "Shirikisha"
         reply_button: "Jibu"

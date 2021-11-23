@@ -15,6 +15,7 @@ describe 'badges' do
 
     get 'List badges' do
       tags 'Badges'
+      operationId 'adminListBadges'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -32,6 +33,7 @@ describe 'badges' do
 
     post 'Create badge' do
       tags 'Badges'
+      operationId 'createBadge'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('badge_create_request')
       parameter name: :params, in: :body, schema: expected_request_schema
@@ -58,6 +60,7 @@ describe 'badges' do
 
     put 'Update badge' do
       tags 'Badges'
+      operationId 'updateBadge'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('badge_update_request')
       parameter name: :id, in: :path, schema: { type: :integer }
@@ -84,6 +87,7 @@ describe 'badges' do
 
     delete 'Delete badge' do
       tags 'Badges'
+      operationId 'deleteBadge'
       consumes 'application/json'
       expected_request_schema = nil
       parameter name: :id, in: :path, schema: { type: :integer }

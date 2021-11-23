@@ -230,17 +230,8 @@
     }
   }
 
-  .section {
-    .period-chooser .period-chooser-header {
-      .selected-name,
-      .d-icon {
-        font-size: $font-up-1;
-      }
-
-      .d-icon {
-        margin: 0;
-      }
-    }
+  .period-chooser .period-chooser-header {
+    font-size: var(--font-down-2);
   }
 
   .dashboard-problems {

@@ -14,6 +14,14 @@ const LoginMethod = EmberObject.extend({
   },
 
   @discourseComputed
+  screenReaderTitle() {
+    return (
+      this.title_override ||
+      I18n.t(`login.${this.name}.sr_title`, { defaultValue: this.title })
+    );
+  },
+
+  @discourseComputed
   prettyName() {
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
@@ -80,16 +88,18 @@ export function findAll() {
     return methods;
   }
 
-  methods = [];
-
-  Site.currentProp("auth_providers").forEach((provider) =>
-    methods.pushObject(LoginMethod.create(provider))
+  methods = Site.currentProp("auth_providers").map((provider) =>
+    LoginMethod.create(provider)
   );
 
   // exclude FA icon for Google, uses custom SVG
   methods.forEach((m) => m.set("isGoogle", m.name === "google_oauth2"));
 
   return methods;
+}
+
+export function clearAuthMethods() {
+  methods = undefined;
 }
 
 export default LoginMethod;

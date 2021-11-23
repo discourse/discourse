@@ -46,6 +46,9 @@
     input {
       margin-bottom: 0;
       font-size: $font-down-2;
+      .ios-device & {
+        font-size: var(--font-down-2);
+      }
     }
   }
 
@@ -84,7 +87,7 @@
       font-weight: bold;
       margin-bottom: 0.25em;
       display: flex;
-      align-items: stretch;
+      align-items: center;
 
       input {
         margin: 0;
@@ -152,7 +155,13 @@
     }
 
     &.color-scheme .admin-controls {
-      padding: 0.5em;
+      padding: 1em;
+      label {
+        margin-bottom: 0;
+        input[type="checkbox"] {
+          margin-top: 0;
+        }
+      }
     }
   }
   .add-component-button {
@@ -235,9 +244,6 @@
         .components-list {
           color: var(--secondary);
         }
-        .fa {
-          color: inherit;
-        }
       }
       &:not(.selected) {
         .broken-indicator {
@@ -275,8 +281,12 @@
 
         .others-count,
         .others-count:hover {
-          color: var(--primary-high);
+          color: inherit;
           text-decoration: underline;
+        }
+
+        .d-icon {
+          color: inherit;
         }
       }
 
@@ -336,9 +346,15 @@
       padding-bottom: 0;
       margin-top: 18px;
       min-height: 35px;
+
+      .input-setting-textarea {
+        height: unset;
+      }
     }
     .setting-label {
-      width: 25%;
+      @include breakpoint(tablet, min-width) {
+        width: 25%;
+      }
       word-wrap: break-word;
       h3 {
         margin-top: 0;
@@ -513,7 +529,8 @@
     .controls {
       display: flex;
       align-items: center;
-      button,
+      margin-bottom: 1em;
+      button:not(:last-child),
       a {
         margin-right: 10px;
       }
@@ -533,6 +550,9 @@
     }
     td.hex {
       width: 160px;
+      .color-picker {
+        display: inline-flex;
+      }
     }
     td.actions {
       width: 200px;
@@ -651,12 +671,14 @@
   margin-top: 1em;
   color: var(--primary-medium);
 }
+
 // Permalinks
 .permalinks {
   .url,
   .topic,
   .category,
   .external_url,
+  .destination,
   .post {
     @include ellipsis;
     max-width: 100px;
@@ -670,40 +692,49 @@
   }
 }
 
-.permalink-search {
-  text-align: left;
-  @include breakpoint(tablet, min-width) {
-    text-align: right;
-  }
-}
-
 .permalink-form {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  @include breakpoint(tablet, min-width) {
-    align-items: center;
-    flex-direction: row;
-  }
-
+  padding: 0.5em 1em 0 1em;
+  margin-top: 1em;
+  background: var(--primary-very-low);
   .select-kit {
-    width: 200px;
+    max-width: 260px;
   }
-  input {
-    margin: 5px 0;
-    @include breakpoint(tablet, min-width) {
-      margin: 0 5px;
+  @include breakpoint(tablet) {
+    label {
+      width: 100%;
     }
   }
 }
 
-.permalink-title {
-  margin-bottom: 10px;
-}
-
 .permalink-description {
   color: var(--primary-medium);
+}
+
+.permalink-search {
+  margin-top: 2em;
+  input {
+    min-width: 250px;
+    margin-bottom: 0;
+  }
+}
+
+table.permalinks {
+  @include breakpoint(tablet, min-width) {
+    td.url,
+    th.url {
+      width: 33%;
+    }
+
+    th.destination,
+    td.destination {
+      width: 60%;
+    }
+  }
+  @include breakpoint(tablet) {
+    td.url .btn-flat {
+      display: none;
+    }
+  }
 }
 
 // embedding

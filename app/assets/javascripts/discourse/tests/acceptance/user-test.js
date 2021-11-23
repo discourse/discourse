@@ -24,13 +24,13 @@ acceptance("User Routes", function (needs) {
       }
     }
 
-    assert.equal(currentRouteName(), "exception-unknown");
+    assert.strictEqual(currentRouteName(), "exception-unknown");
   });
 
   test("Unicode usernames", async function (assert) {
     await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
 
-    assert.equal(currentRouteName(), "user.summary");
+    assert.strictEqual(currentRouteName(), "user.summary");
   });
 
   test("Invites", async function (assert) {
@@ -54,7 +54,7 @@ acceptance("User Routes", function (needs) {
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-activity-page").length, "has the body class");
-    assert.equal(
+    assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
       "it defaults to activity"
@@ -101,14 +101,14 @@ acceptance(
 
     test("Periods in current user's username don't act like wildcards", async function (assert) {
       await visit("/u/eviltrout");
-      assert.equal(
+      assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
         "eviltrout",
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
-      assert.equal(
+      assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
         "e.il.rout",
         "e.il.rout profile is shown"

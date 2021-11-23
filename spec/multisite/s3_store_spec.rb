@@ -183,16 +183,16 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "returns signed URL with correct path" do
         test_multisite_connection('default') do
           upload = Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
+          path = Discourse.store.get_path_for_upload(upload)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("#{upload_path}/original/1X/#{upload.sha1}.pdf").returns(s3_object).at_least_once
+          s3_bucket.expects(:object).with("#{upload_path}/#{path}").returns(s3_object).at_least_once
           s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
 
           upload.url = store.store_upload(uploaded_file, upload)
           expect(upload.url).to eq(
-            "//some-really-cool-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.pdf"
+            "//some-really-cool-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/#{path}"
           )
-
           expect(store.url_for(upload)).not_to eq(upload.url)
         end
       end
@@ -311,9 +311,9 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
       it "returns a presigned url with the correct params and the key for the temporary file" do
         url = store.signed_url_for_temporary_upload("test.png")
-        key = store.path_from_url(url)
+        key = store.s3_helper.path_from_url(url)
         expect(url).to match(/Amz-Expires/)
-        expect(key).to match(/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+        expect(key).to match(/temp\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/)
       end
 
       it "presigned url contans the metadata when provided" do
@@ -327,9 +327,9 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
       it "returns a presigned url with the correct params and the key for the temporary file" do
         url = store.signed_url_for_temporary_upload("test.png")
-        key = store.path_from_url(url)
+        key = store.s3_helper.path_from_url(url)
         expect(url).to match(/Amz-Expires/)
-        expect(key).to match(/site\/uploads\/default\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+        expect(key).to match(/temp\/site\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/)
       end
     end
 
@@ -339,9 +339,9 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       it "returns a presigned url with the correct params and the key for the temporary file" do
         test_multisite_connection('second') do
           url = store.signed_url_for_temporary_upload("test.png")
-          key = store.path_from_url(url)
+          key = store.s3_helper.path_from_url(url)
           expect(url).to match(/Amz-Expires/)
-          expect(key).to match(/standard99\/uploads\/second\/test_[0-9]\/temp\/[a-zA-z0-9]{0,32}\/test.png/)
+          expect(key).to match(/temp\/standard99\/uploads\/second\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/)
         end
       end
     end

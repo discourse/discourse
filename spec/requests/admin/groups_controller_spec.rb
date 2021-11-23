@@ -76,6 +76,31 @@ RSpec.describe Admin::GroupsController do
         expect(group.custom_fields['test2']).to be_blank
       end
     end
+
+    context 'with Group.plugin_permitted_params' do
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it 'filter unpermitted params' do
+        params = group_params
+        params[:group].merge!(allow_unknown_sender_topic_replies: true)
+
+        post "/admin/groups.json", params: params
+        expect(Group.last.allow_unknown_sender_topic_replies).to eq(false)
+      end
+
+      it 'allows plugin to allow custom params' do
+        params = group_params
+        params[:group].merge!(allow_unknown_sender_topic_replies: true)
+
+        plugin = Plugin::Instance.new
+        plugin.register_group_param :allow_unknown_sender_topic_replies
+
+        post "/admin/groups.json", params: params
+        expect(Group.last.allow_unknown_sender_topic_replies).to eq(true)
+      end
+    end
   end
 
   describe '#add_owners' do

@@ -17,6 +17,7 @@ describe 'tags' do
 
     get 'Get a list of tag groups' do
       tags 'Tags'
+      operationId 'listTagGroups'
 
       produces 'application/json'
       response '200', 'tags' do
@@ -59,6 +60,7 @@ describe 'tags' do
 
     post 'Creates a tag group' do
       tags 'Tags'
+      operationId 'createTagGroup'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('tag_group_create_request')
 
@@ -85,6 +87,7 @@ describe 'tags' do
 
     get 'Get a single tag group' do
       tags 'Tags'
+      operationId 'getTagGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, schema: { type: :string }
 
@@ -127,6 +130,7 @@ describe 'tags' do
 
     put 'Update tag group' do
       tags 'Tags'
+      operationId 'updateTagGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, schema: { type: :string }
       parameter name: :put_body, in: :body, schema: {
@@ -177,6 +181,7 @@ describe 'tags' do
 
     get 'Get a list of tags' do
       tags 'Tags'
+      operationId 'listTags'
 
       produces 'application/json'
       response '200', 'notifications' do
@@ -215,6 +220,7 @@ describe 'tags' do
 
     get 'Get a specific tag' do
       tags 'Tags'
+      operationId 'getTag'
       parameter name: :name, in: :path, schema: { type: :string }
 
       produces 'application/json'

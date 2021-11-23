@@ -18,7 +18,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
-  tagName: "li",
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),

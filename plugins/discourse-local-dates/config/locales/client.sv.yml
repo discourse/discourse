@@ -40,3 +40,4 @@ sv:
             every_three_months: "Var tredje månad"
             every_six_months: "Var sjätte månad"
             every_year: "Varje år"
+      default_title: "%{site_name} Händelse"

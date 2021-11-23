@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import createPMRoute from "discourse/routes/build-private-messages-route";
+import I18n from "I18n";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default (inboxType, filter) => {
@@ -35,7 +35,16 @@ export default (inboxType, filter) => {
 
       return lastTopicList
         ? lastTopicList
-        : this.store.findFiltered("topicList", { filter: topicListFilter });
+        : this.store
+            .findFiltered("topicList", { filter: topicListFilter })
+            .then((topicList) => {
+              // andrei: we agreed that this is an anti pattern,
+              // it's better to avoid mutating a rest model like this
+              // this place we'll be refactored later
+              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+              topicList.set("emptyState", this.emptyState());
+              return topicList;
+            });
     },
 
     afterModel(model) {
@@ -52,21 +61,28 @@ export default (inboxType, filter) => {
         .get("groups")
         .filterBy("name", groupName)[0];
 
-      this.setProperties({ groupName: groupName, group });
+      this.setProperties({ groupName, group });
     },
 
     setupController() {
       this._super.apply(this, arguments);
-      this.controllerFor("user-private-messages").set("group", this.group);
-      this.controllerFor("user-topics-list").set("group", this.group);
 
-      if (filter) {
-        this.controllerFor("user-topics-list").subscribe(
-          `/private-messages/group/${this.get(
-            "groupName"
-          ).toLowerCase()}/${filter}`
-        );
-      }
+      const userTopicsListController = this.controllerFor("user-topics-list");
+      userTopicsListController.set("group", this.group);
+
+      userTopicsListController.set(
+        "pmTopicTrackingState.activeGroup",
+        this.group
+      );
+
+      this.controllerFor("user-private-messages").set("group", this.group);
+    },
+
+    emptyState() {
+      return {
+        title: I18n.t("user.no_messages_title"),
+        body: "",
+      };
     },
 
     dismissReadOptions() {

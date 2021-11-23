@@ -136,6 +136,59 @@ describe ApplicationHelper do
     end
   end
 
+  describe "application_logo_dark_url" do
+    context "when dark theme is not present" do
+      context "when dark logo is not present" do
+        it "should return nothing" do
+          expect(helper.application_logo_dark_url.present?).to eq(false)
+        end
+      end
+    end
+
+    context "when dark theme is present" do
+      before do
+        dark_theme = Theme.create(
+          name: "Dark",
+          user_id: -1,
+          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+        )
+      end
+
+      context "when dark logo is not present" do
+        it "should return nothing" do
+          expect(helper.application_logo_dark_url.present?).to eq(false)
+        end
+      end
+
+      context "when dark logo is present" do
+        before do
+          SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
+        end
+
+        it "should return correct url" do
+          expect(helper.application_logo_dark_url).to eq(SiteSetting.site_logo_dark_url)
+        end
+      end
+    end
+
+    context "when dark theme is present and selected" do
+      before do
+        dark_theme = Theme.create(
+          name: "Dark",
+          user_id: -1,
+          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+        )
+        helper.request.env[:resolved_theme_id] = dark_theme.id
+        SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
+      end
+
+      it "should return nothing" do
+        expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
+        expect(helper.application_logo_dark_url.present?).to eq(false)
+      end
+    end
+  end
+
   describe "mobile_view?" do
     context "enable_mobile_theme is true" do
       before do

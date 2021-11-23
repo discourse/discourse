@@ -47,6 +47,10 @@ export default function (name, opts) {
     modalController.set("title", null);
   }
 
+  if (opts.titleAriaElementId) {
+    modalController.set("titleAriaElementId", opts.titleAriaElementId);
+  }
+
   if (opts.panels) {
     modalController.setProperties({
       panels: opts.panels,

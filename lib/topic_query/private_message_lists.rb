@@ -2,43 +2,18 @@
 
 class TopicQuery
   module PrivateMessageLists
-    def list_private_messages_all(user)
-      list = private_messages_for(user, :all)
-      list = filter_archived(list, user, archived: false)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_sent(user)
-      list = private_messages_for(user, :all)
-
-      list = list.where(<<~SQL, user.id)
-      EXISTS (
-        SELECT 1 FROM posts
-        WHERE posts.topic_id = topics.id AND posts.user_id = ?
-      )
-      SQL
-
-      list = filter_archived(list, user, archived: false)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_archive(user)
-      list = private_messages_for(user, :all)
-      list = filter_archived(list, user, archived: true)
-      create_list(:private_messages, {}, list)
-    end
-
-    def list_private_messages_all_new(user)
-      list_private_messages_new(user, :all)
-    end
-
-    def list_private_messages_all_unread(user)
-      list_private_messages_unread(user, :all)
-    end
-
     def list_private_messages(user)
       list = private_messages_for(user, :user)
       list = not_archived(list, user)
+
+      list = list.where(<<~SQL)
+        NOT (
+          topics.participant_count = 1
+          AND topics.user_id = #{user.id.to_i}
+          AND topics.moderator_posts_count = 0
+        )
+      SQL
+
       create_list(:private_messages, {}, list)
     end
 
@@ -64,7 +39,7 @@ class TopicQuery
 
     def list_private_messages_new(user, type = :user)
       list = filter_private_message_new(user, type)
-      list = remove_muted_tags(list, user)
+      list = TopicQuery.remove_muted_tags(list, user)
       list = remove_dismissed(list, user)
 
       create_list(:private_messages, {}, list)
@@ -143,16 +118,27 @@ class TopicQuery
       elsif type == :user
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
       elsif type == :all
-        result = result.where("topics.id IN (
+        group_ids = group_with_messages_ids(user)
+
+        result =
+        if group_ids.present?
+          result.where(<<~SQL)
+            topics.id IN (
               SELECT topic_id
               FROM topic_allowed_users
               WHERE user_id = #{user.id.to_i}
               UNION ALL
               SELECT topic_id FROM topic_allowed_groups
-              WHERE group_id IN (
-                SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}
-              )
-      )")
+              WHERE group_id IN (#{group_ids.join(",")})
+            )
+          SQL
+        else
+          result.joins(<<~SQL)
+          INNER JOIN topic_allowed_users tau
+            ON tau.topic_id = topics.id
+            AND tau.user_id = #{user.id.to_i}
+          SQL
+        end
       end
 
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
@@ -182,9 +168,23 @@ class TopicQuery
         staff: user.staff?
       )
 
-      first_unread_pm_at = UserStat
-        .where(user_id: user.id)
-        .pluck_first(:first_unread_pm_at)
+      first_unread_pm_at =
+        case type
+        when :user
+          user_first_unread_pm_at(user)
+        when :group
+          GroupUser
+            .where(user: user, group: group)
+            .pluck_first(:first_unread_pm_at)
+        else
+          user_first_unread_pm_at = user_first_unread_pm_at(user)
+
+          group_first_unread_pm_at = GroupUser
+            .where(user: user)
+            .minimum(:first_unread_pm_at)
+
+          [user_first_unread_pm_at, group_first_unread_pm_at].compact.min
+        end
 
       if first_unread_pm_at
         list = list.where("topics.updated_at >= ?", first_unread_pm_at)
@@ -215,21 +215,35 @@ class TopicQuery
     end
 
     def filter_archived(list, user, archived: true)
-      list = list.joins(<<~SQL)
-      LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id
-      LEFT JOIN user_archived_messages um
-        ON um.user_id = #{user.id.to_i}
-        AND um.topic_id = topics.id
-      SQL
+      # Executing an extra query instead of a sub-query because it is more
+      # efficient for the PG planner. Caution should be used when changing the
+      # query here as it can easily lead to an inefficient query.
+      group_ids = group_with_messages_ids(user)
 
-      list =
+      if group_ids.present?
+        list = list.joins(<<~SQL)
+          LEFT JOIN group_archived_messages gm
+            ON gm.topic_id = topics.id
+            AND gm.group_id IN (#{group_ids.join(",")})
+          LEFT JOIN user_archived_messages um
+            ON um.user_id = #{user.id.to_i}
+            AND um.topic_id = topics.id
+        SQL
+
         if archived
           list.where("um.user_id IS NOT NULL OR gm.topic_id IS NOT NULL")
         else
           list.where("um.user_id IS NULL AND gm.topic_id IS NULL")
         end
+      else
+        list = list.joins(<<~SQL)
+          LEFT JOIN user_archived_messages um
+          ON um.user_id = #{user.id.to_i}
+          AND um.topic_id = topics.id
+        SQL
 
-      list
+        list.where("um.user_id IS #{archived ? "NOT NULL" : "NULL"}")
+      end
     end
 
     def not_archived(list, user)
@@ -245,6 +259,20 @@ class TopicQuery
           .select(:id, :publish_read_state)
           .first
       end
+    end
+
+    def user_first_unread_pm_at(user)
+      UserStat.where(user: user).pluck_first(:first_unread_pm_at)
+    end
+
+    def group_with_messages_ids(user)
+      @group_with_messages_ids ||= {}
+
+      if ids = @group_with_messages_ids[user.id]
+        return ids
+      end
+
+      @group_with_messages_ids[user.id] = user.groups.where(has_messages: true).pluck(:id)
     end
   end
 end

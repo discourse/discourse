@@ -123,7 +123,7 @@ def dependencies
     }, {
       source: 'markdown-it/dist/markdown-it.js'
     }, {
-      source: 'mousetrap/mousetrap.js'
+      source: '@discourse/itsatrap/itsatrap.js'
     }, {
       source: 'moment/moment.js'
     }, {
@@ -138,8 +138,6 @@ def dependencies
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
-    }, {
-      source: 'mousetrap/plugins/global-bind/mousetrap-global-bind.js'
     }, {
       source: 'resumablejs/resumable.js'
     }, {

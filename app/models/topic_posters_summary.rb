@@ -41,10 +41,10 @@ class TopicPostersSummary
     topic_poster
   end
 
-  def descriptions_by_id
+  def descriptions_by_id(ids: nil)
     @descriptions_by_id ||= begin
       result = {}
-      ids = user_ids
+      ids = ids || user_ids
 
       if id = ids.shift
         result[id] ||= []

@@ -213,6 +213,8 @@ module Email
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f9f9f9; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f9f9f9; overflow: auto; padding: 5px;')
+      style('pre.onebox code', 'white-space: normal;')
+      style('pre code li', 'white-space: pre;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
       style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
 

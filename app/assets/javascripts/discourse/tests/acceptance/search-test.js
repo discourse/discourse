@@ -3,23 +3,41 @@ import {
   count,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
 acceptance("Search - Anonymous", function (needs) {
-  let calledEmpty = false;
-
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
-      if (!request.queryParams["search_context[type]"]) {
-        calledEmpty = true;
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        // posts/topics are not present in the payload by default
+        return helper.response({
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          tags: searchFixtures["search/query"]["tags"],
+          groups: searchFixtures["search/query"]["groups"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
       }
-
       return helper.response(searchFixtures["search/query"]);
+    });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "admin",
+            name: "admin",
+            avatar_template: "/images/avatar.png",
+          },
+        ],
+      });
     });
   });
 
@@ -28,24 +46,61 @@ acceptance("Search - Anonymous", function (needs) {
 
     await click("#search-button");
 
-    assert.ok(exists("#search-term"), "it shows the search bar");
-    assert.ok(!exists(".search-menu .results ul li"), "no results by default");
+    assert.ok(exists("#search-term"), "it shows the search input");
+    assert.ok(
+      exists(".show-advanced-search"),
+      "it shows full page search button"
+    );
+    assert.ok(
+      exists(".search-menu .results ul li.search-random-quick-tip"),
+      "shows random quick tip by default"
+    );
 
     await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", 16);
-    assert.ok(exists(".search-menu .results ul li"), "it shows results");
+
+    assert.ok(
+      !exists(".search-menu .results ul li.search-random-quick-tip"),
+      "quick tip no longer shown"
+    );
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
+      ).innerText.trim(),
+      `dev ${I18n.t("search.in_topics_posts")}`,
+      "shows topic search as first dropdown item"
+    );
+
+    assert.ok(
+      exists(".search-menu .search-result-category ul li"),
+      "shows matching category results"
+    );
+
+    assert.ok(
+      exists(".search-menu .search-result-user ul li"),
+      "shows matching user results"
+    );
+
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-result-topic ul li"),
+      "shows topic results"
+    );
     assert.ok(
       exists(".search-menu .results ul li .topic-title[data-topic-id]"),
       "topic has data-topic-id"
     );
 
-    await click(".show-help");
+    await click(".show-advanced-search");
 
-    assert.equal(
-      queryAll(".full-page-search").val(),
+    assert.strictEqual(
+      query(".full-page-search").value,
       "dev",
-      "it shows the search term"
+      "it goes to full search page and preserves the search term"
     );
+
     assert.ok(
       exists(".search-advanced-options"),
       "advanced search is expanded"
@@ -68,85 +123,190 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(!exists(".search-menu"));
   });
 
-  test("search for a tag", async function (assert) {
-    await visit("/");
+  test("search scope", async function (assert) {
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
 
-    await click("#search-button");
-
-    await fillIn("#search-term", "evil");
-    await triggerKeyEvent("#search-term", "keyup", 16);
-    assert.ok(exists(".search-menu .results ul li"), "it shows results");
-  });
-
-  test("search scope checkbox", async function (assert) {
     await visit("/tag/important");
     await click("#search-button");
-    assert.ok(
-      exists(".search-context input:checked"),
-      "scope to tag checkbox is checked"
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      `${I18n.t("search.in")} test`,
+      "contenxtual tag search is first available option with no term"
     );
-    await click("#search-button");
+
+    await fillIn("#search-term", "smth");
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      `smth ${I18n.t("search.in")} test`,
+      "tag-scoped search is first available option"
+    );
 
     await visit("/c/bug");
     await click("#search-button");
-    assert.ok(
-      exists(".search-context input:checked"),
-      "scope to category checkbox is checked"
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      `smth ${I18n.t("search.in")} bug`,
+      "category-scoped search is first available option"
     );
-    await click("#search-button");
+
+    assert.ok(
+      exists(`${firstResult} span.badge-wrapper`),
+      "category badge is a span (i.e. not a link)"
+    );
 
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
-    assert.not(
-      exists(".search-context input:checked"),
-      "scope to topic checkbox is not checked"
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      `smth ${I18n.t("search.in_this_topic")}`,
+      "topic-scoped search is first available option"
     );
-    await click("#search-button");
 
     await visit("/u/eviltrout");
     await click("#search-button");
-    assert.ok(
-      exists(".search-context input:checked"),
-      "scope to user checkbox is checked"
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      `smth ${I18n.t("search.in_posts_by", {
+        username: "eviltrout",
+      })}`,
+      "user-scoped search is first available option"
     );
   });
 
-  test("Search with context", async function (assert) {
+  test("search scope for topics", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
 
     await click("#search-button");
+
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "contenxtual topic search is first available option"
+    );
+
     await fillIn("#search-term", "a proper");
-    await click(".search-context input[type='checkbox']");
-    await triggerKeyEvent("#search-term", "keyup", 16);
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
 
-    assert.ok(exists(".search-menu .results ul li"), "it shows results");
-
-    const highlighted = [];
-
-    queryAll("#post_7 span.highlighted").map((_, span) => {
-      highlighted.push(span.innerText);
-    });
-
-    assert.deepEqual(
-      highlighted,
-      ["a proper"],
-      "it should highlight the post with the search terms correctly"
+    await click(document.activeElement);
+    assert.ok(
+      exists(".search-menu .search-result-post ul li"),
+      "clicking first option formats results as posts"
     );
 
-    calledEmpty = false;
-    await visit("/");
-    await click("#search-button");
+    assert.strictEqual(
+      query("#post_7 span.highlighted").textContent.trim(),
+      "a proper",
+      "highlights the post correctly"
+    );
 
-    assert.ok(!exists(".search-context input[type='checkbox']"));
-    assert.ok(calledEmpty, "it triggers a new search");
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+    await click(".clear-search");
+    assert.strictEqual(query("#search-term").value, "", "clear button works");
 
-    await visit("/t/internationalization-localization/280/1");
-    await click("#search-button");
+    await click(".search-context");
 
-    assert.ok(!$(".search-context input[type=checkbox]").is(":checked"));
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "search context indicator is no longer visible"
+    );
+
+    await fillIn("#search-term", "dev");
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+
+    await fillIn("#search-term", "");
+    await focus("input#search-term");
+    await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
+
+    assert.ok(
+      !exists(".search-menu .search-context"),
+      "backspace resets search context"
+    );
   });
 
-  test("Right filters are shown to anonymous users", async function (assert) {
+  test("topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+
+    await click("#search-button");
+
+    const firstResult =
+      ".search-menu .results .search-menu-assistant-item:first-child";
+
+    assert.strictEqual(
+      query(firstResult).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "contenxtual topic search is first available option"
+    );
+
+    await fillIn("#search-term", "proper");
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-context"),
+      "search context indicator is visible"
+    );
+
+    await click(".show-advanced-search");
+
+    assert.strictEqual(
+      query(".full-page-search").value,
+      "proper topic:280",
+      "it goes to full search page and preserves search term + context"
+    );
+
+    assert.ok(
+      exists(".search-advanced-options"),
+      "advanced search is expanded"
+    );
+  });
+
+  test("topic search scope - special case when matching a single user", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+
+    await click("#search-button");
+    await fillIn("#search-term", "@admin");
+
+    assert.strictEqual(count(".search-menu-assistant-item"), 2);
+
+    assert.strictEqual(
+      query(
+        ".search-menu-assistant-item:first-child .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "first result hints in this topic search"
+    );
+
+    assert.strictEqual(
+      query(
+        ".search-menu-assistant-item:nth-child(2) .search-item-user .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_topics_posts"),
+      "second result hints global search"
+    );
+  });
+
+  test("Right filters are shown in full page search", async function (assert) {
     const inSelector = selectKit(".select-kit#in");
 
     await visit("/search?expanded=true");
@@ -205,7 +365,7 @@ acceptance("Search - Authenticated", function (needs) {
     });
   });
 
-  test("Right filters are shown to logged-in users", async function (assert) {
+  test("Right filters are shown in full page search", async function (assert) {
     const inSelector = selectKit(".select-kit#in");
 
     await visit("/search?expanded=true");
@@ -230,16 +390,121 @@ acceptance("Search - Authenticated", function (needs) {
 
   test("Works with empty result sets", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".search-dropdown");
-    await click(".search-context input[type=checkbox]");
+    await click("#search-button");
     await fillIn("#search-term", "plans");
-    await triggerKeyEvent("#search-term", "keyup", 32);
-    assert.notEqual(count(".item"), 0);
+    await focus("input#search-term");
+    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await click(document.activeElement);
+
+    assert.notStrictEqual(count(".search-menu .results .item"), 0);
 
     await fillIn("#search-term", "plans empty");
-    await triggerKeyEvent("#search-term", "keyup", 32);
-    assert.equal(count(".item"), 0);
-    assert.equal(count(".no-results"), 1);
+    await triggerKeyEvent("#search-term", "keydown", 13);
+
+    assert.strictEqual(count(".search-menu .results .item"), 0);
+    assert.strictEqual(count(".search-menu .results .no-results"), 1);
+  });
+
+  test("search dropdown keyboard navigation", async function (assert) {
+    const keyEnter = 13;
+    const keyArrowDown = 40;
+    const keyArrowUp = 38;
+    const keyEsc = 27;
+    const keyA = 65;
+    const container = ".search-menu .results";
+
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+
+    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    assert.ok(
+      exists(query(`${container} .search-result-topic`)),
+      "has topic results"
+    );
+
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      query(`${container} li:first-child a`).getAttribute("href"),
+      "arrow down selects first element"
+    );
+
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      query(`${container} li:nth-child(2) a`).getAttribute("href"),
+      "arrow down selects next element"
+    );
+
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      "/search?q=dev",
+      "arrow down sets focus to more results link"
+    );
+
+    await triggerKeyEvent(".search-menu", "keydown", keyEsc);
+    assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
+
+    await click("#search-button");
+    await triggerKeyEvent(".search-menu", "keydown", keyArrowDown);
+    await triggerKeyEvent(".search-menu", "keydown", keyArrowUp);
+
+    assert.strictEqual(
+      document.activeElement.tagName.toLowerCase(),
+      "input",
+      "arrow up sets focus to search term input"
+    );
+
+    await triggerKeyEvent(".search-menu", "keydown", keyEsc);
+    await click("#create-topic");
+    await click("#search-button");
+    await triggerKeyEvent(".search-menu", "keydown", keyArrowDown);
+
+    const firstLink = query(`${container} li:nth-child(1) a`).getAttribute(
+      "href"
+    );
+    await triggerKeyEvent(".search-menu", "keydown", keyA);
+
+    assert.strictEqual(
+      query("#reply-control textarea").value,
+      `${window.location.origin}${firstLink}`,
+      "hitting A when focused on a search result copies link to composer"
+    );
+
+    await click("#search-button");
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+
+    assert.ok(
+      exists(query(`${container} .search-result-topic`)),
+      "has topic results"
+    );
+
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+
+    assert.ok(
+      exists(query(`.search-container`)),
+      "second Enter hit goes to full page search"
+    );
+    assert.ok(
+      !exists(query(`.search-menu`)),
+      "search dropdown is collapsed after second Enter hit"
+    );
+
+    // new search launched, Enter key should be reset
+    await click("#search-button");
+    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
   });
 });
 
@@ -249,19 +514,33 @@ acceptance("Search - with tagging enabled", function (needs) {
 
   test("displays tags", async function (assert) {
     await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keydown", 13);
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
+      ).textContent.trim(),
+      "dev slow",
+      "tags displayed in search results"
+    );
+  });
+
+  test("displays tag shortcuts", async function (assert) {
+    await visit("/");
 
     await click("#search-button");
 
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", 16);
+    await fillIn("#search-term", "dude #monk");
+    await triggerKeyEvent("#search-term", "keyup", 51);
 
-    const tags = queryAll(
-      ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
-    )
-      .text()
-      .trim();
+    const firstItem =
+      ".search-menu .results ul.search-menu-assistant .search-link";
+    assert.ok(exists(query(firstItem)));
 
-    assert.equal(tags, "dev slow");
+    const firstTag = query(`${firstItem} .search-item-tag`).textContent.trim();
+    assert.strictEqual(firstTag, "monkey");
   });
 });
 
@@ -309,24 +588,24 @@ acceptance("Search - assistant", function (needs) {
 
     const firstResultSlug = query(
       `${firstCategory} .category-name`
-    ).innerText.trim();
+    ).textContent.trim();
 
     await click(firstCategory);
-    assert.equal(query("#search-term").value, `#${firstResultSlug} `);
+    assert.strictEqual(query("#search-term").value, `#${firstResultSlug}`);
 
     await fillIn("#search-term", "sam #");
     await triggerKeyEvent("#search-term", "keyup", 51);
 
     assert.ok(exists(query(firstCategory)));
-    assert.equal(
+    assert.strictEqual(
       query(
         ".search-menu .results ul.search-menu-assistant .search-item-prefix"
       ).innerText,
-      "sam"
+      "sam "
     );
 
     await click(firstCategory);
-    assert.equal(query("#search-term").value, `sam #${firstResultSlug} `);
+    assert.strictEqual(query("#search-term").value, `sam #${firstResultSlug}`);
   });
 
   test("shows in: shortcuts", async function (assert) {
@@ -338,15 +617,15 @@ acceptance("Search - assistant", function (needs) {
 
     await fillIn("#search-term", "in:");
     await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.equal(query(firstTarget).innerText, "in:title");
+    assert.strictEqual(query(firstTarget).innerText, "in:title");
 
     await fillIn("#search-term", "sam in:");
     await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.equal(query(firstTarget).innerText, "sam in:title");
+    assert.strictEqual(query(firstTarget).innerText, "sam in:title");
 
     await fillIn("#search-term", "in:pers");
     await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.equal(query(firstTarget).innerText, "in:personal");
+    assert.strictEqual(query(firstTarget).innerText, "in:personal");
   });
 
   test("shows users when typing @", async function (assert) {
@@ -360,9 +639,9 @@ acceptance("Search - assistant", function (needs) {
     const firstUser =
       ".search-menu .results ul.search-menu-assistant .search-item-user";
     const firstUsername = query(firstUser).innerText.trim();
-    assert.equal(firstUsername, "TeaMoe");
+    assert.strictEqual(firstUsername, "TeaMoe");
 
     await click(query(firstUser));
-    assert.equal(query("#search-term").value, `@${firstUsername} `);
+    assert.strictEqual(query("#search-term").value, `@${firstUsername}`);
   });
 });

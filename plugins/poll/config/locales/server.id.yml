@@ -29,3 +29,5 @@ id:
     only_staff_or_op_can_toggle_status: "Hanya anggota staf atau penerbit asli yang dapat merubah status polling."
     email:
       link_to_poll: "Klik untuk menampilkan polling."
+    user_field:
+      no_data: "Tidak ada Data"

@@ -115,6 +115,7 @@ gl:
       previous_month: "Mes anterior"
       next_month: "Mes seguinte"
       placeholder: data
+      to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación #%{postNumber}"
@@ -303,7 +304,13 @@ gl:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_categories:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
     topic_count_latest:
+      one: "Ver %{count} tema novo ou actualizado"
+      other: "Ver %{count} temas novos ou actualizados"
+    topic_count_unseen:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
     topic_count_unread:
@@ -948,6 +955,7 @@ gl:
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
+      no_bookmarks_search: "Non se atoparon marcadores coa busca fornecida."
       first_notification: "Xa ten a súa primeira notificación! Selecciónea para comezar."
       dynamic_favicon: "Amosar conta na icona do navegador"
       skip_new_user_tips:
@@ -1053,7 +1061,13 @@ gl:
         latest: "Últimos"
         sent: "Enviadas"
         unread: "Sen ler"
+        unread_with_count:
+          one: "(%{count}) pendente de ler"
+          other: "(%{count}) pendente de ler"
         new: "Novo"
+        new_with_count:
+          one: "(%{count}) novo"
+          other: "(%{count}) novo"
         archive: "Arquivo"
         groups: "Os meus grupos"
         move_to_inbox: "Mover á caixa de entrada"
@@ -1389,7 +1403,7 @@ gl:
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
-          instructions: "Compartir esta ligazón para conceder acceso a este sitio"
+          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
@@ -1725,6 +1739,7 @@ gl:
         one: "+ %{count} subcategoría"
         other: "+ %{count} subcategorías"
     select_kit:
+      delete_item: "Eliminar %{name}"
       filter_by: "Filtrado por: %{name}"
       select_to_filter: "Seleccione un valor para filtrar"
       default_header_text: Seleccionar...
@@ -1827,7 +1842,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      title: "Ou prema Ctrl+Intro"
       users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
@@ -1960,6 +1974,9 @@ gl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Desbotar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaxe na caixa %{group_name}"
         other: "%{count} mensaxes na caixa %{group_name}"
@@ -2017,8 +2034,8 @@ gl:
       result_count:
         one: "<span>%{count} resultado de</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados de</span><span class='term'>%{term}</span>"
-      title: "buscar temas, publicacións, usuarios ou categorías"
-      full_page_title: "buscar temas ou publicacións"
+      title: "Buscar"
+      full_page_title: "Buscar"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
       post_format: "#%{post_number} de %{username}"
@@ -2030,6 +2047,11 @@ gl:
       search_google: "Probe a buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
+      categories: "Categorías"
+      tags: "Etiquetas"
+      type:
+        users: "Usuarios"
+        categories: "Categorías"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -2037,7 +2059,6 @@ gl:
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
       advanced:
-        title: Busca avanzada
         posted_by:
           label: Publicado por
         in_category:
@@ -2090,7 +2111,6 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir a outra lista de temas ou categoría"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
@@ -2248,6 +2268,7 @@ gl:
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
+        duration: "Duración"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2565,6 +2586,7 @@ gl:
           other: "Seleccionou <b>%{count}</b> publicacións."
     post:
       quote_reply: "Cita"
+      quote_edit: "Editar"
       quote_share: "Compartir"
       edit_reason: "Razón: "
       post_number: "publicación %{number}"
@@ -2655,6 +2677,7 @@ gl:
             other: "Si, e as %{count} respostas"
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
+        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -3224,6 +3247,8 @@ gl:
           name: Outro
         posting:
           name: Publicación
+    download_calendar:
+      download: "Descargar"
     tagging:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
@@ -3359,6 +3384,10 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
+    user_activity:
+      no_activity_others: "Sen actividade."
+      no_replies_others: "Sen respostas."
+      no_likes_others: "Ningún Gústame en publicacións."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3491,7 +3520,6 @@ gl:
               description: "Os administradores poden ver todos os grupos."
             members_visibility_levels:
               title: "Quen pode ver os membros deste grupo?"
-              description: "Os administradores poden ver os membros de todos os grupos."
             publish_read_state: "Publicar nas mensaxes de grupo o estado de lectura de grupo"
           membership:
             automatic: Automático
@@ -3559,7 +3587,6 @@ gl:
         delete: Eliminar definitivamente
         not_shown_again: Esta clave non se amosará de novo. Asegúrese de ter unha copia antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas as accións)
         scopes:
           description: |
             Ao utilizar ámbitos, pode restrinxir unha clave API a un conxunto específico de resultados.
@@ -3945,12 +3972,8 @@ gl:
               }
 
               Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
-          head_tag:
-            text: "</head>"
-            title: "HTML que se inserirá antes da etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que se inserirá antes da etiqueta </body>"
+            text: "Corpo"
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
@@ -4379,8 +4402,6 @@ gl:
         silence_message_placeholder: "(deixar baleiro para enviar mensaxe predeterminada)"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
-        delete_all_posts: "Eliminar todas as publicacións"
-        delete_posts_progress: "Eliminando publicacións..."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
         post_edits: "Edicións publicadas"
         penalty_post_actions: "Que quere facer coa publicación asociada?"
@@ -4443,8 +4464,12 @@ gl:
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
         delete_posts:
+          button: "Eliminar todas as publicacións"
           progress:
             title: "Progreso na eliminación de publicacións"
+            description: "Eliminando publicacións..."
+          confirmation:
+            cancel: "Cancelar"
         merge:
           button: "Combinar"
           prompt:
@@ -4757,7 +4782,6 @@ gl:
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"
-        help: "Engada un novo emoji que estará dispoñíbel para todos. (Suxestión: arrastre e solte múltiples ficheiros dunha vez)"
         add: "Engadir novo emoji"
         uploading: "Cargando..."
         name: "Nome"
@@ -4768,7 +4792,6 @@ gl:
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         confirm_delete: "Confirma a eliminación deste servidor?"
-        sample: "Utilice o seguinte código HTML no seu sitio para crear e incorporar temas do Discourse. Substitúa <b>REPLACE_ME</b> polo URL canónico da páxina na que o está a incorporar."
         title: "Incorporando"
         host: "Servidores permitidos"
         class_name: "Nome da clase"
@@ -4839,7 +4862,5 @@ gl:
           moderator: "Moderador"
           regular: "Usuario normal"
       previews:
-        topic_title: "Tema de discusión"
-        font_title: "Tipo de letra %{font}"
         share_button: "Compartir"
         reply_button: "Responder"

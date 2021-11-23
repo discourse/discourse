@@ -29,7 +29,7 @@ endsParent:!0,keywords:i},o=[t,{className:"class",beginKeywords:"class module",
 end:"$|;",illegal:/=/,contains:[n.inherit(n.TITLE_MODE,{
 begin:"[A-Za-z_]\\w*(::\\w+)*(\\?|!)?"}),{begin:"<\\s*",contains:[{
 begin:"("+n.IDENT_RE+"::)?"+n.IDENT_RE,relevance:0}]}].concat(b)},{
-className:"function",begin:e(/def\s*/,(_=a+"\\s*(\\(|;|$)",e("(?=",_,")"))),
+className:"function",begin:e(/def\s+/,(_=a+"\\s*(\\(|;|$)",e("(?=",_,")"))),
 relevance:0,keywords:"def",end:"$|;",contains:[n.inherit(n.TITLE_MODE,{begin:a
 }),l].concat(b)},{begin:n.IDENT_RE+"::"},{className:"symbol",
 begin:n.UNDERSCORE_IDENT_RE+"(!|\\?)?:",relevance:0},{className:"symbol",

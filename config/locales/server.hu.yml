@@ -571,18 +571,9 @@ hu:
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
   user_activity:
-    no_default:
-      self: "Még nincsenek tevékenységek."
-      others: "Nincsenek tevékenységek."
     no_bookmarks:
       self: "Nincsenek könyvjelzővel ellátott bejegyzéseid; a könyvjelzők segítségével gyorsan hivatkozhatsz bizonyos bejegyzésekre."
       others: "Nincsenek könyvjelzők."
-    no_likes_given:
-      self: "Egyetlen bejegyzést sem kedvelt."
-      others: "Nincsenek kedvelt bejegyzések."
-    no_replies:
-      self: "Nem válaszoltál még egyetlen bejegyzésre sem."
-      others: "Nincsenek válaszok."
     no_drafts:
       self: "Nincsenek még piszkozataid. Kezdj választ írni bármelyik témához, és ha nem küldöd el, automatikusan elmentjük piszkozatként."
   topic_flag_types:
@@ -608,9 +599,8 @@ hu:
         remove: "Ez a téma már nem kiemelt. Ezt követően nem jelenik meg minden oldal tetején."
   unsubscribed:
     title: "Az e-mail beállítások frissítve!"
-    description: "a (z) <b>%{email}</b> e-mail beállításai frissültek. Az e-mail beállítások módosításához <a href='%{url}'>keresse fel a felhasználói beállításokat</a>."
-    topic_description: "A %{link}újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
-    private_topic_description: "A újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
+    topic_description: "A(z) %{link} témára történő újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
+    private_topic_description: "Az újbóli feliratkozáshoz használja a téma alján vagy jobb oldalán található értesítési vezérlőt."
   unsubscribe:
     title: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
@@ -874,6 +864,7 @@ hu:
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
   site_settings:
+    disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
@@ -887,6 +878,7 @@ hu:
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
     suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    external_emoji_url: "Az emodzsi képek külső szolgáltatásának URL-je. A letiltáshoz hagyja üresen."
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
@@ -1397,6 +1389,28 @@ hu:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PÜ] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PÜ] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |2
@@ -1788,7 +1802,7 @@ hu:
     first_quote:
       name: Első idézet
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor első alkalommal idézel egy bejegyzést a válaszodban. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolódásában. Az idézés legegyszerűbb módja, ha kiemeled a bejegyzés egy részét, majd megnyomod bármelyik válasz gombot. Idézz nagylelkűen!
+        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemeleia bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
     read_guidelines:
       name: Irányelvek elolvasva
       long_description: |
@@ -1943,12 +1957,22 @@ hu:
           company_name:
             label: "Cégnév"
             placeholder: "Példa szervezet"
-      colors:
-        title: "Színek"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Előnézet"
+          homepage_style:
+            choices:
+              latest:
+                label: "Legutóbbi témák"
+              categories_only:
+                label: "Csak kategóriák szerint"
+              categories_with_featured_topics:
+                label: "Kategóriák funkciók szerint"
+              categories_and_latest_topics:
+                label: "Kategóriák és legutóbbi témák"
+              categories_and_top_topics:
+                label: "Kategóriák és legfelső témák"
       logos:
         title: "Logók"
         fields:
@@ -1959,21 +1983,6 @@ hu:
         fields:
           large_icon:
             label: "Nagy ikon"
-      homepage:
-        title: "Főoldal"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Legutóbbi témák"
-              categories_only:
-                label: "Csak kategóriák"
-              categories_with_featured_topics:
-                label: "Kategóriák kiemelt témákkal"
-              categories_and_latest_topics:
-                label: "Kategóriák és legutóbbi témák"
-              categories_and_top_topics:
-                label: "Kategóriák és legnépszerűbb témák"
       invites:
         title: "Stáb meghívása"
       finished:
@@ -2006,8 +2015,6 @@ hu:
       low: "Alacsony"
       medium: "Közepes"
       high: "Magas"
-    reasons:
-      suspect_user: "Ez az új felhasználó anélkül adta meg a profil adatait, hogy bármilyen témát vagy bejegyzést olvasott volna, ami erősen azt sugallja, hogy spamelők lehetnek. See `approve_suspect_users`."
     actions:
       agree_and_keep:
         title: "Bejegyzés megtartása"
@@ -2071,6 +2078,7 @@ hu:
       other: "%{topic_title} (%{count}. rész)"
     post_raw: "Beszélgetés folytatása innen: %{parent_url}.\n\nElőző beszélgetések:\n\n%{previous_topics}"
     small_action_post_raw: "Beszélgetés folytatása itt: %{new_title}."
+  fallback_username: "felhasználó"
   activemodel:
     errors:
       <<: *errors

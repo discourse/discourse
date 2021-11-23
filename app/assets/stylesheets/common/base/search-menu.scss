@@ -1,21 +1,47 @@
+@mixin user-item-flex {
+  display: flex;
+  flex-direction: column;
+  line-height: $line-height-medium;
+  color: var(--primary-high-or-secondary-low);
+}
+
+@mixin separator {
+  border-top: 1px solid var(--primary-low);
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+}
+
+$search-pad-vertical: 0.25em;
+$search-pad-horizontal: 0.5em;
+
 .search-menu {
-  --search-padding: 0.5em;
   .menu-panel .panel-body-contents {
     overflow-y: auto;
   }
 
   .search-input {
     position: relative;
-    padding: var(--search-padding);
-  }
-
-  .search-context {
-    label {
-      padding: 0.25em var(--search-padding);
+    margin: 1px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--primary-medium);
+    input#search-term {
+      border-width: 0;
+      margin-bottom: 0;
+      width: auto;
+      flex-grow: 1;
+      padding-right: 50px;
+      &:focus {
+        outline: none;
+      }
     }
-    .show-help {
-      margin-left: auto;
-      line-height: var(--line-height-medium);
+
+    .btn.search-context {
+      margin: 2px;
+      margin-right: 0;
+    }
+    &:focus-within {
+      @include default-focus;
     }
   }
 
@@ -27,28 +53,14 @@
   }
 
   input[type="text"] {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 32px;
-    margin-bottom: 0;
-  }
-
-  .search-context {
-    display: flex;
-    align-items: center;
-
-    label {
-      margin-bottom: 0;
-    }
-  }
-
-  .search-context + .results {
-    margin-top: 1em;
+    margin-right: 0px;
   }
 
   .results {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding-top: $search-pad-vertical;
+    padding-bottom: $search-pad-vertical;
 
     .list {
       min-width: 100px;
@@ -79,11 +91,16 @@
       .second-line {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: baseline;
 
-        .discourse-tags {
-          .discourse-tag {
-            margin-right: 0.25em;
+        .badge-wrapper {
+          margin-right: 0.5em;
+        }
+        .discourse-tags .discourse-tag {
+          margin-right: 0.25em;
+
+          .d-icon {
+            margin-right: 0;
           }
         }
       }
@@ -95,203 +112,205 @@
       }
     }
 
-    .main-results {
+    .search-result-category {
+      .widget-link {
+        margin-bottom: 0;
+      }
+    }
+
+    .search-result-group .group-result,
+    .search-result-user .user-result {
       display: flex;
-      flex: 1 1 auto;
-      .topic-statuses {
-        color: var(--primary-medium);
-      }
+      align-items: center;
+      font-size: var(--font-down-1);
     }
-
-    .main-results + .secondary-results {
-      border-left: 1px solid var(--primary-low);
-      margin-left: 1em;
-      padding-left: 1em;
-      max-width: 33%;
-    }
-
-    .secondary-results {
-      display: flex;
-      flex-direction: column;
-      flex: 1 1 auto;
-
-      .separator {
-        margin: 1em 0.25em;
-        height: 1px;
-        background: var(--primary-low);
+    .search-result-group .group-result {
+      .d-icon,
+      .avatar-flair {
+        width: 20px;
+        height: 20px;
       }
 
-      .search-result-tag {
-        .discourse-tag {
-          font-size: $font-down-1;
-        }
-      }
-
-      .search-result-category {
-        .widget-link {
-          margin-bottom: 0;
-        }
-      }
-
-      .search-result-group {
-        .search-link {
-          color: var(--primary-high);
-
-          &:hover {
-            color: var(--primary);
-          }
-        }
-
-        .group-result {
-          display: flex;
-          align-items: center;
-
-          .d-icon,
-          .avatar-flair {
-            min-width: 25px;
-            margin-right: 0.5em;
-
-            .d-icon {
-              margin-right: 0;
-            }
-          }
-
-          .avatar-flair-image {
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            min-height: 25px;
-          }
-
-          .group-names {
-            display: flex;
-            flex-direction: column;
-            overflow: auto;
-            line-height: $line-height-medium;
-
-            &:hover {
-              .name,
-              .slug {
-                color: var(--primary-high);
-              }
-            }
-
-            .name,
-            .slug {
-              @include ellipsis;
-            }
-
-            .name {
-              font-weight: 700;
-            }
-
-            .slug {
-              font-size: $font-down-1;
-              color: var(--primary-high);
-            }
-          }
-        }
-      }
-
-      .search-result-category,
-      .search-result-user,
-      .search-result-group,
-      .search-result-tag {
-        .list {
-          display: block;
-
-          .item {
-            .widget-link.search-link {
-              flex: 1;
-              font-size: $font-0;
-              padding: 0.25em;
-            }
-          }
-        }
-      }
-
-      .search-result-user {
-        .user-result {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-
-          .avatar {
-            margin-right: 0.5em;
-            display: block;
-            min-width: 25px;
-          }
-
-          .user-titles {
-            display: flex;
-            flex-direction: column;
-            overflow: auto;
-            line-height: $line-height-medium;
-
-            .username,
-            .name {
-              @include ellipsis;
-            }
-
-            .username {
-              color: var(--primary-high-or-secondary-low);
-              font-size: $font-down-1;
-            }
-
-            .custom-field {
-              color: var(--primary-high-or-secondary-low);
-              font-size: $font-down-2;
-            }
-
-            .name {
-              color: var(--primary-high-or-secondary-low);
-              font-size: $font-0;
-              font-weight: 700;
-            }
-          }
-        }
-      }
-    }
-
-    .search-menu-assistant {
-      min-width: 100%;
-      margin-top: -1em;
-
-      .search-menu-assistant-item {
-        > span {
-          vertical-align: baseline;
-          display: inline-block;
-        }
-      }
-
-      .search-item-user .avatar,
-      .search-item-prefix {
+      .avatar-flair,
+      .d-icon-users {
         margin-right: 0.5em;
       }
+
+      .avatar-flair {
+        border-radius: 50%;
+        &.avatar-flair-image {
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+        }
+        .d-icon {
+          margin-right: 0;
+        }
+      }
+
+      .group-names {
+        @include user-item-flex;
+        .name,
+        .slug {
+          @include ellipsis;
+        }
+
+        .name {
+          font-weight: 700;
+        }
+      }
     }
+
+    .search-result-user .user-result {
+      .user-titles {
+        @include user-item-flex;
+
+        .username,
+        .name {
+          @include ellipsis;
+        }
+
+        .name {
+          font-weight: 700;
+        }
+
+        .username,
+        .name,
+        .custom-field {
+          color: var(--primary-high-or-secondary-low);
+        }
+
+        .custom-field {
+          font-size: var(--font-down-2);
+        }
+      }
+    }
+
+    .search-result-category,
+    .search-result-tag {
+      + .search-result-user,
+      + .search-result-group {
+        @include separator;
+      }
+    }
+
+    .search-result-user .user-result img.avatar,
+    .search-item-user img.avatar {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+
+    .label-suffix {
+      color: var(--primary-medium);
+    }
+
+    .extra-hint {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-1);
+      float: right;
+      margin-top: 2px;
+    }
+
+    .search-item-slug .badge-wrapper {
+      font-size: var(--font-0);
+      margin-left: 2px;
+    }
+
+    .search-menu-initial-options {
+      + .search-result-tag,
+      + .search-result-category,
+      + .search-result-user,
+      + .search-result-group {
+        @include separator;
+      }
+    }
+
+    .search-menu-initial-options,
+    .search-result-tag,
+    .search-menu-assistant {
+      .search-link {
+        .d-icon {
+          margin-right: 5px;
+          vertical-align: middle;
+        }
+        .d-icon-tag {
+          font-size: var(--font-down-2);
+        }
+
+        .d-icon-search {
+          font-size: var(--font-down-1);
+        }
+      }
+    }
+  }
+
+  .browser-search-tip,
+  .search-random-quick-tip {
+    padding: $search-pad-vertical $search-pad-horizontal;
+    padding-bottom: 0;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    .tip-label {
+      background-color: rgba(var(--tertiary-rgb), 0.1);
+      margin-right: 4px;
+      padding: 2px 4px;
+      display: inline-block;
+      &.tip-clickable {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .browser-search-tip {
+    padding-top: 0.5em;
   }
 
   .searching {
     position: absolute;
-    top: 1.1em;
-    right: 1em;
+    top: $search-pad-vertical + 0.2em;
+    right: $search-pad-horizontal;
+    min-height: 20px;
 
     .spinner {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-width: 2px;
       margin: 0;
+      margin-top: 2px;
+    }
+
+    a.show-advanced-search,
+    a.clear-search {
+      padding: 0px 3px;
+      display: inline-block;
+      background-color: transparent;
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+      &:hover .d-icon {
+        color: var(--primary-high);
+      }
+    }
+
+    a.clear-search {
+      margin-right: 3px;
     }
   }
 
   .no-results {
-    padding: var(--search-padding);
+    padding: $search-pad-vertical $search-pad-horizontal;
   }
 
   .search-link {
-    padding: var(--search-padding);
+    display: block;
+    padding: $search-pad-vertical $search-pad-horizontal;
 
-    .badge-category-parent {
-      line-height: $line-height-small;
+    // This is purposefully redundant
+    // the search widget can be used outside of the header
+    // and the focus/hover styles from the header in those cases wouldn't follow
+    &:focus,
+    &:hover {
+      background-color: var(--highlight-medium);
     }
 
     .topic {
@@ -305,6 +324,12 @@
         word-break: break-word;
       }
       margin-right: 0.25em;
+    }
+  }
+  .search-result-topic,
+  .search-result-post {
+    .search-link {
+      padding: 0.5em;
     }
   }
 }

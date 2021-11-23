@@ -5,6 +5,7 @@ import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import LoadMore from "discourse/mixins/load-more";
 import Post from "discourse/models/post";
+import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
@@ -14,6 +15,7 @@ import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
+  _lastDecoratedElement: null,
 
   _initialize: on("init", function () {
     const filter = this.get("stream.filter");
@@ -30,7 +32,7 @@ export default Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   @observes("stream.user.id")
-  _scrollTopOnModelChange: function () {
+  _scrollTopOnModelChange() {
     schedule("afterRender", () => $(document).scrollTop(0));
   },
 
@@ -47,6 +49,7 @@ export default Component.extend(LoadMore, {
     $(this.element).on("click.discourse-redirect", ".excerpt a", (e) => {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
+    this._updateLastDecoratedElement();
   }),
 
   // This view is being removed. Shut down operations
@@ -58,6 +61,18 @@ export default Component.extend(LoadMore, {
     // Unbind link tracking
     $(this.element).off("click.discourse-redirect", ".excerpt a");
   }),
+
+  _updateLastDecoratedElement() {
+    const nodes = this.element.querySelectorAll(".user-stream-item");
+    if (nodes.length === 0) {
+      return;
+    }
+    const lastElement = nodes[nodes.length - 1];
+    if (lastElement === this._lastDecoratedElement) {
+      return;
+    }
+    this._lastDecoratedElement = lastElement;
+  },
 
   actions: {
     removeBookmark(userAction) {
@@ -107,6 +122,9 @@ export default Component.extend(LoadMore, {
             Draft.clear(draft.draft_key, draft.sequence)
               .then(() => {
                 stream.remove(draft);
+                if (draft.draft_key === NEW_TOPIC_KEY) {
+                  this.currentUser.set("has_topic_draft", false);
+                }
               })
               .catch((error) => {
                 popupAjaxError(error);
@@ -123,7 +141,15 @@ export default Component.extend(LoadMore, {
 
       this.set("loading", true);
       const stream = this.stream;
-      stream.findItems().then(() => this.set("loading", false));
+      stream.findItems().then(() => {
+        this.set("loading", false);
+        let element = this._lastDecoratedElement?.nextElementSibling;
+        while (element) {
+          this.trigger("user-stream:new-item-inserted", element);
+          element = element.nextElementSibling;
+        }
+        this._updateLastDecoratedElement();
+      });
     },
   },
 });

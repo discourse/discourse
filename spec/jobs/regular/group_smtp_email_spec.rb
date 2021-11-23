@@ -30,6 +30,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
     SiteSetting.reply_by_email_enabled = true
     TopicAllowedGroup.create(group: group, topic: topic)
+    TopicAllowedUser.create(user: recipient_user, topic: topic)
     TopicAllowedUser.create(user: staged1, topic: topic)
     TopicAllowedUser.create(user: staged2, topic: topic)
     TopicAllowedUser.create(user: normaluser, topic: topic)
@@ -64,7 +65,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.as_mail_message.html_part.to_s).not_to include(I18n.t("user_notifications.in_reply_to"))
   end
 
-  it "includes the participants in the correct format, and does not have links for the staged users" do
+  it "includes the participants in the correct format (but not the recipient user), and does not have links for the staged users" do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     email_text = email_log.as_mail_message.text_part.to_s
@@ -74,6 +75,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_text).to include("cormac@lit.com")
     expect(email_text).not_to include("[cormac@lit.com]")
     expect(email_text).to include("normaluser")
+    expect(email_text).not_to include(recipient_user.username)
   end
 
   it "creates an EmailLog record with the correct details" do
@@ -156,6 +158,16 @@ RSpec.describe Jobs::GroupSmtpEmail do
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log.to_address).to eq("test@test.com")
     expect(email_log.smtp_group_id).to eq(group.id)
+  end
+
+  it "drops malformed cc addresses when sending the email" do
+    args2 = args.clone
+    args2[:cc_emails] << "somebadccemail@test.com<mailto:somebadccemail@test.com"
+    subject.execute(args2)
+    expect(ActionMailer::Base.deliveries.count).to eq(1)
+    last_email = ActionMailer::Base.deliveries.last
+    expect(last_email.subject).to eq("Re: Help I need support")
+    expect(last_email.cc).to match_array(["otherguy@test.com", "cormac@lit.com"])
   end
 
   context "when there are cc_addresses" do

@@ -37,7 +37,8 @@
   &.disabled {
     cursor: not-allowed;
     .d-editor-button-bar {
-      visibility: hidden;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
@@ -47,52 +48,6 @@
   margin-left: 1%;
   display: flex;
   flex-direction: column;
-}
-
-.d-editor-button-bar {
-  display: flex;
-  align-items: center;
-  min-height: 30px;
-  border-bottom: 1px solid var(--primary-low);
-
-  .btn,
-  .btn-default {
-    background-color: transparent;
-    display: inline-block;
-    color: var(--primary-medium);
-    .d-icon {
-      color: currentColor;
-    }
-    &:hover {
-      color: var(--primary-low);
-    }
-
-    svg {
-      -webkit-transform: translate3d(
-        0,
-        0,
-        0
-      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
-    }
-  }
-
-  .d-editor-spacer {
-    height: 1em;
-    display: inline-block;
-    border-left: 1px solid var(--primary-low-mid);
-  }
-
-  .btn:not(.no-text) {
-    font-size: $font-up-1;
-  }
-
-  .btn.bold {
-    font-weight: bolder;
-  }
-
-  .btn.italic {
-    font-style: italic;
-  }
 }
 
 .d-editor-preview-wrapper {
@@ -222,23 +177,45 @@
       opacity: 1;
     }
   }
+
   .button-wrapper {
+    min-width: 10em;
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5em;
+
     position: absolute;
     height: var(--resizer-height);
     bottom: 0;
     left: 0;
     opacity: 0;
-    display: flex;
-    align-items: center;
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
-    width: 100%;
     background: var(--secondary); // for when images are wider than controls
 
+    &[editing] {
+      opacity: 1;
+    }
+
+    .scale-btn-container,
+    .alt-text-readonly-container,
+    .alt-text-edit-container {
+      background: var(--secondary);
+      display: flex;
+      height: var(--resizer-height);
+      align-items: center;
+
+      &[hidden] {
+        display: none;
+      }
+    }
+
     .scale-btn {
-      background: var(--secondary); // for when controls are wider than image
       color: var(--tertiary);
       padding: 0 1em;
+
       &:first-child,
       &:last-child {
         padding: 0;
@@ -254,6 +231,61 @@
         cursor: pointer;
       }
     }
+
+    .alt-text-readonly-container {
+      flex: 1 1;
+      width: 100%;
+
+      .alt-text {
+        margin-right: 0.5em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .alt-text-edit-btn {
+        cursor: pointer;
+
+        svg {
+          padding-right: 0.5em;
+        }
+      }
+    }
+
+    .alt-text-edit-container {
+      margin-top: 0.25em;
+      gap: 0 0.25em;
+      flex: 1;
+
+      .alt-text-input,
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        height: var(--resizer-height);
+      }
+
+      .alt-text-input {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        border: none;
+        width: var(--resizer-height);
+
+        svg {
+          margin: 0;
+        }
+      }
+    }
+
+    svg {
+      pointer-events: none;
+    }
   }
 }
 
@@ -261,88 +293,58 @@
   opacity: 1;
 }
 
-// d-editor bar button sizing for all editors - this is kept separate to keep
-// everything in one place
+// d-editor bar button sizing
 .d-editor-button-bar {
-  margin: 0.25em;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--primary-low);
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 2px;
+  padding-right: 2px;
 
-  // shared styles for all font sizes
-  .btn,
-  .btn-default {
-    padding: 0.5em;
-  }
   .d-editor-spacer {
+    height: 1em;
+    display: inline-block;
+    border-left: 1px solid var(--primary-low-mid);
     margin: 0 0.25em;
-  }
-
-  // small text size
-  .text-size-smaller & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.4em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-      .d-editor-spacer {
-        margin: 0 0.25em;
-      }
+    .mobile-view & {
+      display: none;
     }
   }
 
-  // normal text size
-  .text-size-normal & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.35em;
-      }
+  .btn:focus {
+    @include default-focus;
+  }
+
+  .btn {
+    margin: 0;
+    background-color: transparent;
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: currentColor;
     }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.25em;
-      }
+    &:hover {
+      color: var(--primary-low);
     }
   }
 
-  // larger text size
-  .text-size-larger & {
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.2em;
-      }
-    }
-  }
-
-  // largest text size
-  .text-size-largest & {
-    .btn,
-    .btn-default {
-      font-size: $font-down-1;
+  // ensures items grow/shrink on mobile to fit available space
+  @include breakpoint(mobile-large) {
+    .btn {
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: auto;
+      padding-left: 0.25em;
+      padding-right: 0.25em;
     }
 
-    @include breakpoint(mobile-large) {
-      .btn,
-      .btn-default {
-        padding: 0 0.3em;
-      }
-    }
-    @include breakpoint(mobile-medium) {
-      .btn,
-      .btn-default {
-        padding: 0 0.2em;
+    .select-kit.toolbar-popup-menu-options {
+      flex-grow: 1;
+      flex-basis: auto;
+      .select-kit-header .select-kit-header-wrapper {
+        justify-content: center;
       }
     }
   }

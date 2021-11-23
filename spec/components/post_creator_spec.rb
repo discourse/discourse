@@ -786,13 +786,13 @@ describe PostCreator do
 
     context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         TopicUser.create!(topic: topic, user: user, bookmarked: true)
       end
 
       it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
-        Fabricate(:bookmark, topic: topic, user: user)
+        Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user)
         Fabricate(:bookmark, user: user)
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)
@@ -1134,6 +1134,26 @@ describe PostCreator do
 
       expect(target_user1.notifications.count).to eq(1)
       expect(target_user2.notifications.count).to eq(1)
+
+      GroupArchivedMessage.create!(group: group, topic: post.topic)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+        PostCreator.create!(user,
+          raw: "this is a reply to the group message",
+          topic_id: post.topic_id
+        )
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      expect(GroupArchivedMessage.exists?(group: group, topic: post.topic))
+        .to eq(false)
     end
   end
 

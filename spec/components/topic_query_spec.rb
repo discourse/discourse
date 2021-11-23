@@ -97,6 +97,63 @@ describe TopicQuery do
         page: 1)
       ).to eq(topics[per_page...num_topics])
     end
+
+    it "orders globally pinned topics by pinned_at rather than bumped_at" do
+      pinned1 = Fabricate(
+        :topic,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      pinned2 = Fabricate(
+        :topic,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
+
+    it "orders pinned topics within a category by pinned_at rather than bumped_at" do
+      cat = Fabricate(:category)
+      pinned1 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      pinned2 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0, category_id: cat.id)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
   end
 
   context 'bookmarks' do
@@ -211,33 +268,100 @@ describe TopicQuery do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
       let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
+      # Not used in assertions but fabricated to ensure we're not leaking topics
+      # across categories
+      let!(:_category) { Fabricate(:category_with_definition) }
+      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+
       it "works with subcategories" do
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subcategory.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id, no_subcategories: true)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
       end
 
       it "shows a subcategory definition topic in its parent list with the right site setting" do
         SiteSetting.show_category_definitions_in_topic_lists = true
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, subcategory.topic)
       end
 
       it "works with subsubcategories" do
         SiteSetting.max_category_nesting = 3
 
-        Fabricate(:topic, category: category)
-        Fabricate(:topic, category: subcategory)
-        Fabricate(:topic, category: subsubcategory)
+        category_topic = Fabricate(:topic, category: category)
+        subcategory_topic = Fabricate(:topic, category: subcategory)
+        subsubcategory_topic = Fabricate(:topic, category: subsubcategory)
 
         SiteSetting.max_category_nesting = 2
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, category_topic, subcategory_topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
 
         SiteSetting.max_category_nesting = 3
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          category.topic,
+          category_topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
       end
     end
   end
@@ -258,6 +382,11 @@ describe TopicQuery do
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
       fab!(:no_tags_topic) { Fabricate(:topic) }
       let(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
+
+      it "excludes a tag if desired" do
+        topics = TopicQuery.new(moderator, exclude_tag: tag.name).list_latest.topics
+        expect(topics.any? { |t| t.tags.include?(tag) }).to eq(false)
+      end
 
       it "returns topics with the tag when filtered to it" do
         expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
@@ -650,6 +779,17 @@ describe TopicQuery do
         category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
+      end
+
+      it "should apply default sort order to latest and unseen filters only" do
+        category.update!(sort_order: 'created', sort_ascending: true)
+
+        topic1 = Fabricate(:topic, category: category, like_count: 1000, posts_count: 100, created_at: 1.day.ago)
+        topic2 = Fabricate(:topic, category: category, like_count: 5200, posts_count: 500, created_at: 1.hour.ago)
+        TopTopic.refresh!
+
+        topic_ids = TopicQuery.new(user, category: category.id).list_top_for(:monthly).topics.map(&:id)
+        expect(topic_ids).to eq([topic2.id, topic1.id])
       end
 
       it "ignores invalid order value" do

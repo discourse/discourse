@@ -114,6 +114,21 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when image is too big" do
+      let(:filename) { 'logo.png' }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "adds an error to the upload" do
+        SiteSetting.max_image_size_kb = 1
+        upload = UploadCreator.new(
+          file, filename, force_optimize: true
+        ).create_for(Discourse.system_user.id)
+        expect(upload.errors.full_messages.first).to eq(
+          "#{I18n.t("upload.images.too_large_humanized", max_size: "1 KB")}"
+        )
+      end
+    end
+
     describe 'pngquant' do
       let(:filename) { "pngquant.png" }
       let(:file) { file_from_fixtures(filename) }

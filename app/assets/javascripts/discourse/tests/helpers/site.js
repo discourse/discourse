@@ -1,6 +1,5 @@
 import PreloadStore from "discourse/lib/preload-store";
 
-/*jshint maxlen:10000000 */
 PreloadStore.store("site", {
   default_archetype: "regular",
   notification_types: {

@@ -10,6 +10,7 @@ describe DiscourseSingleSignOn do
     SiteSetting.discourse_connect_url = @discourse_connect_url
     SiteSetting.enable_discourse_connect = true
     SiteSetting.discourse_connect_secret = @discourse_connect_secret
+    SiteSetting.reserved_usernames = ''
     Jobs.run_immediately!
   end
 
@@ -264,27 +265,6 @@ describe DiscourseSingleSignOn do
     expect(add_group4.usernames).to eq(user.username)
   end
 
-  it 'can override username properly when only the case changes' do
-    SiteSetting.auth_overrides_username = true
-
-    sso = new_discourse_sso
-    sso.username = "testuser"
-    sso.name = "test user"
-    sso.email = "test@test.com"
-    sso.external_id = "100"
-    sso.bio = "This **is** the bio"
-    sso.suppress_welcome_message = true
-
-    # create the original user
-    user = sso.lookup_or_create_user(ip_address)
-    expect(user.username).to eq "testuser"
-
-    # change the username case
-    sso.username = "TestUser"
-    user = sso.lookup_or_create_user(ip_address)
-    expect(user.username).to eq "TestUser"
-  end
-
   it 'behaves properly when auth_overrides_username is set but username is missing or blank' do
     SiteSetting.auth_overrides_username = true
 
@@ -346,6 +326,146 @@ describe DiscourseSingleSignOn do
     expect(admin.name).to eq "Louis C.K."
   end
 
+  it 'can override username properly when only the case changes' do
+    SiteSetting.auth_overrides_username = true
+
+    sso = new_discourse_sso
+    sso.username = "testuser"
+    sso.name = "test user"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+    sso.bio = "This **is** the bio"
+    sso.suppress_welcome_message = true
+
+    # create the original user
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # change the username case
+    sso.username = "TestUser"
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "TestUser"
+  end
+
+  it 'do not override username when a new username after fixing is the same' do
+    SiteSetting.auth_overrides_username = true
+
+    sso = new_discourse_sso
+    sso.username = "testuser"
+    sso.name = "test user"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+
+    # create the original user
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # change the username case
+    sso.username = "testuserგამარჯობა"
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+  end
+
+  it "doesn't use email as a source for username suggestions by default" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq I18n.t('fallback_username')
+  end
+
+  it "use email as a source for username suggestions if enabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "mail"
+  end
+
+  it "doesn't use email as a source for name suggestions by default" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.name).to eq ""
+  end
+
+  it "use email as a source for name suggestions if enabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    # set username and name to nil, so they cannot be used as a source for suggestions
+    sso.username = nil
+    sso.name = nil
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.name).to eq "Mail"
+  end
+
+  it "can override username with a number at the end to a simpler username without a number" do
+    SiteSetting.auth_overrides_username = true
+
+    user = Fabricate(:user)
+    sso = new_discourse_sso
+    sso.external_id = "A"
+    sso.email = user.email
+
+    username_with_number = "bob1"
+    username_without_number = "bob"
+
+    sso.username = username_with_number
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq username_with_number
+
+    sso.username = username_without_number
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq username_without_number
+  end
+
+  it "can override username after min_username_length was made smaller" do
+    SiteSetting.auth_overrides_username = true
+
+    user = Fabricate(:user)
+    sso = new_discourse_sso
+    sso.external_id = "A"
+    sso.email = user.email
+
+    long_username = "bob"
+    short_username = "bo"
+
+    SiteSetting.min_username_length = 3
+    sso.username = long_username
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq long_username
+
+    SiteSetting.min_username_length = 2
+    sso.username = short_username
+    sso.lookup_or_create_user(ip_address)
+    user.reload
+    expect(user.username).to eq short_username
+  end
+
   it "can fill in data on way back" do
     sso = make_sso
 
@@ -404,6 +524,39 @@ describe DiscourseSingleSignOn do
 
     sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
     expect(sso.nonce).to_not be_nil
+  end
+
+  context 'nonce error' do
+    it "generates correct error message when nonce has already been used" do
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      sso.expire_nonce!
+      expect(sso.nonce_error).to eq("Nonce has already been used")
+    end
+
+    it "generates correct error message when nonce is expired" do
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      Discourse.cache.delete(sso.used_nonce_key)
+      expect(sso.nonce_error).to eq("Nonce is incorrect, was generated in a different browser session, or has expired")
+    end
+
+    it "generates correct error message when nonce is expired, and csrf protection disabled" do
+      SiteSetting.discourse_connect_csrf_protection = false
+      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      expect(sso.nonce_valid?).to eq true
+
+      Discourse.cache.delete(sso.used_nonce_key)
+      expect(sso.nonce_error).to eq("Nonce is incorrect, or has expired")
+    end
   end
 
   context 'user locale' do

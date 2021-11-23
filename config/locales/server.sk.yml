@@ -521,9 +521,6 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-  user_activity:
-    no_default:
-      others: "Žiadna aktivita"
   topic_flag_types:
     spam:
       title: "Spam"
@@ -767,6 +764,7 @@ sk:
     memory_warning: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
+    disabled: "vypnuté"
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
@@ -938,7 +936,6 @@ sk:
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
-    max_new_accounts_per_registration_ip: "Neakceptovať ďalšie prihlásenia z IP adresy v prípade, ak už existuje (n) účtov s úrovňou dôvery 0 z danej IP adresy (a žiadny nie je zamestnancec alebo s úrovňou dôvery 2 a vyššou)."
     min_ban_entries_for_roll_up: "Ak existuje minimálne (N) položiek a kliknete na Zrolovať, vytvorí sa nový obmedzujúci záznam podsiete."
     max_age_unmatched_emails: "Zmazať nevyskytujúce sa kontrolované emailové adresy po (N) dňoch."
     max_age_unmatched_ips: "Zmazať nevyskytujúce sa kontrolované IP adresy po (N) dňoch."
@@ -1401,14 +1398,10 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizácia"
-      colors:
-        title: "Farby"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Ukážka"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -1447,6 +1440,7 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
+  fallback_username: "používateľ"
   activemodel:
     errors:
       <<: *errors

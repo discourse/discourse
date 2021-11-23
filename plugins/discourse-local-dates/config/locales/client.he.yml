@@ -40,3 +40,4 @@ he:
             every_three_months: "כל שלושה חודשים"
             every_six_months: "כל חצי שנה"
             every_year: "כל שנה"
+      default_title: "אירוע %{site_name}"

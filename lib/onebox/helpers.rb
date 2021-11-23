@@ -7,7 +7,7 @@ module Onebox
 
     class DownloadTooLarge < StandardError; end
 
-    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com', 'youtube.com']
+    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com', 'medium.com', 'youtube.com']
 
     def self.symbolize_keys(hash)
       return {} if hash.nil?
@@ -232,6 +232,10 @@ module Onebox
 
     def self.uri_unencode(url)
       Addressable::URI.unencode(url)
+    end
+
+    def self.image_placeholder_html
+      "<div class='onebox-placeholder-container'><span class='placeholder-icon image'></span></div>"
     end
 
     def self.video_placeholder_html

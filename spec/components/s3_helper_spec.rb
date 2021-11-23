@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "s3_helper"
 require "rails_helper"
+require "s3_helper"
 
 describe "S3Helper" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
@@ -78,11 +78,110 @@ describe "S3Helper" do
   end
 
   it "should prefix bucket folder path only if not exists" do
-    s3_helper = S3Helper.new('bucket/folder_path', "", client: client)
+    s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
     object2 = s3_helper.object("folder_path/original/1X/def.xyz")
 
     expect(object1.key).to eq(object2.key)
+  end
+
+  it "should not prefix the bucket folder path if the key begins with the temporary upload prefix" do
+    s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
+
+    object1 = s3_helper.object("original/1X/def.xyz")
+    object2 = s3_helper.object("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
+
+    expect(object1.key).to eq("folder_path/original/1X/def.xyz")
+    expect(object2.key).to eq("#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz")
+  end
+
+  describe "#copy" do
+    let(:source_key) { "#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}uploads/default/blah/source.jpg" }
+    let(:destination_key) { "original/1X/destination.jpg" }
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "can copy an object from the source to the destination" do
+      destination_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: destination_key, client: client)
+      s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
+      destination_stub.expects(:copy_from).with(copy_source: "test-bucket/#{source_key}").returns(
+        stub(copy_object_result: stub(etag: "\"etag\""))
+      )
+      response = s3_helper.copy(source_key, destination_key)
+      expect(response.first).to eq(destination_key)
+      expect(response.second).to eq("etag")
+    end
+
+    it "puts the metadata from options onto the destination if apply_metadata_to_destination" do
+      content_disposition = "attachment; filename=\"source.jpg\"; filename*=UTF-8''source.jpg"
+      destination_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: destination_key, client: client)
+      s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
+      destination_stub.expects(:copy_from).with(
+        copy_source: "test-bucket/#{source_key}", content_disposition: content_disposition, metadata_directive: "REPLACE"
+      ).returns(
+        stub(copy_object_result: stub(etag: "\"etag\""))
+      )
+      response = s3_helper.copy(
+        source_key, destination_key,
+        options: { apply_metadata_to_destination: true, content_disposition: content_disposition }
+      )
+      expect(response.first).to eq(destination_key)
+      expect(response.second).to eq("etag")
+    end
+  end
+
+  describe "#ensure_cors" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "does nothing if !s3_install_cors_rule" do
+      SiteSetting.s3_install_cors_rule = false
+      s3_helper.expects(:s3_resource).never
+      s3_helper.ensure_cors!
+    end
+
+    it "creates the assets rule if no rule exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, Aws::S3::Errors::NoSuchCORSConfiguration.new("", {}))
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS]
+        }
+      )
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
+    end
+
+    it "does nothing if a rule already exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).never
+      s3_helper.ensure_cors!([S3CorsRulesets::ASSETS])
+    end
+
+    it "applies the passed in rule if a different rule already exists" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      )
+      s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+    end
+
+    it "returns false if the CORS rules do not get applied from an error" do
+      s3_helper.s3_client.stub_responses(:get_bucket_cors, {
+        cors_rules: [S3CorsRulesets::ASSETS]
+      })
+      s3_helper.s3_client.expects(:put_bucket_cors).with(
+        bucket: s3_helper.s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD]
+        }
+      ).raises(Aws::S3::Errors::AccessDenied.new("test", "test", {}))
+      expect(s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])).to eq(false)
+    end
   end
 end

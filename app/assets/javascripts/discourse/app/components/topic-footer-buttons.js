@@ -1,7 +1,9 @@
 import { alias, and, or } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 
 export default Component.extend({
   elementId: "topic-footer-buttons",
@@ -18,17 +20,25 @@ export default Component.extend({
     return this.siteSettings.enable_personal_messages && isPM;
   },
 
-  buttons: getTopicFooterButtons(),
+  inlineButtons: getTopicFooterButtons(),
+  inlineDropdowns: getTopicFooterDropdowns(),
 
-  @discourseComputed("buttons.[]")
-  inlineButtons(buttons) {
-    return buttons.filter((button) => !button.dropdown);
-  },
+  inlineActionables: computed(
+    "inlineButtons.[]",
+    "inlineDropdowns.[]",
+    function () {
+      return this.inlineButtons
+        .filterBy("dropdown", false)
+        .concat(this.inlineDropdowns)
+        .sortBy("priority")
+        .reverse();
+    }
+  ),
 
   // topic.assigned_to_user is for backward plugin support
-  @discourseComputed("buttons.[]", "topic.assigned_to_user")
-  dropdownButtons(buttons) {
-    return buttons.filter((button) => button.dropdown);
+  @discourseComputed("inlineButtons.[]", "topic.assigned_to_user")
+  dropdownButtons(inlineButtons) {
+    return inlineButtons.filter((button) => button.dropdown);
   },
 
   @discourseComputed("topic.isPrivateMessage")

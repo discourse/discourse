@@ -12,7 +12,9 @@ export default SelectKitRowComponent.extend({
 
     schedule("afterRender", () => {
       const color = escapeExpression(this.rowValue);
-      this.element.style.borderLeftColor = `#${color}`;
+      this.element.style.borderLeftColor = color.startsWith("#")
+        ? color
+        : `#${color}`;
     });
   },
 });

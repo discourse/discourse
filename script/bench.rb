@@ -297,7 +297,7 @@ begin
   run("RAILS_ENV=profile bundle exec rake assets:clean")
 
   def get_mem(pid)
-    YAML.load `ruby script/memstats.rb #{pid} --yaml`
+    YAML.safe_load `ruby script/memstats.rb #{pid} --yaml`
   end
 
   mem = get_mem(pid)

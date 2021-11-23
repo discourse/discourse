@@ -1,11 +1,20 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
+import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
 import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
 
 let _defaultHomepage;
+
+export function splitString(str, separator = ",") {
+  if (typeof str === "string") {
+    return str.split(separator).filter(Boolean);
+  } else {
+    return [];
+  }
+}
 
 export function translateSize(size) {
   switch (size) {
@@ -86,13 +95,11 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
+  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(
-    deepMerge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
-  );
+  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -210,29 +217,12 @@ export function caretRowCol(el) {
       return sum + row.length + 1;
     }, 0);
 
-  return { rowNum: rowNum, colNum: colNum };
+  return { rowNum, colNum };
 }
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  let r, rc, re;
-  if (el.selectionStart) {
-    return el.selectionStart;
-  }
-  if (document.selection) {
-    el.focus();
-    r = document.selection.createRange();
-    if (!r) {
-      return 0;
-    }
-
-    re = el.createTextRange();
-    rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint("EndToStart", re);
-    return rc.text.length;
-  }
-  return 0;
+  return el?.selectionStart || 0;
 }
 
 // Set the caret's position
@@ -469,20 +459,42 @@ const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/c
 //                               |
 //                               +------- paragraphs starting with 4 spaces or tab
 
-export function inCodeBlock(text, pos) {
-  let result = false;
+const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
-  let match;
-  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
-    const begin = match.index;
-    const end = match.index + match[0].length;
-    if (begin <= pos && pos <= end) {
-      result = true;
+export function inCodeBlock(text, pos) {
+  let end = 0;
+  for (const match of text.matchAll(CODE_BLOCKS_REGEX)) {
+    end = match.index + match[0].length;
+    if (match.index <= pos && pos <= end) {
+      return true;
     }
   }
 
-  return result;
+  // Character at position `pos` can be in a code block that is unfinished.
+  // To check this case, we look for any open code blocks after the last closed
+  // code block.
+  const lastOpenBlock = text.substr(end).search(OPEN_CODE_BLOCKS_REGEX);
+  return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
+export function translateModKey(string) {
+  const { isApple } = helperContext().capabilities;
+  // Apple device users are used to glyphs for shortcut keys
+  if (isApple) {
+    string = string
+      .replace("Shift", "\u21E7")
+      .replace("Meta", "\u2318")
+      .replace("Alt", "\u2325")
+      .replace(/\+/g, "");
+  } else {
+    string = string
+      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+  }
+
+  return string;
+}
 // This prevents a mini racer crash
 export default {};

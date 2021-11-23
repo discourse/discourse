@@ -50,7 +50,7 @@ export default Controller.extend(ModalFunctionality, {
           );
         },
         () => {
-          this.flash(I18n.t("topic.change_owner.error"), "alert-error");
+          this.flash(I18n.t("topic.change_owner.error"), "error");
           this.set("saving", false);
         }
       );

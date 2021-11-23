@@ -144,11 +144,6 @@ export default function () {
           this.route("unread");
           this.route("archive");
           this.route("sent");
-          this.route("personal");
-          this.route("personalSent", { path: "personal/sent" });
-          this.route("personalNew", { path: "personal/new" });
-          this.route("personalUnread", { path: "personal/unread" });
-          this.route("personalArchive", { path: "personal/archive" });
           this.route("warnings");
           this.route("group", { path: "group/:name" });
           this.route("groupArchive", { path: "group/:name/archive" });

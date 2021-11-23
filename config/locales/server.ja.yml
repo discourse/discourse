@@ -240,7 +240,6 @@ ja:
   topic_invite:
     failed_to_invite: "次のいずれかのグループのグループメンバーシップがない場合、ユーザーをこのトピックに招待できません: %{group_names}。"
     user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
-    muted_invitee: "そのユーザーはあなたをミュートしています。"
     muted_topic: "そのユーザーはこのトピックをミュートしています。"
     receiver_does_not_allow_pm: "そのユーザーは、あなたがプライベートメッセージを送信することを許可していません。"
     sender_does_not_allow_pm: "そのユーザーがプライベートメッセージを送信することを許可していません。"
@@ -456,14 +455,6 @@ ja:
       前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
-    get_a_room: |
-      ### 全員が会話に参加できるように奨励しましょう
-
-      この特定のトピックで @%{reply_username} に %{count} 回返信しています！
-
-      素晴らしいディスカッションには多数の人の意見と観点が含まれるものです。ほかに参加できる人はいませんか？
-
-      周りの視線を気にせずにこの特定のユーザーと長い会話を続けるには、[個人メッセージを送信](%{base_path}/u/%{reply_username})できることもお忘れなく。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -839,19 +830,10 @@ ja:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
   user_activity:
-    no_default:
-      self: "まだアクティビティがありません。"
-      others: "アクティビティがありません。"
     no_bookmarks:
       self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
       search: "指定された検索クエリでブックマークは見つかりませんでした。"
       others: "ブックマークはありません。"
-    no_likes_given:
-      self: "「いいね！」した投稿はありません。"
-      others: "「いいね！」した投稿はありません。"
-    no_replies:
-      self: "まだ投稿に返信していません。"
-      others: "返信はありません。"
     no_drafts:
       self: "下書きはありません。トピックで返信の作成を始めると、新しい下書きとして自動保存されます。"
   email_settings:
@@ -914,7 +896,6 @@ ja:
         remove: "このトピックはバナーではなくなりました。各ページの上部に表示されなくなります。"
   unsubscribed:
     title: "メールの設定を更新しました！"
-    description: "<b>%{email}</b> のメールの設定が更新されました。変更するには<a href='%{url}'>あなたのユーザー設定にアクセス</a>してください。"
     topic_description: "%{link} を購読し直すには、トピックの下または右にある通知の管理を使用してください。"
     private_topic_description: "購読し直すには、トピックの下か右にある通知の管理を使用してください。"
   uploads:
@@ -1320,6 +1301,7 @@ ja:
     unreachable_themes: "次のテーマの更新を確認できませんでした:"
     watched_word_regexp_error: "'%{action}' のウォッチ語の正規表現は無効です。<a href='%{base_path}/admin/customize/watched_words'>ウォッチ語の設定</a>を確認するか、'ウォッチ語の正規表現' サイト設定を無効にしてください。"
   site_settings:
+    disabled: "無効"
     display_local_time_in_user_card: "ユーザーカードが開いたときのユーザーのタイムゾーンに基づいて現地時間を表示します。"
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; に置換される語"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
@@ -1413,7 +1395,6 @@ ja:
     summary_likes_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の「いいね！」数。この設定を変更すると、1 週間以内で遡って適用されます。"
     summary_percent_filter: "「このトピックを要約」をクリックしたとき表示される上位投稿の割合%"
     summary_max_results: "'このトピックを要約' が返す最大投稿数"
-    enable_personal_messages: "信頼レベル 1 ユーザーによるメッセージとメッセージへの返信の作成を許可する (メッセージを送信する最低信頼レベルで構成可能)。スタッフは設定に関係なく必ずメッセージを作成できます。"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
@@ -1743,7 +1724,6 @@ ja:
     topic_view_duration_hours: "N 時間ごとに IP/ユーザーあたりの新規トピックビューを 1 回カウントする"
     user_profile_view_duration_hours: "N 時間ごとに IP/ユーザーあたりの新規ユーザープロフィールビューを 1 回カウントする"
     levenshtein_distance_spammer_emails: "迷惑メールのアドレスを照合する場合、あいまい一致を許可する文字数の差。"
-    max_new_accounts_per_registration_ip: "この IP でアクセスする信頼レベル 0 のアカウントが (n) 個存在する場合 (さらにこれらがスタッフメンバーや TL2 以上のメンバーでない場合)、この IP から新たに登録できないようにします。"
     min_ban_entries_for_roll_up: "ロールアップボタンをクリックする際に少なくとも (N) 個のエントリーがある場合、新しいサブネット禁止エントリーを作成します。"
     max_age_unmatched_emails: "(N) 日間一致しなかったスクリーン対象メールアドレスを削除します。"
     max_age_unmatched_ips: "(N) 日間一致しなかったスクリーン対象 IP アドレスを削除します。"
@@ -1902,7 +1882,6 @@ ja:
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
-    show_copy_button_on_codeblocks: "コードブロックのコンテンツをユーザーのクリップボードにコピーするためのボタンをコードブロックに追加する。この機能は Internet Explorer ではサポートされていません。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
     embed_topics_list: "トピックリストの HTML 埋め込みをサポートする"
     embed_set_canonical_url: "埋め込みトピックの正規 URL を埋め込みコンテンツの URL に設定する。"
@@ -2377,47 +2356,6 @@ ja:
   test_mailer:
     title: "テストメーラー"
     subject_template: "[%{email_prefix}] メール配信可能性テスト"
-    text_body_template: |
-      これは次から送信されたテストメールです。
-
-      [**%{base_url}**][0]
-
-      メールの配信可能性は複雑な課題です。最初に確認すべき重要な事項を以下に示します。
-
-      - `notification email` の from: アドレスがサイト設定で正しく設定されていることを*確認してください*。**送信するメールの "from" アドレスに指定されたドメインがメールの検証対象のドメインです**。
-
-      - メールクライアントでメールの生のソースを表示する方法を確認してください。メールのヘッダーを調査すると、重要な手がかりを得ることができます。Gmail では、各メールの右上にあるドロップダウンメニューに含まれる "メッセージのソースを表示" オプションを使用できます。
-
-      - **重要:** あなたの ISP には、メールの送信元のドメイン名と IP アドレスを関連付ける逆引き DNS レコードが入力されていますか？こちらで[逆引き PTR レコードをテストしてください][2]。あなたの ISP が適切な逆引き DNS ポインターレコードを登録しない場合、メールが配信される可能性はほぼありません。
-
-      - あなたのドメインの [SPF レコード][8]は正しいですか？こちらで [SPF レコードをテストしてください][1]。TXT は SPF の正しい正式なレコードタイプであることに注意してください。
-
-      - ドメインの [DKIM レコード][3]は正しいですか？これによりメールの配信可能性が大幅に改善されます。こちらで [DKIM レコードをテストしてください][7]。
-
-      - 独自のメールサーバーを実行している場合は、メールサーバーの IP が[どのメールのブロックリストにも追加されていない][4]ことを確認してください。また、HELO メッセージで DNS に解決する完全修飾ホスト名を確実に送信していることを確認してください。送信していない場合は、多数のメールサーバーによってメールが拒否されることになります。
-
-      - **テストメールを [mail-tester.com][mt] に送信**して、上記すべてが正しく機能していることを確認することを強くお勧めします。
-
-      ([SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]、または [Mailjet][mj] でアカウントを作成するのが*簡単*な方法です。これらは安価なメールプランを提供しており、小規模のコミュニティに最適です。ただし、DNS に SPF と DKIM レコードをセットアップする必要はあります！)
-
-      このメールの配信可能性テストがあなたのところに届きますように！
-
-      それでは幸運を。
-
-      [Discourse](https://www.discourse.org) 一同より
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
@@ -3141,6 +3079,26 @@ ja:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "ユーザーが投稿しました"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3187,6 +3145,9 @@ ja:
         あなたは %{suspended_till} までフォーラムから凍結されました。
 
         理由 - %{reason}
+    account_suspended_forever:
+      title: "アカウントが凍結されました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
     account_silenced:
       title: "アカウントが投稿禁止にされました"
       subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
@@ -3194,6 +3155,9 @@ ja:
         あなたは %{silenced_till} までフォーラムから投稿禁止にされました。
 
         理由 - %{reason}
+    account_silenced_forever:
+      title: "アカウントが投稿禁止にされました"
+      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"
@@ -4168,10 +4132,8 @@ ja:
             label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
-            label: "コミュニティについて簡単な一文で説明してください"
             placeholder: "純子と純子の仲間がワイワイする場所"
           short_site_description:
-            label: "コミュニティについて短い言葉で説明してください"
             placeholder: "史上最高のコミュニティ"
       introduction:
         title: "紹介"
@@ -4230,17 +4192,30 @@ ja:
           city_for_disputes:
             label: "紛争都市"
             placeholder: "カリフォルニア州サンフランシスコ"
-      colors:
-        title: "色"
-      fonts:
-        title: "フォント"
+      styling:
         fields:
           body_font:
             label: "本文のフォント"
           heading_font:
             label: "見出しのフォント"
-          font_preview:
+          styling_preview:
             label: "プレビュー"
+          homepage_style:
+            choices:
+              latest:
+                label: "最新のトピック"
+              categories_only:
+                label: "カテゴリのみ"
+              categories_with_featured_topics:
+                label: "注目のトピックのカテゴリ"
+              categories_and_latest_topics:
+                label: "カテゴリと最新トピック"
+              categories_and_top_topics:
+                label: "カテゴリと人気トピック"
+              categories_boxes:
+                label: "カテゴリボックス"
+              categories_boxes_with_topics:
+                label: "トピック付きのカテゴリボックス"
       logos:
         title: "ロゴ"
         fields:
@@ -4259,26 +4234,6 @@ ja:
           large_icon:
             label: "大きなアイコン"
             description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
-      homepage:
-        description: "ホームページには最新トピックを表示することを推奨しますが、カテゴリ (トピックをグループ化したもの) を表示することもできます。"
-        title: "ホームページ"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "最新のトピック"
-              categories_only:
-                label: "カテゴリのみ"
-              categories_with_featured_topics:
-                label: "注目のトピックのカテゴリ"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-              categories_and_top_topics:
-                label: "カテゴリと人気トピック"
-              categories_boxes:
-                label: "カテゴリボックス"
-              categories_boxes_with_topics:
-                label: "トピック付きのカテゴリボックス"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"
@@ -4333,20 +4288,7 @@ ja:
     missing_version: "バージョンパラメーターを指定する必要があります"
     conflict: "更新の競合があるため、それを行えませんでした。"
     reasons:
-      post_count: "すべてのユーザーの最初の数件の投稿はスタッフによって承認される必要があります。`approve_post_count` をご覧ください。"
-      trust_level: "信頼レベルが低いユーザーはその返信をスタッフが承認する必要があります。`approve_unless_trust_level` をご覧ください。"
-      new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。`pprove_new_topics_unless_trust_level` をご覧ください。"
-      fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。`min_first_post_typing_time` をご覧ください。"
-      auto_silence_regexp: "最初の投稿が `auto_silence_first_post_regex` 設定に一致する新規ユーザー。"
-      watched_word: "この投稿にはウォッチ語が含まれていました。<a href='%{base_url}/admin/customize/watched_words'>ウォッチ語のリスト</a>をご覧ください"
-      staged: "ステージングユーザーの新しいトピックと投稿はスタッフによる承認が必要です。`approve_unless_staged` をご覧ください。"
-      category: "このカテゴリの投稿には、スタッフによる手動の承認が必要です。カテゴリ設定をご覧ください。"
-      must_approve_users: "すべての新規ユーザーはスタッフによる承認が必要です。`must_approve_users` をご覧ください。"
-      invite_only: "すべての新規ユーザーは招待される必要があります。`invite_only` をご覧ください。"
       email_auth_res_enqueue: "このメールは DMARC チェックに失敗しました。これは誰からのものでもないようです。詳細については、生のメールヘッダーを確認してください。"
-      email_spam: "このメールは、`email_in_spam_header` に定義されているヘッダーによって、迷惑として通報されました。"
-      suspect_user: "この新規ユーザーは、トピックまたは投稿を一切読まずにプロフィール情報を入力しました。これは、迷惑行為者であることを強く示唆しています。`approve_suspect_users` をご覧ください。"
-      contains_media: "この投稿には埋め込みメディアが含まれています。`review_media_unless_trust_level` をご覧ください。"
       queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
     actions:
       agree:
@@ -4448,6 +4390,7 @@ ja:
       other: "%{topic_title} (パート %{count})"
     post_raw: "%{parent_url} のディスカッションを継続中です。\n\n前のディスカッション:\n\n%{previous_topics}"
     small_action_post_raw: "%{new_title} でディスカッションを続けます。"
+  fallback_username: "ユーザー"
   activemodel:
     errors:
       <<: *errors

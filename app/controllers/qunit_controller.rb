@@ -31,7 +31,7 @@ class QunitController < ApplicationController
     end
 
     if param_key && theme.blank?
-      return render plain: "Can't find theme with #{param_key} #{params[param_key].inspect}", status: :not_found
+      return render plain: "Can't find theme with #{param_key} #{get_param(param_key).inspect}", status: :not_found
     end
 
     if !param_key

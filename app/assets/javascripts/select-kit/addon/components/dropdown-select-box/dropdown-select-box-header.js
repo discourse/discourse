@@ -6,11 +6,8 @@ import { readOnly } from "@ember/object/computed";
 export default SingleSelectHeaderComponent.extend({
   layout,
   classNames: ["dropdown-select-box-header"],
-  tagName: "button",
   classNameBindings: ["btnClassName", "btnStyleClass"],
   showFullTitle: readOnly("selectKit.options.showFullTitle"),
-  attributeBindings: ["buttonType:type"],
-  buttonType: "button",
   customStyle: readOnly("selectKit.options.customStyle"),
 
   btnClassName: computed("showFullTitle", function () {

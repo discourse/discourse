@@ -1,5 +1,5 @@
-<div class="emoji-uploader">
-  <div class="control">
+<div class="emoji-uploader form-horizontal">
+  <div class="control-group">
     <span class="label">
       {{i18n "admin.emoji.name"}}
     </span>
@@ -12,7 +12,7 @@
       }}
     </div>
   </div>
-  <div class="control">
+  <div class="control-group">
     <span class="label">
       {{i18n "admin.emoji.group"}}
     </span>
@@ -30,12 +30,12 @@
       }}
     </div>
   </div>
-  <div class="control">
+  <div class="control-group">
     <div class="input">
       <label class="btn btn-default btn-primary {{if addDisabled "disabled"}}">
         {{#if uploading}}
           {{d-icon "spinner" class="loading-icon"}}
-          <span>{{i18n "admin.emoji.uploading"}}</span>
+          <span>{{i18n "admin.emoji.uploading"}} {{uploadProgress}}%</span>
         {{else}}
           {{d-icon "plus"}}
           <span>{{i18n "admin.emoji.add"}}</span>
@@ -44,6 +44,7 @@
           class="hidden-upload-field"
           disabled={{addDisabled}}
           type="file"
+          multiple="true"
           accept=".png,.gif">
       </label>
     </div>

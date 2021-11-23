@@ -18,7 +18,6 @@ export default ComboBoxComponent.extend({
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  tagName: "li",
   categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   navigateToEdit: false,
@@ -39,6 +38,7 @@ export default ComboBoxComponent.extend({
     autoInsertNoneItem: false,
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
+    parentCategory: false,
   },
 
   modifyComponentForRow() {

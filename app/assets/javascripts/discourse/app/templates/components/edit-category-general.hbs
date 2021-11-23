@@ -61,21 +61,21 @@
       <div class="category-color-editor">
         {{html-safe categoryBadgePreview}}
 
-        <div style="margin-top: 10px;" class="input-prepend input-append">
+        <section class="field">
           <span class="color-title">{{i18n "category.background_color"}}:</span>
           <div class="colorpicker-wrapper">
             <span class="add-on">#</span>{{text-field value=category.color placeholderKey="category.color_placeholder" maxlength="6"}}
             {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=category.color}}
           </div>
-        </div>
+        </section>
 
-        <div class="input-prepend input-append">
+        <section class="field">
           <span class="color-title">{{i18n "category.foreground_color"}}:</span>
           <div class="colorpicker-wrapper edit-text-color">
             <span class="add-on">#</span>{{text-field value=category.text_color placeholderKey="category.color_placeholder" maxlength="6"}}
             {{color-picker colors=foregroundColors value=category.text_color id="edit-text-color"}}
           </div>
-        </div>
+        </section>
       </div>
     {{/if}}
   </section>

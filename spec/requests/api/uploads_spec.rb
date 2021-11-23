@@ -15,6 +15,7 @@ describe 'uploads' do
   path '/uploads.json' do
     post 'Creates an upload' do
       tags 'Uploads'
+      operationId 'createUpload'
       consumes 'multipart/form-data'
 
       expected_request_schema = load_spec_schema('upload_create_request')

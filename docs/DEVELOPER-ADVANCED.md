@@ -14,6 +14,12 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
     sudo apt-get -yqq update
     sudo apt-get -yqq install software-properties-common vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick redis-server advancecomp jhead jpegoptim libjpeg-turbo-progs optipng pngcrush pngquant gnupg2
 
+    # oxipng
+    mkdir /tmp/oxipng-install && cd /tmp/oxipng-install
+    wget https://github.com/shssoichiro/oxipng/releases/download/v5.0.1/oxipng-5.0.1-x86_64-unknown-linux-musl.tar.gz
+    tar -xzf oxipng-5.0.1-x86_64-unknown-linux-musl.tar.gz && cd oxipng-5.0.1-x86_64-unknown-linux-musl
+    cp oxipng /usr/local/bin
+
     # Ruby
     curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
     curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
@@ -24,7 +30,7 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
 
     rvm install 2.6.2
     rvm --default use 2.6.2 # If this error out check https://rvm.io/integration/gnome-terminal
-    gem install bundler mailcatcher rake
+    gem install bundler rake
 
     # Download and install postgresql-10 from https://wiki.postgresql.org/wiki/Apt
 
@@ -75,9 +81,12 @@ If you ever need to recreate your database:
     bundle exec rake admin:create
     RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
 
+Configure emails via MailHog (https://github.com/mailhog/MailHog):
+
+    docker run -p 8025:8025 -p 1025:1025 mailhog/mailhog # open http://localhost:8025 to see the emails
+
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
-    mailcatcher # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
     bundle exec sidekiq # open http://localhost:3000/sidekiq to see queues
     bundle exec rails server
 

@@ -151,9 +151,9 @@ export default (filterArg, params) => {
           canCreateTopic && category.get("permission") === PermissionType.FULL;
 
       this.controllerFor("navigation/category").setProperties({
-        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        canCreateTopicOnCategory,
         cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
-        canCreateTopic: canCreateTopic,
+        canCreateTopic,
       });
 
       let topicOpts = {
@@ -165,8 +165,8 @@ export default (filterArg, params) => {
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
         expandAllPinned: true,
-        canCreateTopic: canCreateTopic,
-        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        canCreateTopic,
+        canCreateTopicOnCategory,
       };
 
       const p = category.get("params");
@@ -192,6 +192,8 @@ export default (filterArg, params) => {
           outlet: "header-list-container",
           model: this._categoryList,
         });
+      } else {
+        this.disconnectOutlet({ outlet: "header-list-container" });
       }
       this.render("discovery/topics", {
         controller: "discovery/topics",

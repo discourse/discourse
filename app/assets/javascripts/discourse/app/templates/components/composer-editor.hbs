@@ -1,5 +1,4 @@
 {{d-editor
-  tabindex="4"
   value=composer.reply
   placeholder=replyPlaceholder
   previewUpdated=(action "previewUpdated")
@@ -18,14 +17,8 @@
   onPopupMenuAction=onPopupMenuAction
   popupMenuOptions=popupMenuOptions
   disabled=disableTextarea
-  outletArgs=(hash composer=composer editorType="composer")}}
-
-{{#if experimentalComposerUploads}}
-  <br>
-  <div class="alert alert-warning">
-    Experimental uploader being used!
-  </div>
-{{/if}}
+  outletArgs=(hash composer=composer editorType="composer")
+}}
 
 {{#if allowUpload}}
   {{#if acceptsAllFormats}}

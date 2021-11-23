@@ -11,28 +11,28 @@
             {{lastUpdatedAt}}
           </div>
         {{/if}}
-        {{input
-          value=(readonly nameInput)
-          input=(action "onUsernameFilterChanged" value="target.value")
-          placeholderKey="directory.filter_name"
-          class="filter-name no-blur"
-        }}
-        {{combo-box
-          class="directory-group-selector"
-          value=group
-          content=groupOptions
-          onChange=(action groupChanged)
-          options=(hash
-            none="directory.group.all"
-          )
-        }}
-        {{#if currentUser.staff}}
-          {{d-button
-            icon="wrench"
-            action=(action "showEditColumnsModal")
-            class="btn-default open-edit-columns-btn"
+        <div class="inline-form full-width">
+          {{input
+            value=(readonly nameInput)
+            input=(action "onUsernameFilterChanged" value="target.value")
+            placeholderKey="directory.filter_name"
+            class="filter-name no-blur"
           }}
-        {{/if}}
+          {{combo-box
+            class="directory-group-selector"
+            value=group
+            content=groupOptions
+            onChange=(action groupChanged)
+            options=(hash none="directory.group.all")
+          }}
+          {{#if currentUser.staff}}
+            {{d-button
+              icon="wrench"
+              action=(action "showEditColumnsModal")
+              class="btn-default open-edit-columns-btn"
+            }}
+          {{/if}}
+        </div>
         {{plugin-outlet name="users-directory-controls" connectorTagName="" tagName="" args=(hash model=model)}}
       </div>
 

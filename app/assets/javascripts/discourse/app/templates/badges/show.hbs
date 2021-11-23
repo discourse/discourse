@@ -28,7 +28,7 @@
 
     {{#if canSelectTitle}}
       <div class="badge-set-title {{if hiddenSetTitle "hidden" ""}}">
-        {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+        {{badge-title selectableUserBadges=selectableUserBadges}}
         {{d-button class="btn-default close-btn" action=(action "toggleSetUserTitle") label="close"}}
       </div>
     {{/if}}

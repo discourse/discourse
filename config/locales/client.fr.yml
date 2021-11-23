@@ -115,6 +115,7 @@ fr:
       previous_month: "Mois précédent"
       next_month: "Mois suivant"
       placeholder: date
+      to_placeholder: "à la date"
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"
@@ -300,6 +301,7 @@ fr:
     copy_codeblock:
       copied: "copié !"
     drafts:
+      label: "Brouillons"
       resume: "Reprendre"
       remove: "Supprimer"
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
@@ -309,7 +311,13 @@ fr:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+    topic_count_categories:
+      one: "Voir %{count} sujet récent ou mis à jour"
+      other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_latest:
+      one: "Voir %{count} sujet récent ou mis à jour"
+      other: "Voir %{count} sujets récents ou mis à jour"
+    topic_count_unseen:
       one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_unread:
@@ -825,6 +833,10 @@ fr:
       flair_type:
         icon: "Sélectionner une icône"
         image: "Insérer une image"
+      default_notifications:
+        modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
+        modal_yes: "Oui"
+        modal_no: "Non, appliquer ce changement à partir de maintenant"
     user_action_groups:
       "1": "« J'aime » attribués"
       "2": "« J'aime » reçus"
@@ -984,9 +996,11 @@ fr:
       no_bookmarks_title: "Vous n'avez pas encore créé de signet"
       no_bookmarks_body: >
         Le bouton %{icon} vous permet de marquer d'un signet les messages qui vous intéressent particulièrement. Ils seront ensuite affichés ici pour faciliter leur consultation. Vous pouvez également planifier un rappel associé à un signet !
+      no_bookmarks_search: "Aucun signet trouvé avec la requête de recherche fournie."
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
         Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Si vous ne vous êtes pas connecté(e) au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
+      no_notifications_page_title: "Vous n'avez pas encore reçu de notifications"
       first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
@@ -1090,7 +1104,16 @@ fr:
         rejected_posts: "messages rejetés"
       messages:
         inbox: "Boîte de réception"
+        latest: "Récents"
         sent: "Envoyés"
+        unread: "Non lues"
+        unread_with_count:
+          one: "Non lu (%{count})"
+          other: "Non lu (%{count})"
+        new: "Nouveau"
+        new_with_count:
+          one: "Nouveau (%{count})"
+          other: "Nouveau (%{count})"
         archive: "Archivés"
         groups: "Mes groupes"
         move_to_inbox: "Déplacer dans la boîte de réception"
@@ -1429,22 +1452,19 @@ fr:
         invite:
           new_title: "Créer une invitation"
           edit_title: "Modifier l'invitation"
-          instructions: "Partagez ce lien pour donner instantanément accès au forum"
+          instructions: "Partagez ce lien pour donner instantanément accès au site :"
           copy_link: "copier le lien"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
-          restrict_email: "Restreindre l'invitation à une adresse de courriel donnée"
           max_redemptions_allowed: "Nombre max. d'utilisations"
           add_to_groups: "Ajouter la personne invitée à ces groupes"
-          invite_to_topic: "Diriger vers ce sujet"
           expires_at: "Ce lien expirera dans"
           custom_message: "Message personnel (facultatif)"
           send_invite_email: "Enregistrer et envoyer le courriel"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
-          invite_copied: "Lien d'invitation copié."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -1522,6 +1542,8 @@ fr:
         edit: "Modifier l'image de profil"
       title:
         title: "Titre"
+        none: "(aucun)"
+      flair:
         none: "(aucun)"
       primary_group:
         title: "Groupe principal"
@@ -1773,6 +1795,7 @@ fr:
         one: "+ %{count} sous-catégorie"
         other: "+ %{count} sous-catégories"
     select_kit:
+      delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
       select_to_filter: "Sélectionner une valeur à filtrer"
       default_header_text: Sélectionner…
@@ -1877,7 +1900,6 @@ fr:
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
-      title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
@@ -2014,6 +2036,9 @@ fr:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - terminé"
+      dismiss_confirmation:
+        dismiss: "Vu"
+        cancel: "Annuler"
       group_message_summary:
         one: "%{count} message dans la boîte de réception de %{group_name}"
         other: "%{count} messages dans la boîte de réception de %{group_name}"
@@ -2072,8 +2097,8 @@ fr:
       result_count:
         one: "<span>%{count} résultat pour</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
-      title: "rechercher des sujets, messages, utilisateurs ou catégories"
-      full_page_title: "rechercher des sujets ou messages"
+      title: "Recherche"
+      full_page_title: "Recherche"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       post_format: "#%{post_number} par %{username}"
@@ -2085,6 +2110,11 @@ fr:
       search_google: "Essayez plutôt de rechercher avec Google :"
       search_google_button: "Google"
       search_button: "Recherche"
+      categories: "Catégories"
+      tags: "Étiquettes"
+      type:
+        users: "Utilisateurs"
+        categories: "Catégories"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"
@@ -2092,7 +2122,6 @@ fr:
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher dans les messages directs"
       advanced:
-        title: Recherche avancée
         posted_by:
           label: Auteur
         in_category:
@@ -2145,7 +2174,6 @@ fr:
           placeholder: minimum
         max_views:
           placeholder: maximum
-    hamburger_menu: "accéder à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -2318,6 +2346,7 @@ fr:
         time_frame_required: "Veuillez sélectionner un intervalle de temps"
         min_duration: "La durée doit être supérieure à 0"
         max_duration: "La durée doit être inférieure à 20 ans"
+        duration: "Durée "
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
@@ -2649,6 +2678,7 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
     post:
       quote_reply: "Citer"
+      quote_edit: "Modifier"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -2740,6 +2770,7 @@ fr:
             other: "Oui, et les %{count} réponses"
           just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
+        permanently_delete: "Supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
@@ -2832,6 +2863,7 @@ fr:
         name: "Nom"
         name_placeholder: "À quoi correspond ce signet ?"
         set_reminder: "Me le rappeler"
+        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -3107,7 +3139,7 @@ fr:
       one: "utilisateur"
       other: "utilisateurs"
     category_title: "Catégorie"
-    history: "Historique des 100 dernières modifications"
+    history_capped_revisions: "Historique des 100 dernières modifications"
     changed_by: "par %{author}"
     raw_email:
       title: "Courriel entrant"
@@ -3315,6 +3347,8 @@ fr:
       favorite_max_reached: "Vous ne pouvez pas choisir davantage de badges préférés"
       favorite_max_not_reached: "Faire de ce badge un de mes préférés"
       favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
+    download_calendar:
+      download: "Télécharger"
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -3463,6 +3497,10 @@ fr:
         regular: "habitué"
         leader: "meneur"
       detailed_name: "%{level} : %{name}"
+    user_activity:
+      no_activity_others: "Aucune activité."
+      no_replies_others: "Aucune réponse."
+      no_likes_others: "Aucun message aimé."
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -3596,7 +3634,6 @@ fr:
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
               title: "Qui peut voir les membres de ce groupe ?"
-              description: "Les administrateurs peuvent voir les membres de tous les groupes."
             publish_read_state: "Publier le statut de lecture du groupe lors des messages directs de groupe"
           membership:
             automatic: Automatique
@@ -3664,7 +3701,6 @@ fr:
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
-        use_global_key: Clé globale (autorise toutes les actions)
         scopes:
           description: |
             En configurant des permissions, vous pouvez restreindre une clé d'API à certaines actions spécifiques.
@@ -4059,12 +4095,8 @@ fr:
               %{example}
 
               Il est fortement recommandé de préfixer les noms des propriétés CSS pour éviter tout conflit avec Discourse ou ses extensions.
-          head_tag:
-            text: "</head>"
-            title: "HTML qui sera inséré avant la balise </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML qui sera inséré avant la balise </body>"
+            text: "Corps"
           yaml:
             text: "YAML"
             title: "Définir les paramètres du thème au format YAML"
@@ -4508,9 +4540,8 @@ fr:
         silence_message_placeholder: "(laissez vide pour envoyer un message par défaut)"
         suspended_until: "(jusqu'à %{until})"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
-        delete_all_posts: "Supprimer tous les messages"
-        delete_posts_progress: "Messages en cours de suppression…"
         delete_posts_failed: "Un problème est survenu lors de la suppression des messages."
+        post_edits: "Modifications de message"
         penalty_post_actions: "Que souhaitez-vous faire du message associé ?"
         penalty_post_delete: "Supprimer le message"
         penalty_post_delete_replies: "Supprimer le message et les réponses éventuelles"
@@ -4566,14 +4597,19 @@ fr:
         approve_success: "Utilisateur approuvé et un courriel avec les instructions d'activation a été envoyé."
         approve_bulk_success: "Bravo ! Tous les utilisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
+        post_edits_count: "Modifications de message"
         anonymize: "Rendre l'utilisateur anonyme"
         anonymize_confirm: "Voulez-vous vraiment rendre ce compte anonyme ? Cela entraînera la modification du nom d'utilisateur et de l'adresse courriel, et réinitialisera les informations du profil."
         anonymize_yes: "Oui, rendre ce compte anonyme"
         anonymize_failed: "Un problème est survenu lors de l'anonymisation du compte."
         delete: "Supprimer l'utilisateur"
         delete_posts:
+          button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
+            description: "Messages en cours de suppression…"
+          confirmation:
+            cancel: "Annuler"
         merge:
           button: "Fusionner"
           prompt:
@@ -4650,6 +4686,8 @@ fr:
         trust_level_unlocked_tip: "le niveau de confiance est déverrouillé, le système pourra changer le niveau de confiance de cet utilisateur"
         lock_trust_level: "Verrouiller le niveau de confiance"
         unlock_trust_level: "Déverrouiller le niveau de confiance"
+        silenced_count: "En sourdine"
+        suspended_count: "Suspendus"
         tl3_requirements:
           title: "Prérequis pour le niveau de confiance 3"
           table_title:
@@ -4893,7 +4931,6 @@ fr:
           replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"
-        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glissez-déposez plusieurs fichiers en même temps)"
         add: "Ajouter un nouvel émoji"
         uploading: "Envoi en cours…"
         name: "Nom"
@@ -4904,7 +4941,6 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
         class_name: "Nom de classe"
@@ -4975,7 +5011,5 @@ fr:
           moderator: "Modérateur"
           regular: "Utilisateur normal"
       previews:
-        topic_title: "Sujet de discussion"
-        font_title: "Police %{font}"
         share_button: "Partager"
         reply_button: "Répondre"

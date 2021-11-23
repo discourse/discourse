@@ -3,7 +3,6 @@
 require "digest"
 
 module Email
-
   class Receiver
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
@@ -72,8 +71,7 @@ module Email
           # do not create a new `IncomingEmail` record to avoid double ups.
           return if @incoming_email = find_existing_and_update_imap
 
-          ensure_valid_address_lists
-          ensure_valid_date
+          Email::Validator.ensure_valid!(@mail)
 
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
@@ -121,35 +119,23 @@ module Email
       incoming_email
     end
 
-    def ensure_valid_address_lists
-      [:to, :cc, :bcc].each do |field|
-        addresses = @mail[field]
-
-        if addresses&.errors.present?
-          @mail[field] = addresses.to_s.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
-        end
-      end
-    end
-
-    def ensure_valid_date
-      if @mail.date.nil?
-        raise InvalidPost, I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
-      end
-    end
-
     def is_blocked?
       return false if SiteSetting.ignore_by_title.blank?
       Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
     end
 
     def create_incoming_email
+      cc_addresses = Array.wrap(@mail.cc)
+      if has_been_forwarded? && embedded_email&.cc
+        cc_addresses.concat(embedded_email.cc)
+      end
       IncomingEmail.create(
         message_id: @message_id,
         raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
         to_addresses: @mail.to,
-        cc_addresses: @mail.cc,
+        cc_addresses: cc_addresses,
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
@@ -549,11 +535,19 @@ module Email
     end
 
     def previous_replies_regex
-      @previous_replies_regex ||= /^--[- ]\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
+      strings = I18n.available_locales.map do |locale|
+        I18n.with_locale(locale) { I18n.t("user_notifications.previous_discussion") }
+      end.uniq
+
+      @previous_replies_regex ||= /^--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
     end
 
     def reply_above_line_regex
-      @reply_above_line_regex ||= /\n#{I18n.t("user_notifications.reply_above_line")}\n/im
+      strings = I18n.available_locales.map do |locale|
+        I18n.with_locale(locale) { I18n.t("user_notifications.reply_above_line") }
+      end.uniq
+
+      @reply_above_line_regex ||= /\n(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\n/im
     end
 
     def trim_discourse_markers(reply)
@@ -576,29 +570,32 @@ module Email
 
       return unless mail[:from]
 
+      # For forwarded emails, where the from address matches a group incoming
+      # email, we want to use the from address of the original email sender,
+      # which we can extract from embedded_email_raw.
+      if has_been_forwarded?
+        if mail[:from].to_s =~ group_incoming_emails_regex && embedded_email[:from].errors.blank?
+          from_address, from_display_name = extract_from_fields_from_header(embedded_email, :from)
+          return [from_address, from_display_name] if from_address
+        end
+      end
+
       # For now we are only using the Reply-To header if the email has
       # been forwarded via Google Groups, which is why we are checking the
       # X-Original-From header too. In future we may want to use the Reply-To
       # header in more cases.
       if mail['X-Original-From'].present?
         if mail[:reply_to] && mail[:reply_to].errors.blank?
-          mail[:reply_to].each do |address_field|
-            from_address = address_field.address
-            from_display_name = address_field.display_name&.to_s
-            next if address_field.to_s != mail['X-Original-From'].to_s
-            next if !from_address&.include?("@")
-            return [from_address&.downcase, from_display_name&.strip]
-          end
+          from_address, from_display_name = extract_from_fields_from_header(
+            mail, :reply_to, comparison_headers: ['X-Original-From']
+          )
+          return [from_address, from_display_name] if from_address
         end
       end
 
       if mail[:from].errors.blank?
-        mail[:from].each do |address_field|
-          from_address = address_field.address
-          from_display_name = address_field.display_name&.to_s
-          next if !from_address&.include?("@")
-          return [from_address&.downcase, from_display_name&.strip]
-        end
+        from_address, from_display_name = extract_from_fields_from_header(mail, :from)
+        return [from_address, from_display_name] if from_address
       end
 
       return extract_from_address_and_name(mail.from) if mail.from.is_a? String
@@ -613,6 +610,28 @@ module Email
       nil
     rescue StandardError
       nil
+    end
+
+    def extract_from_fields_from_header(mail_object, header, comparison_headers: [])
+      mail_object[header].each do |address_field|
+        from_address = address_field.address
+        from_display_name = address_field.display_name&.to_s
+
+        comparison_failed = false
+        comparison_headers.each do |comparison_header|
+          comparison_header_address = mail_object[comparison_header].to_s[/<([^>]+)>/, 1]
+          if comparison_header_address != from_address
+            comparison_failed = true
+            break
+          end
+        end
+
+        next if comparison_failed
+        next if !from_address&.include?("@")
+        return [from_address&.downcase, from_display_name&.strip]
+      end
+
+      [nil, nil]
     end
 
     def extract_from_address_and_name(value)
@@ -877,6 +896,16 @@ module Email
       @embedded_email_raw
     end
 
+    def embedded_email
+      @embedded_email ||= if embedded_email_raw.present?
+        mail = Mail.new(embedded_email_raw)
+        Email::Validator.ensure_valid_address_lists!(mail)
+        mail
+      else
+        nil
+      end
+    end
+
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
       case SiteSetting.forwarded_emails_behaviour
@@ -922,6 +951,10 @@ module Email
       embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
 
+      if forwarded_by_address && forwarded_by_name
+        @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
+      end
+
       return false if email.blank? || !email["@"]
 
       post = forwarded_email_create_topic(destination: destination,
@@ -948,11 +981,26 @@ module Email
                        post_type: post_type,
                        skip_validations: user.staged?)
         else
-          post.topic.add_small_action(user, "forwarded")
+          if @forwarded_by_user
+            post.topic.topic_allowed_users.find_or_create_by!(user_id: @forwarded_by_user.id)
+          end
+          post.topic.add_small_action(@forwarded_by_user || user, "forwarded")
         end
       end
 
       true
+    end
+
+    def forwarded_by_sender
+      @forwarded_by_sender ||= extract_from_fields_from_header(@mail, :from)
+    end
+
+    def forwarded_by_address
+      @forwarded_by_address ||= forwarded_by_sender&.first
+    end
+
+    def forwarded_by_name
+      @forwarded_by_name ||= forwarded_by_sender&.first
     end
 
     def forwarded_email_quote_forwarded(destination, user)
@@ -1272,7 +1320,11 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic&.private_message? && !is_bounce?
-          add_other_addresses(result.post, user)
+          add_other_addresses(result.post, user, @mail)
+
+          if has_been_forwarded?
+            add_other_addresses(result.post, @forwarded_by_user || user, embedded_email)
+          end
         end
 
         # Alert the people involved in the topic now that the incoming email
@@ -1294,11 +1346,11 @@ module Email
       html
     end
 
-    def add_other_addresses(post, sender)
+    def add_other_addresses(post, sender, mail_object)
       %i(to cc bcc).each do |d|
-        next if @mail[d].blank?
+        next if mail_object[d].blank?
 
-        @mail[d].each do |address_field|
+        mail_object[d].each do |address_field|
           begin
             address_field.decoded
             email = address_field.address.downcase
@@ -1341,7 +1393,11 @@ module Email
     end
 
     def stage_from_user
-      @from_user ||= find_or_create_user!(@from_email, @from_display_name).tap do |u|
+      @from_user ||= stage_sender_user(@from_email, @from_display_name)
+    end
+
+    def stage_sender_user(email, display_name)
+      find_or_create_user!(email, display_name).tap do |u|
         log_and_validate_user(u)
       end
     end

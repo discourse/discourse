@@ -29,6 +29,7 @@ describe PostAlerter do
 
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
@@ -340,6 +341,53 @@ describe PostAlerter do
 
       staged_user.reload
       expect(staged_user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(0)
+    end
+  end
+
+  context '@here' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
+    let(:other_post) { Fabricate(:post, topic: topic) }
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does not notify unrelated users' do
+      expect { post }.to change(evil_trout.notifications, :count).by(0)
+    end
+
+    it 'does not work if user here exists' do
+      Fabricate(:user, username: SiteSetting.here_mention)
+      expect { post }.to change(other_post.user.notifications, :count).by(0)
+    end
+
+    it 'notifies users who replied' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(0)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies users who whispered' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      tl2_user.grant_admin!
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(1)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies only last max_here_mentioned users' do
+      SiteSetting.max_here_mentioned = 2
+      3.times { Fabricate(:post, topic: topic) }
+      expect { post }.to change { Notification.count }.by(2)
     end
   end
 
@@ -721,12 +769,8 @@ describe PostAlerter do
   describe "push_notification" do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
     let(:topic) { mention_post.topic }
-
-    it "pushes nothing to suspended users" do
+    before do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
-      evil_trout.update_columns(suspended_till: 1.year.from_now)
-
       2.times do |i|
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
@@ -734,20 +778,33 @@ describe PostAlerter do
                            scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
+    end
 
+    describe "DiscoursePluginRegistry#push_notification_filters" do
+      it "sends push notifications when all filters pass" do
+        Plugin::Instance.new.register_push_notification_filter do |user, payload|
+          true
+        end
+
+        expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "does not send push notifications when a filters returns false" do
+        Plugin::Instance.new.register_push_notification_filter do |user, payload|
+          false
+        end
+        expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+        DiscoursePluginRegistry.reset!
+      end
+    end
+
+    it "pushes nothing to suspended users" do
+      evil_trout.update_columns(suspended_till: 1.year.from_now)
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
 
     it "pushes nothing when the user is in 'do not disturb'" do
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                           push_url: "https://site2.com/push")
-      end
-
       Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
@@ -755,16 +812,6 @@ describe PostAlerter do
 
     it "correctly pushes notifications if configured correctly" do
       Jobs.run_immediately!
-      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-
-      2.times do |i|
-        UserApiKey.create!(user_id: evil_trout.id,
-                           client_id: "xxx#{i}",
-                           application_name: "iPhone#{i}",
-                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
-                           push_url: "https://site2.com/push")
-      end
-
       body = nil
       headers = nil
 
@@ -845,6 +892,59 @@ describe PostAlerter do
 
       expect(JSON.parse(body)).to eq(payload)
 
+    end
+  end
+
+  describe "create_notification_alert" do
+    it "does nothing for suspended users" do
+      evil_trout.update_columns(suspended_till: 1.year.from_now)
+      post = Fabricate(:post)
+
+      events = nil
+      messages = MessageBus.track_publish do
+        events = DiscourseEvent.track_events do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:custom],
+            excerpt: "excerpt",
+            username: "username"
+          )
+        end
+      end
+
+      expect(events.size).to eq(0)
+      expect(messages.size).to eq(0)
+      expect(Jobs::PushNotification.jobs.size).to eq(0)
+    end
+
+    it "does not publish to MessageBus /notification-alert if the user has not been seen for > 30 days, but still sends a push notification" do
+      evil_trout.update_columns(last_seen_at: 31.days.ago)
+      post = Fabricate(:post)
+
+      SiteSetting.allowed_user_api_push_urls = "https://site2.com/push"
+      UserApiKey.create!(user_id: evil_trout.id,
+                         client_id: "xxx#1",
+                         application_name: "iPhone1",
+                         scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                         push_url: "https://site2.com/push")
+
+      events = nil
+      messages = MessageBus.track_publish do
+        events = DiscourseEvent.track_events do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:custom],
+            excerpt: "excerpt",
+            username: "username"
+          )
+        end
+      end
+
+      expect(events.size).to eq(2)
+      expect(messages.size).to eq(0)
+      expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
   end
 
@@ -1339,6 +1439,30 @@ describe PostAlerter do
       Email::Receiver.new(raw_mail, {}).process!
     end
 
+    it "does not error if SMTP is enabled and the topic has no incoming email or allowed groups" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
+    it "does not error if SMTP is enabled and the topic has no incoming email but does have an allowed group" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
+    it "does not error if SMTP is enabled and the topic has no incoming email but has multiple allowed groups" do
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      TopicAllowedGroup.create(topic: topic, group: Fabricate(:group))
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to raise_error
+    end
+
     it "sends a group smtp email because SMTP is enabled for the site and the group" do
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
@@ -1346,6 +1470,23 @@ describe PostAlerter do
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to include(group.email_username)
+      expect(email.to).to contain_exactly(topic.reload.topic_allowed_users.order(:created_at).first.user.email)
+      expect(email.cc).to match_array(["bar@discourse.org", "jim@othersite.com"])
+      expect(email.subject).to eq("Re: #{topic.title}")
+    end
+
+    it "sends a group smtp email when the original group has had SMTP disabled and there is an additional topic allowed group" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      other_allowed_group = Fabricate(:smtp_group)
+      TopicAllowedGroup.create(group: other_allowed_group, topic: topic)
+      post = Fabricate(:post, topic: topic)
+      group.update!(smtp_enabled: false)
+
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to include(other_allowed_group.email_username)
       expect(email.to).to contain_exactly(topic.reload.topic_allowed_users.order(:created_at).first.user.email)
       expect(email.cc).to match_array(["bar@discourse.org", "jim@othersite.com"])
       expect(email.subject).to eq("Re: #{topic.title}")

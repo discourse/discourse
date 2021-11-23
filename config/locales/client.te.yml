@@ -719,6 +719,8 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:
       loading: లోడవుతోంది...
+    select_kit:
+      delete_item: "%{name} తొలగించు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -736,7 +738,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      title: "లేదా కంట్రోల్ + ఎంటర్ నొక్కు"
       users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
@@ -772,17 +773,25 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      dismiss_confirmation:
+        cancel: "రద్దుచేయి"
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:
-      title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
+      title: "వెతుకు"
+      full_page_title: "వెతుకు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
       search_button: "వెతుకు"
+      categories: "వర్గాలు"
+      tags: "ట్యాగులు"
+      type:
+        users: "వాడుకరులు"
+        categories: "వర్గాలు"
       context:
         user: "@%{username} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
@@ -794,7 +803,6 @@ te:
             label: టపాలు
         views:
           label: చూపులు
-    hamburger_menu: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -1004,6 +1012,7 @@ te:
           one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
           other: "మీరు <b>%{count}</b> టపాలు ఎంచుకున్నారు"
     post:
+      quote_edit: "సవరించు"
       quote_share: "పంచు"
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"
@@ -1309,6 +1318,8 @@ te:
           name: ఇతర
         posting:
           name: రాస్తున్నారు
+    download_calendar:
+      download: "దిగుమతి"
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
@@ -1552,12 +1563,8 @@ te:
             text: "హెడర్"
           footer:
             text: "ఫుటరు"
-          head_tag:
-            text: "</head>"
-            title: "</head> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
           body_tag:
-            text: "</body>"
-            title: "</body> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
+            text: "శరీరం"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"
@@ -1766,7 +1773,6 @@ te:
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         silence_reason: "కారణం"
-        delete_all_posts: "అన్ని టపాలూ తొలగించు"
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
         suspended: "సస్పెండయ్యాడా? "
@@ -1801,6 +1807,10 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
+        delete_posts:
+          button: "అన్ని టపాలూ తొలగించు"
+          confirmation:
+            cancel: "రద్దుచేయి"
         merge:
           prompt:
             cancel: "రద్దుచేయి"

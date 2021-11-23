@@ -29,6 +29,7 @@ describe SiteController do
       expect(json["mobile_logo_url"]).to eq(expected_url)
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
+      expect(json["login_required"]).to eq(true)
     end
   end
 

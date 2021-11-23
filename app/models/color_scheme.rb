@@ -133,10 +133,10 @@ class ColorScheme < ActiveRecord::Base
   LIGHT_THEME_ID = 'Light'
 
   def self.base_color_scheme_colors
-    base_with_hash = {}
+    base_with_hash = []
 
     base_colors.each do |name, color|
-      base_with_hash[name] = "#{color}"
+      base_with_hash << { name: name, hex: "#{color}" }
     end
 
     list = [
@@ -144,7 +144,11 @@ class ColorScheme < ActiveRecord::Base
     ]
 
     CUSTOM_SCHEMES.each do |k, v|
-      list.push(id: k.to_s, colors: v)
+      colors = []
+      v.each do |name, color|
+        colors << { name: name, hex: "#{color}" }
+      end
+      list.push(id: k.to_s, colors: colors)
     end
 
     list
@@ -205,7 +209,7 @@ class ColorScheme < ActiveRecord::Base
   def self.base_color_schemes
     base_color_scheme_colors.map do |hash|
       scheme = new(name: I18n.t("color_schemes.#{hash[:id].downcase.gsub(' ', '_')}"), base_scheme_id: hash[:id])
-      scheme.colors = hash[:colors].map { |k, v| { name: k.to_s, hex: v.sub("#", "") } }
+      scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
       scheme.is_base = true
       scheme
     end
@@ -342,7 +346,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def is_dark?
-    return if colors.empty?
+    return if colors.to_a.empty?
 
     primary_b = brightness(colors_by_name["primary"].hex)
     secondary_b = brightness(colors_by_name["secondary"].hex)

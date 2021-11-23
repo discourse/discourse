@@ -3,7 +3,6 @@ import {
   count,
   exists,
   fakeTime,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -41,22 +40,22 @@ acceptance("User notification schedule", function (needs) {
       "Saturday",
       "Sunday",
     ].forEach((day) => {
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .starts-at .combobox`).header().label(),
         "8:00 AM",
         "8am is selected"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .starts-at .combobox`).header().value(),
         "480",
         "8am is 480"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .ends-at .combobox`).header().label(),
         "5:00 PM",
         "5am is selected"
       );
-      assert.equal(
+      assert.strictEqual(
         selectKit(`.day.${day} .ends-at .combobox`).header().value(),
         "1020",
         "5pm is 1020"
@@ -71,17 +70,17 @@ acceptance("User notification schedule", function (needs) {
     await selectKit(".day.Monday .combobox").expand();
     await selectKit(".day.Monday .combobox").selectRowByValue(-1);
 
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Monday .starts-at .combobox").header().value(),
       "-1",
       "set monday input to none"
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Monday .starts-at .combobox").header().label(),
       "None",
       "set monday label to none"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".day.Monday .select-kit.single-select"),
       1,
       "The end time input is hidden"
@@ -97,7 +96,7 @@ acceptance("User notification schedule", function (needs) {
       "1350"
     );
 
-    assert.equal(
+    assert.strictEqual(
       selectKit(".day.Tuesday .ends-at .combobox").header().value(),
       "1380",
       "End time is 30 past start time"
@@ -129,12 +128,6 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
 
     await click("div.user-notifications div div button");
     await click(".future-date-input-selector-header");
-
-    assert.equal(
-      query(".future-date-input-selector-header").getAttribute("aria-expanded"),
-      "true",
-      "selector is expanded"
-    );
 
     const options = Array.from(
       queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>

@@ -180,8 +180,10 @@
   }
 
   .with-tags {
-    .mini-tag-chooser {
+    .mini-tag-chooser,
+    .category-chooser {
       z-index: z("base");
+      margin-bottom: 5px;
     }
 
     .selected-name {
@@ -191,6 +193,16 @@
           font-size: $font-0;
         }
       }
+    }
+
+    .formated-selection {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .without-tags {
+    .category-input {
+      margin-left: 5px;
     }
   }
 

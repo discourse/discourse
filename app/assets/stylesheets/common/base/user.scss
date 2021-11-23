@@ -66,7 +66,7 @@
     color: var(--love);
   }
 
-  .user-notifications-filter-select-kit {
+  .user-notifications-filter {
     display: block;
     width: 100%;
     border-bottom: 0.5px solid var(--primary-low);
@@ -216,10 +216,6 @@
         list-style-type: none;
         margin-top: 0;
       }
-
-      .btn {
-        margin-bottom: 10px;
-      }
     }
 
     &.collapsed-info {
@@ -361,6 +357,13 @@
 
   .collapsed-info & {
     display: none;
+  }
+
+  .user-field-value-list-item:not(:last-of-type) {
+    &:after {
+      // create comma separated list
+      content: ",";
+    }
   }
 }
 
@@ -795,11 +798,6 @@
 }
 
 .user-invites-page {
-  .user-invite-search {
-    clear: both;
-    margin: 15px 0px -15px 0px;
-  }
-
   .invite-error {
     grid-column: 1 / span 2;
   }

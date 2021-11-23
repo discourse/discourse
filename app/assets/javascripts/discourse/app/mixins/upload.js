@@ -94,15 +94,22 @@ export default Mixin.create({
       const isValid = validateUploadedFiles(data.files, opts);
       const type = this.type;
       let form = type ? { type } : {};
+
       if (this.data) {
-        form = $.extend(form, this.data);
+        form = Object.assign(form, this.data);
       }
+
       data.formData = form;
       this.setProperties({ uploadProgress: 0, uploading: isValid });
+
       return isValid;
     });
 
     $upload.on("fileuploadprogressall", (e, data) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       const progress = parseInt((data.loaded / data.total) * 100, 10);
       this.set("uploadProgress", progress);
     });

@@ -179,9 +179,6 @@ table.api-keys {
       width: 50%;
     }
     .scopes-title {
-      font-size: $font-up-2;
-      font-weight: bold;
-      text-decoration: underline;
       margin-top: 20px;
     }
   }
@@ -252,8 +249,6 @@ table.api-keys {
     border-bottom: var(--primary-low) 1px solid;
   }
   .filters {
-    margin: 5px 0;
-    padding-bottom: 5px;
     border-bottom: var(--primary-low) 1px solid;
     .filter {
       margin-bottom: 1em;

@@ -1,37 +1,43 @@
 {{#each categoryBreadcrumbs as |breadcrumb|}}
   {{#if breadcrumb.hasOptions}}
-    {{category-drop
-      category=breadcrumb.category
-      categories=breadcrumb.options
-      tagId=tag.id
-      editingCategory=editingCategory
-      editingCategoryTab=editingCategoryTab
-      options=(hash
-        parentCategory=breadcrumb.parentCategory
-        subCategory=breadcrumb.isSubcategory
-        noSubcategories=breadcrumb.noSubcategories
-        autoFilterable=true
-      )
-    }}
+    <li>
+      {{category-drop
+        category=breadcrumb.category
+        categories=breadcrumb.options
+        tagId=tag.id
+        editingCategory=editingCategory
+        editingCategoryTab=editingCategoryTab
+        options=(hash
+          parentCategory=breadcrumb.parentCategory
+          subCategory=breadcrumb.isSubcategory
+          noSubcategories=breadcrumb.noSubcategories
+          autoFilterable=true
+        )
+      }}
+    </li>
   {{/if}}
 {{/each}}
 
 {{#if showTagsSection}}
   {{#if additionalTags}}
-    {{tags-intersection-chooser
-      currentCategory=category
-      mainTag=tag.id
-      additionalTags=additionalTags
-      options=(hash
-        categoryId=category.id
-      )
-    }}
+    <li>
+      {{tags-intersection-chooser
+        currentCategory=category
+        mainTag=tag.id
+        additionalTags=additionalTags
+        options=(hash
+          categoryId=category.id
+        )
+      }}
+    </li>
   {{else}}
-    {{tag-drop
-      currentCategory=category
-      noSubcategories=noSubcategories
-      tagId=tag.id
-    }}
+    <li>
+      {{tag-drop
+        currentCategory=category
+        noSubcategories=noSubcategories
+        tagId=tag.id
+      }}
+    </li>
   {{/if}}
 {{/if}}
 

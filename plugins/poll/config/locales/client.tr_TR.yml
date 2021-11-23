@@ -43,6 +43,9 @@ tr_TR:
       show-results:
         title: "Anket sonuçlarını göster"
         label: "Sonuçları göster"
+      remove-vote:
+        title: "Oyunu kaldır"
+        label: "Oyu kaldır"
       hide-results:
         title: "Oylarınıza dönün"
         label: "Oylamayı göster"

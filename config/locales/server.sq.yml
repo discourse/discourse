@@ -747,7 +747,6 @@ sq:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -1080,6 +1079,24 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       text_body_template: |
         %{header_instructions}
@@ -1373,14 +1390,10 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
-      colors:
-        title: "Ngjyrat"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Parashikimi"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -1413,6 +1426,7 @@ sq:
           title: "Fshij Anëtarin"
       reject:
         title: "Refuzo"
+  fallback_username: "përdorues"
   activemodel:
     errors:
       <<: *errors

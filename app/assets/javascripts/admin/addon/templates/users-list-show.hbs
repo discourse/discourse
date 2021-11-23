@@ -16,7 +16,7 @@
 </div>
 
 <div class="username controls">
-  {{text-field value=listFilter placeholder=searchHint}}
+  {{text-field value=listFilter placeholder=searchHint title=searchHint}}
 </div>
 
 {{#load-more class="users-list-container" selector=".users-list tr" action=(action "loadMore")}}

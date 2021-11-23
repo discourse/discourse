@@ -13,6 +13,7 @@ const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
+  classNameBindings: ["info.topicProgressExpanded:topic-progress-expanded"],
   composerOpen: null,
   info: null,
   isPanning: false,

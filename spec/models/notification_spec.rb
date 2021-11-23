@@ -48,6 +48,8 @@ describe Notification do
         expect(@types[:votes_released]).to eq(26)
         expect(@types[:event_reminder]).to eq(27)
         expect(@types[:event_invitation]).to eq(28)
+        expect(@types[:chat_mention]).to eq(29)
+        expect(@types[:chat_message]).to eq(30)
       end
     end
   end
@@ -181,7 +183,7 @@ describe Notification do
   end
 
   describe 'message bus' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
     it 'updates the notification count on create' do
       Notification.any_instance.expects(:refresh_notification_count).returns(nil)

@@ -108,6 +108,8 @@ discourseModule(
         assert.ok(exists(".top-topics-link"));
         assert.ok(exists(".badge-link"));
         assert.ok(exists(".category-link"));
+        assert.ok(exists(".about-link"));
+        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
 
@@ -122,8 +124,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(count(".category-link"), 8);
-        assert.equal(
+        assert.strictEqual(count(".category-link"), 8);
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           this.site
             .get("categoriesByCount")
@@ -144,8 +146,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(count(".category-link"), 8);
-        assert.equal(
+        assert.strictEqual(count(".category-link"), 8);
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           this.site
             .get("categoriesByCount")
@@ -199,7 +201,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".category-link"),
           maxCategoriesToDisplay,
           "categories displayed limited by header_dropdown_category_count"
@@ -216,7 +218,7 @@ discourseModule(
           .uniq()
           .slice(0, maxCategoriesToDisplay);
 
-        assert.equal(
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           ids
             .map(
@@ -266,15 +268,6 @@ discourseModule(
 
       test(assert) {
         assert.ok(!exists(".user-directory-link"));
-      },
-    });
-
-    componentTest("general links", {
-      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
-
-      test(assert) {
-        assert.ok(exists(".about-link"));
-        assert.ok(exists(".keyboard-shortcuts-link"));
       },
     });
   }

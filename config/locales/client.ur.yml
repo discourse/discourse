@@ -112,6 +112,7 @@ ur:
       previous_month: "پچھلے ماہ"
       next_month: "اگلے ماہ"
       placeholder: تاریخ
+      to_placeholder: "اِس تاریخ تک"
     share:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
       post: "پوسٹ #%{postNumber}"
@@ -301,7 +302,13 @@ ur:
         confirm: "آپ کے پاس اس عنوان کے لئے ایک مسودہ ہے۔ آپ اس کے ساتھ کیا کرنا چاہیں گے؟"
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
+    topic_count_categories:
+      one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+      other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
     topic_count_latest:
+      one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+      other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
+    topic_count_unseen:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
     topic_count_unread:
@@ -995,7 +1002,13 @@ ur:
         latest: "تازہ ترین"
         sent: "بھیجا جا چکا"
         unread: "بغیر پڑھے"
+        unread_with_count:
+          one: "بغیر پڑھا (%{count})"
+          other: "بغیر پڑھا (%{count})"
         new: "نیا"
+        new_with_count:
+          one: "نیا (%{count})"
+          other: "نیا (%{count})"
         archive: "آر کائیو"
         groups: "میرے گروپ"
         move_to_inbox: "اِنباکس میں منتقل کریں"
@@ -1597,6 +1610,7 @@ ur:
         one: "+ %{count} ذیلی زمرہ"
         other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
+      delete_item: "%{name} حذف کریں"
       filter_by: "فلٹر بذریعہ: %{name}"
       select_to_filter: "فلٹر کرنے کے لئے ایک قدر منتخب کریں"
       default_header_text: منتخب کریں...
@@ -1686,7 +1700,6 @@ ur:
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
-      title: "یا Ctrl+Enter دبائیں"
       users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
@@ -1822,6 +1835,9 @@ ur:
         other: "%{group_name}' کے %{count} کھلی رکنیت کی درخواستیں"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "بر خاست کریں"
+        cancel: "منسوخ"
       group_message_summary:
         one: "آپ کے %{group_name} اِن باکس میں %{count} پیغام"
         other: "آپ کے %{group_name} اِن باکس میں %{count} پیغامات"
@@ -1874,8 +1890,8 @@ ur:
       result_count:
         one: "<span class='term'>%{term}</span><span>کیلئے %{count} نتیجہ</span>"
         other: "<span class='term'>%{term}</span><span>کیلئے %{count}%{plus} نتائج</span>"
-      title: "ٹاپک، پوسٹس، صارفین، یا زمرہ جات کو سَرچ کریں"
-      full_page_title: "ٹاپک یا پوسٹس کو سَرچ کریں"
+      title: "تلاش کریں"
+      full_page_title: "تلاش کریں"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
       post_format: "%{username} کی طرف سے #%{post_number}"
@@ -1887,13 +1903,17 @@ ur:
       search_google: "اس کے بجائے گُوگَل کے ساتھ تلاش کرنے کی کوشش کریں:"
       search_google_button: "گُوگَل"
       search_button: "تلاش کریں"
+      categories: "زُمرَہ جات"
+      tags: "ٹیگز"
+      type:
+        users: "صارفین"
+        categories: "زُمرَہ جات"
       context:
         user: "@%{username} کے حساب سے پوسٹس تلاش کریں"
         category: "#%{category} زُمرَہ میں تلاش کریں"
         topic: "اِس ٹاپک میں تلاش کریں"
         private_messages: "پیغامات میں تلاش کریں"
       advanced:
-        title: اعلی درجے کی تلاشی
         posted_by:
           label: کی طرف سے پوسٹ کیا گیا
         in_category:
@@ -1936,7 +1956,6 @@ ur:
             after: کے بعد
         views:
           label: وِیوز
-    hamburger_menu: "ایک اور ٹاپک فہرست یا زمرہ پر جائیں"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2074,6 +2093,7 @@ ur:
         time_frame_required: "براہ کرم ایک ٹائم فریم منتخب کریں"
         min_duration: "دورانیہ 0 سے زیادہ ہونا ضروری ہے"
         max_duration: "دورانیہ 20 سال سے کم ہونا ضروری ہے"
+        duration: "دورانیہ"
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
         now: "ابھی"
@@ -2396,6 +2416,7 @@ ur:
           other: "آپ نے <b>%{count}</b> پوسٹس منتخب کی ہیں۔"
     post:
       quote_reply: "اقتباس کریں"
+      quote_edit: "ترمیم"
       quote_share: "شیئر"
       edit_reason: "وجہ:"
       post_number: "پوسٹ %{number}"
@@ -2942,6 +2963,8 @@ ur:
           name: دیگر
         posting:
           name: پوسٹ کرنا
+    download_calendar:
+      download: "ڈاؤن لوڈ"
     tagging:
       all_tags: "تمام ٹیگز"
       other_tags: "دیگر ٹیگز"
@@ -3044,6 +3067,10 @@ ur:
         member: "ممبر"
         regular: "رَیگولر"
         leader: "لِیڈر"
+    user_activity:
+      no_activity_others: "کوئی سرگرمی نہیں۔"
+      no_replies_others: "کوئی جوابات نہیں۔"
+      no_likes_others: "کوئی لائیک کردہ پوسٹس نہیں۔"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3169,7 +3196,6 @@ ur:
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
               title: "کون اِس گروپ  کے ممبران کو دیکھ سکتا ہے؟"
-              description: "ایڈمن تمام گروپس کے ممبران کو دیکھ سکتے ہیں۔"
             publish_read_state: "گروپ پیغامات پر گروپ رِیڈ اسٹیٹ شائع کریں۔"
           membership:
             automatic: خود کار طریقے سے
@@ -3533,12 +3559,8 @@ ur:
           embedded_scss:
             text: "اَیمبَیڈ کیا ہوا CSS"
             title: "تبصرے کے اَیمبَیڈ شدہ ورژن کے ساتھ فراہم کیے جانے والا اپنی مرضی کا CSS درج کریں"
-          head_tag:
-            text: "</head>"
-            title: "HTML جو </head> ٹیگ سے پہلے داخل کی جائے گی"
           body_tag:
-            text: "</‎body>"
-            title: "HTML جو </body> ٹیگ سے پہلے داخل کی جائے گی"
+            text: "متن"
           yaml:
             text: "YAML"
             title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"
@@ -3920,8 +3942,6 @@ ur:
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
-        delete_all_posts: "تمام پوسٹس حذف کریں"
-        delete_posts_progress: "پوسٹس حذف کی جا رہی ہیں..."
         delete_posts_failed: "پوسٹس حذف کرنے میں ایک مسئلہ پیش آیا۔"
         post_edits: "پوسٹ ترامیم"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
@@ -3981,6 +4001,12 @@ ur:
         anonymize_yes: "جی ہاں، اِس اکاؤنٹ کو گمنام بنائیں"
         anonymize_failed: "اِس اکاؤنٹ کو گمنام بنانے میں ایک مسئلہ پیش آیا۔"
         delete: "صارف حذف کریں"
+        delete_posts:
+          button: "تمام پوسٹس حذف کریں"
+          progress:
+            description: "پوسٹس حذف کی جا رہی ہیں..."
+          confirmation:
+            cancel: "منسوخ"
         merge:
           prompt:
             cancel: "منسوخ"
@@ -4243,7 +4269,6 @@ ur:
           badge_query_examples_title: "بَیج قُوَیری کی مثالیں"
       emoji:
         title: "اِیمَوجی"
-        help: "نئی اِیمَوجی شامل کریں جو سب کے لئے دستیاب ہوگی۔ (پیشہ وَرَانہ ٹِپ: ایک بار میں ایک سے زیادہ فائلوں کو ڈرَیگ & ڈراپ کریں)"
         add: "نئی اِیمَوجی شامل کریں"
         uploading: "اَپ لوڈ کیا جا رہا ہے..."
         name: "نام"
@@ -4253,7 +4278,6 @@ ur:
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
-        sample: "ڈِسکورس ٹاپک بنانے اور اَیمبَیڈ کرنے کیلئے اپنی ویب سائٹ میں درج ذیل HTML کوڈ استعمال کریں۔ جس پیج پر آپ اسے اَیمبَیڈ کر رہے ہیں اُس کا canonical URL <b>REPLACE_ME</b> کی جگہ اِستعمال کریں۔"
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
         class_name: "کلاس کا نام"
@@ -4317,6 +4341,5 @@ ur:
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       previews:
-        topic_title: "بحث ٹاپک"
         share_button: "شیئر"
         reply_button: "جواب"

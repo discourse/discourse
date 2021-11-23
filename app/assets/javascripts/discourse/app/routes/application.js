@@ -174,13 +174,14 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         if (controller) {
           this.appEvents.trigger("modal:closed", {
             name: controllerName,
-            controller: controller,
+            controller,
           });
 
           if (controller.onClose) {
             controller.onClose({
               initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
               initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+              initiatedByESC: initiatedBy === "initiatedByESC",
             });
           }
         }
@@ -267,19 +268,26 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account", { signup: true });
+      this._autoLogin("createAccount", "create-account", {
+        signup: true,
+        titleAriaElementId: "create-account-title",
+      });
     }
   },
 
-  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
+  _autoLogin(
+    modal,
+    modalClass,
+    { notAuto = null, signup = false, titleAriaElementId = null } = {}
+  ) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor("login").send("externalLogin", methods[0], {
-        signup: signup,
+        signup,
       });
     } else {
-      showModal(modal);
+      showModal(modal, { titleAriaElementId });
       this.controllerFor("modal").set("modalClass", modalClass);
       if (notAuto) {
         notAuto();

@@ -1,11 +1,16 @@
-{{#each tags as |tag|}}
-  {{#d-button
-    translatedTitle=tag.value
-    icon="times"
-    action=(action "deselectTag")
-    actionParam=tag.value
-    class=tag.classNames
-  }}
-    {{discourse-tag tag.value noHref=true}}
-  {{/d-button}}
-{{/each}}
+{{#if tags}}
+  <div class="mini-tag-chooser-selected-collection selected-tags">
+    {{#each tags as |tag|}}
+      {{#d-button
+        translatedTitle=tag.value
+        icon="times"
+        action=(action selectKit.deselect)
+        actionParam=tag.value
+        class=tag.classNames
+        tabindex=0
+      }}
+        {{discourse-tag tag.value noHref=true}}
+      {{/d-button}}
+    {{/each}}
+  </div>
+{{/if}}

@@ -1,17 +1,15 @@
 // styles that apply to the "share" modal & popup when sharing a link to a post or topic
 
-.link-share-container {
+.link-share-container,
+.notify-user-input {
   display: flex;
-  button {
-    transition-property: background-color, color; // don't transition outline
+  .btn {
+    margin-left: 0.5em;
   }
-  input {
+  input,
+  .select-kit {
     width: 100%;
-    font-size: var(--font-up-1);
     margin-bottom: 0;
-    &:focus + button {
-      outline: 1px solid var(--tertiary);
-    }
   }
 }
 
@@ -61,7 +59,8 @@
   box-shadow: shadow("card");
   background-color: var(--secondary);
   padding: 0.5em;
-  width: 300px;
+  width: 20em; // scales with user font-size
+  max-width: 100vw; // prevents overflow due to extra large user font-size
   display: none;
   &.visible {
     display: block;
@@ -69,7 +68,6 @@
 
   input[type="text"] {
     width: 100%;
-    margin-right: 0.5em;
   }
 
   .title {
@@ -114,37 +112,11 @@
   }
 }
 
-.notify-user-input {
-  display: flex;
-  align-items: stretch;
-
-  .select-kit {
-    width: 100%;
-  }
-
-  .multi-select-header {
-    width: 100%;
-  }
-
-  .select-kit.multi-select .choices {
-    padding: 0;
-  }
-
-  .select-kit.multi-select.is-expanded + button {
-    outline: 1px solid var(--tertiary); // outline the button when the input is outlined, to match height
-  }
-}
-
 // topic invite modal
 
 .create-invite-modal {
   form {
     margin: 0;
-    input[type="text"],
-    .btn,
-    .select-kit-header {
-      height: 2.27rem;
-    }
   }
 
   input {
@@ -181,33 +153,6 @@
     margin-top: 0.25em;
   }
 
-  .future-date-input {
-    display: grid;
-    grid-template-columns: auto 1fr;
-
-    .control-group:nth-child(1) {
-      grid-column-start: 1;
-      grid-column-end: 3;
-    }
-    .control-group:nth-child(2) {
-      margin-left: 1.75em;
-      margin-right: 1.5em;
-    }
-    .control-group:nth-child(2),
-    .control-group:nth-child(3) {
-      grid-row-start: 2;
-      display: inline-flex;
-      align-items: center;
-      margin-bottom: 0;
-      input {
-        height: 100%;
-        margin-bottom: 0;
-        margin-left: 0.5em;
-        width: 150px;
-      }
-    }
-  }
-
   .input-group.input-email {
     display: flex;
     align-items: baseline;
@@ -232,9 +177,10 @@
     }
   }
 
-  .show-advanced {
-    margin-left: auto;
-    margin-right: 0;
+  .invite-custom-message {
+    label {
+      margin-left: 1.75em;
+    }
   }
 
   .input-group {
@@ -242,9 +188,22 @@
     &.invite-to-topic input[type="text"],
     .group-chooser,
     .user-chooser,
-    .future-date-input-selector {
+    .future-date-input-selector,
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
       margin-left: 1.75em;
       width: calc(100% - 1.75em);
+    }
+
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
+      display: inline-block;
+      margin: 0em 0em 0em 1.75em;
+      width: calc(50% - 2em);
+
+      input {
+        height: 34px;
+      }
     }
   }
 }

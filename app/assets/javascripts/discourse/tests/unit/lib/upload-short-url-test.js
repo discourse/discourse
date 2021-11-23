@@ -64,25 +64,24 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
     response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)))
   );
 
-  fixture().html(
+  fixture().innerHTML =
     imageSrcs.map((src) => `<img data-orig-src="${src.short_url}"/>`).join("") +
-      attachmentSrcs
-        .map(
-          (src) =>
-            `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
-        )
-        .join("") +
-      `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>` +
-      otherMediaSrcs
-        .map((src) => {
-          if (src.short_url.indexOf("mp3") > -1) {
-            return `<audio controls><source data-orig-src="${src.short_url}"></audio>`;
-          } else {
-            return `<video controls><source data-orig-src="${src.short_url}"></video>`;
-          }
-        })
-        .join("")
-  );
+    attachmentSrcs
+      .map(
+        (src) =>
+          `<a data-orig-href="${src.short_url}">big enterprise contract.pdf</a>`
+      )
+      .join("") +
+    `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>` +
+    otherMediaSrcs
+      .map((src) => {
+        if (src.short_url.indexOf("mp3") > -1) {
+          return `<audio controls><source data-orig-src="${src.short_url}"></audio>`;
+        } else {
+          return `<video controls><source data-orig-src="${src.short_url}"></video>`;
+        }
+      })
+      .join("");
 }
 
 module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
@@ -97,7 +96,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
     assert.deepEqual(lookup, {});
 
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
     await settled();
 
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
@@ -144,36 +143,36 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
 
   test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
     stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
     await settled();
 
-    let image1 = fixture().find("img").eq(0);
-    let image2 = fixture().find("img").eq(1);
-    let link = fixture().find("a");
-    let audio = fixture().find("audio").eq(0);
-    let video = fixture().find("video").eq(0);
+    let image1 = fixture().querySelector("img");
+    let image2 = fixture().querySelectorAll("img")[1];
+    let audio = fixture().querySelector("audio");
+    let video = fixture().querySelector("video");
+    let link = fixture().querySelector("a");
 
-    assert.equal(image1.attr("src"), "/images/avatar.png?a");
-    assert.equal(image2.attr("src"), "/images/avatar.png?b");
-    assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
-    assert.equal(
-      video.find("source").attr("src"),
+    assert.strictEqual(image1.getAttribute("src"), "/images/avatar.png?a");
+    assert.strictEqual(image2.getAttribute("src"), "/images/avatar.png?b");
+    assert.strictEqual(link.getAttribute("href"), "/uploads/short-url/c.pdf");
+    assert.strictEqual(
+      video.querySelector("source").getAttribute("src"),
       "/uploads/default/original/3X/c/b/4.mp4"
     );
-    assert.equal(
-      audio.find("source").attr("src"),
+    assert.strictEqual(
+      audio.querySelector("source").getAttribute("src"),
       "/uploads/default/original/3X/c/b/5.mp3"
     );
   });
 
   test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
     stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
     await settled();
-    let video = fixture().find("video").eq(1);
+    let video = fixture().querySelectorAll("video")[1];
 
-    assert.equal(
-      video.find("source").attr("src"),
+    assert.strictEqual(
+      video.querySelector("source").getAttribute("src"),
       "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
     );
   });
@@ -190,12 +189,12 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
       ],
       null
     );
-    await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
+    await resolveAllShortUrls(ajax, { secure_media: true }, fixture());
     await settled();
 
-    let link = fixture().find("a");
-    assert.equal(
-      link.attr("href"),
+    let link = fixture().querySelector("a");
+    assert.strictEqual(
+      link.getAttribute("href"),
       "/secure-media-uploads/default/original/3X/c/b/3.pdf"
     );
   });
@@ -204,7 +203,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     stubUrls();
     let lookup;
 
-    let scopedElement = fixture()[0].querySelector(".scoped-area");
+    let scopedElement = fixture().querySelector(".scoped-area");
     await resolveAllShortUrls(ajax, {}, scopedElement);
     await settled();
 

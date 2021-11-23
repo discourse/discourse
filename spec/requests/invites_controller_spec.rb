@@ -78,6 +78,7 @@ describe InvitesController do
 
       get "/invites/#{invite.invite_key}"
       expect(response).to redirect_to(topic.url)
+      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
     end
 
     it 'adds logged in user to group and redirects them to invite topic' do
@@ -95,6 +96,7 @@ describe InvitesController do
       get "/invites/#{invite.invite_key}"
       expect(user.reload.groups).to include(group)
       expect(response).to redirect_to(topic.url)
+      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
     end
 
     it 'fails for logged in users' do
@@ -486,6 +488,7 @@ describe InvitesController do
         put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         expect(response.status).to eq(200)
         expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
       end
 
       it 'sets the timezone of the user in user_options' do
@@ -741,6 +744,7 @@ describe InvitesController do
 
         put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
       end
 
       it 'sets destination_url cookie if user is not activated' do
@@ -749,13 +753,16 @@ describe InvitesController do
 
         put "/invites/show/#{invite.invite_key}.json"
         expect(cookies['destination_url']).to eq(topic.relative_url)
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
       end
 
       it 'does not redirect user if they cannot see topic' do
-        TopicInvite.create!(invite: invite, topic: Fabricate(:topic, category: secured_category))
+        topic = Fabricate(:topic, category: secured_category)
+        TopicInvite.create!(invite: invite, topic: topic)
 
         put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         expect(response.parsed_body['redirect_to']).to eq("/")
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(0)
       end
     end
 
@@ -891,6 +898,16 @@ describe InvitesController do
       end
 
       it 'allows admin to bulk invite' do
+        sign_in(admin)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(200)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+      end
+
+      it 'allows admin to bulk invite when DiscourseConnect enabled' do
+        SiteSetting.discourse_connect_url = "https://example.com"
+        SiteSetting.enable_discourse_connect = true
+
         sign_in(admin)
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
         expect(response.status).to eq(200)

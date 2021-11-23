@@ -7,9 +7,27 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="date-time-input"}}
-  {{date-time-input}}
+  {{date-time-input clearable=true}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="date-time-input-range"}}
   {{date-time-input-range}}
 {{/styleguide-example}}
+
+{{#styleguide-example title="date-time-input-range"}}
+  {{date-time-input-range showFromTime=false showToTime=false}}
+{{/styleguide-example}}
+
+{{#styleguide-example title="future-date-input"}}
+  {{future-date-input
+    displayLabelIcon="far-clock"
+    includeDateTime=true
+    includeMidFuture=true
+    clearable=true
+  }}
+{{/styleguide-example}}
+
+{{#styleguide-example title="date-picker"}}
+  {{date-picker defaultDate="YYYY-MM-DD"}}
+{{/styleguide-example}}
+

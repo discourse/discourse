@@ -9,7 +9,6 @@ export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],
   classNames: ["group-dropdown"],
   content: reads("groupsWithShortcut"),
-  tagName: "li",
   valueProperty: null,
   nameProperty: null,
   hasManyGroups: gte("content.length", 10),

@@ -29,7 +29,7 @@ module Onebox
       end
 
       def placeholder_html
-        ::Onebox::Helpers.video_placeholder_html
+        SiteSetting.enable_diffhtml_preview ? to_html : ::Onebox::Helpers.video_placeholder_html
       end
     end
   end

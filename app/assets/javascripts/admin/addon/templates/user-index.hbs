@@ -334,7 +334,7 @@
       {{/if}}
       {{#if model.can_grant_admin}}
         {{d-button
-          class="btn-default"
+          class="btn-default grant-admin"
           action=(action "grantAdmin")
           icon="shield-alt"
           label="admin.user.grant_admin"}}
@@ -599,9 +599,9 @@
         {{#if model.post_count}}
           {{d-button
             class="btn-danger"
-            action=(action "deleteAllPosts")
+            action=(action "showDeletePostsConfirmation")
             icon="far-trash-alt"
-            label="admin.user.delete_all_posts"}}
+            label="admin.user.delete_posts.button"}}
         {{/if}}
       {{else}}
         {{deleteAllPostsExplanation}}

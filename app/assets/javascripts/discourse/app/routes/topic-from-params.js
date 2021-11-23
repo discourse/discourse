@@ -34,6 +34,14 @@ export default DiscourseRoute.extend({
       });
   },
 
+  afterModel() {
+    const topic = this.modelFor("topic");
+
+    if (topic.isPrivateMessage && topic.suggested_topics) {
+      this.pmTopicTrackingState.startTracking();
+    }
+  },
+
   deactivate() {
     this._super(...arguments);
     this.controllerFor("topic").unsubscribe();

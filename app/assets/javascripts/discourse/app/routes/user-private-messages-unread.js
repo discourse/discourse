@@ -3,8 +3,4 @@ import {
   default as createPMRoute,
 } from "discourse/routes/build-private-messages-route";
 
-export default createPMRoute(
-  "all",
-  "private-messages-all-unread",
-  UNREAD_FILTER
-);
+export default createPMRoute("user", "private-messages-unread", UNREAD_FILTER);

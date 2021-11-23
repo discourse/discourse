@@ -115,6 +115,7 @@ ca:
       previous_month: "Mes anterior"
       next_month: "Mes següent"
       placeholder: data
+      to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber}"
@@ -122,6 +123,7 @@ ca:
       twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
       email: "Envia per correu electrònic"
+      url: "Copiar i compartir URL"
     action_codes:
       public_topic: "tema fet públic %{when}"
       private_topic: "s'ha convertit el tema en un missatge personal %{when}"
@@ -185,6 +187,7 @@ ca:
         us_gov_west_1: "AWS GovCloud (oest dels EUA)"
         us_west_1: "EUA Oest (N. Califòrnia)"
         us_west_2: "EUA Oest (Oregon)"
+    clear_input: "Esborra l'entrada"
     edit: "edita el títol i la categoria d'aquest tema"
     expand: "Expandeix"
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
@@ -246,6 +249,9 @@ ca:
       moderators: "Moderadors"
       stat:
         all_time: "Sempre"
+        last_day: "Últimes 24 hores"
+        last_7_days: "Els darrers 7 dies"
+        last_30_days: "Els darrers 30 dies"
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -255,14 +261,20 @@ ca:
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
     bookmarked:
       title: "Preferit"
+      edit_bookmark: "Edita el marcador"
       clear_bookmarks: "Neteja preferits"
       help:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
+        edit_bookmark: "Feu clic per editar el marcador sobre aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
+        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       not_bookmarked: "marca aquesta publicació com a preferit"
+      created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
       remove: "Elimina preferit"
+      delete: "Suprimeix el marcador"
+      confirm_delete: "Esteu segur que voleu suprimir aquest marcador? El recordatori també se suprimirà."
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
@@ -287,7 +299,13 @@ ca:
       topic_reply: "Esborrany de resposta"
       abandon:
         yes_value: "Descarta"
+    topic_count_categories:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_latest:
+      one: "Vegeu %{count} tema nou o actualitzat"
+      other: "Vegeu %{count} temes nous o actualitzats"
+    topic_count_unseen:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
     topic_count_unread:
@@ -931,7 +949,13 @@ ca:
         latest: "Més recents"
         sent: "Enviat"
         unread: "No llegits"
+        unread_with_count:
+          one: "No llegit (%{count})"
+          other: "No llegit (%{count})"
         new: "Nous"
+        new_with_count:
+          one: "Nou (%{count})"
+          other: "Nou (%{count})"
         archive: "Arxiva"
         groups: "Els meus grups"
         move_to_inbox: "Mou a la safata d'entrada"
@@ -1480,6 +1504,7 @@ ca:
     conditional_loading_section:
       loading: Carregant...
     select_kit:
+      delete_item: "Suprimeix %{name}"
       default_header_text: Selecciona...
       no_content: No s'han trobat coincidències
       filter_placeholder: Cerca...
@@ -1558,7 +1583,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      title: "O prem Ctrl+Retorn"
       users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
@@ -1676,6 +1700,9 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Descarta-ho"
+        cancel: "Cancel·la"
       group_message_summary:
         one: "%{count} missatge en la vostra bústia de %{group_name}"
         other: "%{count} missatges en la vostra bústia de %{group_name}"
@@ -1728,8 +1755,8 @@ ca:
       result_count:
         one: "<span>%{count} resultat per a </span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
-      title: "cerca temes, publicacions, usuaris o categories"
-      full_page_title: "cerca temes o publicacions"
+      title: "Cerca"
+      full_page_title: "Cerca"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
       post_format: "#%{post_number} per %{username}"
@@ -1741,6 +1768,11 @@ ca:
       search_google: "Prova de cercar amb Google:"
       search_google_button: "Google"
       search_button: "Cerca"
+      categories: "Categories"
+      tags: "Etiquetes"
+      type:
+        users: "Usuaris"
+        categories: "Categories"
       context:
         user: "Cerca publicacions de @%{username}"
         category: "Cerca en la categoria #%{category} "
@@ -1748,7 +1780,6 @@ ca:
         topic: "Cerca en aquest tema"
         private_messages: "Cerca missatges"
       advanced:
-        title: Cerca avançada
         posted_by:
           label: Publicat per
         in_category:
@@ -1791,7 +1822,6 @@ ca:
             after: després de
         views:
           label: Vistes
-    hamburger_menu: "vés a una altra llista de temes o categories"
     new_item: "nous"
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
@@ -1911,6 +1941,7 @@ ca:
         publish_to: "Publica en:"
         when: "Quan:"
         time_frame_required: "Seleccioneu un període de temps"
+        duration: "Duració"
       auto_update_input:
         none: "Seleccioneu un període de temps"
         later_today: "Més tard avui"
@@ -2189,6 +2220,7 @@ ca:
           other: "Heu seleccionat <b>%{count}</b> publicacions."
     post:
       quote_reply: "Cita"
+      quote_edit: "Edita"
       quote_share: "Comparteix"
       edit_reason: "Motiu:"
       post_number: "publicació %{number}"
@@ -2740,6 +2772,8 @@ ca:
           name: Altres
         posting:
           name: Publicant
+    download_calendar:
+      download: "Descarrega"
     tagging:
       all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"
@@ -2839,6 +2873,10 @@ ca:
         member: "membre"
         regular: "habitual"
         leader: "líder"
+    user_activity:
+      no_activity_others: "No hi ha activitat."
+      no_replies_others: "No hi ha respostes."
+      no_likes_others: "Publicacions sense 'm'agrada'."
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -2964,7 +3002,6 @@ ca:
               description: "Els administradors poden veure tots els grups."
             members_visibility_levels:
               title: "Qui pot veure els membres d’aquest grup?"
-              description: "Els administradors poden veure membres de tots els grups."
             publish_read_state: "En els missatges de grup publica l'estat de lectura del grup"
           membership:
             automatic: Automàtic
@@ -3345,12 +3382,8 @@ ca:
           embedded_scss:
             text: "CSS incrustat"
             title: "Introduïu el CSS personalitzat que es lliurarà amb la versió incrustada dels comentaris"
-          head_tag:
-            text: "</head>"
-            title: "HTML que s'inclourà abans de l'etiqueta </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML que s'inclourà abans de l'etiqueta </body>"
+            text: "Cos"
           yaml:
             text: "YAML"
             title: "Definiu la configuració de l'aparença en format YAML"
@@ -3735,8 +3768,6 @@ ca:
         silence_message_placeholder: "(deixeu-ho en blanc per a enviar el missatge per defecte)"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
-        delete_all_posts: "Suprimeix totes les publicacions"
-        delete_posts_progress: "Suprimint publicacions..."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."
         post_edits: "Edicions de la publicació"
         penalty_post_actions: "Què voleu fer amb la publicació associada?"
@@ -3796,6 +3827,12 @@ ca:
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
+        delete_posts:
+          button: "Suprimeix totes les publicacions"
+          progress:
+            description: "Suprimint publicacions..."
+          confirmation:
+            cancel: "Cancel·la"
         merge:
           prompt:
             cancel: "Cancel·la"
@@ -4060,7 +4097,6 @@ ca:
           badge_query_examples_title: "Exemples de consulta d'insígnies"
       emoji:
         title: "Emoji"
-        help: "Afegeix un nou emoji que estarà disponible per a tothom. (CONSELL: arrossegueu i deixeu anar molts fitxers de cop)"
         add: "Afegeix emoji nou"
         uploading: "Carregant..."
         name: "Nom"
@@ -4070,7 +4106,6 @@ ca:
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
-        sample: "Feu servir el següent codi HTML en el vostre lloc web per a crear i incrustar temes de Discourse. Reemplaceu <b>REEMPLAÇA'M</b> amb l'URL canònic de la pàgina en la qual ho esteu incrustant."
         title: "Incrustant"
         host: "Amfitrions permesos"
         class_name: "Nom de la classe"
@@ -4134,6 +4169,5 @@ ca:
           moderator: "Moderador"
           regular: "Usuari habitual"
       previews:
-        topic_title: "Tema de discussió"
         share_button: "Comparteix"
         reply_button: "Respon"

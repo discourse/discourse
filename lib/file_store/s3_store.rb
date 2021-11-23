@@ -11,6 +11,9 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
+    delegate :abort_multipart, :presign_multipart_part, :list_multipart_parts,
+      :complete_multipart, to: :s3_helper
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
     end
@@ -35,7 +38,11 @@ module FileStore
       url
     end
 
-    def move_existing_stored_upload(existing_external_upload_key, upload, content_type = nil)
+    def move_existing_stored_upload(
+      existing_external_upload_key:,
+      upload: nil,
+      content_type: nil
+    )
       upload.url = nil
       path = get_path_for_upload(upload)
       url, upload.etag = store_file(
@@ -97,18 +104,26 @@ module FileStore
 
       # if this fails, it will throw an exception
       if opts[:move_existing] && opts[:existing_external_upload_key]
+        original_path = opts[:existing_external_upload_key]
+        options[:apply_metadata_to_destination] = true
         path, etag = s3_helper.copy(
-          opts[:existing_external_upload_key],
+          original_path,
           path,
           options: options
         )
-        s3_helper.delete_object(opts[:existing_external_upload_key])
+        delete_file(original_path)
       else
         path, etag = s3_helper.upload(file, path, options)
       end
 
       # return the upload url and etag
       [File.join(absolute_base_url, path), etag]
+    end
+
+    def delete_file(path)
+      # delete the object outright without moving to tombstone,
+      # not recommended for most use cases
+      s3_helper.delete_object(path)
     end
 
     def remove_file(url, path)
@@ -150,8 +165,11 @@ module FileStore
       end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
-      cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
-      return true if cdn_hostname.presence && url[cdn_hostname]
+
+      s3_cdn_url = URI.parse(SiteSetting.Upload.s3_cdn_url || "")
+      cdn_hostname = s3_cdn_url.hostname
+
+      return true if cdn_hostname.presence && url[cdn_hostname] && (s3_cdn_url.path.blank? || parsed_url.path.starts_with?(s3_cdn_url.path))
       false
     end
 
@@ -199,10 +217,6 @@ module FileStore
         upload.url
     end
 
-    def path_from_url(url)
-      URI.parse(url).path.delete_prefix("/")
-    end
-
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
@@ -217,12 +231,22 @@ module FileStore
 
     def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
       key = temporary_upload_path(file_name)
-      presigned_put_url(key, expires_in: expires_in, metadata: metadata)
+      s3_helper.presigned_url(
+        key,
+        method: :put_object,
+        expires_in: expires_in,
+        opts: {
+          metadata: metadata,
+          acl: "private"
+        }
+      )
     end
 
     def temporary_upload_path(file_name)
-      path = super(file_name)
-      s3_bucket_folder_path.nil? ? path : File.join(s3_bucket_folder_path, path)
+      folder_prefix = s3_bucket_folder_path.nil? ? upload_path : File.join(s3_bucket_folder_path, upload_path)
+      FileStore::BaseStore.temporary_upload_path(
+        file_name, folder_prefix: folder_prefix
+      )
     end
 
     def object_from_path(path)
@@ -297,19 +321,12 @@ module FileStore
       FileUtils.mv(old_upload_path, public_upload_path) if old_upload_path
     end
 
-    private
-
-    def presigned_put_url(key, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
-      signer = Aws::S3::Presigner.new(client: s3_helper.s3_client)
-      signer.presigned_url(
-        :put_object,
-        bucket: s3_bucket_name,
-        key: key,
-        acl: "private",
-        expires_in: expires_in,
-        metadata: metadata
-      )
+    def create_multipart(file_name, content_type, metadata: {})
+      key = temporary_upload_path(file_name)
+      s3_helper.create_multipart(key, content_type, metadata: metadata)
     end
+
+    private
 
     def presigned_get_url(
       url,

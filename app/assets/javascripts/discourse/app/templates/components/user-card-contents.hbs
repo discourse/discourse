@@ -222,7 +222,7 @@
                 {{/if}}
               </h3>
             {{/if}}
-            {{plugin-outlet name="user-card-metadata" args=(hash user=this.user)}}
+            {{plugin-outlet name="user-card-metadata" args=(hash user=this.user) tagName=""}}
           </div>
         {{/unless}}
         {{plugin-outlet name="user-card-after-metadata" args=(hash user=this.user) tagName=""}}
@@ -235,7 +235,13 @@
               {{#if uf.value}}
                 <div class="public-user-field {{uf.field.dasherized_name}}">
                   <span class="user-field-name">{{uf.field.name}}:</span>
-                  <span class="user-field-value">{{uf.value}}</span>
+                  <span class="user-field-value">
+                    {{#each uf.value as |v|}} {{! some values are arrays }}
+                      <span class="user-field-value-list-item">{{v}}</span>
+                    {{else}}
+                      {{uf.value}}
+                    {{/each}}
+                  </span>
                 </div>
               {{/if}}
             {{/each}}

@@ -308,7 +308,7 @@ describe Oneboxer do
     end
   end
 
-  context 'facebook_app_access_token' do
+  context 'instagram' do
     it 'providing a token should attempt to use new endpoint' do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       access_token = 'abc123'
@@ -318,7 +318,7 @@ describe Oneboxer do
       stub_request(:head, url)
       stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
     end
 
     it 'unconfigured token should attempt to use old endpoint' do
@@ -326,7 +326,15 @@ describe Oneboxer do
       stub_request(:head, url)
       stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
+    end
+
+    it 'renders result using an iframe' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to include('iframe')
     end
   end
 

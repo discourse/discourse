@@ -831,4 +831,87 @@ RSpec.describe ApplicationController do
       end
     end
   end
+
+  describe 'vary header' do
+    it 'includes Vary:Accept on all requests where format is not explicit' do
+      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      get "/latest", headers: { "Accept" => "application/json" }
+      expect(response.status).to eq(200)
+      expect(response.headers["Vary"]).to eq("Accept")
+
+      # Discourse additional behaviour (see lib/vary_header.rb)
+      # Include Vary:Accept even when Accept is not supplied
+      get "/latest"
+      expect(response.status).to eq(200)
+      expect(response.headers["Vary"]).to eq("Accept")
+
+      # Not needed, because the path 'format' parameter overrides the Accept header
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["Vary"]).to eq(nil)
+    end
+  end
+
+  describe "Discourse-Rate-Limit-Error-Code header" do
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      RateLimiter.clear_all!
+      RateLimiter.enable
+    end
+
+    it "is included when API key is rate limited" do
+      global_setting :max_admin_api_reqs_per_minute, 1
+      api_key = ApiKey.create!(user_id: admin.id).key
+      get "/latest.json", headers: {
+        "Api-Key": api_key,
+        "Api-Username": admin.username
+      }
+      expect(response.status).to eq(200)
+
+      get "/latest.json", headers: {
+        "Api-Key": api_key,
+        "Api-Username": admin.username
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Discourse-Rate-Limit-Error-Code"]).to eq("admin_api_key_rate_limit")
+    end
+
+    it "is included when user API key is rate limited" do
+      global_setting :max_user_api_reqs_per_minute, 1
+      user_api_key = UserApiKey.create!(
+        user_id: admin.id,
+        client_id: "",
+        application_name: "discourseapp"
+      )
+      user_api_key.scopes = UserApiKeyScope.all_scopes.keys.map do |name|
+        UserApiKeyScope.create!(name: name, user_api_key_id: user_api_key.id)
+      end
+      user_api_key.save!
+
+      get "/session/current.json", headers: {
+        "User-Api-Key": user_api_key.key,
+      }
+      expect(response.status).to eq(200)
+
+      get "/session/current.json", headers: {
+        "User-Api-Key": user_api_key.key,
+      }
+      expect(response.status).to eq(429)
+      expect(
+        response.headers["Discourse-Rate-Limit-Error-Code"]
+      ).to eq("user_api_key_limiter_60_secs")
+
+      global_setting :max_user_api_reqs_per_minute, 100
+      global_setting :max_user_api_reqs_per_day, 1
+
+      get "/session/current.json", headers: {
+        "User-Api-Key": user_api_key.key,
+      }
+      expect(response.status).to eq(429)
+      expect(
+        response.headers["Discourse-Rate-Limit-Error-Code"]
+      ).to eq("user_api_key_limiter_1_day")
+    end
+  end
 end

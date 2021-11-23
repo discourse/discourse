@@ -60,9 +60,9 @@ class UploadRecovery
     }
 
     if Discourse.store.external?
-      recover_post_upload_from_s3(attributes)
+      recover_post_upload_from_s3(**attributes)
     else
-      recover_post_upload_from_local(attributes)
+      recover_post_upload_from_local(**attributes)
     end
   end
 

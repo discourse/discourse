@@ -146,7 +146,9 @@ export default Controller.extend({
 
   @discourseComputed("model.translations")
   translations(translations) {
-    return translations.map((setting) => ThemeSettings.create(setting));
+    return translations.map((setting) =>
+      ThemeSettings.create({ ...setting, textarea: true })
+    );
   },
 
   hasTranslations: notEmpty("translations"),

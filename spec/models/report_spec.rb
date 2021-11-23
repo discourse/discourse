@@ -1325,41 +1325,4 @@ describe Report do
       end
     end
   end
-
-  describe 'report_top_users_by_received_likes' do
-    let(:report) { Report.find('report_top_users_by_received_likes', start_date: 10.days.ago.to_time, end_date: Time.now) }
-
-    include_examples 'no data'
-
-    context 'with data' do
-      # include_examples 'with data x/y'
-
-      before(:each) do
-        (0..5).each do |n|
-          user = Fabricate(:user)
-          topic = Fabricate(:topic, user: user, category: c1)
-          post = Fabricate(:post, topic: topic, user: user)
-
-          (0..n).each do |m|
-            PostActionCreator.like(Fabricate(:user), post)
-          end
-        end
-      end
-
-      json = Report.find('report_top_users_by_received_likes', start_date: 10.days.ago.to_time, end_date: Time.now).as_json
-
-      it "returns a report with data" do
-        expect(report.data).to be_present
-        expect(report.data.count).to be(6)
-
-        row = report.data[0]
-        expect(row[:qtt_like]).to eq(6)
-
-        row = report.data[1]
-        expect(row[:qtt_like]).to eq(5)
-      end
-
-    end
-  end
-
 end

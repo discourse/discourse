@@ -81,9 +81,6 @@ export default RestModel.extend({
     if (this.filterParam) {
       findUrl += `&filter=${this.filterParam}`;
     }
-    if (this.noContentHelpKey) {
-      findUrl += `&no_results_help_key=${this.noContentHelpKey}`;
-    }
 
     if (this.actingUsername) {
       findUrl += `&acting_username=${this.actingUsername}`;
@@ -102,9 +99,6 @@ export default RestModel.extend({
     this.set("loading", true);
     return ajax(findUrl)
       .then((result) => {
-        if (result && result.no_results_help) {
-          this.set("noContentHelp", result.no_results_help);
-        }
         if (result && result.user_actions) {
           const copy = A();
           result.user_actions.forEach((action) => {

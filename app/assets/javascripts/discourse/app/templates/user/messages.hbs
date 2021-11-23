@@ -1,129 +1,91 @@
-{{#d-section class=sectionClass pageClass="user-messages"}}
-  {{#if inboxes.length}}
-    <div class="inboxes-controls">
-      {{combo-box
-        content=inboxes
-        classNames="user-messages-inboxes-drop"
-        value=selectedInbox
-        onChange=(action "updateInbox")
-        options=(hash
-          filterable=true
-        )
-      }}
-      {{#if (and group site.mobileView)}}
-        {{group-notifications-button
-          value=group.group_user.notification_level
-          onChange=(action "changeGroupNotificationLevel")
-        }}
-      {{/if}}
-    </div>
-  {{/if}}
-
+{{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
   {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
-    {{#if isAllInbox}}
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.index" model}}
-          {{i18n "user.messages.latest"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
+    <li>
+      {{#link-to "userPrivateMessages.index" model}}
+        {{i18n "user.messages.inbox"}}
+      {{/link-to}}
+    </li>
+
+    {{#if isPersonal}}
+      <li class="archive">
         {{#link-to "userPrivateMessages.sent" model}}
           {{i18n "user.messages.sent"}}
         {{/link-to}}
       </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.new" model}}
-          {{i18n "user.messages.new"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.unread" model}}
-          {{i18n "user.messages.unread"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
+
+      {{#if viewingSelf}}
+        <li class="archive">
+          {{#link-to "userPrivateMessages.new" model class="new"}}
+            {{newLinkText}}
+          {{/link-to}}
+        </li>
+
+        <li class="archive">
+          {{#link-to "userPrivateMessages.unread" model class="unread"}}
+            {{unreadLinkText}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+
+      <li class="archive">
         {{#link-to "userPrivateMessages.archive" model}}
           {{i18n "user.messages.archive"}}
         {{/link-to}}
       </li>
     {{/if}}
 
-    {{#if group}}
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.group" group.name}}
-          {{i18n "user.messages.latest"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupNew" group.name}}
-          {{i18n "user.messages.new"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupUnread" group.name}}
-          {{i18n "user.messages.unread"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.groupArchive" group.name}}
-          {{i18n "user.messages.archive"}}
-        {{/link-to}}
-      </li>
-    {{/if}}
-
-    {{#if isPersonalInbox}}
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personal" model}}
-          {{i18n "user.messages.latest"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalSent" model}}
-          {{i18n "user.messages.sent"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalNew" model}}
-          {{i18n "user.messages.new"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalUnread" model}}
-          {{i18n "user.messages.unread"}}
-        {{/link-to}}
-      </li>
-      <li class="noGlyph">
-        {{#link-to "userPrivateMessages.personalArchive" model}}
-          {{i18n "user.messages.archive"}}
-        {{/link-to}}
-      </li>
-    {{/if}}
-
-    {{#if displayGlobalFilters}}
-      {{#if pmTaggingEnabled}}
-        <li class="noGlyph tags">
-          {{#link-to "userPrivateMessages.tags" model}}
-            {{i18n "user.messages.tags"}}
+    {{#each model.groups as |group|}}
+      {{#if group.has_messages}}
+        <li>
+          {{#link-to "userPrivateMessages.group" group.name}}
+            {{d-icon "users"}}
+            {{capitalize-string group.name}}
           {{/link-to}}
+        </li>
 
-          {{#if tagId}}
+        {{#if (and isGroup (eq groupFilter group.name))}}
+          {{#if viewingSelf}}
             <li class="archive">
-              {{#link-to "userPrivateMessages.tagsShow" tagId}}
-                {{tagId}}
+              {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
+                {{newLinkText}}
+              {{/link-to}}
+            </li>
+
+            <li class="archive">
+              {{#link-to "userPrivateMessages.groupUnread" group.name class="unread"}}
+                {{unreadLinkText}}
               {{/link-to}}
             </li>
           {{/if}}
-        </li>
-      {{/if}}
 
-      {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
+          <li class="archive">
+            {{#link-to "userPrivateMessages.groupArchive" group.name}}
+              {{i18n "user.messages.archive"}}
+            {{/link-to}}
+          </li>
+        {{/if}}
+      {{/if}}
+    {{/each}}
+
+    {{#if pmTaggingEnabled}}
+      <li class="tags">
+        {{#link-to "userPrivateMessages.tags" model}}
+          {{i18n "user.messages.tags"}}
+        {{/link-to}}
+
+        {{#if tagId}}
+          <li class="archive">
+            {{#link-to "userPrivateMessages.tagsShow" tagId}}
+              {{tagId}}
+            {{/link-to}}
+          </li>
+        {{/if}}
+      </li>
     {{/if}}
+
+    {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
   {{/mobile-nav}}
 {{/d-section}}
-
-{{#if (and site.mobileView showNewPM)}}
-  {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
-{{/if}}
 
 {{#unless site.mobileView}}
   <section class="user-additional-controls">
@@ -133,6 +95,7 @@
         onChange=(action "changeGroupNotificationLevel")
       }}
     {{/if}}
+
     {{#if showNewPM}}
       {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
     {{/if}}
@@ -140,6 +103,16 @@
 {{/unless}}
 
 <section class="user-content">
+  <div class="list-actions">
+    {{#if (and site.mobileView showNewPM)}}
+      {{d-button
+        class="btn-primary new-private-message"
+        action=(route-action "composePrivateMessage")
+        icon="envelope"
+        label="user.new_private_message"}}
+    {{/if}}
+  </div>
+
   {{#if showWarningsWarning}}
     <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
   {{/if}}

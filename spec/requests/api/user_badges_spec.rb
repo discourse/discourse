@@ -14,6 +14,7 @@ describe 'user_badges' do
 
     get 'List badges for a user' do
       tags 'Badges', 'Users'
+      operationId 'listUserBadges'
       consumes 'application/json'
       expected_request_schema = nil
       parameter name: :username, in: :path, schema: { type: :string }

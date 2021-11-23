@@ -15,11 +15,6 @@ class WizardSerializer < ApplicationSerializer
 
   def current_color_scheme
     color_scheme = Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
-    colors = color_scheme ? color_scheme.colors : ColorScheme.base.colors
-
-    # The frontend expects the color hexs to start with '#'
-    colors_with_hash = {}
-    colors.each { |color| colors_with_hash[color.name] = color.hex_with_hash }
-    colors_with_hash
+    color_scheme ? color_scheme.colors_hashes : ColorScheme.base.colors_hashes
   end
 end

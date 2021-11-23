@@ -26,6 +26,7 @@ const USER_HOMES = {
   4: "new",
   5: "top",
   6: "bookmarks",
+  7: "unseen",
 };
 
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
@@ -238,7 +239,25 @@ export default Controller.extend({
       return value;
     },
     get() {
-      return this.session.userColorSchemeId;
+      if (!this.session.userColorSchemeId) {
+        return;
+      }
+
+      const theme = this.userSelectableThemes?.findBy("id", this.themeId);
+
+      // we don't want to display the numeric ID of a scheme
+      // when it is set by the theme but not marked as user selectable
+      if (
+        theme?.color_scheme_id === this.session.userColorSchemeId &&
+        !this.userSelectableColorSchemes.findBy(
+          "id",
+          this.session.userColorSchemeId
+        )
+      ) {
+        return;
+      } else {
+        return this.session.userColorSchemeId;
+      }
     },
   }),
 

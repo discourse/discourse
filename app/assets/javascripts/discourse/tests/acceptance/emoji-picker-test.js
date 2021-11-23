@@ -34,7 +34,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       ":grinning:",
       "it adds the emoji code in the editor when selected"
@@ -49,7 +49,7 @@ acceptance("EmojiPicker", function (needs) {
     await fillIn(".d-editor-input", "This is a test input");
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and a leading whitespace when there is text"
@@ -59,7 +59,7 @@ acceptance("EmojiPicker", function (needs) {
     await fillIn(".d-editor-input", "This is a test input ");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and no leading whitespace when user already entered whitespace"
@@ -111,14 +111,14 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='sunglasses']");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll('.section[data-section="recent"] .section-group img.emoji')
         .length,
       2,
       "it has multiple recent emojis"
     );
 
-    assert.equal(
+    assert.strictEqual(
       /grinning/.test(
         queryAll(".section.recent .section-group img.emoji").first().attr("src")
       ),
@@ -137,7 +137,6 @@ acceptance("EmojiPicker", function (needs) {
 
     assert.ok(
       exists(".emoji-picker button.diversity-scale.medium-dark .d-icon"),
-      true,
       "it stores diversity scale"
     );
   });

@@ -101,4 +101,24 @@ describe RetrieveTitle do
       expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq("very amazing")
     end
   end
+
+  context 'fetch_title' do
+    it "does not parse broken title tag" do
+      # webmock does not do chunks
+      stub_request(:get, "https://en.wikipedia.org/wiki/Internet").
+        to_return(status: 200, body: "<html><head><title>Internet - Wikipedia</ti" , headers: {})
+
+      title = RetrieveTitle.fetch_title("https://en.wikipedia.org/wiki/Internet")
+      expect(title).to eq(nil)
+    end
+
+    it "can parse correct title tag" do
+      # webmock does not do chunks
+      stub_request(:get, "https://en.wikipedia.org/wiki/Internet").
+        to_return(status: 200, body: "<html><head><title>Internet - Wikipedia</title>" , headers: {})
+
+      title = RetrieveTitle.fetch_title("https://en.wikipedia.org/wiki/Internet")
+      expect(title).to eq("Internet - Wikipedia")
+    end
+  end
 end

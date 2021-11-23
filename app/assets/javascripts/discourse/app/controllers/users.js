@@ -3,7 +3,7 @@ import Group from "discourse/models/group";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import showModal from "discourse/lib/show-modal";
-import { equal } from "@ember/object/computed";
+import { and, equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
 import { observes } from "discourse-common/utils/decorators";
 
@@ -19,8 +19,9 @@ export default Controller.extend({
   exclude_usernames: null,
   isLoading: false,
   columns: null,
-  groupsOptions: null,
+  groupOptions: null,
   params: null,
+  showGroupFilter: and("currentUser", "groupOptions"),
 
   showTimeRead: equal("period", "all"),
 
@@ -66,21 +67,23 @@ export default Controller.extend({
   },
 
   loadGroups() {
-    return Group.findAll({ ignore_automatic: true }).then((groups) => {
-      const groupOptions = groups.map((group) => {
-        return {
-          name: group.full_name || group.name,
-          id: group.name,
-        };
+    if (this.currentUser) {
+      return Group.findAll({ ignore_automatic: true }).then((groups) => {
+        const groupOptions = groups.map((group) => {
+          return {
+            name: group.full_name || group.name,
+            id: group.name,
+          };
+        });
+        this.set("groupOptions", groupOptions);
       });
-      this.set("groupOptions", groupOptions);
-    });
+    }
   },
 
   @action
   groupChanged(_, groupAttrs) {
     // First param is the group name, which include none or 'all groups'. Ignore this and look at second param.
-    this.set("group", groupAttrs.id);
+    this.set("group", groupAttrs?.id);
   },
 
   @action

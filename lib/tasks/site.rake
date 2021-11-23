@@ -8,6 +8,7 @@ class ZippedSiteStructure
 
   def initialize(path, create: false)
     @zip = Zip::File.open(path, create)
+    @uploads = {}
   end
 
   def close
@@ -41,17 +42,28 @@ class ZippedSiteStructure
       return nil
     end
 
+    if @uploads[upload.id].present?
+      puts "  - Already exported upload #{upload_or_id_or_url} to #{@uploads[upload.id][:path]}"
+      return @uploads[upload.id]
+    end
+
     local_path = upload.local? ? Discourse.store.path_for(upload) : Discourse.store.download(upload).path
     zip_path = File.join('uploads', File.basename(local_path))
+    zip_path = get_unique_path(zip_path)
 
     puts "  - Exporting upload #{upload_or_id_or_url} to #{zip_path}"
     @zip.add(zip_path, local_path)
 
-    { filename: upload.original_filename, path: zip_path }
+    @uploads[upload.id] ||= { filename: upload.original_filename, path: zip_path }
   end
 
   def get_upload(upload, opts = {})
     return nil if upload.blank?
+
+    if @uploads[upload['path']].present?
+      puts "  - Already imported upload #{upload['filename']} from #{upload['path']}"
+      return @uploads[upload['path']]
+    end
 
     puts "  - Importing upload #{upload['filename']} from #{upload['path']}"
 
@@ -59,8 +71,24 @@ class ZippedSiteStructure
     tempfile.write(@zip.get_input_stream(upload['path']).read)
     tempfile.rewind
 
-    UploadCreator.new(tempfile, upload['filename'], opts)
-      .create_for(Discourse::SYSTEM_USER_ID)
+    @uploads[upload['path']] ||= UploadCreator.new(tempfile, upload['filename'], opts).create_for(Discourse::SYSTEM_USER_ID)
+  end
+
+  private
+
+  def get_unique_path(path)
+    return path if @zip.find_entry(path).blank?
+
+    extname = File.extname(path)
+    basename = File.basename(path, extname)
+    dirname = File.dirname(path)
+
+    i = 0
+    loop do
+      i += 1
+      path = File.join(dirname, "#{basename}_#{i}#{extname}")
+      return path if @zip.find_entry(path).blank?
+    end
   end
 end
 
