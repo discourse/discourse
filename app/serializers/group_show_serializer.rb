@@ -126,6 +126,10 @@ class GroupShowSerializer < BasicGroupSerializer
     object.associated_groups.map(&:id)
   end
 
+  def include_associated_group_ids?
+    scope.can_associate_groups?
+  end
+
   private
 
   def authenticated?

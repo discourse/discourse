@@ -139,6 +139,10 @@ class SiteSerializer < ApplicationSerializer
     scope.can_associate_groups?
   end
 
+  def include_can_associate_groups?
+    scope.admin?
+  end
+
   def include_tags_filter_regexp?
     SiteSetting.tagging_enabled
   end
