@@ -5,13 +5,15 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { isiPad } from "discourse/lib/utilities";
+import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { cancel } from "@ember/runloop";
+import I18n from "I18n";
+import RawHtml from "discourse/widgets/raw-html";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -279,6 +281,11 @@ export default createWidget("search-menu", {
       this.state.inTopicContext &&
       (!SearchHelper.includesTopics() || !searchData.term)
     ) {
+      const isMobileDevice = this.site.isMobileDevice;
+
+      if (!isMobileDevice) {
+        results.push(this.attach("browser-search-tip"));
+      }
       return results;
     }
 
@@ -498,5 +505,18 @@ export default createWidget("search-menu", {
     }
 
     return false;
+  },
+});
+
+createWidget("browser-search-tip", {
+  buildKey: () => "browser-search-tip",
+  tagName: "div.browser-search-tip",
+
+  html() {
+    return new RawHtml({
+      html: `<span>${I18n.t("search.browser_tip", {
+        modifier: translateModKey("Meta"),
+      }).htmlSafe()}</span>`,
+    });
   },
 });

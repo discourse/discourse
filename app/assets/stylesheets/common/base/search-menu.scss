@@ -327,4 +327,17 @@ $search-pad-horizontal: 0.5em;
       padding: 0.5em;
     }
   }
+
+  .browser-search-tip {
+    display: flex;
+    padding-top: 0.5em;
+    padding-left: 0.5em;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+
+    > * {
+      display: flex;
+      align-items: center;
+    }
+  }
 }

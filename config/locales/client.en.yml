@@ -2379,6 +2379,7 @@ en:
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
+      browser_tip: "Press <kbd>%{modifier}</kbd>+<kbd>f</kbd> again to use native browser search."
 
       type:
         default: "Topics/posts"
