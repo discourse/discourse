@@ -7,7 +7,7 @@ class GroupAssociatedGroup < ActiveRecord::Base
   before_destroy :remove_associated_users
 
   def add_associated_users
-    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
+    with_mutex do
       associated_group.users.in_batches do |users|
         users.each do |user|
           group.add_automatically(user, subject: associated_group.label)
@@ -17,7 +17,7 @@ class GroupAssociatedGroup < ActiveRecord::Base
   end
 
   def remove_associated_users
-    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
+    with_mutex do
       User.where("(
         SELECT COUNT(user_id)
         FROM user_associated_groups AS uag
