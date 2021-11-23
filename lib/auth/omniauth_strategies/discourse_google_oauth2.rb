@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ::OmniAuth::Strategies::DiscourseGoogleOauth2 < OmniAuth::Strategies::GoogleOauth2
+class ::Auth::OmniAuthStrategies::DiscourseGoogleOauth2 < OmniAuth::Strategies::GoogleOauth2
   GROUPS_SCOPE ||= "admin.directory.group.readonly"
   GROUPS_DOMAIN ||= "admin.googleapis.com"
   GROUPS_PATH ||= "/admin/directory/v1/groups"

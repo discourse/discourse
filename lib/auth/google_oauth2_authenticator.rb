@@ -16,7 +16,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    strategy_class = OmniAuth::Strategies::DiscourseGoogleOauth2
+    strategy_class = Auth::OmniAuthStrategies::DiscourseGoogleOauth2
     options = {
       setup: lambda { |env|
         strategy = env["omniauth.strategy"]

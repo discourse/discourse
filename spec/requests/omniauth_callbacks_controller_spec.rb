@@ -731,7 +731,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       context "groups are enabled" do
-        let(:strategy_class) { OmniAuth::Strategies::DiscourseGoogleOauth2 }
+        let(:strategy_class) { Auth::OmniAuthStrategies::DiscourseGoogleOauth2 }
         let(:groups_url) { "#{strategy_class::GROUPS_DOMAIN}#{strategy_class::GROUPS_PATH}" }
         let(:groups_scope) { strategy_class::DEFAULT_SCOPE + strategy_class::GROUPS_SCOPE }
         let(:group1) { { id: "12345", name: "group1" } }

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe OmniAuth::Strategies::DiscourseGoogleOauth2 do
+describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
   let(:response_hash) do
     {
       email: 'user@domain.com',
