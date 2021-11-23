@@ -36,22 +36,22 @@ module Reports::TopUsersByReceivedLikesFromInferiorTrustLevel
 
       sql = <<~SQL
       WITH user_liked_tl_lower AS (
-        SELECT 
-            users.id user_id, 
+        SELECT
+            users.id user_id,
             users.username as username,
             users.uploaded_avatar_id as uploaded_avatar_id,
             users.trust_level,
-            COUNT(*) qtt_likes,
-            rank() OVER (PARTITION BY users.trust_level ORDER BY COUNT(*) DESC) 
-        FROM users 
+            COUNT(*) qtt_like,
+            rank() OVER (PARTITION BY users.trust_level ORDER BY COUNT(*) DESC)
+        FROM users
         INNER JOIN posts p ON p.user_id = users.id
         INNER JOIN user_actions ua ON ua.target_post_id = p.id AND ua.action_type = 1
         INNER JOIN users u_liked ON ua.user_id = u_liked.id AND u_liked.trust_level < users.trust_level
         WHERE ua.created_at::date BETWEEN :start_date AND :end_date
         GROUP BY users.id
-        ORDER BY trust_level DESC, qtt_likes DESC
+        ORDER BY trust_level DESC, qtt_like DESC
       )
-      
+
       SELECT * FROM user_liked_tl_lower
       WHERE rank <= 10
       SQL
