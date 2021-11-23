@@ -119,6 +119,10 @@ export function setTestPresence(value) {
   testPresence = value;
 }
 
+export function clearPresenceCallbacks() {
+  callbacks.splice(0, callbacks.length);
+}
+
 if (!isTesting()) {
   // Some of these events occur very frequently. Therefore seenUser() is as fast as possible.
   document.addEventListener("touchmove", seenUser, { passive: true });
