@@ -3944,7 +3944,7 @@ describe Guardian do
     end
   end
 
-  describe "can_mention_here?" do
+  describe "#can_mention_here?" do
     it 'returns false if disabled' do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)

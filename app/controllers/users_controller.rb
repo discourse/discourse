@@ -497,7 +497,7 @@ class UsersController < ApplicationController
     here_count = nil
 
     topic_id = params[:topic_id]
-    if topic = Topic.find_by(id: topic_id)
+    if topic_id.present? && topic = Topic.find_by(id: topic_id)
       usernames.each do |username|
         if !Guardian.new(User.find_by_username(username)).can_see?(topic)
           cannot_see.push(username)
