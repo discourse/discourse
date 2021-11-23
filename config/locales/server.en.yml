@@ -2736,42 +2736,16 @@ en:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. In Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blocklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
-
-      (The *easy* way is to create an account on [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] or [Mailjet][mj], which have low cost mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
       We hope you received this email deliverability test OK!
+
+      Here is a [handy checklist for verifying email delivery configuration][1].
 
       Good luck,
 
       Your friends at [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
 
   new_version_mailer:
     title: "New Version Mailer"
