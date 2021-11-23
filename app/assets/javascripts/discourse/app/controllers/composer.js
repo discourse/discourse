@@ -296,15 +296,6 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed()
-  composerComponent() {
-    const defaultComposer = "composer-editor";
-    if (this.siteSettings.enable_experimental_composer_uploader) {
-      return "composer-editor-uppy";
-    }
-    return defaultComposer;
-  },
-
   @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;

@@ -48,7 +48,6 @@ import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
-  cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
@@ -290,7 +289,6 @@ export function acceptance(name, optionsOrCallback) {
       setTopicList(null);
       _clearSnapshots();
       cleanUpComposerUploadHandler();
-      cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
       clearTopicFooterDropdowns();

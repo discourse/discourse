@@ -2,7 +2,6 @@ import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
-  addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
   addButton,
@@ -1025,29 +1024,6 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
-  }
-
-  /**
-   * Registers a pre-processor for file uploads
-   * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
-   *
-   * Useful for transforming to-be uploaded files client-side
-   *
-   * Example:
-   *
-   * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation(data, options) {
-   *      let p = new Promise((resolve, reject) => {
-   *        let file = data.files[data.index];
-   *        console.log(`Transforming ${file.name}`);
-   *        // do work...
-   *        resolve(data);
-   *      });
-   *      return p;
-   * });
-   */
-  addComposerUploadProcessor(queueItem, actionItem) {
-    addComposerUploadProcessor(queueItem, actionItem);
   }
 
   /**
