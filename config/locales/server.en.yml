@@ -2522,9 +2522,6 @@ en:
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
     omniauth_confirm_title: "Log in using %{provider}"
     omniauth_confirm_button: "Continue"
-    omniauth_secondary_authorization_title: "We need additional permissions for %{provider}"
-    omniauth_secondary_authorization_description:
-      google_oauth2: "As you've signed in with a %{domain} email, we need to ask for permission to view your %{domain} groups."
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
