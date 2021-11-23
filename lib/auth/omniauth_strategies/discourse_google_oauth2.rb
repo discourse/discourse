@@ -32,7 +32,7 @@ class ::OmniAuth::Strategies::DiscourseGoogleOauth2 < OmniAuth::Strategies::Goog
           page_token = response['nextPageToken']
           break if page_token.nil?
         else
-          Rails.logger.warn("[Discourse Google OAuth2] failed to retrieve groups for #{uid}")
+          Rails.logger.error("[Discourse Google OAuth2] failed to retrieve groups for #{uid} - status #{response.status}")
           break
         end
       end
