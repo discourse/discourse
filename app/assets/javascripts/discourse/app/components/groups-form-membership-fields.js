@@ -1,13 +1,13 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { computed } from "@ember/object";
-import { alias, not } from "@ember/object/computed";
+import { readOnly, not } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 
 export default Component.extend({
   tokenSeparator: "|",
-  showAssociatedGroups: alias("site.can_associate_groups"),
+  showAssociatedGroups: readOnly("site.can_associate_groups"),
 
   init() {
     this._super(...arguments);
