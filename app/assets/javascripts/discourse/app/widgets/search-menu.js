@@ -13,7 +13,6 @@ import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { cancel } from "@ember/runloop";
 import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -513,10 +512,14 @@ createWidget("browser-search-tip", {
   tagName: "div.browser-search-tip",
 
   html() {
-    return new RawHtml({
-      html: `<span>${I18n.t("search.browser_tip", {
-        modifier: translateModKey("Meta"),
-      }).htmlSafe()}</span>`,
-    });
+    return [
+      h(
+        "span.tip-label",
+        I18n.t("search.browser_tip", {
+          modifier: translateModKey("Meta"),
+        })
+      ),
+      h("span.tip-description", I18n.t("search.browser_tip_description")),
+    ];
   },
 });
