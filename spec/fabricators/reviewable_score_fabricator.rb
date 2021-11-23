@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:reviewable_score) do
-  reviewable_id
+  reviewable { Fabricate(:reviewable) }
   user { Fabricate(:user) }
   reviewable_score_type { 4 }
   status { 1 }
