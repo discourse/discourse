@@ -478,9 +478,9 @@ export function inCodeBlock(text, pos) {
 }
 
 export function translateModKey(string) {
-  const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-  // Mac users are used to glyphs for shortcut keys
-  if (mac) {
+  const { isApple } = helperContext().capabilities;
+  // Apple device users are used to glyphs for shortcut keys
+  if (isApple) {
     string = string
       .replace("Shift", "\u21E7")
       .replace("Meta", "\u2318")
