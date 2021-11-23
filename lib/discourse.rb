@@ -3,11 +3,8 @@
 
 require 'cache'
 require 'open3'
-require_dependency 'route_format'
 require_dependency 'plugin/instance'
-require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
-require 'digest/sha1'
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
