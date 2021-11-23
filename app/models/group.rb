@@ -778,14 +778,14 @@ class Group < ActiveRecord::Base
   def add_automatically(user, subject: nil)
     if users.exclude?(user) && add(user)
       logger = GroupActionLogger.new(Discourse.system_user, self)
-      logger.log_add_user_to_group_automatically(user, subject)
+      logger.log_add_user_to_group(user, subject)
     end
   end
 
   def remove_automatically(user, subject: nil)
     if users.include?(user) && remove(user)
       logger = GroupActionLogger.new(Discourse.system_user, self)
-      logger.log_remove_user_from_group_automatically(user, subject)
+      logger.log_remove_user_from_group(user, subject)
     end
   end
 

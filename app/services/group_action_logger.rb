@@ -21,23 +21,7 @@ class GroupActionLogger
     ))
   end
 
-  def log_add_user_to_group(target_user)
-    GroupHistory.create!(default_params.merge(
-      action: GroupHistory.actions[:add_user_to_group],
-      target_user: target_user
-    ))
-  end
-
-  def log_remove_user_from_group(target_user)
-    GroupHistory.create!(default_params.merge(
-      action: GroupHistory.actions[:remove_user_from_group],
-      target_user: target_user
-    ))
-  end
-
-  def log_add_user_to_group_automatically(target_user, subject)
-    @acting_user.id == Discourse::SYSTEM_USER_ID
-
+  def log_add_user_to_group(target_user, subject = nil)
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:add_user_to_group],
       target_user: target_user,
@@ -45,9 +29,7 @@ class GroupActionLogger
     ))
   end
 
-  def log_remove_user_from_group_automatically(target_user, subject)
-    @acting_user.id == Discourse::SYSTEM_USER_ID
-
+  def log_remove_user_from_group(target_user, subject = nil)
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:remove_user_from_group],
       target_user: target_user,
