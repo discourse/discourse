@@ -265,7 +265,7 @@ module CookedProcessorMixin
     img.name = "span"
     img.set_attribute("class", "broken-image")
     img.set_attribute("title", I18n.t("post.image_placeholder.broken"))
-    img << "<svg class=\"fa d-icon d-icon-unlink svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#unlink\"></use></svg>"
+    img << "<svg class=\"fa d-icon d-icon-unlink svg-icon\" aria-hidden=\"true\"><use href=\"#unlink\"></use></svg>"
     img.remove_attribute("src")
     img.remove_attribute("width")
     img.remove_attribute("height")
@@ -326,7 +326,7 @@ module CookedProcessorMixin
   def create_icon_node(klass)
     icon = create_node("svg", "fa d-icon d-icon-#{klass} svg-icon")
     icon.set_attribute("aria-hidden", "true")
-    icon << "<use xlink:href=\"##{klass}\"></use>"
+    icon << "<use href=\"##{klass}\"></use>"
   end
 
   def create_node(tag_name, klass)

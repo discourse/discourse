@@ -233,7 +233,7 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#far-smile\"></use></svg>";
+   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use href=\"#far-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
@@ -243,7 +243,7 @@ class PluginApi {
    *          namespace: "http://www.w3.org/2000/svg"
    *        },[
    *          h("use", {
-   *          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
    *          namespace: "http://www.w3.org/2000/svg"
    *        })]
    *     );

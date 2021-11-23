@@ -561,10 +561,10 @@ RSpec.describe UploadCreator do
             <path id="pathdef" d="m0 0h100v100h-77z" stroke="#000" />
           </defs>
           <g>
-            <use id="valid-use" x="123" xlink:href="#pathdef" />
+            <use id="valid-use" x="123" href="#pathdef" />
           </g>
           <use id="invalid-use1" href="https://svg.example.com/evil.svg" />
-          <use id="invalid-use2" xlink:href="data:image/svg+xml;base64,#{b64}" />
+          <use id="invalid-use2" href="data:image/svg+xml;base64,#{b64}" />
         </svg>
       XML
       file.rewind
