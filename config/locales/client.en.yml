@@ -2105,6 +2105,9 @@ en:
       cannot_see_mention:
         category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+      here_mention:
+        one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
+        other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 

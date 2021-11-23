@@ -541,6 +541,15 @@ class Guardian
     UserAuthToken.hash_token(token) if token
   end
 
+  def can_mention_here?
+    return false if SiteSetting.here_mention.blank?
+    return false if SiteSetting.max_here_mentioned < 1
+    return false if !authenticated?
+    return false if User.where(username_lower: SiteSetting.here_mention).exists?
+
+    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+  end
+
   private
 
   def is_my_own?(obj)

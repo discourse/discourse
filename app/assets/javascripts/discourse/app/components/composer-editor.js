@@ -561,10 +561,11 @@ export default Component.extend(ComposerUpload, {
   _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
+    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
+      this._warnHereMention(r.here_count);
     });
   },
 
@@ -637,6 +638,20 @@ export default Component.extend(ComposerUpload, {
 
       this.set("warnedCannotSeeMentions", found);
     });
+  },
+
+  _warnHereMention(hereCount) {
+    if (!hereCount || hereCount === 0) {
+      return;
+    }
+
+    later(
+      this,
+      () => {
+        this.hereMention(hereCount);
+      },
+      2000
+    );
   },
 
   @bind
