@@ -416,7 +416,7 @@ describe Email::Sender do
         end
 
         it "removes the Auto-Submitted header" do
-          TopicAllowedGroup.create(topic: post.topic, group: group)
+          TopicAllowedGroup.create!(topic: post.topic, group: group)
           email_sender.send
 
           expect(message.header['Auto-Submitted']).to eq(nil)
