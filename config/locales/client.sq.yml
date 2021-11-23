@@ -1092,6 +1092,9 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      dismiss_confirmation:
+        dismiss: "Hiqe"
+        cancel: "Anulo"
       popup:
         mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
         group_mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

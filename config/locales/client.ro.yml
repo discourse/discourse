@@ -1684,6 +1684,9 @@ ro:
       watching_first_post: "<span>Subiect nou</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Înlătură"
+        cancel: "Anulează"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
         group_mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'

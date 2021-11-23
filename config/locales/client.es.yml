@@ -1475,22 +1475,19 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparte este enlace para dar acceso inmediato al sitio"
+          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          restrict_email: "Restringir a una dirección de correo electrónico"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
-          invite_to_topic: "Redirigir a este tema"
           expires_at: "Caducar tras"
           custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo electrónico"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
-          invite_copied: "Enlace de invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2081,6 +2078,9 @@ es:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
         other: "%{count} mensajes en tu bandeja de %{group_name} "

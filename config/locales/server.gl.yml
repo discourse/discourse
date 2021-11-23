@@ -2355,47 +2355,6 @@ gl:
   test_mailer:
     title: "Proba de servizo de correo"
     subject_template: "[%{email_prefix}] Proba de entrega de correo"
-    text_body_template: |
-      Esta é unha proba de correo de
-
-      [**%{base_url}**][0]
-
-      A entrega do correo é complicada. Aquí están unhas poucas cousas que debería comprobar en primeiro lugar:
-
-      - *Asegúrese* de axustar correctamente o enderezo do «correo electrónico de notificación» de: na configuración do seu sitio. **O dominio especificado no enderezo «de» dos correos que envíe é o dominio contra o que será validado o seu correo**.
-
-      - Aprenda como ver a forma en bruto do correo no seu cliente de correo, de modo que poida examinar as cabeceiras de correo para obter pistas importantes. En Gmail, é o que se chama «show original» no menú despregábel que está na parte superior dereita de cada mensaxe de correo.
-
-      - **IMPORTANTE:** Ten o seu ISP un rexistro de DNS reverso asociado aos nomes de dominio e aos enderezos IP desde os que vostede envía o correo? [Comprobe o seu rexistro PTR reverso[2] aquí. Se o seu ISP non introduce o rexistro apuntador de DNS reverso adecuado, é moi pouco probábel que o seu correo se poida entregar.
-
-      - É o [rexistro SPF][8] do seu dominio correcto? [Probe o seu rexistro SPF][1] aquí. Vexa que TXT é o tipo de rexistro oficial correcto para SPF.
-
-      - É o [rexistro DKIM][3] do seu dominio correcto? Isto mellorará a entrega do correo. [Probe o seu rexistro DKIM][7] aquí.
-
-      - Se ten en marcha o seu propio servidor de correo, comprobe que os IP do seu servidor de correo [non están en ningunha listaxe de bloqueo de correo][4]. Comprobe tamén que se envía un nome de servidor totalmente cualificado que resolve o DNS na súa mensaxe HELO. En caso de que non, o seu correo será rexeitado por moitos servizos de correo.
-
-      - Recomendámoslle encarecidamente que **envíe un correo de probe a [mail-tester.com][mt]** para comprobar que todo o anterior está funcionando correctamente.
-
-      (A maneira *doada* é crear unha conta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que teñen plans de correo de baixo custo e funcionarán ben para pequenas comunidades. Aínda con todo iso, necesitará configurar os rexistros SPF e DKIM no seu DNS!)
-
-      Agardamos que recibise correctamente esta proba de entrega de correo!
-
-      Boa sorte,
-
-      Os amigos de [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versión de servizo de correo"
     subject_template: "[%{email_prefix}] Nova versión de Discourse, actualización dispoñible"

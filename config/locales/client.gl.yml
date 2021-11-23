@@ -1403,7 +1403,7 @@ gl:
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
-          instructions: "Compartir esta ligazón para conceder acceso a este sitio"
+          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
@@ -1974,6 +1974,9 @@ gl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Desbotar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaxe na caixa %{group_name}"
         other: "%{count} mensaxes na caixa %{group_name}"

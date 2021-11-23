@@ -1684,6 +1684,9 @@ cs:
       watching_first_post: "<span>Nové téma</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Označit jako přečtené"
+        cancel: "Zrušit"
       group_message_summary:
         one: "%{count} zpráva ve schránce skupiny %{group_name}"
         few: "%{count} zprávy ve schránce skupiny %{group_name}"

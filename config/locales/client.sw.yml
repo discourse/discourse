@@ -1326,6 +1326,9 @@ sw:
       topic_reminder: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       watching_first_post: "<span>Mada Mpya</span> %{maelezo}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Ondosha"
+        cancel: "Ghairi"
       group_message_summary:
         one: "Kuna meseji %{count} kwenye %{group_name} inbox"
         other: "kuna meseji %{count} kwenye %{group_name} inbox"

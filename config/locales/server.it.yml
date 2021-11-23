@@ -656,6 +656,7 @@ it:
   post:
     image_placeholder:
       broken: "Questa immagine è assente"
+    hidden_bidi_character: "I caratteri bidirezionali possono cambiare l'ordine di visualizzazione del testo. Ciò potrebbe essere utilizzato per nascondere del codice maligno."
     has_likes:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
@@ -2434,47 +2435,6 @@ it:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
-    text_body_template: |
-      Questa è un'e-mail di prova da
-
-      [**%{base_url}**][0]
-
-      La consegna delle e-mail è complicata. Ecco alcune cose importanti da controllare prima:
-
-      - *Assicurati* di impostare correttamente l'indirizzo da: `notification email` nelle impostazioni del sito. **Il dominio specificato nell'indirizzo "da" delle e-mail inviate è il dominio rispetto al quale avverrà la convalida delle tue e-mail**.
-
-      - Mettiti in condizione di poter analizzare il sorgente non elaborato dell'e-mail nel client di posta, in modo da poter esaminare le intestazioni e-mail per individuare indizi importanti. In Gmail, puoi usare l'opzione "mostra originale" nel menu a discesa in alto a destra di ogni messaggio email.
-
-      - **IMPORTANTE: ** Il tuo ISP ha inserito un record DNS inverso per associare i nomi di dominio e gli indirizzi IP da cui invii la posta? [Prova il tuo record PTR inverso][2] qui. Se il tuo ISP non inserisce il record del puntatore DNS inverso corretto, l'e-mail molto probabilmente non verrà recapitata.
-
-      - Il [record SPF][8] del tuo dominio è corretto? [Prova il tuo record SPF][1] qui. Si noti che TXT è il tipo di record ufficiale corretto per SPF.
-
-      - Il [record DKIM][3] del tuo dominio è corretto? Ciò migliorerà significativamente il corretto recapito delle e-mail. [Prova il tuo record DKIM][7] qui.
-
-      - Se gestisci personalmente il tuo server di posta elettronica, verifica che gli IP del tuo server di posta [non si trovino in elenchi di e-mail bloccate][4]. Verifica inoltre che il server stia inviando un nome host completo traducibile in DNS nel suo messaggio HELO. In caso contrario, si verificherà il rifiuto della tua e-mail da parte di molti servizi di posta elettronica.
-
-      - Consigliamo vivamente di **inviare un'e-mail di prova a [mail-tester.com][mt]** per verificare che tutto quanto sopra indicato funzioni correttamente.
-
-      (Il modo *facile* consiste nel creare un account su [SendGrid],[sg], [SparkPost],[sp], [Mailgun],[mg] o [Mailjet][mj], che offrono piani di abbonamento a servizi e-mail a basso costo e adatti a piccole comunità di utenti. Dovrai comunque configurare i record SPF e DKIM nel tuo DNS!)
-
-      Ci auguriamo che tu abbia ricevuto correttamente questa e-mail di verifica della consegna dei messaggi!
-
-      Cordiali saluti,
-
-      I tuoi amici del team [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"

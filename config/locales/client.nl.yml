@@ -1439,7 +1439,7 @@ nl:
         invite:
           new_title: "Uitnodiging maken"
           edit_title: "Uitnodiging bewerken"
-          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen"
+          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen:"
           copy_link: "koppeling kopiëren"
           show_advanced: "Geavanceerde opties tonen"
           hide_advanced: "Geavanceerde opties verbergen"
@@ -1449,7 +1449,6 @@ nl:
           send_invite_email: "E-mail opslaan en versturen"
           save_invite: "Uitnodiging opslaan"
           invite_saved: "Uitnodiging opgeslagen."
-          invite_copied: "Uitnodigingskoppeling gekopieerd."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -2031,6 +2030,9 @@ nl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
+      dismiss_confirmation:
+        dismiss: "Negeren"
+        cancel: "Annuleren"
       group_message_summary:
         one: "%{count} bericht in uw Postvak IN voor %{group_name}"
         other: "%{count} berichten in uw Postvak IN voor %{group_name}"

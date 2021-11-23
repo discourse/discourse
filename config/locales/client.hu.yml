@@ -1471,22 +1471,19 @@ hu:
         invite:
           new_title: "Meghívási hivatkozás létrehozása"
           edit_title: "Meghívó szerkesztése"
-          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez"
+          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez:"
           copy_link: "hivatkozás másolása"
           expires_in_time: "%{time} múlva lejár"
           expired_at_time: "Lejárt: %{time}"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
-          restrict_email: "Egy e-mail-címre korlátozás"
           max_redemptions_allowed: "Max. használat"
           add_to_groups: "Hozzáadás csoportokhoz"
-          invite_to_topic: "Érkezés erre a témára"
           expires_at: "Ennyi idő múlva lejár:"
           custom_message: "Nem kötelező személyes üzenet"
           send_invite_email: "Mentés és e-mail küldése"
           save_invite: "Meghívó mentése"
           invite_saved: "Meghívó mentve."
-          invite_copied: "Meghívási hivatkozás másolva."
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2067,6 +2064,9 @@ hu:
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
+      dismiss_confirmation:
+        dismiss: "Elvetés"
+        cancel: "Mégse"
       group_message_summary:
         one: "%{count} Üzenet a %{group_name} postaládában"
         other: "%{count} Üzenetek a %{group_name} postaládában"
