@@ -98,7 +98,7 @@ class Auth::Result
   end
 
   def apply_associated_attributes!
-    if extra_data && extra_data[:provider].present? && associated_groups.present?
+    if authenticator.provides_groups? && associated_groups.present?
       associated_group_ids = []
 
       associated_groups.uniq.each do |associated_group|
@@ -192,5 +192,9 @@ class Auth::Result
 
   def username_suggester_attributes
     username || name || email
+  end
+
+  def authenticator
+    @authenticator ||= Discourse.enabled_authenticators.find { |a| a.name == authenticator_name }
   end
 end
