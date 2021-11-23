@@ -1,21 +1,40 @@
-{{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
-  <form>
-    <div class="input-group invite-link">
-      <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
-      <div class="link-share-container">
-        {{input
-          name="invite-link"
-          class="invite-link"
-          value=invite.link
-          readonly=true
-        }}
-        {{copy-button selector="input.invite-link" copied=(action "copied")}}
+{{#if flashText}}
+  <div id="modal-alert" role="alert" class="alert alert-{{flashClass}}">
+    {{#if flashLink}}
+      <div class="input-group invite-link">
+        <label for="invite-link">{{flashText}} {{i18n "user.invited.invite.instructions"}}</label>
+        <div class="link-share-container">
+          {{input
+            name="invite-link"
+            class="invite-link"
+            value=invite.link
+            readonly=true
+          }}
+          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+        </div>
       </div>
-    </div>
+    {{else}}
+      {{flashText}}
+    {{/if}}
+  </div>
+{{/if}}
 
-    <div class="input-group input-expires-at">
-      <label>{{d-icon "far-clock"}}{{expiresAtLabel}}</label>
-    </div>
+{{#d-modal-body title=(if editing "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
+  <form>
+    {{#if editing}}
+      <div class="input-group invite-link">
+        <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
+        <div class="link-share-container">
+          {{input
+            name="invite-link"
+            class="invite-link"
+            value=invite.link
+            readonly=true
+          }}
+          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+        </div>
+      </div>
+    {{/if}}
 
     <div class="input-group input-email">
       <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
@@ -48,66 +67,64 @@
       </div>
     {{/if}}
 
-    {{#if showAdvanced}}
-      {{#if isEmail}}
-        <div class="input-group invite-custom-message">
-          <label for="invite-message">{{d-icon "envelope"}}{{i18n "user.invited.invite.custom_message"}}</label>
-          {{textarea id="invite-message" value=buffered.custom_message}}
-        </div>
-      {{/if}}
+    {{#if isEmail}}
+      <div class="input-group invite-custom-message">
+        <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+        {{textarea id="invite-message" value=buffered.custom_message}}
+      </div>
     {{/if}}
 
-    {{#if showAdvanced}}
-      {{#if currentUser.staff}}
-        <div class="input-group invite-to-topic">
-          {{choose-topic
-            selectedTopicId=buffered.topicId
-            topicTitle=buffered.topicTitle
-            additionalFilters="status:public"
-            labelIcon="hand-point-right"
-            label="user.invited.invite.invite_to_topic"
-          }}
-        </div>
-      {{else if buffered.topicTitle}}
-        <div class="input-group invite-to-topic">
-          <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
-          {{input
-            name="invite-topic"
-            class="invite-topic"
-            value=buffered.topicTitle
-            readonly=true
-          }}
-        </div>
-      {{/if}}
+    {{#if currentUser.staff}}
+      <div class="input-group invite-to-topic">
+        {{choose-topic
+          selectedTopicId=buffered.topicId
+          topicTitle=buffered.topicTitle
+          additionalFilters="status:public"
+          labelIcon="hand-point-right"
+          label="user.invited.invite.invite_to_topic"
+        }}
+      </div>
+    {{else if buffered.topicTitle}}
+      <div class="input-group invite-to-topic">
+        <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
+        {{input
+          name="invite-topic"
+          class="invite-topic"
+          value=buffered.topicTitle
+          readonly=true
+        }}
+      </div>
     {{/if}}
 
-    {{#if showAdvanced}}
-      {{#if canInviteToGroup}}
-        <div class="input-group invite-to-groups">
-          <label>{{d-icon "users"}}{{i18n "user.invited.invite.add_to_groups"}}</label>
-          {{group-chooser
-            content=allGroups
-            value=buffered.groupIds
-            labelProperty="name"
-            onChange=(action (mut buffered.groupIds))
-          }}
-        </div>
-      {{/if}}
+    {{#if canInviteToGroup}}
+      <div class="input-group invite-to-groups">
+        <label>{{d-icon "users"}}{{i18n "user.invited.invite.add_to_groups"}}</label>
+        {{group-chooser
+          content=allGroups
+          value=buffered.groupIds
+          labelProperty="name"
+          onChange=(action (mut buffered.groupIds))
+        }}
+      </div>
     {{/if}}
 
-    {{#if showAdvanced}}
-      {{#if currentUser.staff}}
-        <div class="input-group invite-expires-at">
-          {{future-date-input
-            displayLabelIcon="far-clock"
-            displayLabel=(i18n "user.invited.invite.expires_at")
-            includeDateTime=true
-            includeMidFuture=true
-            clearable=true
-            onChangeInput=(action (mut buffered.expires_at))
-          }}
-        </div>
-      {{/if}}
+    {{#if currentUser.staff}}
+      <div class="input-group invite-expires-at">
+        {{future-date-input
+          displayLabelIcon="far-clock"
+          displayLabel=(i18n "user.invited.invite.expires_at")
+          statusType="close"
+          includeDateTime=true
+          includeMidFuture=true
+          clearable=true
+          input=buffered.expires_at
+          onChangeInput=(action (mut buffered.expires_at))
+        }}
+      </div>
+    {{else}}
+      <div class="input-group input-expires-at">
+        <label>{{d-icon "far-clock"}}{{expiresAtLabel}}</label>
+      </div>
     {{/if}}
   </form>
 {{/d-modal-body}}
@@ -120,21 +137,12 @@
     action=(action "saveInvite")
   }}
 
-  {{#if isEmail}}
-    {{d-button
-      icon="envelope"
-      label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
-      class="btn-primary send-invite"
-      action=(action "saveInvite" true)
-    }}
-  {{/if}}
-
-  {{#if hasAdvanced}}
-    {{d-button
-      action=(action "toggleAdvanced")
-      class="btn-default show-advanced"
-      icon="cog"
-      title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
-    }}
-  {{/if}}
+  {{d-button
+    icon="envelope"
+    label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
+    class="btn-primary send-invite"
+    action=(action "saveInvite" true)
+    title=(unless isEmail "user.invited.invite.send_invite_email_instructions")
+    disabled=(not isEmail)
+  }}
 </div>

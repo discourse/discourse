@@ -243,12 +243,12 @@ export default Controller.extend({
         return;
       }
 
-      const defaultTheme = this.site.user_themes?.findBy("default", true);
+      const theme = this.userSelectableThemes?.findBy("id", this.themeId);
 
       // we don't want to display the numeric ID of a scheme
       // when it is set by the theme but not marked as user selectable
       if (
-        defaultTheme?.color_scheme_id === this.session.userColorSchemeId &&
+        theme?.color_scheme_id === this.session.userColorSchemeId &&
         !this.userSelectableColorSchemes.findBy(
           "id",
           this.session.userColorSchemeId

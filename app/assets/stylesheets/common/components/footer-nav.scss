@@ -9,19 +9,18 @@ body.footer-nav-visible {
     padding-bottom: $footer-nav-height + 15;
   }
 
-  #topic-progress-wrapper,
   #reply-control.draft {
     bottom: $footer-nav-height;
-  }
-
-  #reply-control.draft {
     margin-bottom: env(safe-area-inset-bottom);
     padding-bottom: 0px;
   }
 
+  #topic-progress-wrapper:not(.docked) {
+    margin-bottom: calc(#{$footer-nav-height} + env(safe-area-inset-bottom));
+  }
   .posts-filtered-notice {
     transition: all linear 0.1s;
-    bottom: $footer-nav-height + 15;
+    bottom: calc(#{$footer-nav-height} + env(safe-area-inset-bottom));
   }
 }
 

@@ -22,6 +22,7 @@ describe QuotedPost do
 
       #{post3.full_url}
     RAW
+    stub_image_size
 
     post4 = create_post(topic: topic, raw: raw, post_number: 4, reply_to_post_number: post3.post_number)
 

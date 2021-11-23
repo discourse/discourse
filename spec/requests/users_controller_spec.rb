@@ -1877,6 +1877,7 @@ describe UsersController do
             invites = response.parsed_body['invites']
             expect(invites.size).to eq(1)
             expect(invites.first).to include("email" => invite.email)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
           end
         end
 
@@ -1896,8 +1897,8 @@ describe UsersController do
         end
 
         context 'with permission to see invite links' do
-          it 'returns invites' do
-            inviter = sign_in(Fabricate(:admin))
+          it 'returns own invites' do
+            inviter = sign_in(Fabricate(:user, trust_level: 2))
             invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
             get "/u/#{inviter.username}/invited/pending.json"
@@ -1906,6 +1907,21 @@ describe UsersController do
             invites = response.parsed_body['invites']
             expect(invites.size).to eq(1)
             expect(invites.first).to include("id" => invite.id)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
+          end
+
+          it 'allows admin to see invites' do
+            inviter = Fabricate(:user, trust_level: 2)
+            admin = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+            expect(response.parsed_body['can_see_invite_details']).to eq(true)
           end
         end
 
@@ -4841,11 +4857,18 @@ describe UsersController do
 
       it 'does not let user log out of current session' do
         token = UserAuthToken.generate!(user_id: user.id)
-        env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
-        Guardian.any_instance.stubs(:request).returns(Rack::Request.new(env))
+        cookie = create_auth_cookie(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          issued_at: 5.minutes.ago,
+        )
 
-        post "/u/#{user.username}/preferences/revoke-auth-token.json", params: { token_id: token.id }
+        post "/u/#{user.username}/preferences/revoke-auth-token.json",
+          params: { token_id: token.id },
+          headers: { "HTTP_COOKIE" => "_t=#{cookie}" }
 
+        expect(token.reload.id).to be_present
         expect(response.status).to eq(400)
       end
 
@@ -5059,6 +5082,39 @@ describe UsersController do
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+    end
+
+    it "returns an .ics file of bookmark reminders for the user in date order" do
+      bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+      bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark1.reminder_at_ics}
+        DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark1.topic.title}
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark2.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark2.reminder_at_ics}
+        DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:Some bookmark note
+        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        URL:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        END:VEVENT
+        END:VCALENDAR
+      ICS
     end
 
     it "does not show another user's bookmarks" do

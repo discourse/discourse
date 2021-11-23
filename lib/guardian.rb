@@ -56,6 +56,9 @@ class Guardian
     def has_trust_level?(level)
       false
     end
+    def has_trust_level_or_staff?(level)
+      false
+    end
     def email
       nil
     end
@@ -170,6 +173,10 @@ class Guardian
   # Can we delete the object
   def can_delete?(obj)
     can_do?(:delete, obj)
+  end
+
+  def can_permanently_delete?(obj)
+    can_do?(:permanently_delete, obj)
   end
 
   def can_moderate?(obj)
@@ -349,7 +356,7 @@ class Guardian
   end
 
   def can_see_invite_details?(user)
-    is_me?(user)
+    is_staff? || is_me?(user)
   end
 
   def can_see_invite_emails?(user)
@@ -357,33 +364,18 @@ class Guardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    return false if !authenticated?
-
-    invites_available = SiteSetting.max_invites_per_day.to_i.positive?
-    trust_level_requirement_met = @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
-
-    if !is_staff?
-      return false if !invites_available
-      return false if !trust_level_requirement_met
-    end
-
-    if groups.present?
-      return is_admin? || groups.all? { |g| can_edit_group?(g) }
-    end
-
-    true
+    authenticated? &&
+    (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
+    (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
+    (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
   end
 
   def can_invite_to?(object, groups = nil)
-    return false unless authenticated?
-    is_topic = object.is_a?(Topic)
-    return true if is_admin? && !is_topic
-    return false if SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?
-    return false if SiteSetting.must_approve_users? && !is_staff?
-    return false unless can_see?(object)
+    return false if !authenticated?
+    return false if !object.is_a?(Topic) || !can_see?(object)
     return false if groups.present?
 
-    if is_topic
+    if object.is_a?(Topic)
       if object.private_message?
         return true if is_admin?
         return false unless SiteSetting.enable_personal_messages?
@@ -391,25 +383,23 @@ class Guardian
       end
 
       if (category = object.category) && category.read_restricted
-        if (groups = category.groups&.where(automatic: false))&.any?
-          return groups.any? { |g| can_edit_group?(g) } ? true : false
-        else
-          return false
-        end
+        return category.groups&.where(automatic: false).any? { |g| can_edit_group?(g) }
       end
     end
 
-    user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+    true
   end
 
   def can_invite_via_email?(object)
-    return false unless can_invite_to?(object)
+    return false if !can_invite_to_forum?
+    return false if !can_invite_to?(object)
+
     (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
       (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin? && !SiteSetting.enable_discourse_connect
+    user.admin?
   end
 
   def can_resend_all_invites?(user)
@@ -456,9 +446,7 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
-    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
-    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
+    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)
@@ -506,7 +494,7 @@ class Guardian
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
-    if allowed_theme_ids = GlobalSetting.allowed_theme_ids
+    if allowed_theme_ids = Theme.allowed_remote_theme_ids
       if (theme_ids - allowed_theme_ids).present?
         return false
       end
@@ -541,9 +529,25 @@ class Guardian
   end
 
   def auth_token
-    if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
-      UserAuthToken.hash_token(cookie)
+    return if !request
+
+    token = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).presence
+
+    if !token
+      cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(request.env)
+      token = cookie[:token] if cookie
     end
+
+    UserAuthToken.hash_token(token) if token
+  end
+
+  def can_mention_here?
+    return false if SiteSetting.here_mention.blank?
+    return false if SiteSetting.max_here_mentioned < 1
+    return false if !authenticated?
+    return false if User.where(username_lower: SiteSetting.here_mention).exists?
+
+    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
   end
 
   private

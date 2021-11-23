@@ -45,6 +45,7 @@ acceptance("Topic Timeline", function (needs) {
               read: true,
               user_title: null,
               bookmarked: false,
+              bookmarks: [],
               actions_summary: [
                 {
                   id: 3,
@@ -120,6 +121,7 @@ acceptance("Topic Timeline", function (needs) {
               read: true,
               user_title: null,
               bookmarked: false,
+              bookmarks: [],
               actions_summary: [
                 {
                   id: 3,
@@ -236,6 +238,7 @@ acceptance("Topic Timeline", function (needs) {
         current_post_number: 1,
         highest_post_number: 2,
         last_read_post_number: 0,
+        bookmarks: [],
         last_read_post_id: null,
         deleted_by: {
           id: 7,
@@ -266,7 +269,7 @@ acceptance("Topic Timeline", function (needs) {
         ],
         chunk_size: 20,
         bookmarked: false,
-        bookmarked_posts: null,
+        bookmarks: [],
         topic_timer: null,
         message_bus_last_id: 5,
         participant_count: 1,
@@ -331,6 +334,6 @@ acceptance("Topic Timeline", function (needs) {
 
   test("Shows dates of first and last posts", async function (assert) {
     await visit("/t/deleted-topic-with-whisper-post/129");
-    assert.equal(query(".now-date").innerText, "Jul 2020");
+    assert.strictEqual(query(".now-date").innerText, "Jul 2020");
   });
 });

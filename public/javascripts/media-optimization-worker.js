@@ -2,10 +2,10 @@ function resizeWithAspect(
   input_width,
   input_height,
   target_width,
-  target_height,
+  target_height
 ) {
   if (!target_width && !target_height) {
-    throw Error('Need to specify at least width or height when resizing');
+    throw Error("Need to specify at least width or height when resizing");
   }
 
   if (target_width && target_height) {
@@ -33,9 +33,6 @@ function logIfDebug(message) {
 }
 
 async function optimize(imageData, fileName, width, height, settings) {
-
-  await loadLibs(settings);
-
   const mozJpegDefaultOptions = {
     quality: settings.encode_quality,
     baseline: false,
@@ -63,7 +60,11 @@ async function optimize(imageData, fileName, width, height, settings) {
   // resize
   if (width > settings.resize_threshold) {
     try {
-      const target_dimensions = resizeWithAspect(width, height, settings.resize_target);
+      const target_dimensions = resizeWithAspect(
+        width,
+        height,
+        settings.resize_target
+      );
       const resizeResult = self.codecs.resize(
         new Uint8ClampedArray(imageData),
         width, //in
@@ -75,12 +76,12 @@ async function optimize(imageData, fileName, width, height, settings) {
         settings.resize_linear_rgb
       );
       if (resizeResult[3] !== 255) {
-        throw "Image corrupted during resize. Falling back to the original for encode"
+        throw "Image corrupted during resize. Falling back to the original for encode";
       }
       maybeResized = new ImageData(
         resizeResult,
         target_dimensions.width,
-        target_dimensions.height,
+        target_dimensions.height
       ).data;
       width = target_dimensions.width;
       height = target_dimensions.height;
@@ -102,12 +103,12 @@ async function optimize(imageData, fileName, width, height, settings) {
     mozJpegDefaultOptions
   );
 
-  const finalSize = result.byteLength
+  const finalSize = result.byteLength;
   logIfDebug(`Worker post reencode file: ${finalSize}`);
   logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`);
 
   if (finalSize < 20000) {
-    throw "Final size suspciously small, discarding optimizations"
+    throw "Final size suspciously small, discarding optimizations";
   }
 
   let transferrable = Uint8Array.from(result).buffer; // decoded was allocated inside WASM so it **cannot** be transfered to another context, need to copy by value
@@ -132,7 +133,7 @@ onmessage = async function (e) {
             type: "file",
             file: optimized,
             fileName: e.data.fileName,
-            fileId: e.data.fileId
+            fileId: e.data.fileId,
           },
           [optimized]
         );
@@ -142,24 +143,27 @@ onmessage = async function (e) {
           type: "error",
           file: e.data.file,
           fileName: e.data.fileName,
-          fileId: e.data.fileId
+          fileId: e.data.fileId,
         });
       }
+      break;
+    case "install":
+      await loadLibs(e.data.settings);
+      postMessage({ type: "installed" });
       break;
     default:
       logIfDebug(`Sorry, we are out of ${e}.`);
   }
 };
 
-async function loadLibs(settings){
-
+async function loadLibs(settings) {
   if (self.codecs) return;
 
   importScripts(settings.mozjpeg_script);
   importScripts(settings.resize_script);
 
   let encoderModuleOverrides = {
-    locateFile: function(path, prefix) {
+    locateFile: function (path, prefix) {
       // if it's a mem init file, use a custom dir
       if (path.endsWith(".wasm")) return settings.mozjpeg_wasm;
       // otherwise, use the default, the prefix (JS file's dir) + the path
@@ -174,5 +178,5 @@ async function loadLibs(settings){
   const { resize } = wasm_bindgen;
   await wasm_bindgen(settings.resize_wasm);
 
-  self.codecs = {mozjpeg_enc: mozjpeg_enc_module, resize: resize};
+  self.codecs = { mozjpeg_enc: mozjpeg_enc_module, resize: resize };
 }

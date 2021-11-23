@@ -55,6 +55,16 @@ class UserAction < ActiveRecord::Base
       assigned: 16)
   end
 
+  def self.private_types
+    @private_types ||= [
+      WAS_LIKED,
+      RESPONSE,
+      MENTION,
+      QUOTE,
+      EDIT
+    ]
+  end
+
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,
@@ -160,6 +170,7 @@ class UserAction < ActiveRecord::Base
     action_type
     action_code
     action_code_who
+    action_code_path
     topic_closed
     topic_id
     topic_archived
@@ -208,6 +219,7 @@ class UserAction < ActiveRecord::Base
         p.post_type,
         p.action_code,
         pc.value AS action_code_who,
+        pc2.value AS action_code_path,
         p.edit_reason,
         t.category_id
       FROM user_actions as a
@@ -219,6 +231,7 @@ class UserAction < ActiveRecord::Base
       JOIN users au on au.id = a.user_id
       LEFT JOIN categories c on c.id = t.category_id
       LEFT JOIN post_custom_fields pc ON pc.post_id = a.target_post_id AND pc.name = 'action_code_who'
+      LEFT JOIN post_custom_fields pc2 ON pc2.post_id = a.target_post_id AND pc.name = 'action_code_path'
       /*where*/
       /*order_by*/
       /*offset*/
@@ -407,6 +420,11 @@ class UserAction < ActiveRecord::Base
       builder.where("a.action_type not in (#{BOOKMARK})")
     end
 
+    filter_private_messages(builder, user_id, guardian, ignore_private_messages)
+    filter_categories(builder, guardian)
+  end
+
+  def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
       builder.where("t.archetype <> :private_message", private_message: Archetype::private_message)
     else
@@ -426,7 +444,10 @@ class UserAction < ActiveRecord::Base
         builder.where(sql, private_message: Archetype::private_message, current_user_id: guardian.user.id)
       end
     end
+    builder
+  end
 
+  def self.filter_categories(builder, guardian)
     unless guardian.is_admin?
       allowed = guardian.secure_category_ids
       if allowed.present?
@@ -437,6 +458,7 @@ class UserAction < ActiveRecord::Base
         builder.where("(c.read_restricted IS NULL OR NOT c.read_restricted)")
       end
     end
+    builder
   end
 
   def self.require_parameters(data, *params)

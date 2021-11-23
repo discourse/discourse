@@ -124,8 +124,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(count(".category-link"), 8);
-        assert.equal(
+        assert.strictEqual(count(".category-link"), 8);
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           this.site
             .get("categoriesByCount")
@@ -146,8 +146,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(count(".category-link"), 8);
-        assert.equal(
+        assert.strictEqual(count(".category-link"), 8);
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           this.site
             .get("categoriesByCount")
@@ -201,7 +201,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(
+        assert.strictEqual(
           count(".category-link"),
           maxCategoriesToDisplay,
           "categories displayed limited by header_dropdown_category_count"
@@ -218,7 +218,7 @@ discourseModule(
           .uniq()
           .slice(0, maxCategoriesToDisplay);
 
-        assert.equal(
+        assert.strictEqual(
           queryAll(".category-link .category-name").text(),
           ids
             .map(

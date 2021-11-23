@@ -1317,6 +1317,7 @@ export default {
       user_count: 8,
       alias_level: 99,
       visible: true,
+      has_messages: true,
       public_admission: true,
       public_exit: false,
       flair_url: "fa-adjust",

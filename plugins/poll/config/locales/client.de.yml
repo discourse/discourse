@@ -43,6 +43,9 @@ de:
       show-results:
         title: "Das Ergebnis der Umfrage anzeigen"
         label: "Ergebnisse anzeigen"
+      remove-vote:
+        title: "Entferne deine Stimme"
+        label: "Stimme entfernen"
       hide-results:
         title: "Zurück zur Umfrage"
         label: "Umfrage anzeigen"

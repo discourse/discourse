@@ -4,17 +4,16 @@ import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
-import { clearRewrites, setURLContainer } from "discourse/lib/url";
+import { clearRewrites } from "discourse/lib/url";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext } from "@ember/test-helpers";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { getApplication, getContext, settled } from "@ember/test-helpers";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
-import HeaderComponent from "discourse/components/site-header";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -22,7 +21,7 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -37,6 +36,8 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { resetComposerCustomizations } from "discourse/models/composer";
+import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
@@ -50,6 +51,9 @@ import {
   cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
+import { clearAuthMethods } from "discourse/models/login-method";
+import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -93,7 +97,11 @@ export function withFrozenTime(timeString, timezone, callback) {
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {
-  let siteAttrs = $.extend({}, siteFixtures["site.json"].site, extras || {});
+  let siteAttrs = Object.assign(
+    {},
+    siteFixtures["site.json"].site,
+    extras || {}
+  );
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
   return Site.resetCurrent(Site.create(siteAttrs));
@@ -210,9 +218,6 @@ export function acceptance(name, optionsOrCallback) {
     beforeEach() {
       resetMobile();
 
-      // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({ examineDockHeader: function () {} });
-
       resetExtraClasses();
       if (mobileView) {
         forceMobile();
@@ -246,8 +251,6 @@ export function acceptance(name, optionsOrCallback) {
         });
       }
 
-      setURLContainer(this.container);
-      setDefaultOwner(this.container);
       if (!this.owner) {
         this.owner = this.container;
       }
@@ -280,21 +283,27 @@ export function acceptance(name, optionsOrCallback) {
       resetCustomPostMessageCallbacks();
       resetUserSearchCache();
       resetCardClickListenerSelector();
+      resetComposerCustomizations();
+      resetQuickSearchRandomTips();
       resetPostMenuExtraButtons();
       clearNavItems();
       setTopicList(null);
       _clearSnapshots();
-      setURLContainer(null);
-      setDefaultOwner(null);
       cleanUpComposerUploadHandler();
       cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
+      clearTopicFooterDropdowns();
+      clearTopicFooterButtons();
       resetLastEditNotificationClick();
-      app._runInitializer("instanceInitializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
+      clearAuthMethods();
+
+      app._runInitializer("instanceInitializers", (_, initializer) => {
+        initializer.teardown?.();
+      });
+
+      app._runInitializer("initializers", (_, initializer) => {
+        initializer.teardown?.(this.container);
       });
 
       if (LEGACY_ENV) {
@@ -376,9 +385,9 @@ export function controllerFor(controller, model) {
 
 export function fixture(selector) {
   if (selector) {
-    return $("#qunit-fixture").find(selector);
+    return document.querySelector(`#qunit-fixture ${selector}`);
   }
-  return $("#qunit-fixture");
+  return document.querySelector("#qunit-fixture");
 }
 
 QUnit.assert.not = function (actual, message) {
@@ -469,7 +478,52 @@ export function exists(selector) {
 export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .map((c) => c.func(...args));
+    .forEach((c) => c.func(...args));
+}
+
+export async function selectText(selector, endOffset = null) {
+  const range = document.createRange();
+  let node;
+
+  if (typeof selector === "string") {
+    node = document.querySelector(selector);
+  } else {
+    node = selector;
+  }
+
+  range.selectNodeContents(node);
+
+  if (endOffset) {
+    range.setEnd(node, endOffset);
+  }
+
+  const performSelection = () => {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  if (LEGACY_ENV) {
+    // In the Ember CLI environment, the settled() helper seems to take care of waiting
+    // for this event to fire. In legacy, we need to do it manually.
+    let callback;
+    const selectEventFiredPromise = new Promise((resolve) => {
+      callback = resolve;
+      document.addEventListener("selectionchange", callback);
+    });
+
+    performSelection();
+
+    try {
+      await selectEventFiredPromise;
+    } finally {
+      document.removeEventListener("selectionchange", callback);
+    }
+  } else {
+    performSelection();
+  }
+
+  await settled();
 }
 
 export function conditionalTest(name, condition, testCase) {

@@ -93,6 +93,7 @@ th:
       previous_month: "เดือนที่แล้ว"
       next_month: "เดือนถัดไป"
       placeholder: วัน
+      to_placeholder: "ไปวันที่"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber}"
@@ -251,6 +252,8 @@ th:
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
       topic_reply: "ตอบแบบร่าง"
+    topic_count_categories:
+      other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_unseen:
@@ -1355,7 +1358,6 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       create_pm: "ข้อความ"
-      title: "หรือกด Ctrl+Enter"
       users_placeholder: "เพิ่มผู้ใช้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
@@ -1460,6 +1462,9 @@ th:
       membership_request_accepted: "ถูกรับเป็นสมาชิกในกลุ่ม '%{group_name}'"
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
+      dismiss_confirmation:
+        dismiss: "ซ่อน"
+        cancel: "ยกเลิก"
       group_message_summary:
         other: "%{count}ข้อความในกล่องขาเข้าของกลุ่ม %{group_name}"
       popup:
@@ -1503,8 +1508,8 @@ th:
       select_all: "เลือกทั้งหมด"
       clear_all: "ล้างทั้งหมด"
       too_short: "คำค้นหาสั้นเกินไป"
-      title: "ค้นหากระทู้ โพสต์ ผู้ใช้ หรือหมวดหมู่"
-      full_page_title: "ค้นหากระทู้หรือโพสต์"
+      title: "ค้นหา"
+      full_page_title: "ค้นหา"
       no_results: "ไม่มีผลการค้นหา"
       no_more_results: "ไม่มีผลการค้นหาเพิ่มเติมแล้ว"
       post_format: "#%{post_number} โดย %{username}"
@@ -1514,6 +1519,11 @@ th:
       search_google: "ลองค้นหาด้วยกูเกิล:"
       search_google_button: "กูเกิล"
       search_button: "ค้นหา"
+      categories: "หมวดหมู่"
+      tags: "แท็ก"
+      type:
+        users: "ผู้ใช้"
+        categories: "หมวดหมู่"
       context:
         user: "ค้นหาโพสต์โดย @%{username}"
         category: "ค้นหาหมวด #%{category}"
@@ -1521,7 +1531,6 @@ th:
         topic: "ค้นหากระทู้นี้"
         private_messages: "ค้นหาข้อความ"
       advanced:
-        title: ค้นหาขั้นสูงสุด
         posted_by:
           label: โพสต์โดย
         in_category:
@@ -1561,7 +1570,6 @@ th:
             after: หลังจาก
         views:
           label: ดู
-    hamburger_menu: "ไปยังรายการกระทู้หรือหมวดหมู่อื่น"
     new_item: "ใหม่"
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
@@ -1669,6 +1677,7 @@ th:
         publish_to: "เผยแพร่ไปยัง:"
         when: "เมื่อ:"
         time_frame_required: "กรุณาเลือกระยะเวลา"
+        duration: "ช่วงเวลา"
       auto_update_input:
         now: "ตอนนี้"
         later_today: "ภายหลังในวันนี้"
@@ -1918,6 +1927,7 @@ th:
           other: "คุณได้เลือก <b>%{count}</b> โพสต์"
     post:
       quote_reply: "อ้างอิง"
+      quote_edit: "แก้ไข"
       quote_share: "แบ่งปัน"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ %{number}"
@@ -2343,6 +2353,8 @@ th:
           name: อื่นๆ
         posting:
           name: โพสต์
+    download_calendar:
+      download: "ดาวน์โหลด"
     tagging:
       all_tags: "แท็กทั้งหมด"
       other_tags: "แท็กอื่น"
@@ -2656,10 +2668,6 @@ th:
             text: "Footer"
           embedded_scss:
             text: "Embedded CSS"
-          head_tag:
-            text: "</head>"
-          body_tag:
-            text: "</body>"
         colors:
           title: "สี"
           undo: "เลิกทำ"

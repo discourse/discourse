@@ -37,7 +37,7 @@ export default Controller.extend({
       ajax({
         url: `/session/email-login/${this.model.token}`,
         type: "POST",
-        data: data,
+        data,
       })
         .then((result) => {
           if (result.success) {

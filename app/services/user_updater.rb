@@ -46,7 +46,8 @@ class UserUpdater
     :text_size,
     :title_count_mode,
     :timezone,
-    :skip_new_user_tips
+    :skip_new_user_tips,
+    :default_calendar
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {

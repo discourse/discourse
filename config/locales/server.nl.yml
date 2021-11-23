@@ -227,7 +227,6 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
-    muted_invitee: "Sorry, die gebruiker heeft u gedempt."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -808,19 +807,10 @@ nl:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
   user_activity:
-    no_default:
-      self: "U hebt nog geen activiteit."
-      others: "Geen activiteit."
     no_bookmarks:
       self: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
       search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       others: "Geen bladwijzers."
-    no_likes_given:
-      self: "U hebt geen berichten geliket."
-      others: "Geen gelikete berichten."
-    no_replies:
-      self: "U hebt op geen enkel bericht geantwoord."
-      others: "Geen antwoorden."
     no_drafts:
       self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
   webauthn:
@@ -871,7 +861,6 @@ nl:
         remove: "Dit topic is geen banner meer. Het zal niet meer bovenaan elke pagina verschijnen."
   unsubscribed:
     title: "E-mailvoorkeuren bijgewerkt!"
-    description: "e-mailvoorkeuren voor <b>%{email}</b> zijn bijgewerkt. <a href='%{url}'>Bezoek uw gebruikersvoorkeuren</a> om uw e-mailinstellingen te wijzigen."
     topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw voor %{link} in te schrijven."
     private_topic_description: "Gebruik de meldingsinstellingen onder of rechts van het topic om u opnieuw in te schrijven."
   uploads:
@@ -1359,7 +1348,6 @@ nl:
     summary_likes_required: "Het minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten tonen"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
-    enable_personal_messages: "Gebruikers met vertrouwensniveau 1 (instelbaar via het minimale niveau om berichten te verzenden) toestaan om berichten aan te maken en op berichten te antwoorden. Houd er rekening mee dat stafleden altijd berichten kunnen verzenden."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
     enable_long_polling: "Gebruikte 'message bus' voor melding kan 'long polling' gebruiken"
     enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
@@ -1634,7 +1622,6 @@ nl:
     topic_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-topicweergave tellen."
     user_profile_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-gebruikersprofielweergave tellen."
     levenshtein_distance_spammer_emails: "Bij het vergelijken van spam-e-mails, het aantal verschillende tekens waarbij nog steeds een wazige overeenkomst kan bestaan."
-    max_new_accounts_per_registration_ip: "Als er al (n) accounts met vertrouwensniveau 0 zijn van een bepaald IP-adres (en geen daarvan is staflid of heeft een vertrouwensniveau 2 of hoger), het accepteren van nieuwe registraties vanaf dat IP-adres stoppen."
     min_ban_entries_for_roll_up: "Bij het klikken op de knop Samenvoegen, een nieuwe subnet-banvermelding maken als er minstens (N) vermeldingen zijn."
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."
@@ -1784,7 +1771,6 @@ nl:
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
-    show_copy_button_on_codeblocks: "Een knop voor codeblokken toevoegen om de inhoud van de blokken naar het klembord van de gebruiker te kopiëren. Deze functie wordt niet ondersteund in Internet Explorer."
     embed_any_origin: "Inbedbare inhoud toestaan, ongeacht oorsprong. Dit is vereist voor mobiele apps met statische HTML."
     embed_topics_list: "HTML-inbedding van topiclijsten ondersteunen"
     embed_truncate: "De ingebedde berichten inkorten."
@@ -2453,6 +2439,26 @@ nl:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Een gebruiker heeft iets geplaatst"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3027,8 +3033,6 @@ nl:
     conflict: "Een updateconflict heeft ervoor gezorgd dat u dit niet kon doen."
     reasons:
       email_auth_res_enqueue: "Een DMARC-controle op deze e-mail is mislukt; het bericht komt zeer waarschijnlijk niet van wie het lijkt te komen. Controleer de onbewerkte e-mailheader voor meer informatie."
-      email_spam: "Deze e-mail is als spam gemarkeerd door de header zoals gedefinieerd in `email_in_spam_header`."
-      suspect_user: "Deze nieuwe gebruiker heeft profielgegevens ingevoerd zonder topics of berichten te hebben gelezen, wat sterk doet vermoeden dat het een spammer kan zijn. Zie `approve_suspect_users`."
     actions:
       agree:
         title: "Akkoord..."
@@ -3105,6 +3109,7 @@ nl:
       one: "%{topic_title} (Deel %{count})"
       other: "%{topic_title} (Deel %{count})"
     post_raw: "De discussie wordt voortgezet vanaf %{parent_url}.\n\nEerdere discussies:\n\n%{previous_topics}"
+  fallback_username: "gebruiker"
   activemodel:
     errors:
       <<: *errors

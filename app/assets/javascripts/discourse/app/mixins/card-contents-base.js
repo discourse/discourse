@@ -39,7 +39,7 @@ export default Mixin.create({
   isFixed: false,
   isDocked: false,
 
-  _show(username, target) {
+  _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
@@ -54,13 +54,16 @@ export default Mixin.create({
       return false;
     }
 
+    this.appEvents.trigger("card:show", username, target, event);
+
     const currentUsername = this.username;
-    if (username === currentUsername && this.loading === username) {
+    if (username === currentUsername || this.loading === username) {
+      this._positionCard($(target));
       return;
     }
 
     const closestArticle = target.closest("article");
-    const postId = closestArticle ? closestArticle.dataset["post-id"] : null;
+    const postId = closestArticle ? closestArticle.dataset.postId : null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
 
@@ -95,14 +98,14 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition($(this.element), this._hide.bind(this));
+    afterTransition($(this.element), this._hide);
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
     const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
-      boundCardClickHandler: this._cardClickHandler.bind(this),
+      boundCardClickHandler: this._cardClickHandler,
       previewClickEvent,
       mobileScrollEvent,
     });
@@ -124,6 +127,7 @@ export default Mixin.create({
     );
   },
 
+  @bind
   _cardClickHandler(event) {
     if (this.avatarSelector) {
       let matched = this._showCardOnClick(
@@ -152,11 +156,10 @@ export default Mixin.create({
 
       event.preventDefault();
       event.stopPropagation();
-      return this._show(transformText(matchingEl), matchingEl);
+      return this._show(transformText(matchingEl), matchingEl, event);
     }
-    {
-      return false;
-    }
+
+    return false;
   },
 
   _topicHeaderTrigger(username, $target) {
@@ -288,6 +291,7 @@ export default Mixin.create({
     return mainOutletOffset.top - outletHeights;
   },
 
+  @bind
   _hide() {
     if (!this.visible) {
       $(this.element).css({ left: -9999, top: -9999 });
@@ -314,6 +318,7 @@ export default Mixin.create({
     }
 
     this._hide();
+    this.appEvents.trigger("card:hide");
   },
 
   willDestroyElement() {

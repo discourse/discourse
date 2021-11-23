@@ -575,7 +575,6 @@ vi:
         remove: "Chủ đề này không còn là một banner. Nó sẽ không hiện ở đầu mọi trang nữa."
   unsubscribed:
     title: "Đã cập nhật tùy chọn email!"
-    description: "tùy chọn email cho <b>%{email}</b> đã được cập nhật. Để thay đổi cài đặt email của bạn <a href='%{url}'>hãy truy cập tùy chọn người dùng của bạn</a>."
   unsubscribe:
     title: "Hủy đăng ký"
     log_out: "Đăng Xuất"
@@ -1068,7 +1067,6 @@ vi:
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
-    max_new_accounts_per_registration_ip: "Nếu đã có (n) tài khoản với độ tin cậy mức 0 từ IP này (không phải là BQT, mức TL2 hoặc cao hơn), ngừng chấp nhận đăng ký mới từ IP này."
     min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
     max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
@@ -2019,8 +2017,6 @@ vi:
       medium: "Trung bình"
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
-    reasons:
-      contains_media: "Bài đăng này bao gồm phương tiện được nhúng. Xem `review_media_unless_trust_level`."
     actions:
       agree_and_keep:
         title: "Giữ bài viết"
@@ -2056,6 +2052,7 @@ vi:
       %{keys}
 
       Không cần thực hiện hành động nào vào lúc này, tuy nhiên, đây được coi là phương pháp bảo mật tốt để chu kỳ tất cả các thông tin quan trọng của bạn vài năm một lần.
+  fallback_username: "người dùng"
   activemodel:
     errors:
       <<: *errors

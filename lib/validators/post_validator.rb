@@ -20,11 +20,11 @@ class PostValidator < ActiveModel::Validator
 
   def presence(post)
     unless options[:skip_topic]
-      post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
+      post.errors.add(:topic_id, :blank, **options) if post.topic_id.blank?
     end
 
     if post.new_record? && post.user_id.nil?
-      post.errors.add(:user_id, :blank, options)
+      post.errors.add(:user_id, :blank, **options)
     end
   end
 

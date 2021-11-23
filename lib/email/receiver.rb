@@ -3,7 +3,6 @@
 require "digest"
 
 module Email
-
   class Receiver
     # If you add a new error, you need to
     #   * add it to Email::Processor#handle_failure()
@@ -72,8 +71,7 @@ module Email
           # do not create a new `IncomingEmail` record to avoid double ups.
           return if @incoming_email = find_existing_and_update_imap
 
-          ensure_valid_address_lists
-          ensure_valid_date
+          Email::Validator.ensure_valid!(@mail)
 
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
@@ -119,22 +117,6 @@ module Email
       )
 
       incoming_email
-    end
-
-    def ensure_valid_address_lists
-      [:to, :cc, :bcc].each do |field|
-        addresses = @mail[field]
-
-        if addresses&.errors.present?
-          @mail[field] = addresses.to_s.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
-        end
-      end
-    end
-
-    def ensure_valid_date
-      if @mail.date.nil?
-        raise InvalidPost, I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
-      end
     end
 
     def is_blocked?
@@ -637,7 +619,11 @@ module Email
 
         comparison_failed = false
         comparison_headers.each do |comparison_header|
-          comparison_failed = true if address_field.to_s != mail_object[comparison_header].to_s
+          comparison_header_address = mail_object[comparison_header].to_s[/<([^>]+)>/, 1]
+          if comparison_header_address != from_address
+            comparison_failed = true
+            break
+          end
         end
 
         next if comparison_failed
@@ -911,7 +897,13 @@ module Email
     end
 
     def embedded_email
-      @embedded_email ||= embedded_email_raw.present? ? Mail.new(embedded_email_raw) : nil
+      @embedded_email ||= if embedded_email_raw.present?
+        mail = Mail.new(embedded_email_raw)
+        Email::Validator.ensure_valid_address_lists!(mail)
+        mail
+      else
+        nil
+      end
     end
 
     def process_forwarded_email(destination, user)

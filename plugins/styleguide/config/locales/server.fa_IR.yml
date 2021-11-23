@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  site_settings:
+    styleguide_enabled: 'یک مسیر "/styleguide" برای کمک به سبک‌دهی دیسکورس فعال کنید'
+    styleguide_admin_only: "دید سبک‌دهی راهنما را برای مدیران محدود می‌کند"

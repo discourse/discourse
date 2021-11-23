@@ -36,19 +36,21 @@ class PresenceChannel
   #   count_only: boolean. If true, user identities are never revealed to clients. (default [])
   class Config
     NOT_FOUND ||= "notfound"
-    attr_accessor :public, :allowed_user_ids, :allowed_group_ids, :count_only
 
-    def initialize(public: false, allowed_user_ids: nil, allowed_group_ids: nil, count_only: false)
+    attr_accessor :public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout
+
+    def initialize(public: false, allowed_user_ids: nil, allowed_group_ids: nil, count_only: false, timeout: nil)
       @public = public
       @allowed_user_ids = allowed_user_ids
       @allowed_group_ids = allowed_group_ids
       @count_only = count_only
+      @timeout = timeout
     end
 
     def self.from_json(json)
       data = JSON.parse(json, symbolize_names: true)
       data = {} if !data.is_a? Hash
-      new(**data.slice(:public, :allowed_user_ids, :allowed_group_ids, :count_only))
+      new(**data.slice(:public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout))
     end
 
     def to_json
@@ -56,12 +58,13 @@ class PresenceChannel
       data[:allowed_user_ids] = allowed_user_ids if allowed_user_ids
       data[:allowed_group_ids] = allowed_group_ids if allowed_group_ids
       data[:count_only] = count_only if count_only
+      data[:timeout] = timeout if timeout
       data.to_json
     end
   end
 
   DEFAULT_TIMEOUT ||= 60
-  CONFIG_CACHE_SECONDS ||= 120
+  CONFIG_CACHE_SECONDS ||= 10
   GC_SECONDS ||= 24.hours.to_i
   MUTEX_TIMEOUT_SECONDS ||= 10
   MUTEX_LOCKED_ERROR ||= "PresenceChannel mutex is locked"
@@ -70,36 +73,38 @@ class PresenceChannel
 
   attr_reader :name, :timeout, :message_bus_channel_name, :config
 
-  def initialize(name, raise_not_found: true)
+  def initialize(name, raise_not_found: true, use_cache: true)
     @name = name
-    @timeout = DEFAULT_TIMEOUT
     @message_bus_channel_name = "/presence#{name}"
 
     begin
-      @config = fetch_config
+      @config = fetch_config(use_cache: use_cache)
     rescue PresenceChannel::NotFound
       raise if raise_not_found
       @config = Config.new
     end
+
+    @timeout = config.timeout || DEFAULT_TIMEOUT
   end
 
   # Is this user allowed to view this channel?
   # Pass `nil` for anonymous viewers
-  def can_view?(user_id: nil)
+  def can_view?(user_id: nil, group_ids: nil)
     return true if config.public
     return true if user_id && config.allowed_user_ids&.include?(user_id)
+
     if user_id && config.allowed_group_ids.present?
-      user_group_ids = GroupUser.where(user_id: user_id).pluck("group_id")
-      return true if (user_group_ids & config.allowed_group_ids).present?
+      group_ids ||= GroupUser.where(user_id: user_id).pluck("group_id")
+      return true if (group_ids & config.allowed_group_ids).present?
     end
     false
   end
 
   # Is a user allowed to enter this channel?
   # Currently equal to the the can_view? permission
-  def can_enter?(user_id: nil)
+  def can_enter?(user_id: nil, group_ids: nil)
     return false if user_id.nil?
-    can_view?(user_id: user_id)
+    can_view?(user_id: user_id, group_ids: group_ids)
   end
 
   # Mark a user's client as present in this channel. The client_id should be unique per
@@ -280,7 +285,7 @@ class PresenceChannel
   # should not exist, the block should return `nil`. If the channel should exist,
   # the block should return a PresenceChannel::Config object.
   #
-  # Return values may be cached for up to 2 minutes.
+  # Return values may be cached for up to 10 seconds.
   #
   # Plugins should use the {Plugin::Instance.register_presence_channel_prefix} API instead
   def self.register_prefix(prefix, &block)
@@ -297,8 +302,10 @@ class PresenceChannel
 
   private
 
-  def fetch_config
-    cached_config = PresenceChannel.redis.get(redis_key_config)
+  def fetch_config(use_cache: true)
+    cached_config = if use_cache
+      PresenceChannel.redis.get(redis_key_config)
+    end
 
     if cached_config == Config::NOT_FOUND
       raise PresenceChannel::NotFound

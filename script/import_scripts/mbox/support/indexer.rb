@@ -48,7 +48,7 @@ module ImportScripts::Mbox
       if File.exist?(metadata_file)
         # workaround for YML files that contain classname in file header
         yaml = File.read(metadata_file).sub(/^--- !.*$/, '---')
-        metadata = YAML.load(yaml)
+        metadata = YAML.safe_load(yaml)
       else
         metadata = {}
       end

@@ -1,5 +1,5 @@
 {{#if selectKit.options.showFullTitle}}
-  <div lang={{lang}} title={{title}} data-value={{value}} data-name={{name}} class="select-kit-selected-name selected-name choice">
+  <div lang={{lang}} title={{title}} data-value={{value}} data-name={{name}} role="option" class="select-kit-selected-name selected-name choice">
     {{#if item.icon}}
       {{d-icon item.icon}}
     {{/if}}
@@ -20,7 +20,7 @@
   </div>
 {{else}}
   {{#if item.icon}}
-    <div role="textbox" lang={{lang}} class="select-kit-selected-name selected-name choice">
+    <div role="option" lang={{lang}} class="select-kit-selected-name selected-name choice">
       {{d-icon item.icon}}
     </div>
   {{/if}}

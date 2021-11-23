@@ -40,3 +40,4 @@ pl_PL:
             every_three_months: "Co trzy miesiące"
             every_six_months: "Co sześć miesięcy"
             every_year: "Co roku"
+      default_title: "Wydarzenie %{site_name}"

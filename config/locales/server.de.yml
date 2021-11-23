@@ -16,6 +16,7 @@ de:
       date_only: "%-d. %B %Y"
       long: "%-d. %B %Y um %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -249,7 +250,6 @@ de:
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
-    muted_invitee: "Entschuldige, dieser Benutzer hat dich stummgeschaltet."
     muted_topic: "Entschuldige, dieser Benutzer hat dieses Thema stummgeschaltet."
     receiver_does_not_allow_pm: "Entschuldige, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
     sender_does_not_allow_pm: "Entschuldige, du erlaubst diesem Benutzer nicht, dir private Nachrichten zu senden."
@@ -395,6 +395,7 @@ de:
       cannot_set_past_reminder: "Du kannst keine Lesezeichen-Erinnerung in der Vergangenheit setzen."
       cannot_set_reminder_in_distant_future: "Du kannst keine Lesezeichen-Erinnerung einstellen, die mehr als 10 Jahre in der Zukunft liegt."
       time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
+      for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -658,9 +659,13 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+    hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
+    cannot_permanently_delete:
+      many_posts: "Du kannst dieses Thema nicht dauerhaft löschen, da es andere Beiträge gibt."
+      wait_or_different_admin: "Du musst %{time_left} warten, bevor du diesen Beitrag endgültig löschen kannst, oder ein anderer Administrator muss dies tun."
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
     too_many_requests: "Du hast diese Aktion zu oft durchgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
@@ -885,19 +890,10 @@ de:
     pm_title: "Sichere Entwürfe aus laufenden Themen"
     pm_body: "Thema enthält gesicherte Entwürfe"
   user_activity:
-    no_default:
-      self: "Du hast noch keine Aktivität."
-      others: "Keine Aktivität."
     no_bookmarks:
       self: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
       search: "Keine Lesezeichen mit der angegebenen Suchanfrage gefunden."
       others: "Keine Lesezeichen."
-    no_likes_given:
-      self: "Du hast noch keine Beiträge mit einem „Gefällt mir“ markiert."
-      others: "Keine Beiträge mit „Gefällt mir“."
-    no_replies:
-      self: "Du hast auf keine Beiträge geantwortet."
-      others: "Keine Antworten."
     no_drafts:
       self: "Du hast keine Entwürfe; verfasse eine Antwort in einem beliebigen Thema und sie wird automatisch als neuer Entwurf gespeichert."
   email_settings:
@@ -1462,6 +1458,7 @@ de:
     summary_likes_required: "Mindestanzahl an „Gefällt mir“ in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
+    summary_timeline_button: "Schaltfläche \"Zusammenfassen\" in der Zeitleiste anzeigen"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long Polling nutzen."
@@ -1677,6 +1674,7 @@ de:
     external_emoji_url: "URL des externen Dienstes für Emoji-Bilder. Lasse das Feld leer, um dies zu deaktivieren."
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Buchstaben-Avatar-Hintergrund verwendet werden."
+    enable_listing_suspended_users_on_search: "Ermögliche normalen Benutzern, gesperrte Benutzer zu finden."
     selectable_avatars_enabled: "Benutzer zwingen, einen Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste der Avatare, aus denen Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
@@ -1792,7 +1790,7 @@ de:
     topic_view_duration_hours: "Zähle einen neuen Themenaufruf einmal pro IP/Benutzer alle N Stunden"
     user_profile_view_duration_hours: "Zähle einen neuen Profilaufruf einmal pro IP/Benutzer alle N Stunden"
     levenshtein_distance_spammer_emails: "E-Mail-Adressen, die sich um so viele Zeichen unterscheiden, werden beim Abgleich mit Adressen der Spammer dennoch als identisch betrachtet."
-    max_new_accounts_per_registration_ip: "Keine neuen Registrierungen von einer IP-Adresse annehmen, wenn bereits (n) Benutzerkonten mit Vertrauensstufe 0 zugeordnet sind (und keines davon ein Team-Mitglied ist oder Vertrauensstufe 2 oder höher hat)."
+    max_new_accounts_per_registration_ip: "Keine neuen Registrierungen von einer IP-Adresse annehmen, wenn bereits (n) Benutzerkonten mit Vertrauensstufe 0 zugeordnet sind (und keines davon ein Team-Mitglied ist oder Vertrauensstufe 2 oder höher hat). 0 setzen um die Begrenzung zu deaktivieren."
     min_ban_entries_for_roll_up: "Wenn du auf die Schaltfläche „Zusammenfassen“ klickst, wird ein neuer Subnetz-Block-Eintrag erstellt, wenn es mindestens (N) Einträge gibt."
     max_age_unmatched_emails: "Gefilterte E-Mail-Adressen nach (N) Tagen ohne Treffer löschen."
     max_age_unmatched_ips: "Gefilterte IP-Adressen nach (N) Tagen ohne Treffer löschen."
@@ -1928,6 +1926,8 @@ de:
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_system_edit_notifications: "Unterdrückt Bearbeitungsbenachrichtigungen durch den System-Benutzer, wenn die „download_remote_images_to_local“-Einstellung aktiviert ist."
+    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen über Kategorie-Anpassungen von Themen."
+    disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen über Schlagwort-Anpassungen von Themen."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
@@ -1951,7 +1951,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
-    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Blockinhalt in die Zwischenablage des Benutzers zu kopieren. Diese Funktion wird im Internet Explorer nicht unterstützt."
+    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Inhalt des Blocks in die Zwischenablage des Nutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
     embed_topics_list: "HTML-Einbettung von Themenlisten unterstützen"
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
@@ -1989,6 +1989,7 @@ de:
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
+    enable_fast_edit: "Ermöglicht die Inline-Bearbeitung einer kleinen Auswahl eines Beitragstexts."
     old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
@@ -2457,47 +2458,6 @@ de:
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
-    text_body_template: |
-      Dies ist eine Test-E-Mail von
-
-      [**%{base_url}**][0]
-
-      Die Zustellbarkeit von E-Mails ist eine komplizierte Angelegenheit. Nachfolgend ein paar wichtige Aspekte, die du zuerst überprüfen solltest:
-
-      - Stelle *sicher*, dass du die „from:“-Adresse für die `notification email` in den Einstellungen deiner Website korrekt festlegst. **Die Domain, die in der „from“-Adresse deiner E-Mails angegeben ist, ist die Domain, gegen die deine E-Mail validiert wird.**
-
-      - Du solltest wissen, wie du den Roh-Quelltext der E-Mail in deinem Mail-Client anzeigst, damit du die E-Mail-Header auf wichtige Hinweise untersuchen kannst. In Gmail ist es die Option „Original anzeigen“ im Drop-down-Menü oben rechts bei jeder Mail.
-
-      - **WICHTIG:** Hat dein ISP einen Reverse-DNS-Eintrag festgelegt, um die Domain-Namen und IP-Adressen, von denen du Mails sendest, zu verknüpfen? [Teste deinen Reverse-PTR-Eintrag][2] hier. Wenn dein ISP nicht den richtigen Reverse-DNS-Pointer-Record einträgt, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden können.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? [Teste deinen SPF-Eintrag][1] hier. Beachte, dass TXT der korrekte offizielle Eintragstyp für SPF ist.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Dies wird die Zustellbarkeit von E-Mails deutlich verbessern. [Teste deinen DKIM-Eintrag][7] hier.
-
-      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, ob die IPs deines Mailservers [nicht auf irgendwelchen E-Mail-Negativlisten][4] stehen. Überprüfe auch, ob er definitiv einen vollqualifizierten Hostnamen, der im DNS aufgelöst wird, in seiner HELO-Nachricht sendet. Wenn nicht, wird deine E-Mail von vielen Maildiensten abgelehnt.
-
-      - Wir empfehlen dir dringend, **eine Test-E-Mail an [mail-tester.com][mt]** zu senden, um zu überprüfen, ob alles oben genannte korrekt funktioniert.
-
-      (Am *einfachsten* ist es, ein Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] zu erstellen, die günstige Mailing-Tarife anbieten und für kleine Communitys gut geeignet sind. Du musst allerdings trotzdem noch die SPF- und DKIM-Einträge in deinem DNS einrichten!)
-
-      Wir hoffen, dass du diesen E-Mail-Zustellbarkeitstest erhalten hast!
-
-      Viel Erfolg!
-
-      Deine Freunde von [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
@@ -3278,6 +3238,28 @@ de:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Gruppe wurde in privater Nachricht erwähnt"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Gruppe wurde in privater Nachricht erwähnt"
+      subject_template: "[%{email_prefix}] [PN] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Benutzer hat einen Beitrag geschrieben"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3589,20 +3571,23 @@ de:
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
     size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Abschnittes überein. %{additional_detail}"
-    create_mutlipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
-    abort_mutlipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
-    complete_mutlipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
+    create_multipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
+    abort_multipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
+    complete_multipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
     external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
+      too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
+      too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
       larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
+      too_large_humanized: "(Bild größer als %{max_size})"
   avatar:
     missing: "Entschuldige, wir können keinen Avatar finden, der mit dieser E-Mail-Adresse verbunden ist. Kannst du versuchen, ihn erneut hochzuladen?"
   flag_reason:
@@ -4342,10 +4327,10 @@ de:
             label: "Name deiner Community"
             placeholder: "Erikas Stammtisch"
           site_description:
-            label: "Beschreibe deine Community in einem kurzen Satz"
+            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
           short_site_description:
-            label: "Beschreibe deine Community in wenigen Worten"
+            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
             placeholder: "Beste Community aller Zeiten"
       introduction:
         title: "Einführung"
@@ -4505,21 +4490,24 @@ de:
     missing_version: "Du musst eine Version angeben."
     conflict: "Es gab einen Update-Konflikt, der dich daran gehindert hat."
     reasons:
-      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_post_count`."
-      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
-      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
-      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung `auto_silence_first_post_regex` übereinstimmt."
-      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/customize/watched_words'>Liste der beobachteten Wörter</a>."
-      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
-      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe Kategorie-Einstellungen."
-      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigt werden. Siehe `must_approve_users`. "
-      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe `invite_only`. "
+      post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
+      auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link} -Einstellung übereinstimmt."
+      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe dein %{link}."
+      staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe %{link}."
+      must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      invite_only: "Alle neuen Benutzer müssen eingeladen werden. Siehe %{link}."
       email_auth_res_enqueue: "Diese E-Mail hat eine DMARC-Prüfung nicht bestanden. Sie stammt höchstwahrscheinlich nicht von der Person, von der sie zu stammen scheint. Überprüfe die Roh-E-Mail-Header auf weitere Informationen."
-      email_spam: "Diese E-Mail wurde durch den in `email_in_spam_header` definierten Header als Spam gekennzeichnet."
-      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe `approve_suspect_users`."
-      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe `review_media_unless_trust_level`."
+      email_spam: "Diese E-Mail wurde durch den in %{link} definierten Header als Spam gekennzeichnet."
+      suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass er ein Spammer sein könnte. Siehe %{link}."
+      contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe %{link}."
       queued_by_staff: "Ein Team-Mitglied ist der Meinung, dass dieser Beitrag überprüft werden muss. Bis dahin wird er versteckt bleiben."
+      links:
+        watched_word: Liste der beobachteten Wörter
+        category: Kategorie-Einstellungen
     actions:
       agree:
         title: "Zustimmen …"
@@ -4621,6 +4609,7 @@ de:
       other: "%{topic_title} (Teil %{count})"
     post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
     small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
+  fallback_username: "Benutzer"
   activemodel:
     errors:
       <<: *errors

@@ -90,6 +90,12 @@ class Upload < ActiveRecord::Base
       .where("g.flair_upload_id IS NULL")
       .joins("LEFT JOIN badges b ON b.image_upload_id = uploads.id")
       .where("b.image_upload_id IS NULL")
+      .joins(<<~SQL)
+        LEFT JOIN theme_settings ts
+        ON NULLIF(ts.value, '')::integer = uploads.id
+        AND ts.data_type = #{ThemeSetting.types[:upload].to_i}
+      SQL
+      .where("ts.value IS NULL")
 
     if SiteSetting.selectable_avatars.present?
       scope = scope.where.not(id: SiteSetting.selectable_avatars.map(&:id))

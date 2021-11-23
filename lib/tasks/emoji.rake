@@ -15,14 +15,6 @@ EMOJI_IMAGES_PATH ||= "public/images/emoji"
 
 EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
 
-# Format is search pattern => associated emojis
-# eg: "cry" => [ "sob" ]
-# for a "cry" query should return: cry and sob
-SEARCH_ALIASES ||= {
-  "sad" => [ "frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry" ],
-  "cry" => [ "sob" ]
-}
-
 # emoji aliases are actually created as images
 # eg: "right_anger_bubble" => [ "anger_right" ]
 # your app will physically have right_anger_bubble.png and anger_right.png
@@ -280,14 +272,37 @@ EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
 
 GENERATED_PATH ||= File.join(EMOJI_DB_REPO_PATH, "generated")
 
+def search_aliases(emojis)
+  # Format is search pattern => associated emojis
+  # eg: "cry" => [ "sob" ]
+  # for a "cry" query should return: cry and sob
+  @aliases ||= begin
+    aliases = {
+      "sad" => [ "frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry" ],
+      "cry" => [ "sob" ]
+    }
+
+    emojis.each do |_, config|
+      next if config["search_aliases"].blank?
+      config["search_aliases"].each do |name|
+        aliases[name] ||= []
+        aliases[name] << config["name"]
+      end
+    end
+
+    aliases.map { |_, names| names.uniq! }
+    aliases
+  end
+end
+
 desc "update emoji images"
 task "emoji:update" do
   copy_emoji_db
 
-  json_db = open(File.join(GENERATED_PATH, "db.json")).read
+  json_db = File.read(File.join(GENERATED_PATH, "db.json"))
   db = JSON.parse(json_db)
 
-  write_db_json(db["emojis"], db["translations"])
+  write_db_json(db["emojis"], db["translations"], search_aliases(db["emojis"]))
   fix_incomplete_sets(db["emojis"])
   write_aliases
   groups = generate_emoji_groups(db["emojis"], db["sections"])
@@ -315,7 +330,7 @@ def optimize_images(images)
 end
 
 def copy_emoji_db
-  `rm -rf tmp/emoji-db && git clone #{EMOJI_DB_REPO} tmp/emoji-db`
+  `rm -rf tmp/emoji-db && git clone --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
 
   path = "#{EMOJI_IMAGES_PATH}/**/*"
   confirm_overwrite(path)
@@ -352,7 +367,7 @@ end
 def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
-  list = open(EMOJI_ORDERING_URL).read
+  list = URI.parse(EMOJI_ORDERING_URL).read
   doc = Nokogiri::HTML5(list)
   table = doc.css("table")[0]
 
@@ -398,7 +413,7 @@ def write_aliases
   end
 end
 
-def write_db_json(emojis, translations)
+def write_db_json(emojis, translations, search_aliases)
   puts "Writing #{EMOJI_DB_PATH}..."
 
   confirm_overwrite(EMOJI_DB_PATH)
@@ -427,7 +442,7 @@ def write_db_json(emojis, translations)
     "emojis" => emojis_without_tones,
     "tonableEmojis" => emoji_with_tones,
     "aliases" => EMOJI_ALIASES,
-    "searchAliases" => SEARCH_ALIASES,
+    "searchAliases" => search_aliases,
     "translations" => translations
   }
 

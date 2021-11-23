@@ -28,13 +28,13 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().name(), "bold,italic");
-        assert.equal(this.subject.header().value(), "bold,italic");
+        assert.strictEqual(this.subject.header().name(), "bold,italic");
+        assert.strictEqual(this.subject.header().value(), "bold,italic");
 
         await this.subject.expand();
 
-        assert.equal(this.subject.rows().length, 1);
-        assert.equal(this.subject.rowByIndex(0).value(), "underline");
+        assert.strictEqual(this.subject.rows().length, 1);
+        assert.strictEqual(this.subject.rowByIndex(0).value(), "underline");
       },
     });
   }

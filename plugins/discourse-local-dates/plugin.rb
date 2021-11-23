@@ -4,6 +4,8 @@
 # about: Display a date in your local timezone
 # version: 0.1
 # author: Joffrey Jaffeux
+# transpile_js: true
+
 hide_plugin if self.respond_to?(:hide_plugin)
 
 register_asset 'stylesheets/common/discourse-local-dates.scss'

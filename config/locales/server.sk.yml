@@ -521,9 +521,6 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-  user_activity:
-    no_default:
-      others: "Žiadna aktivita"
   topic_flag_types:
     spam:
       title: "Spam"
@@ -939,7 +936,6 @@ sk:
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
-    max_new_accounts_per_registration_ip: "Neakceptovať ďalšie prihlásenia z IP adresy v prípade, ak už existuje (n) účtov s úrovňou dôvery 0 z danej IP adresy (a žiadny nie je zamestnancec alebo s úrovňou dôvery 2 a vyššou)."
     min_ban_entries_for_roll_up: "Ak existuje minimálne (N) položiek a kliknete na Zrolovať, vytvorí sa nový obmedzujúci záznam podsiete."
     max_age_unmatched_emails: "Zmazať nevyskytujúce sa kontrolované emailové adresy po (N) dňoch."
     max_age_unmatched_ips: "Zmazať nevyskytujúce sa kontrolované IP adresy po (N) dňoch."
@@ -1444,6 +1440,7 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
+  fallback_username: "používateľ"
   activemodel:
     errors:
       <<: *errors

@@ -26,7 +26,7 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().value(), "foo,bar");
+        assert.strictEqual(this.subject.header().value(), "foo,bar");
       },
     });
 
@@ -38,16 +38,22 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().value(), "foo,bar");
+        assert.strictEqual(this.subject.header().value(), "foo,bar");
 
         await this.subject.expand();
         await this.subject.fillInFilter("mon");
-        assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
+        assert.strictEqual(
+          queryAll(".select-kit-row").text().trim(),
+          "monkey x1\ngazelle x2"
+        );
         await this.subject.fillInFilter("key");
-        assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
+        assert.strictEqual(
+          queryAll(".select-kit-row").text().trim(),
+          "monkey x1\ngazelle x2"
+        );
         await this.subject.selectRowByValue("monkey");
 
-        assert.equal(this.subject.header().value(), "foo,bar,monkey");
+        assert.strictEqual(this.subject.header().value(), "foo,bar,monkey");
       },
     });
 
@@ -60,14 +66,14 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(this.subject.header().value(), "foo,bar");
+        assert.strictEqual(this.subject.header().value(), "foo,bar");
 
         await this.subject.expand();
         await this.subject.fillInFilter("baz");
         await this.subject.selectRowByValue("monkey");
 
         const error = queryAll(".select-kit-error").text();
-        assert.equal(
+        assert.strictEqual(
           error,
           I18n.t("select_kit.max_content_reached", {
             count: this.siteSettings.max_tags_per_topic,

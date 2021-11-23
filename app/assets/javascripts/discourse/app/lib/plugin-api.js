@@ -37,7 +37,9 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import Composer from "discourse/models/composer";
+import Composer, {
+  registerCustomizationCallback,
+} from "discourse/models/composer";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import Sharing from "discourse/lib/sharing";
@@ -50,6 +52,7 @@ import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-feature
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
+import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -78,15 +81,20 @@ import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addSearchSuggestion } from "discourse/widgets/search-menu-results";
+import {
+  addQuickSearchRandomTip,
+  addSearchSuggestion,
+} from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
+import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.12.3";
+const PLUGIN_API_VERSION = "0.13.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -194,7 +202,7 @@ class PluginApi {
    *
    * ```
    * api.modifyClassStatic('controller:composer', {
-   *   superFinder: function() { return []; }
+   *   superFinder() { return []; }
    * });
    * ```
    **/
@@ -303,12 +311,10 @@ class PluginApi {
     if (!opts.onlyStream) {
       decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
       decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
-      decorate(
-        this.container.factoryFor("component:user-stream").class,
-        "didInsertElement",
-        callback,
-        opts.id
-      );
+      ["didInsertElement", "user-stream:new-item-inserted"].forEach((event) => {
+        const klass = this.container.factoryFor("component:user-stream").class;
+        decorate(klass, event, callback, opts.id);
+      });
     }
   }
 
@@ -730,18 +736,33 @@ class PluginApi {
   }
 
   /**
-   * Register a small icon to be used for custom small post actions
+   * Register a button to display at the bottom of a topic
    *
    * ```javascript
    * api.registerTopicFooterButton({
-   *   key: "flag"
-   *   icon: "flag"
-   *   action: (context) => console.log(context.get("topic.id"))
+   *   id: "flag",
+   *   icon: "flag",
+   *   action(context) { console.log(context.get("topic.id")) },
    * });
    * ```
    **/
-  registerTopicFooterButton(action) {
-    registerTopicFooterButton(action);
+  registerTopicFooterButton(buttonOptions) {
+    registerTopicFooterButton(buttonOptions);
+  }
+
+  /**
+   * Register a dropdown to display at the bottom of a topic, desktop only
+   *
+   * ```javascript
+   * api.registerTopicFooterDropdown({
+   *   id: "my-button",
+   *   content() { return [{id: 1, name: "foo"}] },
+   *   action(itemId) { console.log(itemId) },
+   * });
+   * ```
+   **/
+  registerTopicFooterDropdown(dropdownOptions) {
+    registerTopicFooterDropdown(dropdownOptions);
   }
 
   /**
@@ -1015,7 +1036,7 @@ class PluginApi {
    * Example:
    *
    * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation: function (data, options) {
+   *    myFileTransformation(data, options) {
    *      let p = new Promise((resolve, reject) => {
    *        let file = data.files[data.index];
    *        console.log(`Transforming ${file.name}`);
@@ -1237,10 +1258,22 @@ class PluginApi {
    * api.addGlobalNotice("text", "foo", { html: "<p>bar</p>" })
    *
    **/
-  addGlobalNotice(id, text, options) {
-    addGlobalNotice(id, text, options);
+  addGlobalNotice(text, id, options) {
+    addGlobalNotice(text, id, options);
   }
 
+  /**
+   * Used for modifying the document title count. The core count is unread notifications, and
+   * the returned value from calling the passed in function will be added to this number.
+   *
+   * For example, to add a count
+   * api.addDocumentTitleCounter(() => {
+   *   return currentUser.somePluginValue;
+   * })
+   **/
+  addDocumentTitleCounter(counterFunction) {
+    addPluginDocumentTitleCounter(counterFunction);
+  }
   /**
    * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
    *
@@ -1409,6 +1442,42 @@ class PluginApi {
   }
 
   /**
+   * Download calendar modal which allow to pick between ICS and Google Calendar
+   *
+   * ```
+   * api.downloadCalendar("title of the event", [
+   * {
+        startsAt: "2021-10-12T15:00:00.000Z",
+        endsAt: "2021-10-12T16:00:00.000Z",
+      },
+   * ]);
+   * ```
+   *
+   */
+  downloadCalendar(title, dates) {
+    downloadCalendar(title, dates);
+  }
+
+  /**
+   * Add a quick search tip shown randomly when the search dropdown is invoked on desktop.
+   *
+   * Example usage:
+   * ```
+   * const tip = {
+   *    label: "in:docs",
+   *    description: I18n.t("search.tips.in_docs"),
+   *    clickable: true,
+   *    showTopics: true
+   * };
+   * api.addQuickSearchRandomTip(tip);
+   * ```
+   *
+   */
+  addQuickSearchRandomTip(tip) {
+    addQuickSearchRandomTip(tip);
+  }
+
+  /**
    * Add custom user search options.
    * It is heavily correlated with `register_groups_callback_for_users_search_controller_action` which allows defining custom filter.
    * Example usage:
@@ -1448,7 +1517,8 @@ class PluginApi {
     this.modifyClass(
       `component:${mountedComponent}`,
       {
-        pluginId: `#{mountedComponent}/#{widgetKey}/#{appEvent}`,
+        pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
+
         didInsertElement() {
           this._super();
           this.dispatch(appEvent, widgetKey);
@@ -1456,6 +1526,28 @@ class PluginApi {
       },
       { ignoreMissing: true }
     );
+  }
+
+  /**
+   * Support for customizing the composer text. By providing a callback. Callbacks should
+   * return `null` or `undefined` if you don't need a customization based on the current state.
+   *
+   * ```
+   * api.customizeComposerText({
+   *   actionTitle(model) {
+   *     if (model.hello) {
+   *        return "hello.world";
+   *     }
+   *   },
+   *
+   *   saveLabel(model) {
+   *     return "my.custom_save_label_key";
+   *   }
+   * })
+   *
+   */
+  customizeComposerText(callbacks) {
+    registerCustomizationCallback(callbacks);
   }
 }
 
@@ -1488,6 +1580,9 @@ function getPluginApi(version) {
       owner.registry.register("plugin-api:main", pluginApi, {
         instantiate: false,
       });
+    } else {
+      // If we are re-using an instance, make sure the container is correct
+      pluginApi.container = owner;
     }
 
     // We are recycling the compatible object, but let's update to the higher version

@@ -5,6 +5,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   def self.can_attributes
     [:can_move_posts,
      :can_delete,
+     :can_permanently_delete,
      :can_recover,
      :can_remove_allowed_users,
      :can_invite_to,
@@ -108,6 +109,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_delete?
     scope.can_delete?(object.topic)
+  end
+
+  def include_can_permanently_delete?
+    SiteSetting.can_permanently_delete && object.topic.deleted_at
   end
 
   def include_can_recover?

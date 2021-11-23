@@ -487,7 +487,6 @@ sr:
             label: "Ime vaše zajednice"
             placeholder: "Milenino mesto za bleju"
           site_description:
-            label: "Opišite vašu zajednicu u jednoj kratkoj rečenici"
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
       introduction:
         title: "Uvod"
@@ -526,6 +525,7 @@ sr:
           title: "Obriši Korisnika"
       reject:
         title: "Odbij"
+  fallback_username: "korisnik"
   time:
     <<: *datetime_formats
   activemodel:

@@ -6,8 +6,7 @@ import { on } from "discourse-common/utils/decorators";
 // Provides the ability to load more items for a view which is scrolled to the bottom.
 export default Mixin.create(Scrolling, {
   scrolled() {
-    const eyeline = this.eyeline;
-    return eyeline && eyeline.update();
+    return this.eyeline?.update();
   },
 
   loadMoreUnlessFull() {
@@ -18,10 +17,14 @@ export default Mixin.create(Scrolling, {
 
   @on("didInsertElement")
   _bindEyeline() {
-    const eyeline = new Eyeline(this.eyelineSelector + ":last");
+    const eyeline = Eyeline.create({
+      selector: `${this.eyelineSelector}:last`,
+    });
+
     this.set("eyeline", eyeline);
     eyeline.on("sawBottom", () => this.send("loadMore"));
     eyeline.update(); // update once to consider current position
+
     this.bindScrolling();
   },
 

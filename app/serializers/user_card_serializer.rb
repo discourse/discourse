@@ -107,10 +107,6 @@ class UserCardSerializer < BasicUserSerializer
     uri.host.sub(/^www\./, '') + uri.path
   end
 
-  def include_website_name
-    website.present?
-  end
-
   def ignored
     scope_ignored_user_ids = scope.user&.ignored_user_ids || []
     scope_ignored_user_ids.include?(object.id)

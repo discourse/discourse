@@ -397,6 +397,7 @@ fa_IR:
   post:
     image_placeholder:
       broken: "عکس خراب شده است."
+    hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
   rate_limiter:
     hours:
       one: "%{count} ساعت"
@@ -576,12 +577,6 @@ fa_IR:
       self: "شما هیچ نوشته نشانک‌ شده‌ای ندارید؛ نشانک‌‌ها به شما اجازه می‌دهد به سرعت به نوشته‌های خاص مراجعه کنید."
       search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       others: "نشانه‌گذاری وجود ندارد"
-    no_likes_given:
-      self: "شما هیچ فرسته‌ای را نپسندیده‌اید."
-      others: "فرسته‌ی موردپسندیدی نیست."
-    no_replies:
-      self: "شما به هیچ فرسته‌ای پاسخ نداده‌اید."
-      others: "بدون پاسخ"
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
@@ -913,7 +908,6 @@ fa_IR:
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این موضوع\" شود"
     summary_percent_filter: "وقتی کاربر بر روی ' خلاصه این موضوع' کلیک کرد٬‌ % بهترین نوشته‌ها را نشان بده"
-    enable_personal_messages: "اجازه ارسال پیام به کاربران سطح اعتماد 1 (قابل تنظیم با حداقل سطح اعتماد برای ارسال پیام). توجه کنید که همکاران در هر شرایطی می‌توانند پیام ارسال کنند."
     enable_long_polling: "message bus استفاده شده برای آگاه سازی می تواند برای رای گیری طولانی استفاده شود. "
     long_polling_base_url: " URL پایه استفاده شده برای رای گیری طولانی (وقتی CDN خدمت محتوای پویا می دهد٬ از تنظیم بودن منشا این کشش مطمئن شوید) برای نمونه : http://origin.site.com"
     long_polling_interval: "مدت زمانی که سرور قبل پاسخ دادن به مشتری‌ها باید صبر کند، وقتی در آن‌جا داده ای برای ارسال نیست (فقط کاربران وارد شده)"
@@ -1086,7 +1080,6 @@ fa_IR:
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     user_profile_view_duration_hours: "بازدید‌های پروفایل کاربران را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد نویسه‌های متفاوت که هنوز هم به یک تطبق مبهم اجازه خواهد داد."
-    max_new_accounts_per_registration_ip: "اگر در حال حاضر (n) حساب کاربری با سطح اعتماد 0 از این IP وجود دارد(و هیچ یک از کارمندان عضو یا با سطح اعتماد 2 یا بالاتر نیستند) ثبت نام را از این ‌IP را متوقف کن. "
     min_ban_entries_for_roll_up: "وقتی بر روی کلید جمع کردن کلیک کنید٬ یک ممنوعیت زیرشبکه ورودی جدید ساخته می شود اگر در آنجا حداقل (N) ورودی باشد. "
     max_age_unmatched_emails: "ایمیل های ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     max_age_unmatched_ips: "IP ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند. "
@@ -1162,6 +1155,7 @@ fa_IR:
     suppress_uncategorized_badge: "نشان برای موضوعات دسته‌بندی نشده را در فهرست موضوعات را نشان نده. "
     permalink_normalizations: "اعمال Regex زیر قبل از تطابق پیوند یکتا، برای مثال /(topic.*)\\?.*/\\1 نوار query string را از پیوند موضوع جدا می‌کند. فرمت regex+string از \\1 استفاده می‌کند. برای دسترسی به تصویر‌برداری."
     disable_system_edit_notifications: "ویرایش اعلان‌ها را از طریق کاربر سیستم کار بینداز وقتی 'download_remote_images_to_local' فعال است "
+    disable_tags_edit_notifications: "ویرایش برچسب‌های آگاه‌سازی مربوط به این موضوعات غیرفعال شود."
     automatically_unpin_topics: "وقتی کاربر به پایین صفحه می‌رسد سنجاق موضوع‌ها به‌صورت خودکار برداشته شود."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."
     share_anonymized_statistics: "اشتراک‌گذاری آمار استفاده ناشناس"
@@ -1795,6 +1789,26 @@ fa_IR:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "کاربر نوشته ارسال کرده"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2217,7 +2231,6 @@ fa_IR:
             label: "نام انجمن شما"
             placeholder: "انجمن آزموده"
           site_description:
-            label: "انجمن خود را در یک جمله کوتاه توضیح دهید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
       introduction:
         title: "مقدمه"
@@ -2320,6 +2333,7 @@ fa_IR:
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن..."
+  fallback_username: "کاربران"
   activemodel:
     errors:
       <<: *errors

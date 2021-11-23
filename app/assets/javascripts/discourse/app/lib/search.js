@@ -55,7 +55,7 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id);
+      return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();
 
@@ -117,11 +117,8 @@ function translateGroupedSearchResults(results, opts) {
       const name = pair[1];
       if (results[name].length > 0) {
         const componentName =
-          opts.searchContext &&
-          opts.searchContext.type === "topic" &&
-          type === "topic"
-            ? "post"
-            : type;
+          opts.searchContext && type === "topic" ? "post" : type;
+
         const result = {
           results: results[name],
           componentName: `search-result-${componentName}`,
@@ -146,7 +143,7 @@ export function searchForTerm(term, opts) {
   }
 
   // Only include the data we have
-  const data = { term: term };
+  const data = { term };
   if (opts.typeFilter) {
     data.type_filter = opts.typeFilter;
   }

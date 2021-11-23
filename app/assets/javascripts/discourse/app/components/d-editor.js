@@ -1,6 +1,11 @@
 import { ajax } from "discourse/lib/ajax";
-import { caretPosition, inCodeBlock } from "discourse/lib/utilities";
+import {
+  caretPosition,
+  inCodeBlock,
+  translateModKey,
+} from "discourse/lib/utilities";
 import discourseComputed, {
+  bind,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -17,7 +22,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
-import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import { linkSeenHashtags } from "discourse/lib/link-hashtags";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
@@ -60,7 +64,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { siteSettings } = opts;
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -125,29 +129,31 @@ class Toolbar {
       action: (...args) => this.context.send("formatCode", args),
     });
 
-    this.addButton({
-      id: "bullet",
-      group: "extras",
-      icon: "list-ul",
-      shortcut: "Shift+8",
-      title: "composer.ulist_title",
-      preventFocus: true,
-      perform: (e) => e.applyList("* ", "list_item"),
-    });
+    if (!site.mobileView) {
+      this.addButton({
+        id: "bullet",
+        group: "extras",
+        icon: "list-ul",
+        shortcut: "Shift+8",
+        title: "composer.ulist_title",
+        preventFocus: true,
+        perform: (e) => e.applyList("* ", "list_item"),
+      });
 
-    this.addButton({
-      id: "list",
-      group: "extras",
-      icon: "list-ol",
-      shortcut: "Shift+7",
-      title: "composer.olist_title",
-      preventFocus: true,
-      perform: (e) =>
-        e.applyList(
-          (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-          "list_item"
-        ),
-    });
+      this.addButton({
+        id: "list",
+        group: "extras",
+        icon: "list-ol",
+        shortcut: "Shift+7",
+        title: "composer.olist_title",
+        preventFocus: true,
+        perform: (e) =>
+          e.applyList(
+            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+            "list_item"
+          ),
+      });
+    }
 
     if (siteSettings.support_mixed_text_direction) {
       this.addButton({
@@ -191,24 +197,12 @@ class Toolbar {
     if (button.shortcut) {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
-      let shortcutTitle = `${mod}+${button.shortcut}`;
 
-      // Mac users are used to glyphs for shortcut keys
-      if (mac) {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", "\u21E7")
-          .replace("Meta", "\u2318")
-          .replace("Alt", "\u2325")
-          .replace(/\+/g, "");
-      } else {
-        shortcutTitle = shortcutTitle
-          .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-          .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-          .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
-      }
+      const shortcutTitle = `${translateModKey(mod + "+")}${translateModKey(
+        button.shortcut
+      )}`;
 
       createdButton.title = `${title} (${shortcutTitle})`;
-
       this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
     } else {
       createdButton.title = title;
@@ -271,6 +265,8 @@ export default Component.extend(TextareaTextManipulation, {
   didInsertElement() {
     this._super(...arguments);
 
+    this._previewMutationObserver = this._disablePreviewTabIndex();
+
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
@@ -290,31 +286,9 @@ export default Component.extend(TextareaTextManipulation, {
     });
 
     // disable clicking on links in the preview
-    $(this.element.querySelector(".d-editor-preview")).on(
-      "click.preview",
-      (e) => {
-        if (wantsNewWindow(e)) {
-          return;
-        }
-        const $target = $(e.target);
-        if ($target.is("a.mention")) {
-          this.appEvents.trigger(
-            "click.discourse-preview-user-card-mention",
-            $target
-          );
-        }
-        if ($target.is("a.mention-group")) {
-          this.appEvents.trigger(
-            "click.discourse-preview-group-card-mention-group",
-            $target
-          );
-        }
-        if ($target.is("a")) {
-          e.preventDefault();
-          return false;
-        }
-      }
-    );
+    this.element
+      .querySelector(".d-editor-preview")
+      .addEventListener("click", this._handlePreviewLinkClick);
 
     if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
@@ -323,7 +297,33 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     if (isTesting()) {
-      this.element.addEventListener("paste", this.paste.bind(this));
+      this.element.addEventListener("paste", this.paste);
+    }
+  },
+
+  @bind
+  _handlePreviewLinkClick(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    if (event.target.tagName === "A") {
+      if (event.target.classList.contains("mention")) {
+        this.appEvents.trigger(
+          "click.discourse-preview-user-card-mention",
+          $(event.target)
+        );
+      }
+
+      if (event.target.classList.contains("mention-group")) {
+        this.appEvents.trigger(
+          "click.discourse-preview-group-card-mention-group",
+          $(event.target)
+        );
+      }
+
+      event.preventDefault();
+      return false;
     }
   },
 
@@ -338,11 +338,17 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
-    $(this.element.querySelector(".d-editor-preview")).off("click.preview");
+    this.element
+      .querySelector(".d-editor-preview")
+      ?.removeEventListener("click", this._handlePreviewLinkClick);
+
+    this._previewMutationObserver?.disconnect();
 
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
     }
+
+    this._cachedCookFunction = null;
   },
 
   @discourseComputed()
@@ -396,8 +402,8 @@ export default Component.extend(TextareaTextManipulation, {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
 
-        linkSeenHashtags($(cookedElement));
-        linkSeenMentions($(cookedElement), this.siteSettings);
+        linkSeenHashtags(cookedElement);
+        linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,
@@ -428,13 +434,8 @@ export default Component.extend(TextareaTextManipulation, {
             return;
           }
 
-          // prevents any tab focus in preview
-          preview.querySelectorAll("a").forEach((anchor) => {
-            anchor.setAttribute("tabindex", "-1");
-          });
-
           if (this.previewUpdated) {
-            this.previewUpdated($(preview));
+            this.previewUpdated(preview);
           }
         });
       });
@@ -792,28 +793,6 @@ export default Component.extend(TextareaTextManipulation, {
       this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
-    emojiSelected(code) {
-      let selected = this._getSelected();
-      const captures = selected.pre.match(/\B:(\w*)$/);
-
-      if (isEmpty(captures)) {
-        if (selected.pre.match(/\S$/)) {
-          this._addText(selected, ` :${code}:`);
-        } else {
-          this._addText(selected, `:${code}:`);
-        }
-      } else {
-        let numOfRemovedChars = selected.pre.length - captures[1].length;
-        selected.pre = selected.pre.slice(
-          0,
-          selected.pre.length - captures[1].length
-        );
-        selected.start -= numOfRemovedChars;
-        selected.end -= numOfRemovedChars;
-        this._addText(selected, `${code}:`);
-      }
-    },
-
     toolbarButton(button) {
       if (this.disabled) {
         return;
@@ -909,5 +888,22 @@ export default Component.extend(TextareaTextManipulation, {
     focusOut() {
       this.set("isEditorFocused", false);
     },
+  },
+
+  _disablePreviewTabIndex() {
+    const observer = new MutationObserver(function () {
+      document.querySelectorAll(".d-editor-preview a").forEach((anchor) => {
+        anchor.setAttribute("tabindex", "-1");
+      });
+    });
+
+    observer.observe(document.querySelector(".d-editor-preview"), {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: true,
+    });
+
+    return observer;
   },
 });

@@ -60,10 +60,6 @@ export default RestModel.extend({
           return;
         }
 
-        if (result.no_results_help) {
-          this.set("noContentHelp", result.no_results_help);
-        }
-
         if (!result.drafts) {
           return;
         }

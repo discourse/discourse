@@ -598,29 +598,11 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.groups,
 .badges,
 .web-hook-container {
-  .form-horizontal {
-    & > div {
-      margin-bottom: 20px;
-    }
-    .d-editor-textarea-wrapper {
-      max-width: 60%;
-      .d-editor-button-bar {
-        overflow: hidden;
-      }
-    }
-    input,
-    textarea,
-    select,
-    .select-box {
-      width: 350px;
-    }
-    input[type="checkbox"],
-    input[type="radio"] {
-      width: 20px;
-    }
+  input[type="text"],
+  textarea {
+    min-width: 350px;
   }
 }
 
@@ -1003,3 +985,4 @@ a.inline-editable-field {
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
+@import "common/admin/mini_profiler";

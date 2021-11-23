@@ -303,14 +303,24 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    guardian.ensure_can_delete!(post)
+
+    force_destroy = false
+    if params[:force_destroy].present?
+      if !guardian.can_permanently_delete?(post)
+        return render_json_error post.cannot_permanently_delete_reason(current_user), status: 403
+      end
+
+      force_destroy = true
+    else
+      guardian.ensure_can_delete!(post)
+    end
 
     unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
-    destroyer = PostDestroyer.new(current_user, post, context: params[:context])
+    destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
     destroyer.destroy
 
     render body: nil
@@ -766,7 +776,7 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     if recipients = result[:target_usernames]
-      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true, drop_from: '2.9.0')
     else
       recipients = result[:target_recipients]
     end

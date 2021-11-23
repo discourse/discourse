@@ -287,11 +287,6 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
-    Discourse.deprecate("Editable group custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
-    DiscoursePluginRegistry.register_editable_group_custom_field(custom_field_name, plugin)
-  end
-
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
   end
@@ -692,7 +687,6 @@ class Group < ActiveRecord::Base
     has_webhooks = WebHook.active_web_hooks(:group_user)
     payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
     group_user.destroy
-    user.update_attribute(:primary_group_id, nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
     WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
       id: group_user.id,
@@ -980,23 +974,26 @@ class Group < ActiveRecord::Base
         /*where*/
       SQL
 
-      builder = DB.build(sql)
-      builder.where(<<~SQL, id: id)
-        id IN (
-          SELECT user_id
-          FROM group_users
-          WHERE group_id = :id
-        )
-      SQL
+      [:primary_group_id, :flair_group_id].each do |column|
+        builder = DB.build(sql)
+        builder.where(<<~SQL, id: id)
+          id IN (
+            SELECT user_id
+            FROM group_users
+            WHERE group_id = :id
+          )
+        SQL
 
-      if primary_group
-        builder.set("primary_group_id = :id")
-      else
-        builder.set("primary_group_id = NULL")
-        builder.where("primary_group_id = :id")
+        if primary_group
+          builder.set("#{column} = :id")
+          builder.where("#{column} IS NULL") if column == :flair_group_id
+        else
+          builder.set("#{column} = NULL")
+          builder.where("#{column} = :id")
+        end
+
+        builder.exec
       end
-
-      builder.exec
     end
   end
 

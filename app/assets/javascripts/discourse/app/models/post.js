@@ -208,6 +208,8 @@ const Post = RestModel.extend({
         deleted_at: new Date(),
         deleted_by: deletedBy,
         can_delete: false,
+        can_permanently_delete:
+          this.siteSettings.can_permanently_delete && deletedBy.admin,
         can_recover: true,
       });
     } else {
@@ -217,8 +219,9 @@ const Post = RestModel.extend({
           : "post.deleted_by_author_simple";
       promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
-          cooked: cooked,
+          cooked,
           can_delete: false,
+          can_permanently_delete: false,
           version: this.version + 1,
           can_recover: true,
           can_edit: false,
@@ -249,10 +252,10 @@ const Post = RestModel.extend({
     }
   },
 
-  destroy(deletedBy) {
+  destroy(deletedBy, opts) {
     return this.setDeletedState(deletedBy).then(() => {
       return ajax("/posts/" + this.id, {
-        data: { context: window.location.pathname },
+        data: { context: window.location.pathname, ...opts },
         type: "DELETE",
       });
     });
@@ -308,13 +311,17 @@ const Post = RestModel.extend({
     this.setProperties({
       "topic.bookmarked": true,
       bookmarked: true,
-      bookmark_reminder_at: data.reminderAt,
-      bookmark_reminder_type: data.reminderType,
-      bookmark_auto_delete_preference: data.autoDeletePreference,
+      bookmark_reminder_at: data.reminder_at,
+      bookmark_auto_delete_preference: data.auto_delete_preference,
       bookmark_name: data.name,
       bookmark_id: data.id,
     });
     this.topic.incrementProperty("bookmarksWereChanged");
+    this.appEvents.trigger("bookmarks:changed", data, {
+      target: "post",
+      targetId: this.id,
+    });
+    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
     this.appEvents.trigger("page:bookmark-post-toggled", this);
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   },
@@ -322,26 +329,60 @@ const Post = RestModel.extend({
   deleteBookmark(bookmarked) {
     this.set("topic.bookmarked", bookmarked);
     this.clearBookmark();
-    this.topic.incrementProperty("bookmarksWereChanged");
-    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   clearBookmark() {
     this.setProperties({
       bookmark_reminder_at: null,
-      bookmark_reminder_type: null,
       bookmark_name: null,
       bookmark_id: null,
       bookmarked: false,
       bookmark_auto_delete_preference: null,
     });
     this.topic.incrementProperty("bookmarksWereChanged");
+    this.appEvents.trigger("bookmarks:changed", null, {
+      target: "post",
+      targetId: this.id,
+    });
+    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   updateActionsSummary(json) {
     if (json && json.id === this.id) {
       json = Post.munge(json);
       this.set("actions_summary", json.actions_summary);
+    }
+  },
+
+  updateLikeCount(count) {
+    let current_actions_summary = this.get("actions_summary");
+    let likeActionID = Site.current().post_action_types.find(
+      (a) => a.name_key === "like"
+    ).id;
+
+    if (!this.actions_summary.find((entry) => entry.id === likeActionID)) {
+      let json = Post.munge({
+        id: this.id,
+        actions_summary: [
+          {
+            id: likeActionID,
+            count,
+          },
+        ],
+      });
+      this.set(
+        "actions_summary",
+        Object.assign(current_actions_summary, json.actions_summary)
+      );
+      this.set("actionByName", json.actionByName);
+      this.set("likeAction", json.likeAction);
+    } else {
+      this.actions_summary.find(
+        (entry) => entry.id === likeActionID
+      ).count = count;
+      this.actionByName["like"] = count;
+      this.likeAction.count = count;
     }
   },
 

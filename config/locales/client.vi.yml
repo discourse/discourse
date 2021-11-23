@@ -93,6 +93,7 @@ vi:
       previous_month: "Tháng trước"
       next_month: "Tháng sau"
       placeholder: ngày
+      to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "đăng #%{postNumber}"
@@ -286,6 +287,8 @@ vi:
         confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_categories:
+      other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unseen:
@@ -1344,22 +1347,19 @@ vi:
         invite:
           new_title: "Tạo lời mời"
           edit_title: "Chỉnh sửa lời mời"
-          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này"
+          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này:"
           copy_link: "sao chép liên kết"
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
-          restrict_email: "Giới hạn đến một địa chỉ email"
           max_redemptions_allowed: "Sử dụng tối đa"
           add_to_groups: "Thêm vào nhóm"
-          invite_to_topic: "Đến chủ đề này"
           expires_at: "Hết hạn sau"
           custom_message: "Tin nhắn cá nhân tùy chọn"
           send_invite_email: "Lưu và Gửi Email"
           save_invite: "Lưu lời mời"
           invite_saved: "Đã lưu lời mời."
-          invite_copied: "Đã sao chép liên kết mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
@@ -1764,7 +1764,6 @@ vi:
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
-      title: "Hoặc nhất Ctrl+Enter"
       users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
@@ -1896,6 +1895,9 @@ vi:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - hoàn thành"
+      dismiss_confirmation:
+        dismiss: "Hủy bỏ"
+        cancel: "Hủy"
       group_message_summary:
         other: "%{count} thư trong %{group_name} hộp thư đến của bạn"
       popup:
@@ -1952,8 +1954,8 @@ vi:
       too_short: "Từ khoá tìm kiếm của bạn quá ngắn."
       result_count:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
-      title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
-      full_page_title: "tìm kiếm chủ đề hoặc bài đăng"
+      title: "Tìm kiếm"
+      full_page_title: "Tìm kiếm"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
       post_format: "#%{post_number} bởi %{username}"
@@ -1965,6 +1967,11 @@ vi:
       search_google: "Hãy thử tìm kiếm bằng Google để thay thế:"
       search_google_button: "G"
       search_button: "Tìm kiếm"
+      categories: "Chuyên mục"
+      tags: "Thẻ"
+      type:
+        users: "Người dùng"
+        categories: "Chuyên mục"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"
@@ -1972,7 +1979,6 @@ vi:
         topic: "Tìm trong chủ đề này"
         private_messages: "Tìm tin nhắn"
       advanced:
-        title: Tìm kiếm nâng cao
         posted_by:
           label: Gửi bởi
         in_category:
@@ -2025,7 +2031,6 @@ vi:
           placeholder: tối thiểu
         max_views:
           placeholder: tối đa
-    hamburger_menu: "đi đến danh sách chủ đề hoặc danh mục khác"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
@@ -2174,6 +2179,7 @@ vi:
         publish_to: "Xuất bản tới:"
         when: "Khi:"
         time_frame_required: "Vui lòng chọn một khung thời gian"
+        duration: "Thời lượng"
       auto_update_input:
         none: "Chọn khung thời gian"
         now: "Bây giờ"
@@ -2470,6 +2476,7 @@ vi:
           other: "Bạn đã chọn <b>%{count}</b> bài viết."
     post:
       quote_reply: "Trích dẫn"
+      quote_edit: "Sửa"
       quote_share: "Chia sẻ"
       edit_reason: "Lý do: "
       post_number: "bài viết %{number}"
@@ -2548,6 +2555,7 @@ vi:
             other: "Có, và tất cả %{count} câu trả lời"
           just_the_post: "Không, chỉ xóa chủ đề"
         admin: "quản lý bài viết"
+        permanently_delete: "Xóa vĩnh viễn"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
         convert_to_moderator: "Thêm màu Nhân viên"
@@ -3081,6 +3089,8 @@ vi:
           name: Khác
         posting:
           name: Gửi bài
+    download_calendar:
+      download: "Tải xuống"
     tagging:
       all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
@@ -3406,7 +3416,6 @@ vi:
         delete: Xóa vĩnh viễn
         not_shown_again: Khóa này sẽ không được hiển thị lại. Đảm bảo bạn chụp một bản sao trước khi tiếp tục.
         continue: Tiếp tục
-        use_global_key: Khóa toàn cầu (cho phép tất cả các hành động)
         scopes:
           description: |
             Khi sử dụng phạm vi, bạn có thể hạn chế khóa API đối với một tập hợp các điểm cuối cụ thể.
@@ -3774,12 +3783,8 @@ vi:
           color_definitions:
             text: "Màu sắc"
             title: "Nhập màu tùy chỉnh (chỉ dành cho người dùng nâng cao)"
-          head_tag:
-            text: "</head>"
-            title: "HTML sẻ thêm trước thẻ </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML sẽ thêm trước thẻ </body>"
+            text: "Thân"
           yaml:
             text: "YAML"
             title: "Xác định cài đặt chủ đề ở định dạng YAML"
@@ -4536,7 +4541,6 @@ vi:
           replace_owners: Xóa huy hiệu khỏi chủ sở hữu trước đó
       emoji:
         title: "Emoji"
-        help: "Thêm emoji mới có sẵn cho tất cả mọi người. (MẸO: kéo & thả nhiều file cùng lúc)"
         add: "Thêm emoji mới"
         uploading: "Đang tải lên..."
         name: "Tên"
@@ -4546,7 +4550,6 @@ vi:
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"
-        sample: "Sử dụng mã HTML sau vào website để tạo và nhúng các chủ đề. Thay thế <b>REPLACE_ME</b> với Canonical URL của trang bạn muốn nhúng."
         title: "Nhúng"
         host: "Cho phép Host"
         class_name: "Tên lớp"

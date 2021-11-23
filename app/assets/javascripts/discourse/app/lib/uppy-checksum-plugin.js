@@ -1,5 +1,7 @@
 import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
 import { Promise } from "rsvp";
+import { HUGE_FILE_THRESHOLD_BYTES } from "discourse/mixins/uppy-upload";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class UppyChecksum extends UploadPreProcessorPlugin {
   static pluginId = "uppy-checksum";
@@ -32,15 +34,22 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
     return true;
   }
 
+  @bind
   _generateChecksum(fileIds) {
     if (!this._canUseSubtleCrypto()) {
-      return Promise.resolve();
+      return this._skipAll(fileIds, true);
     }
 
     let promises = fileIds.map((fileId) => {
       let file = this._getFile(fileId);
-
       this._emitProgress(file);
+
+      if (file.size > HUGE_FILE_THRESHOLD_BYTES) {
+        this._consoleWarn(
+          "The file provided is too large to checksum, skipping."
+        );
+        return this._skip(file);
+      }
 
       return file.data.arrayBuffer().then((arrayBuffer) => {
         return window.crypto.subtle
@@ -78,14 +87,14 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
   }
 
   _hasCryptoCipher() {
-    return window.crypto && window.crypto.subtle && window.crypto.subtle.digest;
+    return window.crypto?.subtle?.digest;
   }
 
   install() {
-    this._install(this._generateChecksum.bind(this));
+    this._install(this._generateChecksum);
   }
 
   uninstall() {
-    this._uninstall(this._generateChecksum.bind(this));
+    this._uninstall(this._generateChecksum);
   }
 }

@@ -133,6 +133,7 @@ tbody {
   border-top: 3px solid var(--primary-low);
 }
 
+.topic-list-item,
 tr {
   border-bottom: 1px solid var(--primary-low);
   &.highlighted {
@@ -174,7 +175,8 @@ input[type="submit"] {
   > .select-kit,
   > input[type="text"],
   > label,
-  > .btn {
+  > .btn,
+  > .d-date-input {
     margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
     margin-right: 0.5em;
     &:last-child {

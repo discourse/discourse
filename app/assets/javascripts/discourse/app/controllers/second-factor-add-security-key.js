@@ -73,7 +73,7 @@ export default Controller.extend(ModalFunctionality, {
           name: this.model.username_lower,
         },
         pubKeyCredParams: this.supported_algorithms.map((alg) => {
-          return { type: "public-key", alg: alg };
+          return { type: "public-key", alg };
         }),
         excludeCredentials: this.existing_active_credential_ids.map(
           (credentialId) => {

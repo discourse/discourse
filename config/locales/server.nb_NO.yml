@@ -600,18 +600,9 @@ nb_NO:
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
   user_activity:
-    no_default:
-      self: "Du har ingen aktivitet enda."
-      others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       others: "Ingen bokmerker."
-    no_likes_given:
-      self: "Du har ikke likt noen innlegg."
-      others: "Ingen likte innlegg. "
-    no_replies:
-      self: "Du har ikke svart på noen innlegg."
-      others: "Ingen svar."
     no_drafts:
       self: "Du har ingen utkast; når du begynner å forfatte et svar på et emne vil det automatisk lagres som et nytt utkast."
   topic_flag_types:
@@ -1163,6 +1154,10 @@ nb_NO:
       subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
     user_mentioned_pm:
       subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
     user_posted_pm:
       title: "Bruker opprettet privat samtale"
       subject_template: "[%{email_prefix}] [privat samtale] %{topic_title}"
@@ -1504,6 +1499,7 @@ nb_NO:
           title: "Slett bruker"
       reject:
         title: "Avvis"
+  fallback_username: "bruker"
   activemodel:
     errors:
       <<: *errors

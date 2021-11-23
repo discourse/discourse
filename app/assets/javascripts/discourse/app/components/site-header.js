@@ -183,16 +183,21 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const offset = info.offset();
+      const headerRect = header.getBoundingClientRect(),
+        headerOffset = headerRect.top + headerRect.height,
+        doc = document.documentElement;
       if (offset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
+          doc.style.setProperty("--header-offset", `${headerOffset}px`);
         }
       } else {
         if (this.dockedHeader) {
           document.body.classList.remove("docked");
           this.dockedHeader = false;
         }
+        doc.style.setProperty("--header-offset", `${headerOffset}px`);
       }
     },
 

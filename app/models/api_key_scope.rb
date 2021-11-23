@@ -17,6 +17,9 @@ class ApiKeyScope < ActiveRecord::Base
       return @default_mappings unless @default_mappings.nil?
 
       mappings = {
+        global: {
+          read: { methods: %i[get] }
+        },
         topics: {
           write: { actions: %w[posts#create], params: %i[topic_id] },
           read: {
@@ -31,6 +34,9 @@ class ApiKeyScope < ActiveRecord::Base
         },
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
+        },
+        uploads: {
+          create: { actions: %w[uploads#create] }
         },
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
@@ -48,12 +54,7 @@ class ApiKeyScope < ActiveRecord::Base
         }
       }
 
-      mappings.each_value do |resource_actions|
-        resource_actions.each_value do |action_data|
-          action_data[:urls] = find_urls(action_data[:actions])
-        end
-      end
-
+      parse_resources!(mappings)
       @default_mappings = mappings
     end
 
@@ -62,33 +63,48 @@ class ApiKeyScope < ActiveRecord::Base
       return default_mappings if plugin_mappings.empty?
 
       default_mappings.deep_dup.tap do |mappings|
-
-        plugin_mappings.each do |resource|
-          resource.each_value do |resource_actions|
-            resource_actions.each_value do |action_data|
-              action_data[:urls] = find_urls(action_data[:actions])
-            end
-          end
-
-          mappings.deep_merge!(resource)
+        plugin_mappings.each do |plugin_mapping|
+          parse_resources!(plugin_mapping)
+          mappings.deep_merge!(plugin_mapping)
         end
       end
     end
 
-    def find_urls(actions)
-      Rails.application.routes.routes.reduce([]) do |memo, route|
-        defaults = route.defaults
-        action = "#{defaults[:controller].to_s}##{defaults[:action]}"
-        path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
-        api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
-        excluded_paths = %w[/new-topic /new-message /exception]
+    def parse_resources!(mappings)
+      mappings.each_value do |resource_actions|
+        resource_actions.each_value do |action_data|
+          action_data[:urls] = find_urls(actions: action_data[:actions], methods: action_data[:methods])
+        end
+      end
+    end
 
-        memo.tap do |m|
-          if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
-            m << "#{path} (#{route.verb})"
+    def find_urls(actions:, methods:)
+      action_urls = []
+      method_urls = []
+
+      if actions.present?
+        Rails.application.routes.routes.reduce([]) do |memo, route|
+          defaults = route.defaults
+          action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+          path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
+          api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
+          excluded_paths = %w[/new-topic /new-message /exception]
+
+          memo.tap do |m|
+            if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+              m << "#{path} (#{route.verb})"
+            end
           end
         end
       end
+
+      if methods.present?
+        methods.each do |method|
+          method_urls << "* (#{method})"
+        end
+      end
+
+      action_urls + method_urls
     end
   end
 

@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 export default {
   "/topics/private-messages/eviltrout.json": {
     users: [
@@ -46,6 +45,7 @@ export default {
           archived: false,
           notification_level: 3,
           bookmarked: false,
+          bookmarks: [],
           liked: false,
           views: 5,
           like_count: 0,

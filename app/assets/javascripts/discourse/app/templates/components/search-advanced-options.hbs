@@ -1,170 +1,188 @@
-{{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+<summary>
+  {{i18n "search.advanced.title"}}
+</summary>
+<div class="search-advanced-filters">
+  <div class="search-advanced-options">
+    {{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
 
-<div class="container advanced-search-posted-by-group">
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-posted-by">
-      {{i18n "search.advanced.posted_by.label"}}
-    </label>
-    <div class="controls">
-      {{user-chooser
-        id="search-posted-by"
-        value=searchedTerms.username
-        onChange=(action "onChangeSearchTermForUsername")
-        options=(hash
-          maximum=1
-          excludeCurrentUser=false
-        )
-      }}
-    </div>
-  </div>
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
-    <div class="controls">
-      {{search-advanced-category-chooser
-        id="search-in-category"
-        value=searchedTerms.category.id
-        onChange=(action "onChangeSearchTermForCategory")
-      }}
-    </div>
-  </div>
-</div>
-
-{{#if siteSettings.tagging_enabled}}
-  <div class="container advanced-search-tag-group">
-    <div class="control-group">
-      <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
+    <div class="control-group advanced-search-category">
+      <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
       <div class="controls">
-        {{tag-chooser
-          id="search-with-tags"
-          tags=searchedTerms.tags
-          allowCreate=false
-          everyTag=true
-          unlimitedTagCount=true
-          onChange=(action "onChangeSearchTermForTags")
+        {{search-advanced-category-chooser
+          id="search-in-category"
+          value=searchedTerms.category.id
+          onChange=(action "onChangeSearchTermForCategory")
         }}
-        <section class="field">
-          <label>
-            {{input
-              type="checkbox"
-              class="all-tags"
-              checked=searchedTerms.special.all_tags
-              click=(action "onChangeSearchTermForAllTags" value="target.checked")
-            }}
-            {{i18n "search.advanced.filters.all_tags"}}
-          </label>
-        </section>
       </div>
     </div>
-  </div>
-{{/if}}
 
-<div class="container advanced-search-topics-posts-group">
-  <div class="control-group pull-left">
-    <div class="controls">
-      <fieldset class="grouped-control">
-        <legend class="grouped-control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</legend>
+    {{#if siteSettings.tagging_enabled}}
+      <div class="control-group advanced-search-tags">
+        <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
+        <div class="controls">
+          {{tag-chooser
+            id="search-with-tags"
+            tags=searchedTerms.tags
+            allowCreate=false
+            everyTag=true
+            unlimitedTagCount=true
+            onChange=(action "onChangeSearchTermForTags")
+            options=(hash
+              headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
+            )
+          }}
+          {{#if showAllTagsCheckbox}}
+            <section class="field">
+              <label>
+                {{input
+                  type="checkbox"
+                  class="all-tags"
+                  checked=searchedTerms.special.all_tags
+                  click=(action "onChangeSearchTermForAllTags" value="target.checked")
+                }}
+                {{i18n "search.advanced.filters.all_tags"}}
+              </label>
+            </section>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
 
-        {{#if currentUser}}
-          <div class="grouped-control-field">
-            {{input
-              id="matching-title-only"
-              type="checkbox"
-              class="in-title"
-              checked=searchedTerms.special.in.title
-              click=(action "onChangeSearchTermForSpecialInTitle" value="target.checked")
-            }}
-            <label for="matching-title-only">
-              {{i18n "search.advanced.filters.title"}}
-            </label>
-          </div>
+    <div class="control-group advanced-search-topics-posts">
+      <div class="controls">
+        <fieldset class="grouped-control">
+          <legend class="grouped-control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</legend>
 
-          <div class="grouped-control-field">
-            {{input
-              id="matching-liked"
-              type="checkbox"
-              class="in-likes"
-              checked=searchedTerms.special.in.likes
-              click=(action "onChangeSearchTermForSpecialInLikes" value="target.checked")
-            }}
-            <label for="matching-liked">{{i18n "search.advanced.filters.likes"}}</label>
-          </div>
+          {{#if currentUser}}
+            <div class="grouped-control-field">
+              {{input
+                id="matching-title-only"
+                type="checkbox"
+                class="in-title"
+                checked=searchedTerms.special.in.title
+                click=(action "onChangeSearchTermForSpecialInTitle" value="target.checked")
+              }}
+              <label for="matching-title-only">
+                {{i18n "search.advanced.filters.title"}}
+              </label>
+            </div>
 
-          <div class="grouped-control-field">
-            {{input
-              id="matching-in-messages"
-              type="checkbox"
-              class="in-private"
-              checked=searchedTerms.special.in.personal
-              click=(action "onChangeSearchTermForSpecialInPersonal" value="target.checked")
-            }}
-            <label for="matching-in-messages">{{i18n "search.advanced.filters.private"}}</label>
-          </div>
+            <div class="grouped-control-field">
+              {{input
+                id="matching-liked"
+                type="checkbox"
+                class="in-likes"
+                checked=searchedTerms.special.in.likes
+                click=(action "onChangeSearchTermForSpecialInLikes" value="target.checked")
+              }}
+              <label for="matching-liked">{{i18n "search.advanced.filters.likes"}}</label>
+            </div>
 
-          <div class="grouped-control-field">
-            {{input
-              id="matching-seen"
-              type="checkbox"
-              class="in-seen"
-              checked=searchedTerms.special.in.seen
-              click=(action "onChangeSearchTermForSpecialInSeen" value="target.checked")
-            }}
-            <label for="matching-seen">{{i18n "search.advanced.filters.seen"}}</label>
-          </div>
-        {{/if}}
+            <div class="grouped-control-field">
+              {{input
+                id="matching-in-messages"
+                type="checkbox"
+                class="in-private"
+                checked=searchedTerms.special.in.personal
+                click=(action "onChangeSearchTermForSpecialInPersonal" value="target.checked")
+              }}
+              <label for="matching-in-messages">{{i18n "search.advanced.filters.private"}}</label>
+            </div>
+
+            <div class="grouped-control-field">
+              {{input
+                id="matching-seen"
+                type="checkbox"
+                class="in-seen"
+                checked=searchedTerms.special.in.seen
+                click=(action "onChangeSearchTermForSpecialInSeen" value="target.checked")
+              }}
+              <label for="matching-seen">{{i18n "search.advanced.filters.seen"}}</label>
+            </div>
+          {{/if}}
+
+          {{combo-box
+            id="in"
+            valueProperty="value"
+            content=inOptions
+            value=searchedTerms.in
+            onChange=(action "onChangeSearchTermForIn")
+            options=(hash
+              none="user.locale.any"
+              clearable=true
+            )
+          }}
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="control-group advanced-search-topic-status">
+      <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
+      <div class="controls">
         {{combo-box
-          id="in"
+          id="search-status-options"
           valueProperty="value"
-          content=inOptions
-          value=searchedTerms.in
-          onChange=(action "onChangeSearchTermForIn")
+          content=statusOptions
+          value=searchedTerms.status
+          onChange=(action "onChangeSearchTermForStatus")
           options=(hash
             none="user.locale.any"
+            headerAriaLabel=(i18n "search.advanced.statuses.label")
             clearable=true
           )
         }}
-      </fieldset>
+      </div>
     </div>
-  </div>
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
-    <div class="controls">
-      {{combo-box
-        id="search-status-options"
-        valueProperty="value"
-        content=statusOptions
-        value=searchedTerms.status
-        onChange=(action "onChangeSearchTermForStatus")
-        options=(hash
-          none="user.locale.any"
-          clearable=true
-        )
-      }}
-    </div>
-  </div>
-</div>
 
-<div class="container advanced-search-date-count-group">
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
-    <div class="controls full-search-dates">
-      {{combo-box
-        id="postTime"
-        valueProperty="value"
-        content=postTimeOptions
-        value=searchedTerms.time.when
-        onChange=(action "onChangeWhenTime")
-      }}
-      {{date-input
-        date=searchedTerms.time.days
-        onChange=(action "onChangeWhenDate")
-        id="search-post-date"
-      }}
+    <div class="control-group advanced-search-posted-by">
+      <label class="control-label" for="search-posted-by">
+        {{i18n "search.advanced.posted_by.label"}}
+      </label>
+      <div class="controls">
+        {{user-chooser
+          id="search-posted-by"
+          value=searchedTerms.username
+          onChange=(action "onChangeSearchTermForUsername")
+          options=(hash
+            headerAriaLabel=(i18n "search.advanced.posted_by.aria_label")
+            maximum=1
+            excludeCurrentUser=false
+          )
+        }}
+      </div>
     </div>
+
+    <div class="control-group advanced-search-posted-date">
+      <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
+      <div class="controls inline-form full-width">
+        {{combo-box
+          id="postTime"
+          valueProperty="value"
+          content=postTimeOptions
+          value=searchedTerms.time.when
+          onChange=(action "onChangeWhenTime")
+          options=(hash
+            headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
+          )
+        }}
+        {{date-input
+          date=searchedTerms.time.days
+          onChange=(action "onChangeWhenDate")
+          inputId="search-post-date"
+        }}
+      </div>
+    </div>
+
+    {{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
   </div>
 
-  <div class="count-group control-group pull-left">
-    <label class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</label>
-    <div class="count pull-left">
+  <details class="search-advanced-additional-options">
+    <summary>
+      {{i18n "search.advanced.additional_options.label"}}
+    </summary>
+    <div class="count-group control-group">
+      {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
+      <span class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</span>
       <div class="controls">
         {{input
           type="number"
@@ -173,12 +191,9 @@
           id="search-min-post-count"
           input=(action "onChangeSearchTermMinPostCount" value="target.value")
           placeholder=(i18n "search.advanced.post.min.placeholder")
+          aria-label=(i18n "search.advanced.post.min.aria_label")
         }}
-      </div>
-    </div>
-    <span class="count-dash">&mdash;</span>
-    <div class="count pull-right">
-      <div class="controls">
+        {{d-icon "arrows-alt-h"}}
         {{input
           type="number"
           value=(readonly searchedTerms.max_posts)
@@ -186,14 +201,14 @@
           id="search-max-post-count"
           input=(action "onChangeSearchTermMaxPostCount" value="target.value")
           placeholder=(i18n "search.advanced.post.max.placeholder")
+          aria-label=(i18n "search.advanced.post.max.aria_label")
         }}
       </div>
     </div>
-  </div>
 
-  <div class="count-group control-group pull-left">
-    <label class="control-label" for="search-min-views">{{i18n "search.advanced.views.label"}}</label>
-    <div class="count pull-left">
+    <div class="count-group control-group">
+      {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
+      <span class="control-label" for="search-min-views">{{i18n "search.advanced.views.label"}}</span>
       <div class="controls">
         {{input
           type="number"
@@ -202,12 +217,9 @@
           id="search-min-views"
           input=(action "onChangeSearchTermMinViews" value="target.value")
           placeholder=(i18n "search.advanced.min_views.placeholder")
+          aria-label=(i18n "search.advanced.post.min_views.aria_label")
         }}
-      </div>
-    </div>
-    <span class="count-dash">&mdash;</span>
-    <div class="count pull-right">
-      <div class="controls">
+        {{d-icon "arrows-alt-h"}}
         {{input
           type="number"
           value=(readonly searchedTerms.max_views)
@@ -215,10 +227,22 @@
           id="search-max-views"
           input=(action "onChangeSearchTermMaxViews" value="target.value")
           placeholder=(i18n "search.advanced.max_views.placeholder")
+          aria-label=(i18n "search.advanced.post.max_views.aria_label")
         }}
       </div>
     </div>
-  </div>
-</div>
+  </details>
 
-{{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+  {{#if site.mobileView}}
+    <div class="second-search-button">
+      {{d-button
+        action=search
+        icon="search"
+        label="search.search_button"
+        class="btn-primary search-cta"
+        ariaLabel="search.search_button"
+        disabled=searchButtonDisabled
+      }}
+    </div>
+  {{/if}}
+</div>

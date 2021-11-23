@@ -9,22 +9,41 @@ module Onebox
 
       matches_regexp(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/(?:p|tv)\/[a-zA-Z\d_-]+/)
       always_https
+      requires_iframe_origins "https://www.instagram.com"
 
       def clean_url
         url.scan(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/(?:p|tv)\/[a-zA-Z\d_-]+/).flatten.first
       end
 
       def data
-        oembed = get_oembed
-        raise "No oEmbed data found. Ensure 'facebook_app_access_token' is valid" if oembed.data.empty?
+        @data ||= begin
+          oembed = get_oembed
+          raise "No oEmbed data found. Ensure 'facebook_app_access_token' is valid" if oembed.data.empty?
 
-        {
-          link: clean_url.gsub("/#{oembed.author_name}/", "/"),
-          title: "@#{oembed.author_name}",
-          image: oembed.thumbnail_url,
-          description: Onebox::Helpers.truncate(oembed.title, 250),
-        }
+          {
+            link: clean_url.gsub("/#{oembed.author_name}/", "/") + '/embed',
+            title: "@#{oembed.author_name}",
+            image: oembed.thumbnail_url,
+            image_width: oembed.data[:thumbnail_width],
+            image_height: oembed.data[:thumbnail_height],
+            description: Onebox::Helpers.truncate(oembed.title, 250),
+          }
+        end
+      end
 
+      def placeholder_html
+        ::Onebox::Helpers.image_placeholder_html
+      end
+
+      def to_html
+        <<-HTML
+          <iframe
+            src="#{data[:link]}"
+            width="#{data[:image_width]}"
+            height="#{data[:image_height].to_i + 98}"
+            frameborder="0"
+          ></iframe>
+        HTML
       end
 
       protected

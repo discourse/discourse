@@ -26,7 +26,8 @@ class CategoriesController < ApplicationController
     category_options = {
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
-      include_topics: include_topics(parent_category)
+      include_topics: include_topics(parent_category),
+      include_subcategories: params[:include_subcategories] == "true"
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -147,9 +148,22 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_edit!(@category)
 
     json_result(@category, serializer: CategorySerializer) do |cat|
+      old_category_params = category_params.dup
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
       category_params.delete(:position)
+
+      old_custom_fields = cat.custom_fields.dup
+      if category_params[:custom_fields]
+        category_params[:custom_fields].each do |key, value|
+          if value.present?
+            cat.custom_fields[key] = value
+          else
+            cat.custom_fields.delete(key)
+          end
+        end
+      end
+      category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
       category_params[:email_in] = nil if category_params[:email_in]&.blank?
@@ -159,7 +173,12 @@ class CategoriesController < ApplicationController
 
       if result = cat.update(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
-          @staff_action_logger.log_category_settings_change(@category, category_params, old_permissions)
+          @staff_action_logger.log_category_settings_change(
+            @category,
+            old_category_params,
+            old_permissions: old_permissions,
+            old_custom_fields: old_custom_fields
+          )
         end
       end
 
@@ -260,7 +279,9 @@ class CategoriesController < ApplicationController
     if topics_filter == :latest
       result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
     elsif topics_filter == :top
-      result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+      result.topic_list = TopicQuery.new(current_user, topic_options).list_top_for(
+        SiteSetting.top_page_default_timeframe.to_sym
+      )
     end
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)

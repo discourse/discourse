@@ -4,30 +4,44 @@ class PresenceController < ApplicationController
   skip_before_action :check_xhr
   before_action :ensure_logged_in, only: [:update]
 
+  MAX_CHANNELS_PER_REQUEST ||= 50
+
   def get
-    name = params.require(:channel)
+    names = params.require(:channels)
+    raise Discourse::InvalidParameters.new(:channels) if !(names.is_a?(Array) && names.all? { |n| n.is_a? String })
 
-    begin
+    names.uniq!
+
+    raise Discourse::InvalidParameters.new("Too many channels") if names.length > MAX_CHANNELS_PER_REQUEST
+
+    user_group_ids = if current_user
+      GroupUser.where(user_id: current_user.id).pluck("group_id")
+    else
+      []
+    end
+
+    result = {}
+    names.each do |name|
       channel = PresenceChannel.new(name)
+      if channel.can_view?(user_id: current_user&.id, group_ids: user_group_ids)
+        result[name] = PresenceChannelStateSerializer.new(channel.state, root: nil)
+      else
+        result[name] = nil
+      end
     rescue PresenceChannel::NotFound
-      raise Discourse::NotFound
+      result[name] = nil
     end
 
-    if !channel.can_view?(user_id: current_user&.id)
-      # Do not reveal existence of channel
-      raise Discourse::NotFound
-    end
-
-    state = channel.state
-    render json: state, serializer: PresenceChannelStateSerializer, root: nil
+    render json: result
   end
 
   def update
     client_id = params[:client_id]
     raise Discourse::InvalidParameters.new(:client_id) if !client_id.is_a?(String) || client_id.blank?
 
-    # JS client is designed to throttle to one request every 5 seconds
-    RateLimiter.new(nil, "update-presence-#{current_user.id}-#{client_id}}", 3, 10.seconds).performed!
+    # JS client is designed to throttle to one request per second
+    # When no changes are being made, it makes one request every 30 seconds
+    RateLimiter.new(nil, "update-presence-#{current_user.id}", 20, 10.seconds).performed!
 
     present_channels = params[:present_channels]
     if present_channels && !(present_channels.is_a?(Array) && present_channels.all? { |c| c.is_a? String })
@@ -39,7 +53,7 @@ class PresenceController < ApplicationController
       raise Discourse::InvalidParameters.new(:leave_channels)
     end
 
-    if present_channels && present_channels.length > 50
+    if present_channels && present_channels.length > MAX_CHANNELS_PER_REQUEST
       raise Discourse::InvalidParameters.new("Too many present_channels")
     end
 

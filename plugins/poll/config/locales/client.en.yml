@@ -44,6 +44,10 @@ en:
         title: "Display the poll results"
         label: "Show results"
 
+      remove-vote:
+        title: "Remove your vote"
+        label: "Remove vote"
+
       hide-results:
         title: "Back to your votes"
         label: "Show vote"

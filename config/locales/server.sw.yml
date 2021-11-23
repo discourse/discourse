@@ -481,17 +481,8 @@ sw:
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
   user_activity:
-    no_default:
-      self: "Bado hauna shughuli."
-      others: "Hakuna shughuli."
     no_bookmarks:
       others: "Hakuna mialamisho."
-    no_likes_given:
-      self: "Haujapenda machapisho yoyote."
-      others: "Hakuna machapisho yaliyopendwa."
-    no_replies:
-      self: "Haujajibu machapisho yoyote."
-      others: "Hakuna majibu."
   topic_flag_types:
     spam:
       title: "Barua Taka"
@@ -798,7 +789,6 @@ sw:
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
-    enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
     markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali ni viungo."
@@ -898,7 +888,6 @@ sw:
     allowed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
     topic_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     user_profile_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
-    max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."
     num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
     auto_silence_fast_typers_max_trust_level: "Kiwango cha juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
@@ -1571,6 +1560,26 @@ sw:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Mtumiaji Amechapisha"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2016,7 +2025,6 @@ sw:
             label: "Jina la Jumuia"
             placeholder: "Sehemu ya Jeni ya Kuburudika"
           site_description:
-            label: "Elezea jamii yako ndani ya sentensi moja"
             placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
       introduction:
         title: "Utambulisho"
@@ -2127,6 +2135,7 @@ sw:
           title: "Futa Mtumiaji"
       reject:
         title: "Kataa"
+  fallback_username: "Mtumiaji"
   activemodel:
     errors:
       <<: *errors

@@ -217,11 +217,8 @@ class MultipartUploader {
     this.isPaused = true;
   }
 
-  abort(opts = {}) {
-    const really = opts.really || false;
-    if (!really) return this.pause();
-
-    _classPrivateFieldLooseBase(this, _abortUpload)[_abortUpload]();
+  abort(opts = undefined) {
+    if (opts != null && opts.really) _classPrivateFieldLooseBase(this, _abortUpload)[_abortUpload]();else this.pause();
   }
 
 }
@@ -411,14 +408,15 @@ function _retryable2({
 
 async function _prepareUploadParts2(candidates) {
   this.lockedCandidatesForBatch.push(...candidates);
-  const result = await this.options.prepareUploadParts({
-    key: this.key,
-    uploadId: this.uploadId,
-    partNumbers: candidates.map(index => index + 1)
+  const result = await _classPrivateFieldLooseBase(this, _retryable)[_retryable]({
+    attempt: () => this.options.prepareUploadParts({
+      key: this.key,
+      uploadId: this.uploadId,
+      partNumbers: candidates.map(index => index + 1)
+    })
   });
-  const valid = typeof (result == null ? void 0 : result.presignedUrls) === 'object';
 
-  if (!valid) {
+  if (typeof (result == null ? void 0 : result.presignedUrls) !== 'object') {
     throw new TypeError('AwsS3/Multipart: Got incorrect result from `prepareUploadParts()`, expected an object `{ presignedUrls }`.');
   }
 
@@ -499,6 +497,7 @@ function _uploadPartBytes2(index, url, headers) {
   xhr.responseType = 'text';
 
   function cleanup() {
+    // eslint-disable-next-line no-use-before-define
     signal.removeEventListener('abort', onabort);
   }
 
@@ -526,7 +525,10 @@ function _uploadPartBytes2(index, url, headers) {
       error.source = ev.target;
       defer.reject(error);
       return;
-    }
+    } // This avoids the net::ERR_OUT_OF_MEMORY in Chromium Browsers.
+
+
+    this.chunks[index] = null;
 
     _classPrivateFieldLooseBase(this, _onPartProgress)[_onPartProgress](index, body.size, body.size); // NOTE This must be allowed by CORS.
 
@@ -589,14 +591,12 @@ function _onError2(err) {
 }
 
 module.exports = MultipartUploader;
-},{"@uppy/utils/lib/AbortController":22,"@uppy/utils/lib/delay":28}],3:[function(require,module,exports){
+},{"@uppy/utils/lib/AbortController":23,"@uppy/utils/lib/delay":29}],3:[function(require,module,exports){
 "use strict";
 
 var _class, _temp;
 
-const {
-  BasePlugin
-} = require('@uppy/core');
+const BasePlugin = require('@uppy/core/lib/BasePlugin');
 
 const {
   Socket,
@@ -1103,8 +1103,8 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
     this.uppy.removeUploader(this.upload);
   }
 
-}, _class.VERSION = "2.0.2", _temp);
-},{"./MultipartUploader":2,"@uppy/companion-client":12,"@uppy/core":17,"@uppy/utils/lib/EventTracker":23,"@uppy/utils/lib/RateLimitedQueue":26,"@uppy/utils/lib/emitSocketProgress":29,"@uppy/utils/lib/getSocketHost":40}],4:[function(require,module,exports){
+}, _class.VERSION = "2.1.1", _temp);
+},{"./MultipartUploader":2,"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41}],4:[function(require,module,exports){
 "use strict";
 
 var _getOptions, _addEventHandlerForFile, _addEventHandlerIfFileStillExists, _uploadLocalFile, _uploadRemoteFile;
@@ -1347,9 +1347,10 @@ function _uploadLocalFile2(file, current, total) {
       return reject(error);
     });
     xhr.open(opts.method.toUpperCase(), opts.endpoint, true); // IE10 does not allow setting `withCredentials` and `responseType`
-    // before `open()` is called.
+    // before `open()` is called. It’s important to set withCredentials
+    // to a boolean, otherwise React Native crashes
 
-    xhr.withCredentials = opts.withCredentials;
+    xhr.withCredentials = Boolean(opts.withCredentials);
 
     if (opts.responseType !== '') {
       xhr.responseType = opts.responseType;
@@ -1480,7 +1481,7 @@ function _uploadRemoteFile2(file) {
     return Promise.reject(err);
   }));
 }
-},{"@uppy/companion-client":12,"@uppy/utils/lib/EventTracker":23,"@uppy/utils/lib/NetworkError":24,"@uppy/utils/lib/ProgressTimeout":25,"@uppy/utils/lib/RateLimitedQueue":26,"@uppy/utils/lib/emitSocketProgress":29,"@uppy/utils/lib/getSocketHost":40,"@uppy/utils/lib/isNetworkError":44,"nanoid":52}],5:[function(require,module,exports){
+},{"@uppy/companion-client":12,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/NetworkError":25,"@uppy/utils/lib/ProgressTimeout":26,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41,"@uppy/utils/lib/isNetworkError":45,"nanoid":53}],5:[function(require,module,exports){
 "use strict";
 
 var _class, _client, _requests, _uploader, _handleUpload, _temp;
@@ -1517,9 +1518,7 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
  * This isn't as nicely modular as we'd like and requires us to maintain two copies of
  * the XHRUpload code, but at least it's not horrifically broken :)
  */
-const {
-  BasePlugin
-} = require('@uppy/core');
+const BasePlugin = require('@uppy/core/lib/BasePlugin');
 
 const {
   RateLimitedQueue,
@@ -1796,8 +1795,8 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
     this.uppy.removeUploader(_classPrivateFieldLooseBase(this, _handleUpload)[_handleUpload]);
   }
 
-}), _class.VERSION = "2.0.2", _temp);
-},{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core":17,"@uppy/utils/lib/RateLimitedQueue":26,"@uppy/utils/lib/settle":46}],6:[function(require,module,exports){
+}), _class.VERSION = "2.0.5", _temp);
+},{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/settle":47}],6:[function(require,module,exports){
 "use strict";
 
 /**
@@ -2141,7 +2140,7 @@ module.exports = (_temp = (_getPostResponseFunc = /*#__PURE__*/_classPrivateFiel
     })).then(_classPrivateFieldLooseBase(this, _getPostResponseFunc)[_getPostResponseFunc](skipPostResponse)).then(handleJSONResponse).catch(_classPrivateFieldLooseBase(this, _errorHandler)[_errorHandler](method, path));
   }
 
-}), _class.VERSION = "2.0.0", _class.defaultHeaders = {
+}), _class.VERSION = "2.0.3", _class.defaultHeaders = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
   'Uppy-Versions': `@uppy/companion-client=${_class.VERSION}`
@@ -2168,7 +2167,7 @@ function _errorHandler2(method, path) {
     return Promise.reject(err);
   };
 }
-},{"./AuthError":7,"@uppy/utils/lib/fetchWithNetworkError":30}],10:[function(require,module,exports){
+},{"./AuthError":7,"@uppy/utils/lib/fetchWithNetworkError":31}],10:[function(require,module,exports){
 'use strict';
 
 const RequestClient = require('./RequestClient');
@@ -2316,7 +2315,7 @@ module.exports = (_queued = /*#__PURE__*/_classPrivateFieldLooseKey("queued"), _
   }
 
 });
-},{"namespace-emitter":51}],12:[function(require,module,exports){
+},{"namespace-emitter":52}],12:[function(require,module,exports){
 'use strict';
 /**
  * Manages communications with Companion
@@ -2451,7 +2450,7 @@ module.exports = class BasePlugin {
   afterUpdate() {}
 
 };
-},{"@uppy/utils/lib/Translator":27}],15:[function(require,module,exports){
+},{"@uppy/utils/lib/Translator":28}],15:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -2618,22 +2617,9 @@ class UIPlugin extends BasePlugin {
 }
 
 module.exports = UIPlugin;
-},{"./BasePlugin":14,"@uppy/utils/lib/findDOMElement":31,"preact":54}],16:[function(require,module,exports){
-"use strict";
-
-module.exports = function getFileName(fileType, fileDescriptor) {
-  if (fileDescriptor.name) {
-    return fileDescriptor.name;
-  }
-
-  if (fileType.split('/')[0] === 'image') {
-    return `${fileType.split('/')[0]}.${fileType.split('/')[1]}`;
-  }
-
-  return 'noname';
-};
-},{}],17:[function(require,module,exports){
-"use strict";
+},{"./BasePlugin":14,"@uppy/utils/lib/findDOMElement":32,"preact":55}],16:[function(require,module,exports){
+/* global AggregateError */
+'use strict';
 
 let _Symbol$for, _Symbol$for2;
 
@@ -2643,7 +2629,6 @@ var id = 0;
 
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
 
-/* global AggregateError */
 const Translator = require('@uppy/utils/lib/Translator');
 
 const ee = require('namespace-emitter');
@@ -2673,11 +2658,7 @@ const getFileName = require('./getFileName');
 const {
   justErrorsLogger,
   debugLogger
-} = require('./loggers');
-
-const UIPlugin = require('./UIPlugin');
-
-const BasePlugin = require('./BasePlugin'); // Exported from here.
+} = require('./loggers'); // Exported from here.
 
 
 class RestrictionError extends Error {
@@ -2851,6 +2832,7 @@ class Uppy {
         noMoreFilesAllowed: 'Cannot add more files',
         noDuplicates: 'Cannot add the duplicate file \'%{fileName}\', it already exists',
         companionError: 'Connection with Companion failed',
+        authAborted: 'Authentication aborted',
         companionUnauthorizeHint: 'To unauthorize to your %{provider} account, please go to %{url}',
         failedToUpload: 'Failed to upload %{file}',
         noInternetConnection: 'No Internet connection',
@@ -2870,6 +2852,7 @@ class Uppy {
         loading: 'Loading...',
         authenticateWithTitle: 'Please authenticate with %{pluginName} to select files',
         authenticateWith: 'Connect to %{pluginName}',
+        signInWithGoogle: 'Sign in with Google',
         searchImages: 'Search for images',
         enterTextToSearch: 'Enter text to search for images',
         backToSearch: 'Back to Search',
@@ -4016,8 +3999,7 @@ class Uppy {
     });
   }
 
-} // Expose class constructor.
-
+}
 
 function _checkRestrictions2(file, files = this.getFiles()) {
   const {
@@ -4116,10 +4098,9 @@ function _checkRequiredMetaFields2(files) {
     hasOwnProperty
   } = Object.prototype;
   const errors = [];
-  const fileIDs = Object.keys(files);
 
-  for (let i = 0; i < fileIDs.length; i++) {
-    const file = this.getFile(fileIDs[i]);
+  for (const fileID of Object.keys(files)) {
+    const file = this.getFile(fileID);
 
     for (let i = 0; i < requiredMetaFields.length; i++) {
       if (!hasOwnProperty.call(file.meta, requiredMetaFields[i]) || file.meta[requiredMetaFields[i]] === '') {
@@ -4494,27 +4475,21 @@ function _removeUpload2(uploadID) {
   });
 }
 
-function _runUpload2(uploadID) {
-  const uploadData = this.getState().currentUploads[uploadID];
-  const restoreStep = uploadData.step;
+async function _runUpload2(uploadID) {
+  let {
+    currentUploads
+  } = this.getState();
+  let currentUpload = currentUploads[uploadID];
+  const restoreStep = currentUpload.step || 0;
   const steps = [..._classPrivateFieldLooseBase(this, _preProcessors)[_preProcessors], ..._classPrivateFieldLooseBase(this, _uploaders)[_uploaders], ..._classPrivateFieldLooseBase(this, _postProcessors)[_postProcessors]];
-  let lastStep = Promise.resolve();
-  steps.forEach((fn, step) => {
-    // Skip this step if we are restoring and have already completed this step before.
-    if (step < restoreStep) {
-      return;
-    }
 
-    lastStep = lastStep.then(() => {
-      const {
-        currentUploads
-      } = this.getState();
-      const currentUpload = currentUploads[uploadID];
-
+  try {
+    for (let step = restoreStep; step < steps.length; step++) {
       if (!currentUpload) {
-        return;
+        break;
       }
 
+      const fn = steps[step];
       const updatedUpload = { ...currentUpload,
         step
       };
@@ -4525,26 +4500,22 @@ function _runUpload2(uploadID) {
       }); // TODO give this the `updatedUpload` object as its only parameter maybe?
       // Otherwise when more metadata may be added to the upload this would keep getting more parameters
 
-      return fn(updatedUpload.fileIDs, uploadID); // eslint-disable-line consistent-return
-    }).then(() => null);
-  }); // Not returning the `catch`ed promise, because we still want to return a rejected
-  // promise from this method if the upload failed.
+      await fn(updatedUpload.fileIDs, uploadID); // Update currentUpload value in case it was modified asynchronously.
 
-  lastStep.catch(err => {
+      currentUploads = this.getState().currentUploads;
+      currentUpload = currentUploads[uploadID];
+    }
+  } catch (err) {
     this.emit('error', err);
 
     _classPrivateFieldLooseBase(this, _removeUpload)[_removeUpload](uploadID);
-  });
-  return lastStep.then(() => {
-    // Set result data.
-    const {
-      currentUploads
-    } = this.getState();
-    const currentUpload = currentUploads[uploadID];
 
-    if (!currentUpload) {
-      return;
-    } // Mark postprocessing step as complete if necessary; this addresses a case where we might get
+    throw err;
+  } // Set result data.
+
+
+  if (currentUpload) {
+    // Mark postprocessing step as complete if necessary; this addresses a case where we might get
     // stuck in the postprocessing UI while the upload is fully complete.
     // If the postprocessing steps do not do any work, they may not emit postprocessing events at
     // all, and never mark the postprocessing as complete. This is fine on its own but we
@@ -4554,8 +4525,6 @@ function _runUpload2(uploadID) {
     //
     // So, just in case an upload with postprocessing plugins *has* completed *without* emitting
     // postprocessing completion, we do it instead.
-
-
     currentUpload.fileIDs.forEach(fileID => {
       const file = this.getFile(fileID);
 
@@ -4566,50 +4535,71 @@ function _runUpload2(uploadID) {
     const files = currentUpload.fileIDs.map(fileID => this.getFile(fileID));
     const successful = files.filter(file => !file.error);
     const failed = files.filter(file => file.error);
-    this.addResultData(uploadID, {
+    await this.addResultData(uploadID, {
       successful,
       failed,
       uploadID
-    });
-  }).then(() => {
-    // Emit completion events.
-    // This is in a separate function so that the `currentUploads` variable
-    // always refers to the latest state. In the handler right above it refers
-    // to an outdated object without the `.result` property.
-    const {
-      currentUploads
-    } = this.getState();
+    }); // Update currentUpload value in case it was modified asynchronously.
 
-    if (!currentUploads[uploadID]) {
-      return;
-    }
+    currentUploads = this.getState().currentUploads;
+    currentUpload = currentUploads[uploadID];
+  } // Emit completion events.
+  // This is in a separate function so that the `currentUploads` variable
+  // always refers to the latest state. In the handler right above it refers
+  // to an outdated object without the `.result` property.
 
-    const currentUpload = currentUploads[uploadID];
-    const {
-      result
-    } = currentUpload;
+
+  let result;
+
+  if (currentUpload) {
+    result = currentUpload.result;
     this.emit('complete', result);
 
-    _classPrivateFieldLooseBase(this, _removeUpload)[_removeUpload](uploadID); // eslint-disable-next-line consistent-return
+    _classPrivateFieldLooseBase(this, _removeUpload)[_removeUpload](uploadID);
+  }
 
+  if (result == null) {
+    this.log(`Not setting result for an upload that has been removed: ${uploadID}`);
+  }
 
-    return result;
-  }).then(result => {
-    if (result == null) {
-      this.log(`Not setting result for an upload that has been removed: ${uploadID}`);
-    }
-
-    return result;
-  });
+  return result;
 }
 
-Uppy.VERSION = "2.0.1";
+Uppy.VERSION = "2.1.1";
+module.exports = Uppy;
+},{"./getFileName":17,"./loggers":19,"./supportsUploadProgress":20,"@transloadit/prettier-bytes":1,"@uppy/store-default":22,"@uppy/utils/lib/Translator":28,"@uppy/utils/lib/generateFileID":33,"@uppy/utils/lib/getFileNameAndExtension":39,"@uppy/utils/lib/getFileType":40,"lodash.throttle":50,"mime-match":51,"namespace-emitter":52,"nanoid":53}],17:[function(require,module,exports){
+"use strict";
+
+module.exports = function getFileName(fileType, fileDescriptor) {
+  if (fileDescriptor.name) {
+    return fileDescriptor.name;
+  }
+
+  if (fileType.split('/')[0] === 'image') {
+    return `${fileType.split('/')[0]}.${fileType.split('/')[1]}`;
+  }
+
+  return 'noname';
+};
+},{}],18:[function(require,module,exports){
+'use strict';
+
+const Uppy = require('./Uppy');
+
+const UIPlugin = require('./UIPlugin');
+
+const BasePlugin = require('./BasePlugin');
+
+const {
+  debugLogger
+} = require('./loggers');
+
 module.exports = Uppy;
 module.exports.Uppy = Uppy;
 module.exports.UIPlugin = UIPlugin;
 module.exports.BasePlugin = BasePlugin;
 module.exports.debugLogger = debugLogger;
-},{"./BasePlugin":14,"./UIPlugin":15,"./getFileName":16,"./loggers":18,"./supportsUploadProgress":19,"@transloadit/prettier-bytes":1,"@uppy/store-default":21,"@uppy/utils/lib/Translator":27,"@uppy/utils/lib/generateFileID":32,"@uppy/utils/lib/getFileNameAndExtension":38,"@uppy/utils/lib/getFileType":39,"lodash.throttle":49,"mime-match":50,"namespace-emitter":51,"nanoid":52}],18:[function(require,module,exports){
+},{"./BasePlugin":14,"./UIPlugin":15,"./Uppy":16,"./loggers":19}],19:[function(require,module,exports){
 "use strict";
 
 /* eslint-disable no-console */
@@ -4633,7 +4623,7 @@ module.exports = {
   justErrorsLogger,
   debugLogger
 };
-},{"@uppy/utils/lib/getTimeStamp":41}],19:[function(require,module,exports){
+},{"@uppy/utils/lib/getTimeStamp":42}],20:[function(require,module,exports){
 "use strict";
 
 // Edge 15.x does not fire 'progress' events on uploads.
@@ -4669,14 +4659,12 @@ module.exports = function supportsUploadProgress(userAgent) {
 
   return false;
 };
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 var _class, _temp;
 
-const {
-  BasePlugin
-} = require('@uppy/core');
+const BasePlugin = require('@uppy/core/lib/BasePlugin');
 
 const getDroppedFiles = require('@uppy/utils/lib/getDroppedFiles');
 
@@ -4711,7 +4699,9 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
       }
     };
 
-    this.handleDrop = event => {
+    this.handleDrop = async event => {
+      var _this$opts$onDrop, _this$opts;
+
       event.preventDefault();
       event.stopPropagation();
       clearTimeout(this.removeDragOverClassTimeout); // 2. Remove dragover class
@@ -4727,12 +4717,16 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
         this.uppy.log(error, 'error');
       };
 
-      getDroppedFiles(event.dataTransfer, {
+      const files = await getDroppedFiles(event.dataTransfer, {
         logDropError
-      }).then(files => this.addFiles(files));
+      });
+      this.addFiles(files);
+      (_this$opts$onDrop = (_this$opts = this.opts).onDrop) == null ? void 0 : _this$opts$onDrop.call(_this$opts, event);
     };
 
     this.handleDragOver = event => {
+      var _this$opts$onDragOver, _this$opts2;
+
       event.preventDefault();
       event.stopPropagation(); // 1. Add a small (+) icon on drop
       // (and prevent browsers from interpreting this as files being _moved_ into the browser,
@@ -4744,9 +4738,12 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
       this.setPluginState({
         isDraggingOver: true
       });
+      (_this$opts$onDragOver = (_this$opts2 = this.opts).onDragOver) == null ? void 0 : _this$opts$onDragOver.call(_this$opts2, event);
     };
 
     this.handleDragLeave = event => {
+      var _this$opts$onDragLeav, _this$opts3;
+
       event.preventDefault();
       event.stopPropagation();
       const {
@@ -4761,6 +4758,7 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
           isDraggingOver: false
         });
       }, 50);
+      (_this$opts$onDragLeav = (_this$opts3 = this.opts).onDragLeave) == null ? void 0 : _this$opts$onDragLeav.call(_this$opts3, event);
     };
 
     this.addListeners = () => {
@@ -4820,8 +4818,8 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
     this.removeListeners();
   }
 
-}, _class.VERSION = "1.0.1", _temp);
-},{"@uppy/core":17,"@uppy/utils/lib/getDroppedFiles":33,"@uppy/utils/lib/toArray":47}],21:[function(require,module,exports){
+}, _class.VERSION = "1.1.1", _temp);
+},{"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/getDroppedFiles":34,"@uppy/utils/lib/toArray":48}],22:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -4875,22 +4873,22 @@ function _publish2(...args) {
   });
 }
 
-DefaultStore.VERSION = "2.0.0";
+DefaultStore.VERSION = "2.0.2";
 
 module.exports = function defaultStore() {
   return new DefaultStore();
 };
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 /**
  * Little AbortController proxy module so we can swap out the implementation easily later.
  */
-exports.AbortController = AbortController;
-exports.AbortSignal = AbortSignal;
+exports.AbortController = globalThis.AbortController;
+exports.AbortSignal = globalThis.AbortSignal;
 
 exports.createAbortError = (message = 'Aborted') => new DOMException(message, 'AbortError');
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var _emitter, _events;
@@ -4931,7 +4929,7 @@ module.exports = (_emitter = /*#__PURE__*/_classPrivateFieldLooseKey("emitter"),
   }
 
 });
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 class NetworkError extends Error {
@@ -4945,7 +4943,7 @@ class NetworkError extends Error {
 }
 
 module.exports = NetworkError;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -5013,7 +5011,7 @@ class ProgressTimeout {
 }
 
 module.exports = ProgressTimeout;
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -5221,7 +5219,7 @@ module.exports = {
   RateLimitedQueue,
   internalRateLimitedQueue: Symbol('__queue')
 };
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 var _apply;
@@ -5392,7 +5390,7 @@ function _apply2(locale) {
   };
   this.locale.pluralize = locale.pluralize || prevLocale.pluralize;
 }
-},{"./hasProperty":42}],28:[function(require,module,exports){
+},{"./hasProperty":43}],29:[function(require,module,exports){
 "use strict";
 
 const {
@@ -5439,7 +5437,7 @@ module.exports = function delay(ms, opts) {
     return undefined;
   });
 };
-},{"./AbortController":22}],29:[function(require,module,exports){
+},{"./AbortController":23}],30:[function(require,module,exports){
 "use strict";
 
 const throttle = require('lodash.throttle');
@@ -5465,7 +5463,7 @@ module.exports = throttle(emitSocketProgress, 300, {
   leading: true,
   trailing: true
 });
-},{"lodash.throttle":49}],30:[function(require,module,exports){
+},{"lodash.throttle":50}],31:[function(require,module,exports){
 "use strict";
 
 const NetworkError = require('./NetworkError');
@@ -5483,7 +5481,7 @@ module.exports = function fetchWithNetworkError(...options) {
     }
   });
 };
-},{"./NetworkError":24}],31:[function(require,module,exports){
+},{"./NetworkError":25}],32:[function(require,module,exports){
 "use strict";
 
 const isDOMElement = require('./isDOMElement');
@@ -5506,7 +5504,7 @@ module.exports = function findDOMElement(element, context = document) {
 
   return null;
 };
-},{"./isDOMElement":43}],32:[function(require,module,exports){
+},{"./isDOMElement":44}],33:[function(require,module,exports){
 "use strict";
 
 function encodeCharacter(character) {
@@ -5556,7 +5554,7 @@ module.exports = function generateFileID(file) {
 
   return id;
 };
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 const webkitGetAsEntryApi = require('./utils/webkitGetAsEntryApi/index');
@@ -5590,7 +5588,7 @@ module.exports = function getDroppedFiles(dataTransfer, {
 
   return fallbackApi(dataTransfer);
 };
-},{"./utils/fallbackApi":34,"./utils/webkitGetAsEntryApi/index":37}],34:[function(require,module,exports){
+},{"./utils/fallbackApi":35,"./utils/webkitGetAsEntryApi/index":38}],35:[function(require,module,exports){
 "use strict";
 
 const toArray = require('../../toArray'); // .files fallback, should be implemented in any browser
@@ -5600,7 +5598,7 @@ module.exports = function fallbackApi(dataTransfer) {
   const files = toArray(dataTransfer.files);
   return Promise.resolve(files);
 };
-},{"../../toArray":47}],35:[function(require,module,exports){
+},{"../../toArray":48}],36:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5633,7 +5631,7 @@ module.exports = function getFilesAndDirectoriesFromDirectory(directoryReader, o
     onSuccess(oldEntries);
   });
 };
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5654,7 +5652,7 @@ module.exports = function getRelativePath(fileEntry) {
 
   return fileEntry.fullPath;
 };
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 const toArray = require('../../../toArray');
@@ -5705,7 +5703,7 @@ module.exports = function webkitGetAsEntryApi(dataTransfer, logDropError) {
   });
   return Promise.all(rootPromises).then(() => files);
 };
-},{"../../../toArray":47,"./getFilesAndDirectoriesFromDirectory":35,"./getRelativePath":36}],38:[function(require,module,exports){
+},{"../../../toArray":48,"./getFilesAndDirectoriesFromDirectory":36,"./getRelativePath":37}],39:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5729,7 +5727,7 @@ module.exports = function getFileNameAndExtension(fullFileName) {
     extension: fullFileName.slice(lastDot + 1)
   };
 };
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 "use strict";
 
 const getFileNameAndExtension = require('./getFileNameAndExtension');
@@ -5750,7 +5748,7 @@ module.exports = function getFileType(file) {
 
   return 'application/octet-stream';
 };
-},{"./getFileNameAndExtension":38,"./mimeTypes":45}],40:[function(require,module,exports){
+},{"./getFileNameAndExtension":39,"./mimeTypes":46}],41:[function(require,module,exports){
 "use strict";
 
 module.exports = function getSocketHost(url) {
@@ -5760,7 +5758,7 @@ module.exports = function getSocketHost(url) {
   const socketProtocol = /^http:\/\//i.test(url) ? 'ws' : 'wss';
   return `${socketProtocol}://${host}`;
 };
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5784,13 +5782,13 @@ module.exports = function getTimeStamp() {
   const seconds = pad(date.getSeconds());
   return `${hours}:${minutes}:${seconds}`;
 };
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 "use strict";
 
 module.exports = function has(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
 };
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5801,7 +5799,7 @@ module.exports = function has(object, key) {
 module.exports = function isDOMElement(obj) {
   return (obj == null ? void 0 : obj.nodeType) === Node.ELEMENT_NODE;
 };
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 function isNetworkError(xhr) {
@@ -5813,7 +5811,7 @@ function isNetworkError(xhr) {
 }
 
 module.exports = isNetworkError;
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 
 // ___Why not add the mime-types package?
@@ -5871,7 +5869,7 @@ module.exports = {
   gz: 'application/gzip',
   dmg: 'application/x-apple-diskimage'
 };
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 "use strict";
 
 module.exports = function settle(promises) {
@@ -5894,21 +5892,19 @@ module.exports = function settle(promises) {
     };
   });
 };
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 
 /**
  * Converts list into array
  */
 module.exports = Array.from;
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 
 var _class, _temp;
 
-const {
-  BasePlugin
-} = require('@uppy/core');
+const BasePlugin = require('@uppy/core/lib/BasePlugin');
 
 const {
   nanoid
@@ -6017,7 +6013,7 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
         try {
           parsedResponse = JSON.parse(responseText);
         } catch (err) {
-          this.uppy.log(err);
+          uppy.log(err);
         }
 
         return parsedResponse;
@@ -6051,6 +6047,7 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
     this.opts = { ...defaultOptions,
       ...opts
     };
+    this.i18nInit();
     this.handleUpload = this.handleUpload.bind(this); // Simultaneous upload limiting is shared across all uploads with this plugin.
 
     if (internalRateLimitedQueue in this.opts) {
@@ -6560,8 +6557,8 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
     this.uppy.removeUploader(this.handleUpload);
   }
 
-}, _class.VERSION = "2.0.1", _temp);
-},{"@uppy/companion-client":12,"@uppy/core":17,"@uppy/utils/lib/EventTracker":23,"@uppy/utils/lib/NetworkError":24,"@uppy/utils/lib/ProgressTimeout":25,"@uppy/utils/lib/RateLimitedQueue":26,"@uppy/utils/lib/emitSocketProgress":29,"@uppy/utils/lib/getSocketHost":40,"@uppy/utils/lib/isNetworkError":44,"@uppy/utils/lib/settle":46,"nanoid":52}],49:[function(require,module,exports){
+}, _class.VERSION = "2.0.5", _temp);
+},{"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/NetworkError":25,"@uppy/utils/lib/ProgressTimeout":26,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41,"@uppy/utils/lib/isNetworkError":45,"@uppy/utils/lib/settle":47,"nanoid":53}],50:[function(require,module,exports){
 (function (global){(function (){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -7004,7 +7001,7 @@ function toNumber(value) {
 module.exports = throttle;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var wildcard = require('wildcard');
 var reMimePartSplit = /[\/\+\.]/;
 
@@ -7030,7 +7027,7 @@ module.exports = function(target, pattern) {
   return pattern ? test(pattern.split(';')[0]) : test;
 };
 
-},{"wildcard":56}],51:[function(require,module,exports){
+},{"wildcard":57}],52:[function(require,module,exports){
 /**
 * Create an event emitter with namespaces
 * @name createNamespaceEmitter
@@ -7168,7 +7165,7 @@ module.exports = function createNamespaceEmitter () {
   return emitter
 }
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 (function (process){(function (){
 // This file replaces `index.js` in bundlers like webpack or Rollup,
 // according to `browser` config in `package.json`.
@@ -7276,7 +7273,7 @@ let nanoid = (size = 21) => {
 module.exports = { nanoid, customAlphabet, customRandom, urlAlphabet, random }
 
 }).call(this)}).call(this,require('_process'))
-},{"./url-alphabet/index.cjs":53,"_process":55}],53:[function(require,module,exports){
+},{"./url-alphabet/index.cjs":54,"_process":56}],54:[function(require,module,exports){
 // This alphabet uses `A-Za-z0-9_-` symbols. The genetic algorithm helped
 // optimize the gzip compression for this alphabet.
 let urlAlphabet =
@@ -7284,11 +7281,11 @@ let urlAlphabet =
 
 module.exports = { urlAlphabet }
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var n,l,u,t,i,o,r,f,e={},c=[],s=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function a(n,l){for(var u in l)n[u]=l[u];return n}function p(n){var l=n.parentNode;l&&l.removeChild(n)}function v(l,u,t){var i,o,r,f={};for(r in u)"key"==r?i=u[r]:"ref"==r?o=u[r]:f[r]=u[r];if(arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),"function"==typeof l&&null!=l.defaultProps)for(r in l.defaultProps)void 0===f[r]&&(f[r]=l.defaultProps[r]);return h(l,f,i,o,null)}function h(n,t,i,o,r){var f={type:n,props:t,key:i,ref:o,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==r?++u:r};return null!=l.vnode&&l.vnode(f),f}function y(n){return n.children}function d(n,l){this.props=n,this.context=l}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return"function"==typeof n.type?_(n):null}function k(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return k(n)}}function x(n){(!n.__d&&(n.__d=!0)&&i.push(n)&&!b.__r++||r!==l.debounceRendering)&&((r=l.debounceRendering)||o)(b)}function b(){for(var n;b.__r=i.length;)n=i.sort(function(n,l){return n.__v.__b-l.__v.__b}),i=[],n.some(function(n){var l,u,t,i,o,r;n.__d&&(o=(i=(l=n).__v).__e,(r=l.__P)&&(u=[],(t=a({},i)).__v=i.__v+1,I(r,i,t,l.__n,void 0!==r.ownerSVGElement,null!=i.__h?[o]:null,u,null==o?_(i):o,i.__h),T(u,i),i.__e!=o&&k(i)))})}function m(n,l,u,t,i,o,r,f,s,a){var p,v,d,k,x,b,m,A=t&&t.__k||c,P=A.length;for(u.__k=[],p=0;p<l.length;p++)if(null!=(k=u.__k[p]=null==(k=l[p])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k||"bigint"==typeof k?h(null,k,null,null,k):Array.isArray(k)?h(y,{children:k},null,null,null):k.__b>0?h(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(d=A[p])||d&&k.key==d.key&&k.type===d.type)A[p]=void 0;else for(v=0;v<P;v++){if((d=A[v])&&k.key==d.key&&k.type===d.type){A[v]=void 0;break}d=null}I(n,k,d=d||e,i,o,r,f,s,a),x=k.__e,(v=k.ref)&&d.ref!=v&&(m||(m=[]),d.ref&&m.push(d.ref,null,k),m.push(v,k.__c||x,k)),null!=x?(null==b&&(b=x),"function"==typeof k.type&&null!=k.__k&&k.__k===d.__k?k.__d=s=g(k,s,n):s=w(n,k,d,A,x,s),a||"option"!==u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&d.__e==s&&s.parentNode!=n&&(s=_(d))}for(u.__e=b,p=P;p--;)null!=A[p]&&("function"==typeof u.type&&null!=A[p].__e&&A[p].__e==u.__d&&(u.__d=_(t,p+1)),L(A[p],A[p]));if(m)for(p=0;p<m.length;p++)z(m[p],m[++p],m[++p])}function g(n,l,u){var t,i;for(t=0;t<n.__k.length;t++)(i=n.__k[t])&&(i.__=n,l="function"==typeof i.type?g(i,l,u):w(u,i,i,n.__k,i.__e,l));return l}function w(n,l,u,t,i,o){var r,f,e;if(void 0!==l.__d)r=l.__d,l.__d=void 0;else if(null==u||i!=o||null==i.parentNode)n:if(null==o||o.parentNode!==n)n.appendChild(i),r=null;else{for(f=o,e=0;(f=f.nextSibling)&&e<t.length;e+=2)if(f==i)break n;n.insertBefore(i,o),r=o}return void 0!==r?r:i.nextSibling}function A(n,l,u,t,i){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],t);for(o in l)i&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],t)}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||s.test(l)?u:u+"px"}function C(n,l,u,t,i){var o;n:if("style"===l)if("string"==typeof u)n.style.cssText=u;else{if("string"==typeof t&&(n.style.cssText=t=""),t)for(l in t)u&&l in u||P(n.style,l,"");if(u)for(l in u)t&&u[l]===t[l]||P(n.style,l,u[l])}else if("o"===l[0]&&"n"===l[1])o=l!==(l=l.replace(/Capture$/,"")),l=l.toLowerCase()in n?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+o]=u,u?t||n.addEventListener(l,o?H:$,o):n.removeEventListener(l,o?H:$,o);else if("dangerouslySetInnerHTML"!==l){if(i)l=l.replace(/xlink[H:h]/,"h").replace(/sName$/,"s");else if("href"!==l&&"list"!==l&&"form"!==l&&"tabIndex"!==l&&"download"!==l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null!=u&&(!1!==u||"a"===l[0]&&"r"===l[1])?n.setAttribute(l,u):n.removeAttribute(l))}}function $(n){this.l[n.type+!1](l.event?l.event(n):n)}function H(n){this.l[n.type+!0](l.event?l.event(n):n)}function I(n,u,t,i,o,r,f,e,c){var s,p,v,h,_,k,x,b,g,w,A,P=u.type;if(void 0!==u.constructor)return null;null!=t.__h&&(c=t.__h,e=u.__e=t.__e,u.__h=null,r=[e]),(s=l.__b)&&s(u);try{n:if("function"==typeof P){if(b=u.props,g=(s=P.contextType)&&i[s.__c],w=s?g?g.props.value:s.__:i,t.__c?x=(p=u.__c=t.__c).__=p.__E:("prototype"in P&&P.prototype.render?u.__c=p=new P(b,w):(u.__c=p=new d(b,w),p.constructor=P,p.render=M),g&&g.sub(p),p.props=b,p.state||(p.state={}),p.context=w,p.__n=i,v=p.__d=!0,p.__h=[]),null==p.__s&&(p.__s=p.state),null!=P.getDerivedStateFromProps&&(p.__s==p.state&&(p.__s=a({},p.__s)),a(p.__s,P.getDerivedStateFromProps(b,p.__s))),h=p.props,_=p.state,v)null==P.getDerivedStateFromProps&&null!=p.componentWillMount&&p.componentWillMount(),null!=p.componentDidMount&&p.__h.push(p.componentDidMount);else{if(null==P.getDerivedStateFromProps&&b!==h&&null!=p.componentWillReceiveProps&&p.componentWillReceiveProps(b,w),!p.__e&&null!=p.shouldComponentUpdate&&!1===p.shouldComponentUpdate(b,p.__s,w)||u.__v===t.__v){p.props=b,p.state=p.__s,u.__v!==t.__v&&(p.__d=!1),p.__v=u,u.__e=t.__e,u.__k=t.__k,u.__k.forEach(function(n){n&&(n.__=u)}),p.__h.length&&f.push(p);break n}null!=p.componentWillUpdate&&p.componentWillUpdate(b,p.__s,w),null!=p.componentDidUpdate&&p.__h.push(function(){p.componentDidUpdate(h,_,k)})}p.context=w,p.props=b,p.state=p.__s,(s=l.__r)&&s(u),p.__d=!1,p.__v=u,p.__P=n,s=p.render(p.props,p.state,p.context),p.state=p.__s,null!=p.getChildContext&&(i=a(a({},i),p.getChildContext())),v||null==p.getSnapshotBeforeUpdate||(k=p.getSnapshotBeforeUpdate(h,_)),A=null!=s&&s.type===y&&null==s.key?s.props.children:s,m(n,Array.isArray(A)?A:[A],u,t,i,o,r,f,e,c),p.base=u.__e,u.__h=null,p.__h.length&&f.push(p),x&&(p.__E=p.__=null),p.__e=!1}else null==r&&u.__v===t.__v?(u.__k=t.__k,u.__e=t.__e):u.__e=j(t.__e,u,t,i,o,r,f,c);(s=l.diffed)&&s(u)}catch(n){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),l.__e(n,u,t)}}function T(n,u){l.__c&&l.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u)})}catch(n){l.__e(n,u.__v)}})}function j(l,u,t,i,o,r,f,c){var s,a,v,h=t.props,y=u.props,d=u.type,k=0;if("svg"===d&&(o=!0),null!=r)for(;k<r.length;k++)if((s=r[k])&&(s===l||(d?s.localName==d:3==s.nodeType))){l=s,r[k]=null;break}if(null==l){if(null===d)return document.createTextNode(y);l=o?document.createElementNS("http://www.w3.org/2000/svg",d):document.createElement(d,y.is&&y),r=null,c=!1}if(null===d)h===y||c&&l.data===y||(l.data=y);else{if(r=r&&n.call(l.childNodes),a=(h=t.props||e).dangerouslySetInnerHTML,v=y.dangerouslySetInnerHTML,!c){if(null!=r)for(h={},k=0;k<l.attributes.length;k++)h[l.attributes[k].name]=l.attributes[k].value;(v||a)&&(v&&(a&&v.__html==a.__html||v.__html===l.innerHTML)||(l.innerHTML=v&&v.__html||""))}if(A(l,y,h,o,c),v)u.__k=[];else if(k=u.props.children,m(l,Array.isArray(k)?k:[k],u,t,i,o&&"foreignObject"!==d,r,f,r?r[0]:t.__k&&_(t,0),c),null!=r)for(k=r.length;k--;)null!=r[k]&&p(r[k]);c||("value"in y&&void 0!==(k=y.value)&&(k!==l.value||"progress"===d&&!k)&&C(l,"value",k,h.value,!1),"checked"in y&&void 0!==(k=y.checked)&&k!==l.checked&&C(l,"checked",k,h.checked,!1))}return l}function z(n,u,t){try{"function"==typeof n?n(u):n.current=u}catch(n){l.__e(n,t)}}function L(n,u,t){var i,o;if(l.unmount&&l.unmount(n),(i=n.ref)&&(i.current&&i.current!==n.__e||z(i,null,u)),null!=(i=n.__c)){if(i.componentWillUnmount)try{i.componentWillUnmount()}catch(n){l.__e(n,u)}i.base=i.__P=null}if(i=n.__k)for(o=0;o<i.length;o++)i[o]&&L(i[o],u,"function"!=typeof n.type);t||null==n.__e||p(n.__e),n.__e=n.__d=void 0}function M(n,l,u){return this.constructor(n,u)}function N(u,t,i){var o,r,f;l.__&&l.__(u,t),r=(o="function"==typeof i)?null:i&&i.__k||t.__k,f=[],I(t,u=(!o&&i||t).__k=v(y,null,[u]),r||e,e,void 0!==t.ownerSVGElement,!o&&i?[i]:r?null:t.firstChild?n.call(t.childNodes):null,f,!o&&i?i:r?r.__e:t.firstChild,o),T(f,u)}n=c.slice,l={__e:function(n,l){for(var u,t,i;l=l.__;)if((u=l.__c)&&!u.__)try{if((t=u.constructor)&&null!=t.getDerivedStateFromError&&(u.setState(t.getDerivedStateFromError(n)),i=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),i=u.__d),i)return u.__E=u}catch(l){n=l}throw n}},u=0,t=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=a({},this.state),"function"==typeof n&&(n=n(a({},u),this.props)),n&&a(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),x(this))},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),x(this))},d.prototype.render=y,i=[],o="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,b.__r=0,f=0,exports.render=N,exports.hydrate=function n(l,u){N(l,u,n)},exports.createElement=v,exports.h=v,exports.Fragment=y,exports.createRef=function(){return{current:null}},exports.isValidElement=t,exports.Component=d,exports.cloneElement=function(l,u,t){var i,o,r,f=a({},l.props);for(r in u)"key"==r?i=u[r]:"ref"==r?o=u[r]:f[r]=u[r];return arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),h(l.type,f,i||l.key,o||l.ref,null)},exports.createContext=function(n,l){var u={__c:l="__cC"+f++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var u,t;return this.getChildContext||(u=[],(t={})[l]=this,this.getChildContext=function(){return t},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(x)},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n)}}),n.children}};return u.Provider.__=u.Consumer.contextType=u},exports.toChildArray=function n(l,u){return u=u||[],null==l||"boolean"==typeof l||(Array.isArray(l)?l.some(function(l){n(l,u)}):u.push(l)),u},exports.options=l;
 
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -7474,7 +7471,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /* jshint node: true */
 'use strict';
 
@@ -7569,7 +7566,7 @@ module.exports = function(text, test, separator) {
   return matcher;
 };
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 // We need a custom build of Uppy because we do not use webpack for
 // our JS modules/build. The only way to get what you want from Uppy
 // is to use the webpack modules or to include the entire Uppy project
@@ -7581,5 +7578,10 @@ Uppy.XHRUpload = require('@uppy/xhr-upload')
 Uppy.AwsS3 = require('@uppy/aws-s3')
 Uppy.AwsS3Multipart = require('@uppy/aws-s3-multipart')
 Uppy.DropTarget = require('@uppy/drop-target')
+Uppy.Utils = {
+  delay: require('@uppy/utils/lib/delay'),
+  EventTracker: require('@uppy/utils/lib/EventTracker'),
+  AbortControllerLib: require('@uppy/utils/lib/AbortController')
+}
 
-},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":17,"@uppy/drop-target":20,"@uppy/xhr-upload":48}]},{},[57]);
+},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":18,"@uppy/drop-target":21,"@uppy/utils/lib/AbortController":23,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/delay":29,"@uppy/xhr-upload":49}]},{},[58]);

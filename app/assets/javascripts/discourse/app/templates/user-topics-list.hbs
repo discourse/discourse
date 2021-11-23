@@ -1,18 +1,12 @@
-{{#if showEmptyStatePlaceholder}}
+{{#if noContent}}
   <div class="empty-state">
-    <span class="empty-state-title">{{emptyState.title}}</span>
+    <span class="empty-state-title">{{model.emptyState.title}}</span>
     <div class="empty-state-body">
-      <p>{{emptyState.body}}</p>
+      <p>{{model.emptyState.body}}</p>
     </div>
   </div>
 {{else}}
-  {{#unless site.mobileView}}
-    {{#if showToggleBulkSelect}}
-      {{bulk-select-button canDoBulkActions=true selected=selected action=(route-action "refresh")}}
-    {{/if}}
-  {{/unless}}
-
-  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list .topic-list-item" action=(action "loadMore")}}
     {{topic-dismiss-buttons
       position="top"
       selectedTopics=selected
@@ -30,16 +24,18 @@
     {{/if}}
 
     {{basic-topic-list topicList=model
-       hideCategory=hideCategory
-       showPosters=showPosters
-       bulkSelectEnabled=bulkSelectEnabled
-       selected=selected
-       tagsForUser=tagsForUser
-       onScroll=saveScrollPosition
-       canBulkSelect=canBulkSelect
-       scrollOnLoad=true
-       toggleBulkSelect=(action "toggleBulkSelect")
-       updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")}}
+      hideCategory=hideCategory
+      showPosters=showPosters
+      bulkSelectEnabled=bulkSelectEnabled
+      bulkSelectAction=(action "refresh")
+      selected=selected
+      tagsForUser=tagsForUser
+      onScroll=saveScrollPosition
+      canBulkSelect=canBulkSelect
+      scrollOnLoad=true
+      toggleBulkSelect=(action "toggleBulkSelect")
+      updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
+    }}
 
     {{topic-dismiss-buttons
       position="bottom"

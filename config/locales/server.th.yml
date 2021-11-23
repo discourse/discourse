@@ -371,6 +371,24 @@ th:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       text_body_template: |
         %{header_instructions}
@@ -516,6 +534,7 @@ th:
           title: "ลบผู้ใช้"
       reject:
         title: "ละทิ้ง"
+  fallback_username: "ผู้ใช้"
   activemodel:
     errors:
       <<: *errors

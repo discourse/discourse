@@ -13,6 +13,58 @@ class PostAlerter
     post
   end
 
+  def self.create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
+    return if user.suspended?
+
+    if post_url = post.url
+      payload = {
+       notification_type: notification_type,
+       post_number: post.post_number,
+       topic_title: post.topic.title,
+       topic_id: post.topic.id,
+       excerpt: excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+       username: username || post.username,
+       post_url: post_url
+      }
+
+      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
+
+      if user.allow_live_notifications?
+        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      end
+
+      push_notification(user, payload)
+      DiscourseEvent.trigger(:post_notification_alert, user, payload)
+    end
+  end
+
+  def self.push_notification(user, payload)
+    return if user.do_not_disturb?
+
+    DiscoursePluginRegistry.push_notification_filters.each do |filter|
+      return unless filter.call(user, payload)
+    end
+
+    if user.push_subscriptions.exists?
+      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
+    end
+
+    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
+      clients = user.user_api_keys
+        .joins(:scopes)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
+        .where("push_url IS NOT NULL AND push_url <> ''")
+        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
+        .where("revoked_at IS NULL")
+        .order(client_id: :asc)
+        .pluck(:client_id, :push_url)
+
+      if clients.length > 0
+        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
+      end
+    end
+  end
+
   def initialize(default_opts = {})
     @default_opts = default_opts
   end
@@ -59,9 +111,9 @@ class PostAlerter
     notified = [post.user, post.last_editor].uniq
 
     # mentions (users/groups)
-    mentioned_groups, mentioned_users = extract_mentions(post)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
 
-    if mentioned_groups || mentioned_users
+    if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
       editor = post.last_editor
 
@@ -78,6 +130,12 @@ class PostAlerter
       expand_group_mentions(mentioned_groups, post) do |group, users|
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
+      end
+
+      if mentioned_here
+        users = expand_here_mention(post, exclude_ids: notified.map(&:id))
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
       end
     end
 
@@ -115,6 +173,8 @@ class PostAlerter
         notify_first_post_watchers(post, watchers)
       end
     end
+
+    DiscourseEvent.trigger(:post_alerter_after_save_post, post, new_record, notified)
   end
 
   def group_watchers(topic)
@@ -144,7 +204,7 @@ class PostAlerter
 
     # Don't notify the OP
     user_ids -= [post.user_id]
-    users = User.where(id: user_ids)
+    users = User.where(id: user_ids).includes(:do_not_disturb_timings)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     each_user_in_batches(users) do |user|
@@ -458,7 +518,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type)
       create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
@@ -466,45 +526,17 @@ class PostAlerter
   end
 
   def create_notification_alert(user:, post:, notification_type:, excerpt: nil, username: nil)
-    if post_url = post.url
-      payload = {
-       notification_type: notification_type,
-       post_number: post.post_number,
-       topic_title: post.topic.title,
-       topic_id: post.topic.id,
-       excerpt: excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
-       username: username || post.username,
-       post_url: post_url
-      }
-
-      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
-      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
-      push_notification(user, payload)
-      DiscourseEvent.trigger(:post_notification_alert, user, payload)
-    end
+    self.class.create_notification_alert(
+      user: user,
+      post: post,
+      notification_type: notification_type,
+      excerpt: excerpt,
+      username: username
+    )
   end
 
   def push_notification(user, payload)
-    return if user.do_not_disturb?
-
-    if user.push_subscriptions.exists?
-      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
-    end
-
-    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
-      clients = user.user_api_keys
-        .joins(:scopes)
-        .where("user_api_key_scopes.name IN ('push', 'notifications')")
-        .where("push_url IS NOT NULL AND push_url <> ''")
-        .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
-        .where("revoked_at IS NULL")
-        .order(client_id: :asc)
-        .pluck(:client_id, :push_url)
-
-      if clients.length > 0
-        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
-      end
-    end
+    self.class.push_notification(user, payload)
   end
 
   def expand_group_mentions(groups, post)
@@ -517,6 +549,21 @@ class PostAlerter
 
   end
 
+  def expand_here_mention(post, exclude_ids: nil)
+    posts = Post.where(topic_id: post.topic_id)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+
+    if post.user.staff?
+      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
+    else
+      posts = posts.where(post_type: Post.types[:regular])
+    end
+
+    User.real
+      .where(id: posts.select(:user_id))
+      .limit(SiteSetting.max_here_mentioned)
+  end
+
   # TODO: Move to post-analyzer?
   def extract_mentions(post)
     mentions = post.raw_mentions
@@ -527,11 +574,14 @@ class PostAlerter
     groups = nil if groups.empty?
 
     if mentions.present?
-      users = User.where(username_lower: mentions).where.not(id: post.user_id)
+      users = User.where(username_lower: mentions).includes(:do_not_disturb_timings).where.not(id: post.user_id)
       users = nil if users.empty?
     end
 
-    [groups, users]
+    # @here can be a user mention and then this feature is disabled
+    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(post.user).can_mention_here?
+
+    [groups, users, here]
   end
 
   # TODO: Move to post-analyzer?
@@ -617,8 +667,21 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
-    post.topic.allowed_groups.where(smtp_enabled: true).first
+    return if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+    return if post.topic.allowed_groups.none?
+
+    if post.topic.allowed_groups.count == 1
+      return post.topic.first_smtp_enabled_group
+    end
+
+    topic_incoming_email = post.topic.incoming_email.first
+    return if topic_incoming_email.blank?
+
+    group = Group.find_by_email(topic_incoming_email.to_addresses)
+    if !group&.smtp_enabled
+      return post.topic.first_smtp_enabled_group
+    end
+    group
   end
 
   def email_using_group_smtp_if_configured(post)
@@ -776,7 +839,7 @@ class PostAlerter
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches
     users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
-      User.where(id: user_ids_batch).each { |user| yield(user) }
+      User.where(id: user_ids_batch).includes(:do_not_disturb_timings).each { |user| yield(user) }
     end
   end
 end

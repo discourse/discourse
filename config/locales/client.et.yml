@@ -281,6 +281,9 @@ et:
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
       topic_reply: "Mustandi vastus"
+    topic_count_categories:
+      one: "Vaata %{count} uut või uuendatud teemat"
+      other: "Vaata %{count} uut või uuendatud teemat"
     topic_count_latest:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -1373,7 +1376,6 @@ et:
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
-      title: "Või vajuta Ctrl+Enter"
       users_placeholder: "Lisa kasutaja"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
@@ -1459,6 +1461,9 @@ et:
       watching_first_post: "<span>New Topic</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Ignoreeri"
+        cancel: "Tühista"
       popup:
         mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
         group_mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1482,19 +1487,24 @@ et:
       select_all: "Vali kõik"
       clear_all: "Puhasta kõik"
       too_short: "Otsitav tekst on liiga lühike."
-      title: "otsi teemasid, postitusi, kasutajaid, või foorumeid"
+      title: "Otsi"
+      full_page_title: "Otsi"
       no_results: "Ei leidnud midagi."
       no_more_results: "Rohkem vasteid pole."
       post_format: "postituse nr%{post_number} tegi %{username}"
       search_google_button: "Google"
       search_button: "Otsi"
+      categories: "Kategooriad"
+      tags: "Sildid"
+      type:
+        users: "Kasutajaid"
+        categories: "Kategooriad"
       context:
         user: "Otsi kasutaja @%{username} postitusi"
         category: "Otsi #%{category} foorumist"
         topic: "Otsi sellest teemast"
         private_messages: "Otsi sõnumeid"
       advanced:
-        title: Täpsem otsing
         posted_by:
           label: Postitaja
         in_category:
@@ -1542,7 +1552,6 @@ et:
           placeholder: miinimum
         max_views:
           placeholder: maksimum
-    hamburger_menu: "mine teise teemaloetelu või foorumi juurde"
     new_item: "uus"
     go_back: "tagasi"
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
@@ -1947,6 +1956,7 @@ et:
           other: "Oled valinud <b>%{count}</b> postitust."
     post:
       quote_reply: "Tsitaat"
+      quote_edit: "Muuda"
       quote_share: "Jaga"
       edit_reason: "Põhjus:"
       post_number: "postitus %{number}"
@@ -2464,6 +2474,8 @@ et:
           name: Muu
         posting:
           name: Postitan
+    download_calendar:
+      download: "Lae alla"
     tagging:
       all_tags: "Kõik sildid"
       other_tags: "Muud sildid"
@@ -2543,6 +2555,10 @@ et:
         member: "liige"
         regular: "tavaline"
         leader: "juht"
+    user_activity:
+      no_activity_others: "Tegevusi pole."
+      no_replies_others: "Vastuseid pole."
+      no_likes_others: "Meeldimisega postitusi veel pole."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -2886,12 +2902,8 @@ et:
             text: "Jalus"
           embedded_scss:
             text: "Sängitatud CSS"
-          head_tag:
-            text: "</head>"
-            title: "HTML, mida lisatakse enne </head> silti"
           body_tag:
-            text: "</body>"
-            title: "HTML, mida lisatakse enne </body> silti"
+            text: "Sisu"
           yaml:
             text: "YAML"
         colors:
@@ -3472,7 +3484,6 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
-        help: "Lisa uued emotikonid kõigile kasutamiseks. (PRO-vihje: pukseeri korraga mitu faili)"
         add: "Lisa uus emotikon"
         uploading: "Laen üles..."
         name: "Nimi"
@@ -3482,7 +3493,6 @@ et:
       embedding:
         get_started: "Kui Sa soovid lisada Discourse teise veebisaidi sisse ehk sängitada, alusta lisades oma teenusepakkuja"
         confirm_delete: "Oled Sa kindel, et soovid kustutada selle teenusepakkuja?"
-        sample: "Kasuta järgnevat HTML koodi oma saidil, et luua ja lisada/sängitada discourse teemad oma saidile. Asenda <b>REPLACE_ME</b> kanoonilise lehe URL-viitega, kuhu Sa seda lisad."
         title: "Sängitamine"
         host: "Lubatud hostid"
         class_name: "Klassi nimi"

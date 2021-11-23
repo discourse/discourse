@@ -26,19 +26,19 @@ acceptance("New Message - Authenticated", function (needs) {
     );
 
     assert.ok(exists(".composer-fields"), "it opens composer");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#reply-title").val().trim(),
       "message title",
       "it pre-fills message title"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       "message body",
       "it pre-fills message body"
     );
 
     const privateMessageUsers = selectKit("#private-message-users");
-    assert.equal(
+    assert.strictEqual(
       privateMessageUsers.header().value(),
       "charlie",
       "it selects correct username"

@@ -102,7 +102,7 @@ class PostActionNotifier
     return if post_revision.user.blank?
     return if post.topic.blank?
     return if post.topic.private_message?
-    return if SiteSetting.disable_system_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
+    return if notification_is_disabled?(post_revision)
 
     user_ids = []
 
@@ -156,5 +156,14 @@ class PostActionNotifier
 
   def self.add_post_revision_notifier_recipients(&block)
     custom_post_revision_notifier_recipients << block
+  end
+
+  private
+
+  def self.notification_is_disabled?(post_revision)
+    modifications = post_revision.modifications
+    (SiteSetting.disable_system_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID) ||
+      (SiteSetting.disable_category_edit_notifications && modifications&.dig("category_id").present?) ||
+      (SiteSetting.disable_tags_edit_notifications && modifications&.dig("tags").present?)
   end
 end

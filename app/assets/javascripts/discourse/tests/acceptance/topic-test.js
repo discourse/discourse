@@ -5,30 +5,14 @@ import {
   exists,
   query,
   queryAll,
+  selectText,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-
-async function selectText(selector) {
-  const range = document.createRange();
-  const node = document.querySelector(selector);
-  range.selectNodeContents(node);
-
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  await settled();
-}
 
 acceptance("Topic", function (needs) {
   needs.user();
@@ -45,12 +29,12 @@ acceptance("Topic", function (needs) {
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
       "it fills composer with the ring string"
     );
-    assert.equal(
+    assert.strictEqual(
       selectKit(".category-chooser").header().value(),
       "2",
       "it fills category selector with the right category"
@@ -64,14 +48,14 @@ acceptance("Topic", function (needs) {
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
       `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
       "it fills composer with the ring string"
     );
 
     const privateMessageUsers = selectKit("#private-message-users");
-    assert.equal(
+    assert.strictEqual(
       privateMessageUsers.header().value(),
       "someguy,test,Group",
       "it fills up the composer correctly"
@@ -112,12 +96,12 @@ acceptance("Topic", function (needs) {
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#topic-title .badge-category").text(),
       "faq",
       "it displays the new category"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "this is the new title",
       "it displays the new title"
@@ -133,13 +117,13 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.equal(count("button.wiki"), 1, "it shows the wiki icon");
+    assert.strictEqual(count("button.wiki"), 1, "it shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {
     await visit("/t/12");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "PM for testing",
       "it routes to the right topic"
@@ -147,7 +131,7 @@ acceptance("Topic", function (needs) {
 
     await visit("/t/280/20");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".fancy-title").text().trim(),
       "Internationalization / localization",
       "it routes to the right topic"
@@ -203,7 +187,7 @@ acceptance("Topic", function (needs) {
   test("Suggested topics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("#suggested-topics .suggested-topics-title").text().trim(),
       I18n.t("suggested_topics.title")
     );
@@ -258,8 +242,8 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/-/299/1");
 
     const link = queryAll(".title-wrapper .topic-featured-link");
-    assert.equal(link.text(), " example.com");
-    assert.equal(link.attr("rel"), "ugc");
+    assert.strictEqual(link.text(), " example.com");
+    assert.strictEqual(link.attr("rel"), "ugc");
   });
 
   test("remove featured link", async function (assert) {
@@ -559,6 +543,31 @@ acceptance("Topic last visit line", function (needs) {
     assert.ok(
       !exists(".topic-post-visited-line"),
       "does not show last visited line if post is the last post"
+    );
+  });
+});
+
+acceptance("Topic filter replies to post number", function (needs) {
+  needs.settings({
+    enable_filtered_replies_view: true,
+  });
+
+  test("visit topic", async function (assert) {
+    await visit("/t/-/280");
+
+    assert.equal(
+      query("#post_3 .show-replies").title,
+      I18n.t("post.filtered_replies_hint", { count: 3 }),
+      "it displays the right title for filtering by replies"
+    );
+
+    await visit("/");
+    await visit("/t/-/280?replies_to_post_number=3");
+
+    assert.equal(
+      query("#post_3 .show-replies").title,
+      I18n.t("post.view_all_posts"),
+      "it displays the right title when filtered by replies"
     );
   });
 });

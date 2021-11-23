@@ -480,6 +480,7 @@ lv:
           title: "Dzēst lietotāju."
       reject:
         title: "Noraidīt"
+  fallback_username: "lietotājs"
   activemodel:
     errors:
       <<: *errors

@@ -16,6 +16,7 @@ zh_CN:
       date_only: "%Y 年%-m 月 %-d 日"
       long: "%Y 年%-m 月 %-d 日 %H:%M"
       no_day: "%Y 年 %-m 月"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -240,7 +241,6 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
-    muted_invitee: "抱歉，该用户已将您设为免打扰。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
     sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"
@@ -374,6 +374,7 @@ zh_CN:
       cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
       cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
+      for_topic_must_use_first_post: "只能使用最早发布的内容来为主题创建书签"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -458,6 +459,7 @@ zh_CN:
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     dominating_topic: 您在这里发布了超过 %{percent}% 的回复，想听听其他人的发言吗？
+    get_a_room: 您已回复@%{reply_username} %{count} 次，您知道您可以向他们发送私信吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
 
@@ -633,6 +635,9 @@ zh_CN:
       broken: "此图片已损坏"
     has_likes:
       other: "%{count} 个赞"
+    cannot_permanently_delete:
+      many_posts: "您不能永久删除此主题，因为还有其他帖子。"
+      wait_or_different_admin: "您必须等待 %{time_left} 才能永久删除此帖子，否则必须由其他管理员执行此操作。"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
     too_many_requests: "您执行此操作的次数过多。请等待 %{time_left}后再试。"
@@ -833,19 +838,10 @@ zh_CN:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
   user_activity:
-    no_default:
-      self: "您还没有活动。"
-      others: "无活动。"
     no_bookmarks:
       self: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       search: "使用提供的搜索查询未找到书签。"
       others: "无书签。"
-    no_likes_given:
-      self: "您还没有点赞任何帖子。"
-      others: "没有赞过的帖子。"
-    no_replies:
-      self: "您还没有回复任何帖子。"
-      others: "无回复。"
     no_drafts:
       self: "您没有草稿；开始在任何话题中撰写回复，它将自动保存为新草稿。"
   email_settings:
@@ -1403,11 +1399,13 @@ zh_CN:
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "强制用户启用双重身份验证。选择“所有”可以强制所有用户。选择“管理人员”仅强制管理人员。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
+    same_site_cookies: "使用相同的站点 cookie，它们消除了支持的浏览器（宽松或严格）上的所有跨站点请求伪造载体。警告：严格仅适用于强制登录并使用外部身份验证方法的站点。"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
     summary_likes_required: "启用“总结此话题”之前话题中的最少赞数。对此设置的更改将在一周内追溯应用。"
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
+    summary_timeline_button: "在时间线中显示“总结”按钮"
     enable_personal_messages: "允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_long_polling: "用于通知的消息总线可以使用长轮询"
@@ -1623,6 +1621,7 @@ zh_CN:
     external_emoji_url: "表情符号图片的外部服务的 URL。留空将禁用。"
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
+    enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
     selectable_avatars_enabled: "强制用户从列表中选择一个头像。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
@@ -1897,7 +1896,6 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
-    show_copy_button_on_codeblocks: "向代码块添加按钮以将块内容复制到用户的剪贴板。Internet Explorer 不支持此功能。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
     embed_topics_list: "支持话题列表的 HTML 嵌入"
     embed_set_canonical_url: "将嵌入话题的规范 URL 设置为嵌入内容的 URL。"
@@ -2377,47 +2375,6 @@ zh_CN:
   test_mailer:
     title: "测试邮件"
     subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
-    text_body_template: |
-      这是一封测试电子邮件，来自
-
-      [**%{base_url}**][0]
-
-      电子邮件能否递送成功取决于很多因素。下面是几个您需要首先留意的重要方面：
-
-      - 请*确保*在站点设置中正确设置 `notification email` from: 地址。**您所发出的电子邮件的“发件人”地址中指定的网域需要进行验证**。
-
-      - 知道如何使用您的邮件客户端查看电子邮件原始内容，这样您能够检查电子邮件标头以获取重要线索。在 Gmail 中，每封邮件右上角的下拉菜单中都会提供“显示原始邮件”选项。
-
-      - **重要提示**：您的 ISP 是否输入了反向 DNS 记录以关联您用于发送邮件的域名和 IP 地址？[测试您的反向 PTR 记录][2]。如果您的 ISP 未输入正确的反向 DNS 记录，您的电子邮件不太可能递送成功。
-
-      - 您的网域的 [SPF 记录][8]正确吗？[测试您的 SPF 记录][1]。注意 SPF 的官方记录类型是 TXT。
-
-      - 您的网域的 [DKIM 记录][3]正确吗？这会显著提升电子邮件递送成功几率。[测试您的 DKIM 记录][7]。
-
-      - 如果您使用自建的邮件服务器，请确保您的邮件服务器的 IP [不在电子邮件屏蔽名单中][4]。还要验证它肯定发送一个可以在 HELO 消息中解析 DNS 的完全限定主机名。否则，您的电子邮件会被许多邮件服务拒绝。
-
-      - 强烈建议您**向 [mail-tester.com][mt] 发送一封测试邮件**以验证上述所有设置正常。
-
-      （一种*简单的*方法是创建一个 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 或 [Mailjet][mj] 帐户，这些平台提供适用于小型社区的低成本邮寄方案。不过，您仍然需要在 DNS 中设置 SPF 和 DKIM 记录！）
-
-      希望您能成功收到这封测试邮件！
-
-      祝君好运，
-
-      您在 [Discourse](https://www.discourse.org) 的伙伴
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
@@ -3194,6 +3151,28 @@ zh_CN:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "私信提及的用户群组"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "私信提及的用户群组"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "用户发帖"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3504,6 +3483,11 @@ zh_CN:
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
     download_failure: "从外部下载文件失败。"
+    size_mismatch_failure: "上传至S3的文件大小与外部上传存根的预期大小不一致。%{additional_detail}"
+    create_multipart_failure: "无法在外部存储中创建分段上传。"
+    abort_multipart_failure: "无法中止外部存储中的分段上传。"
+    complete_multipart_failure: "无法在外部存储中完成分段上传。"
+    external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
     attachments:
@@ -4249,10 +4233,8 @@ zh_CN:
             label: "您社区的名称"
             placeholder: "朱桦的环聊"
           site_description:
-            label: "用一句话描述您的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           short_site_description:
-            label: "用几个词描述您的社区"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"
@@ -4312,7 +4294,10 @@ zh_CN:
             label: "争议之城"
             placeholder: "加利福尼亚州旧金山"
       styling:
+        title: "样式"
         fields:
+          color_scheme:
+            label: "配色方案"
           body_font:
             label: "正文字体"
           heading_font:
@@ -4320,6 +4305,7 @@ zh_CN:
           styling_preview:
             label: "预览"
           homepage_style:
+            label: "首页样式"
             choices:
               latest:
                 label: "最新话题"
@@ -4407,21 +4393,11 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
-      post_count: "每个用户的前几个帖子必须由管理人员审批。请参阅 `approve_post_count`。"
-      trust_level: "信任级别低的用户的回复必须由管理人员审批。请参阅 `approve_unless_trust_level`。"
-      new_topics_unless_trust_level: "信任级别低的用户的话题必须由管理人员审批。请参阅 `approve_new_topics_unless_trust_level`。"
-      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅 `min_firse_post_typing_time`。"
-      auto_silence_regexp: "首个帖子符合 `auto_silence_first_post_regex` 设置的新用户。"
-      watched_word: "此帖子包含关注词，请参见您的<a href='%{base_url}/admin/customize/watched_words'>关注词列表</a>。"
-      staged: "暂存用户的新话题和帖子必须由管理人员审批。请参阅 `approve_unless_staged`。"
-      category: "此类别中的帖子要求管理人员手动审批。请参阅类别设置。"
-      must_approve_users: "所有新用户都必须由管理人员审批。请参阅 `must_approve_users`。"
-      invite_only: "所有新用户都应是受到邀请的用户。请参阅 `invite_only`。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
-      email_spam: "此电子邮件因 `email_in_spam_header` 中定义的标头被标记为垃圾邮件。"
-      suspect_user: "此新用户在没有阅读任何话题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾信息发布者。请参阅 `approve_suspect_users`。"
-      contains_media: "此帖子包括嵌入式媒体。请参阅 `review_media_unless_trust_level`。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
+      links:
+        watched_word: 列出关注的关键字
+        category: 分类设置
     actions:
       agree:
         title: "同意…"
@@ -4522,6 +4498,7 @@ zh_CN:
       other: "%{topic_title}（第 %{count} 部分）"
     post_raw: "从%{parent_url}继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在%{new_title}继续讨论。"
+  fallback_username: "用户"
   activemodel:
     errors:
       <<: *errors

@@ -1,4 +1,5 @@
 import { computed } from "@ember/object";
+import { or } from "@ember/object/computed";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 import UtilsMixin from "select-kit/mixins/utils";
 import layout from "select-kit/templates/components/select-kit/single-select-header";
@@ -8,7 +9,9 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
   tagName: "summary",
   layout,
   classNames: ["single-select-header"],
-  attributeBindings: ["name"],
+  attributeBindings: ["name", "ariaLabel:aria-label"],
+
+  ariaLabel: or("selectKit.options.headerAriaLabel", "name"),
 
   focusIn(event) {
     event.stopImmediatePropagation();

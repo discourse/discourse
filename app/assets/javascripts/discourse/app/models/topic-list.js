@@ -43,12 +43,11 @@ const TopicList = RestModel.extend({
   canLoadMore: notEmpty("more_topics_url"),
 
   forEachNew(topics, callback) {
-    const topicIds = [];
-
-    this.topics.forEach((topic) => (topicIds[topic.id] = true));
+    const topicIds = new Set();
+    this.topics.forEach((topic) => topicIds.add(topic.id));
 
     topics.forEach((topic) => {
-      if (!topicIds[topic.id]) {
+      if (!topicIds.has(topic.id)) {
         callback(topic);
       }
     });

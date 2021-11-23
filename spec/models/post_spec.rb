@@ -1715,6 +1715,17 @@ describe Post do
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
     end
+
+    it "skip S3 cdn urls with different path" do
+      setup_s3
+      SiteSetting.Upload.stubs(:s3_cdn_url).returns("https://cdn.example.com/site1")
+
+      urls = []
+      raw = "<img src='https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg' /><img src='https://cdn.example.com/site2/original/1X/bc68acbc8c022726e69f980e00d68112128.jpg' />"
+      post = Fabricate(:post, raw: raw)
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to contain_exactly("https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg")
+    end
   end
 
   describe "#publish_changes_to_client!" do
@@ -1742,6 +1753,24 @@ describe Post do
         options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
       end
       post.publish_change_to_clients!(:created)
+    end
+  end
+
+  describe "#cannot_permanently_delete_reason" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      freeze_time
+      PostDestroyer.new(admin, post).destroy
+    end
+
+    it 'returns error message if same admin and time did not pass' do
+      expect(post.cannot_permanently_delete_reason(admin)).to eq(I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i)))
+    end
+
+    it 'returns nothing if different admin' do
+      expect(post.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
 end

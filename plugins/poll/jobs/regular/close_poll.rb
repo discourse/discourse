@@ -13,10 +13,10 @@ module Jobs
       end
 
       DiscoursePoll::Poll.toggle_status(
+        Discourse.system_user,
         args[:post_id],
         args[:poll_name],
         "closed",
-        Discourse.system_user,
         false
       )
     end

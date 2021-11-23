@@ -27,9 +27,7 @@ const SELECT_KIT_OPTIONS = Mixin.create({
 });
 
 function isDocumentRTL() {
-  return (
-    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
-  );
+  return document.documentElement.classList.contains("rtl");
 }
 
 export default Component.extend(
@@ -209,8 +207,12 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
-      const computedOptions = {};
       Object.keys(this.selectKitOptions).forEach((key) => {
+        if (isPresent(this.options[key])) {
+          this.selectKit.options.set(key, this.options[key]);
+          return;
+        }
+
         const value = this.selectKitOptions[key];
 
         if (
@@ -219,9 +221,9 @@ export default Component.extend(
           key === "componentForCollection"
         ) {
           if (typeof value === "string") {
-            computedOptions[key] = () => value;
+            this.selectKit.options.set(key, () => value);
           } else {
-            computedOptions[key] = bind(this, value);
+            this.selectKit.options.set(key, bind(this, value));
           }
 
           return;
@@ -234,15 +236,13 @@ export default Component.extend(
         ) {
           const computedValue = get(this, value);
           if (typeof computedValue !== "function") {
-            computedOptions[key] = get(this, value);
+            this.selectKit.options.set(key, computedValue);
             return;
           }
         }
-        computedOptions[key] = value;
+
+        this.selectKit.options.set(key, value);
       });
-      this.selectKit.options.setProperties(
-        Object.assign(computedOptions, this.options || {})
-      );
 
       this.selectKit.setProperties({
         hasSelection: !isEmpty(this.value),
@@ -264,6 +264,7 @@ export default Component.extend(
     },
 
     selectKitOptions: {
+      allowAny: false,
       showFullTitle: true,
       none: null,
       translatedNone: null,
@@ -277,7 +278,6 @@ export default Component.extend(
       maximum: null,
       maximumLabel: null,
       minimum: null,
-      minimumLabel: null,
       autoInsertNoneItem: true,
       closeOnChange: true,
       limitMatches: null,
@@ -698,9 +698,16 @@ export default Component.extend(
 
     _scrollToRow(rowItem, preventScroll = true) {
       const value = this.getValue(rowItem);
-      const rowContainer = this.element.querySelector(
-        `.select-kit-row[data-value="${value}"]`
-      );
+
+      let rowContainer;
+      if (isPresent(value)) {
+        rowContainer = this.element.querySelector(
+          `.select-kit-row[data-value="${value}"]`
+        );
+      } else {
+        rowContainer = this.element.querySelector(".select-kit-row.is-none");
+      }
+
       rowContainer && rowContainer.focus({ preventScroll });
     },
 
@@ -998,6 +1005,10 @@ export default Component.extend(
         const input = this.getFilterInput();
         if (!forceHeader && input) {
           input.focus({ preventScroll: true });
+
+          if (typeof input.selectionStart === "number") {
+            input.selectionStart = input.selectionEnd = input.value.length;
+          }
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });

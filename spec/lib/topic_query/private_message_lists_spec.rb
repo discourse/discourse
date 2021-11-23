@@ -3,8 +3,11 @@
 require 'rails_helper'
 
 describe TopicQuery::PrivateMessageLists do
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_3) { Fabricate(:user) }
+  fab!(:user_4) { Fabricate(:user) }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
@@ -12,10 +15,24 @@ describe TopicQuery::PrivateMessageLists do
     end
   end
 
+  fab!(:group_2) do
+    Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+      g.add(user_4)
+    end
+  end
+
   fab!(:group_message) do
     create_post(
       user: user,
       target_group_names: [group.name],
+      archetype: Archetype.private_message
+    ).topic
+  end
+
+  fab!(:group_message_2) do
+    create_post(
+      user: user_3,
+      target_group_names: [group_2.name],
       archetype: Archetype.private_message
     ).topic
   end
@@ -28,121 +45,22 @@ describe TopicQuery::PrivateMessageLists do
     ).topic
   end
 
-  describe '#list_private_messages_all' do
-    it 'returns a list of all private messages that a user has access to' do
-      topics = TopicQuery.new(nil).list_private_messages_all(user).topics
-
-      expect(topics).to contain_exactly(group_message, private_message)
-    end
-
-    it 'does not include user or group archived messages' do
-      UserArchivedMessage.archive!(user.id, group_message)
-      UserArchivedMessage.archive!(user.id, private_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all(user).topics
-
-      expect(topics).to eq([])
-
-      GroupArchivedMessage.archive!(user_2.id, group_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all(user_2).topics
-
-      expect(topics).to contain_exactly(private_message)
-    end
-  end
-
-  describe '#list_private_messages_all_sent' do
-    it 'returns a list of all private messages that a user has sent' do
-      topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
-
-      expect(topics).to eq([])
-
-      create_post(user: user_2, topic: private_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
-
-      expect(topics).to contain_exactly(private_message)
-
-      create_post(user: user_2, topic: group_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
-
-      expect(topics).to contain_exactly(private_message, group_message)
-    end
-
-    it 'does not include user or group archived messages' do
-      create_post(user: user_2, topic: private_message)
-      create_post(user: user_2, topic: group_message)
-
-      UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(user_2.id, group_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all_sent(user_2).topics
-
-      expect(topics).to eq([])
-    end
-  end
-
-  describe '#list_private_messages_all_archive' do
-    it 'returns a list of all private messages that has been archived' do
-      UserArchivedMessage.archive!(user_2.id, private_message)
-      GroupArchivedMessage.archive!(user_2.id, group_message)
-
-      topics = TopicQuery.new(nil).list_private_messages_all_archive(user_2).topics
-
-      expect(topics).to contain_exactly(private_message, group_message)
-    end
-  end
-
-  describe '#list_private_messages_all_new' do
-    it 'returns a list of new private messages' do
-      topics = TopicQuery.new(nil).list_private_messages_all_new(user_2).topics
-
-      expect(topics).to contain_exactly(private_message, group_message)
-
-      TopicUser.find_by(user: user_2, topic: group_message).update!(
-        last_read_post_number: 1
-      )
-
-      topics = TopicQuery.new(nil).list_private_messages_all_new(user_2).topics
-
-      expect(topics).to contain_exactly(private_message)
-    end
-  end
-
-  describe '#list_private_messages_all_unread' do
-    before do
-      TopicUser.find_by(user: user_2, topic: group_message).update!(
-        last_read_post_number: 1
-      )
-
-      create_post(user: user, topic: group_message)
-    end
-
-    it 'returns a list of unread private messages' do
-      topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it 'takes into account first_unread_pm_at optimization' do
-      user_2.user_stat.update!(first_unread_pm_at: group_message.created_at + 1.day)
-
-      GroupUser.find_by(user: user_2, group: group).update!(
-        first_unread_pm_at: group_message.created_at - 1.day
-      )
-
-      topics = TopicQuery.new(nil).list_private_messages_all_unread(user_2).topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-  end
-
   describe '#list_private_messages' do
     it 'returns a list of all private messages that a user has access to' do
       topics = TopicQuery.new(nil).list_private_messages(user_2).topics
 
       expect(topics).to contain_exactly(private_message)
+    end
+
+    it "includes topics with moderator posts" do
+      pm = Fabricate(:private_message_post, user: user_4).topic
+
+      expect(TopicQuery.new(user_4).list_private_messages(user_4).topics).to be_empty
+
+      pm.add_moderator_post(admin, "Thank you for your flag")
+
+      expect(TopicQuery.new(user_4).list_private_messages(user_4).topics)
+        .to contain_exactly(pm)
     end
   end
 
@@ -335,6 +253,67 @@ describe TopicQuery::PrivateMessageLists do
 
       expect(TopicQuery.new(user_2).list_private_messages_new(user_2).topics)
         .to contain_exactly(pm_2)
+    end
+  end
+
+  describe '#private_messages_for' do
+    it 'returns a list of group private messages for a given user' do
+      expect(
+        TopicQuery
+          .new(user, group_name: group.name)
+          .private_messages_for(user, :group)
+      ).to eq([])
+
+      expect(
+        TopicQuery
+          .new(user_2, group_name: group.name)
+          .private_messages_for(user_2, :group)
+      ).to contain_exactly(group_message)
+
+      expect(
+        TopicQuery
+          .new(user_3, group_name: group_2.name)
+          .private_messages_for(user_3, :group)
+      ).to eq([])
+
+      expect(
+        TopicQuery
+          .new(user_4, group_name: group_2.name)
+          .private_messages_for(user_4, :group)
+      ).to contain_exactly(group_message_2)
+    end
+
+    it 'returns a list of personal private messages for a given user' do
+      expect(TopicQuery.new(user).private_messages_for(user, :user))
+        .to contain_exactly(private_message, group_message)
+
+      expect(TopicQuery.new(user_2).private_messages_for(user_2, :user))
+        .to contain_exactly(private_message)
+
+      expect(TopicQuery.new(user_3).private_messages_for(user_3, :user))
+        .to contain_exactly(group_message_2)
+
+      expect(TopicQuery.new(user_4).private_messages_for(user_4, :user))
+        .to eq([])
+    end
+
+    it 'returns a list of all private messages for a given user' do
+      expect(TopicQuery.new(user).private_messages_for(user, :all))
+        .to contain_exactly(private_message, group_message)
+
+      expect(TopicQuery.new(user_2).private_messages_for(user_2, :all))
+        .to contain_exactly(private_message, group_message)
+
+      expect(TopicQuery.new(user_3).private_messages_for(user_3, :all))
+        .to contain_exactly(group_message_2)
+
+      expect(TopicQuery.new(user_4).private_messages_for(user_4, :all))
+        .to contain_exactly(group_message_2)
+
+      group_2.remove(user_4)
+
+      expect(TopicQuery.new(user_4).private_messages_for(user_4, :all))
+        .to eq([])
     end
   end
 end

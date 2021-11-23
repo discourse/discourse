@@ -4,7 +4,7 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { dasherize } from "@ember/string";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { set } from "@ember/object";
@@ -113,6 +113,7 @@ export default Component.extend({
     return _components[type];
   },
 
+  @bind
   _performConfirmed(action) {
     let reviewable = this.reviewable;
 
@@ -264,7 +265,7 @@ export default Component.extend({
           title: "review.reject_reason.title",
           model: this.reviewable,
         }).setProperties({
-          performConfirmed: this._performConfirmed.bind(this),
+          performConfirmed: this._performConfirmed,
           action,
         });
       } else if (customModal) {
@@ -272,7 +273,7 @@ export default Component.extend({
           title: `review.${customModal}.title`,
           model: this.reviewable,
         }).setProperties({
-          performConfirmed: this._performConfirmed.bind(this),
+          performConfirmed: this._performConfirmed,
           action,
         });
       } else {

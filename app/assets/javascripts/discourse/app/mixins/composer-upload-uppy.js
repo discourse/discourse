@@ -1,17 +1,17 @@
 import Mixin from "@ember/object/mixin";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
-import { ajax } from "discourse/lib/ajax";
+import EmberObject from "@ember/object";
+import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import { warn } from "@ember/debug";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import { observes, on } from "discourse-common/utils/decorators";
+import { bind, observes, on } from "discourse-common/utils/decorators";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -19,6 +19,7 @@ import {
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import bootbox from "bootbox";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -32,7 +33,15 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 // and the most important _bindUploadTarget which handles all the main upload
 // functionality and event binding.
 //
-export default Mixin.create(ExtendableUploader, {
+export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+  uploadRootPath: "/uploads",
+  uploadTargetBound: false,
+
+  @bind
+  _cancelSingleUpload(data) {
+    this._uppyInstance.removeFile(data.fileId);
+  },
+
   @observes("composerModel.uploadCancelled")
   _cancelUpload() {
     if (!this.get("composerModel.uploadCancelled")) {
@@ -46,16 +55,21 @@ export default Mixin.create(ExtendableUploader, {
 
   @on("willDestroyElement")
   _unbindUploadTarget() {
+    if (!this.uploadTargetBound) {
+      return;
+    }
+
     this.fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
     );
 
-    this.element?.removeEventListener("paste", this.pasteEventListener);
+    this.element.removeEventListener("paste", this.pasteEventListener);
 
+    this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
-      `${this.eventPrefix}:add-files`,
-      this._addFiles.bind(this)
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
     );
 
     this._reset();
@@ -64,23 +78,35 @@ export default Mixin.create(ExtendableUploader, {
       this._uppyInstance.close();
       this._uppyInstance = null;
     }
+
+    this.uploadTargetBound = false;
+  },
+
+  _abortAndReset() {
+    this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
+    this._reset();
+    return false;
   },
 
   _bindUploadTarget() {
+    this.set("inProgressUploads", []);
     this.placeholders = {};
-    this._inProgressUploads = 0;
     this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
+    this.appEvents.on(`${this.eventPrefix}:add-files`, this._addFiles);
     this.appEvents.on(
-      `${this.eventPrefix}:add-files`,
-      this._addFiles.bind(this)
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
     );
 
     this._unbindUploadTarget();
-    this._bindFileInputChangeListener();
-    this._bindPasteListener();
+    this.fileInputEventListener = bindFileInputChangeListener(
+      this.fileInputEl,
+      this._addFiles
+    );
+    this.element.addEventListener("paste", this.pasteEventListener);
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,
@@ -117,6 +143,20 @@ export default Mixin.create(ExtendableUploader, {
         const fileCount = Object.keys(files).length;
         const maxFiles = this.siteSettings.simultaneous_uploads;
 
+        // Look for a matching file upload handler contributed from a plugin.
+        // It is not ideal that this only works for single file uploads, but
+        // at this time it is all we need. In future we may want to devise a
+        // nicer way of doing this. Uppy plugins are out of the question because
+        // there is no way to define which uploader plugin handles which file
+        // extensions at this time.
+        if (fileCount === 1) {
+          const file = Object.values(files)[0];
+          const matchingHandler = this._findMatchingUploadHandler(file.name);
+          if (matchingHandler && !matchingHandler.method(file.data, this)) {
+            return this._abortAndReset();
+          }
+        }
+
         // Limit the number of simultaneous uploads
         if (maxFiles > 0 && fileCount > maxFiles) {
           bootbox.alert(
@@ -124,14 +164,15 @@ export default Mixin.create(ExtendableUploader, {
               count: maxFiles,
             })
           );
-          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
-          this._reset();
-          return false;
+          return this._abortAndReset();
         }
       },
     });
 
-    // hidden setting like enable_experimental_image_uploader
+    if (this.siteSettings.enable_upload_debug_mode) {
+      this._instrumentUploadTimings();
+    }
+
     if (this.siteSettings.enable_direct_s3_uploads) {
       this._useS3MultipartUploads();
     } else {
@@ -154,6 +195,37 @@ export default Mixin.create(ExtendableUploader, {
       this.set("uploadProgress", progress);
     });
 
+    this._uppyInstance.on("file-removed", (file, reason) => {
+      file.meta.cancelled = true;
+
+      // we handle the cancel-all event specifically, so no need
+      // to do anything here
+      if (reason === "cancel-all") {
+        return;
+      }
+
+      this._removeInProgressUpload(file.id);
+      this._resetUpload(file, { removePlaceholder: true });
+      if (this.inProgressUploads.length === 0) {
+        this.set("userCancelled", true);
+        this._uppyInstance.cancelAll();
+      }
+    });
+
+    this._uppyInstance.on("upload-progress", (file, progress) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const upload = this.inProgressUploads.find((upl) => upl.id === file.id);
+      if (upload) {
+        const percentage = Math.round(
+          (progress.bytesUploaded / progress.bytesTotal) * 100
+        );
+        upload.set("progress", percentage);
+      }
+    });
+
     this._uppyInstance.on("upload", (data) => {
       this._addNeedProcessing(data.fileIDs.length);
 
@@ -167,7 +239,13 @@ export default Mixin.create(ExtendableUploader, {
       });
 
       files.forEach((file) => {
-        this._inProgressUploads++;
+        this.inProgressUploads.push(
+          EmberObject.create({
+            fileName: file.name,
+            id: file.id,
+            progress: 0,
+          })
+        );
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
@@ -178,7 +256,7 @@ export default Mixin.create(ExtendableUploader, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      this._inProgressUploads--;
+      this._removeInProgressUpload(file.id);
       let upload = response.body;
       const markdown = this.uploadMarkdownResolvers.reduce(
         (md, resolver) => resolver(upload) || md,
@@ -201,7 +279,7 @@ export default Mixin.create(ExtendableUploader, {
       );
     });
 
-    this._uppyInstance.on("upload-error", this._handleUploadError.bind(this));
+    this._uppyInstance.on("upload-error", this._handleUploadError);
 
     this._uppyInstance.on("complete", () => {
       this.appEvents.trigger(`${this.eventPrefix}:all-uploads-complete`);
@@ -229,10 +307,13 @@ export default Mixin.create(ExtendableUploader, {
 
     this._setupPreProcessors();
     this._setupUIPlugins();
+
+    this.uploadTargetBound = true;
   },
 
+  @bind
   _handleUploadError(file, error, response) {
-    this._inProgressUploads--;
+    this._removeInProgressUpload(file.id);
     this._resetUpload(file, { removePlaceholder: true });
 
     file.meta.error = error;
@@ -242,9 +323,16 @@ export default Mixin.create(ExtendableUploader, {
       this.appEvents.trigger(`${this.eventPrefix}:upload-error`, file);
     }
 
-    if (this._inProgressUploads === 0) {
+    if (this.inProgressUploads.length === 0) {
       this._reset();
     }
+  },
+
+  _removeInProgressUpload(fileId) {
+    this.set(
+      "inProgressUploads",
+      this.inProgressUploads.filter((upl) => upl.id !== fileId)
+    );
   },
 
   _setupPreProcessors() {
@@ -368,117 +456,6 @@ export default Mixin.create(ExtendableUploader, {
     });
   },
 
-  _useS3MultipartUploads() {
-    const self = this;
-
-    this._uppyInstance.use(AwsS3Multipart, {
-      // controls how many simultaneous _chunks_ are uploaded, not files,
-      // which in turn controls the minimum number of chunks presigned
-      // in each batch (limit / 2)
-      //
-      // the default, and minimum, chunk size is 5mb. we can control the
-      // chunk size via getChunkSize(file), so we may want to increase
-      // the chunk size for larger files
-      limit: 10,
-
-      createMultipartUpload(file) {
-        const data = {
-          file_name: file.name,
-          file_size: file.size,
-          upload_type: file.meta.upload_type,
-          metadata: file.meta,
-        };
-
-        // the sha1 checksum is set by the UppyChecksum plugin, except
-        // for in cases where the browser does not support the required
-        // crypto mechanisms or an error occurs. it is an additional layer
-        // of security, and not required.
-        if (file.meta.sha1_checksum) {
-          data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
-        }
-
-        return ajax("/uploads/create-multipart.json", {
-          type: "POST",
-          data,
-          // uppy is inconsistent, an error here fires the upload-error event
-        }).then((responseData) => {
-          file.meta.unique_identifier = responseData.unique_identifier;
-          return {
-            uploadId: responseData.external_upload_identifier,
-            key: responseData.key,
-          };
-        });
-      },
-
-      prepareUploadParts(file, partData) {
-        return (
-          ajax("/uploads/batch-presign-multipart-parts.json", {
-            type: "POST",
-            data: {
-              part_numbers: partData.partNumbers,
-              unique_identifier: file.meta.unique_identifier,
-            },
-          })
-            .then((data) => {
-              return { presignedUrls: data.presigned_urls };
-            })
-            // uppy is inconsistent, an error here does not fire the upload-error event
-            .catch((err) => {
-              self._handleUploadError(file, err);
-            })
-        );
-      },
-
-      completeMultipartUpload(file, data) {
-        const parts = data.parts.map((part) => {
-          return { part_number: part.PartNumber, etag: part.ETag };
-        });
-        return ajax("/uploads/complete-multipart.json", {
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({
-            parts,
-            unique_identifier: file.meta.unique_identifier,
-          }),
-          // uppy is inconsistent, an error here fires the upload-error event
-        }).then((responseData) => {
-          return responseData;
-        });
-      },
-
-      abortMultipartUpload(file, { key, uploadId }) {
-        // if the user cancels the upload before the key and uploadId
-        // are stored from the createMultipartUpload response then they
-        // will not be set, and we don't have to abort the upload because
-        // it will not exist yet
-        if (!key || !uploadId) {
-          return;
-        }
-
-        // this gives us a chance to inspect the upload stub before
-        // it is deleted from external storage by aborting the multipart
-        // upload; see also ExternalUploadManager
-        if (file.meta.error && self.siteSettings.enable_upload_debug_mode) {
-          return;
-        }
-
-        return ajax("/uploads/abort-multipart.json", {
-          type: "POST",
-          data: {
-            external_upload_identifier: uploadId,
-          },
-          // uppy is inconsistent, an error here does not fire the upload-error event
-        }).catch((err) => {
-          self._handleUploadError(file, err);
-        });
-      },
-
-      // we will need a listParts function at some point when we want to
-      // resume multipart uploads; this is used by uppy to figure out
-      // what parts are uploaded and which still need to be
-    });
-  },
-
   _reset() {
     this._uppyInstance?.reset();
     this.setProperties({
@@ -501,39 +478,30 @@ export default Mixin.create(ExtendableUploader, {
     }
   },
 
-  _bindFileInputChangeListener() {
-    this.fileInputEventListener = bindFileInputChangeListener(
-      this.fileInputEl,
-      this._addFiles.bind(this)
-    );
+  @bind
+  pasteEventListener(event) {
+    if (
+      document.activeElement !== document.querySelector(this.editorInputClass)
+    ) {
+      return;
+    }
+
+    const { canUpload } = clipboardHelpers(event, {
+      siteSettings: this.siteSettings,
+      canUpload: true,
+    });
+
+    if (!canUpload) {
+      return;
+    }
+
+    if (event && event.clipboardData && event.clipboardData.files) {
+      this._addFiles([...event.clipboardData.files], { pasted: true });
+    }
   },
 
-  _bindPasteListener() {
-    this.pasteEventListener = function pasteListener(event) {
-      if (
-        document.activeElement !== document.querySelector(this.editorInputClass)
-      ) {
-        return;
-      }
-
-      const { canUpload } = clipboardHelpers(event, {
-        siteSettings: this.siteSettings,
-        canUpload: true,
-      });
-
-      if (!canUpload) {
-        return;
-      }
-
-      if (event && event.clipboardData && event.clipboardData.files) {
-        this._addFiles([...event.clipboardData.files]);
-      }
-    }.bind(this);
-
-    this.element.addEventListener("paste", this.pasteEventListener);
-  },
-
-  _addFiles(files) {
+  @bind
+  _addFiles(files, opts = {}) {
     files = Array.isArray(files) ? files : [files];
     try {
       this._uppyInstance.addFiles(
@@ -543,6 +511,7 @@ export default Mixin.create(ExtendableUploader, {
             name: file.name,
             type: file.type,
             data: file,
+            meta: { pasted: opts.pasted },
           };
         })
       );
@@ -555,12 +524,5 @@ export default Mixin.create(ExtendableUploader, {
 
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
-  },
-
-  _debugLog(message) {
-    if (this.siteSettings.enable_upload_debug_mode) {
-      // eslint-disable-next-line no-console
-      console.log(message);
-    }
   },
 });

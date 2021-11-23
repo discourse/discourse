@@ -115,6 +115,7 @@ hy:
       previous_month: "Նախորդ Ամիս"
       next_month: "Հաջորդ Ամիս"
       placeholder: ամսաթիվ
+      to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber}"
@@ -282,6 +283,9 @@ hy:
       topic_reply: "Պատասխանի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
+    topic_count_categories:
+      one: "Տեսնել %{count} նոր կամ թարմացված թեման"
+      other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
     topic_count_latest:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
@@ -1539,7 +1543,6 @@ hy:
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
-      title: "Կամ սեղմեք Ctrl+Enter"
       users_placeholder: "Ավելացնել օգտատեր"
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
@@ -1658,6 +1661,9 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Չեղարկել"
+        cancel: "Չեղարկել"
       group_message_summary:
         one: "%{count} հաղորդագրություն Ձեր %{group_name} մուտքային արկղում"
         other: "%{count} հաղորդագրություն Ձեր %{group_name}-ի մուտքային արկղում"
@@ -1713,8 +1719,8 @@ hy:
       result_count:
         one: "<span>%{count} result for</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
-      title: "որոնել թեմաներ, հաղորդագրություններ, օգտատերեր կամ կատեգորիաներ"
-      full_page_title: "որոնել թեմաներ կամ հաղորդագրություններ"
+      title: "Որոնում"
+      full_page_title: "Որոնում"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       post_format: "#%{post_number} %{username}-ի կողմից"
@@ -1726,6 +1732,11 @@ hy:
       search_google: "Փորձեք որոնել Google-ում:"
       search_google_button: "Google"
       search_button: "Որոնում"
+      categories: "Կատեգորիաներ"
+      tags: "Թեգեր"
+      type:
+        users: "Օգտատերեր"
+        categories: "Կատեգորիաներ"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"
@@ -1733,7 +1744,6 @@ hy:
         topic: "Որոնել այս թեմայում"
         private_messages: "Որոնել հաղորդագրություններում"
       advanced:
-        title: Ընդլայնված Որոնում
         posted_by:
           label: Հրապարակել է՝
         in_category:
@@ -1778,7 +1788,6 @@ hy:
             after: հետո
         views:
           label: Դիտումների
-    hamburger_menu: "գնալ այլ թեմաների ցանկ կամ կատեգորիա"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -2191,6 +2200,7 @@ hy:
           other: "Դուք ընտրել եք <b>%{count}</b> գրառում:"
     post:
       quote_reply: "Մեջբերել"
+      quote_edit: "Խմբագրել"
       quote_share: "Կիսվել"
       edit_reason: "Պատճառը՝ "
       post_number: "գրառում %{number}"
@@ -2774,6 +2784,8 @@ hy:
           name: Այլ
         posting:
           name: Հրապարակում
+    download_calendar:
+      download: "Ներբեռնել"
     tagging:
       all_tags: "Բոլոր Թեգերը"
       other_tags: "Այլ Թեգեր"
@@ -2884,6 +2896,10 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
+    user_activity:
+      no_activity_others: "Ակտիվություն չկա:"
+      no_replies_others: "Պատասխան չկա:"
+      no_likes_others: "Հավանած գրառումներ չկան:"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -3407,12 +3423,8 @@ hy:
           embedded_scss:
             text: "Զետեղված CSS"
             title: "Մուտքագրեք մասնավոր CSS՝ մեկնաբանությունների զետեղված տարբերակի վրա կիրառելու համար"
-          head_tag:
-            text: "</head>"
-            title: "HTML, որը պետք է մուտք արվի մինչև </head> թեգը"
           body_tag:
-            text: "</body>"
-            title: "HTML, որը պետք է մուտք արվի մինչև </body> թեգը"
+            text: "Մարմին"
           yaml:
             text: "YAML"
             title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
@@ -4161,7 +4173,6 @@ hy:
           replace_owners: Հեռացնել նախորդ սեփականատիրոջ կրծքանշանը
       emoji:
         title: "Էմոջի"
-        help: "Ավելացրեք նոր էմոջի, որը հասանելի կլինի բոլորին: (ՀՈՒՇՈՒՄ՝ քաշեք և գցեք բազմակի ֆայլեր միանգամից)"
         add: "Ավելացնել Նոր Էմոջի"
         uploading: "Վերբեռնում..."
         name: "Անուն"
@@ -4172,7 +4183,6 @@ hy:
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հոսթը:"
-        sample: "Օգտագործեք հետևյալ HTML կոդը Ձեր կայքում՝ discourse-ի թեմաներ ստեղծելու և զետեղելու համար: Փոխարինեք <b>REPLACE_ME</b> տեքստը կանոնավոր URL-ով այն էջի վրա, որտեղ Դուք ներկառուցում եք այն:"
         title: "Զետեղում"
         host: "Թույլատրված Հոսթերը"
         class_name: "Class-ի Անունը"

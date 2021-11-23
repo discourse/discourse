@@ -1370,22 +1370,19 @@ lv:
         invite:
           new_title: "Izveidot ielūgumu"
           edit_title: "Rediģēt uzaicinājumu"
-          instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei"
+          instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei:"
           copy_link: "kopēt saiti"
           expires_in_time: "Derīguma termiņš beidzas pēc %{time}"
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
-          restrict_email: "Ierobežot tikai vienu e -pasta adresi"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
-          invite_to_topic: "Ierasties pie šīs tēmas"
           expires_at: "Derīguma termiņš beidzas"
           custom_message: "Neobligāts personiskais ziņojums"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
           save_invite: "Saglabāt uzaicinājumu"
           invite_saved: "Uzaicinājums saglabāts."
-          invite_copied: "Uzaicinājuma saite ir nokopēta."
         bulk_invite:
           progress: "Augšupielādēts %{progress}%..."
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
@@ -1750,7 +1747,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      title: "Vai nospiediet Ctrl+Enter"
       users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
@@ -1800,6 +1796,9 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
+      dismiss_confirmation:
+        dismiss: "Nerādīt"
+        cancel: "Atcelt"
       popup:
         mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
         group_mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -1846,8 +1845,8 @@ lv:
       select_all: "Izvēlēties visu"
       clear_all: "Noņemt visus"
       too_short: "Jūsu meklēšanas frāze ir pārāk īsa."
-      title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
-      full_page_title: "meklēt tēmas vai ziņas"
+      title: "Meklēt"
+      full_page_title: "Meklēt"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
       post_format: "#%{post_number} - %{username}"
@@ -1859,6 +1858,11 @@ lv:
       search_google: "Vai arī mēģiniet meklēt, izmantojot Google:"
       search_google_button: "Google"
       search_button: "Meklēt"
+      categories: "Sadaļas"
+      tags: "Tagi"
+      type:
+        users: "Lietotāji"
+        categories: "Sadaļas"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"
@@ -1866,7 +1870,6 @@ lv:
         topic: "Meklēt šai tēmā"
         private_messages: "Meklēt ziņās"
       advanced:
-        title: Izvērstā meklēšana
         posted_by:
           label: Ierakstīja
         in_category:
@@ -1919,7 +1922,6 @@ lv:
           placeholder: minimums
         max_views:
           placeholder: maksimums
-    hamburger_menu: "iet uz citu tēmu sarakstu vai sadaļu"
     new_item: "jauns"
     go_back: "atgriezties"
     not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"
@@ -2040,6 +2042,7 @@ lv:
         remove: "Noņemt taimeri"
         publish_to: "Publicēt: "
         when: "Kad:"
+        duration: "Ilgums"
       auto_update_input:
         later_today: "Vēlāk šodien"
         tomorrow: "Rītdien"
@@ -2280,6 +2283,7 @@ lv:
           other: "Jūs esat izvēlējies <b>%{count}</b> ierakstus."
     post:
       quote_reply: "Citāts"
+      quote_edit: "Labot"
       quote_share: "Dalīties"
       edit_reason: "Iemesls:"
       post_number: "ieraksts %{number}"
@@ -2758,6 +2762,8 @@ lv:
           name: Citi
         posting:
           name: Ieraksti
+    download_calendar:
+      download: "Lejuplādēt"
     tagging:
       all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"
@@ -3128,6 +3134,8 @@ lv:
           add: "Pievienot"
           scss:
             text: "CSS"
+          body_tag:
+            text: "Ķermenis"
         colors:
           undo: "atsaukt"
           revert: "atgriezt"
@@ -3652,7 +3660,6 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
-        help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
         add: "Pievienot Jaunu Smaidiņu"
         uploading: "Notiek ielāde..."
         name: "Nosaukums"
@@ -3662,7 +3669,6 @@ lv:
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Vai tiešām vēlies dzēst šo?"
-        sample: "(Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on.)"
         title: "Ieguldīšana"
         host: "Atļautie lietotāji"
         class_name: "Klases Nosaukums"

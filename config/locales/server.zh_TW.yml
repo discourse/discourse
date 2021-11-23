@@ -650,18 +650,9 @@ zh_TW:
       description: "給此貼文按讚"
       short_description: "喜歡這篇貼文"
   user_activity:
-    no_default:
-      self: "您尚未有任何活動紀錄。"
-      others: "無活動紀錄。"
     no_bookmarks:
       self: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
       others: "沒有書籤。"
-    no_likes_given:
-      self: "你沒有對任何貼文按讚。"
-      others: "沒有被讚的貼文。"
-    no_replies:
-      self: "您尚未回覆任何貼文。"
-      others: "沒有回覆。"
     no_drafts:
       self: "您沒有任何草稿，開始撰寫任何話題的回應，即會被自動儲存為新的草稿。"
   topic_flag_types:
@@ -697,7 +688,6 @@ zh_TW:
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: "Email 偏好設定已更新！"
-    description: "郵件偏好設定<b>%{email}</b>已經更新。更改郵件設定請訪問<a href='%{url}'>使用者設定</a>"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
     private_topic_description: "若要重新訂閱，請使用話題底部或右邊的通知控制列。"
   unsubscribe:
@@ -1029,7 +1019,7 @@ zh_TW:
       title: "可疑登入"
       labels:
         user: 使用者
-        client_ip: Client IP
+        client_ip: 使用者 IP
         location: 位置
         browser: 瀏覽器
         device: 裝置
@@ -1152,7 +1142,6 @@ zh_TW:
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
     summary_max_results: "“概括主題”將顯示最大貼文數量"
-    enable_personal_messages: "允許信任等級1（可以另外選擇發送消息的信任等級）的使用者建立訊息和回覆訊息。注意：管理人員不受限制。"
     enable_system_message_replies: "即使個人訊息功能未開啟，允許使用者回覆系統傳送的訊息。"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
     long_polling_base_url: "長輪詢的基本 URL（當用 CDN 分發動態內容，請設置此至原始拉取地址）例如：http://origin.site.com"
@@ -1393,7 +1382,6 @@ zh_TW:
     topic_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄一次新的主題訪問"
     user_profile_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄使用者資料訪問數"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
-    max_new_accounts_per_registration_ip: "如果已經有了從這個 IP 創建的 (n) 個信任等級0的賬戶（並且沒有一個是職員或者是信任等級2以上的使用者），不再允許來自該 IP 地址的註冊請求。"
     min_ban_entries_for_roll_up: "當點擊折疊按鈕且不少於 (N) 條記錄時，將會創建一個子網禁止記錄。"
     max_age_unmatched_emails: "在 (N) 天後刪除不匹配的電郵地址。"
     max_age_unmatched_ips: "在 (N) 天後刪除不匹配的 IP 記錄。"
@@ -2404,6 +2392,26 @@ zh_TW:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "使用者貼文"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3040,10 +3048,8 @@ zh_TW:
             label: "你社群的名字"
             placeholder: "小明的論壇"
           site_description:
-            label: "用一句簡短的話描述你的社群"
             placeholder: "小明和他的朋友討論酷東西的論壇"
           short_site_description:
-            label: "用幾句話描述你的社群"
             placeholder: "最佳社群"
       introduction:
         title: "介紹"
@@ -3181,16 +3187,6 @@ zh_TW:
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"
     conflict: "有一個更新衝突阻止您這樣做"
-    reasons:
-      post_count: "每個使用者的前幾個貼文發佈，必須得到管理員的批准，更多資訊請參閱`approve_post_count`。"
-      trust_level: "低信任等級的使用者必須擁有管理員批准，更多資訊請參閱 `approve_unless_trust_level`。"
-      new_topics_unless_trust_level: "低信任等級的使用者必須擁有管理員批准，才可發佈討論話題，更多資訊請參閱`approve_new_topics_unless_trust_level`。"
-      fast_typer: "新使用者輸入他們的第一個貼文，由於發送速度過快，疑似機器人或垃圾郵件發送者的行為，更多資訊請參閱`min_first_post_typing_time`。"
-      auto_silence_regexp: "第一個貼文與`auto_silence_first_post_regex`設定匹配相符的新使用者"
-      staged: "分階段使用者的新討論話題及貼文，必須得到管理員的批准，更多資訊請參閱`approve_unless_staged`。"
-      category: "在這個分類的貼文需要管理員手動批准，更多資訊請參閱分類設定（category setting）。"
-      must_approve_users: "所有新使用者必須得到管理員的批准，更多資訊請參閱`must_approve_users`。"
-      invite_only: "所有的新使用者應被邀請，更多資訊請參閱`invite_only`。"
     actions:
       agree:
         title: "同意..."
@@ -3254,6 +3250,7 @@ zh_TW:
         title: "拒絕"
       delete_user:
         reason: "透過排隊中的審核刪除"
+  fallback_username: "使用者"
   activemodel:
     errors:
       <<: *errors

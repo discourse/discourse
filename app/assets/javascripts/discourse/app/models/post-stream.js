@@ -100,23 +100,18 @@ export default RestModel.extend({
   canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
   canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
 
-  @discourseComputed("hasLoadedData", "firstPostId", "posts.[]")
-  firstPostPresent(hasLoadedData, firstPostId) {
+  @discourseComputed("hasLoadedData", "posts.[]")
+  firstPostPresent(hasLoadedData) {
     if (!hasLoadedData) {
       return false;
     }
-    return !!this.posts.findBy("id", firstPostId);
+
+    return !!this.posts.findBy("post_number", 1);
   },
 
   firstPostNotLoaded: not("firstPostPresent"),
 
-  firstId: null,
   lastId: null,
-
-  @discourseComputed("isMegaTopic", "stream.firstObject", "firstId")
-  firstPostId(isMegaTopic, streamFirstId, firstId) {
-    return isMegaTopic ? firstId : streamFirstId;
-  },
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {
@@ -554,7 +549,7 @@ export default RestModel.extend({
 
     post.setProperties({
       post_number: topic.get("highest_post_number"),
-      topic: topic,
+      topic,
       created_at: new Date(),
       id: -1,
     });
@@ -852,6 +847,18 @@ export default RestModel.extend({
     return resolved;
   },
 
+  triggerLikedPost(postId, likesCount) {
+    const resolved = Promise.resolve();
+
+    const post = this.findLoadedPost(postId);
+    if (post) {
+      post.updateLikeCount(likesCount);
+      this.storePost(post);
+    }
+
+    return resolved;
+  },
+
   triggerReadPost(postId, readersCount) {
     const resolved = Promise.resolve();
     resolved.then(() => {
@@ -1068,7 +1075,7 @@ export default RestModel.extend({
     const url = `/t/${this.get("topic.id")}/posts.json`;
     let data = {
       post_number: postNumber,
-      asc: asc,
+      asc,
       include_suggested: includeSuggested,
     };
 
@@ -1252,6 +1259,8 @@ export default RestModel.extend({
       suggested_group_name: result.suggested_group_name,
     });
 
-    this.pmTopicTrackingState.startTracking();
+    if (this.topic.isPrivateMessage) {
+      this.pmTopicTrackingState.startTracking();
+    }
   },
 });

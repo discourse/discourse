@@ -55,7 +55,7 @@ class PostDestroyer
 
   def destroy
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
-    topic = @post.topic
+    topic = Topic.with_deleted.find_by(id: @post.topic_id)
     is_first_post = @post.is_first_post? && topic
     has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
 
@@ -79,7 +79,7 @@ class PostDestroyer
     Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
 
     if is_first_post
-      UserProfile.remove_featured_topic_from_all_profiles(@topic)
+      UserProfile.remove_featured_topic_from_all_profiles(topic)
       UserActionManager.topic_destroyed(topic)
       DiscourseEvent.trigger(:topic_destroyed, topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload) if has_topic_web_hooks
@@ -205,7 +205,8 @@ class PostDestroyer
       @post.revise(@user,
         { raw: I18n.t(key) },
         force_new_version: true,
-        deleting_post: true
+        deleting_post: true,
+        skip_validations: true
       )
 
       Post.transaction do

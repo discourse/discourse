@@ -9,7 +9,6 @@ export default Component.extend(UtilsMixin, {
   attributeBindings: [
     "role",
     "tabindex",
-    "ariaLevel:aria-level",
     "selectedValue:data-value",
     "selectedNames:data-name",
     "buttonTitle:title",
@@ -18,9 +17,7 @@ export default Component.extend(UtilsMixin, {
 
   selectKit: null,
 
-  role: "application",
-
-  ariaLevel: 1,
+  role: "listbox",
 
   tabindex: 0,
 

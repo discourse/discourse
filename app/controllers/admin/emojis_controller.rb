@@ -6,6 +6,9 @@ class Admin::EmojisController < Admin::AdminController
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end
 
+  # TODO (martin) Figure out a way that this kind of custom logic can
+  # be run in the ExternalUploadManager when a direct S3 upload is completed,
+  # related to preventDirectS3Uploads in the UppyUploadMixin.
   def create
     file = params[:file] || params[:files].first
     name = params[:name] || File.basename(file.original_filename, ".*")
@@ -13,6 +16,7 @@ class Admin::EmojisController < Admin::AdminController
 
     hijack do
       # fix the name
+      name = File.basename(name, ".*")
       name = name.gsub(/[^a-z0-9]+/i, '_')
         .gsub(/_{2,}/, '_')
         .downcase

@@ -32,13 +32,6 @@
     padding-bottom: 0px;
   }
 
-  // iOS 15 Safari has a floating address bar that displays above the composer submit bar
-  // we cannot detect its preseence, so we need to add extra padding
-  // Apple says it's a known issue, see https://bugs.webkit.org/show_bug.cgi?id=229876
-  .keyboard-visible body.ios-safari-15-hack &.open .reply-area {
-    padding-bottom: 45px;
-  }
-
   .reply-to {
     margin: 5px 0;
     .reply-details {
@@ -187,7 +180,8 @@
   }
 
   .with-tags {
-    .mini-tag-chooser {
+    .mini-tag-chooser,
+    .category-chooser {
       z-index: z("base");
       margin-bottom: 5px;
     }

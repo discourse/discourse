@@ -115,6 +115,7 @@ fr:
       previous_month: "Mois précédent"
       next_month: "Mois suivant"
       placeholder: date
+      to_placeholder: "à la date"
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"
@@ -310,6 +311,9 @@ fr:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+    topic_count_categories:
+      one: "Voir %{count} sujet récent ou mis à jour"
+      other: "Voir %{count} sujets récents ou mis à jour"
     topic_count_latest:
       one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
@@ -1448,22 +1452,19 @@ fr:
         invite:
           new_title: "Créer une invitation"
           edit_title: "Modifier l'invitation"
-          instructions: "Partagez ce lien pour donner instantanément accès au forum"
+          instructions: "Partagez ce lien pour donner instantanément accès au site :"
           copy_link: "copier le lien"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
-          restrict_email: "Restreindre l'invitation à une adresse de courriel donnée"
           max_redemptions_allowed: "Nombre max. d'utilisations"
           add_to_groups: "Ajouter la personne invitée à ces groupes"
-          invite_to_topic: "Diriger vers ce sujet"
           expires_at: "Ce lien expirera dans"
           custom_message: "Message personnel (facultatif)"
           send_invite_email: "Enregistrer et envoyer le courriel"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
-          invite_copied: "Lien d'invitation copié."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -1899,7 +1900,6 @@ fr:
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
-      title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
@@ -2036,6 +2036,9 @@ fr:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - terminé"
+      dismiss_confirmation:
+        dismiss: "Vu"
+        cancel: "Annuler"
       group_message_summary:
         one: "%{count} message dans la boîte de réception de %{group_name}"
         other: "%{count} messages dans la boîte de réception de %{group_name}"
@@ -2094,8 +2097,8 @@ fr:
       result_count:
         one: "<span>%{count} résultat pour</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
-      title: "rechercher des sujets, messages, utilisateurs ou catégories"
-      full_page_title: "rechercher des sujets ou messages"
+      title: "Recherche"
+      full_page_title: "Recherche"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       post_format: "#%{post_number} par %{username}"
@@ -2107,6 +2110,11 @@ fr:
       search_google: "Essayez plutôt de rechercher avec Google :"
       search_google_button: "Google"
       search_button: "Recherche"
+      categories: "Catégories"
+      tags: "Étiquettes"
+      type:
+        users: "Utilisateurs"
+        categories: "Catégories"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"
@@ -2114,7 +2122,6 @@ fr:
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher dans les messages directs"
       advanced:
-        title: Recherche avancée
         posted_by:
           label: Auteur
         in_category:
@@ -2167,7 +2174,6 @@ fr:
           placeholder: minimum
         max_views:
           placeholder: maximum
-    hamburger_menu: "accéder à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -2340,6 +2346,7 @@ fr:
         time_frame_required: "Veuillez sélectionner un intervalle de temps"
         min_duration: "La durée doit être supérieure à 0"
         max_duration: "La durée doit être inférieure à 20 ans"
+        duration: "Durée "
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
@@ -2671,6 +2678,7 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
     post:
       quote_reply: "Citer"
+      quote_edit: "Modifier"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -2762,6 +2770,7 @@ fr:
             other: "Oui, et les %{count} réponses"
           just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
+        permanently_delete: "Supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
@@ -3338,6 +3347,8 @@ fr:
       favorite_max_reached: "Vous ne pouvez pas choisir davantage de badges préférés"
       favorite_max_not_reached: "Faire de ce badge un de mes préférés"
       favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
+    download_calendar:
+      download: "Télécharger"
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -3486,6 +3497,10 @@ fr:
         regular: "habitué"
         leader: "meneur"
       detailed_name: "%{level} : %{name}"
+    user_activity:
+      no_activity_others: "Aucune activité."
+      no_replies_others: "Aucune réponse."
+      no_likes_others: "Aucun message aimé."
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -3686,7 +3701,6 @@ fr:
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
-        use_global_key: Clé globale (autorise toutes les actions)
         scopes:
           description: |
             En configurant des permissions, vous pouvez restreindre une clé d'API à certaines actions spécifiques.
@@ -4081,12 +4095,8 @@ fr:
               %{example}
 
               Il est fortement recommandé de préfixer les noms des propriétés CSS pour éviter tout conflit avec Discourse ou ses extensions.
-          head_tag:
-            text: "</head>"
-            title: "HTML qui sera inséré avant la balise </head>"
           body_tag:
-            text: "</body>"
-            title: "HTML qui sera inséré avant la balise </body>"
+            text: "Corps"
           yaml:
             text: "YAML"
             title: "Définir les paramètres du thème au format YAML"
@@ -4921,7 +4931,6 @@ fr:
           replace_owners: Retirer le badge des propriétaires précédents
       emoji:
         title: "Émoji"
-        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glissez-déposez plusieurs fichiers en même temps)"
         add: "Ajouter un nouvel émoji"
         uploading: "Envoi en cours…"
         name: "Nom"
@@ -4932,7 +4941,6 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
         class_name: "Nom de classe"

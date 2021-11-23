@@ -1,5 +1,6 @@
 import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
 import { Promise } from "rsvp";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
   static pluginId = "uppy-media-optimization";
@@ -15,6 +16,7 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
     this.runParallel = opts.runParallel || false;
   }
 
+  @bind
   _optimizeFile(fileId) {
     let file = this._getFile(fileId);
 
@@ -22,17 +24,19 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
 
     return this.optimizeFn(file, { stopWorkerOnError: !this.runParallel })
       .then((optimizedFile) => {
+        let skipped = false;
         if (!optimizedFile) {
           this._consoleWarn(
-            "Nothing happened, possible error or other restriction."
+            "Nothing happened, possible error or other restriction, or the file format is not a valid one for compression."
           );
+          skipped = true;
         } else {
           this._setFileState(fileId, {
             data: optimizedFile,
             size: optimizedFile.size,
           });
         }
-        this._emitComplete(file);
+        this._emitComplete(file, skipped);
       })
       .catch((err) => {
         this._consoleWarn(err);
@@ -40,13 +44,15 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
       });
   }
 
+  @bind
   _optimizeParallel(fileIds) {
-    return Promise.all(fileIds.map(this._optimizeFile.bind(this)));
+    return Promise.all(fileIds.map(this._optimizeFile));
   }
 
+  @bind
   async _optimizeSerial(fileIds) {
     let optimizeTasks = fileIds.map((fileId) => () =>
-      this._optimizeFile.call(this, fileId)
+      this._optimizeFile(fileId)
     );
 
     for (const task of optimizeTasks) {
@@ -56,17 +62,17 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
 
   install() {
     if (this.runParallel) {
-      this._install(this._optimizeParallel.bind(this));
+      this._install(this._optimizeParallel);
     } else {
-      this._install(this._optimizeSerial.bind(this));
+      this._install(this._optimizeSerial);
     }
   }
 
   uninstall() {
     if (this.runParallel) {
-      this._uninstall(this._optimizeParallel.bind(this));
+      this._uninstall(this._optimizeParallel);
     } else {
-      this._uninstall(this._optimizeSerial.bind(this));
+      this._uninstall(this._optimizeSerial);
     }
   }
 }

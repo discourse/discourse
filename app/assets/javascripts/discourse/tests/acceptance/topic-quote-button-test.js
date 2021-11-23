@@ -3,20 +3,11 @@ import {
   chromeTest,
   exists,
   queryAll,
+  selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { settled, visit } from "@ember/test-helpers";
-
-async function selectText(selector) {
-  const range = document.createRange();
-  const node = document.querySelector(selector);
-  range.selectNodeContents(node);
-
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  await settled();
-}
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`
 acceptance("Topic - Quote button - logged in", function (needs) {
@@ -63,7 +54,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
       await selectText("#post_3 aside.onebox p");
       await click(".insert-quote");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val().trim(),
         '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
         "quote only contains a link"
@@ -132,4 +123,20 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       assert.ok(!exists(".insert-quote"), "it does not show the quote button");
     }
   );
+});
+
+acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
+  needs.user();
+
+  test("Can use keyboard shortcut to quote selected text", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_1 .cooked");
+    await triggerKeyEvent(document, "keypress", "q".charCodeAt(0));
+    assert.ok(exists(".d-editor-input"), "the editor is open");
+
+    assert.ok(
+      queryAll(".d-editor-input").val().includes("Any plans to support"),
+      "editor includes selected text"
+    );
+  });
 });

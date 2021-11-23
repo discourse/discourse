@@ -3,10 +3,12 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -69,7 +71,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:all-uploads-complete", () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val(),
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
       );
@@ -77,7 +79,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     });
 
     appEvents.on("composer:upload-started", () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val(),
         "The image:\n[Uploading: avatar.png...]()\n"
       );
@@ -96,7 +98,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image2 = createFile("avatar2.png");
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         I18n.t("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
@@ -120,7 +122,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
@@ -139,47 +141,47 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", [jsonFile]);
   });
 
-  // Had to comment this out for now; it works fine in Ember CLI but lagging
+  // TODO: Had to comment this out for now; it works fine in Ember CLI but lagging
   // UI updates sink it for the old Ember for some reason. Will re-enable
   // when we make Ember CLI the primary.
-  //
-  // test("cancelling uploads clears the placeholders out", async function (assert) {
-  //   await visit("/");
-  //   await click("#create-topic");
-  //   await fillIn(".d-editor-input", "The image:\n");
-  //   const appEvents = loggedInUser().appEvents;
-  //   const done = assert.async();
 
-  //   appEvents.on("composer:uploads-cancelled", () => {
-  //     assert.equal(
-  //       queryAll(".d-editor-input").val(),
-  //       "The image:\n",
-  //       "it should clear the cancelled placeholders"
-  //     );
-  //     done();
-  //   });
+  skip("cancelling uploads clears the placeholders out", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
 
-  //   let uploadStarted = 0;
-  //   appEvents.on("composer:upload-started", async () => {
-  //     uploadStarted++;
+    appEvents.on("composer:uploads-cancelled", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n",
+        "it should clear the cancelled placeholders"
+      );
+      done();
+    });
 
-  //     if (uploadStarted === 2) {
-  //       assert.equal(
-  //         queryAll(".d-editor-input").val(),
-  //         "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
-  //         "it should show the upload placeholders when the upload starts"
-  //       );
-  //     }
-  //   });
+    let uploadStarted = 0;
+    appEvents.on("composer:upload-started", async () => {
+      uploadStarted++;
 
-  //   appEvents.on("composer:uploads-preprocessing-complete", async () => {
-  //     await click("#cancel-file-upload");
-  //   });
+      if (uploadStarted === 2) {
+        assert.strictEqual(
+          queryAll(".d-editor-input").val(),
+          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
+          "it should show the upload placeholders when the upload starts"
+        );
+      }
+    });
 
-  //   const image = createFile("avatar.png");
-  //   const image2 = createFile("avatar2.png");
-  //   appEvents.trigger("composer:add-files", [image, image2]);
-  // });
+    appEvents.on("composer:uploads-preprocessing-complete", async () => {
+      await click("#cancel-file-upload");
+    });
+
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+    appEvents.trigger("composer:add-files", [image, image2]);
+  });
 });
 
 acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
@@ -207,7 +209,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
@@ -220,5 +222,41 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
+  });
+});
+
+acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
+  needs.user();
+  needs.pretender(pretender);
+  needs.settings({
+    enable_experimental_composer_uploader: true,
+    simultaneous_uploads: 2,
+  });
+  needs.hooks.beforeEach(() => {
+    withPluginApi("0.8.14", (api) => {
+      api.addComposerUploadHandler(["png"], (file) => {
+        bootbox.alert(`This is an upload handler test for ${file.name}`);
+      });
+    });
+  });
+
+  test("should use upload handler if the matching extension is used and a single file is uploaded", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const image = createFile("handlertest.png");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:uploads-aborted", async () => {
+      assert.strictEqual(
+        queryAll(".bootbox .modal-body").html(),
+        "This is an upload handler test for handlertest.png",
+        "it should show the bootbox triggered by the upload handler"
+      );
+      await click(".modal-footer .btn");
+      done();
+    });
+
+    appEvents.trigger("composer:add-files", [image]);
   });
 });

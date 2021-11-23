@@ -20,9 +20,9 @@ export default Controller.extend(BulkTopicSelection, {
   tagsForUser: null,
   incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
 
-  @discourseComputed("emptyState", "model.topics.length", "incomingCount")
-  showEmptyStatePlaceholder(emptyState, topicsLength, incomingCount) {
-    return emptyState && topicsLength === 0 && incomingCount === 0;
+  @discourseComputed("model.topics.length", "incomingCount")
+  noContent(topicsLength, incomingCount) {
+    return topicsLength === 0 && incomingCount === 0;
   },
 
   saveScrollPosition() {
@@ -49,7 +49,7 @@ export default Controller.extend(BulkTopicSelection, {
   },
 
   unsubscribe() {
-    this.pmTopicTrackingState.resetIncomingTracking();
+    this.pmTopicTrackingState.stopIncomingTracking();
   },
 
   @action
@@ -60,7 +60,7 @@ export default Controller.extend(BulkTopicSelection, {
 
     const opts = {
       inbox: this.inbox,
-      topicIds: topicIds,
+      topicIds,
     };
 
     if (this.group) {
@@ -85,5 +85,10 @@ export default Controller.extend(BulkTopicSelection, {
     this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
     this.pmTopicTrackingState.resetIncomingTracking();
     return false;
+  },
+
+  @action
+  refresh() {
+    this.send("triggerRefresh");
   },
 });

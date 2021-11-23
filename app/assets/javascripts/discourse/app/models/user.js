@@ -97,6 +97,7 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "default_calendar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -381,7 +382,7 @@ const User = RestModel.extend({
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
-      data: data,
+      data,
       type: "PUT",
     })
       .then((result) => {
@@ -760,7 +761,7 @@ const User = RestModel.extend({
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
-  delete: function () {
+  delete() {
     if (this.can_delete_account) {
       return ajax(userPath(this.username + ".json"), {
         type: "DELETE",
@@ -1036,7 +1037,7 @@ User.reopenClass(Singleton, {
 
   // Find a `User` for a given username.
   findByUsername(username, options) {
-    const user = User.create({ username: username });
+    const user = User.create({ username });
     return user.findDetails(options);
   },
 
@@ -1124,6 +1125,7 @@ User.reopenClass(Singleton, {
 
 if (typeof Discourse !== "undefined") {
   let warned = false;
+  // eslint-disable-next-line no-undef
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {

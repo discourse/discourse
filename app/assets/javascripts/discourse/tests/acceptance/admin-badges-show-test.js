@@ -51,7 +51,7 @@ acceptance("Admin - Badges - Show", function (needs) {
     );
     assert.ok(exists(".icon-picker"), "icon picker is visible");
     assert.ok(!exists(".image-uploader"), "image uploader is not visible");
-    assert.equal(query(".icon-picker").textContent.trim(), "fa-rocket");
+    assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 
   test("existing badge that has an image URL", async function (assert) {
@@ -92,6 +92,6 @@ acceptance("Admin - Badges - Show", function (needs) {
     await click("input#badge-icon");
     assert.ok(exists(".icon-picker"), "icon picker is becomes visible");
     assert.ok(!exists(".image-uploader"), "image uploader becomes hidden");
-    assert.equal(query(".icon-picker").textContent.trim(), "fa-rocket");
+    assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 });

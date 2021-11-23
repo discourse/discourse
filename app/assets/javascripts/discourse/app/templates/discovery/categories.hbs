@@ -1,6 +1,14 @@
 {{plugin-outlet name="above-discovery-categories" tagName="" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}
 
 {{#discovery-categories refresh=(action "refresh")}}
+  {{#if topicTrackingState.hasIncoming}}
+    <div class="show-more {{if hasTopics "has-topics"}}">
+      <div role="button" class="alert alert-info clickable" {{action "showInserted"}}>
+        {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+      </div>
+    </div>
+  {{/if}}
+
   {{component categoryPageStyle
               categories=model.categories
               topics=model.topics}}

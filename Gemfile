@@ -181,9 +181,14 @@ group :development do
   gem 'yaml-lint'
 end
 
-group ENV["ALLOW_DEV_POPULATE"] == "1" ? :production : :development do
+if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem 'discourse_dev_assets'
   gem 'faker', "~> 2.16"
+else
+  group :development do
+    gem 'discourse_dev_assets'
+    gem 'faker', "~> 2.16"
+  end
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -209,6 +214,9 @@ gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
+
+# rss gem is a bundled gem from Ruby 3 onwards
+gem 'rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri

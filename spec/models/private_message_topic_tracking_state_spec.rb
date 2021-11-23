@@ -166,6 +166,17 @@ describe PrivateMessageTopicTrackingState do
         .to eq(NotificationLevels.all[:watching])
       expect(data['payload']['group_ids']).to eq([])
     end
+
+    it 'does not publish message_bus message if post in topic is not new for user' do
+      group_message.update!(created_at: 3.days.ago)
+      user_2.user_option.update!(new_topic_duration_minutes: 2.days.minutes)
+
+      messages = MessageBus.track_publish do
+        described_class.publish_unread(group_message.first_post)
+      end
+
+      expect(messages).to eq([])
+    end
   end
 
   describe '.publish_group_archived' do

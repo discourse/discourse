@@ -28,7 +28,7 @@ const NavItem = EmberObject.extend({
       count = 0;
     }
 
-    let extra = { count: count };
+    let extra = { count };
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
     return emojiUnescape(

@@ -16,6 +16,7 @@ pl_PL:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -267,7 +268,6 @@ pl_PL:
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
-    muted_invitee: "Przepraszamy, ten użytkownik Cię wyciszył."
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
     receiver_does_not_allow_pm: "Przepraszamy, ten użytkownik nie pozwala na wysyłanie mu prywatnych wiadomości."
     sender_does_not_allow_pm: "Przepraszamy, nie pozwalasz temu użytkownikowi na wysyłanie Ci prywatnych wiadomości."
@@ -437,6 +437,7 @@ pl_PL:
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
+      for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -716,6 +717,9 @@ pl_PL:
       few: "%{count} polubienia"
       many: "%{count} polubień"
       other: "%{count} polubień"
+    cannot_permanently_delete:
+      many_posts: "Nie możesz trwale usunąć tego tematu, ponieważ są tam inne posty."
+      wait_or_different_admin: "Musisz odczekać %{time_left} przed trwałym usunięciem tego posta lub musi to zrobić inny administrator."
   rate_limiter:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie za %{time_left}."
@@ -988,19 +992,10 @@ pl_PL:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
-    no_default:
-      self: "Nie masz jeszcze żadnej aktywności."
-      others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz żadnych wpisów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych wpisów."
       search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       others: "Brak zakładek."
-    no_likes_given:
-      self: "Nie masz polubionych wpisów."
-      others: "Brak polubionych wpisów."
-    no_replies:
-      self: "Nie odpowiedziałeś na żadne wpisy."
-      others: "Brak odpowiedzi."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
   email_settings:
@@ -1063,7 +1058,7 @@ pl_PL:
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: "Zaktualizowano preferencje e-mail!"
-    description: "preferencje e-mailowe dla <b>%{email}</b> zostały zapisane. Aby zmienić ustawienia e-mailowe <a href='%{url}'>zajrzyj do ustawień użytkownika</a>."
+    description: "Preferencje wiadomości e-mail dla <b>%{email}</b> zostały zaktualizowane. Aby zmienić ustawienia poczty e-mail <a href='%{url}'>odwiedź preferencje użytkownika</a>."
     topic_description: "Aby ponownie zasubskrybować %{link}, użyj kontrolki powiadomienia na dole lub po prawej stronie tematu."
     private_topic_description: "Aby ponownie zasubskrybować, użyj opcji powiadomienia na dole lub po prawej stronie tematu."
   uploads:
@@ -1567,7 +1562,7 @@ pl_PL:
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
-    enable_personal_messages: "Zezwalaj użytkownikom o poziomie zaufania 1 (możliwe do zmiany przez min trust level to send messages) na tworzenie wiadomości i odpowiadanie na nie. Zwróć uwagę, że administracja zawsze może wysyłać wiadomości bez względu na wszystko."
+    summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
@@ -1782,6 +1777,7 @@ pl_PL:
     external_emoji_url: "Adres URL zewnętrznej usługi dla obrazów emoji. Pozostaw puste, aby wyłączyć."
     use_site_small_logo_as_system_avatar: "Użyj małego logo witryny zamiast awatara użytkownika system. Wymaga obecności logo."
     restrict_letter_avatar_colors: "Lista 6-cyfrowych szesnastkowych wartości kolorów, które mają być używane jako tło awatara."
+    enable_listing_suspended_users_on_search: "Zezwól zwykłym użytkownikom na znajdowanie zawieszonych użytkowników."
     selectable_avatars_enabled: "Wymuś na użytkownikach wybieranie awatara z listy."
     selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
@@ -1897,7 +1893,6 @@ pl_PL:
     topic_view_duration_hours: "Licz wyświetlanie nowego tematu na IP/Użytkownika co N godzin"
     user_profile_view_duration_hours: "Licz nowe wyświetlenia profilu użytkownika na IP/Użytkownika co N godzin"
     levenshtein_distance_spammer_emails: "Przy dopasowywaniu emaili spamowych, różnica liczby znaków, która w dalszym ciągu pozwoli na przybliżone dopasowanie."
-    max_new_accounts_per_registration_ip: "Jeśli istnieję już (n) kont o poziomie zaufania 0 z tego adresu IP (i żaden nie jest z obsługi lub na TL2 lub wyżej), zatrzymaj akceptowanie nowych użytkowników z tego IP."
     min_ban_entries_for_roll_up: "Podczas naciskania na przycisk Przewiń do góry, utwórz nowy wpis blokady podsieci jeśli jest co najmniej (N) wpisów."
     max_age_unmatched_emails: "Usuń niedopasowany ekranowany wpis email po (N) dniach."
     max_age_unmatched_ips: "Usuń niedopasowany ekranowany wpis IP po (N) dniach."
@@ -2033,6 +2028,7 @@ pl_PL:
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
     global_notice: "Wyświetlaj PILNE, AWARYJNE lub zawsze widoczny banner informacyjny, który będzie widoczny dla wszystkich odwiedzających. Ustaw to pole jako puste, aby go ukryć. (HTML dozwolony)"
     disable_system_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
+    disable_category_edit_notifications: "Wyłącz powiadomienia o edycji kategorii w tematach."
     notification_consolidation_threshold: "Liczba polubień lub powiadomień o członkostwie otrzymanych przed połączeniem powiadomień w jedno. Ustaw 0 aby wyłączyć."
     likes_notification_consolidation_window_mins: "Czas w minutach, po którym powiadomienia o polubieniach są łączone w jedno powiadomienie. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."
@@ -2056,7 +2052,7 @@ pl_PL:
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     highlighted_languages: "Dołączone reguły podświetlania składni. (Ostrzeżenie: dołączenie zbyt wielu języków może wpłynąć na wydajność) Zobacz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>, aby zobaczyć wersję demonstracyjną"
-    show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku bezpośrednio do schowka użytkownika. Ta funkcja nie jest obsługiwana w przeglądarce Internet Explorer."
+    show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku do schowka użytkownika."
     embed_any_origin: "Zezwalaj na osadzanie zawartości niezależnie od jej pochodzenia. Jest to wymagane w przypadku aplikacji mobilnych ze statycznym kodem HTML."
     embed_topics_list: "Obsługa osadzania list tematów w formacie HTML"
     embed_set_canonical_url: "Ustaw kanoniczny adres URL dla osadzonych tematów w adresie osadzonej zawartości."
@@ -2094,6 +2090,7 @@ pl_PL:
     max_allowed_message_recipients: "Maksymalna dozwolona liczba odbiorców dla wiadomości."
     watched_words_regular_expressions: "Obserwowane słowa są wyrażeniami regularnymi."
     enable_diffhtml_preview: "Funkcja eksperymentalna, która używa dyfHTML do synchronizacji podglądu zamiast pełnego renderowania"
+    enable_fast_edit: "Umożliwia mały wybór tekstu posta do edycji w wierszu."
     old_post_notice_days: "Dni przed tym, jak ogłoszenie pocztowe stanie się stare"
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."
     returning_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o postach powracających użytkowników."
@@ -2608,47 +2605,6 @@ pl_PL:
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{email_prefix}] Test dostarczania poczty"
-    text_body_template: |
-      To jest wiadomość testowa od
-
-      [**%{base_url}**][0]
-
-      Dostarczanie wiadomości e-mail jest dość skomplikowane. Oto kilka ważnych rzeczy, które powinieneś najpierw sprawdzić:
-
-      - Bądź *pewien* aby zmienić "From:" na poprawny adres w ustawieniach witryny. **Domena określona w adresie "Od:/From:" wysyłanych wiadomości to domena, w której Twój e-mail zostanie zweryfikowany **.
-
-      - Dowiedz się, jak przeglądać surowe źródło wiadomości e-mail w kliencie poczty, dzięki czemu możesz sprawdzić nagłówki wiadomości e-mail w poszukiwaniu ważnych wskazówek. W Gmail jest to opcja "Pokaż oryginał" w rozwijanym menu w prawym górnym rogu każdej wiadomości.
-
-      - **WAŻNE:** Czy twój dostawca usług internetowych ma odwrotny rekord DNS (revDNS) wprowadzony do powiązania nazw domen z adresami IP, z których wysyłasz pocztę? [Przetestuj swój odwrotny rekord PTR][2] tutaj. Jeśli Twój dostawca usług internetowych nie wprowadził poprawnego odwrotnego rekordu DNS, jest bardzo mało prawdopodobne, aby którakolwiek z Twoich korespondencji została dostarczona.
-
-      - Czy [rekord SPF][8] jest poprawnie ustawiony dla Twojej domeny? [Sprawdź swój rekord SPF][1] tutaj. Należy zauważyć, że rekord TXT jest prawidłowym oficjalnym typem dla rekordu SPF.
-
-      - Czy [rekord DKIM][3] jest poprawnie ustawiony dla Twojej domeny? To znacznie poprawi dostarczanie wiadomości e-mail. [Sprawdź swój rekord DKIM][7] tutaj.
-
-      - Jeśli używasz własnego serwera poczty, sprawdź, aby upewnić się, że adresy IP serwera pocztowego [nie znajdują się na blokowanych listach][4]. Sprawdź, czy na pewno wysyłasz w pełni kwalifikowaną nazwę hosta, która rozwiązuje się przez DNS w wiadomości HELO. Jeśli nie, to spowoduje, że Twój e-mail zostanie odrzucony przez wiele serwisów pocztowych.
-
-      - Zalecamy **wysłanie wiadomości testowej na adres [mail-tester.com][mt]**, aby sprawdzić, czy wszystkie powyższe punkty zostały spełnione.
-
-      (*Najłatwiejszy* sposób to utworzenie konta na [SendGrid][sg], [SparkPost][sp] [Mailgun][mg] lub [Mailjet][mj], które mają tanie plany mailingowe i będą dobre dla małych społeczności. Nadal będziesz musiał skonfigurować rekordy SPF i DKIM w swoim DNS!)
-
-      Mamy nadzieję, że otrzymałeś/łaś ten testowy e-mail.
-
-      Powodzenia,
-
-      Twoi przyjaciele na [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{email_prefix}] Nowa wersja Discourse jest dostępna"
@@ -3433,6 +3389,26 @@ pl_PL:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PW] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Użytkownik Opublikował"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3744,16 +3720,21 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
+    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
+    create_multipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
+      too_large_humanized: "Przepraszamy, plik, który próbujesz przesłać, jest za duży (maksymalny rozmiar to %{max_size})."
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
+      too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
       larger_than_x_megapixels: "Przepraszamy, obraz który próbujesz dodać jest zbyt duży (maksymalny wymiar to %{max_image_megapixels}-megapikseli), proszę zmienić rozmiar i spróbować ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
+      too_large_humanized: "(obraz większy niż %{max_size})"
   avatar:
     missing: "Przepraszamy, nie możemy odnaleźć żadnego avatara przypisanego do tego konta email. Spróbuj załadować go ponownie"
   flag_reason:
@@ -4497,10 +4478,10 @@ pl_PL:
             label: "Twoja pełna nazwa"
             placeholder: "Hangout Jane"
           site_description:
-            label: "Opisz swoja społeczność w jednym krótkim zdaniu."
+            label: "Opisz swoją społeczność w jednym krótkim zdaniu (używanym w wynikach wyszukiwania i mediach społecznościowych)"
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
           short_site_description:
-            label: "Opisz swoją społeczność w paru słowach"
+            label: "Opisz swoją społeczność kilkoma słowami (używane do tytułu strony głównej)"
             placeholder: "Najlepsza społeczność kiedykolwiek"
       introduction:
         title: "Wprowadzenie"
@@ -4662,21 +4643,24 @@ pl_PL:
     missing_version: "Musisz wprowadzić parametr wersji"
     conflict: "Wystąpił konflikt aktualizacji, który uniemożliwia Ci to działanie."
     reasons:
-      post_count: "Pierwsze kilka postów od każdego użytkownika musi zostać zatwierdzone przez personel. Zobacz `approve_post_count`."
-      trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz `approve_new_topics_unless_trust_level`."
-      fast_typer: "Nowy użytkownik wpisał swój pierwszy post podejrzanie szybko, co sugeruje zachowanie bota lub spamera. Zobacz `min_first_post_typing_time`."
-      auto_silence_regexp: "Nowy użytkownik, którego pierwszy post pasuje do ustawienia `auto_silence_first_post_regex`."
-      watched_word: "Ten post zawierał obserwowane słowo. Zobacz listę <a href='%{base_url}/admin/customize/watched_words'>obserwowanych słów</a>."
-      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
-      category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz ustawienia kategorii."
-      must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz `must_approve_users`."
-      invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz `invite_only`."
+      post_count: "Kilka pierwszych postów każdego użytkownika musi zostać zatwierdzonych przez personel. Zobacz %{link}."
+      trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz %{link}."
+      new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
+      fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
+      auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
+      watched_word: "Ten post zawierał obserwowane słowo. Zobacz swoje %{link}."
+      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz %{link}."
+      category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz %{link}."
+      must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz %{link}."
+      invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz %{link}."
       email_auth_res_enqueue: "Ten e-mail nie powiódł się sprawdzenie DMARC, najprawdopodobniej nie pochodzi od nadawcy, za którego się podaje. Sprawdź surowe nagłówki wiadomości e-mail, aby uzyskać więcej informacji."
-      email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w `email_in_spam_header`."
-      suspect_user: "Ten nowy użytkownik wprowadził informacje profilowe bez czytania żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz `approve_suspect_users`."
-      contains_media: "Ten post zawiera osadzone multimedia. Zobacz `review_media_unless_trust_level`."
+      email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w %{link}."
+      suspect_user: "Ten nowy użytkownik wprowadził informacje o profilu, nie czytając żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz %{link}."
+      contains_media: "Ten post zawiera osadzone media. Zobacz %{link}."
       queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
+      links:
+        watched_word: lista obserwowanych słów
+        category: ustawienia kategorii
     actions:
       agree:
         title: "Zgadzam się..."
@@ -4780,6 +4764,7 @@ pl_PL:
       other: "%{topic_title} (Część %{count})"
     post_raw: "Kontynuacja dyskusji z %{parent_url}.\n\nPoprzednie dyskusje:\n\n%{previous_topics}"
     small_action_post_raw: "Kontynuuj dyskusję na %{new_title}."
+  fallback_username: "użytkownik"
   activemodel:
     errors:
       <<: *errors

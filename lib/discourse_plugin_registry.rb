@@ -87,8 +87,11 @@ class DiscoursePluginRegistry
 
   define_filtered_register :permitted_bulk_action_parameters
   define_filtered_register :reviewable_params
+  define_filtered_register :reviewable_score_links
 
   define_filtered_register :presence_channel_prefixes
+
+  define_filtered_register :push_notification_filters
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider

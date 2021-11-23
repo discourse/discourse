@@ -135,6 +135,12 @@ table.group-members {
     &.bulk-select-buttons {
       text-align: left;
       width: 20%;
+      .bulk-select-buttons-wrap {
+        display: inline-flex;
+        .btn {
+          margin-right: 0.5em;
+        }
+      }
     }
 
     &.username {

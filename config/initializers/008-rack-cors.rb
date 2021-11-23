@@ -45,6 +45,7 @@ class Discourse::Cors
       headers['Access-Control-Allow-Headers'] = 'Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization'
       headers['Access-Control-Allow-Credentials'] = 'true'
       headers['Access-Control-Allow-Methods'] = 'POST, PUT, GET, OPTIONS, DELETE'
+      headers['Access-Control-Max-Age'] = '7200'
     end
 
     headers

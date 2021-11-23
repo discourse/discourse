@@ -92,6 +92,17 @@ describe TopicTrackingState do
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
     end
 
+    it "is not erroring when user_stat is missing" do
+      post.user.user_stat.destroy!
+      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      data = message.data
+
+      expect(message.user_ids).to contain_exactly(post.user.id)
+    end
+
     it "does not publish whisper post to non-staff users" do
       post.update!(post_type: Post.types[:whisper])
 

@@ -72,7 +72,7 @@ end
 
 shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
-    self.public_send(method, url, params)
+    self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -223,6 +223,65 @@ describe PostsController do
         destroyer.expects(:destroy)
 
         delete "/posts/#{post.id}.json"
+      end
+
+      context "permanently destroy" do
+        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+
+        before do
+          SiteSetting.can_permanently_delete = true
+        end
+
+        it "does not work for a post that was not deleted yet" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
+
+        it "needs some time to pass to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "needs two users to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(Fabricate(:admin))
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "moderators cannot permanently delete topics" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(moderator)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
       end
     end
   end
@@ -564,7 +623,7 @@ describe PostsController do
 
   describe "#destroy_bookmark" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
 
     before do
       sign_in(user)
@@ -578,7 +637,7 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
       end
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"

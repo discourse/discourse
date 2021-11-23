@@ -1,10 +1,18 @@
+import afterTransition from "discourse/lib/after-transition";
+import { propertyEqual } from "discourse/lib/computed";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
   selectedText,
+  setCaretPosition,
+  translateModKey,
 } from "discourse/lib/utilities";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -28,11 +36,32 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
-export default Component.extend({
+function fixQuotes(str) {
+  // u+201c “
+  // u+201d ”
+  return str.replace(/[\u201C\u201D]/g, '"');
+}
+
+function regexSafeStr(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export default Component.extend(KeyEnterEscape, {
   classNames: ["quote-button"],
-  classNameBindings: ["visible"],
+  classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
   visible: false,
   privateCategory: alias("topic.category.read_restricted"),
+  editPost: null,
+
+  _isFastEditable: false,
+  _displayFastEditInput: false,
+  _fastEditInitalSelection: null,
+  _fastEditNewSelection: null,
+  _isSavingFastEdit: false,
+  _canEditPost: false,
+  _saveEditButtonTitle: I18n.t("composer.title", {
+    modifier: translateModKey("Meta+"),
+  }),
 
   _isMouseDown: false,
   _reselected: false,
@@ -40,9 +69,18 @@ export default Component.extend({
   _hideButton() {
     this.quoteState.clear();
     this.set("visible", false);
+
+    this.set("_isFastEditable", false);
+    this.set("_displayFastEditInput", false);
+    this.set("_fastEditInitalSelection", null);
+    this.set("_fastEditNewSelection", null);
   },
 
   _selectionChanged() {
+    if (this._displayFastEditInput) {
+      return;
+    }
+
     const quoteState = this.quoteState;
 
     const selection = window.getSelection();
@@ -104,6 +142,31 @@ export default Component.extend({
     quoteState.selected(postId, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 
+    if (this.siteSettings.enable_fast_edit) {
+      this.set(
+        "_canEditPost",
+        this.topic.postStream.findLoadedPost(postId)?.can_edit
+      );
+
+      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+      const matches = postBody.match(regexp);
+
+      if (
+        quoteState.buffer.length < 1 ||
+        quoteState.buffer.includes("|") || // tables are too complex
+        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+        matches?.length > 1 // duplicates are too complex
+      ) {
+        this.set("_isFastEditable", false);
+        this.set("_fastEditInitalSelection", null);
+        this.set("_fastEditNewSelection", null);
+      } else if (matches?.length === 1) {
+        this.set("_isFastEditable", true);
+        this.set("_fastEditInitalSelection", quoteState.buffer);
+        this.set("_fastEditNewSelection", quoteState.buffer);
+      }
+    }
+
     // avoid hard loops in quote selection unconditionally
     // this can happen if you triple click text in firefox
     if (this._prevSelection === _selectedText) {
@@ -160,15 +223,11 @@ export default Component.extend({
 
       let top = markerOffset.top;
       let left = markerOffset.left + Math.max(0, parentScrollLeft);
-
       if (showAtEnd) {
-        const nearRightEdgeOfScreen =
-          $(window).width() - $quoteButton.outerWidth() < left + 10;
-
-        top = nearRightEdgeOfScreen ? top + 50 : top + 20;
+        top = top + 25;
         left = Math.min(
           left + 10,
-          $(window).width() - $quoteButton.outerWidth() - 10
+          window.innerWidth - this.element.clientWidth - 10
         );
       } else {
         top = top - $quoteButton.outerHeight() - 5;
@@ -192,6 +251,12 @@ export default Component.extend({
         this._prevSelection = null;
         this._isMouseDown = true;
         this._reselected = false;
+
+        // prevents fast-edit input event to trigger mousedown
+        if (e.target.classList.contains("fast-edit-input")) {
+          return;
+        }
+
         if (
           $(e.target).closest(".quote-button, .create, .share, .reply-new")
             .length === 0
@@ -199,7 +264,12 @@ export default Component.extend({
           this._hideButton();
         }
       })
-      .on("mouseup.quote-button", () => {
+      .on("mouseup.quote-button", (e) => {
+        // prevents fast-edit input event to trigger mouseup
+        if (e.target.classList.contains("fast-edit-input")) {
+          return;
+        }
+
         this._prevSelection = null;
         this._isMouseDown = false;
         onSelectionChanged();
@@ -209,6 +279,8 @@ export default Component.extend({
           onSelectionChanged();
         }
       });
+    this.appEvents.on("quote-button:quote", this, "insertQuote");
+    this.appEvents.on("quote-button:edit", this, "_toggleFastEditForm");
   },
 
   willDestroyElement() {
@@ -216,6 +288,8 @@ export default Component.extend({
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
       .off("selectionchange.quote-button");
+    this.appEvents.off("quote-button:quote", this, "insertQuote");
+    this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
   },
 
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")
@@ -264,9 +338,112 @@ export default Component.extend({
     );
   },
 
+  _saveFastEditDisabled: propertyEqual(
+    "_fastEditInitalSelection",
+    "_fastEditNewSelection"
+  ),
+
   @action
   insertQuote() {
     this.attrs.selectText().then(() => this._hideButton());
+  },
+
+  @action
+  _toggleFastEditForm() {
+    if (this._isFastEditable) {
+      this.toggleProperty("_displayFastEditInput");
+
+      schedule("afterRender", () => {
+        if (this.site.mobileView) {
+          this.element.style.left = `${
+            (window.innerWidth - this.element.clientWidth) / 2
+          }px`;
+        }
+        document.querySelector("#fast-edit-input")?.focus();
+      });
+    } else {
+      const postId = this.quoteState.postId;
+      const postModel = this.topic.postStream.findLoadedPost(postId);
+      return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false }).then(
+        (result) => {
+          let bestIndex = 0;
+          const rows = result.raw.split("\n");
+
+          // selecting even a part of the text of a list item will include
+          // "* " at the beginning of the buffer, we remove it to be able
+          // to find it in row
+          const buffer = fixQuotes(
+            this.quoteState.buffer.split("\n")[0].replace(/^\* /, "")
+          );
+
+          rows.some((row, index) => {
+            if (row.length && row.includes(buffer)) {
+              bestIndex = index;
+              return true;
+            }
+          });
+
+          this?.editPost(postModel);
+
+          afterTransition(document.querySelector("#reply-control"), () => {
+            const textarea = document.querySelector(".d-editor-input");
+            if (!textarea || this.isDestroyed || this.isDestroying) {
+              return;
+            }
+
+            // best index brings us to one row before as slice start from 1
+            // we add 1 to be at the beginning of next line, unless we start from top
+            setCaretPosition(
+              textarea,
+              rows.slice(0, bestIndex).join("\n").length +
+                (bestIndex > 0 ? 1 : 0)
+            );
+
+            // ensures we correctly scroll to caret and reloads composer
+            // if we do another selection/edit
+            textarea.blur();
+            textarea.focus();
+          });
+        }
+      );
+    }
+  },
+
+  @action
+  _saveFastEdit() {
+    const postId = this.quoteState?.postId;
+    const postModel = this.topic.postStream.findLoadedPost(postId);
+
+    this.set("_isSavingFastEdit", true);
+
+    return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
+      .then((result) => {
+        const newRaw = result.raw.replace(
+          fixQuotes(this._fastEditInitalSelection),
+          fixQuotes(this._fastEditNewSelection)
+        );
+
+        postModel
+          .save({ raw: newRaw })
+          .catch(popupAjaxError)
+          .finally(() => {
+            this.set("_isSavingFastEdit", false);
+            this._hideButton();
+          });
+      })
+      .catch(popupAjaxError);
+  },
+
+  @action
+  save() {
+    if (this._displayFastEditInput && !this._saveFastEditDisabled) {
+      this._saveFastEdit();
+    }
+  },
+
+  @action
+  cancelled() {
+    this._hideButton();
   },
 
   @action

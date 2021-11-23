@@ -245,11 +245,6 @@ input {
   padding-bottom: 0;
 }
 
-// Fixes Chrome height inconsistency
-::-webkit-calendar-picker-indicator {
-  height: 100%;
-}
-
 ::placeholder {
   text-overflow: ellipsis;
 }

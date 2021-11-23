@@ -2,15 +2,25 @@ import Service from "@ember/service";
 import EmberObject, { computed, defineProperty } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import { cancel, debounce, later, throttle } from "@ember/runloop";
+import {
+  cancel,
+  debounce,
+  later,
+  next,
+  once,
+  run,
+  throttle,
+} from "@ember/runloop";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
+import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
-const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 5000;
+const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
+
+const PRESENCE_GET_RETRY_MS = 5000;
 
 function createPromiseProxy() {
   const promiseProxy = {};
@@ -121,21 +131,7 @@ class PresenceChannelState extends EmberObject {
     }
 
     if (!initialData) {
-      try {
-        initialData = await ajax("/presence/get", {
-          data: {
-            channel: this.name,
-          },
-        });
-      } catch (e) {
-        if (e.jqXHR?.status === 404) {
-          throw new PresenceChannelNotFound(
-            `PresenceChannel '${this.name}' not found`
-          );
-        } else {
-          throw e;
-        }
-      }
+      initialData = await this.presenceService._getInitialData(this.name);
     }
 
     this.set("count", initialData.count);
@@ -149,9 +145,8 @@ class PresenceChannelState extends EmberObject {
 
     this.lastSeenId = initialData.last_message_id;
 
-    let callback = (data, global_id, message_id) => {
-      this._processMessage(data, global_id, message_id);
-    };
+    let callback = (data, global_id, message_id) =>
+      run(() => this._processMessage(data, global_id, message_id));
     this.presenceService.messageBus.subscribe(
       `/presence${this.name}`,
       callback,
@@ -231,9 +226,15 @@ export default class PresenceService extends Service {
     this._presenceChannelStates = EmberObject.create();
     this._presentProxies = {};
     this._subscribedProxies = {};
-    window.addEventListener("beforeunload", () => {
-      this._beaconLeaveAll();
-    });
+    this._initialDataRequests = {};
+
+    this._beforeUnloadCallback = () => this._beaconLeaveAll();
+    window.addEventListener("beforeunload", this._beforeUnloadCallback);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beforeUnloadCallback);
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -242,6 +243,65 @@ export default class PresenceService extends Service {
       name: channelName,
       presenceService: this,
     });
+  }
+
+  _getInitialData(channelName) {
+    let promiseProxy = this._initialDataRequests[channelName];
+    if (!promiseProxy) {
+      promiseProxy = this._initialDataRequests[
+        channelName
+      ] = createPromiseProxy();
+    }
+
+    once(this, this._makeInitialDataRequest);
+
+    return promiseProxy.promise;
+  }
+
+  async _makeInitialDataRequest() {
+    if (this._initialDataAjax) {
+      // try again next runloop
+      next(this, () => once(this, this._makeInitialDataRequest));
+      return;
+    }
+
+    if (Object.keys(this._initialDataRequests).length === 0) {
+      // Nothing to request
+      return;
+    }
+
+    this._initialDataAjax = ajax("/presence/get", {
+      data: {
+        channels: Object.keys(this._initialDataRequests).slice(0, 50),
+      },
+    });
+
+    let result;
+    try {
+      result = await this._initialDataAjax;
+    } catch (e) {
+      later(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
+      throw e;
+    } finally {
+      this._initialDataAjax = null;
+    }
+
+    for (const channel in result) {
+      if (!result.hasOwnProperty(channel)) {
+        continue;
+      }
+
+      const state = result[channel];
+      if (state) {
+        this._initialDataRequests[channel].resolve(state);
+      } else {
+        const error = new PresenceChannelNotFound(
+          `PresenceChannel '${channel}' not found`
+        );
+        this._initialDataRequests[channel].reject(error);
+      }
+      delete this._initialDataRequests[channel];
+    }
   }
 
   _addPresent(channelProxy) {
@@ -271,6 +331,9 @@ export default class PresenceService extends Service {
   _removeSubscribed(channelProxy) {
     let subscribed = this._subscribedProxies[channelProxy.name];
     subscribed?.delete(channelProxy);
+    if (subscribed?.size === 0) {
+      delete this._subscribedProxies[channelProxy.name];
+    }
     return subscribed?.size || 0;
   }
 
@@ -292,7 +355,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "enter",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();
@@ -321,7 +384,7 @@ export default class PresenceService extends Service {
     this._queuedEvents.push({
       channel: channelName,
       type: "leave",
-      promiseProxy: promiseProxy,
+      promiseProxy,
     });
 
     this._scheduleNextUpdate();
@@ -330,6 +393,10 @@ export default class PresenceService extends Service {
   }
 
   async _subscribe(channelProxy, initialData = null) {
+    if (this.siteSettings.login_required && !this.currentUser) {
+      throw "Presence is only available to authenticated users on login-required sites";
+    }
+
     this._addSubscribed(channelProxy);
     const channelName = channelProxy.name;
     let state = this._presenceChannelStates[channelName];
@@ -361,9 +428,14 @@ export default class PresenceService extends Service {
       .filter((e) => e.type === "leave")
       .map((e) => e.channel);
 
+    channelsToLeave.push(...this._presentChannels);
+
+    if (channelsToLeave.length === 0) {
+      return;
+    }
+
     const data = new FormData();
     data.append("client_id", this.messageBus.clientId);
-    this._presentChannels.forEach((ch) => data.append("leave_channels[]", ch));
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));
@@ -417,8 +489,14 @@ export default class PresenceService extends Service {
         }
       });
     } catch (e) {
-      // Updating server failed. Put the failed events
-      // back in the queue for next time
+      if (e.jqXHR?.status === 403 && isTesting() && isLegacyEmber()) {
+        // Legacy testing environment will remove the User.current() value before disposing of controllers/components.
+        // Presence often involves making HTTP calls during disposal of components, so this can cause issues.
+        // Modern Ember-CLI environment does not require this hack
+        return;
+      }
+
+      // Put the failed events back in the queue for next time
       this._queuedEvents.unshift(...queue);
       if (e.jqXHR?.status === 429) {
         // Rate limited. No need to raise, we'll try again later
@@ -459,7 +537,11 @@ export default class PresenceService extends Service {
     } else if (this._queuedEvents.length > 0) {
       this._cancelTimer();
       debounce(this, this._throttledUpdateServer, PRESENCE_DEBOUNCE_MS);
-    } else if (!this._nextUpdateTimer && !isTesting()) {
+    } else if (
+      !this._nextUpdateTimer &&
+      this._presentChannels.size > 0 &&
+      !isTesting()
+    ) {
       this._nextUpdateTimer = later(
         this,
         this._throttledUpdateServer,

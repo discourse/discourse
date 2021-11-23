@@ -1,6 +1,7 @@
 import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import showModal from "discourse/lib/show-modal";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -249,7 +250,18 @@ export default createWidget("user-menu", {
   },
 
   dismissNotifications() {
-    return this.state.markRead();
+    const unreadHighPriorityNotifications = this.currentUser.get(
+      "unread_high_priority_notifications"
+    );
+
+    if (unreadHighPriorityNotifications > 0) {
+      return showModal("dismiss-notification-confirmation").setProperties({
+        count: unreadHighPriorityNotifications,
+        dismissNotifications: () => this.state.markRead(),
+      });
+    } else {
+      return this.state.markRead();
+    }
   },
 
   itemsLoaded({ hasUnread, markRead }) {

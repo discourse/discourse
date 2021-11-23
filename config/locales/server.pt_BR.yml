@@ -249,7 +249,6 @@ pt_BR:
   topic_invite:
     failed_to_invite: "O(a) usuário(a) não pode ser convidado(a) para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Desculpe, este(a) usuário(a) já foi convidado(a). Você pode convidar um(a) usuário(a) para um tópico apenas uma vez."
-    muted_invitee: "Desculpe, você foi silenciado(a) por este(a) usuário(a)."
     muted_topic: "Desculpe, este(a) usuário(a) silenciou este tópico."
     receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você envie mensagens privadas."
     sender_does_not_allow_pm: "Desculpe, você não permite que o(a) usuário(a) envie mensagens privadas."
@@ -883,19 +882,10 @@ pt_BR:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
   user_activity:
-    no_default:
-      self: "Você ainda não tem nenhuma atividade."
-      others: "Nenhuma atividade."
     no_bookmarks:
       self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
       others: "Nenhum favorito."
-    no_likes_given:
-      self: "Você não curtiu nenhuma postagem."
-      others: "Nenhuma postagem curtida."
-    no_replies:
-      self: "Você não respondeu a nenhuma postagem."
-      others: "Sem respostas."
     no_drafts:
       self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
   email_settings:
@@ -958,7 +948,6 @@ pt_BR:
         remove: "Este tópico não é mais um banner. Ele deixará de aparecer no topo de todas as páginas."
   unsubscribed:
     title: "Preferências de e-mail atualizadas!"
-    description: "as preferências de e-mail de <b>%{email}</b> foram atualizadas. Para alterar suas configurações de e-mail, <a href='%{url}'>acesse suas preferências de usuário(a)</a>."
     topic_description: "Para se associar novamente em %{link}, use o controle de notificações na parte inferior ou no canto direito do tópico."
     private_topic_description: "Para se associar novamente, use o controle de notificações na parte inferior ou à direita do tópico."
   uploads:
@@ -1460,7 +1449,6 @@ pt_BR:
     summary_likes_required: "Quantidade mínima de curtidas em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
     summary_percent_filter: "Quando um(a) usuário(a) clicar em \"Resuma este tópico\", exiba as % melhores postagens"
     summary_max_results: "Quantidade máxima de postagens retornadas por \"Resumir este tópico\""
-    enable_personal_messages: "Permita que usuários(as) do nível de confiança 1 (configurável por meio do nível mínimo de confiança para enviar mensagens) criem e respondam a mensagens. Nove que a equipe sempre pode enviar mensagens."
     enable_system_message_replies: "Permite que os(as) usuários(as) respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer sondagens longas."
     enable_chunked_encoding: "Ative respostas de codificação em bloco no servidor. Esse recurso funciona na maioria das configurações, mas alguns proxies podem ser armazenados em buffer, atrasando as respostas"
@@ -1790,7 +1778,6 @@ pt_BR:
     topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP/usuário(a) a cada N horas"
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
-    max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da equipe ou tiver NC2 ou mais alto), pare de aceitar novas assinaturas desse IP."
     min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, uma entrada de banimento de subrede será criada se houver ao menos (N) entradas."
     max_age_unmatched_emails: "Excluir entradas de e-mails filtrados sem correspondência após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados sem correspondência após (N) dias."
@@ -1949,7 +1936,6 @@ pt_BR:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não especificarem o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para ver uma demonstração"
-    show_copy_button_on_codeblocks: "Adicione um botão ao Codeblocks para copiar o conteúdo do bloco para a área de transferência do(a) usuário(a). Este recurso não é compatível com o Internet Explorer."
     embed_any_origin: "Permita um conteúdo incorporado, seja qual for a origem. Isso é necessário para apps móveis com HTML estático."
     embed_topics_list: "Compatível com incorporação HTML de listas de tópicos"
     embed_set_canonical_url: "Defina a URL canônica de tópicos incorporados para a URL do conteúdo incorporado."
@@ -2454,47 +2440,6 @@ pt_BR:
   test_mailer:
     title: "Testar mensageiro"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
-    text_body_template: |
-      Este é um e-mail de teste de
-
-      [**%{base_url}**][0]
-
-      Estamos com dificuldades para entregar o e-mail. Confira algumas coisas importantes que precisam ser verificadas:
-
-      - Defina o "e-mail de notificação" corretamente nas configurações do site. **O domínio especificado no endereço "de" dos e-mails enviados é o domínio com o qual o seu e-mail será validado**.
-
-      - Visualize a origem não processada no seu cliente de e-mail, de forma que você possa conferir os cabeçalhos de e-mail para obter pistas importantes. No Gmail, é a opção "mostrar original" no menu suspenso, no canto superior à direita de cada e-mail.
-
-      - **IMPORTANTE:** Seu ISP tem um registro de DNS reverso inserido para associar os nomes de domínio e endereços IP a partir dos quais você envia e-mail? [Teste seu registro PTR reverso][2] aqui. Se o seu ISP não inserir o registro de ponteiro DNS reverso apropriado, existe pouquíssima probabilidade de que seu e-mail seja entregue.
-
-      - Se o [registro SPF] do seu domínio[8] está correto. [Teste seu registro SPF][1] aqui. Observe que o TXT é o tipo de registro oficial correto para o SPF.
-
-      - Se o [registro DKIM] do seu domínio[3] está correto. Isso irá aumentará muito a chance de o seu e-mail ser entregue. [Teste seu registro DKIM][7] aqui.
-
-      - Se você rodar seu próprio servidor de e-mail, verifique se os IPs do seu servidor de e-mail não [estão em nenhuma lista de bloqueio de e-mails][4]. Além disso, verifique se está sendo enviado um nome de host plenamente qualificado que é resolvido no DNS da sua mensagem HELO. Caso contrário, isso fará que o seu e-mail seja rejeitado por vários serviços.
-
-      - É altamente recomendável **enviar um e-mail de teste para [mail-tester.com][mt]** para verificar se tudo o que foi mencionado acima está funcionando corretamente.
-
-      (Esta é a maneira *fácil* de criar uma conta em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que tem planos de e-mail de baixo custo para comunidades pequenas. Mas ainda será preciso definir os registros DKIM e SPF no seu DNS!)
-
-      Esperamos que você tenha recebido este teste de entrega de e-mail!
-
-      Boa sorte,
-
-      Seus amigos do [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versão do mensageiro"
     subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"
@@ -3235,6 +3180,26 @@ pt_BR:
     user_group_mentioned:
       title: "Grupo de usuários(as) mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4287,10 +4252,8 @@ pt_BR:
             label: "Nome de sua comunidade"
             placeholder: "Hangout de Jane"
           site_description:
-            label: "Descreva sua comunidade com uma frase curta."
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
           short_site_description:
-            label: "Descreva sua comunidade em poucas palavras"
             placeholder: "Melhor comunidade de todos os tempos"
       introduction:
         title: "Introdução"
@@ -4446,20 +4409,7 @@ pt_BR:
     missing_version: "Você precisa informar um parâmetro de versão"
     conflict: "Houve um conflito de atualização impedindo de fazer isso."
     reasons:
-      post_count: "As primeiras postagens de todos os(as) usuários(as) devem ser aprovadas pela equipe. Acesse \"approve_post_count\"."
-      trust_level: "Usuários(as) com níveis de confiança baixos precisam ter respostas aprovadas pela equipe. Veja \"approve_unless_trust_level\"."
-      new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja \"approve_unless_trust_level\"."
-      fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja \"min_first_post_typing_time\"."
-      auto_silence_regexp: "Novo(a) usuário(a) cuja primeira postagem corresponde à configuração \"auto_silence_first_post_regex\"."
-      watched_word: "Esta postagem incluiu uma palavra acompanhada. Confira sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras acompanhadas</a>."
-      staged: "Novos tópicos e postagens para usuários encenados(as) precisam ser aprovados pela equipe. Veja \"approve_unless_staged\"."
-      category: "Postagens nesta categoria exigem aprovação manual pela equipe. Veja as configurações da categoria."
-      must_approve_users: "Todos os novos(as) usuários(as) precisam ser aprovados(as) pela equipe. Veja \"must_approve_users\"."
-      invite_only: "Todos os(as) novos(as) usuários(as) devem ser convidados(as). Veja \"invite_only\"."
       email_auth_res_enqueue: "Este e-mail falhou na verificação DMARC, é altamente provável que o remetente não é quem parece ser. Confira os cabeçalhos de e-mail não processados para obter mais informações."
-      email_spam: "Este e-mail foi sinalizado como spam pelo cabeçalho definido em \"email_in_spam_header\"."
-      suspect_user: "Este(a) novo(a) usuário(a) inseriu informações de perfil sem ler nenhum tópico ou postagem, o que sugere que possa ser remetente de spam. Consulte \"approve_suspect_users\"."
-      contains_media: "Esta postagem inclui mídias incorporadas. Confira \"review_media_unless_trust_level\"."
       queued_by_staff: "Um membro da equipe acha que esta postagem precisa de revisão. Permanecerá oculta até que isso seja feito."
     actions:
       agree:
@@ -4562,6 +4512,7 @@ pt_BR:
       other: "%{topic_title} (parte %{count})"
     post_raw: "Continuando a discussContinuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
     small_action_post_raw: "Continue a discussão em %{new_title}."
+  fallback_username: "usuário(a)"
   activemodel:
     errors:
       <<: *errors

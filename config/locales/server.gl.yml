@@ -235,7 +235,6 @@ gl:
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
-    muted_invitee: "Sentímolo, ese usuario silenciouno."
     muted_topic: "Sentímolo, ese usuario silenciou este tema."
     receiver_does_not_allow_pm: "Sentímolo, ese usuario non lle permite enviarlles mensaxes privadas."
     sender_does_not_allow_pm: "Sentímolo, vostede non permite que ese usuario lle envíe mensaxes privadas."
@@ -849,19 +848,10 @@ gl:
     pm_title: "Borradores de seguranza procedentes de temas en curso"
     pm_body: "O tema contén borradores de seguranza"
   user_activity:
-    no_default:
-      self: "Aínda non ten actividade."
-      others: "Sen actividade."
     no_bookmarks:
       self: "Non ten publicacións engadidas aos marcadores; os marcadores permítenlle volver rapidamente a publicacións específicas."
       search: "Non se atoparon marcadores coa busca fornecida."
       others: "Sen marcadores."
-    no_likes_given:
-      self: "Non premeu en Gústame en ningunha publicación."
-      others: "Ningún Gústame en publicacións."
-    no_replies:
-      self: "Non respondeu a ningunha publicación."
-      others: "Sen respostas."
     no_drafts:
       self: "Non ten borradores; comece a responder en calquera tema e gardarase automaticamente como un novo borrador."
   webauthn:
@@ -912,7 +902,6 @@ gl:
         remove: "Este tema deixou de ser tema de cabeceira. Xa non aparecerá na parte superior de cada páxina."
   unsubscribed:
     title: "Preferencias de correo electrónico actualizadas!"
-    description: "as preferencias para <b>%{email}</b> foron actualizadas. Para cambiar a configuración do seu correo electrónico <a href='%{url}'>visite as súas preferencias de usuario</a>."
     topic_description: "Para volver subscribirse a%{link}, utilice o control de notificacións na parte inferior ou á dereita do tema."
     private_topic_description: "Para volver subscribirse, utilice o control de notificacións na parte inferior ou á dereita do tema."
   uploads:
@@ -1409,7 +1398,6 @@ gl:
     summary_likes_required: "Número mínimo de gústame nun tema antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
     summary_percent_filter: "Cando un usuario preme en «Resumir este tema» mostrar a porcentaxe de publicacións destacadas"
     summary_max_results: "Número máximo de publicacións que devolve a opción «Resumir este tema»"
-    enable_personal_messages: "Permitirlles aos usuarios con nivel de confianza 1 (configurable a través de nivel mínimo de confianza para enviar mensaxes) crear mensaxes e respondelas. Repare en que o equipo sempre pode enviar mensaxes pasar o que pasar."
     enable_system_message_replies: "Permitirlles aos usuarios responder mensaxes do sistema, mesmo aínda que as mensaxes persoais estean desactivadas"
     enable_long_polling: "O bus de mensaxes utilizado para a notificación pode utilizar «long polling»"
     enable_chunked_encoding: "Active as respostas mediante codificación fragmentaria do servidor. Esta funcionalidade serve na maioría das configuracións, pero algúns servidores intermedios poden retelas, o que provocaría o atraso nas respostas"
@@ -1720,7 +1708,6 @@ gl:
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
-    max_new_accounts_per_registration_ip: "Se hai xa (n) contas con nivel de confianza 0 desde este IP (e ningunha é dun membro do equipo ou de nivel de confianza 2 ou superior), prohibir rexistros novos desde ese IP."
     min_ban_entries_for_roll_up: "Ao premer no botón Pregar, crearase unha nova entrada de veto de subrede se hai polo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que non coincidan despois de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidas que non coincidan despois de (N) días."
@@ -1873,7 +1860,6 @@ gl:
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
     autohighlight_all_code: "Forza a aplicación do resaltado de código en todos os bloques de código preformatados, mesmo aínda que non se especificase a linguaxe de xeito explícito."
     highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
-    show_copy_button_on_codeblocks: "Engadir un botón aos bloques de código para copiar o contido do bloque ao portapapeis do usuario. Esta funcionalidade non é compatíbel con Internet Explorer."
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_topics_list: "Admite a incorporación en HTML de listaxes de temas"
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
@@ -2369,47 +2355,6 @@ gl:
   test_mailer:
     title: "Proba de servizo de correo"
     subject_template: "[%{email_prefix}] Proba de entrega de correo"
-    text_body_template: |
-      Esta é unha proba de correo de
-
-      [**%{base_url}**][0]
-
-      A entrega do correo é complicada. Aquí están unhas poucas cousas que debería comprobar en primeiro lugar:
-
-      - *Asegúrese* de axustar correctamente o enderezo do «correo electrónico de notificación» de: na configuración do seu sitio. **O dominio especificado no enderezo «de» dos correos que envíe é o dominio contra o que será validado o seu correo**.
-
-      - Aprenda como ver a forma en bruto do correo no seu cliente de correo, de modo que poida examinar as cabeceiras de correo para obter pistas importantes. En Gmail, é o que se chama «show original» no menú despregábel que está na parte superior dereita de cada mensaxe de correo.
-
-      - **IMPORTANTE:** Ten o seu ISP un rexistro de DNS reverso asociado aos nomes de dominio e aos enderezos IP desde os que vostede envía o correo? [Comprobe o seu rexistro PTR reverso[2] aquí. Se o seu ISP non introduce o rexistro apuntador de DNS reverso adecuado, é moi pouco probábel que o seu correo se poida entregar.
-
-      - É o [rexistro SPF][8] do seu dominio correcto? [Probe o seu rexistro SPF][1] aquí. Vexa que TXT é o tipo de rexistro oficial correcto para SPF.
-
-      - É o [rexistro DKIM][3] do seu dominio correcto? Isto mellorará a entrega do correo. [Probe o seu rexistro DKIM][7] aquí.
-
-      - Se ten en marcha o seu propio servidor de correo, comprobe que os IP do seu servidor de correo [non están en ningunha listaxe de bloqueo de correo][4]. Comprobe tamén que se envía un nome de servidor totalmente cualificado que resolve o DNS na súa mensaxe HELO. En caso de que non, o seu correo será rexeitado por moitos servizos de correo.
-
-      - Recomendámoslle encarecidamente que **envíe un correo de probe a [mail-tester.com][mt]** para comprobar que todo o anterior está funcionando correctamente.
-
-      (A maneira *doada* é crear unha conta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que teñen plans de correo de baixo custo e funcionarán ben para pequenas comunidades. Aínda con todo iso, necesitará configurar os rexistros SPF e DKIM no seu DNS!)
-
-      Agardamos que recibise correctamente esta proba de entrega de correo!
-
-      Boa sorte,
-
-      Os amigos de [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versión de servizo de correo"
     subject_template: "[%{email_prefix}] Nova versión de Discourse, actualización dispoñible"
@@ -3128,6 +3073,26 @@ gl:
     user_group_mentioned:
       title: "Grupo de usuarios mencionado"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4084,10 +4049,8 @@ gl:
             label: "O nome da súa comunidade"
             placeholder: "Reunión de Helena"
           site_description:
-            label: "Describa a súa comunidade cunha frase curta"
             placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
           short_site_description:
-            label: "Describa a súa comunidade nunhas poucas palabras"
             placeholder: "A mellor comunidade do mundo"
       introduction:
         title: "Introdución"
@@ -4242,19 +4205,7 @@ gl:
     missing_version: "Debe incluír un parámetro de versión"
     conflict: "Hai un conflito de actualización que non lle permitiu realizar esta acción."
     reasons:
-      post_count: "As primeiras publicacións dun usuario deben ser aprobadas polo equipo. Revise `approve_post_count`."
-      trust_level: "Os usuarios con niveis de confianza baixos deben ter respostas aprobadas polo equipo. Revise `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Os usuarios con niveis de confianza baixos deben ter temas aprobados polo equipo. Revise `approve_new_topics_unless_trust_level`."
-      fast_typer: "O usuario novo escribiu a súa primeira publicación sospeitosamente rápido; pode ser un bot ou alguén cun comportamento de remitente non desexado. Revise `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuario novo cuxa primeira publicación coincide coa configuración `auto_silence_first_post_regex`."
-      staged: "Os novos temas e publicacións de usuarios transitorios deben ser aprobados polo equipo. Revise `approve_unless_staged`."
-      category: "As publicacións nesta categoría requiren a aprobación manual do equipo. Consulte os axustes das categorías."
-      must_approve_users: "Todos os novos usuarios deben ser aprobados polo equipo. Consulte `must_approve_users`."
-      invite_only: "Todos os novos usuarios deben ser convidados. Revise `invite_only`."
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
-      email_spam: "Este correo electrónico foi denunciado como lixo pola cabeceira definida en `email_in_spam_header`."
-      suspect_user: "Este novo usuario inseriu información de perfil sen ler antes ningún tema nin publicación, o cal suxire claramente que pode ser un remitente cun comportamento non desexado. Revise `approve_suspect_users`."
-      contains_media: "Esta publicación inclúe elementos multimedia inseridos. Vexa `review_media_unless_trust_level`."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
       agree:
@@ -4346,6 +4297,7 @@ gl:
       other: "%{topic_title} (Partes %{count})"
     post_raw: "Continuando a discusión de %{parent_url}.\n\nDiscusións previas:\n\n%{previous_topics}"
     small_action_post_raw: "Continuar a discusión en %{new_title}."
+  fallback_username: "usuario"
   activemodel:
     errors:
       <<: *errors

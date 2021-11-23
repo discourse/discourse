@@ -8,7 +8,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 
-export function actionDescriptionHtml(actionCode, createdAt, username) {
+export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, {
     format: "medium-with-ago-and-on",
@@ -22,7 +22,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-  return I18n.t(`action_codes.${actionCode}`, { who, when }).htmlSafe();
+  return I18n.t(`action_codes.${actionCode}`, { who, when, path }).htmlSafe();
 }
 
 export function actionDescription(actionCode, createdAt, username) {
@@ -87,6 +87,17 @@ export default createWidget("post-small-action", {
   html(attrs) {
     const contents = [];
 
+    if (attrs.canRecover) {
+      contents.push(
+        this.attach("button", {
+          className: "small-action-recover",
+          icon: "undo",
+          action: "recoverPost",
+          title: "post.controls.undelete",
+        })
+      );
+    }
+
     if (attrs.canDelete) {
       contents.push(
         this.attach("button", {
@@ -98,7 +109,7 @@ export default createWidget("post-small-action", {
       );
     }
 
-    if (attrs.canEdit) {
+    if (attrs.canEdit && !attrs.canRecover) {
       contents.push(
         this.attach("button", {
           className: "small-action-edit",
@@ -120,7 +131,8 @@ export default createWidget("post-small-action", {
     const description = actionDescriptionHtml(
       attrs.actionCode,
       new Date(attrs.created_at),
-      attrs.actionCodeWho
+      attrs.actionCodeWho,
+      attrs.actionCodePath
     );
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));
 

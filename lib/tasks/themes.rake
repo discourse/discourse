@@ -30,7 +30,7 @@ task "themes:install" => :environment do |task, args|
   use_json = theme_args == ''
 
   theme_args = begin
-                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::load(theme_args)
+                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::safe_load(theme_args)
                rescue
                  puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
                  exit 1
@@ -61,14 +61,11 @@ def update_themes
         theme.save!
         unless theme.remote_theme.last_error_text.nil?
           puts "Error updating '#{theme.name}': #{theme.remote_theme.last_error_text}"
-          exit 1
         end
       end
     rescue => e
-      STDERR.puts "Failed to update '#{theme.name}'"
-      STDERR.puts e
+      STDERR.puts "Failed to update '#{theme.name}': #{e}"
       STDERR.puts e.backtrace
-      exit 1
     end
   end
 end

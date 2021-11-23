@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -36,7 +36,7 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 6);
+    assert.strictEqual(count("#quick-access-notifications li"), 6);
 
     // high priority, unread notification - should be first
 
@@ -50,7 +50,6 @@ acceptance("User Notifications", function (needs) {
           id: 42,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: false,
           high_priority: true,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -81,8 +80,8 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 6);
-    assert.equal(
+    assert.strictEqual(count("#quick-access-notifications li"), 6);
+    assert.strictEqual(
       query("#quick-access-notifications li span[data-topic-id]").innerText,
       "First notification"
     );
@@ -99,7 +98,6 @@ acceptance("User Notifications", function (needs) {
           id: 43,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: true,
           high_priority: false,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -131,8 +129,8 @@ acceptance("User Notifications", function (needs) {
 
     await visit("/"); // wait for re-render
 
-    assert.equal(count("#quick-access-notifications li"), 7);
-    assert.equal(
+    assert.strictEqual(count("#quick-access-notifications li"), 7);
+    assert.strictEqual(
       queryAll("#quick-access-notifications li span[data-topic-id]")[1]
         .innerText,
       "Second notification"
@@ -150,7 +148,6 @@ acceptance("User Notifications", function (needs) {
           id: 44,
           user_id: 1,
           notification_type: 5,
-          high_priority: true,
           read: true,
           high_priority: false,
           created_at: "2021-01-01 12:00:00 UTC",
@@ -182,7 +179,7 @@ acceptance("User Notifications", function (needs) {
     });
 
     await visit("/"); // wait for re-render
-    assert.equal(count("#quick-access-notifications li"), 8);
+    assert.strictEqual(count("#quick-access-notifications li"), 8);
     const texts = [];
     queryAll("#quick-access-notifications li").each((_, el) =>
       texts.push(el.innerText.trim())
@@ -221,7 +218,7 @@ acceptance(
     test("It does not render filter", async function (assert) {
       await visit("/u/eviltrout/notifications");
 
-      assert.notOk(exists("div.user-notifications-filter-select-kit"));
+      assert.notOk(exists("div.user-notifications-filter"));
     });
   }
 );

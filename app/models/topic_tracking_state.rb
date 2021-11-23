@@ -171,7 +171,7 @@ class TopicTrackingState
         category_id: post.topic.category_id,
         notification_level: tu.notification_level,
         archetype: post.topic.archetype,
-        first_unread_at: tu.user.user_stat.first_unread_at,
+        first_unread_at: tu.user.user_stat&.first_unread_at,
         unread_not_too_old: true
       }
 

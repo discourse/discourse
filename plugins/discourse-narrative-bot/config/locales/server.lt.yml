@@ -7,28 +7,122 @@
 lt:
   site_settings:
     discourse_narrative_bot_enabled: "Įgalinti Discourse Botą (discodot)"
+    disable_discourse_narrative_bot_welcome_post: "Išjunkite „Discourse Narrative Bot“ pasveikinimo įrašą"
+    discourse_narrative_bot_ignored_usernames: "Naudotojų vardai, kuriuos Discourse naratyvo botas turėtų ignoruoti"
+    discourse_narrative_bot_disable_public_replies: "Išjunkite viešus atsakymus naudodami „Discourse Narrative Bot“"
+    discourse_narrative_bot_welcome_post_type: "Sveikinimo įrašo tipas, kurį turėtų išsiųsti Discourse pasakojimo robotas"
+    discourse_narrative_bot_welcome_post_delay: "Palaukite (n) sekundžių prieš siųsdami „Discourse Narrative Bot“ pasveikinimo įrašą."
+  badges:
+    certified:
+      name: Sertifikuota
+      description: "Baigėme naują vartotojo vadovą"
+      long_description: |
+        Šis ženklelis suteikiamas sėkmingai užbaigus interaktyvią naują vartotojo pamoką. Jūs ėmėtės iniciatyvos išmokti pagrindines diskusijų priemones, o dabar esate sertifikuotas!
+    licensed:
+      description: "Baigėme pažengusio vartotojo vadovą"
+      long_description: |
+        Šis ženklelis suteikiamas sėkmingai baigus interaktyvią pažengusio vartotojo mokymo programą. Įvaldėte pažangias diskusijų priemones - dabar esate visiškai licencijuotas!
   discourse_narrative_bot:
+    bio: "Sveiki, nesu tikras žmogus. Aš esu robotas, galintis jus išmokyti apie šią svetainę. Norėdami su manimi bendrauti, atsiųskite man žinutę arba paminėkite mane vardu."
+    tl2_promotion_message:
+      subject_template: "Dabar, kai esate paaukštintas, atėjo laikas sužinoti apie kai kurias išplėstines funkcijas!"
+      text_body_template: |
+        Atsakykite į šį pranešimą naudodami „@%{discobot_username} %{reset_trigger}“, kad sužinotumėte daugiau apie tai, ką galite padaryti.
+    dice:
+      invalid: |-
+        Atsiprašau, matematiškai neįmanoma mesti to kauliukų derinio. :confounded:
     quote:
       trigger: "citata"
+      "1":
+        author: "Albertas Einšteinas"
+      "4":
+        author: "Charles-Guillaume Étienne"
+      "5":
+        author: "Teodoras Ruzveltas"
+      "6":
+        quote: "Gyvenimas yra kaip šokolado dėžutė. Niekada nežinai, ką gausi."
+      "7":
+        author: "Neilas Armstrongas"
+      "8":
+        quote: "Kasdien darykite vieną dalyką, kuris jus gąsdina."
+      "9":
+        quote: "Klaidos visada atleidžiamos, jei žmogus turi drąsos jas pripažinti."
+        author: "Bruce Lee"
+      "10":
+        author: "Napoleono kalnas"
     magic_8_ball:
+      trigger: "likimas"
       answers:
-        "1": "It is certain"
-        "2": "It is decidedly so"
-        "3": "Without a doubt"
-        "4": "Yes definitely"
-        "5": "You may rely on it"
-        "6": "As I see it, yes"
-        "7": "Most likely"
-        "8": "Outlook good"
+        "1": "Tai aišku"
+        "2": "Tai neabejotinai taip"
+        "3": "Be abejonės"
+        "4": "Taip tikrai"
+        "5": "Galite juo pasikliauti"
+        "6": "Kaip matau, taip"
+        "7": "Labiausiai tikėtina"
+        "8": "Perspektyva gera"
         "9": "Taip"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
-        "12": "Ask again later"
+        "10": "Ženklai rodo, kad taip"
+        "11": "Atsakymas miglotas, bandykite dar kartą"
+        "12": "Vėliau paklauskite dar kartą"
         "13": "Better not tell you now"
-        "14": "Cannot predict now"
-        "15": "Concentrate and ask again"
-        "16": "Don't count on it"
-        "17": "My reply is no"
-        "18": "My sources say no"
-        "19": "Outlook not so good"
-        "20": "Very doubtful"
+        "14": "Dabar negalima prognozuoti"
+        "15": "Susikaupkite ir vėl paklauskite"
+        "16": "Nesitikėkite"
+        "17": "Mano atsakymas yra ne"
+        "18": "Mano šaltiniai sako “ne”"
+        "19": "Perspektyva nėra tokia gera"
+        "20": "Labai abejotina"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "pradėti"
+      skip_trigger: "praleisti"
+      help_trigger: "rodyti pagalbą"
+      random_mention:
+        reply: |-
+          Sveiki! Norėdami sužinoti, ką galiu padaryti, pasakykite „@%{discobot_username} %{help_trigger}“.
+    new_user_narrative:
+      reset_trigger: "pamoka"
+      hello:
+        title: "Sveikinimai!"
+      likes:
+        reply: |-
+          Ačiū, kad patinka mano įrašas!
+        not_found: |-
+          Ar pamiršote pamėgti :heart: mano [įrašą?] (%{url}) :crying_cat_face:
+      quoting:
+        reply: |-
+          Puikus darbas, pasirinkote mano mėgstamiausią citatą! :left_speech_bubble:
+      mention:
+        reply: |-
+          _Ar kas nors pasakė mano vardą!? _ :raised_hand: Tikiu, kad pasakėte! :wave: Na, aš čia! Ačiū, kad paminėjote mane. :ok_hand:
+      certificate:
+        alt: "Pasiekimo pažymėjimas"
+    advanced_user_narrative:
+      reset_trigger: "išplėstinė pamoka"
+      title: ":arrow_up: Išplėstinės vartotojo funkcijos"
+      edit:
+        reply: |-
+          Puikus darbas!
+
+          Atminkite, kad po 5 minučių atlikti pakeitimai bus rodomi kaip viešos redagavimo peržiūros, o viršutiniame dešiniajame kampe bus rodoma pieštuko piktograma su peržiūrų skaičiumi.
+      category_hashtag:
+        reply: |-
+          Puikiai! Atminkite, kad tai veikia abiejų kategorijų _ir_ žymas, jei žymės įjungtos.
+      change_topic_notification_level:
+        not_found: |-
+          Panašu, kad vis dar žiūrite :eyes: šią temą! Jei jums sunku rasti, pranešimo lygio mygtukas yra temos apačioje.
+      details:
+        not_found: |-
+          Kyla sunkumų kuriant išsamios informacijos valdiklį? Į kitą atsakymą pabandykite įtraukti:
+
+          "" tekstas
+          [detalės = Pasirinkite mane, jei norite gauti daugiau informacijos]
+          Čia yra išsami informacija
+          [/details]
+          "
+        reply: |-
+          Puikus darbas - jūsų dėmesys detalėms yra žavingas!
+      certificate:
+        alt: "Išplėstinis vartotojo stebėjimo pasiekimų sertifikatas"

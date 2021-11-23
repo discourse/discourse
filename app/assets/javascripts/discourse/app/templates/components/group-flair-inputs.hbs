@@ -21,11 +21,12 @@
       onChange=(action (mut model.flair_icon))
     }}
   {{else if flairPreviewImage}}
-    {{image-uploader
+    {{uppy-image-uploader
       imageUrl=flairImageUrl
       onUploadDone=(action "setFlairImage")
       onUploadDeleted=(action "removeFlairImage")
       type="group_flair"
+      id="group-flair-uploader"
       class="no-repeat contain-image"}}
     <div class="control-instructions">
       {{i18n "groups.flair_upload_description"}}

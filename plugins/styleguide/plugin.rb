@@ -4,6 +4,7 @@
 # about: Preview how Widgets are Styled in Discourse
 # version: 0.2
 # author: Robin Ward
+# transpile_js: true
 
 register_asset "stylesheets/styleguide.scss"
 enabled_site_setting :styleguide_enabled

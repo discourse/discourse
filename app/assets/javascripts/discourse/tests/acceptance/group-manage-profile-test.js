@@ -24,17 +24,17 @@ acceptance("Managing Group Profile", function (needs) {
   test("As an admin", async function (assert) {
     await visit("/g/discourse/manage/profile");
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-bio"),
       1,
       "it should display group bio input"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-name"),
       1,
       "it should display group name input"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-full-name"),
       1,
       "it should display group full name input"

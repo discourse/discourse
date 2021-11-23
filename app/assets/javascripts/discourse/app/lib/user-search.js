@@ -55,7 +55,7 @@ function performSearch(
   }
 
   let data = {
-    term: term,
+    term,
     topic_id: topicId,
     category_id: categoryId,
     include_groups: includeGroups,
@@ -65,7 +65,7 @@ function performSearch(
     topic_allowed_users: allowedUsers,
     include_staged_users: includeStagedUsers,
     last_seen_users: lastSeenUsers,
-    limit: limit,
+    limit,
   };
 
   if (customUserSearchOptions) {

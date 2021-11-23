@@ -345,6 +345,7 @@ describe CookedPostProcessor do
         let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
         before do
+          stub_image_size
           cpp.post_process
         end
 
@@ -462,7 +463,6 @@ describe CookedPostProcessor do
             it 'should not add lightbox' do
               FastImage.expects(:size).returns([1750, 2000])
 
-              SiteSetting.crawl_images = true
               cpp.post_process
 
               expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/#{upload_path}/original/1X/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
@@ -526,6 +526,7 @@ describe CookedPostProcessor do
             it "does not create thumbnails or optimize images" do
               CookedPostProcessor.any_instance.expects(:optimize_image!).never
               Upload.any_instance.expects(:create_thumbnail!).never
+              stub_image_size
               cpp.post_process
 
               expect(cpp.html).not_to match_html cooked_html
@@ -828,21 +829,18 @@ describe CookedPostProcessor do
 
     it "resizes when only width is specified" do
       img = { 'src' => 'http://foo.bar/image3.png', 'width' => 100 }
-      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([200, 400])
       expect(cpp.get_size_from_attributes(img)).to eq([100, 200])
     end
 
     it "resizes when only height is specified" do
       img = { 'src' => 'http://foo.bar/image3.png', 'height' => 100 }
-      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([100, 300])
       expect(cpp.get_size_from_attributes(img)).to eq([33, 100])
     end
 
     it "doesn't raise an error with a weird url" do
       img = { 'src' => nil, 'height' => 100 }
-      SiteSetting.crawl_images = true
       expect(cpp.get_size_from_attributes(img)).to be_nil
     end
 
@@ -876,39 +874,10 @@ describe CookedPostProcessor do
     end
 
     it "caches the results" do
-      SiteSetting.crawl_images = true
       FastImage.expects(:size).returns([200, 400])
       cpp.get_size("http://foo.bar/image3.png")
       expect(cpp.get_size("http://foo.bar/image3.png")).to eq([200, 400])
     end
-
-    context "when crawl_images is disabled" do
-
-      before do
-        SiteSetting.crawl_images = false
-      end
-
-      it "doesn't call FastImage" do
-        FastImage.expects(:size).never
-        expect(cpp.get_size("http://foo.bar/image1.png")).to eq(nil)
-      end
-
-      it "is always allowed to crawl our own images" do
-        store = stub
-        Discourse.expects(:store).returns(store).at_least_once
-        store.expects(:has_been_uploaded?).returns(true)
-        FastImage.expects(:size).returns([100, 200])
-        expect(cpp.get_size("http://foo.bar/image2.png")).to eq([100, 200])
-      end
-
-      it "returns nil if FastImage can't get the original size" do
-        Discourse.store.class.any_instance.expects(:has_been_uploaded?).returns(true)
-        FastImage.expects(:size).returns(nil)
-        expect(cpp.get_size("http://foo.bar/image3.png")).to eq(nil)
-      end
-
-    end
-
   end
 
   context "#is_valid_image_url?" do
@@ -1078,15 +1047,17 @@ describe CookedPostProcessor do
         post.save_custom_fields
 
         cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        stub_image_size(width: 100, height: 200)
         cpp.post_process_oneboxes
 
-        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"100\" height=\"200\"></p>")
 
         upload.destroy!
         cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+        stub_image_size(width: 100, height: 200)
         cpp.post_process_oneboxes
 
-        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"\" height=\"\"></p>")
+        expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{image_url}\" width=\"100\" height=\"200\"></p>")
         Oneboxer.unstub(:onebox)
       end
 
@@ -1112,14 +1083,16 @@ describe CookedPostProcessor do
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
 
           cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+          stub_image_size(width: 100, height: 200)
           cpp.post_process_oneboxes
 
-          expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"\" height=\"\"></p>")
+          expect(cpp.doc.to_s).to eq("<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"100\" height=\"200\"></p>")
         end
       end
     end
 
     it "replaces large image placeholder" do
+      SiteSetting.max_image_size_kb = 4096
       url = 'https://image.com/my-avatar'
       image_url = 'https://image.com/avatar.png'
 
@@ -1134,6 +1107,7 @@ describe CookedPostProcessor do
       cpp.post_process
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
+      expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
     end
   end
 
@@ -1204,8 +1178,6 @@ describe CookedPostProcessor do
   context "#post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
-      SiteSetting.crawl_images = true
-
       url = 'https://square-image.com/onebox'
 
       body = <<~HTML
@@ -1224,7 +1196,7 @@ describe CookedPostProcessor do
 
       # not an ideal stub but shipping the whole image to fast image can add
       # a lot of cost to this test
-      FastImage.stubs(:size).returns([200, 200])
+      stub_image_size(width: 200, height: 200)
 
       post = Fabricate.build(:post, raw: url)
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -1815,10 +1787,13 @@ describe CookedPostProcessor do
       Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
 
+      stub_image_size
       CookedPostProcessor.new(reply).post_process
       expect(reply.raw).to eq(raw)
 
       PostRevisor.new(reply).revise!(Discourse.system_user, raw: raw, edit_reason: "put back full quote")
+
+      stub_image_size
       CookedPostProcessor.new(reply).post_process(new_post: true)
       expect(reply.raw).to eq("and this is the third reply")
     end

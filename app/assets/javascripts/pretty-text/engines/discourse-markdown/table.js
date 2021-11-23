@@ -11,7 +11,7 @@ export function setup(helper) {
 
   // we need a custom callback for style handling
   helper.allowList({
-    custom: function (tag, attr, val) {
+    custom(tag, attr, val) {
       if (tag !== "th" && tag !== "td") {
         return false;
       }

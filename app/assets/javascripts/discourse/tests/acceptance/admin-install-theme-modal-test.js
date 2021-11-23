@@ -20,8 +20,8 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
     await click(privateRepoCheckbox);
-    assert.equal(query(urlInput).value, themeUrl, "url input is filled");
-    assert.equal(
+    assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
+    assert.strictEqual(
       query(branchInput).value,
       "tests-passed",
       "branch input is filled"
@@ -36,8 +36,8 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await click(".create-actions .btn-primary");
     await click("#remote");
-    assert.equal(query(urlInput).value, "", "url input is reset");
-    assert.equal(query(branchInput).value, "", "branch input is reset");
+    assert.strictEqual(query(urlInput).value, "", "url input is reset");
+    assert.strictEqual(query(branchInput).value, "", "branch input is reset");
     assert.ok(
       !query(privateRepoCheckbox).checked,
       "private repo checkbox unchecked"
@@ -60,7 +60,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
     await click(privateRepoCheckbox);
-    assert.equal(query(urlInput).value, themeUrl, "url input is filled");
+    assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
     assert.ok(
       query(privateRepoCheckbox).checked,
       "private repo checkbox is checked"
@@ -84,7 +84,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
   test("modal can be auto-opened with the right query params", async function (assert) {
     await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
     assert.ok(query(".admin-install-theme-modal"), "modal is visible");
-    assert.equal(
+    assert.strictEqual(
       query(".install-theme code").textContent.trim(),
       "testUrl",
       "repo url is visible"
@@ -101,7 +101,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       ),
       "no install button is shown for installed themes"
     );
-    assert.equal(
+    assert.strictEqual(
       query(
         '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
       ).textContent.trim(),

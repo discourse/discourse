@@ -12,4 +12,13 @@ describe UserField do
     subject { described_class.new(field_type: 'dropdown') }
     it { is_expected.to validate_presence_of :name }
   end
+
+  it 'sanitizes the description' do
+    xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
+    user_field = Fabricate(:user_field)
+
+    user_field.update!(description: xss)
+
+    expect(user_field.description).to eq("<b>click me!</b>alert('TEST');")
+  end
 end

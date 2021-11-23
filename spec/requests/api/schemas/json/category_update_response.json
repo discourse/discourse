@@ -218,12 +218,6 @@
         "can_delete": {
           "type": "boolean"
         },
-        "cannot_delete_reason": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "allow_badges": {
           "type": "boolean"
         },
@@ -290,7 +284,6 @@
         "mailinglist_mirror",
         "all_topics_wiki",
         "can_delete",
-        "cannot_delete_reason",
         "allow_badges",
         "topic_featured_link_allowed",
         "search_priority",

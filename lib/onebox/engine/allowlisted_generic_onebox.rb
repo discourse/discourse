@@ -65,8 +65,8 @@ module Onebox
       def placeholder_html
         return article_html if (is_article? || force_article_html?)
         return image_html if is_image?
-        return Onebox::Helpers.video_placeholder_html if is_video? || is_card?
-        return Onebox::Helpers.generic_placeholder_html if is_embedded?
+        return Onebox::Helpers.video_placeholder_html if !SiteSetting.enable_diffhtml_preview? && (is_video? || is_card?)
+        return Onebox::Helpers.generic_placeholder_html if !SiteSetting.enable_diffhtml_preview? && is_embedded?
         to_html
       end
 

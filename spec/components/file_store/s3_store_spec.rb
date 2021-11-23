@@ -163,7 +163,11 @@ describe FileStore::S3Store do
         s3_helper.expects(:copy).with(external_upload_stub.key, kind_of(String), options: upload_opts).returns(["path", "etag"])
         s3_helper.expects(:delete_object).with(external_upload_stub.key)
         upload = Fabricate(:upload, extension: "png", sha1: upload_sha1, original_filename: original_filename)
-        store.move_existing_stored_upload(external_upload_stub.key, upload, "image/png")
+        store.move_existing_stored_upload(
+          existing_external_upload_key: external_upload_stub.key,
+          upload: upload,
+          content_type: "image/png"
+        )
       end
 
       context "when the file is a PDF" do
@@ -175,7 +179,11 @@ describe FileStore::S3Store do
           disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}", content_type: "application/pdf" }
           s3_helper.expects(:copy).with(external_upload_stub.key, kind_of(String), options: upload_opts.merge(disp_opts)).returns(["path", "etag"])
           upload = Fabricate(:upload, extension: "png", sha1: upload_sha1, original_filename: original_filename)
-          store.move_existing_stored_upload(external_upload_stub.key, upload, "application/pdf")
+          store.move_existing_stored_upload(
+            existing_external_upload_key: external_upload_stub.key,
+            upload: upload,
+            content_type: "application/pdf"
+          )
         end
       end
     end

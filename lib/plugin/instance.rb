@@ -326,8 +326,8 @@ class Plugin::Instance
   # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_allowlister do |user|
-        plugin.enabled? ? block.call(user) : []
+      ::TopicView.add_post_custom_fields_allowlister do |user, topic|
+        plugin.enabled? ? block.call(user, topic) : []
       end
     end
   end
@@ -744,9 +744,9 @@ class Plugin::Instance
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.", drop_from: '2.9.0')
           return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
-          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.", drop_from: '2.9.0')
           true
         end
       end
@@ -948,6 +948,32 @@ class Plugin::Instance
   # for usage instructions
   def register_presence_channel_prefix(prefix, &block)
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
+  end
+
+  # Registers a new push notification filter. User and notification payload are passed into block, and if all
+  # filters return `true`, the push notification will be sent.
+  def register_push_notification_filter(&block)
+    DiscoursePluginRegistry.register_push_notification_filter(block, self)
+  end
+
+  # Register a ReviewableScore setting_name associated with a reason.
+  # We'll use this to build a site setting link and add it to the reason's translation.
+  #
+  # If your plugin has a reason translation looking like this:
+  #
+  #   my_plugin_reason: "This is the reason this post was flagged. See %{link}."
+  #
+  # And you associate the reason with a setting:
+  #
+  #   add_reviewable_score_link(:my_plugin_reason, 'a_plugin_setting')
+  #
+  # We'll generate the following link and attach it to the translation:
+  #
+  #   <a href="/admin/site_settings/category/all_results?filter=a_plugin_setting">
+  #     a plugin setting
+  #   </a>
+  def add_reviewable_score_link(reason, setting_name)
+    DiscoursePluginRegistry.register_reviewable_score_link({ reason: reason.to_sym, setting: setting_name }, self)
   end
 
   protected

@@ -12,7 +12,7 @@
     <article class='post<%- if post.trashed? %> deleted<% end %>' id='post-<%= post.id.to_s %>'>
       <%= link_to embed_post_date(post.created_at), post.full_url, title: post.created_at.strftime("%B %e, %Y %l:%M%P"), class: 'post-date', target: "_blank" %>
       <%- if post.reply_to_post.present? && !post.cooked.index('aside') %>
-        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.full_url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
+        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.full_url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to', target: "_blank" %>
       <%- end %>
 
       <div class='author'>
@@ -29,7 +29,7 @@
 
         <%- if post.reply_count > 0 && post.replies.exists? %>
           <%- if post.reply_count == 1 %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button', target: "_blank" %>
           <% else %>
             <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, class: 'post-replies button', target: "_blank" %>
           <%- end %>

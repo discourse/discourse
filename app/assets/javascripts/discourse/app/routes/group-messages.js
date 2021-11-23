@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -17,5 +18,10 @@ export default DiscourseRoute.extend({
     ) {
       this.transitionTo("group.members", group);
     }
+  },
+
+  @action
+  triggerRefresh() {
+    this.refresh();
   },
 });

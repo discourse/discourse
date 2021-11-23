@@ -482,16 +482,9 @@ et:
       description: "Laigi seda postitust"
       short_description: "Laigi seda postitust"
   user_activity:
-    no_default:
-      others: "Tegevusi pole."
     no_bookmarks:
       self: "Sul pole järjehoidjatesse lisatud postitusi; järjehoidjad võimaldavad kiiresti konkreetsetele postitustele viidata."
       others: "Järjehoidjad puuduvad."
-    no_likes_given:
-      self: "Sa pole oma meeldimist ühelegi postitusele andnud."
-      others: "Meeldimisega postitusi veel pole."
-    no_replies:
-      others: "Vastuseid pole."
   topic_flag_types:
     spam:
       title: "Spämm"
@@ -1031,7 +1024,6 @@ et:
             label: "Sinu kogukonna nimi"
             placeholder: "Jane ajaviitenurgake"
           site_description:
-            label: "Kirjelda oma kogukonda ühe lühikese lausega"
             placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
       introduction:
         title: "Sissejuhatus"
@@ -1131,6 +1123,7 @@ et:
           title: "Kustuta kasutaja"
       reject:
         title: "Lükka tagasi"
+  fallback_username: "kasutaja"
   activemodel:
     errors:
       <<: *errors

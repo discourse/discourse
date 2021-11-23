@@ -126,6 +126,10 @@
         border-bottom-width: 5px;
         border-bottom-style: solid;
       }
+
+      .badge-wrapper {
+        font-size: inherit;
+      }
     }
 
     .btn-clear {
@@ -166,6 +170,11 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+
+    .selected-content {
+      max-height: 300px;
+      overflow-y: auto;
+    }
   }
 
   .select-kit-row {

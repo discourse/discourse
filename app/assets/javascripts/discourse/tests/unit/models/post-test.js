@@ -54,17 +54,17 @@ module("Unit | Model | post", function () {
       })
     );
 
-    assert.equal(post.get("raw"), "different raw", "raw field updated");
+    assert.strictEqual(post.get("raw"), "different raw", "raw field updated");
   });
 
   test("destroy by staff", async function (assert) {
     let user = User.create({ username: "staff", moderator: true });
-    let post = buildPost({ user: user });
+    let post = buildPost({ user });
 
     await post.destroy(user);
 
     assert.present(post.get("deleted_at"), "it has a `deleted_at` field.");
-    assert.equal(
+    assert.strictEqual(
       post.get("deleted_by"),
       user,
       "it has the user in the `deleted_by` field"
@@ -85,7 +85,7 @@ module("Unit | Model | post", function () {
   test("destroy by non-staff", async function (assert) {
     const originalCooked = "this is the original cooked value";
     const user = User.create({ username: "evil trout" });
-    const post = buildPost({ user: user, cooked: originalCooked });
+    const post = buildPost({ user, cooked: originalCooked });
 
     await post.destroy(user);
 
@@ -97,6 +97,6 @@ module("Unit | Model | post", function () {
       post.get("cooked") !== originalCooked,
       "the cooked content changed"
     );
-    assert.equal(post.get("version"), 2, "the version number increased");
+    assert.strictEqual(post.get("version"), 2, "the version number increased");
   });
 });

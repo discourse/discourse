@@ -11,18 +11,47 @@
     }
   }
 
-  #private-message-users {
-    width: 404px;
-  }
-
-  .item + #private-message-users {
-    width: unset;
-    min-width: 150px;
-    flex: 1 1 auto;
-  }
-
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
+  }
+
+  &.private-message {
+    .with-tags {
+      .title-and-category {
+        flex-wrap: nowrap; // force title and tags on same line for PMs
+        .mini-tag-chooser {
+          margin-bottom: 5px; // match title input margin
+          flex: 0 0 auto;
+          margin-left: 1%; // matches margin between category and tag input
+          width: 39%;
+        }
+      }
+    }
+
+    #private-message-users,
+    .users-input {
+      width: 100%;
+      flex: 0 0 auto;
+      &.can-warn {
+        // space for warning, inverse of mini-tag-chooser width
+        width: 60%;
+      }
+    }
+
+    .add-warning {
+      flex: 1 1 auto;
+      overflow: hidden;
+      span {
+        // protects the space of the user input in case there's a very long translation
+        @include ellipsis;
+      }
+    }
+
+    &.show-preview {
+      .user-selector {
+        width: 50%;
+      }
+    }
   }
 }
 

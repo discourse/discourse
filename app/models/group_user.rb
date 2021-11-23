@@ -83,12 +83,9 @@ class GroupUser < ActiveRecord::Base
   end
 
   def remove_primary_group
-    DB.exec("
-      UPDATE users
-      SET primary_group_id = NULL
-      WHERE id = :user_id AND primary_group_id = :id",
-      id: group.id, user_id: user_id
-    )
+    return if user.primary_group_id != group_id
+    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
+    user.update_attribute(:primary_group_id, nil)
   end
 
   def grant_other_available_title

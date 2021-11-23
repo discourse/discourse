@@ -10,10 +10,17 @@ class FakeUppy {
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764": {
         meta: {},
         data: createFile("test1.png"),
+        size: 1024,
       },
       "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764": {
         meta: {},
         data: createFile("test2.png"),
+        size: 2048,
+      },
+      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764": {
+        meta: {},
+        data: createFile("test2.png"),
+        size: 209715200,
       },
     };
   }
@@ -42,8 +49,8 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const plugin = new UppyChecksum(fakeUppy, {
       capabilities,
     });
-    assert.equal(plugin.id, "uppy-checksum");
-    assert.equal(plugin.capabilities, capabilities);
+    assert.strictEqual(plugin.id, "uppy-checksum");
+    assert.strictEqual(plugin.capabilities, capabilities);
   });
 
   test("it does nothing if not running in a secure context", function (assert) {
@@ -60,10 +67,10 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const fileId =
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764";
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
-      assert.equal(
+      assert.strictEqual(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
       );
       done();
     });
@@ -83,10 +90,10 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const fileId =
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764";
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
-      assert.equal(
+      assert.strictEqual(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
       );
       done();
     });
@@ -104,10 +111,32 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     const fileId =
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764";
     plugin.uppy.preprocessors[0]([fileId]).then(() => {
-      assert.equal(
+      assert.strictEqual(
         plugin.uppy.emitted.length,
-        0,
-        "no events were fired by the checksum plugin because it returned early"
+        1,
+        "only the complete event was fired by the checksum plugin because it skipped the file"
+      );
+      done();
+    });
+  });
+
+  test("it does nothing if the file is > 100MB", function (assert) {
+    const capabilities = {};
+    const fakeUppy = new FakeUppy();
+    const plugin = new UppyChecksum(fakeUppy, {
+      capabilities,
+    });
+    plugin.install();
+    const done = assert.async();
+
+    const fileId =
+      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764";
+    plugin.uppy.preprocessors[0]([fileId]).then(() => {
+      assert.strictEqual(plugin.uppy.emitted[0].event, "preprocess-progress");
+      assert.strictEqual(plugin.uppy.emitted[1].event, "preprocess-complete");
+      assert.strictEqual(
+        plugin.uppy.getFile(fileId).meta.sha1_checksum,
+        undefined
       );
       done();
     });
@@ -127,17 +156,17 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
       "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764",
     ];
     plugin.uppy.preprocessors[0](fileIds).then(() => {
-      assert.equal(plugin.uppy.emitted[0].event, "preprocess-progress");
-      assert.equal(plugin.uppy.emitted[1].event, "preprocess-progress");
-      assert.equal(plugin.uppy.emitted[2].event, "preprocess-complete");
-      assert.equal(plugin.uppy.emitted[3].event, "preprocess-complete");
+      assert.strictEqual(plugin.uppy.emitted[0].event, "preprocess-progress");
+      assert.strictEqual(plugin.uppy.emitted[1].event, "preprocess-progress");
+      assert.strictEqual(plugin.uppy.emitted[2].event, "preprocess-complete");
+      assert.strictEqual(plugin.uppy.emitted[3].event, "preprocess-complete");
 
       // these checksums are the actual SHA1 hashes of the test file names
-      assert.equal(
+      assert.strictEqual(
         plugin.uppy.getFile(fileIds[0]).meta.sha1_checksum,
         "d9bafe64b034b655db018ad0226c6865300ada31"
       );
-      assert.equal(
+      assert.strictEqual(
         plugin.uppy.getFile(fileIds[1]).meta.sha1_checksum,
         "cb10341e3efeab45f0bc309a1c497edca4c5a744"
       );
@@ -165,10 +194,10 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
       .rejects({ message: "Algorithm: Unrecognized name" });
 
     plugin.uppy.preprocessors[0](fileIds).then(() => {
-      assert.equal(plugin.uppy.emitted[0].event, "preprocess-progress");
-      assert.equal(plugin.uppy.emitted[1].event, "preprocess-progress");
-      assert.equal(plugin.uppy.emitted[2].event, "preprocess-complete");
-      assert.equal(plugin.uppy.emitted[3].event, "preprocess-complete");
+      assert.strictEqual(plugin.uppy.emitted[0].event, "preprocess-progress");
+      assert.strictEqual(plugin.uppy.emitted[1].event, "preprocess-progress");
+      assert.strictEqual(plugin.uppy.emitted[2].event, "preprocess-complete");
+      assert.strictEqual(plugin.uppy.emitted[3].event, "preprocess-complete");
 
       assert.deepEqual(plugin.uppy.getFile(fileIds[0]).meta, {});
       assert.deepEqual(plugin.uppy.getFile(fileIds[1]).meta, {});

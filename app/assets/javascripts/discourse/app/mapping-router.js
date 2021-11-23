@@ -141,6 +141,11 @@ export function mapRoutes() {
     this.route("unknown", { path: "*path" });
   });
 }
+export function teardownRouter(container) {
+  const router = container.lookup("router:main");
+  const constructor = Object.getPrototypeOf(router).constructor;
+  constructor.dslCallbacks.splice(0, constructor.dslCallbacks.length);
+}
 
 export function registerRouter(registry) {
   registry.unregister("router:main");

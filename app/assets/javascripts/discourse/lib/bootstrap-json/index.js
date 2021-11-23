@@ -29,7 +29,7 @@ function htmlTag(buffer, bootstrap) {
   buffer.push(`<html lang="${bootstrap.html_lang}"${classList}>`);
 }
 
-function head(buffer, bootstrap) {
+function head(buffer, bootstrap, headers, baseURL) {
   if (bootstrap.csrf_token) {
     buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
     buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
@@ -86,6 +86,13 @@ function head(buffer, bootstrap) {
     }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
+
+  if (bootstrap.preloaded.currentUser) {
+    let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
+    if (staff) {
+      buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
+    }
+  }
 
   bootstrap.plugin_js.forEach((src) =>
     buffer.push(`<script src="${src}"></script>`)
@@ -156,15 +163,15 @@ const BUILDERS = {
   "locale-script": localeScript,
 };
 
-function replaceIn(bootstrap, template, id, headers) {
+function replaceIn(bootstrap, template, id, headers, baseURL) {
   let buffer = [];
-  BUILDERS[id](buffer, bootstrap, headers);
+  BUILDERS[id](buffer, bootstrap, headers, baseURL);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
   return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
-async function applyBootstrap(bootstrap, template, response) {
+async function applyBootstrap(bootstrap, template, response, baseURL) {
   // If our initial page added some preload data let's not lose that.
   let json = await response.json();
   if (json && json.preloaded) {
@@ -172,7 +179,7 @@ async function applyBootstrap(bootstrap, template, response) {
   }
 
   Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id, response);
+    template = replaceIn(bootstrap, template, id, response, baseURL);
   });
   return template;
 }
@@ -192,7 +199,7 @@ function buildFromBootstrap(assetPath, proxy, baseURL, req, response) {
 
         getJSON(url, null, req.headers)
           .then((json) => {
-            return applyBootstrap(json.bootstrap, template, response);
+            return applyBootstrap(json.bootstrap, template, response, baseURL);
           })
           .then(resolve)
           .catch((e) => {

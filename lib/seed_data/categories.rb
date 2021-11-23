@@ -21,7 +21,7 @@ module SeedData
         categories(site_setting_names).each do |params|
           params.slice!(:site_setting_name, :name, :description)
           params[:skip_changed] = skip_changed
-          update_category(params)
+          update_category(**params)
         end
       end
     end

@@ -4,6 +4,7 @@
 #
 # This one uses their API.
 
+require 'open-uri'
 require 'reverse_markdown'
 require_relative 'base'
 require_relative 'base/generic_database'
@@ -12,6 +13,24 @@ require_relative 'base/generic_database'
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/zendesk_api.rb SOURCE_URL DIRNAME AUTH_EMAIL AUTH_TOKEN
 class ImportScripts::ZendeskApi < ImportScripts::Base
   BATCH_SIZE = 1000
+
+  HTTP_ERRORS = [
+    EOFError,
+    Errno::ECONNRESET,
+    Errno::EINVAL,
+    Net::HTTPBadResponse,
+    Net::HTTPHeaderSyntaxError,
+    Net::ProtocolError,
+    Timeout::Error,
+    OpenURI::HTTPError,
+    OpenSSL::SSL::SSLError
+  ]
+
+  MAX_RETRIES = 5
+
+  IMAGE_DOWNLOAD_PATH = "replace-me"
+
+  SUBDOMAIN = "replace-me"
 
   def initialize(source_url, path, auth_email, auth_token)
     super()
@@ -219,7 +238,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
         {
           id: import_topic_id(row['id']),
           title: row['title'].present? ? row['title'].strip[0...255] : "Topic title missing",
-          raw: normalize_raw(row['raw']),
+          raw: normalize_raw(row['raw'], user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id),
           category: category_id_from_imported_category_id(row['category_id']),
           user_id: user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id,
           created_at: row['created_at'],
@@ -257,7 +276,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
 
         {
           id: row['id'],
-          raw: normalize_raw(row['raw']),
+          raw: normalize_raw(row['raw'], user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id),
           user_id: user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id,
           topic_id: topic[:topic_id],
           created_at: row['created_at'],
@@ -302,9 +321,47 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
     end
   end
 
-  def normalize_raw(raw)
+  def normalize_raw(raw, user_id)
     raw = raw.gsub('\n', '')
     raw = ReverseMarkdown.convert(raw)
+
+    # Process images, after the ReverseMarkdown they look like
+    # ![](https://<sub-domain>.zendesk.com/<hash>.<image-format>)
+    raw.gsub!(/!\[\]\((https:\/\/#{SUBDOMAIN}\.zendesk\.com\/hc\/user_images\/([^).]+\.[^)]+))\)/i) do
+      image_url = $1
+      filename = $2
+      attempts = 0
+
+      begin
+        URI.parse(image_url).open do |image|
+          # IMAGE_DOWNLOAD_PATH is whatever image, it will be replaced with the downloaded image
+          File.open(IMAGE_DOWNLOAD_PATH, "wb") do |file|
+            file.write(image.read)
+          end
+        end
+      rescue *HTTP_ERRORS => e
+        if attempts < MAX_RETRIES
+          attempts += 1
+          sleep(2)
+          retry
+        else
+          puts "Error downloading image"
+        end
+        next
+      end
+
+      upl_obj = create_upload(user_id, IMAGE_DOWNLOAD_PATH, filename)
+
+      if upl_obj&.persisted?
+        html = html_for_upload(upl_obj, filename)
+        html
+      else
+        puts "Error creating image upload"
+        "![](#{$1})"
+        exit
+      end
+    end
+
     raw
   end
 

@@ -154,6 +154,7 @@ cs:
       previous_month: "Předchozí měsíc"
       next_month: "Další měsíc"
       placeholder: datum
+      to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek #%{postNumber}"
@@ -347,6 +348,11 @@ cs:
       topic_reply: "Koncept odpovědi"
       abandon:
         yes_value: "Zahodit"
+    topic_count_categories:
+      one: "Zobrazit %{count} nové nebo upravené téma"
+      few: "Zobrazit %{count} nová nebo upravená témata"
+      many: "Zobrazit %{count} nových nebo upravených témat"
+      other: "Zobrazit %{count} nových nebo upravených témat"
     topic_count_latest:
       one: "Zobrazit %{count} nové nebo upravené téma"
       few: "Zobrazit %{count} nová nebo upravená témata"
@@ -1565,7 +1571,6 @@ cs:
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
-      title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
@@ -1679,6 +1684,9 @@ cs:
       watching_first_post: "<span>Nové téma</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Označit jako přečtené"
+        cancel: "Zrušit"
       group_message_summary:
         one: "%{count} zpráva ve schránce skupiny %{group_name}"
         few: "%{count} zprávy ve schránce skupiny %{group_name}"
@@ -1715,8 +1723,8 @@ cs:
         few: "<span>%{count}%{plus} výsledky pro</span><span class='term'>%{term}</span>"
         many: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} výsledků pro</span><span class='term'>%{term}</span>"
-      title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
-      full_page_title: "vyhledávat témata nebo příspěvky"
+      title: "Vyhledat"
+      full_page_title: "Vyhledat"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
       post_format: "#%{post_number} od %{username}"
@@ -1728,13 +1736,17 @@ cs:
       search_google: "Zkuste vyhledávat pomocí Google:"
       search_google_button: "Google"
       search_button: "Vyhledat"
+      categories: "Kategorie"
+      tags: "Štítky"
+      type:
+        users: "Uživatelé"
+        categories: "Kategorie"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
       advanced:
-        title: Pokročilé hledání
         posted_by:
           label: Od uživatele
         in_category:
@@ -1777,7 +1789,6 @@ cs:
             after: po
         views:
           label: Zobrazení
-    hamburger_menu: "jít na jiný seznam témat nebo kategorii"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -1907,6 +1918,7 @@ cs:
         publish_to: "Publikovat v:"
         when: "Když:"
         time_frame_required: "Vyberte prosím časové období"
+        duration: "Doba trvání"
       auto_update_input:
         none: "Vyberte časové období"
         later_today: "Později během dnešního dne"
@@ -2173,6 +2185,7 @@ cs:
           other: "Máte označeno <b>%{count}</b> příspěvků."
     post:
       quote_reply: "Cituj"
+      quote_edit: "Upravit"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
@@ -2737,6 +2750,8 @@ cs:
           name: Ostatní
         posting:
           name: Přispívání
+    download_calendar:
+      download: "Stáhnout"
     tagging:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
@@ -2828,6 +2843,8 @@ cs:
         member: "člen"
         regular: "pravidelný uživatel"
         leader: "vůdce"
+    user_activity:
+      no_replies_others: "Žádné odpovědi."
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -3201,12 +3218,8 @@ cs:
           embedded_scss:
             text: "Vloženo CSS"
             title: "Zadat vlastní CSS k doručení s vloženou verzí kometářů"
-          head_tag:
-            text: "</head>"
-            title: "HTML které bude vloženo před</head> štítkem"
           body_tag:
-            text: "</body>"
-            title: "HTML, který bude vložený před </body>štítek"
+            text: "Tělo"
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
@@ -3831,7 +3844,6 @@ cs:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Vložte nové emoji, které bude dostupné pro všechny na fóru. (Protip: můžete přetáhnout několik souborů najednou.)"
         add: "Vložit nový Emoji"
         uploading: "Nahrává se..."
         name: "Název"
@@ -3841,7 +3853,6 @@ cs:
       embedding:
         get_started: "Pokud chceš zabudovat Discourse do jiných stránek, začni s přidáním hostu."
         confirm_delete: "Opravdu chcete smazat tento host?"
-        sample: "Abyste vytvořili a zabudovali témata z discourse, použijte následující HTML kód na vašem webu. Nahraď <b>REPLACE_ME</b> celkovým URL stránky, do které je zabudováváš."
         title: "Zabudování"
         host: "Povolené hosty"
         class_name: "název třídy"

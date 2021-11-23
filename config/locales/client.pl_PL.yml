@@ -43,7 +43,7 @@ pl_PL:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} temu"
-      wrap_on: "na %{date}"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -160,6 +160,8 @@ pl_PL:
       previous_month: "Poprzedni miesiąc"
       next_month: "Następny miesiąc"
       placeholder: data
+      from_placeholder: "od daty"
+      to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -201,6 +203,7 @@ pl_PL:
         disabled: "Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony."
       forwarded: "przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
+    skip_to_main_content: "Przejdź do głównej zawartości"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     software_update_prompt:
@@ -228,6 +231,7 @@ pl_PL:
         cn_northwest_1: "Chiny (Ningxia)"
         eu_central_1: "UE (Frankfurt)"
         eu_north_1: "UE (Sztokholm)"
+        eu_south_1: "UE (Mediolan)"
         eu_west_1: "UE (Irlandia)"
         eu_west_2: "UE (Londyn)"
         eu_west_3: "EU (Paryż)"
@@ -291,6 +295,8 @@ pl_PL:
       few: "%{count} znaki"
       many: "%{count} znaków"
       other: "%{count} znaków"
+    period_chooser:
+      aria_label: "Filtruj według okresu"
     related_messages:
       title: "Wiadomości powiązane"
       see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username} ...'
@@ -323,11 +329,13 @@ pl_PL:
       help:
         bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
         edit_bookmark: "Kliknij, aby edytować zakładkę w tym temacie"
+        edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       not_bookmarked: "dodaj do zakładek"
+      remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
@@ -365,6 +373,11 @@ pl_PL:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+    topic_count_categories:
+      one: "Zobacz %{count} nowy albo zaktualizowany temat"
+      few: "Zobacz %{count} nowe albo zaktualizowane tematy"
+      many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+      other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
     topic_count_latest:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -423,6 +436,7 @@ pl_PL:
         placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
       order_by: "Segreguj według:"
+      date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       explain:
         why: "wyjaśnij, dlaczego ten element znalazł się w kolejce"
@@ -1072,7 +1086,9 @@ pl_PL:
       use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
       expand_profile: "Rozwiń"
+      sr_expand_profile: "Rozwiń szczegóły profilu"
       collapse_profile: "Zwiń"
+      sr_collapse_profile: "Zwiń szczegóły profilu"
       bookmarks: "Zakładki"
       bio: "O mnie"
       timezone: "Strefa czasowa"
@@ -1231,6 +1247,8 @@ pl_PL:
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
         tags: "Tagi"
         warnings: "Oficjalne ostrzeżenia"
+        read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -1571,22 +1589,19 @@ pl_PL:
         invite:
           new_title: "Utwórz zaproszenie"
           edit_title: "Edytuj zaproszenie"
-          instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny"
+          instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           copy_link: "skopiuj link"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
-          restrict_email: "Ogranicz do jednego adresu e-mail"
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
-          invite_to_topic: "Przyjedź pod ten temat"
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zapisane."
-          invite_copied: "Link z zaproszeniem został skopiowany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -1772,6 +1787,8 @@ pl_PL:
       description_time_MF: "Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>."
       enable: "Podsumuj ten temat"
       disable: "Pokaż wszystkie posty"
+      short_label: "Podsumuj"
+      short_title: "Pokaż podsumowanie tego tematu: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -1877,21 +1894,27 @@ pl_PL:
       google_oauth2:
         name: "Google"
         title: "przez Google"
+        sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
         title: "przez Twitter"
+        sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
         title: "z Instagramem"
+        sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
         title: "przez Facebook"
+        sr_title: "Zaloguj się przez facebook"
       github:
         name: "GitHub"
         title: "przez GitHub"
+        sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
         title: "z Discordem"
+        sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
@@ -2075,7 +2098,7 @@ pl_PL:
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
-      title: "Lub naciśnij Ctrl+Enter"
+      title: "Lub naciśnij %{modifier}Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
@@ -2165,6 +2188,8 @@ pl_PL:
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
       reload: "Przeładuj"
       ignore: "Ignoruj"
+      image_alt_text:
+        aria_label: Tekst alternatywny dla obrazu
     notifications:
       tooltip:
         regular:
@@ -2225,6 +2250,9 @@ pl_PL:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
+      dismiss_confirmation:
+        dismiss: "Odrzuć"
+        cancel: "Anuluj"
       group_message_summary:
         one: "%{count} wiadomość w skrzynce odbiorczej %{group_name}"
         few: "%{count} wiadomości w skrzynce odbiorczej %{group_name}"
@@ -2282,13 +2310,16 @@ pl_PL:
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
+      open_advanced: "Otwórz wyszukiwanie zaawansowane"
+      clear_search: "Wyczyść wyszukiwanie"
+      sort_or_bulk_actions: "Sortuj lub zbiorczo wybierz wyniki"
       result_count:
         one: "<span>%{count} wynik dla</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} wyniki dla</span><span class='term'>%{term}</span>"
         many: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
-      title: "szukaj tematów, postów, użytkowników lub kategorii"
-      full_page_title: "szukaj tematów lub postów"
+      title: "Wyszukaj"
+      full_page_title: "Wyszukaj"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
       post_format: "#%{post_number} za %{username}"
@@ -2300,16 +2331,38 @@ pl_PL:
       search_google: "Spróbuj wyszukać w Google:"
       search_google_button: "Google"
       search_button: "Szukaj"
+      search_term_label: "wpisz słowo kluczowe wyszukiwania"
+      categories: "Kategorie"
+      tags: "Tagi"
+      in: "w"
+      in_this_topic: "w tym temacie"
+      in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
+      in_topics_posts: "we wszystkich tematach i postach"
+      enter_hint: "lub naciśnij Enter"
+      in_posts_by: "w postach %{username}"
+      type:
+        default: "Tematy/posty"
+        users: "Użytkownicy"
+        categories: "Kategorie"
+        categories_and_tags: "Kategorie/tagi"
       context:
         user: "Szukaj postów @%{username}"
         category: "Szukaj w kategorii #%{category}"
         tag: "Wyszukaj znacznik # %{tag}"
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
+      tips:
+        category_tag: "filtry według kategorii lub tagu"
+        author: "filtry według autora posta"
+        in: "filtruje według metadanych (np. in:title, in:personal, in:pinned)"
+        status: "filtry według statusu tematu"
+        full_search: "uruchamia wyszukiwanie pełnej strony"
+        full_search_key: "%{modifier} + Enter"
       advanced:
-        title: Zaawansowane wyszukiwanie
+        title: Zaawansowane filtry
         posted_by:
           label: Wysłane przez
+          aria_label: Filtruj według autora posta
         in_category:
           label: Skategoryzowane
         in_group:
@@ -2318,6 +2371,7 @@ pl_PL:
           label: Z odnaką
         with_tags:
           label: Otagowane
+          aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy / wpisy...
           title: Dopasowanie tylko w tytule
@@ -2348,19 +2402,26 @@ pl_PL:
             label: Wpisy
           min:
             placeholder: minimum
+            aria_label: filtruj według minimalnej liczby postów
           max:
             placeholder: maksimum
+            aria_label: filtruj według maksymalnej liczby postów
           time:
             label: Opublikowano
+            aria_label: Filtruj według daty opublikowania
             before: przed
             after: po
         views:
           label: Odsłony
         min_views:
           placeholder: minimum
+          aria_label: filtruj według minimalnych wyświetleń
         max_views:
           placeholder: maksimum
-    hamburger_menu: "przejdź do innej listy lub kategorii"
+          aria_label: filtrować według maksymalnych wyświetleń
+        additional_options:
+          label: "Filtruj według liczby postów i wyświetleń tematu"
+    hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -2559,6 +2620,7 @@ pl_PL:
         time_frame_required: "Wybierz przedział czasowy"
         min_duration: "Czas trwania musi być większy niż 0"
         max_duration: "Czas trwania musi być krótszy niż 20 lat"
+        duration: "Czas trwania"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -2923,6 +2985,9 @@ pl_PL:
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
       quote_reply: "Cytuj"
+      quote_reply_shortcut: "Lub naciśnij q"
+      quote_edit: "Edytuj"
+      quote_edit_shortcut: "Lub naciśnij e"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -2983,6 +3048,7 @@ pl_PL:
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
+        file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files:
           one: "Przepraszamy, możesz przesłać %{count} plik jednocześnie."
@@ -3032,6 +3098,8 @@ pl_PL:
             other: "Tak i wszystkie %{count} odpowiedzi"
           just_the_post: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
+        permanently_delete: "Usuń bezpowrotnie"
+        permanently_delete_confirmation: "Czy na pewno chcesz usunąć ten post? Nie będziesz w stanie go odzyskać."
         wiki: "Włącz tryb Wiki"
         unwiki: "Wyłącz tryb Wiki"
         convert_to_moderator: "Włącz kolor moderatora"
@@ -3136,7 +3204,9 @@ pl_PL:
             button: "HTML"
       bookmarks:
         create: "Utwórz zakładkę"
+        create_for_topic: "Utwórz zakładkę do tematu"
         edit: "Edytuj zakładkę"
+        edit_for_topic: "Edytuj zakładkę dla tematu"
         created: "Utworzono"
         updated: "Zaktualizowane"
         name: "Imię"
@@ -3259,6 +3329,7 @@ pl_PL:
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
       notifications:
+        title: "zmień poziom powiadomień dla tej kategorii"
         watching:
           title: "Obserwuj wszystko"
           description: "Będziesz automatycznie obserwować wszystkie tematy w tej kategorii. Zostaniesz powiadomiony o każdym nowym poście w każdym wątku, a liczba nowych odpowiedzi zostanie wyświetlona."
@@ -3670,6 +3741,18 @@ pl_PL:
       favorite_max_reached: "Nie możesz faworyzować więcej odznak."
       favorite_max_not_reached: "Oznacz tę odznakę jako ulubioną"
       favorite_count: "%{count}/%{max} odznaki oznaczone jako ulubione"
+    download_calendar:
+      title: "Pobierz kalendarz"
+      save_ics: "Pobierz plik .ics"
+      save_google: "Dodaj do kalendarza Google"
+      remember: "Nie pytaj ponownie"
+      remember_explanation: "(możesz zmienić tę preferencję w swoich ustawieniach użytkownika)"
+      download: "Pobierz"
+      default_calendar: "Domyślny kalendarz"
+      default_calendar_instruction: "Określ, który kalendarz powinien być używany podczas zapisywania dat"
+      add_to_calendar: "Dodaj do kalendarza"
+      google: "Kalendarz Google"
+      ics: "ICS"
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -3835,6 +3918,23 @@ pl_PL:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
+    user_activity:
+      no_activity_title: "Brak aktywności"
+      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy i nie przyczyniłeś się jeszcze do dyskusji. W pierwszym kroku odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i zacznij czytać! Kliknij %{heartIcon} dla wpisów, które lubisz lub chcesz dowiedzieć się więcej. Jeśli jeszcze tego nie zrobiłeś, pomóż innym cię poznać, dodając zdjęcie i bio w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>."
+      no_activity_others: "Brak aktywności"
+      no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
+      no_replies_others: "Brak odpowiedzi."
+      no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
+      no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
+      no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
+      no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
+      no_likes_others: "Brak polubionych wpisów."
+      no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
+      no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
+    no_group_messages_title: "Nie znaleziono wiadomości grupowych"
+    fullscreen_table:
+      expand_btn: "Rozwiń tabelę"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -3970,6 +4070,7 @@ pl_PL:
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
               title: "Kto może widzieć członków grupy?"
+              description: "Administratorzy widzą członków wszystkich grup. Flair jest widoczny dla wszystkich użytkowników."
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
@@ -4041,12 +4142,13 @@ pl_PL:
         delete: Usuń bezpowrotnie
         not_shown_again: Ten klucz nie będzie ponownie wyświetlany. Upewnij się, że wykonałeś/łaś kopię, zanim przejdziesz dalej.
         continue: Kontynuuj
-        use_global_key: Klucz globalny (zezwala na wszystkie działania)
         scopes:
           description: |
             Korzystanie z interfejsu API o określonym zakresie umożliwia bardziej szczegółowe dostosowywanie uprawnień.
             Możesz określić, które parametry będą dozwolone. Użyj przecinków, aby oddzielić wiele wartości.
           title: Zakresy
+          read_only: Tylko do odczytu
+          global_description: Klucz API nie ma ograniczeń i wszystkie punkty końcowe są dostępne.
           resource: Zasób
           action: Akcja
           allowed_parameters: Dozwolone parametry
@@ -4054,6 +4156,8 @@ pl_PL:
           any_parameter: (dowolny parametr)
           allowed_urls: Dozwolone adresy URL
           descriptions:
+            global:
+              read: Ogranicz klucz API do punktów końcowych tylko do odczytu.
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
@@ -4445,11 +4549,10 @@ pl_PL:
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
           head_tag:
-            text: "</head>"
-            title: "HTML, który zostanie umieszczony przed tagiem </head>"
+            title: "HTML, który zostanie wstawiony przed tagiem head"
           body_tag:
-            text: "</body>"
-            title: "HTML, który zostanie umieszczony przed tagiem </body>"
+            text: "Body"
+            title: "HTML, który zostanie wstawiony przed tagiem body"
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
@@ -4925,6 +5028,7 @@ pl_PL:
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
         revoke_admin: "Odbierz status administratora"
         grant_admin: "Przyznaj status administratora"
+        grant_admin_success: "Nowy administrator został potwierdzony."
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
@@ -5312,7 +5416,7 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji. (PROTIP: przeciągnij i upuść kilka plików na raz)"
+        help: "Dodaj nowe emoji, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie, bez wpisywania nazwy, aby utworzyć emotikony za pomocą ich nazw plików."
         add: "Dodaj nowe Emoji"
         uploading: "Przesyłanie…"
         name: "Nazwa"
@@ -5323,7 +5427,7 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
-        sample: "Użyj poniższego kodu HTML na swojej stronie, aby osadzić tematy z Discourse. Zastąp <b>REPLACE_ME</b> domyślnym adresem URL strony na której osadzasz."
+        sample: "Wklej następujący kod HTML do swojej strony, aby utworzyć i osadzić tematy discourse. Zastąp <b>REPLACE_ME</b> kanonicznym adresem URL strony, na której go osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"

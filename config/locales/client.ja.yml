@@ -94,6 +94,7 @@ ja:
       previous_month: "前月"
       next_month: "翌月"
       placeholder: 日付
+      to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "投稿 #%{postNumber}"
@@ -286,6 +287,8 @@ ja:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+    topic_count_categories:
+      other: "%{count} 件の新規/更新トピックを見る"
     topic_count_latest:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_unseen:
@@ -1396,22 +1399,19 @@ ja:
         invite:
           new_title: "招待の作成"
           edit_title: "招待の編集"
-          instructions: "このサイトへのアクセスと即時に許可するにはこのリンクを共有します"
+          instructions: "このサイトへのアクセスと即時に許可するにはこのリンクを共有します:"
           copy_link: "リンクをコピー"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
-          restrict_email: "1 つのメールアドレスに制限"
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
-          invite_to_topic: "このトピックに到着"
           expires_at: "有効期限"
           custom_message: "オプションの個人メッセージ"
           send_invite_email: "保存してメールを送信"
           save_invite: "招待を保存"
           invite_saved: "招待は保存されました。"
-          invite_copied: "招待リンクがコピーされました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -1828,7 +1828,6 @@ ja:
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
-      title: "Ctrl+Enter でも投稿できます"
       users_placeholder: "ユーザーを追加"
       title_placeholder: "トピックのタイトルを入力してください"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
@@ -1960,6 +1959,9 @@ ja:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
+      dismiss_confirmation:
+        dismiss: "閉じる"
+        cancel: "キャンセル"
       group_message_summary:
         other: "%{group_name} の受信トレイに %{count} 件のメッセージがあります"
       popup:
@@ -2016,8 +2018,8 @@ ja:
       too_short: "検索文字が短すぎます。"
       result_count:
         other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
-      title: "トピック、投稿、ユーザー、カテゴリを検索"
-      full_page_title: "トピックまたは投稿の検索"
+      title: "検索"
+      full_page_title: "検索"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       post_format: "%{username} の #%{post_number}"
@@ -2029,6 +2031,11 @@ ja:
       search_google: "Google で検索してみてください:"
       search_google_button: "Google"
       search_button: "検索"
+      categories: "カテゴリ"
+      tags: "タグ"
+      type:
+        users: "ユーザー"
+        categories: "カテゴリ"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
@@ -2036,7 +2043,6 @@ ja:
         topic: "このトピックを検索"
         private_messages: "メッセージを検索"
       advanced:
-        title: 高度な検索
         posted_by:
           label: 投稿者
         in_category:
@@ -2089,7 +2095,6 @@ ja:
           placeholder: 最小
         max_views:
           placeholder: 最大
-    hamburger_menu: "他のトピックリストやカテゴリに移動"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
@@ -2251,6 +2256,7 @@ ja:
         time_frame_required: "時間枠を選択してください"
         min_duration: "期間は 0 より大きくする必要があります"
         max_duration: "期間は 20 年未満である必要があります"
+        duration: "期間"
       auto_update_input:
         none: "時間枠を選択してください"
         now: "今"
@@ -2568,6 +2574,7 @@ ja:
       deleted_by_author_simple: "(作成者が削除したトピック)"
     post:
       quote_reply: "引用"
+      quote_edit: "編集"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
@@ -2650,6 +2657,7 @@ ja:
             other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
+        permanently_delete: "永久に削除"
         wiki: "ウィキにする"
         unwiki: "ウィキから削除"
         convert_to_moderator: "スタッフの色を追加"
@@ -3200,6 +3208,8 @@ ja:
       favorite_max_reached: "これ以上のバッジをお気に入りにできません。"
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
+    download_calendar:
+      download: "ダウンロード"
     tagging:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
@@ -3343,6 +3353,10 @@ ja:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "サポートされていないファイルを選択しました。サポートされているファイルタイプ – %{types}。"
+    user_activity:
+      no_activity_others: "アクティビティがありません。"
+      no_replies_others: "返信はありません。"
+      no_likes_others: "「いいね！」した投稿はありません。"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:
@@ -3540,7 +3554,6 @@ ja:
         delete: 永久に削除
         not_shown_again: このキーは二度と表示されません。続行する前に必ずコピーしてください。
         continue: 続行
-        use_global_key: グローバルキー (すべての操作を許可)
         scopes:
           description: |
             スコープを使用する場合、API キーを特定のエンドポイントのセットに制限できます。
@@ -3933,12 +3946,8 @@ ja:
               %{example}
 
               プラグインやコアとの競合を避けるには、プロパティ名に接頭辞を付けることを強くお勧めします。
-          head_tag:
-            text: "</head>"
-            title: "</head> タグの前に挿入される HTML"
           body_tag:
-            text: "</body>"
-            title: "</body> タグの前に挿入される HTML"
+            text: "本文"
           yaml:
             text: "YAML"
             title: "YAML 形式でテーマ設定を定義してください"
@@ -4773,7 +4782,6 @@ ja:
           grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
-        help: "みんなが利用できる新しい絵文字を追加します。(ヒント: 複数のファイルを一度にドラッグアンドドロップできます)"
         add: "新しい絵文字を追加"
         uploading: "アップロード中..."
         name: "名前"
@@ -4784,7 +4792,6 @@ ja:
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         confirm_delete: "このホストを削除してもよろしいですか？"
-        sample: "次の HTML コードをサイトに使用して、Discourse のトピックを作成して埋め込みます。<b>REPLACE_ME</b> を埋め込み先の正規 URL に置き換えてください。"
         title: "埋め込み"
         host: "許可されたホスト"
         class_name: "クラス名"

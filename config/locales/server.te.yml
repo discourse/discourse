@@ -757,6 +757,7 @@ te:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
+  fallback_username: "సభ్యుడు"
   activemodel:
     errors:
       <<: *errors

@@ -34,7 +34,7 @@ class TopicEmbed < ActiveRecord::Base
       contents = first_paragraph_from(contents)
     end
     contents ||= ''
-    contents = +contents << imported_from_html(url)
+    contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
 
@@ -113,11 +113,12 @@ class TopicEmbed < ActiveRecord::Base
     fd = FinalDestination.new(
       url,
       validate_uri: true,
-      max_redirects: 5
+      max_redirects: 5,
+      follow_canonical: true,
     )
 
-    url = fd.resolve
-    return if url.blank?
+    uri = fd.resolve
+    return if uri.blank?
 
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -131,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(url, allow_redirections: :safe).read
+      html = uri.read(allow_redirections: :safe)
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
@@ -160,12 +161,8 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(UrlHelper.escape_uri(src))
-          unless uri.host
-            uri.scheme = original_uri.scheme
-            uri.host = original_uri.host
-            node[url_param] = uri.to_s
-          end
+          # convert URL to absolute form
+          node[url_param] = URI.join(url, UrlHelper.escape_uri(src)).to_s
         rescue URI::Error, Addressable::URI::InvalidURIError
           # If there is a mistyped URL, just do nothing
         end
@@ -210,15 +207,13 @@ class TopicEmbed < ActiveRecord::Base
 
     fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
-      href = a['href']
-      if href.present? && href.start_with?('/')
-        a['href'] = "#{prefix}/#{href.sub(/^\/+/, '')}"
+      if a['href'].present?
+        a['href'] = URI.join(prefix, a['href']).to_s
       end
     end
     fragment.css('img').each do |a|
-      src = a['src']
-      if src.present? && src.start_with?('/')
-        a['src'] = "#{prefix}/#{src.sub(/^\/+/, '')}"
+      if a['src'].present?
+        a['src'] = URI.join(prefix, a['src']).to_s
       end
     end
     fragment.at('div').inner_html
@@ -254,10 +249,6 @@ class TopicEmbed < ActiveRecord::Base
       body << TopicEmbed.imported_from_html(url)
       body
     end
-  end
-
-  def self.open(uri, **kwargs)
-    URI.open(uri, **kwargs)
   end
 end
 

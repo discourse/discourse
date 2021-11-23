@@ -8,6 +8,7 @@ describe UserNameSuggester do
     before do
       SiteSetting.min_username_length = 3
       SiteSetting.max_username_length = 15
+      SiteSetting.reserved_usernames = ''
     end
 
     it "keeps adding numbers to the username" do
@@ -19,8 +20,8 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest('saM')).to eq('saM3')
     end
 
-    it "doesn't raise an error on nil username" do
-      expect(UserNameSuggester.suggest(nil)).to eq(nil)
+    it "doesn't raise an error on nil username and suggest the fallback username" do
+      expect(UserNameSuggester.suggest(nil)).to eq(I18n.t('fallback_username'))
     end
 
     it "doesn't raise an error on integer username" do
@@ -82,6 +83,11 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest("myname!^$=")).to eq('myname')
     end
 
+    it "suggest a fallback username if name contains only invalid characters" do
+      suggestion = UserNameSuggester.suggest("---")
+      expect(suggestion).to eq(I18n.t('fallback_username'))
+    end
+
     it "allows dots in the middle" do
       expect(UserNameSuggester.suggest("my.name")).to eq('my.name')
     end
@@ -119,9 +125,10 @@ describe UserNameSuggester do
         expect(UserNameSuggester.suggest('Jørn')).to eq('Jorn')
       end
 
-      it "replaces Unicode characters" do
-        expect(UserNameSuggester.suggest('طائر')).to eq('111')
-        expect(UserNameSuggester.suggest('πουλί')).to eq('111')
+      it "uses fallback username if there are Unicode characters only" do
+        fallback_username = I18n.t('fallback_username')
+        expect(UserNameSuggester.suggest('طائر')).to eq(fallback_username)
+        expect(UserNameSuggester.suggest('πουλί')).to eq(fallback_username)
       end
     end
 
@@ -153,14 +160,6 @@ describe UserNameSuggester do
         expect(UserNameSuggester.suggest('য়া')).to eq('য়া11')
       end
 
-      it "does not skip ove allowed names" do
-        Fabricate(:user, username: 'sam')
-        Fabricate(:user, username: 'saM1')
-        Fabricate(:user, username: 'sam2')
-
-        expect(UserNameSuggester.suggest('SaM', 'Sam1')).to eq('Sam1')
-      end
-
       it "normalizes usernames" do
         actual = 'Löwe'    # NFD, "Lo\u0308we"
         expected = 'Löwe'  # NFC, "L\u00F6we"
@@ -178,7 +177,7 @@ describe UserNameSuggester do
       it "uses allowlist" do
         SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
-        expect(UserNameSuggester.suggest('πουλί')).to eq('111')
+        expect(UserNameSuggester.suggest('πουλί')).to eq(I18n.t('fallback_username'))
         expect(UserNameSuggester.suggest('a鳥b')).to eq('a_b')
         expect(UserNameSuggester.suggest('Löwe')).to eq('Löwe')
 

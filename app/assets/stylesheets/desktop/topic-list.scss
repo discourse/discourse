@@ -24,8 +24,7 @@
   @extend .topic-list-icons;
 
   margin: 0 0 10px;
-  th,
-  td {
+  .topic-list-data {
     padding: 12px 5px;
     &:first-of-type {
       padding-left: 10px;
@@ -34,18 +33,13 @@
       padding-right: 10px;
     }
   }
-  th {
-    button .d-icon {
-      color: var(--primary-med-or-secondary-med);
-    }
-  }
 
   button.bulk-select {
     padding: 0;
     line-height: $line-height-large;
   }
 
-  td.bulk-select {
+  .topic-list-data.bulk-select {
     padding: 0;
     width: 30px;
     label {
@@ -89,7 +83,7 @@
       }
     }
   }
-  td.posters {
+  .topic-list-data.posters {
     height: $td-posters-height;
   }
   .posters a:first-child .avatar.latest:not(.single) {
@@ -168,34 +162,16 @@
   .show-more.has-topics {
     top: 0;
     .alert {
-      padding: 12px 35px 12px 14px;
+      padding: 16px 35px 16px 14px;
     }
   }
 }
 
-.bulk-select-container {
-  @supports (position: sticky) {
-    @media screen and (min-width: 1250px) {
-      position: sticky;
-      position: -webkit-sticky;
-    }
-  }
-}
-
-#bulk-select {
-  position: fixed;
-  right: 10px; // match horizontal padding on .wrap
-  padding-top: 12px; // match .topic-list th padding
-  background-color: var(--secondary);
-  z-index: z("dropdown");
-  @supports (position: sticky) {
-    @media screen and (min-width: 1250px) {
-      body:not(.search-page):not(.user-messages-page) & {
-        position: absolute;
-        right: -60px;
-        top: 0;
-      }
-    }
+.bulk-select-topics {
+  display: inline-flex;
+  margin-left: -5px;
+  .btn {
+    margin-right: 0.5em;
   }
 }
 
@@ -235,20 +211,16 @@ button.dismiss-read {
 
   .topic-list {
     // tighter table header spacing
-    th:first-of-type {
+    .topic-list-item .topic-list-data:first-of-type {
       padding: 12px 5px;
     }
     // smaller table cell spacing
-    th,
-    td {
+    .topic-list-data {
       padding: 10px;
       font-size: $font-0;
     }
     // suppress views column
-    th.views {
-      display: none;
-    }
-    td.views {
+    .views {
       display: none;
     }
     // reduce width for more title space
@@ -260,7 +232,7 @@ button.dismiss-read {
       text-align: center;
     }
     // show only the first poster
-    td.posters {
+    .topic-list-data.posters {
       a:not(.latest) {
         display: none;
       }

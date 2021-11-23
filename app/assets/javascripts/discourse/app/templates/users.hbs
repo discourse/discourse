@@ -25,15 +25,17 @@
               placeholderKey="directory.filter_name"
               class="filter-name no-blur"
             }}
-            {{combo-box
-              class="directory-group-selector"
-              value=group
-              content=groupOptions
-              onChange=(action groupChanged)
-              options=(hash
-                none="directory.group.all"
-              )
-            }}
+            {{#if showGroupFilter}}
+              {{combo-box
+                class="directory-group-selector"
+                value=group
+                content=groupOptions
+                onChange=(action groupChanged)
+                options=(hash
+                  none="directory.group.all"
+                )
+              }}
+            {{/if}}
             {{#if currentUser.staff}}
               {{d-button
                 icon="wrench"

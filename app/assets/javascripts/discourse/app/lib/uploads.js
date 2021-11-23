@@ -328,7 +328,11 @@ function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
     case 413:
       const type = uploadTypeFromFileName(fileName);
       const max_size_kb = siteSettings[`max_${type}_size_kb`];
-      bootbox.alert(I18n.t("post.errors.file_too_large", { max_size_kb }));
+      bootbox.alert(
+        I18n.t("post.errors.file_too_large_humanized", {
+          max_size: I18n.toHumanSize(max_size_kb * 1024),
+        })
+      );
       return true;
 
     // the error message is provided by the server

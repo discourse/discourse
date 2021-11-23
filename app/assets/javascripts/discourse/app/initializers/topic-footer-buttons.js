@@ -14,7 +14,7 @@ export default {
   initialize() {
     registerTopicFooterButton({
       id: "share-and-invite",
-      icon: "link",
+      icon: "d-topic-share",
       priority: SHARE_PRIORITY,
       label() {
         if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
@@ -23,7 +23,9 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        const controller = showModal("share-topic");
+        const controller = showModal("share-topic", {
+          model: this.topic.category,
+        });
         controller.setProperties({
           allowInvites: this.canInviteTo && !this.inviteDisabled,
           topic: this.topic,
@@ -67,8 +69,7 @@ export default {
       dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (bookmarkedPosts && bookmarkedPosts.find((x) => x.reminder_at)) {
+        if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
@@ -81,14 +82,9 @@ export default {
       },
       label() {
         if (!this.topic.isPrivateMessage || this.site.mobileView) {
-          const bookmarkedPosts = this.topic.bookmarked_posts;
-          const bookmarkedPostsCount = bookmarkedPosts
-            ? bookmarkedPosts.length
-            : 0;
-
-          if (bookmarkedPostsCount === 0) {
+          if (this.topic.bookmarkCount === 0) {
             return "bookmarked.title";
-          } else if (bookmarkedPostsCount === 1) {
+          } else if (this.topic.bookmarkCount === 1) {
             return "bookmarked.edit_bookmark";
           } else {
             return "bookmarked.clear_bookmarks";
@@ -96,12 +92,19 @@ export default {
         }
       },
       translatedTitle() {
-        const bookmarkedPosts = this.topic.bookmarked_posts;
-        if (!bookmarkedPosts || bookmarkedPosts.length === 0) {
+        if (this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
-        } else if (bookmarkedPosts.length === 1) {
-          return I18n.t("bookmarked.help.edit_bookmark");
-        } else if (bookmarkedPosts.find((x) => x.reminder_at)) {
+        } else if (this.topic.bookmarkCount === 1) {
+          if (
+            this.topic.bookmarks.filter((bookmark) => bookmark.for_topic).length
+          ) {
+            return I18n.t("bookmarked.help.edit_bookmark_for_topic");
+          } else {
+            return I18n.t("bookmarked.help.edit_bookmark");
+          }
+        } else if (
+          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
+        ) {
           return I18n.t("bookmarked.help.unbookmark_with_reminder");
         } else {
           return I18n.t("bookmarked.help.unbookmark");

@@ -116,6 +116,8 @@ it:
       previous_month: "Mese Precedente"
       next_month: "Mese Prossimo"
       placeholder: data
+      from_placeholder: "dalla data"
+      to_placeholder: "ad oggi"
     share:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber}"
@@ -157,6 +159,7 @@ it:
         disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
+    skip_to_main_content: "Passa al contenuto principale"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     software_update_prompt:
@@ -182,6 +185,7 @@ it:
         cn_northwest_1: "Cina"
         eu_central_1: "Europa (Francoforte)"
         eu_north_1: "Europa (Stoccolma)"
+        eu_south_1: "UE (Milano)"
         eu_west_1: "Europa (Irlanda)"
         eu_west_2: "Europa (Londra)"
         eu_west_3: "Europa (Parigi)"
@@ -239,6 +243,8 @@ it:
     character_count:
       one: "%{count} carattere"
       other: "%{count} caratteri"
+    period_chooser:
+      aria_label: "Filtra per periodo"
     related_messages:
       title: "Messaggi correlati"
       see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
@@ -271,11 +277,13 @@ it:
       help:
         bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
         edit_bookmark: "Clicca per modificare il segnalibro a questo argomento"
+        edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
+      remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
@@ -302,6 +310,7 @@ it:
       copied: "copiato!"
     drafts:
       label: "Bozze"
+      label_with_count: "Bozze (%{count})"
       resume: "Riprendi"
       remove: "Rimuovi"
       remove_confirmation: "Vuoi davvero eliminare questa bozza?"
@@ -312,6 +321,9 @@ it:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
+    topic_count_categories:
+      one: "Visualizza %{count} argomento nuovo o aggiornato"
+      other: "Visualizza %{count} argomenti nuovi o aggiornati."
     topic_count_latest:
       one: "Visualizza %{count} argomento nuovo o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
@@ -362,6 +374,7 @@ it:
         placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
     review:
       order_by: "Ordina per"
+      date_filter: "Pubblicato tra"
       in_reply_to: "in risposta a"
       explain:
         why: "spiega perché questo oggetto è stato aggiunto alla coda"
@@ -791,6 +804,7 @@ it:
         owner: "Proprietario"
         primary: "Primario"
         forbidden: "Non puoi visualizzare i membri."
+        no_filter_matches: "Nessun membro corrisponde a questa ricerca."
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
@@ -926,6 +940,7 @@ it:
           all: "Tutti"
           read: "Letti"
           unread: "Non letti"
+          unseen: "Non viste"
         ignore_duration_title: "Ignora utente"
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
@@ -969,7 +984,9 @@ it:
       use_current_timezone: "Usa Fuso Orario Corrente"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
+      sr_expand_profile: "Espandi i dettagli del profilo"
       collapse_profile: "Comprimi"
+      sr_collapse_profile: "Comprimi i dettagli del profilo"
       bookmarks: "Segnalibri"
       bio: "Info su di me"
       timezone: "Fuso orario"
@@ -1001,6 +1018,8 @@ it:
       no_notifications_body: >
         Riceverai una notifica in questo pannello sulle attività che ti riguardano direttamente, quali risposte ai tuoi argomenti e messaggi. quando qualcuno ti <b>@menziona</b> o ti cita e risponde agli argomenti che stai osservando. Le notifiche verranno inviate anche alla tua e-mail quando non hai effettuato l'accesso per un po' di tempo. <br><br> Cerca %{icon} per decidere su quali argomenti, categorie ed etichette essere informato. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       no_notifications_page_title: "Non hai ancora notifiche"
+      no_notifications_page_body: >
+        Riceverai una notifica sulle attività rilevanti per te, fra cui le risposte ai tuoi argomenti e messaggi, quando qualcuno ti <b>@menziona</b> o ti cita, e le risposte agli argomenti che osservi. Le notifiche ti saranno inviate anche per e-mail quando è un po' che non ti colleghi al forum. <br><br> Cerca l'%{icon} per decidere per quali specifici argomenti, categorie ed etichette vuoi ricevere le notifiche. Per maggiori opzioni, vai alle tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1103,7 +1122,9 @@ it:
         warnings_received: "avvisi"
         rejected_posts: "messaggi rifiutati"
       messages:
+        all: "tutti i messaggi in arrivo"
         inbox: "In arrivo"
+        personal: "Personali"
         latest: "Più recenti"
         sent: "Inviati"
         unread: "Non letti"
@@ -1122,7 +1143,7 @@ it:
         tags: "Etichette"
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
-        read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages/personal'>messaggi personali</a>."
+        read_more: "Vuoi saperne di più? Leggi altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1282,6 +1303,7 @@ it:
         not_connected: "(non connesso)"
         confirm_modal_title: "Collega un account %{provider} "
         confirm_description:
+          disconnect: "Il tuo attuale account %{provider} '%{account_description}' sarà disconnesso."
           account_specific: "Il tuo account %{provider} '%{account_description}' verrà utilizzato per l'autenticazione."
           generic: "Il tuo account %{provider} verrà utilizzato per l'autenticazione."
       name:
@@ -1454,22 +1476,19 @@ it:
         invite:
           new_title: "Crea invito"
           edit_title: "Modifica invito"
-          instructions: "Condividi questo link per garantire l'accesso istantaneo a questo sito"
+          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
           copy_link: "copia link"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
-          restrict_email: "Limita a un solo indirizzo email"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
-          invite_to_topic: "Invia a questo argomento"
           expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
-          invite_copied: "Link di invito copiato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -1635,6 +1654,8 @@ it:
       description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
+      short_label: "Riassumi"
+      short_title: "Mostra un riassunto di questo argomento: i messaggi più interessanti secondo gli utenti"
     deleted_filter:
       enabled_description: "Questo argomento contiene messaggi eliminati, che sono quindi nascosti."
       disabled_description: "I messaggi eliminati di questo argomento sono ora visibili."
@@ -1908,7 +1929,7 @@ it:
       create_whisper: "Sussurro"
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
-      title: "Oppure premi Ctrl+Invio"
+      title: "Oppure premi %{modifier}Invio"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
@@ -1998,6 +2019,8 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
       reload: "Ricarica"
       ignore: "Ignora"
+      image_alt_text:
+        aria_label: Testo alternativo per l'immagine
     notifications:
       tooltip:
         regular:
@@ -2046,6 +2069,9 @@ it:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
+      dismiss_confirmation:
+        dismiss: "Ignora"
+        cancel: "Annulla"
       group_message_summary:
         one: "%{count} messaggio in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
@@ -2101,11 +2127,13 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
+      open_advanced: "Apri ricerca avanzata"
+      clear_search: "Azzera ricerca"
       result_count:
         one: "<span>%{count} risultato per</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
-      title: "cerca argomenti, messaggi, utenti o categorie"
-      full_page_title: "Cerca negli Argomenti o nei Messaggi"
+      title: "Cerca"
+      full_page_title: "Cerca"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
       post_format: "n°%{post_number} da %{username}"
@@ -2117,14 +2145,32 @@ it:
       search_google: "Prova a cercare con Google:"
       search_google_button: "Google"
       search_button: "Cerca"
+      categories: "Categorie"
+      tags: "Etichette"
+      in: "in"
+      in_this_topic: "in questo argomento"
+      in_topics_posts: "in tutti gli argomenti e i messaggi"
+      enter_hint: "o premi Invio"
+      in_posts_by: "nei messaggi di @%{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "di nuovo per utilizzare la ricerca nativa del browser"
+      type:
+        users: "Utenti"
+        categories: "Categorie"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
         tag: "Cerca l'etichetta #%{tag}"
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
+      tips:
+        category_tag: "filtra per categoria o etichetta"
+        author: "filtra per autore del messaggio"
+        in: "filtra per metadati (per es. in:title, in:personal, in:pinned)"
+        status: "filtra per status dell'argomento"
+        full_search: "avvia la ricerca a pagina intera"
+        full_search_key: "%{modifier} + Invio"
       advanced:
-        title: Ricerca Avanzata
         posted_by:
           label: Pubblicato da
         in_category:
@@ -2165,8 +2211,10 @@ it:
             label: Messaggi
           min:
             placeholder: minimo
+            aria_label: filtra per numero minimo di messaggi
           max:
             placeholder: massimo
+            aria_label: filtra per numero massimo di messaggi
           time:
             label: Pubblicato
             before: prima del
@@ -2175,9 +2223,11 @@ it:
           label: Visualizzazioni
         min_views:
           placeholder: minimo
+          aria_label: filtra per visualizzazioni minime
         max_views:
           placeholder: massimo
-    hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
+          aria_label: filtra per visualizzazioni massime
+    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -2350,6 +2400,7 @@ it:
         time_frame_required: "Seleziona un intervallo di tempo"
         min_duration: "La durata deve essere maggiore di 0"
         max_duration: "La durata deve essere inferiore a 20 anni"
+        duration: "Durata"
       auto_update_input:
         none: "Seleziona un intervallo di tempo"
         now: "Adesso"
@@ -2682,6 +2733,9 @@ it:
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
+      quote_reply_shortcut: "Oppure premi \"q\""
+      quote_edit: "Modifica"
+      quote_edit_shortcut: "Oppure premi \"e\""
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -2730,6 +2784,7 @@ it:
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
+        file_too_large_humanized: "Purtroppo questo file è troppo grande (la dimensione massima consentita è %{max_size}). Perché non carichi il file su un servizio di condivisione in cloud e poi incolli qui il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files:
           one: "Spiacenti, puoi caricare solo %{count} file alla volta."
@@ -2773,6 +2828,8 @@ it:
             other: "Sì, e tutte le %{count} risposte"
           just_the_post: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
+        permanently_delete: "Elimina Definitivamente"
+        permanently_delete_confirmation: "Sicuro di voler eliminare definitivamente questo messaggio? Non sarà possibile recuperarlo."
         wiki: "Rendi Wiki"
         unwiki: "Rimuovi Wiki"
         convert_to_moderator: "Aggiungi Colore Staff"
@@ -2859,7 +2916,9 @@ it:
             button: "HTML"
       bookmarks:
         create: "Crea un segnalibro"
+        create_for_topic: "Crea un segnalibro per quest'argomento"
         edit: "Modifica Segnalibro"
+        edit_for_topic: "Modifica il segnalibro per quest'argomento"
         created: "Creazione"
         updated: "Aggiornato"
         name: "Nome"
@@ -2981,6 +3040,7 @@ it:
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
+        title: "cambia il livello di notifica per questa categoria"
         watching:
           title: "In osservazione"
           description: "Osserverai automaticamente tutti gli argomenti in questa categoria. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
@@ -3314,6 +3374,7 @@ it:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
         insert_url: "%{shortcut} Inserisci la selezione nello strumento di composizione aperto"
+        full_page_search: "%{shortcut} Avvia la ricerca a pagina intera"
     badges:
       earned_n_times:
         one: "Ha guadagnato questo distintivo %{count} volta"
@@ -3349,6 +3410,18 @@ it:
       favorite_max_reached: "Non puoi aggiungere altri distintivi ai preferiti."
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
+    download_calendar:
+      title: "Scarica il calendario"
+      save_ics: "Scarica il file.ics"
+      save_google: "Aggiungi al calendario di Google"
+      remember: "Non chiedermelo più"
+      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
+      download: "Scarica"
+      default_calendar: "Calendario predefinito"
+      default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
+      add_to_calendar: "Aggiungi al calendario"
+      google: "Google Calendar"
+      ics: "ICS"
     tagging:
       all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"
@@ -3499,6 +3572,14 @@ it:
       detailed_name: "%{level} - %{name}"
     pick_files_button:
       unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
+    user_activity:
+      no_activity_title: "Ancora nessuna attività"
+      no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a qui e non hai ancora contribuito alle discussioni. Per cominciare, visita <a href='%{topUrl}'>Top</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. Se non lo hai già fatto, fatti conoscere aggiungendo una foto e una biografia nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>."
+      no_activity_others: "Nessuna attività."
+      no_replies_others: "Nessuna risposta."
+      no_likes_others: "Nessun messaggio con \"Mi piace\"."
+    fullscreen_table:
+      expand_btn: "Espandi Tabella"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3689,6 +3770,7 @@ it:
         no_description: (nessuna descrizione)
         all_api_keys: Tutte le Chiavi API
         user_mode: Livello utente
+        scope_mode: Ambito
         impersonate_all_users: Impersona qualsiasi utente
         single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
@@ -3699,12 +3781,15 @@ it:
         delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
-        use_global_key: Chiave globale (consente tutte le azioni)
         scopes:
           description: |
             Quando si utilizzano gli ambiti, è possibile limitare una chiave API a un set specifico di endpoint.
             È inoltre possibile definire quali parametri saranno consentiti. Utilizzare le virgole per separare più valori.
           title: Ambiti
+          granular: Granulare
+          read_only: Sola lettura
+          global: Globale
+          global_description: La chiave API non ha restrizioni e tutti gli endpoint sono accessibili.
           resource: Risorsa
           action: Azione
           allowed_parameters: Parametri consentiti
@@ -3712,6 +3797,8 @@ it:
           any_parameter: (qualsiasi parametro)
           allowed_urls: URL consentiti
           descriptions:
+            global:
+              read: Limita la chiave API agli endpoint di sola lettura.
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
@@ -3719,6 +3806,8 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
+            uploads:
+              create: Carica un nuovo file.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
@@ -4096,11 +4185,11 @@ it:
 
               Si consiglia di assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
           head_tag:
-            text: "</head>"
-            title: "HTML che sarà inserito prima del tag </head> "
+            text: "Intestazione"
+            title: "L'HTML sarà inserito prima dell'etichetta di intestazione"
           body_tag:
-            text: "</body>"
-            title: "HTML che deve essere inserito prima del tag </body>"
+            text: "Corpo"
+            title: "HTML che sarà inserito prima dell'etichetta del corpo"
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
@@ -4573,6 +4662,7 @@ it:
         logged_out: "L'utente è stato disconnesso da tutti i terminali"
         revoke_admin: "Revoca privilegi di amministrazione"
         grant_admin: "Assegna privilegi di amministrazione"
+        grant_admin_success: "Nuovo amministratore confermato."
         grant_admin_confirm: "Ti abbiamo inviato una email per verificare il nuovo amministratore. Per favore aprila e segui le istruzioni."
         revoke_moderation: "Revoca diritti di moderazione"
         grant_moderation: "Assegna diritti di moderazione"
@@ -4941,7 +5031,7 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuovi emoji da mettere a disposizione per tutti. (Suggerimento: trascina e rilascia più file in una volta sola)"
+        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"
@@ -4952,7 +5042,7 @@ it:
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
-        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonico della pagina in cui lo stai incorporando."
+        sample: "Incolla il seguente codice HTML nel tuo sito per creare e incorporare argomenti Discourse. Sostituire <b>REPLACE_ME</b> con l'URL canonico della pagina su cui si sta incorporando."
         title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"

@@ -244,9 +244,6 @@
         .components-list {
           color: var(--secondary);
         }
-        .fa {
-          color: inherit;
-        }
       }
       &:not(.selected) {
         .broken-indicator {
@@ -284,8 +281,12 @@
 
         .others-count,
         .others-count:hover {
-          color: var(--primary-high);
+          color: inherit;
           text-decoration: underline;
+        }
+
+        .d-icon {
+          color: inherit;
         }
       }
 
@@ -351,7 +352,9 @@
       }
     }
     .setting-label {
-      width: 25%;
+      @include breakpoint(tablet, min-width) {
+        width: 25%;
+      }
       word-wrap: break-word;
       h3 {
         margin-top: 0;
@@ -668,12 +671,14 @@
   margin-top: 1em;
   color: var(--primary-medium);
 }
+
 // Permalinks
 .permalinks {
   .url,
   .topic,
   .category,
   .external_url,
+  .destination,
   .post {
     @include ellipsis;
     max-width: 100px;
@@ -687,25 +692,49 @@
   }
 }
 
-.permalink-search {
-  text-align: left;
-  @include breakpoint(tablet, min-width) {
-    text-align: right;
-  }
-}
-
 .permalink-form {
+  padding: 0.5em 1em 0 1em;
+  margin-top: 1em;
+  background: var(--primary-very-low);
   .select-kit {
-    max-width: 200px;
+    max-width: 260px;
   }
-}
-
-.permalink-title {
-  margin-bottom: 10px;
+  @include breakpoint(tablet) {
+    label {
+      width: 100%;
+    }
+  }
 }
 
 .permalink-description {
   color: var(--primary-medium);
+}
+
+.permalink-search {
+  margin-top: 2em;
+  input {
+    min-width: 250px;
+    margin-bottom: 0;
+  }
+}
+
+table.permalinks {
+  @include breakpoint(tablet, min-width) {
+    td.url,
+    th.url {
+      width: 33%;
+    }
+
+    th.destination,
+    td.destination {
+      width: 60%;
+    }
+  }
+  @include breakpoint(tablet) {
+    td.url .btn-flat {
+      display: none;
+    }
+  }
 }
 
 // embedding

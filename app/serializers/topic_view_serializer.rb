@@ -62,7 +62,7 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
-    :bookmarked_posts,
+    :bookmarks,
     :message_archived,
     :topic_timer,
     :unicode_title,
@@ -193,8 +193,8 @@ class TopicViewSerializer < ApplicationSerializer
     object.has_bookmarks?
   end
 
-  def bookmarked_posts
-    object.bookmarked_posts
+  def bookmarks
+    object.bookmarks
   end
 
   def topic_timer

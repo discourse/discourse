@@ -50,7 +50,7 @@ describe UserAuthenticator do
 
       authentication = github_auth(true)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_truthy
       expect(group.usernames).to include(user.username)
     end
@@ -60,7 +60,7 @@ describe UserAuthenticator do
 
       authentication = github_auth(false)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_falsey
       expect(group.usernames).not_to include(user.username)
     end
@@ -70,7 +70,7 @@ describe UserAuthenticator do
 
       authentication = github_auth(true)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_falsey
       expect(group.usernames).not_to include(user.username)
     end

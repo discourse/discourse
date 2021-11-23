@@ -5,6 +5,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { triggerEvent } from "@ember/test-helpers";
 import sinon from "sinon";
+import bootbox from "bootbox";
 
 function createBlob(mimeType, extension) {
   const blob = new Blob(["content"], {

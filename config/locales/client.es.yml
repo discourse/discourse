@@ -116,6 +116,8 @@ es:
       previous_month: "Mes anterior"
       next_month: "El próximo mes"
       placeholder: fecha
+      from_placeholder: "desde la fecha"
+      to_placeholder: "hasta hoy"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación núm. %{postNumber}"
@@ -183,6 +185,7 @@ es:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Estocolmo)"
+        eu_south_1: "UE (Milán)"
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "EU (Londres)"
         eu_west_3: "EU (París)"
@@ -240,6 +243,8 @@ es:
     character_count:
       one: "%{count} carácter"
       other: "%{count} caracteres"
+    period_chooser:
+      aria_label: "Filtrar por periodo"
     related_messages:
       title: "Mensajes relacionados"
       see_all: 'Ver <a href="%{path}">todos los mensajes</a> de @%{username}...'
@@ -272,11 +277,13 @@ es:
       help:
         bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
         edit_bookmark: "Haga clic para editar el marcador sobre este tema"
+        edit_bookmark_for_topic: "Haz clic para editar el marcador de este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
         unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "guarda esta publicación en marcadores"
+      remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Eliminar marcador"
@@ -314,6 +321,9 @@ es:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
+    topic_count_categories:
+      one: "Ver %{count} tema nuevo o actualizado"
+      other: "Ver %{count} temas nuevos o actualizados"
     topic_count_latest:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
@@ -364,6 +374,7 @@ es:
         placeholder: "escribe el título, URL ID del mensaje aquí"
     review:
       order_by: "Ordenar por"
+      date_filter: "Publicado entre"
       in_reply_to: "en respuesta a"
       explain:
         why: "explica por qué este elemento ha acabado en la cola"
@@ -973,7 +984,9 @@ es:
       use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
       expand_profile: "Expandir"
+      sr_expand_profile: "Expandir detalles del perfil"
       collapse_profile: "Contraer"
+      sr_collapse_profile: "Ocultar detalles del perfil"
       bookmarks: "Marcadores"
       bio: "Acerca de mí"
       timezone: "Zona horaria"
@@ -1005,6 +1018,8 @@ es:
       no_notifications_body: >
         En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
       no_notifications_page_title: "No tienes ninguna notificación todavía"
+      no_notifications_page_body: >
+        Te notificaremos de actividad relevante para ti, como cuando alguien responda a tus temas o mensajes, te <b>@mencione</b> o cite, y también cuando alguien responda a temas que estés vigilando. Además, te mandaremos las notificaciones a tu correo electrónico cuando no te hayamos visto por aquí en un tiempo. <br><br>Busca el icono %{icon} para decidir las categorías o etiquetas sobre las que quieres que mandemos notificaciones. Para más ajustes, pásate por tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a>.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
@@ -1107,7 +1122,9 @@ es:
         warnings_received: "avisos"
         rejected_posts: "publicaciones rechazadas"
       messages:
+        all: "todas las bandejas de entrada"
         inbox: "Bandeja de entrada"
+        personal: "Personal"
         latest: "Recientes"
         sent: "Enviados"
         unread: "Sin leer"
@@ -1125,6 +1142,7 @@ es:
         failed_to_move: "No se han podido mover los mensajes seleccionados (podrías estar teniendo problemas de conexión)"
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
+        read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1284,6 +1302,7 @@ es:
         not_connected: "(no conectada)"
         confirm_modal_title: "Conectar cuenta de %{provider}"
         confirm_description:
+          disconnect: "Tu cuenta de %{provider} «%{account_description}» será desenlazada"
           account_specific: "Tu cuenta de %{provider} «%{account_description}» se utilizará para la autenticación."
           generic: "Tu cuenta de %{provider} se utilizará para la autenticación."
       name:
@@ -1456,22 +1475,19 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparte este enlace para dar acceso inmediato al sitio"
+          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          restrict_email: "Restringir a una dirección de correo electrónico"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
-          invite_to_topic: "Redirigir a este tema"
           expires_at: "Caducar tras"
           custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo electrónico"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
-          invite_copied: "Enlace de invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -1550,7 +1566,9 @@ es:
       title:
         title: "Título"
         none: "(ninguno)"
+        instructions: "aparece después de tu nombre de usuario"
       flair:
+        title: "Icono"
         none: "(ninguno)"
         instructions: "icono que se muestra junto a tu foto de perfil"
       primary_group:
@@ -1635,6 +1653,8 @@ es:
       description_time_MF: "Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
       enable: "Resumir este tema"
       disable: "Mostrar todas las publicaciones"
+      short_label: "Resumir"
+      short_title: "Muestra un resumen de este tema: los mensajes más interesantes según la comunidad"
     deleted_filter:
       enabled_description: "Este tema contiene publicaciones eliminadas que se han ocultado."
       disabled_description: "Se muestran las publicaciones eliminadas de este tema. "
@@ -1662,6 +1682,7 @@ es:
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
       title: "Crea tu cuenta"
       failed: "Algo salió mal. Quizás este correo electrónico ya se encuentra registrado. Prueba con el enlace «olvidé la contraseña»"
+      associate: "¿Ya tienes una cuenta? <a href='%{associate_link}'>Inicia sesión</a> para enlazarla con tu cuenta de %{provider}."
     forgot_password:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
@@ -1739,21 +1760,27 @@ es:
       google_oauth2:
         name: "Google"
         title: "con Google"
+        sr_title: "Iniciar sesión con Google"
       twitter:
         name: "Twitter"
         title: "con Twitter"
+        sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
         title: "con Instagram"
+        sr_title: "Iniciar sesión con Instagram"
       facebook:
         name: "Facebook"
         title: "con Facebook"
+        sr_title: "Iniciar sesión con Facebook"
       github:
         name: "GitHub"
         title: "con GitHub"
+        sr_title: "Iniciar sesión con GitHub"
       discord:
         name: "Discord"
         title: "con Discord"
+        sr_title: "Iniciar sesión con Discord"
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de copia de seguridad en su lugar"
@@ -1808,6 +1835,9 @@ es:
       select_to_filter: "Selecciona un valor para filtrar"
       default_header_text: Seleccionar...
       no_content: No se encontraron coincidencias
+      results_count:
+        one: "%{count} resultado"
+        other: "%{count} resultados"
       filter_placeholder: Buscar...
       filter_placeholder_with_any: Buscar o crear...
       create: "Crear: «%{content}»"
@@ -1908,7 +1938,7 @@ es:
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
-      title: "O pulsa Ctrl+Intro"
+      title: "O pulsa %{modifier}Intro"
       users_placeholder: "Añadir un usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
@@ -1978,6 +2008,7 @@ es:
           confirm: Tienes un borrador de tema nuevo guardado. Este se sobrescribirá si creas un tema enlazado.
         reply_as_new_group_message:
           label: Responder como un nuevo mensaje de grupo
+          desc: Crear un nuevo mensaje con los mismos destinatarios
         reply_as_private_message:
           label: Nuevo mensaje
           desc: Crear un nuevo mensaje personal
@@ -1997,6 +2028,8 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image_alt_text:
+        aria_label: Texto alternativo para imagen
     notifications:
       tooltip:
         regular:
@@ -2045,6 +2078,9 @@ es:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
         other: "%{count} mensajes en tu bandeja de %{group_name} "
@@ -2100,11 +2136,14 @@ es:
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
+      open_advanced: "Abrir búsqueda avanzada"
+      clear_search: "Limpiar búsqueda"
+      sort_or_bulk_actions: "Ordenar resultados o seleccionar en masa"
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
-      title: "buscar temas, publicaciones, usuarios o categorías"
-      full_page_title: "buscar temas o publicaciones"
+      title: "Buscar"
+      full_page_title: "Buscar"
       no_results: "No se encontró ningún resultado."
       no_more_results: "No se encontraron más resultados."
       post_format: "#%{post_number} de %{username}"
@@ -2116,24 +2155,47 @@ es:
       search_google: "Intenta buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
+      search_term_label: "escribe lo que quieras buscar"
+      categories: "Categorías"
+      tags: "Etiquetas"
+      in: "en"
+      in_this_topic: "en este tema"
+      in_this_topic_tooltip: "cambiar a buscar en todos los temas"
+      in_topics_posts: "en todos los temas y publicaciones"
+      enter_hint: "o pulsa Intro"
+      in_posts_by: "en publicaciones por %{username}"
+      type:
+        default: "Temas/respuestas"
+        users: "Usuarios"
+        categories: "Categorías"
+        categories_and_tags: "Categorías/etiquetas"
       context:
         user: "Buscar publicaciones de @%{username}"
         category: "Buscar la categoría #%{category}"
         tag: "Buscar la etiqueta #%{tag}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
+      tips:
+        category_tag: "filtra por categoría o etiqueta"
+        author: "filtra por el autor de la publicación"
+        in: "filtra según los metadatos (por ejemplo, in:title, in:personal, in:pinned)"
+        status: "filtra por el estado del tema"
+        full_search: "lanza la página de búsqueda"
+        full_search_key: "%{modifier} + Intro"
       advanced:
-        title: Búsqueda avanzada
+        title: Filtros avanzados
         posted_by:
           label: Publicado por
+          aria_label: Filtrar por autor
         in_category:
-          label: Categorizado
+          label: Categoría
         in_group:
           label: En el grupo
         with_badge:
           label: Con insignia
         with_tags:
           label: Etiquetado
+          aria_label: Filtrar por etiqueta
         filters:
           label: Solo temas/mensajes que...
           title: coincide el título únicamente
@@ -2164,19 +2226,26 @@ es:
             label: Publicaciones
           min:
             placeholder: mínimo
+            aria_label: filtrar por número mínimo de publicaciones
           max:
             placeholder: máximo
+            aria_label: filtrar por número máximo de publicaciones
           time:
             label: Fecha de publicación
+            aria_label: Filtrar por fecha de publicación
             before: antes de
             after: después de
         views:
           label: Vistas
         min_views:
           placeholder: mínimo
+          aria_label: filtrar por número mínimo de visitas
         max_views:
           placeholder: máximo
-    hamburger_menu: "ir a otra lista de temas o categoría"
+          aria_label: filtrar por número máximo de visitas
+        additional_options:
+          label: "Filtra por número de respuestas y visitas del tema"
+    hamburger_menu: "menú"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -2208,9 +2277,11 @@ es:
           other: "Descartar nuevos (%{count})"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
+        change_category: "Cambiar categoría..."
         close_topics: "Cerrar temas"
         archive_topics: "Archivar temas"
         move_messages_to_inbox: "Mover a la bandeja de entrada"
+        notification_level: "Notificaciones..."
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
         selected:
@@ -2230,6 +2301,7 @@ es:
           other: "Progreso: <strong>%{count}</strong> temas"
       none:
         unread: "No tienes temas sin leer."
+        unseen: "Has visto todos los temas."
         new: "No tienes temas nuevos."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
@@ -2246,6 +2318,7 @@ es:
         read: "No hay más temas leídos."
         new: "No hay más temas nuevos."
         unread: "No hay más temas que no hayas leído."
+        unseen: "Ya no hay más temas que no hayas visto."
         category: "No hay más temas de la categoría %{category}."
         tag: "No hay más temas con la etiqueta %{tag}."
         top: "No hay más temas destacados."
@@ -2349,6 +2422,7 @@ es:
         time_frame_required: "Selecciona un intervalo de tiempo"
         min_duration: "La duración debe ser mayor que 0"
         max_duration: "La duración debe ser inferior a 20 años"
+        duration: "Duración"
       auto_update_input:
         none: "Selecciona el plazo"
         now: "Ahora"
@@ -2479,6 +2553,7 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         multi_select: "Seleccionar publicaciones..."
+        slow_mode: "Ajustar modo lento..."
         timed_update: "Configurar temporizador..."
         pin: "Anclar tema..."
         unpin: "Desanclar tema…"
@@ -2487,12 +2562,14 @@ es:
         invisible: "Hacer invisible"
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
+        make_public: "Hacer el tema público…"
         make_private: "Crear mensaje personal"
         reset_bump_date: "Restablecer fecha de reflote"
       feature:
         pin: "Anclar tema"
         unpin: "Desanclar tema"
         pin_globally: "Anclar tema globalmente"
+        make_banner: "Convertir el tema en banner"
         remove_banner: "Quitar tema de banner"
       reply:
         title: "Responder"
@@ -2680,6 +2757,9 @@ es:
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post:
       quote_reply: "Citar"
+      quote_reply_shortcut: "O pulsa q"
+      quote_edit: "Editar"
+      quote_edit_shortcut: "O pulsa e"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"
@@ -2728,6 +2808,7 @@ es:
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
         upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
+        file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
         too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
           one: "Solo se pueden subir archivos de %{count} en 1."
@@ -2771,6 +2852,8 @@ es:
             other: "Sí, y todas las %{count} respuestas"
           just_the_post: "No, solo esta publicación"
         admin: "acciones de administrador para la publicación"
+        permanently_delete: "Eliminar permanentemente"
+        permanently_delete_confirmation: "¿Seguro que quieres eliminar para siempre esta publicación? No podrás recuperarla."
         wiki: "Transformar en formato wiki"
         unwiki: "Deshacer formato wiki"
         convert_to_moderator: "Añadir color del personal"
@@ -2778,6 +2861,8 @@ es:
         rebake: "Reconstruir HTML"
         publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
+        change_owner: "Cambiar dueño…"
+        grant_badge: "Conceder medalla…"
         lock_post: "Bloquear publicación"
         lock_post_description: "impedir que el usuario que realizó esta publicación la edite"
         unlock_post: "Desbloquear publicación"
@@ -2791,6 +2876,8 @@ es:
         delete_topic_confirm_modal_no: "No, conservar este tema"
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
         delete_topic: "eliminar tema"
+        add_post_notice: "Añadir aviso oficial…"
+        change_post_notice: "Cambiar aviso oficial…"
         delete_post_notice: "Eliminar aviso del personal"
         remove_timer: "quitar temporizador"
         edit_timer: "editar temporizador"
@@ -2857,7 +2944,9 @@ es:
             button: "HTML"
       bookmarks:
         create: "Crear marcador"
+        create_for_topic: "Añadir este tema a marcadores"
         edit: "Editar marcador"
+        edit_for_topic: "Editar el marcador de este tema"
         created: "Creado"
         updated: "Actualizado"
         name: "Nombre"
@@ -2975,10 +3064,12 @@ es:
       position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
       position_disabled_click: 'activa la opción «posiciones de categoría fijas».'
       minimum_required_tags: "Número mínimo de etiquetas requeridas en un tema:"
+      default_slow_mode: 'Activar «modo lento» en los nuevos temas de esta categoría'
       parent: "Categoría principal"
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
       notifications:
+        title: "cambiar el nivel de notificación de esta categoría"
         watching:
           title: "Vigilar"
           description: "Vigilarás automáticamente todos los temas en esta categoría. Se te notificará de cada nueva respuesta en cada tema, y verás un contador de nuevas respuestas."
@@ -3140,6 +3231,7 @@ es:
       other: "usuarios"
     category_title: "Categoría"
     history_capped_revisions: "Últimas 100 ediciones"
+    history: "Historial"
     changed_by: "por %{author}"
     raw_email:
       title: "Correo electrónico entrante"
@@ -3170,6 +3262,10 @@ es:
         lower_title_with_count:
           one: "%{count} sin leer"
           other: "%{count} sin leer"
+      unseen:
+        title: "No vistos"
+        lower_title: "no vistos"
+        help: "nuevos temas y temas que estés vigilando, siguiendo, o que tengan respuestas sin leer"
       new:
         lower_title_with_count:
           one: "%{count} nuevo"
@@ -3347,6 +3443,18 @@ es:
       favorite_max_reached: "No puedes marcar más insignias como favoritas."
       favorite_max_not_reached: "Marcar esta insignia como favorita"
       favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
+    download_calendar:
+      title: "Descargar calendario"
+      save_ics: "Descargar archivo.ics"
+      save_google: "Añadir a calendario de Google"
+      remember: "No volver a preguntar"
+      remember_explanation: "(puedes cambiar esto en tus preferencias)"
+      download: "Descargar"
+      default_calendar: "Calendario por defecto"
+      default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
+      add_to_calendar: "Añadir al calendario"
+      google: "Calendario de Google"
+      ics: "ICS"
     tagging:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
@@ -3355,6 +3463,9 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas (opcional)"
+      choose_for_topic_required:
+        one: "selecciona al menos %{count} etiqueta…"
+        other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -3454,6 +3565,7 @@ es:
       topics:
         none:
           unread: "No tienes temas sin leer."
+          unseen: "No te queda ningún mensaje sin leer."
           new: "No tienes temas nuevos."
           read: "Todavía no has leído ningún tema."
           posted: "Todavía no has publicado en ningún tema."
@@ -3495,6 +3607,25 @@ es:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Has elegido un tipo de archivo no admitido. Tipos de archivo admitidos: %{types}."
+    user_activity:
+      no_activity_title: "Todavía no hay actividad"
+      no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar y todavía no has empezado a participar. Como primer paso, echa un vistazo a los temas <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y lee un poco. Dale a %{heartIcon} en los mensajes que te gusten o interesen. Si todavía no lo has hecho, puedes ayudar a que los demás te reconozcan si subes una foto y escribes algo sobre ti en tus <a href='%{preferencesUrl}'>preferencias</a>."
+      no_activity_others: "Sin actividad."
+      no_replies_title: "Todavía no has respondido a ningún tema"
+      no_replies_others: "No hay respuestas."
+      no_drafts_title: "Todavía no has empezado ningún borrador"
+      no_drafts_body: "¿Todavía no quieres publicarlo? Vamos a guardar un borrador automáticamente y lo pondremos aquí cuando vayas a empezar a escribir un tema, respuesta o mensaje personal. Dale al botón de cancelar para descartarlo o guardar el borrador y seguir luego."
+      no_likes_title: "Todavía no le has dado a me gusta en ningún tema"
+      no_likes_body: "Una buena manera de empezar a contribuir es ir leyendo los temas ya publicados y darle a %{heartIcon} en lo que te guste"
+      no_likes_others: "No le ha dado me gusta a ninguna publicación."
+      no_topics_title: "Todavía no has empezado ningún tema"
+      no_read_topics_title: "Todavía no has leído ningún tema"
+      no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
+    no_group_messages_title: "No hay ningún mensaje en el grupo"
+    fullscreen_table:
+      expand_btn: "Expandir tabla"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -3628,6 +3759,7 @@ es:
               description: "Los administradores pueden ver todos los grupos."
             members_visibility_levels:
               title: "¿Quién puede ver los miembros de este grupo?"
+              description: "Los administradores pueden ver todos los miembros de todos los grupos. Todos los usuarios podrán ver el icono."
             publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
@@ -3695,11 +3827,13 @@ es:
         delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas las acciones)
         scopes:
           description: |
             Al usar ámbitos, puedes restringir una clave de API a una lista de terminales específicos. También puedes definir qué parámetros permitir. Usa comas para separar varios valores.
           title: Ámbitos
+          granular: Granular
+          read_only: Solo lectura
+          global: Global
           resource: Recurso
           action: Acción
           allowed_parameters: Parámetros permitidos
@@ -3723,6 +3857,7 @@ es:
               log_out: Cerrar sesión todas las sesiones del usuario.
               anonymize: Anonimizar cuentas de usuario.
               delete: Eliminar cuentas de usuario.
+              list: Obtener una lista de usuarios.
             email:
               receive_emails: Combinar este ámbito con el ámbito mail-receiver para procesar correos entrantes.
       web_hooks:
@@ -3937,6 +4072,7 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
+          filter_placeholder: "escribe para filtrar…"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
           themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"
@@ -4090,11 +4226,9 @@ es:
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
           head_tag:
-            text: "</head>"
-            title: "HTML a insertar antes de la etiqueta </head>"
+            text: "Cabecera"
           body_tag:
-            text: "</body>"
-            title: "HTML a insertar antes de la etiqueta </body>"
+            text: "Cuerpo"
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
@@ -4540,12 +4674,14 @@ es:
         cant_suspend: "Este usuario no puede ser suspendido."
         delete_posts_failed: "Hubo un problema al eliminar los mensajes."
         post_edits: "Ediciones de la publicación"
+        view_edits: "Ver ediciones"
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Eliminar la publicación"
         penalty_post_delete_replies: "Eliminar la publicación + sus respuestas"
         penalty_post_edit: "Editar la publicación"
         penalty_post_none: "No hacer nada"
         penalty_count: "Contador de faltas"
+        penalty_history: "Historial de sanciones"
         clear_penalty_history:
           title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
@@ -4566,6 +4702,7 @@ es:
         logged_out: "El usuario cerró sesión en todos los dispositivos"
         revoke_admin: "Revocar administración"
         grant_admin: "Conceder administración"
+        grant_admin_success: "Nuevo administrador confirmado."
         grant_admin_confirm: "Te hemos enviado un correo electrónico para verificar al nuevo administrador. Abre el correo electrónico y sigue las instrucciones."
         revoke_moderation: "Revocar moderación"
         grant_moderation: "Conceder moderación"
@@ -4936,10 +5073,13 @@ es:
           perform: "Conceder insignia a los usuarios"
           upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario
           aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario
+          success: Archivo CSV recibido. %{count} usuarios recibirán sus medallas en unos instantes.
+          csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
+          csv_has_unmatched_users_truncated_list: "El archivo CSV tenía %{count} filas que han coincidido con ningún usuario, por lo que no se han repartido sus medallas. Debido al gran número de filas que no han coincidido, solo se muestran las 100 primeras:"
           replace_owners: Quitar insignia de los anteriores propietarios
+          grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"
@@ -4950,7 +5090,6 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde lo quieres incrustar."
         title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"
@@ -5021,5 +5160,8 @@ es:
           moderator: "Moderador"
           regular: "Usuario habitual"
       previews:
+        topic_title: "Encabezado de tema"
         share_button: "Compartir"
         reply_button: "Responder"
+        topic_preview: "Vista previa de tema"
+        homepage_preview: "Vista previa de la página de inicio"

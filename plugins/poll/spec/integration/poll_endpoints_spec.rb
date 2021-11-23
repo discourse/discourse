@@ -4,17 +4,28 @@ require "rails_helper"
 
 describe "DiscoursePoll endpoints" do
   describe "fetch voters for a poll" do
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+
+    fab!(:post_with_multiple_poll) do
+      Fabricate(:post, raw: <<~SQL)
+      [poll type=multiple public=true min=1 max=2]
+      - A
+      - B
+      - C
+      [/poll]
+      SQL
+    end
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
     it "should return the right response" do
       DiscoursePoll::Poll.vote(
+        user,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a],
-        user
+        [option_a]
       )
 
       get "/polls/voters.json", params: {
@@ -34,14 +45,14 @@ describe "DiscoursePoll endpoints" do
 
     it 'should return the right response for a single option' do
       DiscoursePoll::Poll.vote(
-        post.id,
+        user,
+        post_with_multiple_poll.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b],
-        user
+        [option_a, option_b]
       )
 
       get "/polls/voters.json", params: {
-        post_id: post.id,
+        post_id: post_with_multiple_poll.id,
         poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
         option_id: option_b
       }
@@ -72,7 +83,7 @@ describe "DiscoursePoll endpoints" do
           post_id: -1,
           poll_name: DiscoursePoll::DEFAULT_POLL_NAME
         }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
         expect(response.body).to include('post_id')
       end
     end
@@ -87,7 +98,7 @@ describe "DiscoursePoll endpoints" do
     describe 'when poll_name is not valid' do
       it 'should raise the right error' do
         get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(400)
         expect(response.body).to include('poll_name')
       end
     end
@@ -99,10 +110,10 @@ describe "DiscoursePoll endpoints" do
         post
 
         DiscoursePoll::Poll.vote(
+          user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          ["4d8a15e3cc35750f016ce15a43937620"],
-          user
+          ["4d8a15e3cc35750f016ce15a43937620"]
         )
 
         get "/polls/voters.json", params: {
@@ -125,7 +136,16 @@ describe "DiscoursePoll endpoints" do
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+
+    fab!(:post) do
+      Fabricate(:post, raw: <<~SQL)
+      [poll type=multiple public=true min=1 max=2]
+      - A
+      - B
+      [/poll]
+      SQL
+    end
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -135,22 +155,23 @@ describe "DiscoursePoll endpoints" do
         user_1: option_a,
         user_2: option_b,
       }
+
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
+          user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          [user_votes["user_#{index}".to_sym]],
-          user
+          [user_votes["user_#{index}".to_sym]]
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
 
       # Add another user to one of the fields to prove it groups users properly
       DiscoursePoll::Poll.vote(
+        user4,
         post.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [option_a, option_b],
-        user4
+        [option_a, option_b]
       )
       UserCustomField.create(user_id: user4.id, name: "something", value: "value1")
     end
@@ -182,7 +203,7 @@ describe "DiscoursePoll endpoints" do
         user_field_name: "something"
       }
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
       expect(response.body).to include('user_field_name')
     end
   end

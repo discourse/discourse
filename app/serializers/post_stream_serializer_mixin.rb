@@ -22,7 +22,6 @@ module PostStreamSerializerMixin
         result[:stream] = object.filtered_post_ids
       else
         result[:isMegaTopic] = true
-        result[:firstId] = object.first_post_id
         result[:lastId] = object.last_post_id
       end
     end

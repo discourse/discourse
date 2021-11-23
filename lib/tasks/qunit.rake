@@ -29,32 +29,52 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     false
   end
 
-  port = ENV['TEST_SERVER_PORT'] || 60099
+  ember_cli = ENV['QUNIT_EMBER_CLI'] == "1"
 
+  port = ENV['TEST_SERVER_PORT'] || 60099
   while !port_available? port
     port += 1
   end
 
+  if ember_cli
+    unicorn_port = 60098
+    while unicorn_port == port || !port_available?(unicorn_port)
+      unicorn_port += 1
+    end
+  else
+    unicorn_port = port
+  end
+
+  env = {
+    "RAILS_ENV" => ENV["QUNIT_RAILS_ENV"] || "test",
+    "SKIP_ENFORCE_HOSTNAME" => "1",
+    "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{unicorn_port}.pid", # So this can run alongside development
+    "UNICORN_PORT" => unicorn_port.to_s,
+    "UNICORN_SIDEKIQS" => "0",
+    "DISCOURSE_SKIP_CSS_WATCHER" => "1",
+    "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
+    "LOGSTASH_UNICORN_URI" => nil,
+    "UNICORN_WORKERS" => "3"
+  }
+
+  cmd = if ember_cli
+    "#{Rails.root}/bin/ember-cli -u --port #{port} --proxy http://localhost:#{unicorn_port} -lr false"
+  else
+    "#{Rails.root}/bin/unicorn"
+  end
+
   pid = Process.spawn(
-    {
-      "RAILS_ENV" => ENV["QUNIT_RAILS_ENV"] || "test",
-      "SKIP_ENFORCE_HOSTNAME" => "1",
-      "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid", # So this can run alongside development
-      "UNICORN_PORT" => port.to_s,
-      "UNICORN_SIDEKIQS" => "0",
-      "DISCOURSE_SKIP_CSS_WATCHER" => "1",
-      "UNICORN_LISTENER" => "127.0.0.1:#{port}",
-      "LOGSTASH_UNICORN_URI" => nil,
-      "UNICORN_WORKERS" => "3"
-    },
-    "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb",
+    env,
+    cmd,
     pgroup: true
   )
 
   begin
     success = true
     test_path = "#{Rails.root}/test"
-    qunit_path = args[:qunit_path] || "/qunit"
+    qunit_path = args[:qunit_path]
+    qunit_path ||= "/tests" if ember_cli
+    qunit_path ||= "/qunit"
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
@@ -79,7 +99,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
     # wait for server to accept connections
     require 'net/http'
-    uri = URI("http://localhost:#{port}/assets/test_helper.js")
+    uri = URI("http://localhost:#{port}/#{qunit_path}")
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
@@ -96,7 +116,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
   ensure
     # was having issues with HUP
     Process.kill "-KILL", pid
-    FileUtils.rm("#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid")
+    FileUtils.rm("#{Rails.root}/tmp/pids/unicorn_test_#{unicorn_port}.pid")
   end
 
   if success

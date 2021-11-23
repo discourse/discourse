@@ -69,8 +69,6 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone(upload) {
     this.setProperties({
-      imageUrl: upload.url,
-      imageId: upload.id,
       imageFilesize: upload.human_filesize,
       imageFilename: upload.original_filename,
       imageWidth: upload.width,
@@ -79,8 +77,13 @@ export default Component.extend(UppyUploadMixin, {
 
     this._applyLightbox();
 
+    // the value of the property used for imageUrl should be set
+    // in this callback. this should be done in cases where imageUrl
+    // is bound to a computed property of the parent component.
     if (this.onUploadDone) {
       this.onUploadDone(upload);
+    } else {
+      this.set("imageUrl", upload.url);
     }
   },
 
@@ -123,13 +126,16 @@ export default Component.extend(UppyUploadMixin, {
     },
 
     trash() {
-      this.setProperties({ imageUrl: null, imageId: null });
-
       // uppy needs to be reset to allow for more uploads
       this._reset();
 
+      // the value of the property used for imageUrl should be cleared
+      // in this callback. this should be done in cases where imageUrl
+      // is bound to a computed property of the parent component.
       if (this.onUploadDeleted) {
         this.onUploadDeleted();
+      } else {
+        this.setProperties({ imageUrl: null });
       }
     },
   },

@@ -6,7 +6,7 @@ const TIMEFRAME_BASE = {
 };
 
 function buildTimeframe(opts) {
-  return jQuery.extend({}, TIMEFRAME_BASE, opts);
+  return Object.assign({}, TIMEFRAME_BASE, opts);
 }
 
 const TIMEFRAMES = [

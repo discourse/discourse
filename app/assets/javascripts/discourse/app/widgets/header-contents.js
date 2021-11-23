@@ -8,6 +8,6 @@ createWidget("header-contents", {
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
     {{/if}}
-    <div class="panel clearfix">{{yield}}</div>
+    <div class="panel clearfix" role="navigation">{{yield}}</div>
   `,
 });

@@ -49,7 +49,7 @@ discourseModule("Unit | Model | topic", function () {
 
     topic.set("category", category);
 
-    assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
+    assert.strictEqual(topic.get("lastUnreadUrl"), "/t/hello/101/1");
   });
 
   test("has details", function (assert) {
@@ -57,7 +57,7 @@ discourseModule("Unit | Model | topic", function () {
     const topicDetails = topic.get("details");
 
     assert.present(topicDetails, "a topic has topicDetails after we create it");
-    assert.equal(
+    assert.strictEqual(
       topicDetails.get("topic"),
       topic,
       "the topicDetails has a reference back to the topic"
@@ -69,7 +69,7 @@ discourseModule("Unit | Model | topic", function () {
     const postStream = topic.get("postStream");
 
     assert.present(postStream, "a topic has a postStream after we create it");
-    assert.equal(
+    assert.strictEqual(
       postStream.get("topic"),
       topic,
       "the postStream has a reference back to the topic"
@@ -80,7 +80,11 @@ discourseModule("Unit | Model | topic", function () {
     const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
     const suggestedTopics = topic.get("suggestedTopics");
 
-    assert.equal(suggestedTopics.length, 2, "it loaded the suggested_topics");
+    assert.strictEqual(
+      suggestedTopics.length,
+      2,
+      "it loaded the suggested_topics"
+    );
     assert.containsInstance(suggestedTopics, Topic);
   });
 
@@ -89,7 +93,7 @@ discourseModule("Unit | Model | topic", function () {
     const category = Category.list()[0];
     const topic = Topic.create({ id: 1111, category_id: category.get("id") });
 
-    assert.equal(topic.get("category"), category);
+    assert.strictEqual(topic.get("category"), category);
   });
 
   test("updateFromJson", function (assert) {
@@ -104,9 +108,17 @@ discourseModule("Unit | Model | topic", function () {
     });
 
     assert.blank(topic.get("post_stream"), "it does not update post_stream");
-    assert.equal(topic.get("details.hello"), "world", "it updates the details");
-    assert.equal(topic.get("cool"), "property", "it updates other properties");
-    assert.equal(topic.get("category"), category);
+    assert.strictEqual(
+      topic.get("details.hello"),
+      "world",
+      "it updates the details"
+    );
+    assert.strictEqual(
+      topic.get("cool"),
+      "property",
+      "it updates other properties"
+    );
+    assert.strictEqual(topic.get("category"), category);
   });
 
   test("recover", async function (assert) {
@@ -128,7 +140,7 @@ discourseModule("Unit | Model | topic", function () {
       fancy_title: ":smile: with all :) the emojis :pear::peach:",
     });
 
-    assert.equal(
+    assert.strictEqual(
       topic.get("fancyTitle"),
       `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img width=\"20\" height=\"20\" src='/images/emoji/google_classic/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
       "supports emojis"
@@ -140,12 +152,12 @@ discourseModule("Unit | Model | topic", function () {
     const ltrTopic = Topic.create({ fancy_title: "This is a test" });
 
     this.siteSettings.support_mixed_text_direction = true;
-    assert.equal(
+    assert.strictEqual(
       rtlTopic.get("fancyTitle"),
       `<span dir="rtl">هذا اختبار</span>`,
       "sets the dir-span to rtl"
     );
-    assert.equal(
+    assert.strictEqual(
       ltrTopic.get("fancyTitle"),
       `<span dir="ltr">This is a test</span>`,
       "sets the dir-span to ltr"
@@ -158,7 +170,7 @@ discourseModule("Unit | Model | topic", function () {
       pinned: true,
     });
 
-    assert.equal(
+    assert.strictEqual(
       topic.get("escapedExcerpt"),
       `This is a test topic <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "supports emojis"
@@ -167,15 +179,15 @@ discourseModule("Unit | Model | topic", function () {
 
   test("visible & invisible", function (assert) {
     const topic = Topic.create();
-    assert.equal(topic.visible, undefined);
-    assert.equal(topic.invisible, undefined);
+    assert.strictEqual(topic.visible, undefined);
+    assert.strictEqual(topic.invisible, undefined);
 
     const visibleTopic = Topic.create({ visible: true });
-    assert.equal(visibleTopic.visible, true);
-    assert.equal(visibleTopic.invisible, false);
+    assert.strictEqual(visibleTopic.visible, true);
+    assert.strictEqual(visibleTopic.invisible, false);
 
     const invisibleTopic = Topic.create({ visible: false });
-    assert.equal(invisibleTopic.visible, false);
-    assert.equal(invisibleTopic.invisible, true);
+    assert.strictEqual(invisibleTopic.visible, false);
+    assert.strictEqual(invisibleTopic.invisible, true);
   });
 });

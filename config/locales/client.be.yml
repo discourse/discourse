@@ -820,7 +820,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      title: "Or press Ctrl Enter"
       users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
@@ -864,6 +863,8 @@ be:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
     notifications:
+      dismiss_confirmation:
+        cancel: "Адмяніць"
       popup:
         mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
         group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
@@ -885,17 +886,21 @@ be:
       sort_by: "сартаваць па"
       latest_post: "апошняе паведамленне"
       select_all: "выбраць усе"
-      title: "пошук тэмаў, пастоў, юзераў альбо катэгорыяў"
-      full_page_title: "пошук тэмаў альбо пастоў"
+      title: "Пошук"
+      full_page_title: "Пошук"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
       search_button: "Пошук"
+      categories: "Катэгорыі"
+      tags: "Цэтлікі"
+      type:
+        users: "Карыстальнікі"
+        categories: "Катэгорыі"
       context:
         topic: "Пошук у гэтай тэме"
         private_messages: "Пошук паведамленняў"
       advanced:
-        title: пашыраны пошук
         posted_by:
           label: апублікавана
         in_group:
@@ -908,7 +913,6 @@ be:
             after: пасля
         views:
           label: прагляды
-    hamburger_menu: "перайсці да іншага пераліку або катэгорыі тым"
     new_item: "новы"
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
@@ -1083,6 +1087,7 @@ be:
         title: "Змяніць метку часу"
         action: "змяніць метку часу"
     post:
+      quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
@@ -1307,6 +1312,8 @@ be:
           name: іншае
         posting:
           name: апублікаванне
+    download_calendar:
+      download: "спампаваць"
     tagging:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
@@ -1347,6 +1354,10 @@ be:
         member: "член"
         regular: "рэгулярны"
         leader: "лідэр"
+    user_activity:
+      no_activity_others: "Няма актыўнасці."
+      no_replies_others: "Няма адказаў."
+      no_likes_others: "Не спадабалася паведамленні."
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1554,8 +1565,8 @@ be:
           add: "Дадаць"
           header:
             text: "Header"
-          head_tag:
-            text: "<"
+          body_tag:
+            text: "цела"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"

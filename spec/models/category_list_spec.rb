@@ -41,16 +41,33 @@ describe CategoryList do
       secret_subcat.set_permissions(admins: :full)
       secret_subcat.save
 
+      muted_tag = Fabricate(:tag) # muted tag
+      SiteSetting.default_tags_muted = muted_tag.name
+      Fabricate(:topic, category: public_cat, tags: [muted_tag])
+
       CategoryFeaturedTopic.feature_topics
 
-      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
+      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(3)
       expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == private_cat.name }.displayable_topics.count).to eq(1)
 
-      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
       expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
 
       expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
       expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
+    end
+
+    it "doesn't show muted topics" do
+      cat = Fabricate(:category_with_definition) # public category
+      topic = Fabricate(:topic, category: cat)
+
+      CategoryFeaturedTopic.feature_topics
+
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(1)
+
+      TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:muted])
+
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(0)
     end
 
   end

@@ -57,30 +57,21 @@ const Site = RestModel.extend({
 
   // Sort subcategories under parents
   @discourseComputed("categoriesByCount", "categories.[]")
-  sortedCategories(cats) {
-    const result = [],
-      remaining = {};
+  sortedCategories(categories) {
+    const children = new Map();
 
-    cats.forEach((c) => {
-      const parentCategoryId = parseInt(c.get("parent_category_id"), 10);
-      if (!parentCategoryId) {
-        result.pushObject(c);
-      } else {
-        remaining[parentCategoryId] = remaining[parentCategoryId] || [];
-        remaining[parentCategoryId].pushObject(c);
-      }
+    categories.forEach((category) => {
+      const parentId = parseInt(category.parent_category_id, 10) || -1;
+      const group = children.get(parentId) || [];
+      group.pushObject(category);
+
+      children.set(parentId, group);
     });
 
-    Object.keys(remaining).forEach((parentCategoryId) => {
-      const category = result.findBy("id", parseInt(parentCategoryId, 10)),
-        index = result.indexOf(category);
+    const reduce = (values) =>
+      values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
 
-      if (index !== -1) {
-        result.replace(index + 1, 0, remaining[parentCategoryId]);
-      }
-    });
-
-    return result;
+    return reduce(children.get(-1));
   },
 
   // Returns it in the correct order, by setting
@@ -224,6 +215,7 @@ Site.reopenClass(Singleton, {
 
 if (typeof Discourse !== "undefined") {
   let warned = false;
+  // eslint-disable-next-line no-undef
   Object.defineProperty(Discourse, "Site", {
     get() {
       if (!warned) {

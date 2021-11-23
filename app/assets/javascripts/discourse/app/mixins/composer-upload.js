@@ -13,6 +13,7 @@ import {
   validateUploadedFiles,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import bootbox from "bootbox";
 
 export default Mixin.create({
   _xhr: null,
@@ -199,9 +200,10 @@ export default Mixin.create({
 
     $element.on("fileuploadsubmit", (e, data) => {
       const max = this.siteSettings.simultaneous_uploads;
+      const fileCount = data.files.length;
 
       // Limit the number of simultaneous uploads
-      if (max > 0 && data.files.length > max) {
+      if (max > 0 && fileCount > max) {
         bootbox.alert(
           I18n.t("post.errors.too_many_dragged_and_dropped_files", {
             count: max,
@@ -211,15 +213,10 @@ export default Mixin.create({
       }
 
       // Look for a matching file upload handler contributed from a plugin
-      const matcher = (handler) => {
-        const ext = handler.extensions.join("|");
-        const regex = new RegExp(`\\.(${ext})$`, "i");
-        return regex.test(data.files[0].name);
-      };
-
-      const matchingHandler = this.uploadHandlers.find(matcher);
-      if (data.files.length === 1 && matchingHandler) {
-        if (!matchingHandler.method(data.files[0], this)) {
+      if (fileCount === 1) {
+        const file = data.files[0];
+        const matchingHandler = this._findMatchingUploadHandler(file.name);
+        if (matchingHandler && !matchingHandler.method(file, this)) {
           return false;
         }
       }
@@ -331,9 +328,11 @@ export default Mixin.create({
 
   _bindMobileUploadButton() {
     if (this.site.mobileView) {
-      this.mobileUploadButton = document.getElementById("mobile-file-upload");
-      this.mobileUploadButtonEventListener = function mobileButtonEventListener() {
-        document.getElementById("file-uploader").click();
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
       };
       this.mobileUploadButton.addEventListener(
         "click",

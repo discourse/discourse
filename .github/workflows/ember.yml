@@ -1,12 +1,10 @@
-name: (experimental) Ember CLI tests
+name: (experimental) Ember CLI tests (core)
 
 on:
   pull_request:
   push:
     branches:
       - main
-  schedule:
-    - cron: "0 0 * * *"
 
 jobs:
   build:
@@ -42,16 +40,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
-      - name: Official Plugins Install
-        if: ${{ github.event_name == 'schedule' }}
-        run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs 4
-          bundle clean
-          bundle exec rake plugin:install_all_official
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse

@@ -327,6 +327,10 @@ sr:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi sa uređivanjem"
+    topic_count_categories:
+      one: "Pregledajte %{count} novu ili ažuriranu temu"
+      few: "Pregledajte %{count} nove ili ažurirane teme"
+      other: "Pregledajte %{count} novih ili ažuriranih tema"
     topic_count_latest:
       one: "Pregledajte %{count} novu ili ažuriranu temu"
       few: "Pregledajte %{count} nove ili ažurirane teme"
@@ -1081,7 +1085,6 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       create_pm: "Privatna poruka"
-      title: "Ili pritisnite Ctrl+Enter"
       users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
@@ -1126,6 +1129,9 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      dismiss_confirmation:
+        dismiss: "Одбаци"
+        cancel: "Odustani"
       titles:
         watching_first_post: "nova tema"
     upload_selector:
@@ -1135,17 +1141,21 @@ sr:
       most_liked: "Najviše sviđanja"
       select_all: "Izaberi sve"
       too_short: "Vaš termin za pretragu je previše kratak."
-      title: "pretražite teme, poruke, korisnike ili kategorije"
+      title: "Pretraži"
+      full_page_title: "Pretraži"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
       post_format: "#%{post_number} od %{username}"
       search_google_button: "Google"
       search_button: "Pretraži"
+      categories: "Kategorije"
+      type:
+        users: "Korisnici"
+        categories: "Kategorije"
       context:
         user: "Pretražite poruke od @%{username}"
         topic: "Pretražite ovu temu"
       advanced:
-        title: Napredna pretraga
         posted_by:
           label: Postavio
         post:
@@ -1156,7 +1166,6 @@ sr:
             before: pre
         views:
           label: Pregledi
-    hamburger_menu: "idi na drugi popis tema ili kategoriju"
     new_item: "novo"
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
@@ -1397,6 +1406,7 @@ sr:
           few: "Odabrali ste <b>%{count}</b> poruka."
           other: "Odabrali ste <b>%{count}</b> poruka."
     post:
+      quote_edit: "Izmeni"
       quote_share: "Podeli"
       edit_reason: "Razlog:"
       post_number: "poruka %{number}"
@@ -1746,6 +1756,8 @@ sr:
           name: Ostalo
         posting:
           name: Poruke
+    download_calendar:
+      download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
       sort_by_count: "broj"
@@ -1979,12 +1991,6 @@ sr:
             text: "Header"
           footer:
             text: "Footer"
-          head_tag:
-            text: "</head>"
-            title: "HTML koji će biti umetnut pre </head> oznake"
-          body_tag:
-            text: "</body>"
-            title: "HTML koji će biti umetnut pre </body oznake"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"
@@ -2436,7 +2442,6 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Dodajte nove Emoji-e koji će biti dostupni svima. (Savet: povuci i ispusti više datoteka odjednom)"
         add: "Dodaj Novi Emoji"
         uploading: "Učitavanje..."
         name: "Ime"

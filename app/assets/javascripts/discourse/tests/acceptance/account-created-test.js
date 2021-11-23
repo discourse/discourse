@@ -15,7 +15,7 @@ acceptance("Account Created", function () {
     await visit("/u/account-created");
 
     assert.ok(exists(".account-created"));
-    assert.equal(
+    assert.strictEqual(
       queryAll(".account-created .ac-message").text().trim(),
       "Hello World",
       "it displays the message"
@@ -34,7 +34,7 @@ acceptance("Account Created", function () {
     await visit("/u/account-created");
 
     assert.ok(exists(".account-created"));
-    assert.equal(
+    assert.strictEqual(
       queryAll(".account-created .ac-message").text().trim(),
       "Hello World",
       "it displays the message"
@@ -42,9 +42,9 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .resend");
 
-    assert.equal(currentRouteName(), "account-created.resent");
+    assert.strictEqual(currentRouteName(), "account-created.resent");
     const email = queryAll(".account-created .ac-message b").text();
-    assert.equal(email, "eviltrout@example.com");
+    assert.strictEqual(email, "eviltrout@example.com");
   });
 
   test("account created - update email - cancel", async function (assert) {
@@ -59,12 +59,12 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .edit-email");
 
-    assert.equal(currentRouteName(), "account-created.edit-email");
+    assert.strictEqual(currentRouteName(), "account-created.edit-email");
     assert.ok(exists(".activation-controls .btn-primary:disabled"));
 
     await click(".activation-controls .edit-cancel");
 
-    assert.equal(currentRouteName(), "account-created.index");
+    assert.strictEqual(currentRouteName(), "account-created.index");
   });
 
   test("account created - update email - submit", async function (assert) {
@@ -87,8 +87,8 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .btn-primary");
 
-    assert.equal(currentRouteName(), "account-created.resent");
+    assert.strictEqual(currentRouteName(), "account-created.resent");
     const email = queryAll(".account-created .ac-message b").text();
-    assert.equal(email, "newemail@example.com");
+    assert.strictEqual(email, "newemail@example.com");
   });
 });

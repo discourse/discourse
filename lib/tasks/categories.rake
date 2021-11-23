@@ -14,7 +14,12 @@ task "categories:move_topics", [:from_category, :to_category] => [:environment] 
 
   if from_category.present? && to_category.present?
     puts "Moving topics from #{from_category.slug} to #{to_category.slug}..."
-    Topic.where(category_id: from_category.id).update_all(category_id: to_category.id)
+
+    Topic
+      .where(category_id: from_category.id)
+      .where.not(id: from_category.topic_id)
+      .update_all(category_id: to_category.id)
+
     from_category.update_attribute(:topic_count, 0)
 
     puts "Updating category stats..."
