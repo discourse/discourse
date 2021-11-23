@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
@@ -26,7 +27,7 @@ export default Mixin.create(UppyS3Multipart, {
   uploadProgress: 0,
   _uppyInstance: null,
   autoStartUploads: true,
-  _inProgressUploads: 0,
+  inProgressUploads: null,
   id: null,
   uploadRootPath: "/uploads",
 
@@ -59,6 +60,7 @@ export default Mixin.create(UppyS3Multipart, {
       fileInputEl: this.element.querySelector(".hidden-upload-field"),
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
+    this.set("inProgressUploads", []);
 
     this._bindFileInputChange();
 
@@ -143,11 +145,22 @@ export default Mixin.create(UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload", (data) => {
-      this._inProgressUploads += data.fileIDs.length;
+      const files = data.fileIDs.map((fileId) =>
+        this._uppyInstance.getFile(fileId)
+      );
+      files.forEach((file) => {
+        this.inProgressUploads.push(
+          EmberObject.create({
+            fileName: file.name,
+            id: file.id,
+            progress: 0,
+          })
+        );
+      });
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      this._inProgressUploads--;
+      this._removeInProgressUpload(file.id);
 
       if (this.usingS3Uploads) {
         this.setProperties({ uploading: false, processing: true });
@@ -157,13 +170,13 @@ export default Mixin.create(UppyS3Multipart, {
               deepMerge(completeResponse, { file_name: file.name })
             );
 
-            if (this._inProgressUploads === 0) {
+            if (this.inProgressUploads.length === 0) {
               this._reset();
             }
           })
           .catch((errResponse) => {
             displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            if (this._inProgressUploads === 0) {
+            if (this.inProgressUploads.length === 0) {
               this._reset();
             }
           });
@@ -171,13 +184,14 @@ export default Mixin.create(UppyS3Multipart, {
         this.uploadDone(
           deepMerge(response?.body || {}, { file_name: file.name })
         );
-        if (this._inProgressUploads === 0) {
+        if (this.inProgressUploads.length === 0) {
           this._reset();
         }
       }
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
+      this._removeInProgressUpload(file.id);
       displayErrorForUpload(response || error, this.siteSettings, file.name);
       this._reset();
     });
@@ -315,5 +329,12 @@ export default Mixin.create(UppyS3Multipart, {
       uploadProgress: 0,
     });
     this.fileInputEl.value = "";
+  },
+
+  _removeInProgressUpload(fileId) {
+    this.set(
+      "inProgressUploads",
+      this.inProgressUploads.filter((upl) => upl.id !== fileId)
+    );
   },
 });
