@@ -112,9 +112,7 @@ class Auth::Result
           retry
         end
 
-        if associated_group.present?
-          associated_group_ids.push(associated_group.id)
-        end
+        associated_group_ids.push(associated_group.id)
       end
 
       user.update(associated_group_ids: associated_group_ids)
