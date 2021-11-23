@@ -90,11 +90,9 @@ describe UserStat do
     end
 
     it 'updates first unread pm timestamp correctly' do
-      freeze_time
-
-      pm_topic = Fabricate(:private_message_topic)
-      user = pm_topic.user
-      user.update!(last_seen_at: Time.zone.now)
+      user = Fabricate(:user, last_seen_at: Time.zone.now)
+      user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
+      pm_topic = Fabricate(:private_message_topic, user: user, recipient: user_2)
       create_post(user: user, topic_id: pm_topic.id)
 
       TopicUser.change(user.id, pm_topic.id,
@@ -102,9 +100,6 @@ describe UserStat do
       )
 
       # user that is not tracking PM topic
-      user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
-      pm_topic.allowed_users << user_2
-
       TopicUser.change(user_2.id, pm_topic.id,
         notification_level: TopicUser.notification_levels[:regular]
       )
@@ -124,9 +119,9 @@ describe UserStat do
       user_4_orig_first_unread_pm_at = user_4.user_stat.first_unread_pm_at
 
       # User for another PM topic
-      pm_topic_2 = Fabricate(:private_message_topic)
-      user_5 = pm_topic_2.user
-      user_5.update!(last_seen_at: Time.zone.now)
+      user_5 = Fabricate(:user, last_seen_at: Time.zone.now)
+      user_6 = Fabricate(:user, last_seen_at: 10.minutes.ago)
+      pm_topic_2 = Fabricate(:private_message_topic, user: user_5, recipient: user_6)
       create_post(user: user_5, topic_id: pm_topic_2.id)
 
       TopicUser.change(user_5.id, pm_topic_2.id,
@@ -134,30 +129,27 @@ describe UserStat do
       )
 
       # User out of last seen limit
-      user_6 = Fabricate(:user, last_seen_at: Time.zone.now)
-      pm_topic.allowed_users << user_6
-      create_post(user: user_6, topic_id: pm_topic.id)
-
-      TopicUser.change(user_6.id, pm_topic.id,
+      TopicUser.change(user_6.id, pm_topic_2.id,
         notification_level: TopicUser.notification_levels[:tracking]
       )
 
+      create_post(user: user_6, topic_id: pm_topic_2.id)
       user_6_orig_first_unread_pm_at = user_6.user_stat.first_unread_pm_at
 
-      admin = Fabricate(:admin)
-      create_post(user: admin, topic_id: pm_topic.id)
-      create_post(user: admin, topic_id: pm_topic_2.id)
+      create_post(user: user_2, topic_id: pm_topic.id)
+      create_post(user: user_6, topic_id: pm_topic_2.id)
       pm_topic.update!(updated_at: 10.minutes.from_now)
       pm_topic_2.update!(updated_at: 20.minutes.from_now)
 
       stub_const(UserStat, "UPDATE_UNREAD_USERS_LIMIT", 4) do
-        UserStat.ensure_consistency!
+        UserStat.ensure_consistency!(1.hour.ago)
       end
 
-      expect(user.user_stat.reload.first_unread_pm_at).to eq_time(pm_topic.reload.updated_at)
-      expect(user_2.user_stat.reload.first_unread_pm_at).to eq_time(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      # User affected
+      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(pm_topic.reload.updated_at)
+      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
       expect(user_3.user_stat.reload.first_unread_pm_at).to eq_time(user_3_orig_first_unread_pm_at)
-      expect(user_4.user_stat.reload.first_unread_pm_at).to eq_time(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
       expect(user_5.user_stat.reload.first_unread_pm_at).to eq_time(pm_topic_2.reload.updated_at)
       expect(user_6.user_stat.reload.first_unread_pm_at).to eq_time(user_6_orig_first_unread_pm_at)
     end
