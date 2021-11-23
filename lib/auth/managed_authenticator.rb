@@ -113,8 +113,8 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result
   end
 
-  def after_create_account(user, auth)
-    auth_token = auth[:extra_data]
+  def after_create_account(user, auth_result)
+    auth_token = auth_result[:extra_data]
     association = UserAssociatedAccount.find_or_initialize_by(provider_name: auth_token[:provider], provider_uid: auth_token[:uid])
     association.user = user
     association.save!
@@ -122,7 +122,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     retrieve_avatar(user, association.info["image"])
     retrieve_profile(user, association.info)
 
-    auth.apply_associated_attributes! if auth.respond_to?(:apply_associated_attributes!)
+    auth_result.apply_associated_attributes!
   end
 
   def find_user_by_email(auth_token)
