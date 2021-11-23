@@ -2440,47 +2440,6 @@ pt_BR:
   test_mailer:
     title: "Testar mensageiro"
     subject_template: "[%{email_prefix}] Teste de entrega de e-mail"
-    text_body_template: |
-      Este é um e-mail de teste de
-
-      [**%{base_url}**][0]
-
-      Estamos com dificuldades para entregar o e-mail. Confira algumas coisas importantes que precisam ser verificadas:
-
-      - Defina o "e-mail de notificação" corretamente nas configurações do site. **O domínio especificado no endereço "de" dos e-mails enviados é o domínio com o qual o seu e-mail será validado**.
-
-      - Visualize a origem não processada no seu cliente de e-mail, de forma que você possa conferir os cabeçalhos de e-mail para obter pistas importantes. No Gmail, é a opção "mostrar original" no menu suspenso, no canto superior à direita de cada e-mail.
-
-      - **IMPORTANTE:** Seu ISP tem um registro de DNS reverso inserido para associar os nomes de domínio e endereços IP a partir dos quais você envia e-mail? [Teste seu registro PTR reverso][2] aqui. Se o seu ISP não inserir o registro de ponteiro DNS reverso apropriado, existe pouquíssima probabilidade de que seu e-mail seja entregue.
-
-      - Se o [registro SPF] do seu domínio[8] está correto. [Teste seu registro SPF][1] aqui. Observe que o TXT é o tipo de registro oficial correto para o SPF.
-
-      - Se o [registro DKIM] do seu domínio[3] está correto. Isso irá aumentará muito a chance de o seu e-mail ser entregue. [Teste seu registro DKIM][7] aqui.
-
-      - Se você rodar seu próprio servidor de e-mail, verifique se os IPs do seu servidor de e-mail não [estão em nenhuma lista de bloqueio de e-mails][4]. Além disso, verifique se está sendo enviado um nome de host plenamente qualificado que é resolvido no DNS da sua mensagem HELO. Caso contrário, isso fará que o seu e-mail seja rejeitado por vários serviços.
-
-      - É altamente recomendável **enviar um e-mail de teste para [mail-tester.com][mt]** para verificar se tudo o que foi mencionado acima está funcionando corretamente.
-
-      (Esta é a maneira *fácil* de criar uma conta em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que tem planos de e-mail de baixo custo para comunidades pequenas. Mas ainda será preciso definir os registros DKIM e SPF no seu DNS!)
-
-      Esperamos que você tenha recebido este teste de entrega de e-mail!
-
-      Boa sorte,
-
-      Seus amigos do [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versão do mensageiro"
     subject_template: "[%{email_prefix}] Nova versão do Discourse, atualização disponível"

@@ -1835,6 +1835,9 @@ ur:
         other: "%{group_name}' کے %{count} کھلی رکنیت کی درخواستیں"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "بر خاست کریں"
+        cancel: "منسوخ"
       group_message_summary:
         one: "آپ کے %{group_name} اِن باکس میں %{count} پیغام"
         other: "آپ کے %{group_name} اِن باکس میں %{count} پیغامات"
