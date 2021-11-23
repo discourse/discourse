@@ -295,6 +295,8 @@ export default Mixin.create({
           match.index === 0 &&
           match.lastIndex === match.raw.length
         ) {
+          // When specified, linkify supports fuzzy links and emails. Prefer providing the protocol.
+          // eg: pasting "example@discourse.org" may apply a link format of "mailto:example@discourse.org"
           this._addText(selected, `[${selectedValue}](${match.url})`);
           handled = true;
         }
