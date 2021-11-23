@@ -1,11 +1,12 @@
 "use strict";
 
+const express = require("express");
 const bent = require("bent");
 const getJSON = bent("json");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs/promises");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -15,11 +16,6 @@ function generateUID() {
   secondPart = ("000" + secondPart.toString(36)).slice(-3);
   return firstPart + secondPart;
 }
-
-const IGNORE_PATHS = [
-  /\/ember-cli-live-reload\.js$/,
-  /\/session\/[^\/]+\/become$/,
-];
 
 function htmlTag(buffer, bootstrap) {
   let classList = "";
@@ -184,78 +180,80 @@ async function applyBootstrap(bootstrap, template, response, baseURL) {
   return template;
 }
 
-function buildFromBootstrap(assetPath, proxy, baseURL, req, response) {
-  // eslint-disable-next-line
-  return new Promise((resolve, reject) => {
-    fs.readFile(
-      path.join(process.cwd(), "dist", assetPath),
-      "utf8",
-      (err, template) => {
-        let url = `${proxy}${baseURL}bootstrap.json`;
-        let queryLoc = req.url.indexOf("?");
-        if (queryLoc !== -1) {
-          url += req.url.substr(queryLoc);
-        }
-
-        getJSON(url, null, req.headers)
-          .then((json) => {
-            return applyBootstrap(json.bootstrap, template, response, baseURL);
-          })
-          .then(resolve)
-          .catch((e) => {
-            reject(
-              `Could not get ${proxy}${baseURL}bootstrap.json\n\n${e.toString()}`
-            );
-          });
-      }
+async function buildFromBootstrap(proxy, baseURL, req, response) {
+  try {
+    const template = await fs.readFile(
+      path.join(process.cwd(), "dist", "index.html"),
+      "utf8"
     );
-  });
+
+    let url = `${proxy}${baseURL}bootstrap.json`;
+    const queryLoc = req.url.indexOf("?");
+    if (queryLoc !== -1) {
+      url += req.url.substr(queryLoc);
+    }
+
+    const json = await getJSON(url, null, req.headers);
+
+    return applyBootstrap(json.bootstrap, template, response, baseURL);
+  } catch (error) {
+    throw new Error(
+      `Could not get ${proxy}${baseURL}bootstrap.json\n\n${error}`
+    );
+  }
 }
 
-async function handleRequest(assetPath, proxy, baseURL, req, res) {
-  if (assetPath.endsWith("tests/index.html")) {
-    return;
+async function handleRequest(proxy, baseURL, req, res) {
+  const originalHost = req.headers.host;
+  req.headers.host = new URL(proxy).host;
+
+  if (req.headers["Origin"]) {
+    req.headers["Origin"] = req.headers["Origin"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
   }
 
-  if (assetPath.endsWith("index.html")) {
-    try {
-      // Avoid Ember CLI's proxy if doing a GET, since Discourse depends on some non-XHR
-      // GET requests to work.
-      if (req.method === "GET") {
-        let url = `${proxy}${req.path}`;
+  if (req.headers["Referer"]) {
+    req.headers["Referer"] = req.headers["Referer"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
+  }
 
-        let queryLoc = req.url.indexOf("?");
-        if (queryLoc !== -1) {
-          url += req.url.substr(queryLoc);
-        }
+  let url = `${proxy}${req.path}`;
+  const queryLoc = req.url.indexOf("?");
+  if (queryLoc !== -1) {
+    url += req.url.substr(queryLoc);
+  }
 
-        req.headers["X-Discourse-Ember-CLI"] = "true";
-        let get = bent("GET", [200, 301, 302, 303, 307, 308, 404, 403, 500]);
-        let response = await get(url, null, req.headers);
-        res.set(response.headers);
-        res.set("content-type", "text/html");
-        if (response.headers["x-discourse-bootstrap-required"] === "true") {
-          req.headers["X-Discourse-Asset-Path"] = req.path;
-          let html = await buildFromBootstrap(
-            assetPath,
-            proxy,
-            baseURL,
-            req,
-            response
-          );
-          return res.send(html);
-        }
-        res.status(response.status);
-        res.send(await response.text());
-      }
-    } catch (e) {
-      res.send(`
-                <html>
-                  <h1>Discourse Build Error</h1>
-                  <pre><code>${e.toString()}</code></pre>
-                </html>
-              `);
-    }
+  if (req.method === "GET") {
+    req.headers["X-Discourse-Ember-CLI"] = "true";
+    req.headers["X-Discourse-Asset-Path"] = req.path;
+  }
+
+  const acceptedStatusCodes = [200, 301, 302, 303, 307, 308, 404, 403, 500];
+  const proxyRequest = bent(req.method, acceptedStatusCodes);
+  const requestBody = req.method === "GET" ? null : req.body;
+  const response = await proxyRequest(url, requestBody, req.headers);
+
+  res.set(response.headers);
+  res.set("content-encoding", null);
+
+  const { location } = response.headers;
+  if (location) {
+    const newLocation = location
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
+
+    res.set("location", newLocation);
+  }
+
+  if (response.headers["x-discourse-bootstrap-required"] === "true") {
+    const html = await buildFromBootstrap(proxy, baseURL, req, response);
+    res.set("content-type", "text/html");
+    res.send(html);
+  } else {
+    res.status(response.status);
+    res.send(await response.text());
   }
 }
 
@@ -267,12 +265,11 @@ module.exports = {
   },
 
   serverMiddleware(config) {
-    let proxy = config.options.proxy;
-    let app = config.app;
-    let options = config.options;
+    const app = config.app;
+    let { proxy, rootURL, baseURL } = config.options;
 
     if (!proxy) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-console
       console.error(`
 Discourse can't be run without a \`--proxy\` setting, because it needs a Rails application
 to serve API requests. For example:
@@ -281,31 +278,20 @@ to serve API requests. For example:
       throw "--proxy argument is required";
     }
 
-    let watcher = options.watcher;
+    baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
-    let baseURL =
-      options.rootURL === ""
-        ? "/"
-        : cleanBaseURL(options.rootURL || options.baseURL);
-
-    app.use(async (req, res, next) => {
+    app.use(express.raw({ type: "*/*" }), async (req, res, next) => {
       try {
-        const results = await watcher;
-        if (this.shouldHandleRequest(req, options)) {
-          let assetPath = req.path.slice(baseURL.length);
-          let isFile = false;
-
-          try {
-            isFile = fs
-              .statSync(path.join(results.directory, assetPath))
-              .isFile();
-          } catch (err) {}
-
-          if (!isFile) {
-            assetPath = "index.html";
-          }
-          await handleRequest(assetPath, proxy, baseURL, req, res);
+        if (this.shouldHandleRequest(req)) {
+          await handleRequest(proxy, baseURL, req, res);
         }
+      } catch (error) {
+        res.send(`
+          <html>
+            <h1>Discourse Build Error</h1>
+            <pre><code>${error}</code></pre>
+          </html>
+        `);
       } finally {
         if (!res.headersSent) {
           return next();
@@ -314,25 +300,17 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(req) {
-    let acceptHeaders = req.headers.accept || [];
-    let hasHTMLHeader = acceptHeaders.indexOf("text/html") !== -1;
-    if (req.method !== "GET") {
-      return false;
-    }
-    if (!hasHTMLHeader) {
-      return false;
+  shouldHandleRequest(request) {
+    if (request.get("Accept")?.includes("text/html")) {
+      return true;
     }
 
-    if (IGNORE_PATHS.some((ip) => ip.test(req.path))) {
-      return false;
+    if (
+      request.get("Content-Type")?.includes("application/x-www-form-urlencoded")
+    ) {
+      return true;
     }
 
-    if (req.path.endsWith(".json")) {
-      return false;
-    }
-
-    let baseURLRegexp = new RegExp(`^/`);
-    return baseURLRegexp.test(req.path);
+    return false;
   },
 };
