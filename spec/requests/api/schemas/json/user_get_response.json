@@ -778,6 +778,9 @@
             },
             "default_calendar": {
               "type": "string"
+            },
+            "oldest_search_log_date": {
+              "type": ["string", "null"]
             }
           },
           "required": [
