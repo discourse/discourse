@@ -309,6 +309,10 @@ to serve API requests. For example:
   },
 
   shouldHandleRequest(request) {
+    if (request.path === "/tests/index.html") {
+      return false;
+    }
+
     if (request.get("Accept") && request.get("Accept").includes("text/html")) {
       return true;
     }
