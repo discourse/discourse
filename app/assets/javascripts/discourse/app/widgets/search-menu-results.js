@@ -735,7 +735,12 @@ createWidget("search-menu-recent-searches", {
   template: hbs`
     <div class="heading">
       <h4>{{i18n "search.recent"}}</h4>
-      {{flat-button title="search.clear_recent" icon="times" action=(action "clearRecent")}}
+      {{flat-button
+        className="clear-recent-searches"
+        title="search.clear_recent"
+        icon="times"
+        action="clearRecent"
+      }}
     </div>
 
     {{#each this.currentUser.recent_searches as |slug|}}
@@ -747,7 +752,7 @@ createWidget("search-menu-recent-searches", {
   `,
 
   clearRecent() {
-    User.resetRecentSearches().then((result) => {
+    return User.resetRecentSearches().then((result) => {
       if (result.success) {
         this.currentUser.recent_searches.clear();
         this.sendWidgetAction("refreshSearchMenuResults");
