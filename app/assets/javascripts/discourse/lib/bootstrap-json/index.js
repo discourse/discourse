@@ -6,7 +6,7 @@ const getJSON = bent("json");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const fs = require("fs/promises");
+const { promises: fs } = require("fs");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -240,11 +240,17 @@ async function handleRequest(proxy, baseURL, req, res) {
 
   const { location } = response.headers;
   if (location) {
-    const newLocation = location
-      .replace(req.headers.host, originalHost)
-      .replace(/^https/, "http");
-
+    const newLocation = location.replace(proxy, `http://${originalHost}`);
     res.set("location", newLocation);
+  }
+
+  const csp = response.headers["content-security-policy"];
+  if (csp) {
+    const newCSP = csp.replace(
+      new RegExp(proxy, "g"),
+      `http://${originalHost}`
+    );
+    res.set("content-security-policy", newCSP);
   }
 
   if (response.headers["x-discourse-bootstrap-required"] === "true") {
@@ -280,7 +286,9 @@ to serve API requests. For example:
 
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
-    app.use(express.raw({ type: "*/*" }), async (req, res, next) => {
+    const rawMiddleware = express.raw({ type: "*/*", limit: "100mb" });
+
+    app.use(rawMiddleware, async (req, res, next) => {
       try {
         if (this.shouldHandleRequest(req)) {
           await handleRequest(proxy, baseURL, req, res);
@@ -301,12 +309,20 @@ to serve API requests. For example:
   },
 
   shouldHandleRequest(request) {
-    if (request.get("Accept")?.includes("text/html")) {
+    if (request.get("Accept") && request.get("Accept").includes("text/html")) {
       return true;
     }
 
     if (
-      request.get("Content-Type")?.includes("application/x-www-form-urlencoded")
+      request.get("Content-Type") &&
+      request.get("Content-Type").includes("application/x-www-form-urlencoded")
+    ) {
+      return true;
+    }
+
+    if (
+      request.get("Content-Type") &&
+      request.get("Content-Type").includes("multipart/form-data")
     ) {
       return true;
     }
