@@ -232,10 +232,15 @@ export function applySearchAutocomplete($input, siteSettings) {
 }
 
 export function updateRecentSearches(currentUser, term) {
-  const recentSearches = currentUser?.recent_searches;
+  let recentSearches = Object.assign(currentUser.recent_searches);
 
-  if (recentSearches && !recentSearches.includes(term)) {
-    recentSearches.popObject();
-    recentSearches.unshiftObject(term);
+  if (recentSearches.length === 5) {
+    if (recentSearches.includes(term)) {
+      recentSearches = recentSearches.without(term);
+    } else {
+      recentSearches.popObject();
+    }
   }
+  recentSearches.unshiftObject(term);
+  currentUser.set("recent_searches", recentSearches);
 }

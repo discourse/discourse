@@ -259,22 +259,22 @@ $search-pad-horizontal: 0.5em;
         cursor: pointer;
       }
     }
+  }
 
-    .search-menu-recent {
-      @include separator;
+  .search-menu-recent {
+    @include separator;
 
-      .heading {
-        display: flex;
-        justify-content: space-between;
-        h4 {
-          color: var(--primary-medium);
-          font-weight: normal;
-          margin-bottom: 0;
-        }
-        .clear-recent-searches {
-          cursor: pointer;
-          color: var(--primary-low-mid);
-        }
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      h4 {
+        color: var(--primary-medium);
+        font-weight: normal;
+        margin-bottom: 0;
+      }
+      .clear-recent-searches {
+        cursor: pointer;
+        color: var(--primary-low-mid);
       }
     }
   }
