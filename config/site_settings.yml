@@ -828,6 +828,8 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+  notify_users_after_responses_deleted_on_flagged_post:
+    default: false
   traditional_markdown_linebreaks:
     client: true
     default: false

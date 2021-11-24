@@ -1498,6 +1498,7 @@ en:
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
+    notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
@@ -2791,6 +2792,11 @@ en:
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+    responder:
+      off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
+      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+      spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
+      notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
@@ -2888,6 +2894,24 @@ en:
         ```
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
+
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Reply removed from flagged post by staff"
+      subject_template: "Reply removed from flagged post by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that a [post](%{base_url}%{url}) you replied to was removed.
+
+        %{flag_reason}
+
+        This post was flagged by the community and a staff member opted to remove it.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
 
     usage_tips:
       text_body_template: |
