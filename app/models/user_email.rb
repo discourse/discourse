@@ -7,6 +7,7 @@ class UserEmail < ActiveRecord::Base
   attr_accessor :skip_validate_unique_email
 
   before_validation :strip_downcase_email
+  before_validation :normalize_email
 
   validates :email, presence: true
   validates :email, email: true, if: :validate_email?
@@ -16,6 +17,14 @@ class UserEmail < ActiveRecord::Base
   validate :unique_email, if: :validate_unique_email?
 
   scope :secondary, -> { where(primary: false) }
+
+  def normalize_email
+    self.normalized_email = if self.email.present?
+      username, domain = self.email.split('@', 2)
+      username = username.gsub('.', '').gsub(/\+.*/, '')
+      "#{username}@#{domain}"
+    end
+  end
 
   private
 
@@ -37,9 +46,13 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
-    if self.class.where("lower(email) = ?", email).exists?
-      self.errors.add(:email, :taken)
+    email_exists = if SiteSetting.normalize_emails?
+      self.class.where("lower(email) = ? OR lower(normalized_email) = ?", email, normalized_email).exists?
+    else
+      self.class.where("lower(email) = ?", email).exists?
     end
+
+    self.errors.add(:email, :taken) if email_exists
   end
 
   def user_id_not_changed
@@ -55,16 +68,18 @@ end
 #
 # Table name: user_emails
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  email      :string(513)      not null
-#  primary    :boolean          default(FALSE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id               :integer          not null, primary key
+#  user_id          :integer          not null
+#  email            :string(513)      not null
+#  primary          :boolean          default(FALSE), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  normalized_email :string
 #
 # Indexes
 #
 #  index_user_emails_on_email                (lower((email)::text)) UNIQUE
+#  index_user_emails_on_normalized_email     (lower((normalized_email)::text))
 #  index_user_emails_on_user_id              (user_id)
 #  index_user_emails_on_user_id_and_primary  (user_id,primary) UNIQUE WHERE "primary"
 #

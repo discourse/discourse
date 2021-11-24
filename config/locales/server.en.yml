@@ -1649,6 +1649,7 @@ en:
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
