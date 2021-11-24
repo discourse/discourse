@@ -94,7 +94,7 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.13.1";
+const PLUGIN_API_VERSION = "0.14.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -490,9 +490,17 @@ class PluginApi {
    * ```
    * api.removePostMenuButton('like');
    * ```
+   *
+   * ```
+   * api.removePostMenuButton('like', (attrs, state, siteSettings, settings, currentUser) => {
+   *   if (attrs.post_number === 1) {
+   *     return true;
+   *   }
+   * });
+   * ```
    **/
-  removePostMenuButton(name) {
-    removeButton(name);
+  removePostMenuButton(name, callback) {
+    removeButton(name, callback);
   }
 
   /**
