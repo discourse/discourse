@@ -66,7 +66,7 @@
     "virtual-dom": "^2.1.1"
   },
   "engines": {
-    "node": "12.* || 14.* || 16.*",
+    "node": "12.* || 14.* || >= 16",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },
