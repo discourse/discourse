@@ -93,7 +93,8 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
-// If you add any methods to the API ensure you bump up this number
+// If you add any methods to the API ensure you bump up the version number
+// based on Semantic Versioning 2.0.0.
 const PLUGIN_API_VERSION = "0.14.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
