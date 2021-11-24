@@ -428,6 +428,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/admin-login" => "users#admin_login"
       post "#{root_path}/toggle-anon" => "users#toggle_anon"
       post "#{root_path}/read-faq" => "users#read_faq"
+      get "#{root_path}/recent-searches" => "users#recent_searches", constraints: { format: 'json' }
       delete "#{root_path}/recent-searches" => "users#reset_recent_searches", constraints: { format: 'json' }
       get "#{root_path}/search/users" => "users#search_users"
 

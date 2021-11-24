@@ -332,6 +332,7 @@ acceptance("Search - Anonymous", function (needs) {
 
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
+  needs.settings({ log_search_queries: true });
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -505,6 +506,27 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
     await triggerKeyEvent("#search-term", "keydown", keyEnter);
     assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+  });
+
+  test("Shows recent search results", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+      ).textContent.trim(),
+      "yellow",
+      "shows first recent search"
+    );
+
+    assert.strictEqual(
+      query(
+        ".search-menu .search-menu-recent li:nth-of-type(2) .search-link"
+      ).textContent.trim(),
+      "blue",
+      "shows second recent search"
+    );
   });
 });
 

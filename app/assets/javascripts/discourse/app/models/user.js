@@ -1072,6 +1072,10 @@ User.reopenClass(Singleton, {
     return ajax(userPath("check_email"), { data: { email } });
   },
 
+  loadRecentSearches() {
+    return ajax(`/u/recent-searches`);
+  },
+
   resetRecentSearches() {
     return ajax(`/u/recent-searches`, { type: "DELETE" });
   },

@@ -66,8 +66,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_topic_draft,
              :can_review,
              :draft_count,
-             :default_calendar,
-             :recent_searches
+             :default_calendar
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -325,25 +324,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def draft_count
     object.user_stat.draft_count
-  end
-
-  def include_recent_searches?
-    SiteSetting.log_search_queries
-  end
-
-  def recent_searches
-    query = SearchLog
-      .select(:term)
-      .where(user_id: object.id)
-
-    if object.user_option.oldest_search_log_date
-      query = query
-        .where("created_at > ?", object.user_option.oldest_search_log_date)
-    end
-
-    query.group(:term)
-      .order("max(id) DESC")
-      .limit(5)
-      .pluck(:term)
   end
 end

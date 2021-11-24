@@ -587,8 +587,13 @@ createWidget("search-menu-initial-options", {
 
     if (content.length === 0) {
       content.push(this.attach("random-quick-tip"));
-      if (this.currentUser?.recent_searches?.length) {
-        content.push(this.attach("search-menu-recent-searches"));
+
+      if (this.currentUser && this.siteSettings.log_search_queries) {
+        if (this.currentUser.recent_searches?.length) {
+          content.push(this.attach("search-menu-recent-searches"));
+        } else {
+          this.loadRecentSearches();
+        }
       }
     }
 
@@ -610,6 +615,18 @@ createWidget("search-menu-initial-options", {
 
   refreshSearchMenuResults() {
     this.scheduleRerender();
+  },
+
+  loadRecentSearches() {
+    User.loadRecentSearches().then((result) => {
+      if (result.success && result.recent_searches?.length) {
+        this.currentUser.set(
+          "recent_searches",
+          Object.assign(result.recent_searches)
+        );
+        this.scheduleRerender();
+      }
+    });
   },
 });
 
