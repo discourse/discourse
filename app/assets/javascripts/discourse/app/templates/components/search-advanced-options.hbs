@@ -23,11 +23,11 @@
           {{tag-chooser
             id="search-with-tags"
             tags=searchedTerms.tags
-            allowCreate=false
             everyTag=true
             unlimitedTagCount=true
             onChange=(action "onChangeSearchTermForTags")
             options=(hash
+              allowAny=false
               headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
             )
           }}

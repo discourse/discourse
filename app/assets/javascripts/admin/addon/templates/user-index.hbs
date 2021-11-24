@@ -553,8 +553,10 @@
           {{combo-box
             content=model.customGroups
             value=model.primary_group_id
-            none="admin.groups.no_primary"
             onChange=(action (mut model.primary_group_id))
+            options=(hash
+              none="admin.groups.no_primary"
+            )
           }}
         </div>
         {{#if primaryGroupDirty}}

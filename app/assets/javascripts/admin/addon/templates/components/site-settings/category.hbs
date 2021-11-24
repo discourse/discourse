@@ -1,7 +1,9 @@
 {{category-chooser
   value=value
-  allowUncategorized=true
   onChange=(action (mut value))
+  options=(hash
+    allowUncategorized=true
+  )
 }}
 {{setting-validation-message message=validationMessage}}
 <div class="desc">{{html-safe setting.description}}</div>

@@ -93,7 +93,10 @@
                 class="recurrence-input"
                 value=recurring
                 onChange=(action (mut recurring))
-                none="discourse_local_dates.create.form.recurring_none"}}
+                options=(hash
+                  none="discourse_local_dates.create.form.recurring_none"
+                )
+              }}
             </div>
           </div>
         {{/unless}}
@@ -133,10 +136,12 @@
               valueProperty=null
               nameProperty=null
               class="timezones-input"
-              allowAny=false
-              maximum=5
               content=allTimezones
               value=timezones
+              options=(hash
+                allowAny=false
+                maximum=5
+              )
             }}
           </div>
         </div>

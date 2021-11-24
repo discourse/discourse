@@ -52,9 +52,11 @@
       <div class="reviewable-filter">
         <label class="filter-label">{{i18n "review.filters.category"}}</label>
         {{category-chooser
-          none="review.filters.all_categories"
           value=filterCategoryId
           onChange=(action (mut filterCategoryId))
+          options=(hash
+            none="review.filters.all_categories"
+          )
         }}
       </div>
 
