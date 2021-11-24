@@ -280,7 +280,9 @@ to serve API requests. For example:
 
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
-    app.use(express.raw({ type: "*/*" }), async (req, res, next) => {
+    const rawMiddleware = express.raw({ type: "*/*", limit: "100mb" });
+
+    app.use(rawMiddleware, async (req, res, next) => {
       try {
         if (this.shouldHandleRequest(req)) {
           await handleRequest(proxy, baseURL, req, res);
@@ -308,6 +310,13 @@ to serve API requests. For example:
     if (
       request.get("Content-Type") &&
       request.get("Content-Type").includes("application/x-www-form-urlencoded")
+    ) {
+      return true;
+    }
+
+    if (
+      request.get("Content-Type") &&
+      request.get("Content-Type").includes("multipart/form-data")
     ) {
       return true;
     }
