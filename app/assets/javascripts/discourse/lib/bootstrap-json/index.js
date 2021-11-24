@@ -286,7 +286,7 @@ to serve API requests. For example:
 
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
-    const rawMiddleware = express.raw({ type: "*/*", limit: "100mb" });
+    const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {
