@@ -12,6 +12,10 @@ export default Component.extend({
     this._super(...arguments);
 
     ajax("/admin/dashboard/new-features.json").then((json) => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.setProperties({
         newFeatures: json.new_features,
         hasUnseenFeatures: json.has_unseen_features,
