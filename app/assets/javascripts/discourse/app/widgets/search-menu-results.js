@@ -586,7 +586,7 @@ createWidget("search-menu-initial-options", {
 
     if (content.length === 0) {
       content.push(this.attach("random-quick-tip"));
-      if (this.currentUser?.recent_searches.length) {
+      if (this.currentUser?.recent_searches?.length) {
         content.push(this.attach("search-menu-recent-searches"));
       }
     }

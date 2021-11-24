@@ -346,7 +346,9 @@ export default Controller.extend({
           });
         break;
       default:
-        updateRecentSearches(this.currentUser, searchTerm);
+        if (this.currentUser) {
+          updateRecentSearches(this.currentUser, searchTerm);
+        }
         ajax("/search", { data: args })
           .then(async (results) => {
             const model = (await translateResults(results)) || {};

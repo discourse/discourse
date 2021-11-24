@@ -460,7 +460,9 @@ export default createWidget("search-menu", {
       searchData.loading = true;
       cancel(this.state._debouncer);
       SearchHelper.perform(this);
-      updateRecentSearches(this.currentUser, searchData.term);
+      if (this.currentUser) {
+        updateRecentSearches(this.currentUser, searchData.term);
+      }
     } else {
       searchData.loading = false;
       if (!this.state.inTopicContext) {
