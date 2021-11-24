@@ -6,7 +6,7 @@ const getJSON = bent("json");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const fs = require("fs/promises");
+const { promises: fs } = require("fs");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -301,12 +301,13 @@ to serve API requests. For example:
   },
 
   shouldHandleRequest(request) {
-    if (request.get("Accept")?.includes("text/html")) {
+    if (request.get("Accept") && request.get("Accept").includes("text/html")) {
       return true;
     }
 
     if (
-      request.get("Content-Type")?.includes("application/x-www-form-urlencoded")
+      request.get("Content-Type") &&
+      request.get("Content-Type").includes("application/x-www-form-urlencoded")
     ) {
       return true;
     }
