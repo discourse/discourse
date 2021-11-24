@@ -5,7 +5,6 @@ import { Promise } from "rsvp";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
@@ -233,7 +232,7 @@ export function applySearchAutocomplete($input, siteSettings) {
 }
 
 export function updateRecentSearches(currentUser, term) {
-  let recentSearches = Object.assign(currentUser.recent_searches || A());
+  let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.length === 5) {
     if (recentSearches.includes(term)) {

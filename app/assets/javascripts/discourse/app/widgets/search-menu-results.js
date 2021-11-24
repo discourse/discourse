@@ -8,6 +8,7 @@ import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
@@ -714,29 +715,19 @@ createWidget("random-quick-tip", {
 createWidget("search-menu-recent-searches", {
   tagName: "div.search-menu-recent",
 
-  html() {
-    const content = [];
-    content.push(
-      h("div.heading", [
-        h("h4", I18n.t("search.recent")),
-        this.attach("flat-button", {
-          action: "clearRecent",
-          icon: "times",
-          title: "search.clear_recent",
-        }),
-      ])
-    );
-    this.currentUser.recent_searches.forEach((slug) => {
-      content.push(
-        this.attach("search-menu-assistant-item", {
-          slug,
-          icon: "history",
-        })
-      );
-    });
+  template: hbs`
+    <div class="heading">
+      <h4>{{i18n "search.recent"}}</h4>
+      {{flat-button title="search.clear_recent" icon="times" action=(action "clearRecent")}}
+    </div>
 
-    return content;
-  },
+    {{#each this.currentUser.recent_searches as |slug|}}
+      {{attach
+        widget="search-menu-assistant-item"
+        attrs=(hash slug=slug icon="history")
+      }}
+    {{/each}}
+  `,
 
   clearRecent() {
     User.resetRecentSearches().then((result) => {

@@ -1073,7 +1073,7 @@ User.reopenClass(Singleton, {
   },
 
   resetRecentSearches() {
-    return ajax(`/u/reset-recent-searches`, { type: "POST" });
+    return ajax(`/u/recent-searches`, { type: "DELETE" });
   },
 
   groupStats(stats) {

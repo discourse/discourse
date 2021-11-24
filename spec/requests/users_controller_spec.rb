@@ -5129,13 +5129,13 @@ describe UsersController do
     fab!(:user) { Fabricate(:user) }
 
     it 'does nothing for anon' do
-      post "/u/reset-recent-searches.json"
+      delete "/u/recent-searches.json"
       expect(response.status).to eq(403)
     end
 
     it 'works for logged in user' do
       sign_in(user)
-      post "/u/reset-recent-searches.json"
+      delete "/u/recent-searches.json"
 
       expect(response.status).to eq(200)
       user.reload
