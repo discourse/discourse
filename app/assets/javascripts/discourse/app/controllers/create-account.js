@@ -295,6 +295,10 @@ export default Controller.extend(
 
       this._hpPromise = ajax("/session/hp.json")
         .then((json) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
           // 30 seconds so we don't have hard loops
