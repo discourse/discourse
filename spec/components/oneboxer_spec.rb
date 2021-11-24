@@ -72,7 +72,7 @@ describe Oneboxer do
       onebox = preview(public_reply.url, user, public_category)
       expect(onebox).to include(public_reply.excerpt)
       expect(onebox).to include(%{data-post="2"})
-      expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
+      expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template_url, "tiny"))
 
       short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
@@ -80,11 +80,11 @@ describe Oneboxer do
       onebox = preview(public_moderator_action.url, user, public_category)
       expect(onebox).to include(public_moderator_action.excerpt)
       expect(onebox).to include(%{data-post="4"})
-      expect(onebox).to include(PrettyText.avatar_img(staff.avatar_template, "tiny"))
+      expect(onebox).to include(PrettyText.avatar_img(staff.avatar_template_url, "tiny"))
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
       expect(onebox).not_to include(public_topic.title)
-      expect(onebox).to include(replier.avatar_template.sub("{size}", "40"))
+      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "40"))
 
       expect(preview(public_hidden.url, user, public_category)).to match_html(link(public_hidden.url))
       expect(preview(secured_topic.relative_url, user, public_category)).to match_html(link(secured_topic.relative_url))
