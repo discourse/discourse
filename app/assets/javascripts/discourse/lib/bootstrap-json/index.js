@@ -240,11 +240,17 @@ async function handleRequest(proxy, baseURL, req, res) {
 
   const { location } = response.headers;
   if (location) {
-    const newLocation = location
-      .replace(req.headers.host, originalHost)
-      .replace(/^https/, "http");
-
+    const newLocation = location.replace(proxy, `http://${originalHost}`);
     res.set("location", newLocation);
+  }
+
+  const csp = response.headers["content-security-policy"];
+  if (csp) {
+    const newCSP = csp.replace(
+      new RegExp(proxy, "g"),
+      `http://${originalHost}`
+    );
+    res.set("content-security-policy", newCSP);
   }
 
   if (response.headers["x-discourse-bootstrap-required"] === "true") {
