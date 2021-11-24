@@ -211,6 +211,10 @@ export default Controller.extend(
 
       return User.checkEmail(this.accountEmail)
         .then((result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           if (result.failed) {
             this.setProperties({
               serverAccountEmail: this.accountEmail,
@@ -356,6 +360,10 @@ export default Controller.extend(
       this.set("formSubmitted", true);
       return User.createAccount(attrs).then(
         (result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this.set("isDeveloper", false);
           if (result.success) {
             // invalidate honeypot
