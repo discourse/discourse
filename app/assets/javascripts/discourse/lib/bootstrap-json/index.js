@@ -317,16 +317,15 @@ to serve API requests. For example:
       return true;
     }
 
-    if (
-      request.get("Content-Type") &&
-      request.get("Content-Type").includes("application/x-www-form-urlencoded")
-    ) {
-      return true;
+    const contentType = request.get("Content-Type");
+    if (!contentType) {
+      return false;
     }
 
     if (
-      request.get("Content-Type") &&
-      request.get("Content-Type").includes("multipart/form-data")
+      contentType.includes("application/x-www-form-urlencoded") ||
+      contentType.includes("multipart/form-data") ||
+      contentType.includes("application/json")
     ) {
       return true;
     }
