@@ -140,7 +140,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_can_associate_groups?
-    scope.admin?
+    scope.is_admin?
   end
 
   def include_tags_filter_regexp?
