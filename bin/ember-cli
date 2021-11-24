@@ -46,7 +46,7 @@ if !args.include?("test") && !args.include?("--proxy")
   args << PROXY
 end
 
-system "yarn -s install --cwd #{yarn_dir}"
+exit 1 if !system "yarn -s install --cwd #{yarn_dir}"
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
@@ -72,7 +72,6 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   end
 
   Process.wait(unicorn_pid)
-
 else
   exec "yarn", *args.to_a.flatten
 end
