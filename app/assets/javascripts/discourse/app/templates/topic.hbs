@@ -133,7 +133,7 @@
       {{plugin-outlet name="above-timeline" tagName=""}}
 
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
-        {{plugin-outlet name="topic-navigation" tagName=""}}
+        {{plugin-outlet name="topic-navigation" tagName="" args=(hash topic=model)}}
 
         {{#if info.renderTimeline}}
           {{topic-timeline
