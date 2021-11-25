@@ -66,7 +66,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_topic_draft,
              :can_review,
              :draft_count,
-             :default_calendar
+             :default_calendar,
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
