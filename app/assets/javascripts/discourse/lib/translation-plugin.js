@@ -51,7 +51,7 @@ class TranslationPlugin extends Plugin {
     this.inputPaths.forEach((path) => {
       let file = path + "/" + this.inputFile;
       let yaml = fs.readFileSync(file, { encoding: "UTF-8" });
-      let loaded = Yaml.load(yaml);
+      let loaded = Yaml.load(yaml, { json: true });
       parsed = deepmerge(parsed, loaded);
     });
 
