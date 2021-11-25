@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref, github.job) || format('{0}-{1}', github.ref, github.run_number) }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
