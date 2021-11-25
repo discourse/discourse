@@ -5125,6 +5125,97 @@ describe UsersController do
     end
   end
 
+  describe "#reset_recent_searches" do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'does nothing for anon' do
+      delete "/u/recent-searches.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'works for logged in user' do
+      sign_in(user)
+      delete "/u/recent-searches.json"
+
+      expect(response.status).to eq(200)
+      user.reload
+      expect(user.user_option.oldest_search_log_date).to be_within(5.seconds).of(1.second.ago)
+    end
+  end
+
+  describe "#recent_searches" do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'does nothing for anon' do
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(403)
+    end
+
+    it 'works for logged in user' do
+      sign_in(user)
+      SiteSetting.log_search_queries = true
+      user.user_option.update!(oldest_search_log_date: nil)
+
+      get "/u/recent-searches.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq([])
+
+      SearchLog.create!(
+        term: "old one",
+        user_id: user.id,
+        search_type: 1,
+        ip_address: '192.168.0.1',
+        created_at: 5.minutes.ago
+      )
+      SearchLog.create!(
+        term: "also old",
+        user_id: user.id,
+        search_type: 1,
+        ip_address: '192.168.0.1',
+        created_at: 15.minutes.ago
+      )
+
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq(["old one", "also old"])
+
+      user.user_option.update!(oldest_search_log_date: 20.minutes.ago)
+
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq(["old one", "also old"])
+
+      user.user_option.update!(oldest_search_log_date: 10.seconds.ago)
+
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq([])
+
+      SearchLog.create!(
+        term: "new search",
+        user_id: user.id,
+        search_type: 1,
+        ip_address: '192.168.0.1',
+        created_at: 2.seconds.ago
+      )
+
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq(["new search"])
+    end
+
+    it 'shows an error message when log_search_queries are off' do
+      sign_in(user)
+      SiteSetting.log_search_queries = false
+
+      get "/u/recent-searches.json"
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error"]).to eq(I18n.t("user_activity.no_log_search_queries"))
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user)
     stub_secure_session_confirmed

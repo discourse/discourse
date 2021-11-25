@@ -11,7 +11,8 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :check_sso_email, :check_sso_payload
+    :bookmarks, :invited, :check_sso_email, :check_sso_payload,
+    :recent_searches, :reset_recent_searches
   ]
 
   skip_before_action :check_xhr, only: [
@@ -49,6 +50,8 @@ class UsersController < ApplicationController
                                                             :confirm_admin]
 
   after_action :add_noindex_header, only: [:show, :my_redirect]
+
+  MAX_RECENT_SEARCHES = 5
 
   def index
   end
@@ -1299,6 +1302,33 @@ class UsersController < ApplicationController
       user.user_stat.save
     end
 
+    render json: success_json
+  end
+
+  def recent_searches
+    if !SiteSetting.log_search_queries
+      return render json: failed_json.merge(
+                      error: I18n.t("user_activity.no_log_search_queries")
+                    ), status: 403
+    end
+
+    query = SearchLog.where(user_id: current_user.id)
+
+    if current_user.user_option.oldest_search_log_date
+      query = query
+        .where("created_at > ?", current_user.user_option.oldest_search_log_date)
+    end
+
+    results = query.group(:term)
+      .order("max(created_at) DESC")
+      .limit(MAX_RECENT_SEARCHES)
+      .pluck(:term)
+
+    render json: success_json.merge(recent_searches: results)
+  end
+
+  def reset_recent_searches
+    current_user.user_option.update!(oldest_search_log_date: 1.second.ago)
     render json: success_json
   end
 

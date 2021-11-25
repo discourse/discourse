@@ -259,6 +259,7 @@ end
 #  skip_new_user_tips               :boolean          default(FALSE), not null
 #  color_scheme_id                  :integer
 #  default_calendar                 :integer          default("none_selected"), not null
+#  oldest_search_log_date           :datetime
 #
 # Indexes
 #

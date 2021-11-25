@@ -2384,6 +2384,8 @@ en:
       in_posts_by: "in posts by %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "again to use native browser search"
+      recent: "Recent Searches"
+      clear_recent: "Clear Recent Searches"
 
       type:
         default: "Topics/posts"
