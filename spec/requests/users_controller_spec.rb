@@ -5154,6 +5154,7 @@ describe UsersController do
     it 'works for logged in user' do
       sign_in(user)
       SiteSetting.log_search_queries = true
+      user.user_option.update!(oldest_search_log_date: nil)
 
       get "/u/recent-searches.json"
 
@@ -5179,8 +5180,13 @@ describe UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["recent_searches"]).to eq(["old one", "also old"])
 
-      user.user_option.oldest_search_log_date = 10.seconds.ago
-      user.user_option.save
+      user.user_option.update!(oldest_search_log_date: 20.minutes.ago)
+
+      get "/u/recent-searches.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["recent_searches"]).to eq(["old one", "also old"])
+
+      user.user_option.update!(oldest_search_log_date: 10.seconds.ago)
 
       get "/u/recent-searches.json"
       expect(response.status).to eq(200)
