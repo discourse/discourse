@@ -144,23 +144,6 @@ class BulkImport::Generic < BulkImport::Base
         closed: to_boolean(row["closed"])
       }
     end
-
-    puts "Importing first posts..."
-    topics = @db.execute(<<~SQL)
-      SELECT ROWID, *
-      FROM topics
-      ORDER BY ROWID
-    SQL
-
-    create_posts(topics) do |row|
-      {
-        imported_id: row["id"],
-        topic_id: topic_id_from_imported_id(row["id"]),
-        user_id: user_id_from_imported_id(row["user_id"]),
-        created_at: to_datetime(row["created_at"]),
-        raw: row["raw"]
-      }
-    end
   end
 
   def import_posts
