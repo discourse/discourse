@@ -6,7 +6,7 @@ module Jobs
 
     def execute(args)
       EmailToken
-        .where('NOT confirmed OR expired')
+        .where('NOT confirmed AND expired')
         .where('created_at < ?', 1.month.ago)
         .delete_all
     end
