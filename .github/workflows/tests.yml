@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: tests-${{ concat(github.head_ref, github.job) || concat(github.ref, github.run_number) }}
+  group: tests-${{ join([github.head_ref, github.job]) || join([github.ref, github.run_number]) }}
   cancel-in-progress: true
 
 jobs:
