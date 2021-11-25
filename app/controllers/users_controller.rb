@@ -51,6 +51,8 @@ class UsersController < ApplicationController
 
   after_action :add_noindex_header, only: [:show, :my_redirect]
 
+  MAX_RECENT_SEARCHES = 5
+
   def index
   end
 
@@ -1307,7 +1309,7 @@ class UsersController < ApplicationController
     if !SiteSetting.log_search_queries
       return render json: failed_json.merge(
                       error: I18n.t("user_activity.no_log_search_queries")
-                    )
+                    ), status: 403
     end
 
     query = SearchLog
@@ -1321,7 +1323,7 @@ class UsersController < ApplicationController
 
     results = query.group(:term)
       .order("max(created_at) DESC")
-      .limit(5)
+      .limit(MAX_RECENT_SEARCHES)
       .pluck(:term)
 
     render json: success_json.merge(recent_searches: results)

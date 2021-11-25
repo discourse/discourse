@@ -17,6 +17,7 @@ import { userPath } from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
 
 const translateResultsCallbacks = [];
+const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
 
 export function addSearchResultsCallback(callback) {
   translateResultsCallbacks.push(callback);
@@ -234,7 +235,7 @@ export function applySearchAutocomplete($input, siteSettings) {
 export function updateRecentSearches(currentUser, term) {
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
-  if (recentSearches.length === 5) {
+  if (recentSearches.length === MAX_RECENT_SEARCHES) {
     if (recentSearches.includes(term)) {
       recentSearches = recentSearches.without(term);
     } else {

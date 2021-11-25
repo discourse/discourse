@@ -5205,6 +5205,7 @@ describe UsersController do
 
       get "/u/recent-searches.json"
 
+      expect(response.status).to eq(403)
       expect(response.parsed_body["error"]).to eq(I18n.t("user_activity.no_log_search_queries"))
     end
   end
