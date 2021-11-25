@@ -839,7 +839,11 @@ class ApplicationController < ActionController::Base
 
     if !current_user && SiteSetting.login_required?
       flash.keep
-      redirect_to_login
+      if (request.format && request.format.json?) || request.xhr? || !request.get?
+        ensure_logged_in
+      else
+        redirect_to_login
+      end
       return
     end
 
