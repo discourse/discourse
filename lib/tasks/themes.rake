@@ -76,7 +76,7 @@ task "themes:update" => :environment do
   if ENV['RAILS_DB'].present?
     update_themes
   else
-    RailsMultisite::ConnectionManagement.each_connection do |db|
+    RailsMultisite::ConnectionManagement.each_connection do
       update_themes
     end
   end
