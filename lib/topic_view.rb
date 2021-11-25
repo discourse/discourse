@@ -79,6 +79,25 @@ class TopicView
     @custom_filters || {}
   end
 
+  # Configure a default scope to be applied to @filtered_posts.
+  # The registered block is called with @filtered_posts and an instance of
+  # `TopicView`.
+  #
+  # This API should be considered experimental until it is exposed in
+  # `Plugin::Instance`.
+  def self.apply_custom_default_scope(&block)
+    custom_default_scopes << block
+  end
+
+  def self.custom_default_scopes
+    @custom_default_scopes ||= []
+  end
+
+  # For testing
+  def self.reset_custom_default_scopes
+    @custom_default_scopes = nil
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -108,7 +127,7 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
-    @filtered_posts = apply_default_order(@filtered_posts)
+    @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -160,7 +179,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, apply_default_order(unfiltered_posts).pluck(:id))
+        Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
       end
     end
   end
@@ -287,8 +306,10 @@ class TopicView
     elsif opts[:post_ids].present?
       filter_posts_by_ids(opts[:post_ids])
     elsif opts[:filter_post_number].present?
+      # Only used for megatopics where we do not load the entire post stream
       filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
     elsif opts[:best].present?
+      # Only used for wordpress
       filter_best(opts[:best], opts)
     else
       filter_posts_paged(@page)
@@ -738,7 +759,7 @@ class TopicView
         :image_upload
       )
 
-    @posts = apply_default_order(@posts)
+    @posts = apply_default_scope(@posts)
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
@@ -762,8 +783,14 @@ class TopicView
     result
   end
 
-  def apply_default_order(scope)
-    scope.order(sort_order: :asc)
+  def apply_default_scope(scope)
+    scope = scope.order(sort_order: :asc)
+
+    self.class.custom_default_scopes.each do |block|
+      scope = block.call(scope, self)
+    end
+
+    scope
   end
 
   def setup_filtered_posts

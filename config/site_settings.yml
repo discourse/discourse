@@ -512,6 +512,8 @@ login:
     default: ""
     type: list
     list_type: simple
+  normalize_emails:
+    default: false
   auto_approve_email_domains:
     default: ""
     type: list
@@ -828,6 +830,8 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+  notify_users_after_responses_deleted_on_flagged_post:
+    default: false
   traditional_markdown_linebreaks:
     client: true
     default: false
@@ -875,6 +879,14 @@ posting:
   max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
+  here_mention:
+    default: "here"
+    validator: "NotUsernameValidator"
+    client: true
+  max_here_mentioned: 10
+  min_trust_level_for_here_mention:
+    default: "2"
+    enum: "TrustLevelAndStaffSetting"
   title_max_word_length:
     default: 30
     locale_default:

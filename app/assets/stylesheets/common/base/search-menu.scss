@@ -242,22 +242,27 @@ $search-pad-horizontal: 0.5em;
         }
       }
     }
+  }
 
-    .search-random-quick-tip {
-      padding: $search-pad-vertical $search-pad-horizontal;
-      padding-bottom: 0;
-      font-size: var(--font-down-2);
-      color: var(--primary-medium);
-      .tip-label {
-        background-color: rgba(var(--tertiary-rgb), 0.1);
-        margin-right: 4px;
-        padding: 2px 4px;
-        display: inline-block;
-        &.tip-clickable {
-          cursor: pointer;
-        }
+  .browser-search-tip,
+  .search-random-quick-tip {
+    padding: $search-pad-vertical $search-pad-horizontal;
+    padding-bottom: 0;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    .tip-label {
+      background-color: rgba(var(--tertiary-rgb), 0.1);
+      margin-right: 4px;
+      padding: 2px 4px;
+      display: inline-block;
+      &.tip-clickable {
+        cursor: pointer;
       }
     }
+  }
+
+  .browser-search-tip {
+    padding-top: 0.5em;
   }
 
   .searching {

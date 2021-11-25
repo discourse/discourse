@@ -773,6 +773,8 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      dismiss_confirmation:
+        cancel: "రద్దుచేయి"
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:

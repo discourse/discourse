@@ -111,9 +111,9 @@ class PostAlerter
     notified = [post.user, post.last_editor].uniq
 
     # mentions (users/groups)
-    mentioned_groups, mentioned_users = extract_mentions(post)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
 
-    if mentioned_groups || mentioned_users
+    if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
       editor = post.last_editor
 
@@ -130,6 +130,12 @@ class PostAlerter
       expand_group_mentions(mentioned_groups, post) do |group, users|
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
+      end
+
+      if mentioned_here
+        users = expand_here_mention(post, exclude_ids: notified.map(&:id))
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
       end
     end
 
@@ -543,6 +549,21 @@ class PostAlerter
 
   end
 
+  def expand_here_mention(post, exclude_ids: nil)
+    posts = Post.where(topic_id: post.topic_id)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+
+    if post.user.staff?
+      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
+    else
+      posts = posts.where(post_type: Post.types[:regular])
+    end
+
+    User.real
+      .where(id: posts.select(:user_id))
+      .limit(SiteSetting.max_here_mentioned)
+  end
+
   # TODO: Move to post-analyzer?
   def extract_mentions(post)
     mentions = post.raw_mentions
@@ -557,7 +578,10 @@ class PostAlerter
       users = nil if users.empty?
     end
 
-    [groups, users]
+    # @here can be a user mention and then this feature is disabled
+    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(post.user).can_mention_here?
+
+    [groups, users, here]
   end
 
   # TODO: Move to post-analyzer?

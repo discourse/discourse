@@ -29,6 +29,7 @@ describe PostAlerter do
 
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
@@ -340,6 +341,53 @@ describe PostAlerter do
 
       staged_user.reload
       expect(staged_user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(0)
+    end
+  end
+
+  context '@here' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
+    let(:other_post) { Fabricate(:post, topic: topic) }
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does not notify unrelated users' do
+      expect { post }.to change(evil_trout.notifications, :count).by(0)
+    end
+
+    it 'does not work if user here exists' do
+      Fabricate(:user, username: SiteSetting.here_mention)
+      expect { post }.to change(other_post.user.notifications, :count).by(0)
+    end
+
+    it 'notifies users who replied' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(0)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies users who whispered' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      tl2_user.grant_admin!
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(1)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies only last max_here_mentioned users' do
+      SiteSetting.max_here_mentioned = 2
+      3.times { Fabricate(:post, topic: topic) }
+      expect { post }.to change { Notification.count }.by(2)
     end
   end
 

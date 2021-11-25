@@ -22,15 +22,16 @@
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
     "@popperjs/core": "2.10.2",
-    "@uppy/utils": "^4.0.3",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/aws-s3-multipart": "^2.1.0",
     "@uppy/core": "^2.1.0",
     "@uppy/drop-target": "^1.1.0",
+    "@uppy/utils": "^4.0.3",
     "@uppy/xhr-upload": "^2.0.4",
     "admin": "^1.0.0",
     "bent": "^7.3.12",
     "broccoli-asset-rev": "^3.0.0",
+    "deepmerge": "^4.2.2",
     "discourse-common": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
@@ -66,7 +67,7 @@
     "virtual-dom": "^2.1.1"
   },
   "engines": {
-    "node": ">= 12.*",
+    "node": "12.* || 14.* || >= 16",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },
