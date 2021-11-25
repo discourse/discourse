@@ -1328,8 +1328,7 @@ class UsersController < ApplicationController
   end
 
   def reset_recent_searches
-    current_user.user_option.oldest_search_log_date = 1.second.ago
-    current_user.user_option.save
+    current_user.user_option.update!(oldest_search_log_date: 1.second.ago)
     render json: success_json
   end
 
