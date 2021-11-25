@@ -1478,22 +1478,22 @@ de:
         invite:
           new_title: "Einladung erstellen"
           edit_title: "Einladung bearbeiten"
-          instructions: "Teile diesen Link, um sofort Zugriff auf diese Website zu gewähren"
+          instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
           copy_link: "Link kopieren"
           expires_in_time: "Läuft in %{time} ab"
           expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
-          restrict_email: "Auf eine E-Mail-Adresse beschränken"
+          restrict_email: "Auf E-Mail beschränken"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
-          invite_to_topic: "Dieses Thema aufrufen"
+          invite_to_topic: "Ankommen beim Thema"
           expires_at: "Verfällt nach"
           custom_message: "Optionale persönliche Nachricht"
           send_invite_email: "Speichern und E-Mail senden"
+          send_invite_email_instructions: "Einladung auf E-Mail beschränken, um eine Einladungs-E-Mail zu senden"
           save_invite: "Einladung speichern"
           invite_saved: "Einladung gespeichert."
-          invite_copied: "Einladungslink kopiert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2084,6 +2084,12 @@ de:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – abgeschlossen"
+      dismiss_confirmation:
+        body:
+          one: "Bist du sicher? Du hast %{count} wichtige Benachrichtigung."
+          other: "Bist du sicher? Du hast %{count} wichtige Benachrichtigungen."
+        dismiss: "Alles gelesen"
+        cancel: "Abbrechen"
       group_message_summary:
         one: "%{count} Nachricht in deinem „%{group_name}“-Posteingang"
         other: "%{count} Nachrichten in deinem „%{group_name}“-Posteingang"
@@ -2583,6 +2589,9 @@ de:
         help: "teile einen Link zu diesem Thema"
         instructions: "Link zu diesem Thema teilen:"
         copied: "Themen-Link kopiert."
+        restricted_groups:
+          one: "Nur für Mitglieder der Gruppe sichtbar: %{groupNames}"
+          other: "Nur für Gruppenmitglieder sichtbar: %{groupNames}"
         notify_users:
           title: "Benachrichtige"
           instructions: "Folgende Benutzer über dieses Thema benachrichtigen:"
@@ -3411,6 +3420,7 @@ de:
         title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
         insert_url: "%{shortcut} Auswahl in geöffneten Editor einfügen"
+        full_page_search: "%{shortcut} Startet die ganzseitige Suche"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -3856,6 +3866,8 @@ de:
               wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
+            uploads:
+              create: Lade eine neue Datei hoch.
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.

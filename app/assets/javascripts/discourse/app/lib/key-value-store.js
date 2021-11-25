@@ -14,11 +14,13 @@ try {
   safeLocalStorage = null;
 }
 
-const KeyValueStore = function (ctx) {
-  this.context = ctx;
-};
+export default class KeyValueStore {
+  context = null;
 
-KeyValueStore.prototype = {
+  constructor(ctx) {
+    this.context = ctx;
+  }
+
   abandonLocal() {
     if (!safeLocalStorage) {
       return;
@@ -32,57 +34,64 @@ KeyValueStore.prototype = {
       }
       i--;
     }
+
     return true;
-  },
+  }
 
   remove(key) {
     if (!safeLocalStorage) {
       return;
     }
+
     return safeLocalStorage.removeItem(this.context + key);
-  },
+  }
 
   set(opts) {
     if (!safeLocalStorage) {
       return false;
     }
+
     safeLocalStorage[this.context + opts.key] = opts.value;
-  },
+  }
 
   setObject(opts) {
     this.set({ key: opts.key, value: JSON.stringify(opts.value) });
-  },
+  }
 
   get(key) {
     if (!safeLocalStorage) {
       return null;
     }
     return safeLocalStorage[this.context + key];
-  },
+  }
 
   getInt(key, def) {
     if (!def) {
       def = 0;
     }
+
     if (!safeLocalStorage) {
       return def;
     }
+
     const result = parseInt(this.get(key), 10);
     if (!isFinite(result)) {
       return def;
     }
+
     return result;
-  },
+  }
 
   getObject(key) {
     if (!safeLocalStorage) {
       return null;
     }
+
     try {
       return JSON.parse(safeLocalStorage[this.context + key]);
     } catch (e) {}
-  },
-};
+  }
+}
 
 // API compatibility with `localStorage`
 KeyValueStore.prototype.getItem = KeyValueStore.prototype.get;
@@ -90,5 +99,3 @@ KeyValueStore.prototype.removeItem = KeyValueStore.prototype.remove;
 KeyValueStore.prototype.setItem = function (key, value) {
   this.set({ key, value });
 };
-
-export default KeyValueStore;

@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import EmberObject from "@ember/object";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -36,6 +37,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
 
+  @bind
+  _cancelSingleUpload(data) {
+    this._uppyInstance.removeFile(data.fileId);
+  },
+
   @observes("composerModel.uploadCancelled")
   _cancelUpload() {
     if (!this.get("composerModel.uploadCancelled")) {
@@ -61,6 +67,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.element.removeEventListener("paste", this.pasteEventListener);
 
     this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.off(
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
+    );
 
     this._reset();
 
@@ -79,13 +89,17 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _bindUploadTarget() {
+    this.set("inProgressUploads", []);
     this.placeholders = {};
-    this._inProgressUploads = 0;
     this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
     this.appEvents.on(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.on(
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
+    );
 
     this._unbindUploadTarget();
     this.fileInputEventListener = bindFileInputChangeListener(
@@ -181,6 +195,37 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.set("uploadProgress", progress);
     });
 
+    this._uppyInstance.on("file-removed", (file, reason) => {
+      file.meta.cancelled = true;
+
+      // we handle the cancel-all event specifically, so no need
+      // to do anything here
+      if (reason === "cancel-all") {
+        return;
+      }
+
+      this._removeInProgressUpload(file.id);
+      this._resetUpload(file, { removePlaceholder: true });
+      if (this.inProgressUploads.length === 0) {
+        this.set("userCancelled", true);
+        this._uppyInstance.cancelAll();
+      }
+    });
+
+    this._uppyInstance.on("upload-progress", (file, progress) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const upload = this.inProgressUploads.find((upl) => upl.id === file.id);
+      if (upload) {
+        const percentage = Math.round(
+          (progress.bytesUploaded / progress.bytesTotal) * 100
+        );
+        upload.set("progress", percentage);
+      }
+    });
+
     this._uppyInstance.on("upload", (data) => {
       this._addNeedProcessing(data.fileIDs.length);
 
@@ -194,7 +239,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
 
       files.forEach((file) => {
-        this._inProgressUploads++;
+        this.inProgressUploads.push(
+          EmberObject.create({
+            fileName: file.name,
+            id: file.id,
+            progress: 0,
+          })
+        );
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
@@ -205,7 +256,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      this._inProgressUploads--;
+      this._removeInProgressUpload(file.id);
       let upload = response.body;
       const markdown = this.uploadMarkdownResolvers.reduce(
         (md, resolver) => resolver(upload) || md,
@@ -262,7 +313,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   @bind
   _handleUploadError(file, error, response) {
-    this._inProgressUploads--;
+    this._removeInProgressUpload(file.id);
     this._resetUpload(file, { removePlaceholder: true });
 
     file.meta.error = error;
@@ -272,9 +323,16 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.appEvents.trigger(`${this.eventPrefix}:upload-error`, file);
     }
 
-    if (this._inProgressUploads === 0) {
+    if (this.inProgressUploads.length === 0) {
       this._reset();
     }
+  },
+
+  _removeInProgressUpload(fileId) {
+    this.set(
+      "inProgressUploads",
+      this.inProgressUploads.filter((upl) => upl.id !== fileId)
+    );
   },
 
   _setupPreProcessors() {

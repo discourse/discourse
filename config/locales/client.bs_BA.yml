@@ -1821,6 +1821,9 @@ bs_BA:
       watching_first_post: "<span>Nova tema</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Odpusti"
+        cancel: "Odustani"
       group_message_summary:
         one: "%{count} poruka u vašem %{group_name} sandučiću"
         few: "%{count} poruke u vašem %{group_name} sandučiću"

@@ -498,15 +498,14 @@ createWidget("search-menu-assistant", {
 
 createWidget("search-menu-initial-options", {
   tagName: "ul.search-menu-initial-options",
+  services: ["search"],
 
   html(attrs) {
     if (attrs.term?.match(MODIFIER_REGEXP)) {
       return this.defaultRow(attrs.term);
     }
 
-    const service = this.register.lookup("search-service:main");
-    const ctx = service.get("searchContext");
-
+    const ctx = this.search.searchContext;
     const content = [];
 
     if (attrs.term || ctx) {

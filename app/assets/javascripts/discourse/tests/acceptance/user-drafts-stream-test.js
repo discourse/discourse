@@ -16,7 +16,7 @@ acceptance("User Drafts", function (needs) {
     await visit("/u/eviltrout/activity/drafts");
     assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
 
-    await click(".user-stream-item:last-child .remove-draft");
+    await click(".user-stream-item:first-child .remove-draft");
     assert.ok(visible(".bootbox"));
 
     await click(".bootbox .btn-primary");
@@ -24,6 +24,13 @@ acceptance("User Drafts", function (needs) {
       count(".user-stream-item"),
       2,
       "draft removed, list length diminished by one"
+    );
+
+    await visit("/");
+    assert.ok(visible("#create-topic"));
+    assert.ok(
+      !exists("#create-topic.open-draft"),
+      "Open Draft button is not present"
     );
   });
 

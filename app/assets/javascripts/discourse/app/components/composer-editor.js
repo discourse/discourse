@@ -561,10 +561,11 @@ export default Component.extend(ComposerUpload, {
   _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
+    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
+      this._warnHereMention(r.here_count);
     });
   },
 
@@ -639,6 +640,20 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
+  _warnHereMention(hereCount) {
+    if (!hereCount || hereCount === 0) {
+      return;
+    }
+
+    later(
+      this,
+      () => {
+        this.hereMention(hereCount);
+      },
+      2000
+    );
+  },
+
   @bind
   _handleImageScaleButtonClick(event) {
     if (!event.target.classList.contains("scale-btn")) {
@@ -677,6 +692,38 @@ export default Component.extend(ComposerUpload, {
     return;
   },
 
+  resetImageControls(buttonWrapper) {
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const readonlyContainer = buttonWrapper.querySelector(
+      ".alt-text-readonly-container"
+    );
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+
+    imageResize.removeAttribute("hidden");
+    readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
+    editContainer.setAttribute("hidden", "true");
+  },
+
+  commitAltText(buttonWrapper) {
+    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
+    const matchingPlaceholder = this.get("composer.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
+    const match = matchingPlaceholder[index];
+    const input = buttonWrapper.querySelector("input.alt-text-input");
+    const replacement = match.replace(
+      IMAGE_MARKDOWN_REGEX,
+      `![${input.value}|$2$3$4]($5)`
+    );
+
+    this.appEvents.trigger("composer:replace-text", match, replacement);
+
+    this.resetImageControls(buttonWrapper);
+  },
+
   @bind
   _handleAltTextInputKeypress(event) {
     if (!event.target.classList.contains("alt-text-input")) {
@@ -688,29 +735,8 @@ export default Component.extend(ComposerUpload, {
     }
 
     if (event.key === "Enter") {
-      const index = parseInt(
-        $(event.target).closest(".button-wrapper").attr("data-image-index"),
-        10
-      );
-      const matchingPlaceholder = this.get("composer.reply").match(
-        IMAGE_MARKDOWN_REGEX
-      );
-      const match = matchingPlaceholder[index];
-      const replacement = match.replace(
-        IMAGE_MARKDOWN_REGEX,
-        `![${$(event.target).val()}|$2$3$4]($5)`
-      );
-
-      this.appEvents.trigger("composer:replace-text", match, replacement);
-
-      const parentContainer = $(event.target).closest(
-        ".alt-text-readonly-container"
-      );
-      const altText = parentContainer.find(".alt-text");
-      const altTextButton = parentContainer.find(".alt-text-edit-btn");
-      altText.show();
-      altTextButton.show();
-      $(event.target).hide();
+      const buttonWrapper = event.target.closest(".button-wrapper");
+      this.commitAltText(buttonWrapper);
     }
   },
 
@@ -720,21 +746,52 @@ export default Component.extend(ComposerUpload, {
       return;
     }
 
-    const parentContainer = $(event.target).closest(
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+
+    const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
     );
-    const altText = parentContainer.find(".alt-text");
-    const correspondingInput = parentContainer.find(".alt-text-input");
+    const altText = readonlyContainer.querySelector(".alt-text");
 
-    $(event.target).hide();
-    altText.hide();
-    correspondingInput.val(altText.text());
-    correspondingInput.show();
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+    const editContainerInput = editContainer.querySelector(".alt-text-input");
+
+    buttonWrapper.setAttribute("editing", "true");
+    imageResize.setAttribute("hidden", "true");
+    readonlyContainer.setAttribute("hidden", "true");
+    editContainerInput.value = altText.textContent;
+    editContainer.removeAttribute("hidden");
+    editContainerInput.focus();
     event.preventDefault();
+  },
+
+  @bind
+  _handleAltTextOkButtonClick(event) {
+    if (!event.target.classList.contains("alt-text-edit-ok")) {
+      return;
+    }
+
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    this.commitAltText(buttonWrapper);
+  },
+
+  @bind
+  _handleAltTextCancelButtonClick(event) {
+    if (!event.target.classList.contains("alt-text-edit-cancel")) {
+      return;
+    }
+
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    this.resetImageControls(buttonWrapper);
   },
 
   _registerImageAltTextButtonClick(preview) {
     preview.addEventListener("click", this._handleAltTextEditButtonClick);
+    preview.addEventListener("click", this._handleAltTextOkButtonClick);
+    preview.addEventListener("click", this._handleAltTextCancelButtonClick);
     preview.addEventListener("keypress", this._handleAltTextInputKeypress);
   },
 
@@ -766,6 +823,8 @@ export default Component.extend(ComposerUpload, {
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     preview?.removeEventListener("click", this._handleImageScaleButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
   },
 

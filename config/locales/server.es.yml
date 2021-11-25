@@ -2453,47 +2453,6 @@ es:
   test_mailer:
     title: "Correo electrónico de prueba"
     subject_template: "[%{email_prefix}] Prueba de envío de correo electrónico"
-    text_body_template: |
-      Este es un correo electrónico de prueba de
-
-      [**%{base_url}**][0]
-
-      La entregabilidad del correo electrónico es complicada. Aquí hay algunas cosas importantes que deberías comprobar primero:
-
-      - Asegúrate de establecer correctamente la dirección «correo electrónico de notificación» de: en la configuración de tu sitio. **El dominio especificado en la dirección «de» de los correos electrónicos que envíes es el dominio con el que se validará tu correo electrónico**.
-
-      - Saber ver el origen bruto del correo electrónico en tu cliente de correo, para poder examinar los encabezados del correo en busca de pistas importantes. En Gmail, es la opción «mostrar original» en el menú desplegable de la parte superior derecha de cada correo.
-
-      - **IMPORTANTE:** ¿Tiene tu ISP un registro DNS inverso introducido para asociar los nombres de dominio y las direcciones IP desde las que envías el correo? Prueba tu registro PTR inverso][2] aquí. Si tu ISP no introduce el registro de puntero DNS inverso adecuado, es muy poco probable que se entregue tu correo electrónico.
-
-      - ¿Es correcto el [registro SPF][8] de tu dominio? Prueba tu registro SPF][1] aquí. Ten en cuenta que TXT es el tipo de registro oficial correcto para SPF.
-
-      - ¿Es correcto el [registro DKIM][3] de tu dominio? Esto mejorará significativamente la capacidad de entrega del correo electrónico. Prueba tu registro DKIM][7] aquí.
-
-      - Si diriges tu propio servidor de correo, comprueba que las IP de tu servidor de correo electrónico no están [en ninguna lista de bloqueo de correo electrónico][4]. Comprueba también que definitivamente está enviando un nombre de host totalmente calificado que se resuelve en DNS en su mensaje HELO. Si no es así, tu correo electrónico será rechazado por muchos servicios de correo.
-
-      - Te recomendamos encarecidamente que **envíes un correo electrónico de prueba a [mail-tester.com][mt]** para verificar que todo lo anterior funciona correctamente.
-
-      (La forma *fácil* es crear una cuenta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que tienen planes de correo electrónico de bajo coste y estarán bien para comunidades pequeñas. No obstante, tendrás que configurar los registros SPF y DKIM en tus DNS)
-
-      Esperamos que hayas recibido bien esta prueba de entregabilidad del correo electrónico.
-
-      Buena suerte,
-
-      Tus amigos de [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"

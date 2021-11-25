@@ -40,6 +40,13 @@ sv:
     user_cant_post_in_topic: "Du kan inte rösta eftersom du inte kan göra inlägg i detta ämne."
     topic_must_be_open_to_vote: "Detta ämne måste vara öppet för att kunna rösta."
     poll_must_be_open_to_vote: "Omröstning måste vara öppen för att kunna rösta."
+    one_vote_per_user: "Endast 1 röst tillåts för denna omröstning."
+    max_vote_per_user:
+      one: Endast %{count} röst tillåts för denna omröstning.
+      other: Högst %{count} röster tillåts för denna omröstning.
+    min_vote_per_user:
+      one: Minst %{count} röst krävs för denna omröstning.
+      other: Minst %{count} röster krävs för denna omröstning.
     topic_must_be_open_to_toggle_status: "Ämnet måste vara öppet för att kunna växla status."
     only_staff_or_op_can_toggle_status: "Endast personal eller ursprungsskribenten kan växla status på en omröstning."
     insufficient_rights_to_create: "Du är inte behörig att skapa omröstningar."

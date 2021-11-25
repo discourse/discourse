@@ -262,7 +262,9 @@ const rule = {
 
 function newApiInit(helper) {
   helper.registerOptions((opts, siteSettings) => {
-    opts.features.poll = !!siteSettings.poll_enabled;
+    if (!siteSettings.poll_enabled) {
+      opts.features.poll = false;
+    }
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 

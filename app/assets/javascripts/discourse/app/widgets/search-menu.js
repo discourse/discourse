@@ -5,13 +5,14 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { isiPad } from "discourse/lib/utilities";
+import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { cancel } from "@ember/runloop";
+import I18n from "I18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -185,6 +186,7 @@ const SearchHelper = {
 
 export default createWidget("search-menu", {
   tagName: "div.search-menu",
+  services: ["search"],
   searchData,
 
   buildKey: () => "search-menu",
@@ -278,6 +280,11 @@ export default createWidget("search-menu", {
       this.state.inTopicContext &&
       (!SearchHelper.includesTopics() || !searchData.term)
     ) {
+      const isMobileDevice = this.site.isMobileDevice;
+
+      if (!isMobileDevice) {
+        results.push(this.attach("browser-search-tip"));
+      }
       return results;
     }
 
@@ -304,13 +311,6 @@ export default createWidget("search-menu", {
     searchInput.value = "";
     searchInput.focus();
     this.triggerSearch();
-  },
-
-  searchService() {
-    if (!this._searchService) {
-      this._searchService = this.register.lookup("search-service:main");
-    }
-    return this._searchService;
   },
 
   html(attrs, state) {
@@ -450,7 +450,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     if (SearchHelper.includesTopics()) {
       if (this.state.inTopicContext) {
-        this.searchService().set("highlightTerm", searchData.term);
+        this.search.set("highlightTerm", searchData.term);
       }
 
       searchData.loading = true;
@@ -500,9 +500,26 @@ export default createWidget("search-menu", {
 
   searchContext() {
     if (this.state.inTopicContext) {
-      return this.searchService().get("searchContext");
+      return this.search.searchContext;
     }
 
     return false;
+  },
+});
+
+createWidget("browser-search-tip", {
+  buildKey: () => "browser-search-tip",
+  tagName: "div.browser-search-tip",
+
+  html() {
+    return [
+      h(
+        "span.tip-label",
+        I18n.t("search.browser_tip", {
+          modifier: translateModKey("Meta"),
+        })
+      ),
+      h("span.tip-description", I18n.t("search.browser_tip_description")),
+    ];
   },
 });

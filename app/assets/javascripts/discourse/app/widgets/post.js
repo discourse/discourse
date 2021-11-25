@@ -483,9 +483,11 @@ createWidget("post-contents", {
     ) {
       controller.send("cancelFilter", currentFilterPostNumber);
       this.state.filteredRepliesShown = false;
+      return Promise.resolve();
     } else {
       this.state.filteredRepliesShown = true;
-      post
+
+      return post
         .get("topic.postStream")
         .filterReplies(post.post_number, post.id)
         .then(() => {

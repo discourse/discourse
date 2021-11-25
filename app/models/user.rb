@@ -285,6 +285,8 @@ class User < ActiveRecord::Base
   def self.reserved_username?(username)
     username = normalize_username(username)
 
+    return true if SiteSetting.here_mention == username
+
     SiteSetting.reserved_usernames.unicode_normalize.split("|").any? do |reserved|
       username.match?(/^#{Regexp.escape(reserved).gsub('\*', '.*')}$/)
     end
@@ -590,6 +592,8 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    return if !self.allow_live_notifications?
+
     # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
@@ -691,6 +695,10 @@ class User < ActiveRecord::Base
 
   def seen_before?
     last_seen_at.present?
+  end
+
+  def seen_since?(datetime)
+    seen_before? && last_seen_at >= datetime
   end
 
   def create_visit_record!(date, opts = {})
@@ -1013,6 +1021,12 @@ class User < ActiveRecord::Base
     end
 
     admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
+  end
+
+  def has_trust_level_or_staff?(level)
+    return admin? if level.to_s == 'admin'
+    return staff? if level.to_s == 'staff'
+    has_trust_level?(level.to_i)
   end
 
   # a touch faster than automatic
@@ -1436,6 +1450,10 @@ class User < ActiveRecord::Base
 
   def shelved_notifications
     ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
+  end
+
+  def allow_live_notifications?
+    seen_since?(30.days.ago)
   end
 
   protected

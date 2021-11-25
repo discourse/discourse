@@ -494,10 +494,19 @@ class UsersController < ApplicationController
     usernames.each(&:downcase!)
 
     cannot_see = []
+    here_count = nil
+
     topic_id = params[:topic_id]
-    unless topic_id.blank?
-      topic = Topic.find_by(id: topic_id)
-      usernames.each { |username| cannot_see.push(username) unless Guardian.new(User.find_by_username(username)).can_see?(topic) }
+    if topic_id.present? && topic = Topic.find_by(id: topic_id)
+      usernames.each do |username|
+        if !Guardian.new(User.find_by_username(username)).can_see?(topic)
+          cannot_see.push(username)
+        end
+      end
+
+      if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
+        here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
+      end
     end
 
     result = User.where(staged: false)
@@ -509,6 +518,7 @@ class UsersController < ApplicationController
       valid_groups: groups,
       mentionable_groups: mentionable_groups,
       cannot_see: cannot_see,
+      here_count: here_count,
       max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
     }
   end

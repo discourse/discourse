@@ -116,7 +116,8 @@ class FileHelper
         timeout: 15,
         skip_missing_workers: true,
         # PNG
-        optipng: { level: 2, strip: strip_image_metadata },
+        oxipng: { level: 3, strip: strip_image_metadata },
+        optipng: false,
         advpng: false,
         pngcrush: false,
         pngout: false,
@@ -128,7 +129,6 @@ class FileHelper
         # Skip looking for gifsicle, svgo binaries
         gifsicle: false,
         svgo: false,
-        oxipng: false
       )
     end
   end
