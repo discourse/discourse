@@ -20,7 +20,11 @@ class TranslationPlugin extends Plugin {
   }
 
   replaceMF(formats, input, path = []) {
-    Object.keys(input).forEach((key) => {
+    if (!input) {
+      return;
+    }
+
+    Object.keys(input || {}).forEach((key) => {
       let value = input[key];
 
       let subpath = path.concat(key);
