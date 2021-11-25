@@ -74,7 +74,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     authenticator.finish
 
     if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email && invite.email_token.present? && email_token == invite.email_token
-      user.email_tokens.create!(email: user.email)
+      user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
       user.activate
     end
 
