@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: ember-${{ github.head_ref, github.job || concat(github.ref, github.run_number) }}
+  group: ember-${{ concat(github.head_ref, github.job) || concat(github.ref, github.run_number) }}
   cancel-in-progress: true
 
 jobs:
