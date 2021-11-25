@@ -1312,9 +1312,7 @@ class UsersController < ApplicationController
                     ), status: 403
     end
 
-    query = SearchLog
-      .select(:term)
-      .where(user_id: current_user.id)
+    query = SearchLog.where(user_id: current_user.id)
 
     if current_user.user_option.oldest_search_log_date
       query = query
