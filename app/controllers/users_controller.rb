@@ -1324,9 +1324,7 @@ class UsersController < ApplicationController
       .limit(5)
       .pluck(:term)
 
-    render json: success_json.merge(
-              recent_searches: results
-            )
+    render json: success_json.merge(recent_searches: results)
   end
 
   def reset_recent_searches
