@@ -454,7 +454,7 @@ test("previews", function (assert) {
           {
             current: true,
             formated:
-              'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 12:00 AM → 1:30 AM',
+              'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 12:00 AM → 1:30 AM',
             timezone: "Paris",
           },
         ],
@@ -486,7 +486,7 @@ test("previews", function (assert) {
           {
             current: true,
             formated:
-              'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 11:34 AM',
+              'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:34 AM',
             timezone: "Paris",
           },
         ],
@@ -542,22 +542,22 @@ test("previews", function (assert) {
           {
             current: true,
             formated:
-              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 2:54 PM',
+              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 2:54 PM',
             timezone: "Paris",
           },
           {
             formated:
-              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 1:54 PM',
+              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
             timezone: "London",
           },
           {
             formated:
-              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 1:54 PM',
+              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
             timezone: "Lagos",
           },
           {
             formated:
-              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 10:54 PM',
+              'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 10:54 PM',
             timezone: "Sydney",
           },
         ],
@@ -577,12 +577,12 @@ test("previews", function (assert) {
           {
             current: true,
             formated:
-              'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 11:00 AM',
+              'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:00 AM',
             timezone: "Los Angeles",
           },
           {
             formated:
-              'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use xlink:href="#clock" /></svg> 6:00 PM',
+              'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 6:00 PM',
             timezone: "UTC",
           },
         ],
