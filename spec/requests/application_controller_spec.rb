@@ -668,6 +668,33 @@ RSpec.describe ApplicationController do
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
 
+  it "adds a noindex header if non-canonical indexing is disabled" do
+    SiteSetting.allow_indexing_non_canonical_urls = false
+    get '/'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    get '/latest'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    get '/categories'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    topic = create_post.topic
+    get "/t/#{topic.slug}/#{topic.id}"
+    expect(response.headers['X-Robots-Tag']).to be_nil
+    post = create_post(topic_id: topic.id)
+    get "/t/#{topic.slug}/#{topic.id}/2"
+    expect(response.headers['X-Robots-Tag']).to eq('noindex')
+
+    20.times do
+      create_post(topic_id: topic.id)
+    end
+    get "/t/#{topic.slug}/#{topic.id}/21"
+    expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    get "/t/#{topic.slug}/#{topic.id}?page=2"
+    expect(response.headers['X-Robots-Tag']).to be_nil
+  end
+
   context "default locale" do
     before do
       SiteSetting.default_locale = :fr
