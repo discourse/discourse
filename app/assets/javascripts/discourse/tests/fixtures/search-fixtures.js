@@ -539,7 +539,15 @@ export default {
         category_id: 7,
         pinned_globally: false,
         posters: [],
-        tags: ["dev", "slow"],
+        tags: [
+        {
+          "name": "dev",
+          "description": "dev description",
+        },
+        {
+          "name": "slow",
+          "description": "slow description",
+        }]
       },
       {
         id: 14727,
