@@ -70,7 +70,7 @@ export default Component.extend(UtilsMixin, {
   },
 
   keyDown(event) {
-    if (this.selectKit.isDisabled) {
+    if (this.selectKit.isDisabled || this.selectKit.options.disabled) {
       return;
     }
 
