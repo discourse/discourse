@@ -16,33 +16,6 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  scope :filter_by_consolidation_data, ->(notification_type, data) {
-    notifications = Notification.where(notification_type: notification_type)
-
-    case notification_type
-    when types[:liked], types[:liked_consolidated]
-      key = "display_username"
-      consolidation_window = SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
-    when types[:private_message]
-      key = "topic_title"
-      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
-    when types[:membership_request_consolidated]
-      key = "group_name"
-      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
-    end
-
-    notifications = notifications.where("created_at > ? AND data::json ->> '#{key}' = ?", consolidation_window, data[key.to_sym]) if data[key&.to_sym].present?
-
-    case notification_type
-    when types[:liked]
-      notifications = notifications.where("data::json ->> 'username2' IS NULL")
-    when types[:group_message_summary]
-      notifications = notifications.where("data::json ->> 'group_id' = ?", data[:group_id].to_s)
-    end
-
-    notifications
-  }
-
   attr_accessor :skip_send_email
 
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]

@@ -13,21 +13,32 @@ module Notifications
 
     def plan_for(notification)
       consolidation_plans = [liked, dashboard_problems_pm, group_message_summary, group_membership]
+      consolidation_plans.concat(DiscoursePluginRegistry.notification_consolidation_plans)
 
       consolidation_plans.detect { |plan| plan.can_consolidate_data?(notification) }
-    end
-
-    def notification_consolidation_plans
-      [liked, group_membership, group_message_summary]
     end
 
     def liked
       ConsolidateNotifications.new(
         from: Notification.types[:liked],
         to: Notification.types[:liked_consolidated],
-        set_data_blk: ->(data) { data.merge(username: data[:display_username]) },
-        precondition_blk: ->(_) { true },
-        threshold: SiteSetting.notification_consolidation_threshold
+        threshold: -> { SiteSetting.notification_consolidation_threshold },
+        consolidation_window: SiteSetting.likes_notification_consolidation_window_mins.minutes,
+        unconsolidated_query_blk: ->(notifications, data) do
+          key = 'display_username'
+          value = data[key.to_sym]
+          filtered = notifications.where("data::json ->> 'username2' IS NULL")
+
+          filtered = filtered.where("data::json ->> '#{key}' = ?", value) if value
+
+          filtered
+        end,
+        consolidated_query_blk: filtered_by_data_attribute('display_username')
+      ).set_mutations(
+        set_data_blk: ->(notification) do
+          data = notification.data_hash
+          data.merge(username: data[:display_username])
+        end
       )
     end
 
@@ -35,7 +46,15 @@ module Notifications
       ConsolidateNotifications.new(
         from: Notification.types[:private_message],
         to: Notification.types[:membership_request_consolidated],
-        set_data_blk: ->(data) do
+        threshold: -> { SiteSetting.notification_consolidation_threshold },
+        consolidation_window: Notification::MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours,
+        unconsolidated_query_blk: filtered_by_data_attribute('topic_title'),
+        consolidated_query_blk: filtered_by_data_attribute('group_name')
+      ).set_precondition(
+        precondition_blk: ->(data) { data[:group_name].present? }
+      ).set_mutations(
+        set_data_blk: ->(notification) do
+          data = notification.data_hash
           post_id = data[:original_post_id]
           custom_field = PostCustomField.select(:value).find_by(post_id: post_id, name: "requested_group_id")
           group_id = custom_field&.value
@@ -43,9 +62,7 @@ module Notifications
 
           data[:group_name] = group_name
           data
-        end,
-        precondition_blk: ->(data) { data[:group_name].present? },
-        threshold: SiteSetting.notification_consolidation_threshold
+        end
       )
     end
 
@@ -53,9 +70,11 @@ module Notifications
       ConsolidateNotifications.new(
         from: Notification.types[:group_message_summary],
         to: Notification.types[:group_message_summary],
-        set_data_blk: ->(data) { data },
-        precondition_blk: ->(_) { true },
+        unconsolidated_query_blk: filtered_by_data_attribute('group_id'),
+        consolidated_query_blk: filtered_by_data_attribute('group_id'),
         threshold: 1 # We should always apply this plan to refresh the summary stats
+      ).set_precondition(
+        precondition_blk: ->(data) { data[:group_id].present? }
       )
     end
 
@@ -63,12 +82,24 @@ module Notifications
       ConsolidateNotifications.new(
         from: Notification.types[:private_message],
         to: Notification.types[:private_message],
-        set_data_blk: ->(data) { data },
+        threshold: 1,
+        unconsolidated_query_blk: filtered_by_data_attribute('topic_title'),
+        consolidated_query_blk: filtered_by_data_attribute('topic_title')
+      ).set_precondition(
         precondition_blk: ->(data) do
           data[:topic_title] == I18n.t("system_messages.dashboard_problems.subject_template")
-        end,
-        threshold: 1
+        end
       )
+    end
+
+    def filtered_by_data_attribute(attribute_name)
+      ->(notifications, data) do
+        if (value = data[attribute_name.to_sym])
+          notifications.where("data::json ->> '#{attribute_name}' = ?", value.to_s)
+        else
+          notifications
+        end
+      end
     end
   end
 end

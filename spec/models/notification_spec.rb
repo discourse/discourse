@@ -355,36 +355,6 @@ describe Notification do
     end
   end
 
-  describe '.filter_by_consolidation_data' do
-    let(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:user) }
-
-    before do
-      PostActionNotifier.enable
-    end
-
-    it 'should return the right notifications' do
-      expect(Notification.filter_by_consolidation_data(
-        Notification.types[:liked], display_username: user.username_lower
-      )).to eq([])
-
-      expect do
-        PostAlerter.post_created(Fabricate(:basic_reply,
-          user: user,
-          topic: post.topic
-        ))
-
-        PostActionCreator.like(user, post)
-      end.to change { Notification.count }.by(2)
-
-      expect(Notification.filter_by_consolidation_data(
-        Notification.types[:liked], display_username: user.username_lower
-      )).to contain_exactly(
-        Notification.find_by(notification_type: Notification.types[:liked])
-      )
-    end
-  end
-
   describe "do not disturb" do
     it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
       user = Fabricate(:user)
