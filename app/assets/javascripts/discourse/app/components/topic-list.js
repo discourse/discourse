@@ -170,14 +170,13 @@ export default Component.extend(LoadMore, {
   },
 
   click(e) {
-    let self = this;
     let onClick = function (sel, callback) {
       let target = $(e.target).closest(sel);
 
       if (target.length === 1) {
-        callback.apply(self, [target]);
+        callback.apply(this, [target]);
       }
-    };
+    }.bind(this);
 
     onClick("button.bulk-select", function () {
       this.toggleBulkSelect();

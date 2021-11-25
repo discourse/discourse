@@ -5,15 +5,14 @@ import { debounce } from "@ember/runloop";
   Original function will be called with the context and arguments from the last call made.
 **/
 export default function (func, wait) {
-  let self, args;
+  let args;
   const later = function () {
-    func.apply(self, args);
+    func.apply(this, args);
   };
 
   return function () {
-    self = this;
     args = arguments;
 
-    debounce(null, later, wait);
+    debounce(null, later.bind(this), wait);
   };
 }
