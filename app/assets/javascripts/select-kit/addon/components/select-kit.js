@@ -862,7 +862,7 @@ export default Component.extend(
         );
 
         const placementStrategy =
-          this.capabilities.isIpadOS || this.site?.mobileView
+          this.capabilities?.isIpadOS || this.site?.mobileView
             ? "absolute"
             : "fixed";
         const verticalOffset = 3;
