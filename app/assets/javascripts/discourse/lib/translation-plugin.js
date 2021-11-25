@@ -24,7 +24,7 @@ class TranslationPlugin extends Plugin {
       return;
     }
 
-    Object.keys(input || {}).forEach((key) => {
+    Object.keys(input).forEach((key) => {
       let value = input[key];
 
       let subpath = path.concat(key);
