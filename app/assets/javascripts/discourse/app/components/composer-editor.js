@@ -360,10 +360,14 @@ export default Component.extend(ComposerUpload, {
     });
 
     schedule("afterRender", () => {
-      input?.addEventListener("touchstart", this._handleInputInteraction);
+      input?.addEventListener("touchstart", this._handleInputInteraction, {
+        passive: true,
+      });
       input?.addEventListener("mouseenter", this._handleInputInteraction);
 
-      preview?.addEventListener("touchstart", this._handlePreviewInteraction);
+      preview?.addEventListener("touchstart", this._handlePreviewInteraction, {
+        passive: true,
+      });
       preview?.addEventListener("mouseenter", this._handlePreviewInteraction);
     });
   },
