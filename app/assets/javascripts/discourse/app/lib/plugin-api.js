@@ -93,7 +93,8 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
-// If you add any methods to the API ensure you bump up this number
+// If you add any methods to the API ensure you bump up the version number
+// based on Semantic Versioning 2.0.0.
 const PLUGIN_API_VERSION = "0.14.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -233,7 +234,7 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#far-smile\"></use></svg>";
+   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use href=\"#far-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
@@ -243,7 +244,7 @@ class PluginApi {
    *          namespace: "http://www.w3.org/2000/svg"
    *        },[
    *          h("use", {
-   *          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
    *          namespace: "http://www.w3.org/2000/svg"
    *        })]
    *     );

@@ -62,7 +62,7 @@ acceptance("Bookmarking", function (needs) {
   topicResponse.post_stream.posts[0].cooked += `<span data-date="2036-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
   <span>
     <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-      <use xlink:href="#globe-americas"></use>
+      <use href="#globe-americas"></use>
     </svg>
     <span class="relative-time">January 15, 2036 12:35 AM</span>
   </span>
@@ -71,7 +71,7 @@ acceptance("Bookmarking", function (needs) {
   topicResponse.post_stream.posts[1].cooked += `<span data-date="2021-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
   <span>
     <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-      <use xlink:href="#globe-americas"></use>
+      <use href="#globe-americas"></use>
     </svg>
     <span class="relative-time">Today 10:30 AM</span>
   </span>

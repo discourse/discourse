@@ -11,7 +11,7 @@ acceptance("User Activity / Topics - bulk actions", function (needs) {
       return helper.response(userFixtures["/topics/created-by/eviltrout.json"]);
     });
 
-    server.put("topics/bulk", () => {
+    server.put("/topics/bulk", () => {
       return helper.response({ topic_ids: [7764, 9318] });
     });
   });

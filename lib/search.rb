@@ -254,7 +254,7 @@ class Search
   def execute(readonly_mode: Discourse.readonly_mode?)
     if log_query?(readonly_mode)
       status, search_log_id = SearchLog.log(
-        term: @term,
+        term: @clean_term,
         search_type: @opts[:search_type],
         ip_address: @opts[:ip_address],
         user_id: @opts[:user_id]

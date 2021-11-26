@@ -13,29 +13,29 @@ class Poll < ActiveRecord::Base
     regular: 0,
     multiple: 1,
     number: 2,
-  }
+  }, _scopes: false
 
   enum status: {
     open: 0,
     closed: 1,
-  }
+  }, _scopes: false
 
   enum results: {
     always: 0,
     on_vote: 1,
     on_close: 2,
     staff_only: 3,
-  }
+  }, _scopes: false
 
   enum visibility: {
     secret: 0,
     everyone: 1,
-  }
+  }, _scopes: false
 
   enum chart_type: {
     bar: 0,
     pie: 1
-  }
+  }, _scopes: false
 
   validates :min, numericality: { allow_nil: true, only_integer: true, greater_than_or_equal_to: 0 }
   validates :max, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }

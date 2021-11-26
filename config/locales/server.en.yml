@@ -968,6 +968,7 @@ en:
       others: "No bookmarks."
     no_drafts:
       self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
+    no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."

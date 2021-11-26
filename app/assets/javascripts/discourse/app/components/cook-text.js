@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { afterRender } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { cookAsync } from "discourse/lib/text";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
@@ -10,31 +9,26 @@ const CookText = Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
+
     cookAsync(this.rawText).then((cooked) => {
       this.set("cooked", cooked);
-      if (this.paintOneboxes) {
-        this._loadOneboxes();
-      }
-      this._resolveUrls();
     });
   },
 
-  @afterRender
-  _loadOneboxes() {
-    const refresh = false;
+  didRender() {
+    this._super(...arguments);
 
-    loadOneboxes(
-      this.element,
-      ajax,
-      this.topicId,
-      this.categoryId,
-      this.siteSettings.max_oneboxes_per_post,
-      refresh
-    );
-  },
+    if (this.paintOneboxes) {
+      loadOneboxes(
+        this.element,
+        ajax,
+        this.topicId,
+        this.categoryId,
+        this.siteSettings.max_oneboxes_per_post,
+        false // refresh
+      );
+    }
 
-  @afterRender
-  _resolveUrls() {
     resolveAllShortUrls(ajax, this.siteSettings, this.element, this.opts);
   },
 });

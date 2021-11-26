@@ -11,7 +11,8 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :check_sso_email, :check_sso_payload
+    :bookmarks, :invited, :check_sso_email, :check_sso_payload,
+    :recent_searches, :reset_recent_searches
   ]
 
   skip_before_action :check_xhr, only: [
@@ -49,6 +50,8 @@ class UsersController < ApplicationController
                                                             :confirm_admin]
 
   after_action :add_noindex_header, only: [:show, :my_redirect]
+
+  MAX_RECENT_SEARCHES = 5
 
   def index
   end
@@ -783,7 +786,6 @@ class UsersController < ApplicationController
     # no point doing anything else if we can't even find
     # a user from the token
     if @user
-
       if !secure_session["second-factor-#{token}"]
         second_factor_authentication_result = @user.authenticate_second_factor(params, secure_session)
         if !second_factor_authentication_result.ok
@@ -869,7 +871,7 @@ class UsersController < ApplicationController
 
   def confirm_email_token
     expires_now
-    EmailToken.confirm(params[:token])
+    EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
     render json: success_json
   end
 
@@ -895,7 +897,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
       if user = User.with_email(params[:email]).admins.human_users.first
-        email_token = user.email_tokens.create(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
@@ -926,7 +928,7 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
 
       if user_presence
-        email_token = user.email_tokens.create!(email: user.email)
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
 
         Jobs.enqueue(:critical_user_email,
           type: :email_login,
@@ -996,7 +998,7 @@ class UsersController < ApplicationController
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
 
-    if @user = EmailToken.confirm(params[:token])
+    if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -1041,8 +1043,8 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.email_tokens.create!(email: @user.email)
-        enqueue_activation_email
+        @email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
+        EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
         render json: success_json
       else
         render_json_error(primary_email)
@@ -1061,11 +1063,10 @@ class UsersController < ApplicationController
     if params[:username].present?
       @user = User.find_by_username_or_email(params[:username].to_s)
     end
+
     raise Discourse::NotFound unless @user
 
-    if !current_user&.staff? &&
-        @user.id != session[SessionController::ACTIVATE_USER_KEY]
-
+    if !current_user&.staff? && @user.id != session[SessionController::ACTIVATE_USER_KEY]
       raise Discourse::InvalidAccess.new
     end
 
@@ -1074,15 +1075,10 @@ class UsersController < ApplicationController
     if @user.active && @user.email_confirmed?
       render_json_error(I18n.t('activation.activated'), status: 409)
     else
-      @email_token = @user.email_tokens.unconfirmed.active.first
-      enqueue_activation_email
+      @email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
+      EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
       render body: nil
     end
-  end
-
-  def enqueue_activation_email
-    @email_token ||= @user.email_tokens.create!(email: @user.email)
-    Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token, to_address: @user.email)
   end
 
   def search_users
@@ -1306,6 +1302,33 @@ class UsersController < ApplicationController
       user.user_stat.save
     end
 
+    render json: success_json
+  end
+
+  def recent_searches
+    if !SiteSetting.log_search_queries
+      return render json: failed_json.merge(
+                      error: I18n.t("user_activity.no_log_search_queries")
+                    ), status: 403
+    end
+
+    query = SearchLog.where(user_id: current_user.id)
+
+    if current_user.user_option.oldest_search_log_date
+      query = query
+        .where("created_at > ?", current_user.user_option.oldest_search_log_date)
+    end
+
+    results = query.group(:term)
+      .order("max(created_at) DESC")
+      .limit(MAX_RECENT_SEARCHES)
+      .pluck(:term)
+
+    render json: success_json.merge(recent_searches: results)
+  end
+
+  def reset_recent_searches
+    current_user.user_option.update!(oldest_search_log_date: 1.second.ago)
     render json: success_json
   end
 
@@ -1635,14 +1658,17 @@ class UsersController < ApplicationController
   end
 
   def password_reset_find_user(token, committing_change:)
-    if EmailToken.valid_token_format?(token)
-      @user = committing_change ? EmailToken.confirm(token) : EmailToken.confirmable(token)&.user
-      if @user
-        secure_session["password-#{token}"] = @user.id
-      else
-        user_id = secure_session["password-#{token}"].to_i
-        @user = User.find(user_id) if user_id > 0
-      end
+    @user = if committing_change
+      EmailToken.confirm(token, scope: EmailToken.scopes[:password_reset])
+    else
+      EmailToken.confirmable(token, scope: EmailToken.scopes[:password_reset])&.user
+    end
+
+    if @user
+      secure_session["password-#{token}"] = @user.id
+    else
+      user_id = secure_session["password-#{token}"].to_i
+      @user = User.find(user_id) if user_id > 0
     end
 
     @error = I18n.t('password_reset.no_token') if !@user

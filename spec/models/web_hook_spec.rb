@@ -333,7 +333,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
 
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = Fabricate(:email_token, user: user)
       EmailToken.confirm(email_token.token)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 

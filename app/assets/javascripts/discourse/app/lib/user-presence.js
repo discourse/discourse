@@ -1,68 +1,138 @@
-// for android we test webkit
-const hiddenProperty =
-  document.hidden !== undefined
-    ? "hidden"
-    : document.webkitHidden !== undefined
-    ? "webkitHidden"
-    : undefined;
-
-const MAX_UNSEEN_TIME = 60000;
-
-let seenUserTime = Date.now();
-
-export default function (maxUnseenTime) {
-  maxUnseenTime = maxUnseenTime === undefined ? MAX_UNSEEN_TIME : maxUnseenTime;
-  const now = Date.now();
-
-  if (seenUserTime + maxUnseenTime < now) {
-    return false;
-  }
-
-  if (hiddenProperty !== undefined) {
-    return !document[hiddenProperty];
-  } else {
-    return document && document.hasFocus;
-  }
-}
+import { isTesting } from "discourse-common/config/environment";
 
 const callbacks = [];
 
-const MIN_DELTA = 60000;
+const DEFAULT_USER_UNSEEN_MS = 60000;
+const DEFAULT_BROWSER_HIDDEN_MS = 0;
+
+let browserHiddenAt = null;
+let lastUserActivity = Date.now();
+let userSeenJustNow = false;
+
+let callbackWaitingForPresence = false;
+
+let testPresence = true;
+
+// Check whether the document is currently visible, and the user is actively using the site
+// Will return false if the browser went into the background more than `browserHiddenTime` milliseconds ago
+// Will also return false if there has been no user activty for more than `userUnseenTime` milliseconds
+// Otherwise, will return true
+export default function userPresent({
+  browserHiddenTime = DEFAULT_BROWSER_HIDDEN_MS,
+  userUnseenTime = DEFAULT_USER_UNSEEN_MS,
+} = {}) {
+  if (isTesting()) {
+    return testPresence;
+  }
+
+  if (browserHiddenAt) {
+    const timeSinceBrowserHidden = Date.now() - browserHiddenAt;
+    if (timeSinceBrowserHidden >= browserHiddenTime) {
+      return false;
+    }
+  }
+
+  const timeSinceUserActivity = Date.now() - lastUserActivity;
+  if (timeSinceUserActivity >= userUnseenTime) {
+    return false;
+  }
+
+  return true;
+}
+
+// Register a callback to be triggered when the value of `userPresent()` changes.
+// userUnseenTime and browserHiddenTime work the same as for `userPresent()`
+// 'not present' callbacks may lag by up to 10s, depending on the reason
+// 'now present' callbacks should be almost instantaneous
+export function onPresenceChange({
+  userUnseenTime = DEFAULT_USER_UNSEEN_MS,
+  browserHiddenTime = DEFAULT_BROWSER_HIDDEN_MS,
+  callback,
+} = {}) {
+  if (userUnseenTime < DEFAULT_USER_UNSEEN_MS) {
+    throw `userUnseenTime must be at least ${DEFAULT_USER_UNSEEN_MS}`;
+  }
+  callbacks.push({
+    userUnseenTime,
+    browserHiddenTime,
+    lastState: true,
+    callback,
+  });
+}
+
+export function removeOnPresenceChange(callback) {
+  const i = callbacks.findIndex((c) => c.callback === callback);
+  callbacks.splice(i, 1);
+}
+
+function processChanges() {
+  const browserHidden = document.hidden;
+  if (!!browserHiddenAt !== browserHidden) {
+    browserHiddenAt = browserHidden ? Date.now() : null;
+  }
+
+  if (userSeenJustNow) {
+    lastUserActivity = Date.now();
+    userSeenJustNow = false;
+  }
+
+  callbackWaitingForPresence = false;
+  for (const callback of callbacks) {
+    const currentState = userPresent({
+      userUnseenTime: callback.userUnseenTime,
+      browserHiddenTime: callback.browserHiddenTime,
+    });
+
+    if (callback.lastState !== currentState) {
+      try {
+        callback.callback(currentState);
+      } finally {
+        callback.lastState = currentState;
+      }
+    }
+
+    if (!currentState) {
+      callbackWaitingForPresence = true;
+    }
+  }
+}
 
 export function seenUser() {
-  let lastSeenTime = seenUserTime;
-  seenUserTime = Date.now();
-  let delta = seenUserTime - lastSeenTime;
-
-  if (lastSeenTime && delta > MIN_DELTA) {
-    callbacks.forEach((info) => {
-      if (delta > info.unseenTime) {
-        info.callback();
-      }
-    });
+  userSeenJustNow = true;
+  if (callbackWaitingForPresence) {
+    processChanges();
   }
 }
 
-// register a callback for cases where presence changed
-export function onPresenceChange({ unseenTime, callback }) {
-  if (unseenTime < MIN_DELTA) {
-    throw "unseenTime is too short";
+export function visibilityChanged() {
+  if (document.hidden) {
+    processChanges();
+  } else {
+    seenUser();
   }
-  callbacks.push({ unseenTime, callback });
 }
 
-// We could piggieback on the Scroll mixin, but it is not applied
-// consistently to all pages
-//
-// We try to keep this as cheap as possible by performing absolute minimal
-// amount of work when the event handler is fired
-//
-// An alternative would be to use a timer that looks at the scroll position
-// however this will not work as message bus can issue page updates and scroll
-// page around when user is not present
-//
-// We avoid tracking mouse move which would be very expensive
+export function setTestPresence(value) {
+  if (!isTesting()) {
+    throw "Only available in test mode";
+  }
+  testPresence = value;
+}
 
-$(document).bind("touchmove.discourse-track-presence", seenUser);
-$(document).bind("click.discourse-track-presence", seenUser);
-$(window).bind("scroll.discourse-track-presence", seenUser);
+export function clearPresenceCallbacks() {
+  callbacks.splice(0, callbacks.length);
+}
+
+if (!isTesting()) {
+  // Some of these events occur very frequently. Therefore seenUser() is as fast as possible.
+  document.addEventListener("touchmove", seenUser, { passive: true });
+  document.addEventListener("click", seenUser, { passive: true });
+  window.addEventListener("scroll", seenUser, { passive: true });
+  window.addEventListener("focus", seenUser, { passive: true });
+
+  document.addEventListener("visibilitychange", visibilityChanged, {
+    passive: true,
+  });
+
+  setInterval(processChanges, 10000);
+}
