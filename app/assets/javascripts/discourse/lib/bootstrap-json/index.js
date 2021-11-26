@@ -230,7 +230,18 @@ async function handleRequest(proxy, baseURL, req, res) {
     req.headers["X-Discourse-Asset-Path"] = req.path;
   }
 
-  const acceptedStatusCodes = [200, 301, 302, 303, 307, 308, 404, 403, 500];
+  const acceptedStatusCodes = [
+    200,
+    201,
+    301,
+    302,
+    303,
+    307,
+    308,
+    404,
+    403,
+    500,
+  ];
   const proxyRequest = bent(req.method, acceptedStatusCodes);
   const requestBody = req.method === "GET" ? null : req.body;
   const response = await proxyRequest(url, requestBody, req.headers);
