@@ -56,22 +56,13 @@
 }
 
 // For the support_mixed_text_direction setting
-html:not(.rtl) {
-  .cooked ul[dir="rtl"],
-  .d-editor-preview ul[dir="rtl"] {
-    padding-left: 0;
-    padding-right: 1.25em;
-    margin-right: 1.25em;
-  }
-}
-
-.rtl {
-  .cooked ul[dir="ltr"],
-  .d-editor-preview ul[dir="ltr"] {
-    padding-left: 0;
-    padding-right: 1.25em;
-    margin-right: 1.25em;
-  }
+html:not(.rtl) .cooked ul[dir="rtl"],
+html:not(.rtl) .d-editor-preview ul[dir="rtl"],
+.rtl .cooked ul[dir="ltr"],
+.rtl .d-editor-preview ul[dir="ltr"] {
+  padding-left: 0;
+  padding-right: 1.25em;
+  margin-right: 1.25em;
 }
 
 // Fixes github oneboxes for RTL sites
