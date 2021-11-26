@@ -204,7 +204,7 @@ export function acceptance(name, optionsOrCallback) {
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
       `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      { since: "2.6.0" }
+      { since: "2.6.0", dropFrom: "2.9.0.beta1" }
     );
     options = optionsOrCallback;
   }
