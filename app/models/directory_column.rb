@@ -6,7 +6,7 @@ class DirectoryColumn < ActiveRecord::Base
   self.ignored_columns = ["automatic"]
   self.inheritance_column = nil
 
-  enum type: { automatic: 0, user_field: 1, plugin: 2 }
+  enum type: { automatic: 0, user_field: 1, plugin: 2 }, _scopes: false
 
   def self.automatic_column_names
     @automatic_column_names ||= [:likes_received,
