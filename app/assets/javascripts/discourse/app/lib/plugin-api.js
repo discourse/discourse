@@ -102,7 +102,7 @@ function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
-      "To prevent errors, add a `pluginId` key to your changes when calling `modifyClass`"
+      "To prevent errors in tests, add a `pluginId` key to your `modifyClass` call. This will ensure the modification is only applied once."
     );
     return true;
   }
@@ -1629,7 +1629,7 @@ function decorate(klass, evt, cb, id) {
   if (!id) {
     // eslint-disable-next-line no-console
     console.warn(
-      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
     );
   } else {
     if (!_decorated.has(klass)) {
