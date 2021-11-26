@@ -112,7 +112,9 @@ export default Component.extend(KeyEnterEscape, {
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element
         .querySelector(".grippie")
-        ?.addEventListener(startDragEvent, this.startDragHandler);
+        ?.addEventListener(startDragEvent, this.startDragHandler, {
+          passive: false,
+        });
     });
 
     if (this._visualViewportResizing()) {
