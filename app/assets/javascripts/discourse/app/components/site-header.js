@@ -186,7 +186,13 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerRect = header.getBoundingClientRect(),
         headerOffset = headerRect.top + headerRect.height,
         doc = document.documentElement;
-      doc.style.setProperty("--header-offset", `${headerOffset}px`);
+
+      const newValue = `${headerOffset}px`;
+      if (newValue !== this.currentHeaderOffsetValue) {
+        this.currentHeaderOffsetValue = newValue;
+        doc.style.setProperty("--header-offset", newValue);
+      }
+
       if (offset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
