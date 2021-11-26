@@ -84,6 +84,10 @@ if ENV['LOAD_PLUGINS'] == "1"
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
     require f
   end
+
+  Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each do |f|
+    require f
+  end
 end
 
 # let's not run seed_fu every test
