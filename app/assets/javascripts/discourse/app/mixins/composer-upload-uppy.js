@@ -147,11 +147,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // Uppy plugins are out of the question because there is no way to
         // define which uploader plugin handles which file extensions at this time.
         const uploadHandlerFiles = [];
+        const unhandledFiles = {};
         for (const [fileId, file] of Object.entries(files)) {
           const matchingHandler = this._findMatchingUploadHandler(file.name);
           if (matchingHandler) {
             uploadHandlerFiles.push([file, matchingHandler]);
-            delete files[fileId];
+          } else {
+            unhandledFiles[fileId] = { ...files[fileId] };
           }
         }
 
@@ -168,7 +170,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         // Limit the number of simultaneous uploads, for files which have
         // _not_ been handled by an upload handler.
-        const fileCount = Object.keys(files).length;
+        const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
           bootbox.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
@@ -177,6 +179,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           );
           return this._abortAndReset();
         }
+
+        // uppy uses this new object to track progress of remaining files
+        return unhandledFiles;
       },
     });
 
@@ -207,14 +212,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("file-removed", (file, reason) => {
-      file.meta.cancelled = true;
-
       // we handle the cancel-all event specifically, so no need
-      // to do anything here
+      // to do anything here. this event is also fired when some files
+      // are handled by an upload handler
       if (reason === "cancel-all") {
         return;
       }
 
+      file.meta.cancelled = true;
       this._removeInProgressUpload(file.id);
       this._resetUpload(file, { removePlaceholder: true });
       if (this.inProgressUploads.length === 0) {
