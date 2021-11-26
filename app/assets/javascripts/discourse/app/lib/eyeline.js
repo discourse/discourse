@@ -19,10 +19,6 @@ configureEyeline();
 
 // Track visible elements on the screen.
 export default EmberObject.extend(Evented, {
-  init() {
-    this._super(...arguments);
-  },
-
   update() {
     if (_skipUpdate) {
       return;
