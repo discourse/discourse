@@ -48,7 +48,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def after_authenticate(auth_token, existing_account: nil)
     result = super
-    if provides_groups? && (groups = auth_token[:extra][:raw_groups]).any?
+    if provides_groups? && (groups = auth_token[:extra][:raw_groups])
       result.associated_groups = groups.map { |group| group.slice(:id, :name) }
     end
     result

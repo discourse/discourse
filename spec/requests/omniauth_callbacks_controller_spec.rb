@@ -755,13 +755,11 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         it "updates associated groups" do
           mock_omniauth_for_groups([group1, group2])
-
           get "/auth/google_oauth2/callback.json", params: {
             scope: groups_scope.split(' '),
             code: 'abcde',
             hd: domain
           }
-
           expect(response.status).to eq(302)
 
           associated_groups = AssociatedGroup.where(provider_name: 'google_oauth2')
@@ -773,6 +771,32 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(user_associated_groups.length).to eq(2)
           expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(true)
           expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(true)
+
+          mock_omniauth_for_groups([group1])
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+          expect(response.status).to eq(302)
+
+          user_associated_groups = UserAssociatedGroup.where(user_id: user.id)
+          expect(user_associated_groups.length).to eq(1)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(true)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(false)
+
+          mock_omniauth_for_groups([])
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+          expect(response.status).to eq(302)
+
+          user_associated_groups = UserAssociatedGroup.where(user_id: user.id)
+          expect(user_associated_groups.length).to eq(0)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(false)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(false)
         end
 
         it "handles failure to retrieve groups" do

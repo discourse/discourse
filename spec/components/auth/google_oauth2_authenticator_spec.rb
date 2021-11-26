@@ -148,6 +148,12 @@ describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@groups_hash)
           expect(result.associated_groups).to eq(@groups)
         end
+
+        it "handles a blank groups array" do
+          @groups_hash[:extra][:raw_groups] = []
+          result = described_class.new.after_authenticate(@groups_hash)
+          expect(result.associated_groups).to eq([])
+        end
       end
 
       context "disabled" do

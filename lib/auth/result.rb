@@ -98,7 +98,7 @@ class Auth::Result
   end
 
   def apply_associated_attributes!
-    if authenticator&.provides_groups? && associated_groups.present?
+    if authenticator&.provides_groups? && !associated_groups.nil?
       associated_group_ids = []
 
       associated_groups.uniq.each do |associated_group|
