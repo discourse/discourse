@@ -140,24 +140,35 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       },
 
       onBeforeUpload: (files) => {
-        const fileCount = Object.keys(files).length;
         const maxFiles = this.siteSettings.simultaneous_uploads;
 
         // Look for a matching file upload handler contributed from a plugin.
-        // It is not ideal that this only works for single file uploads, but
-        // at this time it is all we need. In future we may want to devise a
-        // nicer way of doing this. Uppy plugins are out of the question because
-        // there is no way to define which uploader plugin handles which file
-        // extensions at this time.
-        if (fileCount === 1) {
-          const file = Object.values(files)[0];
+        // In future we may want to devise a nicer way of doing this.
+        // Uppy plugins are out of the question because there is no way to
+        // define which uploader plugin handles which file extensions at this time.
+        const uploadHandlerFiles = [];
+        for (const [fileId, file] of Object.entries(files)) {
           const matchingHandler = this._findMatchingUploadHandler(file.name);
-          if (matchingHandler && !matchingHandler.method(file.data, this)) {
-            return this._abortAndReset();
+          if (matchingHandler) {
+            uploadHandlerFiles.push([file, matchingHandler]);
+            delete files[fileId];
           }
         }
 
-        // Limit the number of simultaneous uploads
+        // This replicates what the old composer upload handler did; because
+        // jQuery file uploader passed through a single file at a time to
+        // the upload handlers.
+        uploadHandlerFiles.forEach((fileWithHandler) => {
+          const file = fileWithHandler[0];
+          const matchingHandler = fileWithHandler[1];
+          if (matchingHandler && !matchingHandler.method(file.data, this)) {
+            return this._abortAndReset();
+          }
+        });
+
+        // Limit the number of simultaneous uploads, for files which have
+        // _not_ been handled by an upload handler.
+        const fileCount = Object.keys(files).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
           bootbox.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
