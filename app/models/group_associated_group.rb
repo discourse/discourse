@@ -18,15 +18,15 @@ class GroupAssociatedGroup < ActiveRecord::Base
 
   def remove_associated_users
     with_mutex do
-      User.where("(
-        SELECT COUNT(user_id)
-        FROM user_associated_groups AS uag
+      User.where("NOT EXISTS(
+        SELECT 1
+        FROM user_associated_groups uag
+        JOIN group_associated_groups gag
+        ON gag.associated_group_id = uag.associated_group_id
         WHERE uag.user_id = users.id
-        AND uag.associated_group_id IN (
-          SELECT associated_group_id FROM group_associated_groups AS gag
-          WHERE gag.group_id = ?
-        )
-      ) = 1", group.id).in_batches do |users|
+        AND gag.id != :gag_id
+        AND gag.group_id = :group_id
+      )", gag_id: id, group_id: group_id).in_batches do |users|
         users.each do |user|
           group.remove_automatically(user, subject: associated_group.label)
         end

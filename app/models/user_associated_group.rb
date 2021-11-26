@@ -14,15 +14,15 @@ class UserAssociatedGroup < ActiveRecord::Base
   end
 
   def remove_from_associated_groups
-    Group.where("(
-      SELECT COUNT(group_id)
-      FROM group_associated_groups AS gag
-      WHERE gag.group_id = groups.id
-      AND gag.associated_group_id IN (
-        SELECT associated_group_id FROM user_associated_groups AS uag
-        WHERE uag.user_id = ?
-      )
-    ) = 1", user_id).each do |group|
+    Group.where("NOT EXISTS(
+      SELECT 1
+      FROM user_associated_groups uag
+      JOIN group_associated_groups gag
+      ON gag.associated_group_id = uag.associated_group_id
+      WHERE uag.user_id = :user_id
+      AND uag.id != :uag_id
+      AND gag.group_id = groups.id
+    )", uag_id: id, user_id: user_id).each do |group|
       group.remove_automatically(user, subject: associated_group.label)
     end
   end
