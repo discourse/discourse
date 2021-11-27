@@ -365,8 +365,8 @@ export default MountWidget.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    document.removeEventListener("touchmove", this._debouncedScrollCallback);
-    window.removeEventListener("scroll", this._debouncedScrollCallback);
+    document.removeEventListener("touchmove", this._debouncedScroll);
+    window.removeEventListener("scroll", this._debouncedScroll);
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     $(this.element).off("mouseenter.post-stream");
     $(this.element).off("mouseleave.post-stream");
