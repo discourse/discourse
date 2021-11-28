@@ -161,8 +161,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // jQuery file uploader passed through a single file at a time to
         // the upload handlers.
         uploadHandlerFiles.forEach((fileWithHandler) => {
-          const file = fileWithHandler[0];
-          const matchingHandler = fileWithHandler[1];
+          const [file, matchingHandler] = fileWithHandler;
           if (matchingHandler && !matchingHandler.method(file.data, this)) {
             return this._abortAndReset();
           }
