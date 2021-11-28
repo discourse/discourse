@@ -34,7 +34,7 @@ export default Mixin.create({
       this.touchCancel = (e) => this._panMove({ type: "pointercancel" }, e);
 
       const opts = {
-        passive: true,
+        passive: false,
       };
       element.addEventListener("touchstart", this.touchStart, opts);
       element.addEventListener("touchmove", this.touchMove, opts);
