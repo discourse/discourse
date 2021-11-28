@@ -493,7 +493,10 @@ const Topic = RestModel.extend({
     keys.forEach((key) => this.set(key, json[key]));
 
     if (this.bookmarks.length) {
-      this.bookmarks = this.bookmarks.map((bm) => Bookmark.create(bm));
+      this.set(
+        "bookmarks",
+        this.bookmarks.map((bm) => Bookmark.create(bm))
+      );
     }
 
     return this;
