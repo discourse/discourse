@@ -1449,17 +1449,17 @@ describe PostAlerter do
 
     def create_post_with_incoming
       raw_mail = <<~MAIL
-        From: Foo <foo@discourse.org>
-        To: discourse@example.com
-        Cc: bar@discourse.org, jim@othersite.com
-        Subject: Full email group username flow
-        Date: Fri, 15 Jan 2021 00:12:43 +0100
-        Message-ID: <u4w8c9r4y984yh98r3h69873@example.com.mail>
-        Mime-Version: 1.0
-        Content-Type: text/plain
-        Content-Transfer-Encoding: 7bit
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: bar@discourse.org, jim@othersite.com
+      Subject: Full email group username flow
+      Date: Fri, 15 Jan 2021 00:12:43 +0100
+      Message-ID: <u4w8c9r4y984yh98r3h69873@example.com.mail>
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
 
-        This is the first email.
+      This is the first email.
       MAIL
 
       Email::Receiver.new(raw_mail, {}).process!
@@ -1608,18 +1608,18 @@ describe PostAlerter do
 
       # the reply post from someone who was emailed
       reply_raw_mail = <<~MAIL
-        From: Bar <bar@discourse.org>
-        To: discourse@example.com
-        Cc: someothernewcc@baz.com, finalnewcc@doom.com
-        Subject: #{email.subject}
-        Date: Fri, 16 Jan 2021 00:12:43 +0100
-        Message-ID: <sdugj3o4iyu4832x3487@discourse.org.mail>
-        In-Reply-To: #{email.message_id}
-        Mime-Version: 1.0
-        Content-Type: text/plain
-        Content-Transfer-Encoding: 7bit
+      From: Bar <bar@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sdugj3o4iyu4832x3487@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
 
-        Hey here is my reply!
+      Hey here is my reply!
       MAIL
 
       reply_post_from_email = nil
@@ -1659,18 +1659,18 @@ describe PostAlerter do
 
       # the reply post from someone who was emailed
       reply_raw_mail = <<~MAIL
-        From: Foo <foo@discourse.org>
-        To: discourse@example.com
-        Cc: someothernewcc@baz.com, finalnewcc@doom.com
-        Subject: #{email.subject}
-        Date: Fri, 16 Jan 2021 00:12:43 +0100
-        Message-ID: <sgk094238uc0348c334483@discourse.org.mail>
-        In-Reply-To: #{email.message_id}
-        Mime-Version: 1.0
-        Content-Type: text/plain
-        Content-Transfer-Encoding: 7bit
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <sgk094238uc0348c334483@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
 
-        I am ~~Commander Shepherd~~ the OP and I approve of this message.
+      I am ~~Commander Shepherd~~ the OP and I approve of this message.
       MAIL
 
       reply_post_from_email = nil
@@ -1703,16 +1703,16 @@ describe PostAlerter do
       # this is a special case where we are not CC'ing on the original email,
       # only on the follow up email
       raw_mail = <<~MAIL
-        From: Foo <foo@discourse.org>
-        To: discourse@example.com
-        Subject: Full email group username flow
-        Date: Fri, 14 Jan 2021 00:12:43 +0100
-        Message-ID: <f4832ujfc3498u398i3@example.com.mail>
-        Mime-Version: 1.0
-        Content-Type: text/plain
-        Content-Transfer-Encoding: 7bit
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Subject: Full email group username flow
+      Date: Fri, 14 Jan 2021 00:12:43 +0100
+      Message-ID: <f4832ujfc3498u398i3@example.com.mail>
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
 
-        This is the first email.
+      This is the first email.
       MAIL
 
       incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
@@ -1725,18 +1725,18 @@ describe PostAlerter do
 
       # the reply post from the OP, cc'ing new people in
       reply_raw_mail = <<~MAIL
-        From: Foo <foo@discourse.org>
-        To: discourse@example.com
-        Cc: someothernewcc@baz.com, finalnewcc@doom.com
-        Subject: #{email.subject}
-        Date: Fri, 16 Jan 2021 00:12:43 +0100
-        Message-ID: <3849cu9843yncr9834yr9348x934@discourse.org.mail>
-        In-Reply-To: #{email.message_id}
-        Mime-Version: 1.0
-        Content-Type: text/plain
-        Content-Transfer-Encoding: 7bit
+      From: Foo <foo@discourse.org>
+      To: discourse@example.com
+      Cc: someothernewcc@baz.com, finalnewcc@doom.com
+      Subject: #{email.subject}
+      Date: Fri, 16 Jan 2021 00:12:43 +0100
+      Message-ID: <3849cu9843yncr9834yr9348x934@discourse.org.mail>
+      In-Reply-To: #{email.message_id}
+      Mime-Version: 1.0
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
 
-        I am inviting my mates to this email party.
+      I am inviting my mates to this email party.
       MAIL
 
       reply_post_from_email = nil
