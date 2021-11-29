@@ -16,6 +16,8 @@ export function addGlobalNotice(text, id, options = {}) {
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
 const Notice = EmberObject.extend({
+  logsNoticeService: service("logsNotice"),
+
   text: null,
   id: null,
   options: null,
