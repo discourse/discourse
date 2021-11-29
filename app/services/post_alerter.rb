@@ -180,7 +180,6 @@ class PostAlerter
 
   def tag_watchers(topic)
     topic.tag_users
-      .select("tag_users.user_id")
       .joins("LEFT OUTER JOIN tag_group_memberships ON tag_users.tag_id = tag_group_memberships.tag_id")
       .joins("LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id")
       .joins("LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id")
