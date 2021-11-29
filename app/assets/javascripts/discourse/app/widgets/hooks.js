@@ -1,5 +1,4 @@
 /*eslint no-loop-func:0*/
-import { bind } from "discourse-common/utils/decorators";
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
 const DOUBLE_CLICK_ATTRIBUTE_NAME = "_discourse_double_click_widget";
@@ -8,6 +7,7 @@ const MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME =
   "_discourse_mouse_down_outside_widget";
 const KEY_UP_ATTRIBUTE_NAME = "_discourse_key_up_widget";
 const KEY_DOWN_ATTRIBUTE_NAME = "_discourse_key_down_widget";
+const DRAG_ATTRIBUTE_NAME = "_discourse_drag_widget";
 const INPUT_ATTRIBUTE_NAME = "_discourse_input_widget";
 const CHANGE_ATTRIBUTE_NAME = "_discourse_change_widget";
 const MOUSE_DOWN_ATTRIBUTE_NAME = "_discourse_mouse_down_widget";
@@ -15,6 +15,7 @@ const MOUSE_UP_ATTRIBUTE_NAME = "_discourse_mouse_up_widget";
 const MOUSE_MOVE_ATTRIBUTE_NAME = "_discourse_mouse_move_widget";
 const MOUSE_OVER_ATTRIBUTE_NAME = "_discourse_mouse_over_widget";
 const MOUSE_OUT_ATTRIBUTE_NAME = "_discourse_mouse_out_widget";
+const TOUCH_START_ATTRIBUTE_NAME = "_discourse_touch_start_widget";
 const TOUCH_END_ATTRIBUTE_NAME = "_discourse_touch_end_widget";
 
 class WidgetBaseHook {
@@ -69,78 +70,87 @@ export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
 // listeners for these events.
 // Instead, the WidgetTouchStartHook and WidgetDragHook automatically register listeners on
 // the specific widget DOM elements when required.
+function touchStartHandler(e) {
+  return e.currentTarget[TOUCH_START_ATTRIBUTE_NAME].touchStart(e);
+}
+
 export class WidgetTouchStartHook extends WidgetBaseHook {
   hook(node, propertyName, previousValue) {
+    node[TOUCH_START_ATTRIBUTE_NAME] = this.widget;
     if (!previousValue) {
-      // Adding to DOM
-      node.addEventListener("touchstart", this.callback, { passive: false });
+      // Element added to DOM
+      node.addEventListener("touchstart", touchStartHandler, {
+        passive: false,
+      });
     }
   }
 
   unhook(node, propertyName, newValue) {
     if (!newValue) {
-      node.removeEventListener("touchstart", this.callback);
+      // Element removed from DOM
+      node.removeEventListener("touchstart", touchStartHandler);
     }
-  }
-
-  @bind
-  callback(e) {
-    this.widget.touchStart(e);
   }
 }
 
-let _currentlyDraggingHook;
+let _currentlyDraggingElement;
+
+function dragStart(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (_currentlyDraggingElement) {
+    dragEnd();
+  }
+  _currentlyDraggingElement = e.currentTarget;
+  document.body.classList.add("widget-dragging");
+  document.addEventListener("touchmove", drag, { passive: false });
+  document.addEventListener("mousemove", drag, { passive: false });
+  document.addEventListener("touchend", dragEnd);
+  document.addEventListener("mouseup", dragEnd);
+}
+
+function drag(e) {
+  const widget = _currentlyDraggingElement[DRAG_ATTRIBUTE_NAME];
+  if (event.type === "mousemove") {
+    widget.drag(e);
+  } else {
+    const tt = e.targetTouches[0];
+    e.preventDefault();
+    e.stopPropagation();
+    widget.drag(tt);
+  }
+}
+
+function dragEnd(e) {
+  document.body.classList.remove("widget-dragging");
+  document.removeEventListener("touchmove", drag);
+  document.removeEventListener("mousemove", drag);
+  document.removeEventListener("touchend", dragEnd);
+  document.removeEventListener("mouseup", dragEnd);
+  const widget = _currentlyDraggingElement[DRAG_ATTRIBUTE_NAME];
+  widget.dragEnd(e);
+  _currentlyDraggingElement = null;
+}
+
 export class WidgetDragHook extends WidgetBaseHook {
   hook(node, propertyName, previousValue) {
+    node[DRAG_ATTRIBUTE_NAME] = this.widget;
     if (!previousValue) {
       // Adding to DOM
-      node.addEventListener("touchstart", this.startDrag, { passive: false });
-      node.addEventListener("mousedown", this.startDrag, { passive: false });
+      node.addEventListener("touchstart", dragStart, { passive: false });
+      node.addEventListener("mousedown", dragStart, { passive: false });
     }
   }
 
   unhook(node, propertyName, newValue) {
     if (!newValue) {
       // Removing from DOM
-      node.removeEventListener("touchstart", this.startDrag);
-      node.removeEventListener("mousedown", this.startDrag);
+      if (_currentlyDraggingElement === node) {
+        dragEnd();
+      }
+      node.removeEventListener("touchstart", dragStart);
+      node.removeEventListener("mousedown", dragStart);
     }
-  }
-
-  @bind
-  startDrag(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    _currentlyDraggingHook?.dragEnd();
-    _currentlyDraggingHook = this;
-    document.body.classList.add("widget-dragging");
-    document.addEventListener("touchmove", this.drag, { passive: false });
-    document.addEventListener("mousemove", this.drag, { passive: false });
-    document.addEventListener("touchend", this.dragEnd);
-    document.addEventListener("mouseup", this.dragEnd);
-  }
-
-  @bind
-  drag(e) {
-    if (event.type === "mousemove") {
-      this.widget.drag(e);
-    } else {
-      const tt = e.targetTouches[0];
-      e.preventDefault();
-      e.stopPropagation();
-      this.widget.drag(tt);
-    }
-  }
-
-  @bind
-  dragEnd(e) {
-    document.body.classList.remove("widget-dragging");
-    document.removeEventListener("touchmove", this.drag);
-    document.removeEventListener("mousemove", this.drag);
-    document.removeEventListener("touchend", this.dragEnd);
-    document.removeEventListener("mouseup", this.dragEnd);
-    this.widget.dragEnd(e);
-    _currentlyDraggingHook = null;
   }
 }
 
