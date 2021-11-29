@@ -21,3 +21,10 @@ of the overarching move towards Uppy in the Discourse codebase rather than
 jQuery fileupload, which will eventually be removed altogether as a broader effort
 to remove jQuery from the codebase.
 
+### Changed
+- Changes `addComposerUploadHandler`'s behaviour. Instead of being only usable
+for single files at a time, now multiple files are sent to the upload handler
+at once. These multiple files are sent based on the groups in which they are
+added (e.g. multiple files selected from the system upload dialog, or multiple
+files dropped in to the composer). Files will be sent in buckets to the handlers
+they match.

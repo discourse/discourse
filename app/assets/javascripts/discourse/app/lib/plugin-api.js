@@ -1022,15 +1022,16 @@ class PluginApi {
   }
 
   /**
-   * Registers a function to handle uploads for specified file types
+   * Registers a function to handle uploads for specified file types.
    * The normal uploading functionality will be bypassed if function returns
    * a falsy value.
-   * This only for uploads of individual files
    *
    * Example:
    *
-   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *   console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (files, editor) => {
+   *   files.forEach((file) => {
+   *     console.log("Handling upload for", file.name);
+   *   });
    * })
    */
   addComposerUploadHandler(extensions, method) {
