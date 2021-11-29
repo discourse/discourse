@@ -8,10 +8,12 @@ import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
+import User from "discourse/models/user";
 
 const suggestionShortcuts = [
   "in:title",
@@ -585,6 +587,14 @@ createWidget("search-menu-initial-options", {
 
     if (content.length === 0) {
       content.push(this.attach("random-quick-tip"));
+
+      if (this.currentUser && this.siteSettings.log_search_queries) {
+        if (this.currentUser.recent_searches?.length) {
+          content.push(this.attach("search-menu-recent-searches"));
+        } else {
+          this.loadRecentSearches();
+        }
+      }
     }
 
     return content;
@@ -602,6 +612,22 @@ createWidget("search-menu-initial-options", {
       ],
     });
   },
+
+  refreshSearchMenuResults() {
+    this.scheduleRerender();
+  },
+
+  loadRecentSearches() {
+    User.loadRecentSearches().then((result) => {
+      if (result.success && result.recent_searches?.length) {
+        this.currentUser.set(
+          "recent_searches",
+          Object.assign(result.recent_searches)
+        );
+        this.scheduleRerender();
+      }
+    });
+  },
 });
 
 createWidget("search-menu-assistant-item", {
@@ -612,7 +638,7 @@ createWidget("search-menu-assistant-item", {
     const attributes = {};
     attributes.href = "#";
 
-    let content = [iconNode("search")];
+    let content = [iconNode(attrs.icon || "search")];
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));
@@ -700,5 +726,37 @@ createWidget("random-quick-tip", {
         searchTopics: this.state.searchTopics,
       });
     }
+  },
+});
+
+createWidget("search-menu-recent-searches", {
+  tagName: "div.search-menu-recent",
+
+  template: hbs`
+    <div class="heading">
+      <h4>{{i18n "search.recent"}}</h4>
+      {{flat-button
+        className="clear-recent-searches"
+        title="search.clear_recent"
+        icon="times"
+        action="clearRecent"
+      }}
+    </div>
+
+    {{#each this.currentUser.recent_searches as |slug|}}
+      {{attach
+        widget="search-menu-assistant-item"
+        attrs=(hash slug=slug icon="history")
+      }}
+    {{/each}}
+  `,
+
+  clearRecent() {
+    return User.resetRecentSearches().then((result) => {
+      if (result.success) {
+        this.currentUser.recent_searches.clear();
+        this.sendWidgetAction("refreshSearchMenuResults");
+      }
+    });
   },
 });

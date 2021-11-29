@@ -32,8 +32,10 @@ export default Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    window.addEventListener("scroll", this.queueDockCheck);
-    document.addEventListener("touchmove", this.queueDockCheck);
+    window.addEventListener("scroll", this.queueDockCheck, { passive: true });
+    document.addEventListener("touchmove", this.queueDockCheck, {
+      passive: true,
+    });
 
     // dockCheck might happen too early on full page refresh
     this._initialTimer = later(this, this.safeDockCheck, 50);

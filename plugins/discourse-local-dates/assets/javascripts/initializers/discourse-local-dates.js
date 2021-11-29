@@ -24,7 +24,7 @@ export function applyLocalDates(dates, siteSettings) {
       "beforeend",
       `
         <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-          <use xlink:href="#globe-americas"></use>
+          <use href="#globe-americas"></use>
         </svg>
         <span class="relative-time">${localDateBuilder.formated}</span>
       `

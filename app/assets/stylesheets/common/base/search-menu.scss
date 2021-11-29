@@ -229,6 +229,7 @@ $search-pad-horizontal: 0.5em;
     .search-result-tag,
     .search-menu-assistant {
       .search-link {
+        @include ellipsis;
         .d-icon {
           margin-right: 5px;
           vertical-align: middle;
@@ -246,8 +247,7 @@ $search-pad-horizontal: 0.5em;
 
   .browser-search-tip,
   .search-random-quick-tip {
-    padding: $search-pad-vertical $search-pad-horizontal;
-    padding-bottom: 0;
+    padding: $search-pad-vertical 1px;
     font-size: var(--font-down-2);
     color: var(--primary-medium);
     .tip-label {
@@ -257,6 +257,24 @@ $search-pad-horizontal: 0.5em;
       display: inline-block;
       &.tip-clickable {
         cursor: pointer;
+      }
+    }
+  }
+
+  .search-menu-recent {
+    @include separator;
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      h4 {
+        color: var(--primary-medium);
+        font-weight: normal;
+        margin-bottom: 0;
+      }
+      .clear-recent-searches {
+        cursor: pointer;
+        color: var(--primary-low-mid);
       }
     }
   }

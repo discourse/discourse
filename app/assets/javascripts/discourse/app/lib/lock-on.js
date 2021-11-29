@@ -87,7 +87,7 @@ export default class LockOn {
     const body = document.querySelector("body");
 
     SCROLL_EVENTS.forEach((event) => {
-      body.addEventListener(event, this._scrollListener);
+      body.addEventListener(event, this._scrollListener, { passive: true });
     });
   }
 

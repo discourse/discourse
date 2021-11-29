@@ -1049,11 +1049,9 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token, skip_reviewable: true)
-    end
-    self.update!(active: true)
-    create_reviewable
+    email_token = self.email_tokens.create!(email: self.email, scope: EmailToken.scopes[:signup])
+    EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+    reload
   end
 
   def deactivate(performed_by)
@@ -1495,7 +1493,7 @@ class User < ActiveRecord::Base
   end
 
   def create_email_token
-    email_tokens.create!(email: email)
+    email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
   def ensure_password_is_hashed
