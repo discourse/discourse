@@ -444,7 +444,10 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (this.selectKit.options.closeOnChange) {
+          if (
+            this.selectKit.options.closeOnChange ||
+            (isPresent(value) && this.selectKit.options.maximum === 1)
+          ) {
             this.selectKit.close(event);
           }
 
