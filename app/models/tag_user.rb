@@ -4,6 +4,18 @@ class TagUser < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
+  scope :notification_level_visible, -> (notification_levels) {
+    joins("LEFT OUTER JOIN tag_group_memberships ON tag_users.tag_id = tag_group_memberships.tag_id")
+      .joins("LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id")
+      .joins("LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id")
+      .where("(tag_group_permissions.group_id IS NULL
+               OR tag_group_permissions.group_id = group_users.group_id
+               OR group_users.group_id = ?)
+              AND tag_users.notification_level IN (?)",
+             Group::AUTO_GROUPS[:staff],
+             notification_levels)
+  }
+
   def self.notification_levels
     NotificationLevels.all
   end
