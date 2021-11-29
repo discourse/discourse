@@ -954,38 +954,6 @@ describe PostAlerter do
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
     end
-
-    describe "tags, tag groups, and tag group permissions" do
-      it "notifies a user who is watching a tag that does not belong to a tag group" do
-        level = TagUser.notification_levels[:watching_first_post]
-        TagUser.change(user.id, tag.id, level)
-        PostAlerter.post_created(post)
-        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
-      end
-
-      it "does not notify a user watching a tag with tag group permissions that he does not belong to" do
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
-
-        watching_first_post_level = TagUser.notification_levels[:watching_first_post]
-        TagUser.change(user.id, tag.id, watching_first_post_level)
-
-        PostAlerter.post_created(post)
-
-        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
-      end
-
-      it "notifies a user watching a tag with tag group permissions that he belongs to" do
-        Fabricate(:group_user, group: group, user: user)
-
-        watching_first_post_level = TagUser.notification_levels[:watching_first_post]
-        TagUser.change(user.id, tag.id, watching_first_post_level)
-
-        PostAlerter.post_created(post)
-
-        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
-      end
-    end
   end
 
   context "replies" do
@@ -1306,6 +1274,52 @@ describe PostAlerter do
         expect(Notification.where(user_id: admin.id).count).to eq(0)
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(1)
+      end
+    end
+
+    context "with tag groups" do
+      fab!(:tag)  { Fabricate(:tag) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      shared_examples "tag user with notification level" do |notification_level, notification_type|
+        it "notifies a user who is watching a tag that does not belong to a tag group" do
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+          PostAlerter.post_created(post)
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
+
+        it "does not notify a user watching a tag with tag group permissions that he does not belong to" do
+          tag_group = Fabricate(:tag_group, tags: [tag])
+          Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(0)
+        end
+
+        it "notifies a user watching a tag with tag group permissions that he belongs to" do
+          puts user.id
+          Fabricate(:group_user, group: group, user: user)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
+      end
+
+      context "with :watching notification level" do
+        include_examples "tag user with notification level", :watching, :posted
+      end
+
+      context "with :watching_first_post notification level" do
+        include_examples "tag user with notification level", :watching_first_post, :watching_first_post
       end
     end
   end

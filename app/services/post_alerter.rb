@@ -774,9 +774,14 @@ class PostAlerter
           FROM tag_users
      LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id
                              AND tu.topic_id = :topic_id
-         WHERE tag_users.notification_level = :watching
-           AND tag_users.tag_id IN (:tag_ids)
-           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
+     LEFT JOIN tag_group_memberships tgm ON tag_users.tag_id = tgm.tag_id
+     LEFT JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
+     LEFT JOIN group_users gu ON gu.user_id = tag_users.user_id
+
+         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id OR gu.group_id = 3)
+               AND (tag_users.notification_level = :watching
+                    AND tag_users.tag_id IN (:tag_ids)
+                    AND (tu.user_id IS NULL OR tu.notification_level = :watching))
       SQL
     end
 
