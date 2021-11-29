@@ -1225,7 +1225,7 @@ describe PostAlerter do
         expect(Notification.count).to eq(0)
       end
 
-      it "adds notification if user does not belong to tag group with permissions" do
+      it "adds notification if user belongs to tag group with permissions" do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
         post = Fabricate(:post, topic: topic)
