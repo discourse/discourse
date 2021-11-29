@@ -184,10 +184,8 @@ class PostAlerter
       .joins("LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id")
       .joins("LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id")
       .where("(tag_group_permissions.group_id IS NULL
-               OR tag_group_permissions.group_id = group_users.group_id
-               OR group_users.group_id = ?)
+               OR tag_group_permissions.group_id = group_users.group_id)
               AND tag_users.notification_level = ?",
-              Group::AUTO_GROUPS[:staff],
               TagUser.notification_levels[:watching_first_post],
               )
       .distinct(:user_id).pluck(:user_id)
@@ -778,7 +776,7 @@ class PostAlerter
      LEFT JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
      LEFT JOIN group_users gu ON gu.user_id = tag_users.user_id
 
-         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id OR gu.group_id = 3)
+         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id)
                AND (tag_users.notification_level = :watching
                     AND tag_users.tag_id IN (:tag_ids)
                     AND (tu.user_id IS NULL OR tu.notification_level = :watching))
