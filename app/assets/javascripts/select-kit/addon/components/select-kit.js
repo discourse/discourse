@@ -861,7 +861,10 @@ export default Component.extend(
           `#${this.selectKit.uniqueID}-body`
         );
 
-        const placementStrategy = this?.site?.mobileView ? "absolute" : "fixed";
+        const placementStrategy =
+          this.capabilities?.isIpadOS || this.site?.mobileView
+            ? "absolute"
+            : "fixed";
         const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
