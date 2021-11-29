@@ -234,7 +234,8 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   });
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.14", (api) => {
-      api.addComposerUploadHandler(["png"], (file) => {
+      api.addComposerUploadHandler(["png"], (files) => {
+        const file = files[0];
         bootbox.alert(`This is an upload handler test for ${file.name}`);
       });
     });
