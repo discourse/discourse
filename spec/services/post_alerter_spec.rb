@@ -1210,6 +1210,35 @@ describe PostAlerter do
         notification_data = JSON.parse(notification.data)
         expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
       end
+
+      it "does not add notification if user does not belong to tag group with permissions" do
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+        post = Fabricate(:post, topic: topic)
+        tag_group = Fabricate(:tag_group, tags: [tag])
+        group = Fabricate(:group)
+        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        PostAlerter.post_created(post)
+
+        expect(Notification.count).to eq(0)
+      end
+
+      it "adds notification if user does not belong to tag group with permissions" do
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+        post = Fabricate(:post, topic: topic)
+        tag_group = Fabricate(:tag_group, tags: [tag])
+        group = Fabricate(:group)
+        Fabricate(:group_user, group: group, user: user)
+        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        PostAlerter.post_created(post)
+
+        expect(Notification.count).to eq(1)
+      end
     end
 
     context "on change" do
@@ -1303,7 +1332,6 @@ describe PostAlerter do
         end
 
         it "notifies a user watching a tag with tag group permissions that he belongs to" do
-          puts user.id
           Fabricate(:group_user, group: group, user: user)
 
           TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
