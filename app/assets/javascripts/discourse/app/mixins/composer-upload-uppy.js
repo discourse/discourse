@@ -146,26 +146,35 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // In future we may want to devise a nicer way of doing this.
         // Uppy plugins are out of the question because there is no way to
         // define which uploader plugin handles which file extensions at this time.
-        const uploadHandlerFiles = [];
         const unhandledFiles = {};
+        const handlerBuckets = {};
+
         for (const [fileId, file] of Object.entries(files)) {
           const matchingHandler = this._findMatchingUploadHandler(file.name);
           if (matchingHandler) {
-            uploadHandlerFiles.push([file, matchingHandler]);
+            // the function signature will be converted to a string for the
+            // object key, so we can send multiple files at once to each handler
+            if (handlerBuckets[matchingHandler.method]) {
+              handlerBuckets[matchingHandler.method].files.push(file);
+            } else {
+              handlerBuckets[matchingHandler.method] = {
+                fn: matchingHandler.method,
+                files: [file],
+              };
+            }
           } else {
             unhandledFiles[fileId] = { ...files[fileId] };
           }
         }
 
-        // This replicates what the old composer upload handler did; because
-        // jQuery file uploader passed through a single file at a time to
-        // the upload handlers.
-        uploadHandlerFiles.forEach((fileWithHandler) => {
-          const [file, matchingHandler] = fileWithHandler;
-          if (matchingHandler && !matchingHandler.method(file.data, this)) {
+        // Send the collected array of files to each matching handler,
+        // rather than the old jQuery file uploader method of sending
+        // a single file at a time through to the handler.
+        for (const bucket of Object.values(handlerBuckets)) {
+          if (!bucket.fn(bucket.files, this)) {
             return this._abortAndReset();
           }
-        });
+        }
 
         // Limit the number of simultaneous uploads, for files which have
         // _not_ been handled by an upload handler.
