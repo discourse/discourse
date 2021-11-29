@@ -180,8 +180,18 @@ class PostAlerter
 
   def tag_watchers(topic)
     topic.tag_users
-      .where(notification_level: TagUser.notification_levels[:watching_first_post])
-      .pluck(:user_id)
+      .select("tag_users.user_id")
+      .joins("LEFT OUTER JOIN tag_group_memberships ON tag_users.tag_id = tag_group_memberships.tag_id")
+      .joins("LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id")
+      .joins("LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id")
+      .where("(tag_group_permissions.group_id IS NULL
+               OR tag_group_permissions.group_id = group_users.group_id
+               OR group_users.group_id = ?)
+              AND tag_users.notification_level = ?",
+              Group::AUTO_GROUPS[:staff],
+              TagUser.notification_levels[:watching_first_post],
+              )
+      .distinct(:user_id).pluck(:user_id)
   end
 
   def category_watchers(topic)
