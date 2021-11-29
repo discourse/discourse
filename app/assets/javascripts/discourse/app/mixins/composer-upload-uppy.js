@@ -549,4 +549,35 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
   },
+
+  _bindMobileUploadButton() {
+    if (this.site.mobileView) {
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
+      };
+      this.mobileUploadButton.addEventListener(
+        "click",
+        this.mobileUploadButtonEventListener,
+        false
+      );
+    }
+  },
+
+  _unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this.mobileUploadButtonEventListener
+    );
+  },
+
+  _filenamePlaceholder(data) {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  },
+
+  _resetUploadFilenamePlaceholder() {
+    this.set("uploadFilenamePlaceholder", null);
+  },
 });
