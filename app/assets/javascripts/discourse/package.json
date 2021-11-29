@@ -51,6 +51,7 @@
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^5.1.2",
     "ember-source": "~3.15.0",
+    "ember-test-selectors": "^6.0.0",
     "eslint": "^7.27.0",
     "html-entities": "^2.1.0",
     "js-yaml": "^4.0.0",
