@@ -1340,6 +1340,17 @@ describe PostAlerter do
 
           expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
         end
+
+        it "notifies a staff watching a tag with tag group permissions that he does not belong to" do
+          staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+          Fabricate(:group_user, group: staff_group, user: user)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
       end
 
       context "with :watching notification level" do
