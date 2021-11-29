@@ -308,4 +308,25 @@ describe SiteSettings::Validations do
       end
     end
   end
+
+  context "slow_down_crawler_user_agents" do
+    let(:error_message) { I18n.t("errors.site_settings.slow_down_crawler_user_agent_must_be_at_least_3_characters") }
+
+    it "cannot contain a user agent that's shorter than 3 characters" do
+      expect { subject.validate_slow_down_crawler_user_agents("ao|acsw") }.to raise_error(Discourse::InvalidParameters, error_message)
+      expect { subject.validate_slow_down_crawler_user_agents("up") }.to raise_error(Discourse::InvalidParameters, error_message)
+      expect { subject.validate_slow_down_crawler_user_agents("a|") }.to raise_error(Discourse::InvalidParameters, error_message)
+      expect { subject.validate_slow_down_crawler_user_agents("|a") }.to raise_error(Discourse::InvalidParameters, error_message)
+    end
+
+    it "allows user agents that are 3 characters or longer" do
+      expect { subject.validate_slow_down_crawler_user_agents("aoc") }.not_to raise_error
+      expect { subject.validate_slow_down_crawler_user_agents("anuq") }.not_to raise_error
+      expect { subject.validate_slow_down_crawler_user_agents("pupsc|kcx") }.not_to raise_error
+    end
+
+    it "allows the setting to be empty" do
+      expect { subject.validate_slow_down_crawler_user_agents("") }.not_to raise_error
+    end
+  end
 end

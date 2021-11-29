@@ -201,6 +201,13 @@ module SiteSettings::Validations
     validate_error :cors_origins_should_not_have_trailing_slash
   end
 
+  def validate_slow_down_crawler_user_agents(new_val)
+    return if new_val.blank?
+    if new_val.split("|").any? { |crawler| crawler.size < 3 }
+      validate_error :slow_down_crawler_user_agent_must_be_at_least_3_characters
+    end
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)
