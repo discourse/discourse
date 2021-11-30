@@ -1634,6 +1634,9 @@ id:
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
     posts: "Pos"
+    pending_posts:
+      label: "Tertunda"
+      label_with_count: "Tertunda (%{count})"
     replies: "Balasan"
     activity: "Aktifitas"
     likes: "Suka"

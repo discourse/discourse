@@ -3108,6 +3108,9 @@ nl:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
+    pending_posts:
+      label: "In wachtrij"
+      label_with_count: "Uitstaand (%{count})"
     posts_likes_MF: |
       Dit topic heeft {count, plural, one {# antwoord} other {# antwoorden}} {ratio, select,
       low {met een hoge verhouding likes per bericht}

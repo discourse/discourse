@@ -3071,6 +3071,9 @@ zh_CN:
         title: "此话题是一条个人消息"
         help: "此话题是一条个人消息"
     posts: "帖子"
+    pending_posts:
+      label: "待处理"
+      label_with_count: "待处理 (%{count})"
     posts_likes_MF: |
       此话题有 {count, plural, other {# 个回复}}{ratio, select,
         low {，并且点赞发帖比例比较高}

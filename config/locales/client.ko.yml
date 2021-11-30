@@ -3061,6 +3061,9 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
+    pending_posts:
+      label: "보류중"
+      label_with_count: "보류중 (%{count})"
     original_post: "원본 글"
     views: "조회수"
     views_lowercase:

@@ -1898,6 +1898,9 @@ it:
       cannot_see_mention:
         category: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questo messaggio personale. Dovrai invitarlo a questo MP."
+      here_mention:
+        one: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utente – confermi?"
+        other: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utenti – confermi?"
       duplicate_link: "Sembra che il tuo collegamento a <b>%{domain}</b> sia già stato pubblicato in questo argomento da <b>@%{username}</b> in <a href='%{post_url}'>una risposta di %{ago}</a> - sei sicuro di volerlo pubblicare ancora?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -3176,6 +3179,9 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
+    pending_posts:
+      label: "In attesa"
+      label_with_count: "In sospeso (%{count})"
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
         low {con un'alta percentuale di 'mi piace' sulle risposte}

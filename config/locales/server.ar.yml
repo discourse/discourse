@@ -1711,7 +1711,6 @@ ar:
     allowed_iframes: "قائمة بادئات نطاقات iframe src التي يمكن أن يسمح بها Discourse بأمان في المنشورات"
     allowed_crawler_user_agents: "وكلاء المستخدمين لزاحفات الويب التي يجب السماح لها بالوصول إلى الموقع. تحذير! سيؤدي ضبط هذا الإعداد إلى عدم السماح بجميع الزاحفات غير المُدرَجة هنا!"
     blocked_crawler_user_agents: "الكلمة الفريدة غير حساسة لحالة الأحرف في سلسلة وكيل المستخدم والتي تحدِّد زاحفات الويب التي لا ينبغي السماح لها بالوصول إلى الموقع. لا تنطبق إذا تم تعريف قائمة السماح."
-    slow_down_crawler_user_agents: "وكلاء المستخدمين لزاحفات الويب التي يجب أن يكون معدَّلها محدودًا في ملف robots.txt باستخدام توجيه تأخير الزحف"
     slow_down_crawler_rate: "إذا تم تحديد slow_down_crawler_user_agents، فسيتم تطبيق هذا المعدَّل على جميع الزاحفات (عدد ثواني التأخير بين الطلبات)"
     content_security_policy: "تفعيل Content-Security-Policy"
     content_security_policy_report_only: "تفعيل Content-Security-Policy-Report-Only"

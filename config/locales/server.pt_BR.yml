@@ -1503,7 +1503,6 @@ pt_BR:
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o Discourse pode permitir com segurança em postagens"
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    slow_down_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (quantidade de segundos de atraso entre os pedidos)"
     content_security_policy: "Ativar Content-Security-Policy"
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only"

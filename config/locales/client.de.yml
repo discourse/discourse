@@ -1913,6 +1913,9 @@ de:
       cannot_see_mention:
         category: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
         private: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
+      here_mention:
+        one: "Indem du <b>@%{here}</b>erwähnst, bist du dabei, %{count} Benutzer zu benachrichtigen - bist du sicher?"
+        other: "Indem du <b>@%{here}</b>erwähnst, benachrichtigst du %{count} Benutzer - bist du sicher?"
       duplicate_link: "Es sieht so aus, als ob dein Link zu <b>%{domain}</b> bereits im Thema von <b>@%{username}</b> in <a href='%{post_url}'>einer Antwort vor %{ago}</a> geteilt wurde – bist du sicher, dass du ihn noch einmal teilen möchtest?"
       reference_topic_title: "AW: %{title}"
       error:
@@ -2173,6 +2176,8 @@ de:
       in_topics_posts: "in allen Themen und Beiträgen"
       enter_hint: "oder drücke die Eingabetaste"
       in_posts_by: "in Beiträgen von %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "nochmal um die native Browsersuche zu verwenden"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
@@ -3217,6 +3222,9 @@ de:
         title: "Dieses Thema ist eine persönliche Nachricht"
         help: "Dieses Thema ist eine persönliche Nachricht"
     posts: "Beiträge"
+    pending_posts:
+      label: "Ausstehend"
+      label_with_count: "Ausstehend (%{count})"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
         low {mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}

@@ -2875,6 +2875,9 @@ vi:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
     posts: "Bài viết"
+    pending_posts:
+      label: "Đang treo"
+      label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
       Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}

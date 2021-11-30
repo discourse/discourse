@@ -3662,6 +3662,9 @@ ar:
         title: "هذا الموضوع عبارة عن رسالة خاصة"
         help: "هذا الموضوع عبارة عن رسالة خاصة"
     posts: "المنشورات"
+    pending_posts:
+      label: "قيد الانتظار"
+      label_with_count: "قيد الانتظار (%{count})"
     posts_likes_MF: |
       يتضمَّن هذا الموضوع {count, plural, zero {# رد} one {ردًا واحدًا (#)} two {ردَّين (#)} few {# ردود} many {# ردًا} other {# رد}} {ratio, select,
         low {بمعدل إعجابات مرتفع على المنشورات}

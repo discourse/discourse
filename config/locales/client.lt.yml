@@ -2018,6 +2018,8 @@ lt:
       enter_hint: "arba paspauskite Enter"
       in_posts_by: "pranešimuose %{username}"
       browser_tip: "%{modifier} + f"
+      recent: "Naujausios paieškos"
+      clear_recent: "Išvalyti naujausias paieškas"
       type:
         default: "Temos/įrašai"
         users: "Nariai"
@@ -2985,6 +2987,9 @@ lt:
         title: "Ši tema yra asmeninė žinutė"
         help: "Ši tema yra asmeninė žinutė"
     posts: "Įrašai"
+    pending_posts:
+      label: "Laukiama"
+      label_with_count: "Neperskaityti (%{count})"
     original_post: "Originalus įrašas"
     views: "Peržiūros"
     views_lowercase:

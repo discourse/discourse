@@ -998,6 +998,7 @@ pl_PL:
       others: "Brak zakładek."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
+    no_log_search_queries: "Zapytania dziennika wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
   email_settings:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
@@ -1617,7 +1618,6 @@ pl_PL:
     allowed_iframes: "Lista prefiksów domeny src iframe, które dyskurs może bezpiecznie dopuścić w wpisach"
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
-    slow_down_crawler_user_agents: "Programy klienckie robotów indeksujących, które powinny mieć ograniczoną szybkość w pliku robots.txt, korzystając z dyrektywy o opóźnieniu indeksowania"
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
     content_security_policy: "Włącz politykę bezpieczeństwa treści"
     content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"

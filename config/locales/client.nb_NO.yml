@@ -3069,6 +3069,9 @@ nb_NO:
         title: "Dette emnet er en personlig melding"
         help: "Dette emnet er en personlig melding"
     posts: "Innlegg"
+    pending_posts:
+      label: "På vent"
+      label_with_count: "Ventende (%{count})"
     posts_likes_MF: |
       Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
       low {med mange likes i forhold til innlegg}
