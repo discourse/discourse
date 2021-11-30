@@ -98,8 +98,8 @@ export default Component.extend({
         .then((result) => {
           this.set("editing", false);
           this.tagInfo.set("description", this.newTagDescription);
-          if (result.responseJson.tag) {
-            this.router.transitionTo("tag.show", result.responseJson.tag.id);
+          if (result.payload) {
+            this.router.transitionTo("tag.show", result.payload.id);
           }
         })
         .catch(popupAjaxError);

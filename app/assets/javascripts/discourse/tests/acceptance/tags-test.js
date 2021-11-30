@@ -65,6 +65,7 @@ acceptance("Tags", function (needs) {
               bookmarked: false,
               liked: true,
               tags: ["test"],
+              tags_descriptions: { test: "test description" },
               views: 42,
               like_count: 42,
               has_summary: false,

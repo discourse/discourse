@@ -152,14 +152,6 @@ const Topic = RestModel.extend({
     });
   },
 
-  @discourseComputed("tags.[]")
-  tagNames() {
-    if (!this.tags) {
-      return [];
-    }
-    return this.tags.map((tag) => tag.name);
-  },
-
   @discourseComputed("tags")
   visibleListTags(tags) {
     if (!tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
@@ -170,7 +162,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.indexOf(tag.name.toLowerCase()) === -1) {
+      if (title.indexOf(tag.toLowerCase()) === -1) {
         newTags.push(tag);
       }
     });
