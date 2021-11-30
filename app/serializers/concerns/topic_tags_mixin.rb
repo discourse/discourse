@@ -15,10 +15,7 @@ module TopicTagsMixin
   end
 
   def tags_descriptions
-    all_tags.reduce({}) do |acc, tag|
-      acc[tag.name] = tag.description
-      acc
-    end.compact
+    all_tags.each.with_object({}) { |tag, acc| acc[tag.name] = tag.description }.compact
   end
 
   def topic
