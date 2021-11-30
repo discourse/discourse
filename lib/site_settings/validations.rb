@@ -230,7 +230,7 @@ module SiteSettings::Validations
       if crawler.size < 3
         validate_error(:slow_down_crawler_user_agent_must_be_at_least_3_characters)
       end
-      if PROHIBITED_USER_AGENT_STRINGS.include?(crawler)
+      if PROHIBITED_USER_AGENT_STRINGS.any? { |c| c.include?(crawler) }
         validate_error(
           :slow_down_crawler_user_agent_cannot_be_popular_browsers,
           values: PROHIBITED_USER_AGENT_STRINGS.join(I18n.t("word_connector.comma"))

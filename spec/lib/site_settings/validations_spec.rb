@@ -363,6 +363,10 @@ describe SiteSettings::Validations do
       expect {
         subject.validate_slow_down_crawler_user_agents("chRome|badcrawler")
       }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
+
+      expect {
+        subject.validate_slow_down_crawler_user_agents("html|badcrawler")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
     end
   end
 end
