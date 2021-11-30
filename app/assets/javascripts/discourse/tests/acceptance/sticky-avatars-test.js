@@ -11,8 +11,6 @@ acceptance("Sticky Avatars", function () {
     container.scrollTo(0, 800);
     container.scrollTo(0, 700);
 
-    // await waitUntil(() => find(".sticky-avatar"));
-
     assert.ok(
       query("#post_5").parentElement.classList.contains("sticky-avatar"),
       "Sticky avatar is applied"
