@@ -416,7 +416,7 @@ describe TopicView do
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
-        first, second = topic_view.bookmarks
+        first, second = topic_view.bookmarks.sort_by(&:id)
         expect(first[:post_id]).to eq(bookmark1.post_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         expect(second[:post_id]).to eq(bookmark2.post_id)
