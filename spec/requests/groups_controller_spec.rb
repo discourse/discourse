@@ -176,12 +176,6 @@ describe GroupsController do
       )
     end
 
-    it 'should return correct X-Robots-Tag header when allow_index_in_robots_txt is set to false' do
-      SiteSetting.allow_index_in_robots_txt = false
-      get "/groups"
-      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow')
-    end
-
     context 'viewing groups of another user' do
       describe 'when an invalid username is given' do
         it 'should return the right response' do

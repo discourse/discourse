@@ -241,6 +241,9 @@
 
     .timeline-ago {
       color: var(--primary-med-or-secondary-med);
+      max-width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .timeline-scroller {

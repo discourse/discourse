@@ -46,7 +46,7 @@
     "loader.js": "^4.7.0"
   },
   "engines": {
-    "node": ">= 12.*",
+    "node": "12.* || 14.* || >= 16",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },

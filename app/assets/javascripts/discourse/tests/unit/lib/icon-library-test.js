@@ -7,7 +7,7 @@ import { module, test } from "qunit";
 
 module("Unit | Utility | icon-library", function () {
   test("return icon markup", function (assert) {
-    assert.ok(iconHTML("bars").indexOf('use xlink:href="#bars"') > -1);
+    assert.ok(iconHTML("bars").indexOf('use href="#bars"') > -1);
 
     const nodeIcon = iconNode("bars");
     assert.strictEqual(nodeIcon.tagName, "svg");

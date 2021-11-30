@@ -70,6 +70,15 @@ export default DiscourseRoute.extend({
     this.messageBus.subscribe(`/u/${user.username_lower}`, (data) =>
       user.loadUserAction(data)
     );
+    this.messageBus.subscribe(`/u/${user.username_lower}/counters`, (data) => {
+      user.setProperties(data);
+      Object.entries(data).forEach(([key, value]) =>
+        this.appEvents.trigger(
+          `count-updated:${user.username_lower}:${key}`,
+          value
+        )
+      );
+    });
   },
 
   deactivate() {
@@ -77,6 +86,7 @@ export default DiscourseRoute.extend({
 
     const user = this.modelFor("user");
     this.messageBus.unsubscribe(`/u/${user.username_lower}`);
+    this.messageBus.unsubscribe(`/u/${user.username_lower}/counters`);
 
     // Remove the search context
     this.searchService.set("searchContext", null);

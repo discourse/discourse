@@ -183,7 +183,7 @@ describe Notification do
   end
 
   describe 'message bus' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
     it 'updates the notification count on create' do
       Notification.any_instance.expects(:refresh_notification_count).returns(nil)

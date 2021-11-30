@@ -1129,6 +1129,9 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      dismiss_confirmation:
+        dismiss: "Одбаци"
+        cancel: "Odustani"
       titles:
         watching_first_post: "nova tema"
     upload_selector:

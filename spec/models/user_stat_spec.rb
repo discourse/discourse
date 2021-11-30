@@ -90,9 +90,9 @@ describe UserStat do
     end
 
     it 'updates first unread pm timestamp correctly' do
-      pm_topic = Fabricate(:private_message_topic)
-      user = pm_topic.user
-      user.update!(last_seen_at: Time.zone.now)
+      user = Fabricate(:user, last_seen_at: Time.zone.now)
+      user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
+      pm_topic = Fabricate(:private_message_topic, user: user, recipient: user_2)
       create_post(user: user, topic_id: pm_topic.id)
 
       TopicUser.change(user.id, pm_topic.id,
@@ -100,33 +100,58 @@ describe UserStat do
       )
 
       # user that is not tracking PM topic
-      user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
-      pm_topic.allowed_users << user_2
-
       TopicUser.change(user_2.id, pm_topic.id,
         notification_level: TopicUser.notification_levels[:regular]
       )
 
-      # User that has not been seen
-      user_3 = Fabricate(:user)
+      # User that has not been seen recently
+      user_3 = Fabricate(:user, last_seen_at: 1.year.ago)
       pm_topic.allowed_users << user_3
 
       TopicUser.change(user_3.id, pm_topic.id,
         notification_level: TopicUser.notification_levels[:tracking]
       )
 
-      freeze_time 10.minutes.from_now
+      user_3_orig_first_unread_pm_at = user_3.user_stat.first_unread_pm_at
 
-      post = create_post(
-        user: Fabricate(:admin),
-        topic_id: pm_topic.id
+      # User that is not related to the PM
+      user_4 = Fabricate(:user, last_seen_at: Time.zone.now)
+      user_4_orig_first_unread_pm_at = user_4.user_stat.first_unread_pm_at
+
+      # User for another PM topic
+      user_5 = Fabricate(:user, last_seen_at: Time.zone.now)
+      user_6 = Fabricate(:user, last_seen_at: 10.minutes.ago)
+      pm_topic_2 = Fabricate(:private_message_topic, user: user_5, recipient: user_6)
+      create_post(user: user_5, topic_id: pm_topic_2.id)
+
+      TopicUser.change(user_5.id, pm_topic_2.id,
+        notification_level: TopicUser.notification_levels[:tracking]
       )
 
-      UserStat.ensure_consistency!
+      # User out of last seen limit
+      TopicUser.change(user_6.id, pm_topic_2.id,
+        notification_level: TopicUser.notification_levels[:tracking]
+      )
 
-      expect(user.user_stat.reload.first_unread_pm_at).to eq_time(post.topic.updated_at)
-      expect(user_2.user_stat.reload.first_unread_pm_at).to_not eq_time(post.topic.updated_at)
-      expect(user_3.user_stat.reload.first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+      create_post(user: user_6, topic_id: pm_topic_2.id)
+      user_6_orig_first_unread_pm_at = user_6.user_stat.first_unread_pm_at
+
+      create_post(user: user_2, topic_id: pm_topic.id)
+      create_post(user: user_6, topic_id: pm_topic_2.id)
+      pm_topic.update!(updated_at: 10.minutes.from_now)
+      pm_topic_2.update!(updated_at: 20.minutes.from_now)
+
+      stub_const(UserStat, "UPDATE_UNREAD_USERS_LIMIT", 4) do
+        UserStat.ensure_consistency!(1.hour.ago)
+      end
+
+      # User affected
+      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(pm_topic.reload.updated_at)
+      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      expect(user_3.user_stat.reload.first_unread_pm_at).to eq_time(user_3_orig_first_unread_pm_at)
+      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      expect(user_5.user_stat.reload.first_unread_pm_at).to eq_time(pm_topic_2.reload.updated_at)
+      expect(user_6.user_stat.reload.first_unread_pm_at).to eq_time(user_6_orig_first_unread_pm_at)
     end
   end
 
@@ -234,6 +259,29 @@ describe UserStat do
 
       UserStat.update_draft_count(user.id)
       expect(user.user_stat.draft_count).to eq(3)
+    end
+  end
+
+  describe "#update_pending_posts" do
+    subject(:update_pending_posts) { stat.update_pending_posts }
+
+    let!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    let(:user) { reviewable.created_by }
+    let(:stat) { user.user_stat }
+
+    before do
+      stat.update!(pending_posts_count: 0) # the reviewable callback will have set this to 1 already.
+    end
+
+    it "sets 'pending_posts_count'" do
+      expect { update_pending_posts }.to change { stat.pending_posts_count }.to 1
+    end
+
+    it "publishes a message to clients" do
+      MessageBus.expects(:publish).with("/u/#{user.username_lower}/counters",
+                                        { pending_posts_count: 1 },
+                                        user_ids: [user.id], group_ids: [Group::AUTO_GROUPS[:staff]])
+      update_pending_posts
     end
   end
 end

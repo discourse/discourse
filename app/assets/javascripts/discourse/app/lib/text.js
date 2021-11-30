@@ -50,6 +50,13 @@ export function generateCookFunction(options) {
   });
 }
 
+export function generateLinkifyFunction(options) {
+  return loadMarkdownIt().then(() => {
+    const prettyText = createPrettyText(options);
+    return prettyText.opts.engine.linkify;
+  });
+}
+
 export function sanitize(text, options) {
   return textSanitize(text, new AllowLister(options));
 }

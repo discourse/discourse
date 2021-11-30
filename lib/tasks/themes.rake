@@ -53,24 +53,22 @@ task "themes:install" => :environment do |task, args|
 end
 
 def update_themes
-  Theme.where(auto_update: true, enabled: true).find_each do |theme|
+  Theme.includes(:remote_theme).where(enabled: true, auto_update: true).find_each do |theme|
     begin
-      if theme.remote_theme.present?
-        puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
-        theme.remote_theme.update_from_remote
-        theme.save!
-        unless theme.remote_theme.last_error_text.nil?
-          puts "Error updating '#{theme.name}': #{theme.remote_theme.last_error_text}"
-          exit 1
-        end
-      end
+      remote_theme = theme.remote_theme
+      next if remote_theme.blank?
+
+      puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
+      remote_theme.update_from_remote
+
+      raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
-      STDERR.puts "Failed to update '#{theme.name}'"
-      STDERR.puts e
-      STDERR.puts e.backtrace
-      exit 1
+      STDERR.puts "Failed to update '#{theme.name}': #{e}"
+      raise if RailsMultisite::ConnectionManagement.current_db == "default"
     end
   end
+
+  true
 end
 
 desc "Update themes & theme components"

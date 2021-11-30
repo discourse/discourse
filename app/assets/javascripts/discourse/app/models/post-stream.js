@@ -1215,17 +1215,21 @@ export default RestModel.extend({
 
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
-  errorLoading(result) {
+  errorLoading(error) {
     const topic = this.topic;
     this.set("loadingFilter", false);
     topic.set("errorLoading", true);
 
-    const json = result.jqXHR.responseJSON;
+    if (!error.jqXHR) {
+      throw error;
+    }
+
+    const json = error.jqXHR.responseJSON;
     if (json && json.extras && json.extras.html) {
       topic.set("errorHtml", json.extras.html);
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
-      topic.set("noRetry", result.jqXHR.status === 403);
+      topic.set("noRetry", error.jqXHR.status === 403);
     }
   },
 

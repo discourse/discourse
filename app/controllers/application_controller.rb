@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -41,13 +42,14 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
-  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
   after_action  :ensure_vary_header
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
+  after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -912,6 +914,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def add_noindex_header_to_non_canonical
+    canonical = (@canonical_url || @default_canonical)
+    if canonical.present? && canonical != request.url && !SiteSetting.allow_indexing_non_canonical_urls
+      response.headers['X-Robots-Tag'] ||= 'noindex'
+    end
+  end
+
   protected
 
   def honeypot_value
@@ -949,5 +958,28 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  def rate_limit_crawlers
+    return if current_user.present?
+    return if SiteSetting.slow_down_crawler_user_agents.blank?
+
+    user_agent = request.user_agent&.downcase
+    return if user_agent.blank?
+
+    SiteSetting.slow_down_crawler_user_agents.downcase.split("|").each do |crawler|
+      if user_agent.include?(crawler)
+        key = "#{crawler}_crawler_rate_limit"
+        limiter = RateLimiter.new(
+          nil,
+          key,
+          1,
+          SiteSetting.slow_down_crawler_rate,
+          error_code: key
+        )
+        limiter.performed!
+        break
+      end
+    end
   end
 end

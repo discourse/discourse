@@ -3,11 +3,8 @@
 
 require 'cache'
 require 'open3'
-require_dependency 'route_format'
 require_dependency 'plugin/instance'
-require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
-require 'digest/sha1'
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
@@ -660,16 +657,7 @@ module Discourse
     end
   end
 
-  def self.ensure_version_file_loaded
-    unless @version_file_loaded
-      version_file = "#{Rails.root}/config/version.rb"
-      require version_file if File.exists?(version_file)
-      @version_file_loaded = true
-    end
-  end
-
   def self.git_version
-    ensure_version_file_loaded
     $git_version ||=
       begin
         git_cmd = 'git rev-parse HEAD'
@@ -678,7 +666,6 @@ module Discourse
   end
 
   def self.git_branch
-    ensure_version_file_loaded
     $git_branch ||=
       begin
         git_cmd = 'git rev-parse --abbrev-ref HEAD'
@@ -687,7 +674,6 @@ module Discourse
   end
 
   def self.full_version
-    ensure_version_file_loaded
     $full_version ||=
       begin
         git_cmd = 'git describe --dirty --match "v[0-9]*"'
@@ -696,7 +682,6 @@ module Discourse
   end
 
   def self.last_commit_date
-    ensure_version_file_loaded
     $last_commit_date ||=
       begin
         git_cmd = 'git log -1 --format="%ct"'

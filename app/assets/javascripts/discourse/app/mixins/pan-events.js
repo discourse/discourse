@@ -33,10 +33,13 @@ export default Mixin.create({
       this.touchEnd = (e) => this._panMove({ type: "pointerup" }, e);
       this.touchCancel = (e) => this._panMove({ type: "pointercancel" }, e);
 
-      element.addEventListener("touchstart", this.touchStart);
-      element.addEventListener("touchmove", this.touchMove);
-      element.addEventListener("touchend", this.touchEnd);
-      element.addEventListener("touchcancel", this.touchCancel);
+      const opts = {
+        passive: false,
+      };
+      element.addEventListener("touchstart", this.touchStart, opts);
+      element.addEventListener("touchmove", this.touchMove, opts);
+      element.addEventListener("touchend", this.touchEnd, opts);
+      element.addEventListener("touchcancel", this.touchCancel, opts);
     }
   },
 

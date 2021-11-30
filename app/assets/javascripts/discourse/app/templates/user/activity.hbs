@@ -17,6 +17,12 @@
         {{/d-navigation-item}}
       {{/if}}
 
+      {{#if (gt model.pending_posts_count 0)}}
+        {{#d-navigation-item route="userActivity.pending"}}
+          {{pendingLabel}}
+        {{/d-navigation-item}}
+      {{/if}}
+
       {{#d-navigation-item route="userActivity.likesGiven"}}{{i18n "user_action_groups.1"}}{{/d-navigation-item}}
 
       {{#if user.showBookmarks}}

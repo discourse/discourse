@@ -111,7 +111,7 @@
 
         </div>
 
-        {{component composerComponent
+        {{composer-editor
           topic=topic
           composer=model
           lastValidatedAt=lastValidatedAt
@@ -129,6 +129,7 @@
           uploadProgress=uploadProgress
           groupsMentioned=(action "groupsMentioned")
           cannotSeeMention=(action "cannotSeeMention")
+          hereMention=(action "hereMention")
           importQuote=(action "importQuote")
           togglePreview=(action "togglePreview")
           processPreview=showPreview

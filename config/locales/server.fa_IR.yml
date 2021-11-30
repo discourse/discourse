@@ -397,6 +397,7 @@ fa_IR:
   post:
     image_placeholder:
       broken: "عکس خراب شده است."
+    hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
   rate_limiter:
     hours:
       one: "%{count} ساعت"

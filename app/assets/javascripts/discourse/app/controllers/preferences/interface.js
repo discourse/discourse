@@ -1,11 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import Session from "discourse/models/session";
-import {
-  iOSWithVisualViewport,
-  isiPad,
-  safariHacksDisabled,
-  setDefaultHomepage,
-} from "discourse/lib/utilities";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
@@ -70,18 +65,6 @@ export default Controller.extend({
     }
 
     return attrs;
-  },
-
-  @discourseComputed()
-  isiPad() {
-    // TODO: remove this preference checkbox when iOS adoption > 90%
-    // (currently only applies to iOS 12 and below)
-    return isiPad() && !iOSWithVisualViewport();
-  },
-
-  @discourseComputed()
-  disableSafariHacks() {
-    return safariHacksDisabled();
   },
 
   @discourseComputed()
@@ -341,16 +324,6 @@ export default Controller.extend({
           }
 
           this.homeChanged();
-
-          if (this.isiPad) {
-            if (safariHacksDisabled() !== this.disableSafariHacks) {
-              this.session.requiresRefresh = true;
-            }
-            localStorage.setItem(
-              "safari-hacks-disabled",
-              this.disableSafariHacks.toString()
-            );
-          }
 
           if (this.themeId !== this.currentThemeId) {
             reload();

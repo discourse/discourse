@@ -32,10 +32,7 @@ module TopicGuardian
   end
 
   def can_see_shared_draft?
-    return is_admin? if SiteSetting.shared_drafts_min_trust_level.to_s == 'admin'
-    return is_staff? if SiteSetting.shared_drafts_min_trust_level.to_s == 'staff'
-
-    @user.has_trust_level?(SiteSetting.shared_drafts_min_trust_level.to_i)
+    @user.has_trust_level_or_staff?(SiteSetting.shared_drafts_min_trust_level)
   end
 
   def can_create_whisper?

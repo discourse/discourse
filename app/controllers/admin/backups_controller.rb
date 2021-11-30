@@ -180,13 +180,11 @@ class Admin::BackupsController < Admin::AdminController
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
     previous_chunk_number = chunk_number - 1
 
-    # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
-    # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
-    uploaded_file_size = previous_chunk_number * chunk_size
     # when all chunks are uploaded
+    uploaded_file_size = previous_chunk_number * chunk_size
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread
       Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)

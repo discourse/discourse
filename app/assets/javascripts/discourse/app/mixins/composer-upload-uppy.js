@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import EmberObject from "@ember/object";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import { deepMerge } from "discourse-common/lib/object";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -36,6 +37,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
 
+  @bind
+  _cancelSingleUpload(data) {
+    this._uppyInstance.removeFile(data.fileId);
+  },
+
   @observes("composerModel.uploadCancelled")
   _cancelUpload() {
     if (!this.get("composerModel.uploadCancelled")) {
@@ -61,6 +67,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.element.removeEventListener("paste", this.pasteEventListener);
 
     this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.off(
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
+    );
 
     this._reset();
 
@@ -79,13 +89,17 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _bindUploadTarget() {
+    this.set("inProgressUploads", []);
     this.placeholders = {};
-    this._inProgressUploads = 0;
     this._preProcessorStatus = {};
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
     this.appEvents.on(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.on(
+      `${this.eventPrefix}:cancel-upload`,
+      this._cancelSingleUpload
+    );
 
     this._unbindUploadTarget();
     this.fileInputEventListener = bindFileInputChangeListener(
@@ -126,24 +140,45 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       },
 
       onBeforeUpload: (files) => {
-        const fileCount = Object.keys(files).length;
         const maxFiles = this.siteSettings.simultaneous_uploads;
 
         // Look for a matching file upload handler contributed from a plugin.
-        // It is not ideal that this only works for single file uploads, but
-        // at this time it is all we need. In future we may want to devise a
-        // nicer way of doing this. Uppy plugins are out of the question because
-        // there is no way to define which uploader plugin handles which file
-        // extensions at this time.
-        if (fileCount === 1) {
-          const file = Object.values(files)[0];
+        // In future we may want to devise a nicer way of doing this.
+        // Uppy plugins are out of the question because there is no way to
+        // define which uploader plugin handles which file extensions at this time.
+        const unhandledFiles = {};
+        const handlerBuckets = {};
+
+        for (const [fileId, file] of Object.entries(files)) {
           const matchingHandler = this._findMatchingUploadHandler(file.name);
-          if (matchingHandler && !matchingHandler.method(file.data, this)) {
+          if (matchingHandler) {
+            // the function signature will be converted to a string for the
+            // object key, so we can send multiple files at once to each handler
+            if (handlerBuckets[matchingHandler.method]) {
+              handlerBuckets[matchingHandler.method].files.push(file);
+            } else {
+              handlerBuckets[matchingHandler.method] = {
+                fn: matchingHandler.method,
+                files: [file],
+              };
+            }
+          } else {
+            unhandledFiles[fileId] = { ...files[fileId] };
+          }
+        }
+
+        // Send the collected array of files to each matching handler,
+        // rather than the old jQuery file uploader method of sending
+        // a single file at a time through to the handler.
+        for (const bucket of Object.values(handlerBuckets)) {
+          if (!bucket.fn(bucket.files, this)) {
             return this._abortAndReset();
           }
         }
 
-        // Limit the number of simultaneous uploads
+        // Limit the number of simultaneous uploads, for files which have
+        // _not_ been handled by an upload handler.
+        const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
           bootbox.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
@@ -152,6 +187,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           );
           return this._abortAndReset();
         }
+
+        // uppy uses this new object to track progress of remaining files
+        return unhandledFiles;
       },
     });
 
@@ -181,6 +219,37 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.set("uploadProgress", progress);
     });
 
+    this._uppyInstance.on("file-removed", (file, reason) => {
+      // we handle the cancel-all event specifically, so no need
+      // to do anything here. this event is also fired when some files
+      // are handled by an upload handler
+      if (reason === "cancel-all") {
+        return;
+      }
+
+      file.meta.cancelled = true;
+      this._removeInProgressUpload(file.id);
+      this._resetUpload(file, { removePlaceholder: true });
+      if (this.inProgressUploads.length === 0) {
+        this.set("userCancelled", true);
+        this._uppyInstance.cancelAll();
+      }
+    });
+
+    this._uppyInstance.on("upload-progress", (file, progress) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const upload = this.inProgressUploads.find((upl) => upl.id === file.id);
+      if (upload) {
+        const percentage = Math.round(
+          (progress.bytesUploaded / progress.bytesTotal) * 100
+        );
+        upload.set("progress", percentage);
+      }
+    });
+
     this._uppyInstance.on("upload", (data) => {
       this._addNeedProcessing(data.fileIDs.length);
 
@@ -194,7 +263,16 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
 
       files.forEach((file) => {
-        this._inProgressUploads++;
+        // The inProgressUploads is meant to be used to display these uploads
+        // in a UI, and Ember will only update the array in the UI if pushObject
+        // is used to notify it.
+        this.inProgressUploads.pushObject(
+          EmberObject.create({
+            fileName: file.name,
+            id: file.id,
+            progress: 0,
+          })
+        );
         const placeholder = this._uploadPlaceholder(file);
         this.placeholders[file.id] = {
           uploadPlaceholder: placeholder,
@@ -205,7 +283,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      this._inProgressUploads--;
+      this._removeInProgressUpload(file.id);
       let upload = response.body;
       const markdown = this.uploadMarkdownResolvers.reduce(
         (md, resolver) => resolver(upload) || md,
@@ -262,7 +340,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   @bind
   _handleUploadError(file, error, response) {
-    this._inProgressUploads--;
+    this._removeInProgressUpload(file.id);
     this._resetUpload(file, { removePlaceholder: true });
 
     file.meta.error = error;
@@ -272,9 +350,16 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.appEvents.trigger(`${this.eventPrefix}:upload-error`, file);
     }
 
-    if (this._inProgressUploads === 0) {
+    if (this.inProgressUploads.length === 0) {
       this._reset();
     }
+  },
+
+  _removeInProgressUpload(fileId) {
+    this.set(
+      "inProgressUploads",
+      this.inProgressUploads.filter((upl) => upl.id !== fileId)
+    );
   },
 
   _setupPreProcessors() {
@@ -466,5 +551,36 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
+  },
+
+  _bindMobileUploadButton() {
+    if (this.site.mobileView) {
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
+      };
+      this.mobileUploadButton.addEventListener(
+        "click",
+        this.mobileUploadButtonEventListener,
+        false
+      );
+    }
+  },
+
+  _unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this.mobileUploadButtonEventListener
+    );
+  },
+
+  _filenamePlaceholder(data) {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  },
+
+  _resetUploadFilenamePlaceholder() {
+    this.set("uploadFilenamePlaceholder", null);
   },
 });

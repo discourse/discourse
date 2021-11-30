@@ -309,9 +309,22 @@ export default function (options) {
     }
     ul.find("li").click(function () {
       selectedOption = ul.find("li").index(this);
-      completeTerm(autocompleteOptions[selectedOption]);
-      if (!options.single) {
-        me.focus();
+      // hack for Gboard, see meta.discourse.org/t/-/187009/24
+      if (autocompleteOptions == null) {
+        const opts = { ...options, _gboard_hack_force_lookup: true };
+        const forcedAutocompleteOptions = dataSource(prevTerm, opts);
+        forcedAutocompleteOptions?.then((data) => {
+          updateAutoComplete(data);
+          completeTerm(autocompleteOptions[selectedOption]);
+          if (!options.single) {
+            me.focus();
+          }
+        });
+      } else {
+        completeTerm(autocompleteOptions[selectedOption]);
+        if (!options.single) {
+          me.focus();
+        }
       }
       return false;
     });
@@ -398,7 +411,11 @@ export default function (options) {
   }
 
   function dataSource(term, opts) {
-    if (prevTerm === term) {
+    const force = opts._gboard_hack_force_lookup;
+    if (force) {
+      delete opts._gboard_hack_force_lookup;
+    }
+    if (prevTerm === term && !force) {
       return SKIP;
     }
 

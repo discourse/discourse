@@ -444,7 +444,10 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (this.selectKit.options.closeOnChange) {
+          if (
+            this.selectKit.options.closeOnChange ||
+            (isPresent(value) && this.selectKit.options.maximum === 1)
+          ) {
             this.selectKit.close(event);
           }
 
@@ -861,7 +864,10 @@ export default Component.extend(
           `#${this.selectKit.uniqueID}-body`
         );
 
-        const placementStrategy = this?.site?.mobileView ? "absolute" : "fixed";
+        const placementStrategy =
+          this.capabilities?.isIpadOS || this.site?.mobileView
+            ? "absolute"
+            : "fixed";
         const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
