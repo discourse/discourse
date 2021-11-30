@@ -6,7 +6,7 @@ class AssociatedGroup < ActiveRecord::Base
   has_many :groups, through: :group_associated_groups
 
   def label
-    "#{name}:#{provider_name}#{provider_id ? ":#{provider_id}" : ""}"
+    "#{provider_name}:#{name}"
   end
 
   def self.has_provider?

@@ -1,14 +1,8 @@
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-const AssociatedGroup = EmberObject.extend({
-  @discourseComputed
-  label() {
-    return `${this.provider_name}:${this.name}`;
-  },
-});
+const AssociatedGroup = EmberObject.extend();
 
 AssociatedGroup.reopenClass({
   list() {

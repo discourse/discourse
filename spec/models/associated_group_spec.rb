@@ -8,9 +8,8 @@ describe AssociatedGroup do
   let(:group) { Fabricate(:group) }
 
   it "generates a label" do
-    provider_id = SecureRandom.hex(20)
-    ag = described_class.new(name: "group1", provider_name: "google", provider_id: provider_id)
-    expect(ag.label).to eq("group1:google:#{provider_id}")
+    ag = described_class.new(name: "group1", provider_name: "google")
+    expect(ag.label).to eq("google:group1")
   end
 
   it "detects whether any auth providers provide associated groups" do
