@@ -338,9 +338,32 @@ section.tag-info {
     margin-right: 0.5em;
   }
 
+  .edit-tag-wrapper {
+    display: flex;
+
+    input {
+      margin-right: 0.5em;
+    }
+  }
+  .tag-name-wrapper,
+  .tag-description-wrapper {
+    display: flex;
+  }
+  .tag-name-wrapper a {
+    color: var(--primary-high);
+    margin-left: 0.5em;
+  }
+
+  .tag-name-wrapper a {
+    font-size: var(--font-up-3);
+  }
+
   .tag-name .discourse-tag {
     display: block;
-    margin-bottom: 0.75em;
+  }
+
+  .tag-description-wrapper {
+    margin-bottom: 1em;
   }
 
   .synonyms-list,

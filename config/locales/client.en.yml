@@ -3796,6 +3796,7 @@ en:
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      save: "Save name and description of the tag"
       tag_groups_info:
         one: 'This tag belongs to the group "%{tag_groups}".'
         other: "This tag belongs to these groups: %{tag_groups}."
@@ -3819,8 +3820,8 @@ en:
       delete_confirm_synonyms:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
-      rename_tag: "Rename Tag"
-      rename_instructions: "Choose a new name for the tag:"
+      edit_tag: "Edit tag name and description"
+      description: "Description"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
