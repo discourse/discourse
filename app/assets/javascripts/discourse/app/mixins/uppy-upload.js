@@ -230,7 +230,7 @@ export default Mixin.create(UppyS3Multipart, {
     if (!this.filesAwaitingUpload) {
       return;
     }
-    if (!this._uppyInstance.getFiles().length) {
+    if (!this._uppyInstance?.getFiles().length) {
       return;
     }
     return this._uppyInstance?.upload();
