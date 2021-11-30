@@ -442,7 +442,7 @@ acceptance("Tag info", function (needs) {
     assert.ok(exists(".tag-info .tag-name"), "show tag");
 
     await click("#edit-tag");
-    assert.equal(
+    assert.strictEqual(
       query("#edit-name").value,
       "happy-monkey",
       "it displays original tag name"
