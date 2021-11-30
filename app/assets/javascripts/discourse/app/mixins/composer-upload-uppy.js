@@ -263,7 +263,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
 
       files.forEach((file) => {
-        this.inProgressUploads.push(
+        // The inProgressUploads is meant to be used to display these uploads
+        // in a UI, and Ember will only update the array in the UI if pushObject
+        // is used to notify it.
+        this.inProgressUploads.pushObject(
           EmberObject.create({
             fileName: file.name,
             id: file.id,
