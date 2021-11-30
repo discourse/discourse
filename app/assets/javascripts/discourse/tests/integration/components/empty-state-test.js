@@ -1,23 +1,18 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "ember-qunit";
-import { render } from "@ember/test-helpers";
+import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
 
-const LEGACY_ENV = !setupRenderingTest;
-
-module("Integration | Component | empty-state", function (hooks) {
-  if (LEGACY_ENV) {
-    return;
-  }
-
+discourseModule("Integration | Component | empty-state", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it renders", async function (assert) {
-    await render(hbs`
-      <EmptyState @title="title" @body="body" />
-    `);
+  componentTest("it renders", {
+    template: hbs`<EmptyState @title="title" @body="body" />`,
 
-    assert.dom("[data-test-title]").hasText("title");
-    assert.dom("[data-test-body]").hasText("body");
+    test(assert) {
+      assert.strictEqual(query("[data-test-title]").textContent, "title");
+      assert.strictEqual(query("[data-test-body]").textContent, "body");
+    },
   });
 });
