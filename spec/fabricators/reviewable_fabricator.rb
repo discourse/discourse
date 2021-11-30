@@ -57,6 +57,9 @@ Fabricator(:reviewable_flagged_post) do
   topic
   target_type 'Post'
   target { Fabricate(:post) }
+  reviewable_scores { |p| [
+    Fabricate.build(:reviewable_score, reviewable_id: p[:id]),
+  ]}
 end
 
 Fabricator(:reviewable_user) do

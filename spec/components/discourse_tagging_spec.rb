@@ -383,6 +383,18 @@ describe DiscourseTagging do
       expect(topic.tags.pluck(:name)).to be_blank
     end
 
+    it 'can remove tags and keep existent ones' do
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic = Fabricate(:topic, tags: [tag1, tag2])
+      Fabricate(:category, allowed_tags: [tag1.name])
+
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
+
+      expect(result).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to eq([tag1.name])
+    end
+
     context 'respects category minimum_required_tags setting' do
       fab!(:category) { Fabricate(:category, minimum_required_tags: 2) }
       fab!(:topic) { Fabricate(:topic, category: category) }

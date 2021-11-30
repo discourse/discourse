@@ -1,5 +1,6 @@
 import { bind } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
@@ -7,7 +8,6 @@ import { isTesting } from "discourse-common/config/environment";
 import {
   clipboardHelpers,
   determinePostReplaceSelection,
-  safariHacksDisabled,
 } from "discourse/lib/utilities";
 import { next, schedule } from "@ember/runloop";
 
@@ -17,6 +17,14 @@ const isInside = (text, regex) => {
 };
 
 export default Mixin.create({
+  init() {
+    this._super(...arguments);
+    generateLinkifyFunction(this.markdownOptions || {}).then((linkify) => {
+      // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
+      this._cachedLinkify = linkify;
+    });
+  },
+
   // ensures textarea scroll position is correct
   _focusTextArea() {
     schedule("afterRender", () => {
@@ -87,7 +95,7 @@ export default Mixin.create({
       this._$textarea.trigger("change");
       if (opts.scroll) {
         const oldScrollPos = this._$textarea.scrollTop();
-        if (!this.capabilities.isIOS || safariHacksDisabled()) {
+        if (!this.capabilities.isIOS) {
           this._$textarea.focus();
         }
         this._$textarea.scrollTop(oldScrollPos);
@@ -242,7 +250,8 @@ export default Mixin.create({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
+    const selected = this._getSelected(null, { lineVal: true });
+    const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
     const isCodeBlock = isInside(pre, /(^|\n)```/g);
 
@@ -269,6 +278,27 @@ export default Mixin.create({
         );
       } else {
         canPasteHtml = !isCodeBlock;
+      }
+    }
+
+    if (
+      this._cachedLinkify &&
+      plainText &&
+      !handled &&
+      selected.end > selected.start
+    ) {
+      if (this._cachedLinkify.test(plainText)) {
+        const match = this._cachedLinkify.match(plainText)[0];
+        if (
+          match &&
+          match.index === 0 &&
+          match.lastIndex === match.raw.length
+        ) {
+          // When specified, linkify supports fuzzy links and emails. Prefer providing the protocol.
+          // eg: pasting "example@discourse.org" may apply a link format of "mailto:example@discourse.org"
+          this._addText(selected, `[${selectedValue}](${match.url})`);
+          handled = true;
+        }
       }
     }
 

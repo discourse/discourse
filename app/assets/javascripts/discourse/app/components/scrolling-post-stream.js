@@ -6,6 +6,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 const DEBOUNCE_DELAY = 50;
 
@@ -320,19 +321,21 @@ export default MountWidget.extend({
     this.queueRerender();
   },
 
+  @bind
   _debouncedScroll() {
     discourseDebounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () =>
-      discourseDebounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
     this._previouslyNearby = {};
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
-    $(document).bind("touchmove.post-stream", debouncedScroll);
-    $(window).bind("scroll.post-stream", debouncedScroll);
+    const opts = {
+      passive: true,
+    };
+    document.addEventListener("touchmove", this._debouncedScroll, opts);
+    window.addEventListener("scroll", this._debouncedScroll, opts);
     this._scrollTriggered();
 
     this.appEvents.on("post-stream:posted", this, "_posted");
@@ -362,8 +365,8 @@ export default MountWidget.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    $(document).unbind("touchmove.post-stream");
-    $(window).unbind("scroll.post-stream");
+    document.removeEventListener("touchmove", this._debouncedScroll);
+    window.removeEventListener("scroll", this._debouncedScroll);
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     $(this.element).off("mouseenter.post-stream");
     $(this.element).off("mouseleave.post-stream");

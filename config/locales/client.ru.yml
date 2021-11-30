@@ -1592,22 +1592,22 @@ ru:
         invite:
           new_title: "Создать приглашение"
           edit_title: "Изменить приглашение"
-          instructions: "Поделитесь указанной здесь ссылкой, чтобы предоставить доступ к этому сайту"
+          instructions: "Поделитесь указанной здесь ссылкой, чтобы предоставить доступ к этому сайту:"
           copy_link: "Скопировать ссылку"
           expires_in_time: "Срок действия ссылки истечёт через %{time}"
           expired_at_time: "Срок действия ссылки истёк %{time}"
           show_advanced: "Показать дополнительные параметры"
           hide_advanced: "Скрыть дополнительные параметры"
-          restrict_email: "Ограничить одним адресом электронной почты"
+          restrict_email: "Ограничиться адресом электронной почты"
           max_redemptions_allowed: "Максимальное количество использований ссылки"
           add_to_groups: "Добавить приглашённых в группы"
-          invite_to_topic: "После перехода на сайт открыть эту тему"
+          invite_to_topic: "После перехода на сайт открыть тему"
           expires_at: "Срок действия приглашения истечёт после"
           custom_message: "Необязательное личное сообщение"
           send_invite_email: "Сохранить и отправить приглашение"
+          send_invite_email_instructions: "Ограничиться адресом электронной почты для отправки приглашения"
           save_invite: "Сохранить приглашение"
           invite_saved: "Приглашение сохранено."
-          invite_copied: "Ссылка на приглашение скопирована."
         bulk_invite:
           none: "Нет приглашений для отображения на этой странице."
           text: "Массовое приглашение"
@@ -2256,6 +2256,14 @@ ru:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - завершено"
+      dismiss_confirmation:
+        body:
+          one: "Вы уверены? У вас %{count} важное уведомление."
+          few: "Вы уверены? У вас %{count} важных уведомления."
+          many: "Вы уверены? У вас %{count} важных уведомлений."
+          other: "Вы уверены? У вас есть %{count} важных уведомлений."
+        dismiss: "Пометить прочитанными"
+        cancel: "Нет"
       group_message_summary:
         one: "%{count} сообщение в вашей группе %{group_name}"
         few: "%{count} сообщения в вашей группе %{group_name}"
@@ -2343,6 +2351,8 @@ ru:
       in_topics_posts: "Во всех темах и сообщениях"
       enter_hint: "Или нажмите Enter"
       in_posts_by: "В сообщениях от %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "Использовать поисковый движок браузера"
       type:
         default: "По темам и сообщениям"
         users: "По пользователям"
@@ -2355,10 +2365,10 @@ ru:
         topic: "Искать в этой теме"
         private_messages: "Искать в личных сообщениях"
       tips:
-        category_tag: "фильтры по разделам или тегам"
-        author: "фильтры по автору сообщения"
-        in: "фильтры по метаданным (например, in:title, in:personal, in:pinned)"
-        status: "фильтры по статусу темы"
+        category_tag: "Фильтр по разделам или тегам"
+        author: "Фильтр по автору сообщения"
+        in: "Фильтр по метаданным (например, in:title, in:personal, in:pinned)"
+        status: "Фильтр по статусу темы"
         full_search: "Запуск поиска по всей странице"
         full_search_key: "%{modifier} + Enter"
       advanced:
@@ -2423,7 +2433,7 @@ ru:
           placeholder: максимум
           aria_label: Фильтр по максимальному количеству просмотров
         additional_options:
-          label: "Фильтр по количеству сообщений и просмотрам тем"
+          label: "Фильтр по количеству сообщений и просмотров тем"
     hamburger_menu: "системное меню"
     new_item: "новый"
     go_back: "вернуться"
@@ -2787,6 +2797,11 @@ ru:
         help: "Поделиться ссылкой на тему"
         instructions: "Поделиться ссылкой на тему:"
         copied: "Ссылка на тему скопирована."
+        restricted_groups:
+          one: "Тема видна только участникам группы %{groupNames}"
+          few: "Тема видна только участникам групп: %{groupNames}"
+          many: "Тема видна только участникам групп: %{groupNames}"
+          other: "Тема видна только участникам групп: %{groupNames}"
         notify_users:
           title: "Уведомить"
           instructions: "Уведомить следующих пользователей об этой теме:"
@@ -3701,6 +3716,7 @@ ru:
         title: "Меню результатов поиска"
         prev_next: "%{shortcut} Перемещение по результатам поиска"
         insert_url: "%{shortcut} Вставить ссылку на найденное сообщение в окно открытого редактора"
+        full_page_search: "%{shortcut} Запустить поиск по всей странице"
     badges:
       earned_n_times:
         one: "Заработал эту награду %{count} раз"
@@ -4176,6 +4192,8 @@ ru:
               wordpress: Работа плагина WordPress wp-discourse.
             posts:
               edit: Редактирование сообщения.
+            uploads:
+              create: Загрузка нового файла.
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.

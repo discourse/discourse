@@ -95,7 +95,7 @@ export default Component.extend(
     didInsertElement() {
       this._super(...arguments);
 
-      this.bindScrolling({ name: "topic-view" });
+      this.bindScrolling();
       window.addEventListener("resize", this.scrolled);
       $(this.element).on(
         "click.discourse-redirect",
@@ -110,7 +110,7 @@ export default Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      this.unbindScrolling("topic-view");
+      this.unbindScrolling();
       window.removeEventListener("resize", this.scrolled);
 
       // Unbind link tracking

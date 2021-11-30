@@ -863,6 +863,8 @@ be:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
     notifications:
+      dismiss_confirmation:
+        cancel: "Адмяніць"
       popup:
         mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
         group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'

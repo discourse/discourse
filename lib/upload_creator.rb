@@ -406,9 +406,6 @@ class UploadCreator
       if use_el.attr('href')
         use_el.remove_attribute('href') unless use_el.attr('href').starts_with?('#')
       end
-      if use_el.attr('xlink:href')
-        use_el.remove_attribute('xlink:href') unless use_el.attr('xlink:href').starts_with?('#')
-      end
     end
     File.write(@file.path, doc.to_s)
     @file.rewind

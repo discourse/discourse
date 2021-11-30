@@ -43,7 +43,7 @@ pl_PL:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} temu"
-      wrap_on: "na %{date}"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -1589,22 +1589,19 @@ pl_PL:
         invite:
           new_title: "Utwórz zaproszenie"
           edit_title: "Edytuj zaproszenie"
-          instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny"
+          instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           copy_link: "skopiuj link"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
-          restrict_email: "Ogranicz do jednego adresu e-mail"
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
-          invite_to_topic: "Przyjedź pod ten temat"
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zapisane."
-          invite_copied: "Link z zaproszeniem został skopiowany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2253,6 +2250,9 @@ pl_PL:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
+      dismiss_confirmation:
+        dismiss: "Odrzuć"
+        cancel: "Anuluj"
       group_message_summary:
         one: "%{count} wiadomość w skrzynce odbiorczej %{group_name}"
         few: "%{count} wiadomości w skrzynce odbiorczej %{group_name}"

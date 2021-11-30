@@ -37,6 +37,10 @@ class ThemeSettingsManager
     @opts[:description] # Old method of specifying description. Is now overridden by locale file
   end
 
+  def requests_refresh?
+    @opts[:refresh]
+  end
+
   def value=(new_value)
     ensure_is_valid_value!(new_value)
 

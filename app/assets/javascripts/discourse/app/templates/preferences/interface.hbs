@@ -142,9 +142,6 @@
   {{#if siteSettings.allow_users_to_hide_profile}}
     {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
   {{/if}}
-  {{#if isiPad}}
-    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
-  {{/if}}
   {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
   <div class="controls controls-dropdown pref-page-title">
     <label for="user-title-count-mode">{{i18n "user.title_count_mode.title"}}</label>

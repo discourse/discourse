@@ -3474,4 +3474,11 @@ export default {
       timezone: "Australia/Brisbane",
     },
   },
+  "/u/recent-searches": {
+    success: "OK",
+    recent_searches: [
+      "yellow",
+      "blue"
+    ]
+  }
 };

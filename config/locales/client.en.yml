@@ -2105,6 +2105,9 @@ en:
       cannot_see_mention:
         category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+      here_mention:
+        one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
+        other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 
@@ -2287,9 +2290,9 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "You have %{count} important notification, are you sure you would like to dismiss?"
-          other: "You have %{count} important notifications, are you sure you would like to dismiss?"
-        confirm: "Confirm"
+          one: "Are you sure? You have %{count} important notification."
+          other: "Are you sure? You have %{count} important notifications."
+        dismiss: "Dismiss"
         cancel: "Cancel"
 
       group_message_summary:
@@ -2379,6 +2382,10 @@ en:
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "again to use native browser search"
+      recent: "Recent Searches"
+      clear_recent: "Clear Recent Searches"
 
       type:
         default: "Topics/posts"
@@ -3507,6 +3514,9 @@ en:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
     posts: "Posts"
+    pending_posts:
+      label: "Pending"
+      label_with_count: "Pending (%{count})"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
@@ -4193,6 +4203,8 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            uploads:
+              create: Upload a new file.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.

@@ -59,7 +59,6 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
 
@@ -197,7 +196,6 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     });
   });
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
 
@@ -229,12 +227,12 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.14", (api) => {
-      api.addComposerUploadHandler(["png"], (file) => {
+      api.addComposerUploadHandler(["png"], (files) => {
+        const file = files[0];
         bootbox.alert(`This is an upload handler test for ${file.name}`);
       });
     });

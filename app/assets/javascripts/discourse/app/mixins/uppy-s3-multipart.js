@@ -122,6 +122,10 @@ export default Mixin.create({
 
   @bind
   _completeMultipartUpload(file, data) {
+    if (file.meta.cancelled) {
+      return;
+    }
+
     this._uppyInstance.emit("complete-multipart", file.id);
     const parts = data.parts.map((part) => {
       return { part_number: part.PartNumber, etag: part.ETag };
@@ -158,6 +162,8 @@ export default Mixin.create({
     if (file.meta.error && this.siteSettings.enable_upload_debug_mode) {
       return;
     }
+
+    file.meta.cancelled = true;
 
     return ajax(getUrl(`${this.uploadRootPath}/abort-multipart.json`), {
       type: "POST",

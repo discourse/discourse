@@ -38,6 +38,9 @@ zh_CN:
       show-results:
         title: "显示投票结果"
         label: "显示结果"
+      remove-vote:
+        title: "移除您的投票"
+        label: "移除投票"
       hide-results:
         title: "回到您的投票"
         label: "显示投票"

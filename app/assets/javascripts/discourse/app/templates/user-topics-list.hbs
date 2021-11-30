@@ -1,10 +1,8 @@
 {{#if noContent}}
-  <div class="empty-state">
-    <span class="empty-state-title">{{model.emptyState.title}}</span>
-    <div class="empty-state-body">
-      <p>{{model.emptyState.body}}</p>
-    </div>
-  </div>
+  <EmptyState
+    @title={{model.emptyState.title}}
+    @body={{model.emptyState.body}}
+  />
 {{else}}
   {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list .topic-list-item" action=(action "loadMore")}}
     {{topic-dismiss-buttons

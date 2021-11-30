@@ -7578,5 +7578,10 @@ Uppy.XHRUpload = require('@uppy/xhr-upload')
 Uppy.AwsS3 = require('@uppy/aws-s3')
 Uppy.AwsS3Multipart = require('@uppy/aws-s3-multipart')
 Uppy.DropTarget = require('@uppy/drop-target')
+Uppy.Utils = {
+  delay: require('@uppy/utils/lib/delay'),
+  EventTracker: require('@uppy/utils/lib/EventTracker'),
+  AbortControllerLib: require('@uppy/utils/lib/AbortController')
+}
 
-},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":18,"@uppy/drop-target":21,"@uppy/xhr-upload":49}]},{},[58]);
+},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":18,"@uppy/drop-target":21,"@uppy/utils/lib/AbortController":23,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/delay":29,"@uppy/xhr-upload":49}]},{},[58]);

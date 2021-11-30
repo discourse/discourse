@@ -1,4 +1,4 @@
-import { bind as emberBind, next, schedule } from "@ember/runloop";
+import { bind as emberBind, schedule } from "@ember/runloop";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import extractValue from "discourse-common/utils/extract-value";
 import handleDescriptor from "discourse-common/utils/handle-descriptor";
@@ -19,12 +19,10 @@ export default function discourseComputedDecorator(...params) {
 export function afterRender(target, name, descriptor) {
   const originalFunction = descriptor.value;
   descriptor.value = function () {
-    next(() => {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          return originalFunction.apply(this, arguments);
-        }
-      });
+    schedule("afterRender", () => {
+      if (this.element && !this.isDestroying && !this.isDestroyed) {
+        return originalFunction.apply(this, arguments);
+      }
     });
   };
 }

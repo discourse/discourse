@@ -3,6 +3,7 @@
   flex: 1;
   right: 0;
   left: 0;
+  top: var(--header-offset, 60px);
   background-color: var(--tertiary-low);
   color: var(--tertiary);
   max-height: 0;

@@ -3,6 +3,7 @@ import {
   authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
 } from "discourse/lib/uploads";
+import { alias } from "@ember/object/computed";
 import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import {
@@ -27,7 +28,7 @@ import {
 import { later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import ComposerUpload from "discourse/mixins/composer-upload";
+import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
@@ -71,17 +72,6 @@ export function cleanUpComposerUploadHandler() {
   uploadHandlers.length = 0;
 }
 
-let uploadProcessorQueue = [];
-let uploadProcessorActions = {};
-export function addComposerUploadProcessor(queueItem, actionItem) {
-  uploadProcessorQueue.push(queueItem);
-  Object.assign(uploadProcessorActions, actionItem);
-}
-export function cleanUpComposerUploadProcessor() {
-  uploadProcessorQueue = [];
-  uploadProcessorActions = {};
-}
-
 let uploadPreProcessors = [];
 export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
   if (!(pluginClass.prototype instanceof BasePlugin)) {
@@ -107,18 +97,22 @@ export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];
 }
 
-export default Component.extend(ComposerUpload, {
+export default Component.extend(ComposerUploadUppy, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
+  eventPrefix: "composer",
+  uploadType: "composer",
+  uppyId: "composer-editor-uppy",
+  composerModel: alias("composer"),
+  composerModelContentKey: "reply",
+  editorInputClass: ".d-editor-input",
   shouldBuildScrollMap: true,
   scrollMap: null,
   processPreview: true,
 
   uploadMarkdownResolvers,
-  uploadProcessorActions,
-  uploadProcessorQueue,
   uploadPreProcessors,
   uploadHandlers,
 
@@ -360,10 +354,14 @@ export default Component.extend(ComposerUpload, {
     });
 
     schedule("afterRender", () => {
-      input?.addEventListener("touchstart", this._handleInputInteraction);
+      input?.addEventListener("touchstart", this._handleInputInteraction, {
+        passive: true,
+      });
       input?.addEventListener("mouseenter", this._handleInputInteraction);
 
-      preview?.addEventListener("touchstart", this._handlePreviewInteraction);
+      preview?.addEventListener("touchstart", this._handlePreviewInteraction, {
+        passive: true,
+      });
       preview?.addEventListener("mouseenter", this._handlePreviewInteraction);
     });
   },
@@ -561,10 +559,11 @@ export default Component.extend(ComposerUpload, {
   _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
+    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
+      this._warnHereMention(r.here_count);
     });
   },
 
@@ -639,6 +638,20 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
+  _warnHereMention(hereCount) {
+    if (!hereCount || hereCount === 0) {
+      return;
+    }
+
+    later(
+      this,
+      () => {
+        this.hereMention(hereCount);
+      },
+      2000
+    );
+  },
+
   @bind
   _handleImageScaleButtonClick(event) {
     if (!event.target.classList.contains("scale-btn")) {
@@ -688,6 +701,7 @@ export default Component.extend(ComposerUpload, {
 
     imageResize.removeAttribute("hidden");
     readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
     editContainer.setAttribute("hidden", "true");
   },
 
@@ -743,6 +757,7 @@ export default Component.extend(ComposerUpload, {
     );
     const editContainerInput = editContainer.querySelector(".alt-text-input");
 
+    buttonWrapper.setAttribute("editing", "true");
     imageResize.setAttribute("hidden", "true");
     readonlyContainer.setAttribute("hidden", "true");
     editContainerInput.value = altText.textContent;
