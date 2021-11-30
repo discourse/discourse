@@ -2,12 +2,18 @@
 
 module BackupRestore
   class S3BackupStore < BackupStore
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21_600 # 6 hours
+    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 6.hours.to_i
+
+    delegate :abort_multipart, :presign_multipart_part, :list_multipart_parts,
+      :complete_multipart, to: :s3_helper
 
     def initialize(opts = {})
       @s3_options = S3Helper.s3_options(SiteSetting)
       @s3_options.merge!(opts[:s3_options]) if opts[:s3_options]
-      @s3_helper = S3Helper.new(s3_bucket_name_with_prefix, '', @s3_options.clone)
+    end
+
+    def s3_helper
+      @s3_helper ||= S3Helper.new(s3_bucket_name_with_prefix, '', @s3_options.clone)
     end
 
     def remote?
@@ -15,12 +21,12 @@ module BackupRestore
     end
 
     def file(filename, include_download_source: false)
-      obj = @s3_helper.object(filename)
+      obj = s3_helper.object(filename)
       create_file_from_object(obj, include_download_source) if obj.exists?
     end
 
     def delete_file(filename)
-      obj = @s3_helper.object(filename)
+      obj = s3_helper.object(filename)
 
       if obj.exists?
         obj.delete
@@ -29,11 +35,11 @@ module BackupRestore
     end
 
     def download_file(filename, destination_path, failure_message = nil)
-      @s3_helper.download_file(filename, destination_path, failure_message)
+      s3_helper.download_file(filename, destination_path, failure_message)
     end
 
     def upload_file(filename, source_path, content_type)
-      obj = @s3_helper.object(filename)
+      obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
       obj.upload_file(source_path, content_type: content_type)
@@ -41,14 +47,71 @@ module BackupRestore
     end
 
     def generate_upload_url(filename)
-      obj = @s3_helper.object(filename)
+      obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
-      ensure_cors!
+      # TODO (martin) We can remove this at a later date when we move this
+      # ensure CORS for backups and direct uploads to a post-site-setting
+      # change event, so the rake task doesn't have to be run manually.
+      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
+
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
       raise StorageError.new(e.message.presence || e.class.name)
+    end
+
+    def signed_url_for_temporary_upload(file_name, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, metadata: {})
+      obj = object_from_path(file_name)
+      raise BackupFileExists.new if obj.exists?
+      key = temporary_upload_path(file_name)
+      s3_helper.presigned_url(
+        key,
+        method: :put_object,
+        expires_in: expires_in,
+        opts: {
+          metadata: metadata,
+          acl: "private"
+        }
+      )
+    end
+
+    def temporary_upload_path(file_name)
+      FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: temporary_folder_prefix)
+    end
+
+    def temporary_folder_prefix
+      folder_prefix = s3_helper.s3_bucket_folder_path.nil? ? "" : s3_helper.s3_bucket_folder_path
+
+      if Rails.env.test?
+        folder_prefix = File.join(folder_prefix, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
+      end
+
+      folder_prefix
+    end
+
+    def create_multipart(file_name, content_type, metadata: {})
+      obj = object_from_path(file_name)
+      raise BackupFileExists.new if obj.exists?
+      key = temporary_upload_path(file_name)
+      s3_helper.create_multipart(key, content_type, metadata: metadata)
+    end
+
+    def move_existing_stored_upload(
+      existing_external_upload_key:,
+      original_filename: nil,
+      content_type: nil
+    )
+      s3_helper.copy(
+        existing_external_upload_key,
+        File.join(s3_helper.s3_bucket_folder_path, original_filename),
+        options: { acl: "private", apply_metadata_to_destination: true }
+      )
+      s3_helper.delete_object(existing_external_upload_key)
+    end
+
+    def object_from_path(path)
+      s3_helper.object(path)
     end
 
     private
@@ -56,7 +119,7 @@ module BackupRestore
     def unsorted_files
       objects = []
 
-      @s3_helper.list.each do |obj|
+      s3_helper.list.each do |obj|
         if obj.key.match?(file_regex)
           objects << create_file_from_object(obj)
         end
@@ -82,10 +145,6 @@ module BackupRestore
       obj.presigned_url(method, expires_in: expires_in_seconds)
     end
 
-    def ensure_cors!
-      @s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])
-    end
-
     def cleanup_allowed?
       !SiteSetting.s3_disable_cleanup
     end
@@ -96,7 +155,7 @@ module BackupRestore
 
     def file_regex
       @file_regex ||= begin
-        path = @s3_helper.s3_bucket_folder_path || ""
+        path = s3_helper.s3_bucket_folder_path || ""
 
         if path.present?
           path = "#{path}/" unless path.end_with?("/")

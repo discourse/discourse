@@ -40,3 +40,4 @@ uk:
             every_three_months: "Кожні три місяці"
             every_six_months: "Кожні півроку"
             every_year: "Щороку"
+      default_title: "Подія на сайті %{site_name}"

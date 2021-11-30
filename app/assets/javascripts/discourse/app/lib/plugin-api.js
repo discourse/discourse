@@ -2,7 +2,6 @@ import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
-  addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
   addButton,
@@ -81,6 +80,7 @@ import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
@@ -92,15 +92,18 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
-// If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.13.0";
+// If you add any methods to the API ensure you bump up the version number
+// based on Semantic Versioning 2.0.0. Please up the changelog at
+// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
+// using the format described at https://keepachangelog.com/en/1.0.0/.
+const PLUGIN_API_VERSION = "1.0.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
-      "To prevent errors, add a `pluginId` key to your changes when calling `modifyClass`"
+      "To prevent errors in tests, add a `pluginId` key to your `modifyClass` call. This will ensure the modification is only applied once."
     );
     return true;
   }
@@ -201,7 +204,7 @@ class PluginApi {
    *
    * ```
    * api.modifyClassStatic('controller:composer', {
-   *   superFinder: function() { return []; }
+   *   superFinder() { return []; }
    * });
    * ```
    **/
@@ -232,7 +235,7 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#far-smile\"></use></svg>";
+   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use href=\"#far-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
@@ -242,7 +245,7 @@ class PluginApi {
    *          namespace: "http://www.w3.org/2000/svg"
    *        },[
    *          h("use", {
-   *          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
    *          namespace: "http://www.w3.org/2000/svg"
    *        })]
    *     );
@@ -489,9 +492,17 @@ class PluginApi {
    * ```
    * api.removePostMenuButton('like');
    * ```
+   *
+   * ```
+   * api.removePostMenuButton('like', (attrs, state, siteSettings, settings, currentUser) => {
+   *   if (attrs.post_number === 1) {
+   *     return true;
+   *   }
+   * });
+   * ```
    **/
-  removePostMenuButton(name) {
-    removeButton(name);
+  removePostMenuButton(name, callback) {
+    removeButton(name, callback);
   }
 
   /**
@@ -735,18 +746,33 @@ class PluginApi {
   }
 
   /**
-   * Register a small icon to be used for custom small post actions
+   * Register a button to display at the bottom of a topic
    *
    * ```javascript
    * api.registerTopicFooterButton({
-   *   key: "flag"
-   *   icon: "flag"
-   *   action: (context) => console.log(context.get("topic.id"))
+   *   id: "flag",
+   *   icon: "flag",
+   *   action(context) { console.log(context.get("topic.id")) },
    * });
    * ```
    **/
-  registerTopicFooterButton(action) {
-    registerTopicFooterButton(action);
+  registerTopicFooterButton(buttonOptions) {
+    registerTopicFooterButton(buttonOptions);
+  }
+
+  /**
+   * Register a dropdown to display at the bottom of a topic, desktop only
+   *
+   * ```javascript
+   * api.registerTopicFooterDropdown({
+   *   id: "my-button",
+   *   content() { return [{id: 1, name: "foo"}] },
+   *   action(itemId) { console.log(itemId) },
+   * });
+   * ```
+   **/
+  registerTopicFooterDropdown(dropdownOptions) {
+    registerTopicFooterDropdown(dropdownOptions);
   }
 
   /**
@@ -996,42 +1022,20 @@ class PluginApi {
   }
 
   /**
-   * Registers a function to handle uploads for specified file types
+   * Registers a function to handle uploads for specified file types.
    * The normal uploading functionality will be bypassed if function returns
    * a falsy value.
-   * This only for uploads of individual files
    *
    * Example:
    *
-   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *   console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (files, editor) => {
+   *   files.forEach((file) => {
+   *     console.log("Handling upload for", file.name);
+   *   });
    * })
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
-  }
-
-  /**
-   * Registers a pre-processor for file uploads
-   * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
-   *
-   * Useful for transforming to-be uploaded files client-side
-   *
-   * Example:
-   *
-   * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation: function (data, options) {
-   *      let p = new Promise((resolve, reject) => {
-   *        let file = data.files[data.index];
-   *        console.log(`Transforming ${file.name}`);
-   *        // do work...
-   *        resolve(data);
-   *      });
-   *      return p;
-   * });
-   */
-  addComposerUploadProcessor(queueItem, actionItem) {
-    addComposerUploadProcessor(queueItem, actionItem);
   }
 
   /**
@@ -1564,6 +1568,9 @@ function getPluginApi(version) {
       owner.registry.register("plugin-api:main", pluginApi, {
         instantiate: false,
       });
+    } else {
+      // If we are re-using an instance, make sure the container is correct
+      pluginApi.container = owner;
     }
 
     // We are recycling the compatible object, but let's update to the higher version
@@ -1601,7 +1608,7 @@ function decorate(klass, evt, cb, id) {
   if (!id) {
     // eslint-disable-next-line no-console
     console.warn(
-      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
     );
   } else {
     if (!_decorated.has(klass)) {

@@ -1924,7 +1924,6 @@ fi:
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin koodilohkoihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "Lisää painike koodilohkoihin lohkon sisällön kopioimiseksi käyttäjän leikepöydälle. Tätä ominaisuutta ei tueta Internet Explorerissa."
     embed_any_origin: "Salli upotettava sisältö alkuperästä riippumatta. Tämä vaaditaan mobiilisovelluksille, joissa on staattista HTML:ää."
     embed_topics_list: "Tue ketjuluetteloiden HTML-upottamista"
     embed_set_canonical_url: "Aseta upotetun sisällön URL-osoitteeksi upotettujen ketjujen kanoninen URL."
@@ -2426,47 +2425,6 @@ fi:
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testiviesti sivustolta
-
-      [**%{base_url}**][0]
-
-      Sähköpostien toimittaminen on monimutkaista. Tässä on muutamia tärkeitä asioita, jotka sinun tulisi tarkistaa ensin:
-
-      – *Varmista*, että asetat "notification email" -asetuksen lähettäjän osoitteen oikein sivustosi asetuksissa. **Lähettämiesi sähköpostien lähettäjäosoitteessa määritetty verkkotunnus on se verkkotunnus, jota vastaan sähköpostisi tarkistetaan**.
-
-      – Tiedä, miten voit tarkastella sähköpostin raakaa lähdettä sähköpostiohjelmassasi, jotta voit etsiä tärkeitä vihjeitä sähköpostien otsikkotiedoista. Gmailissa se on "näytä alkuperäinen" -valinta avattavassa valikossa jokaisen postin oikeassa yläkulmassa.
-
-      – **TÄRKEÄÄ:** Onko internetpalveluntarjoajallasi käänteinen DNS-tietue, joka yhdistää verkkotunnukset ja IP-osoitteet, joista lähetät sähköpostia? [Testaa käänteinen PTR- tietueesi][2] täällä. Jos internetpalveluntarjoaja ei anna asianmukaista käänteistä DNS-osoitustietuetta, sähköpostiviestisi toimittaminen on erittäin epätodennäköistä.
-
-      – Onko verkkotunnuksesi [SPF-tietue][8] oikein? [Testaa SPF-tietueesi][1] täällä. Huomaa, että TXT on oikea virallinen tietuetyyppi SPF:lle.
-
-      – Onko verkkotunnuksesi [DKIM-tietue][3] oikein? Tämä parantaa merkittävästi sähköpostien toimitusta. [Testaa DKIM-tietueesi][7] täällä.
-
-      – Jos käytät omaa sähköpostipalvelintasi, tarkista, etteivät sähköpostipalvelimesi IP-osoitteet [eivät ole millään sähköpostien estolistalla][4]. Varmista myös, että se lähettää täysin pätevän isäntänimen, joka selvittää DNS:nsä HELO-viestissään. Jos näin ei ole, monet postipalvelut hylkäävät sähköpostiviestisi.
-
-      – Suosittelemme **lähettämään testisähköpostin osoitteeseen [mail-tester.com][mt]** varmistaaksesi, että kaikki edellä mainitut toimivat oikein.
-
-      (*Helppo* tapa on luoda tili [SendGridissä][sg], [SparkPostissa][sp], [Mailgunissa][mg] tai [Mailjetissä][mj], joilla on edullisia postituspaketteja ja soveltuvat pienille yhteisöille. Sinun täytyy kuitenkin vielä määrittää SPF- ja DKIM-tietueet DNS:ssäsi!)
-
-      Toivomme, että tämä sähköpostien toimitettavuustesti tuli perille ongelmitta!
-
-      Onnea,
-
-      Ystäväsi [Discoursella](https://www. iscourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup. spx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester. om/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www. parkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
@@ -4259,10 +4217,8 @@ fi:
             label: "Yhteisön nimi"
             placeholder: "Jennin mesta"
           site_description:
-            label: "Kuvaile yhteisöä yhdellä lyhyellä lauseella"
             placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
           short_site_description:
-            label: "Kuvaile yhteisöä muutamalla sanalla lyhyesti"
             placeholder: "Paras yhteisö ikinä missään"
       introduction:
         title: "Johdanto"

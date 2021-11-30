@@ -5,6 +5,7 @@
 # version: 1.0
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
+# transpile_js: true
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
@@ -159,10 +160,11 @@ after_initialize do
     guardian = Guardian.new(user)
     DiscoursePoll::Poll.schedule_jobs(post)
 
-    unless post.is_first_post?
-      polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
-      post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
-    end
+    next if post.is_first_post?
+    next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
+
+    polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
+    post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
   on(:merging_users) do |source_user, target_user|

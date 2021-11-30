@@ -9,7 +9,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 const UserBadge = EmberObject.extend({
   @discourseComputed
-  postUrl: function () {
+  postUrl() {
     if (this.topic_title) {
       return "/t/-/" + this.topic_id + "/" + this.post_number;
     }
@@ -34,7 +34,7 @@ const UserBadge = EmberObject.extend({
 });
 
 UserBadge.reopenClass({
-  createFromJson: function (json) {
+  createFromJson(json) {
     // Create User objects.
     if (json.users === undefined) {
       json.users = [];
@@ -110,7 +110,7 @@ UserBadge.reopenClass({
     @param {Object} options
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByUsername: function (username, options) {
+  findByUsername(username, options) {
     if (!username) {
       return Promise.resolve([]);
     }
@@ -130,7 +130,7 @@ UserBadge.reopenClass({
     @param {String} badgeId
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByBadgeId: function (badgeId, options) {
+  findByBadgeId(badgeId, options) {
     if (!options) {
       options = {};
     }
@@ -151,13 +151,13 @@ UserBadge.reopenClass({
     @param {String} username username of the user to be granted the badge.
     @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
-  grant: function (badgeId, username, reason) {
+  grant(badgeId, username, reason) {
     return ajax("/user_badges", {
       type: "POST",
       data: {
-        username: username,
+        username,
         badge_id: badgeId,
-        reason: reason,
+        reason,
       },
     }).then(function (json) {
       return UserBadge.createFromJson(json);

@@ -2401,10 +2401,8 @@ be:
             label: "Імя вашага супольнасці"
             placeholder: "Hangout Джэйн"
           site_description:
-            label: "Апішыце сваю супольнасць у адным кароткім сказе"
             placeholder: "Месца для Джэйн і яе сяброў, каб абмеркаваць цікавыя рэчы"
           short_site_description:
-            label: "Апішыце сваю супольнасць у некалькіх словах"
             placeholder: "Лепшае супольнасць калі-небудзь"
       introduction:
         title: "ўвядзенне"

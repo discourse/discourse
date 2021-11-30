@@ -63,7 +63,7 @@ export default Mixin.create({
     }
 
     const closestArticle = target.closest("article");
-    const postId = closestArticle ? closestArticle.dataset["post-id"] : null;
+    const postId = closestArticle ? closestArticle.dataset.postId : null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
 
@@ -98,14 +98,14 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition($(this.element), this._hide.bind(this));
+    afterTransition($(this.element), this._hide);
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
     const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
-      boundCardClickHandler: this._cardClickHandler.bind(this),
+      boundCardClickHandler: this._cardClickHandler,
       previewClickEvent,
       mobileScrollEvent,
     });
@@ -127,6 +127,7 @@ export default Mixin.create({
     );
   },
 
+  @bind
   _cardClickHandler(event) {
     if (this.avatarSelector) {
       let matched = this._showCardOnClick(
@@ -290,6 +291,7 @@ export default Mixin.create({
     return mainOutletOffset.top - outletHeights;
   },
 
+  @bind
   _hide() {
     if (!this.visible) {
       $(this.element).css({ left: -9999, top: -9999 });

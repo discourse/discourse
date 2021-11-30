@@ -1,6 +1,6 @@
-hljs.registerLanguage("csharp",(()=>{"use strict";return e=>{var n={
+hljs.registerLanguage("csharp",(()=>{"use strict";return e=>{const n={
 keyword:["abstract","as","base","break","case","class","const","continue","do","else","event","explicit","extern","finally","fixed","for","foreach","goto","if","implicit","in","interface","internal","is","lock","namespace","new","operator","out","override","params","private","protected","public","readonly","record","ref","return","sealed","sizeof","stackalloc","static","struct","switch","this","throw","try","typeof","unchecked","unsafe","using","virtual","void","volatile","while"].concat(["add","alias","and","ascending","async","await","by","descending","equals","from","get","global","group","init","into","join","let","nameof","not","notnull","on","or","orderby","partial","remove","select","set","unmanaged","value|0","var","when","where","with","yield"]),
-built_in:["bool","byte","char","decimal","delegate","double","dynamic","enum","float","int","long","nint","nuint","object","sbyte","short","string","ulong","unit","ushort"],
+built_in:["bool","byte","char","decimal","delegate","double","dynamic","enum","float","int","long","nint","nuint","object","sbyte","short","string","ulong","uint","ushort"],
 literal:["default","false","null","true"]},a=e.inherit(e.TITLE_MODE,{
 begin:"[a-zA-Z](\\.?\\w)*"}),i={className:"number",variants:[{
 begin:"\\b(0b[01']+)"},{
@@ -15,7 +15,7 @@ begin:/\{\{/},{begin:/\}\}/},{begin:'""'},r]},d=e.inherit(o,{illegal:/\n/,
 contains:[{begin:/\{\{/},{begin:/\}\}/},{begin:'""'},l]})
 ;r.contains=[o,c,s,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,i,e.C_BLOCK_COMMENT_MODE],
 l.contains=[d,c,t,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,i,e.inherit(e.C_BLOCK_COMMENT_MODE,{
-illegal:/\n/})];var g={variants:[o,c,s,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]
+illegal:/\n/})];const g={variants:[o,c,s,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]
 },E={begin:"<",end:">",contains:[{beginKeywords:"in out"},a]
 },_=e.IDENT_RE+"(<"+e.IDENT_RE+"(\\s*,\\s*"+e.IDENT_RE+")*>)?(\\[\\])?",b={
 begin:"@"+e.IDENT_RE,relevance:0};return{name:"C#",aliases:["cs","c#"],

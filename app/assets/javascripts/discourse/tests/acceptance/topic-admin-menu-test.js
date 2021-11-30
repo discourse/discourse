@@ -51,7 +51,7 @@ acceptance("Topic - Admin Menu", function (needs) {
     assert.ok(exists("#topic"), "The topic was rendered");
     await click(".toggle-admin-menu");
 
-    assert.equal(
+    assert.strictEqual(
       document.activeElement,
       document.querySelector(".topic-admin-multi-select > button")
     );

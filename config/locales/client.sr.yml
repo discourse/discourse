@@ -1129,6 +1129,9 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      dismiss_confirmation:
+        dismiss: "Одбаци"
+        cancel: "Odustani"
       titles:
         watching_first_post: "nova tema"
     upload_selector:
@@ -2439,7 +2442,6 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Dodajte nove Emoji-e koji će biti dostupni svima. (Savet: povuci i ispusti više datoteka odjednom)"
         add: "Dodaj Novi Emoji"
         uploading: "Učitavanje..."
         name: "Ime"

@@ -232,6 +232,10 @@ export default Controller.extend(ModalFunctionality, {
         insert_url: buildShortcut("search_menu.insert_url", {
           keys1: ["a"],
         }),
+        full_page_search: buildShortcut("search_menu.full_page_search", {
+          keys1: [translateModKey("Meta"), "Enter"],
+          keysDelimiter: PLUS,
+        }),
       },
     });
   },

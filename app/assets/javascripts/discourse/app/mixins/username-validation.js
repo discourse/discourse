@@ -86,6 +86,10 @@ export default Mixin.create({
   checkUsernameAvailability() {
     return User.checkUsername(this.accountUsername, this.accountEmail).then(
       (result) => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
         this.set("isDeveloper", false);
         if (result.available) {
           if (result.is_developer) {

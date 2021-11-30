@@ -111,7 +111,13 @@
 .create-invite-modal,
 .create-invite-bulk-modal,
 .share-topic-modal {
+  &.modal .modal-body {
+    margin: 1em;
+    padding: unset;
+  }
+
   .modal-inner-container {
-    width: 600px;
+    width: 40em; // scale with user font-size
+    max-width: 100vw; // prevent overflow if user font-size is enourmous
   }
 }

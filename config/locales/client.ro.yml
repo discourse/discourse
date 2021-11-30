@@ -1684,6 +1684,9 @@ ro:
       watching_first_post: "<span>Subiect nou</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Înlătură"
+        cancel: "Anulează"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
         group_mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
@@ -3700,7 +3703,6 @@ ro:
             with_time: <span class="username">%{username}</span> la <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
         add: "Adaugă un emoji nou"
         uploading: "Se încarcă..."
         name: "Nume"
@@ -3710,7 +3712,6 @@ ro:
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         confirm_delete: "Ești sigur că vrei să ștergi acest host?"
-        sample: "Folosește următorul cod HTML în site-ul tău pentru a crea și pentru a încorpora subiecte Discourse. Înlocuiește <b>ÎNLOCUIEȘTE_MĂ</b> cu URL-ul canonic al paginii pe care dorești să o încorporezi."
         title: "Embedding"
         host: "Host-uri permise"
         class_name: "Numele clasei"

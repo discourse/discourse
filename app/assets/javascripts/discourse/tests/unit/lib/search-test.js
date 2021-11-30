@@ -37,26 +37,26 @@ module("Unit | Utility | search", function () {
   });
 
   test("searchContextDescription", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("topic"),
       I18n.t("search.context.topic")
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("user", "silvio.dante"),
       I18n.t("search.context.user", { username: "silvio.dante" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("category", "staff"),
       I18n.t("search.context.category", { category: "staff" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("tag", "important"),
       I18n.t("search.context.tag", { tag: "important" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("private_messages"),
       I18n.t("search.context.private_messages")
     );
-    assert.equal(searchContextDescription("bad_type"), null);
+    assert.strictEqual(searchContextDescription("bad_type"), undefined);
   });
 });

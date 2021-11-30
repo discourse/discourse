@@ -103,7 +103,7 @@ export default createWidget("home-logo", {
         : { src: getURL(url), alt: title };
 
     const imgElement = h(`img#site-logo.${key}`, {
-      key: key,
+      key,
       attributes,
     });
 

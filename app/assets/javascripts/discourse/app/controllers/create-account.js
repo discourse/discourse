@@ -211,6 +211,10 @@ export default Controller.extend(
 
       return User.checkEmail(this.accountEmail)
         .then((result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           if (result.failed) {
             this.setProperties({
               serverAccountEmail: this.accountEmail,
@@ -260,7 +264,7 @@ export default Controller.extend(
     },
 
     @observes("emailValidation", "accountEmail")
-    prefillUsername: function () {
+    prefillUsername() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
@@ -295,6 +299,10 @@ export default Controller.extend(
 
       this._hpPromise = ajax("/session/hp.json")
         .then((json) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
           // 30 seconds so we don't have hard loops
@@ -352,6 +360,10 @@ export default Controller.extend(
       this.set("formSubmitted", true);
       return User.createAccount(attrs).then(
         (result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this.set("isDeveloper", false);
           if (result.success) {
             // invalidate honeypot

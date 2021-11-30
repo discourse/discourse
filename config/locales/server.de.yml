@@ -659,6 +659,7 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+    hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
@@ -1925,7 +1926,8 @@ de:
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_system_edit_notifications: "Unterdrückt Bearbeitungsbenachrichtigungen durch den System-Benutzer, wenn die „download_remote_images_to_local“-Einstellung aktiviert ist."
-    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen zum Bearbeiten von Kategorien für Themen."
+    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen über Kategorie-Anpassungen von Themen."
+    disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen über Schlagwort-Anpassungen von Themen."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
@@ -1949,7 +1951,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
-    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Blockinhalt in die Zwischenablage des Benutzers zu kopieren. Diese Funktion wird im Internet Explorer nicht unterstützt."
+    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Inhalt des Blocks in die Zwischenablage des Nutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
     embed_topics_list: "HTML-Einbettung von Themenlisten unterstützen"
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
@@ -2456,47 +2458,6 @@ de:
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
-    text_body_template: |
-      Dies ist eine Test-E-Mail von
-
-      [**%{base_url}**][0]
-
-      Die Zustellbarkeit von E-Mails ist eine komplizierte Angelegenheit. Nachfolgend ein paar wichtige Aspekte, die du zuerst überprüfen solltest:
-
-      - Stelle *sicher*, dass du die „from:“-Adresse für die `notification email` in den Einstellungen deiner Website korrekt festlegst. **Die Domain, die in der „from“-Adresse deiner E-Mails angegeben ist, ist die Domain, gegen die deine E-Mail validiert wird.**
-
-      - Du solltest wissen, wie du den Roh-Quelltext der E-Mail in deinem Mail-Client anzeigst, damit du die E-Mail-Header auf wichtige Hinweise untersuchen kannst. In Gmail ist es die Option „Original anzeigen“ im Drop-down-Menü oben rechts bei jeder Mail.
-
-      - **WICHTIG:** Hat dein ISP einen Reverse-DNS-Eintrag festgelegt, um die Domain-Namen und IP-Adressen, von denen du Mails sendest, zu verknüpfen? [Teste deinen Reverse-PTR-Eintrag][2] hier. Wenn dein ISP nicht den richtigen Reverse-DNS-Pointer-Record einträgt, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden können.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? [Teste deinen SPF-Eintrag][1] hier. Beachte, dass TXT der korrekte offizielle Eintragstyp für SPF ist.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Dies wird die Zustellbarkeit von E-Mails deutlich verbessern. [Teste deinen DKIM-Eintrag][7] hier.
-
-      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, ob die IPs deines Mailservers [nicht auf irgendwelchen E-Mail-Negativlisten][4] stehen. Überprüfe auch, ob er definitiv einen vollqualifizierten Hostnamen, der im DNS aufgelöst wird, in seiner HELO-Nachricht sendet. Wenn nicht, wird deine E-Mail von vielen Maildiensten abgelehnt.
-
-      - Wir empfehlen dir dringend, **eine Test-E-Mail an [mail-tester.com][mt]** zu senden, um zu überprüfen, ob alles oben genannte korrekt funktioniert.
-
-      (Am *einfachsten* ist es, ein Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] zu erstellen, die günstige Mailing-Tarife anbieten und für kleine Communitys gut geeignet sind. Du musst allerdings trotzdem noch die SPF- und DKIM-Einträge in deinem DNS einrichten!)
-
-      Wir hoffen, dass du diesen E-Mail-Zustellbarkeitstest erhalten hast!
-
-      Viel Erfolg!
-
-      Deine Freunde von [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
@@ -3610,9 +3571,9 @@ de:
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
     size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Abschnittes überein. %{additional_detail}"
-    create_mutlipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
-    abort_mutlipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
-    complete_mutlipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
+    create_multipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
+    abort_multipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
+    complete_multipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
     external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
@@ -4366,10 +4327,10 @@ de:
             label: "Name deiner Community"
             placeholder: "Erikas Stammtisch"
           site_description:
-            label: "Beschreibe deine Community in einem kurzen Satz"
+            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
           short_site_description:
-            label: "Beschreibe deine Community in wenigen Worten"
+            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
             placeholder: "Beste Community aller Zeiten"
       introduction:
         title: "Einführung"

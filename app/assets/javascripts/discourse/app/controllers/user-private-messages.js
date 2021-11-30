@@ -27,12 +27,20 @@ export default Controller.extend({
     return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
-  @discourseComputed("pmTopicTrackingState.newIncoming.[]", "group")
+  @discourseComputed(
+    "pmTopicTrackingState.newIncoming.[]",
+    "pmTopicTrackingState.statesModificationCounter",
+    "group"
+  )
   newLinkText() {
     return this._linkText("new");
   },
 
-  @discourseComputed("pmTopicTrackingState.newIncoming.[]", "group")
+  @discourseComputed(
+    "pmTopicTrackingState.newIncoming.[]",
+    "pmTopicTrackingState.statesModificationCounter",
+    "group"
+  )
   unreadLinkText() {
     return this._linkText("unread");
   },

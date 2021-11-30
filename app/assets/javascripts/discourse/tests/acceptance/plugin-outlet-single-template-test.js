@@ -23,12 +23,12 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
 
   test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
-    assert.equal(
+    assert.strictEqual(
       count(".user-profile-primary-outlet.hello"),
       1,
       "it has class names"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".hello-username").text(),
       "eviltrout",
       "it renders into the outlet"

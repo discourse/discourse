@@ -8,7 +8,7 @@ module("Unit | Model | category", function () {
     const store = createStore();
 
     const slugFor = function (cat, val, text) {
-      assert.equal(Category.slugFor(cat), val, text);
+      assert.strictEqual(Category.slugFor(cat), val, text);
     };
 
     slugFor(
@@ -39,7 +39,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         slug: "luke",
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "darth/luke",
       "it uses the parent slug before the child"
@@ -48,7 +48,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         id: 555,
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "darth/555-category",
       "it uses the parent slug before the child and then uses id"
@@ -58,7 +58,7 @@ module("Unit | Model | category", function () {
     slugFor(
       store.createRecord("category", {
         id: 555,
-        parentCategory: parentCategory,
+        parentCategory,
       }),
       "345-category/555-category",
       "it uses the parent before the child and uses ids for both"
@@ -219,6 +219,50 @@ module("Unit | Model | category", function () {
     assert.deepEqual(Category.findBySlugPathWithID("foo/bar"), bar);
     assert.deepEqual(Category.findBySlugPathWithID("foo/bar/"), bar);
     assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
+  });
+
+  test("minimumRequiredTags", function (assert) {
+    const store = createStore();
+
+    let foo = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      required_tag_groups: ["bar"],
+      min_tags_from_required_group: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, 2);
+
+    foo = store.createRecord("category", {
+      id: 2,
+      slug: "foo",
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
+
+    foo = store.createRecord("category", {
+      id: 3,
+      slug: "foo",
+      minimum_required_tags: 0,
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
+
+    foo = store.createRecord("category", {
+      id: 4,
+      slug: "foo",
+      minimum_required_tags: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, 2);
+
+    foo = store.createRecord("category", {
+      id: 5,
+      slug: "foo",
+      min_tags_from_required_group: 2,
+    });
+
+    assert.equal(foo.minimumRequiredTags, null);
   });
 
   test("search with category name", function (assert) {

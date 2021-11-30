@@ -482,6 +482,7 @@ lt:
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
+    hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     cannot_permanently_delete:
       many_posts: "Negalite visam laikui ištrinti šios temos, nes yra kitų įrašų."
       wait_or_different_admin: "Prieš visam laikui ištrindami šį įrašą, turite palaukti %{time_left} arba kitas administratorius turi tai padaryti."
@@ -1239,6 +1240,7 @@ lt:
     disable_category_edit_notifications: "Išjungti pranešimus apie temų kategorijų redagavimą."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
+    show_copy_button_on_codeblocks: "Pridėkite mygtuką prie kodų blokų, kad nukopijuotumėte bloko turinį į vartotojo iškarpinę."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maskimalus įterpiamų įrašų skaičius."
     embed_username_required: "Kuriant temą reikalingas vartotojo vardas."
@@ -1946,9 +1948,9 @@ lt:
     png_to_jpg_conversion_failure_message: "Konvertuojant iš PNG į JPG įvyko klaida."
     optimize_failure_message: "Optimizuojant įkeltą vaizdą įvyko klaida."
     download_failure: "Nepavyko atsisiųsti failo iš išorinio teikėjo."
-    create_mutlipart_failure: "Nepavyko sukurti kelių dalių įkėlimo išorinėje parduotuvėje."
-    abort_mutlipart_failure: "Nepavyko nutraukti kelių dalių įkėlimo išorinėje parduotuvėje."
-    complete_mutlipart_failure: "Nepavyko užbaigti kelių dalių įkėlimo išorinėje parduotuvėje."
+    create_multipart_failure: "Nepavyko sukurti kelių dalių įkėlimo išorinėje parduotuvėje."
+    abort_multipart_failure: "Nepavyko nutraukti kelių dalių įkėlimo išorinėje parduotuvėje."
+    complete_multipart_failure: "Nepavyko užbaigti kelių dalių įkėlimo išorinėje parduotuvėje."
     attachments:
       too_large: "Atsiprašome, failas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size_kb}KB)."
       too_large_humanized: "Atsiprašome, failas, kurį bandote įkelti, yra per didelis (didžiausias dydis yra %{max_size}KB)."
@@ -2242,10 +2244,10 @@ lt:
           title:
             label: "Jūsų bendruomenės pavadinimas"
           site_description:
-            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu"
+            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu (naudojamu paieškos rezultatuose ir socialinėje žiniasklaidoje)"
             placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
           short_site_description:
-            label: "Apibūdinkite savo bendruomenę keliais žodžiais"
+            label: "Apibūdinkite savo bendruomenę keliais žodžiais (naudojamas pagrindinio puslapio pavadinime)"
             placeholder: "Pati geriausia bendruomenė"
       introduction:
         title: "Prisistatymas"

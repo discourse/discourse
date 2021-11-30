@@ -1438,22 +1438,19 @@ nb_NO:
         invite:
           new_title: "Opprett invitasjon"
           edit_title: "Rediger invitasjon"
-          instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart"
+          instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart:"
           copy_link: "kopier link"
           expires_in_time: "Utløper om %{time}"
           expired_at_time: "Utløpt kl. %{time}"
           show_advanced: "Vis avanserte innstillinger"
           hide_advanced: "Skjul avanserte alternativer"
-          restrict_email: "Begrens til en e-postadresse"
           max_redemptions_allowed: "Maks antall bruk"
           add_to_groups: "Legg til i grupper"
-          invite_to_topic: "Kom til dette emnet"
           expires_at: "Utløper etter"
           custom_message: "Valgfri personlig melding"
           send_invite_email: "Lagre og send e-post"
           save_invite: "Lagre invitasjon"
           invite_saved: "Invitasjon lagret."
-          invite_copied: "Invitasjonslenken er kopiert."
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"
@@ -2008,6 +2005,9 @@ nb_NO:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - fullført"
+      dismiss_confirmation:
+        dismiss: "Avslå"
+        cancel: "Avbryt"
       group_message_summary:
         one: "%{count} melding i din %{group_name} innboks"
         other: "%{count} meldinger i din innboks for %{group_name}"
@@ -4638,7 +4638,6 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Legg til en ny emoji som vil være tilgjengelig for alle. (PROFFTIPS: Dra og slipp flere filer samtidig)"
         add: "Legg til ny Emoji"
         uploading: "Laster opp…"
         name: "Navn"
@@ -4648,7 +4647,6 @@ nb_NO:
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
         confirm_delete: "Er du sikker på at du vil slette den verten?"
-        sample: "Bruk følgende HTML-kode på siden din for å bygge inn Discourse-emner. Erstatt <b>ERSTATT_MEG</b> med riktig nettadresse til siden du bygger den inn i."
         title: "Innbygging"
         host: "Tillatte verter"
         class_name: "Klassenavn"

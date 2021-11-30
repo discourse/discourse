@@ -1370,22 +1370,19 @@ lv:
         invite:
           new_title: "Izveidot ielūgumu"
           edit_title: "Rediģēt uzaicinājumu"
-          instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei"
+          instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei:"
           copy_link: "kopēt saiti"
           expires_in_time: "Derīguma termiņš beidzas pēc %{time}"
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
-          restrict_email: "Ierobežot tikai vienu e -pasta adresi"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
-          invite_to_topic: "Ierasties pie šīs tēmas"
           expires_at: "Derīguma termiņš beidzas"
           custom_message: "Neobligāts personiskais ziņojums"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
           save_invite: "Saglabāt uzaicinājumu"
           invite_saved: "Uzaicinājums saglabāts."
-          invite_copied: "Uzaicinājuma saite ir nokopēta."
         bulk_invite:
           progress: "Augšupielādēts %{progress}%..."
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
@@ -1799,6 +1796,9 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
+      dismiss_confirmation:
+        dismiss: "Nerādīt"
+        cancel: "Atcelt"
       popup:
         mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
         group_mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -3660,7 +3660,6 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
-        help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
         add: "Pievienot Jaunu Smaidiņu"
         uploading: "Notiek ielāde..."
         name: "Nosaukums"
@@ -3670,7 +3669,6 @@ lv:
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Vai tiešām vēlies dzēst šo?"
-        sample: "(Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on.)"
         title: "Ieguldīšana"
         host: "Atļautie lietotāji"
         class_name: "Klases Nosaukums"

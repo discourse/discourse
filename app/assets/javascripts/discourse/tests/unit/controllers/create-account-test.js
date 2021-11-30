@@ -3,43 +3,42 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | create-account", function () {
-  test("basicUsernameValidation", async function (assert) {
-    const testInvalidUsername = async (username, expectedReason) => {
+  test("basicUsernameValidation", function (assert) {
+    const testInvalidUsername = (username, expectedReason) => {
       const controller = this.getController("create-account");
       controller.set("accountUsername", username);
 
       let validation = controller.basicUsernameValidation(username);
       assert.ok(validation.failed, "username should be invalid: " + username);
-      assert.equal(
+      assert.strictEqual(
         validation.reason,
         expectedReason,
         "username validation reason: " + username + ", " + expectedReason
       );
     };
 
-    testInvalidUsername("", undefined);
+    testInvalidUsername("", null);
     testInvalidUsername("x", I18n.t("user.username.too_short"));
     testInvalidUsername(
       "123456789012345678901",
       I18n.t("user.username.too_long")
     );
 
-    const controller = await this.owner.lookup("controller:create-account");
-    controller.setProperties({
+    const controller = this.getController("create-account", {
       accountUsername: "porkchops",
       prefilledUsername: "porkchops",
     });
 
     let validation = controller.basicUsernameValidation("porkchops");
     assert.ok(validation.ok, "Prefilled username is valid");
-    assert.equal(
+    assert.strictEqual(
       validation.reason,
       I18n.t("user.username.prefilled"),
       "Prefilled username is valid"
     );
   });
 
-  test("passwordValidation", async function (assert) {
+  test("passwordValidation", function (assert) {
     const controller = this.getController("create-account");
 
     controller.set("authProvider", "");
@@ -48,13 +47,13 @@ discourseModule("Unit | Controller | create-account", function () {
     controller.set("prefilledUsername", "porkchops");
     controller.set("accountPassword", "b4fcdae11f9167");
 
-    assert.equal(
-      controller.get("passwordValidation.ok"),
+    assert.strictEqual(
+      controller.passwordValidation.ok,
       true,
       "Password is ok"
     );
-    assert.equal(
-      controller.get("passwordValidation.reason"),
+    assert.strictEqual(
+      controller.passwordValidation.reason,
       I18n.t("user.password.ok"),
       "Password is valid"
     );
@@ -62,19 +61,19 @@ discourseModule("Unit | Controller | create-account", function () {
     const testInvalidPassword = (password, expectedReason) => {
       controller.set("accountPassword", password);
 
-      assert.equal(
-        controller.get("passwordValidation.failed"),
+      assert.strictEqual(
+        controller.passwordValidation.failed,
         true,
         "password should be invalid: " + password
       );
-      assert.equal(
-        controller.get("passwordValidation.reason"),
+      assert.strictEqual(
+        controller.passwordValidation.reason,
         expectedReason,
         "password validation reason: " + password + ", " + expectedReason
       );
     };
 
-    testInvalidPassword("", undefined);
+    testInvalidPassword("", null);
     testInvalidPassword("x", I18n.t("user.password.too_short"));
     testInvalidPassword("porkchops", I18n.t("user.password.same_as_username"));
     testInvalidPassword(
@@ -83,16 +82,16 @@ discourseModule("Unit | Controller | create-account", function () {
     );
   });
 
-  test("authProviderDisplayName", async function (assert) {
-    const controller = this.owner.lookup("controller:create-account");
+  test("authProviderDisplayName", function (assert) {
+    const controller = this.getController("create-account");
 
-    assert.equal(
+    assert.strictEqual(
       controller.authProviderDisplayName("facebook"),
       I18n.t("login.facebook.name"),
       "provider name is translated correctly"
     );
 
-    assert.equal(
+    assert.strictEqual(
       controller.authProviderDisplayName("idontexist"),
       "idontexist",
       "provider name falls back if not found"

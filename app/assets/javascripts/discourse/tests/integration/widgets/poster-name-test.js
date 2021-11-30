@@ -27,9 +27,9 @@ discourseModule(
         assert.ok(exists(".names"));
         assert.ok(exists("span.username"));
         assert.ok(exists('a[data-user-card="eviltrout"]'));
-        assert.equal(queryAll(".username a").text(), "eviltrout");
-        assert.equal(queryAll(".full-name a").text(), "Robin Ward");
-        assert.equal(queryAll(".user-title").text(), "Trout Master");
+        assert.strictEqual(queryAll(".username a").text(), "eviltrout");
+        assert.strictEqual(queryAll(".full-name a").text(), "Robin Ward");
+        assert.strictEqual(queryAll(".user-title").text(), "Trout Master");
       },
     });
 

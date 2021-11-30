@@ -1835,6 +1835,9 @@ ur:
         other: "%{group_name}' کے %{count} کھلی رکنیت کی درخواستیں"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "بر خاست کریں"
+        cancel: "منسوخ"
       group_message_summary:
         one: "آپ کے %{group_name} اِن باکس میں %{count} پیغام"
         other: "آپ کے %{group_name} اِن باکس میں %{count} پیغامات"
@@ -4266,7 +4269,6 @@ ur:
           badge_query_examples_title: "بَیج قُوَیری کی مثالیں"
       emoji:
         title: "اِیمَوجی"
-        help: "نئی اِیمَوجی شامل کریں جو سب کے لئے دستیاب ہوگی۔ (پیشہ وَرَانہ ٹِپ: ایک بار میں ایک سے زیادہ فائلوں کو ڈرَیگ & ڈراپ کریں)"
         add: "نئی اِیمَوجی شامل کریں"
         uploading: "اَپ لوڈ کیا جا رہا ہے..."
         name: "نام"
@@ -4276,7 +4278,6 @@ ur:
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
-        sample: "ڈِسکورس ٹاپک بنانے اور اَیمبَیڈ کرنے کیلئے اپنی ویب سائٹ میں درج ذیل HTML کوڈ استعمال کریں۔ جس پیج پر آپ اسے اَیمبَیڈ کر رہے ہیں اُس کا canonical URL <b>REPLACE_ME</b> کی جگہ اِستعمال کریں۔"
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
         class_name: "کلاس کا نام"

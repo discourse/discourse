@@ -1326,16 +1326,18 @@ fa_IR:
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
-          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید"
+          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          restrict_email: "محدود کردن به ایمیل"
           add_to_groups: "افزودن به گروه‌ها"
+          invite_to_topic: "وارد شدن به موضوع"
           expires_at: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
+          send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوتنامه ذخیره شد."
-          invite_copied: "لینک دعوت کپی شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -1807,6 +1809,8 @@ fa_IR:
           label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
       ignore: "چشم پوشی"
+      image_alt_text:
+        aria_label: متن Alt برای عکس
     notifications:
       tooltip:
         regular:
@@ -1848,6 +1852,12 @@ fa_IR:
       membership_request_accepted: "عضویت در %{group_name} پذیرفته‌شد"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        body:
+          one: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+          other: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+        dismiss: "نادیده گرفتن"
+        cancel: "انصراف"
       group_message_summary:
         one: "%{count}پیام در اینباکس %{group_name}"
         other: "%{count}پیام در اینباکس %{group_name}"
@@ -1912,6 +1922,7 @@ fa_IR:
       search_button: "جسنجو"
       categories: "دسته‌بندی‌ها"
       tags: "برچسب‌ها"
+      browser_tip: "%{modifier} + f"
       type:
         users: "کاربران"
         categories: "دسته‌بندی‌ها"
@@ -2900,6 +2911,8 @@ fa_IR:
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
         defer: "تاپیک‌های به تعویق افتاده %{shortcut}"
+      search_menu:
+        full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -2942,6 +2955,9 @@ fa_IR:
       changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
+      choose_for_topic_required:
+        one: "حداقل برچسب %{count} را انتخاب کنید..."
+        other: "حداقل برچسب %{count} را انتخاب کنید..."
       info: "اطلاعات"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
@@ -3190,7 +3206,12 @@ fa_IR:
         save: ذخیره
         continue: ادامه
         scopes:
+          read_only: فقط خواندنی
+          global: جهانی
           action: اقدام
+          descriptions:
+            uploads:
+              create: یک پرونده جدید بارگذاری کنید.
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"
@@ -3480,8 +3501,12 @@ fa_IR:
           embedded_scss:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
+          head_tag:
+            text: "Head"
+            title: "کد HTML که قبل از برچسب head درج خواهد شد"
           body_tag:
-            text: "بدنه"
+            text: "Body"
+            title: "کد HTML که قبل از برچسب body درج خواهد شد"
           yaml:
             text: "YAML"
         colors:
@@ -4072,7 +4097,6 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
-        help: "اضافه کردن شکلک های جدید که در دسترس همگان خواهد بود.(PROTIP: کشیدن و رها کردن چند فایل در یک بار)"
         add: "افزودن شکلک جدید"
         uploading: "در حال بار گذاری ..."
         name: "نام"
@@ -4082,7 +4106,6 @@ fa_IR:
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"
-        sample: "از این کد HTML در سایت خود استفاده کنید تا بتوانید مبحث های Discourse ایجاد کنید یا جاساز کنید, این کد <b>REPLACE_ME</b> را به URL استاندارد صفحه ای که بر روی آن جاسازی میکنید تغییر دهید."
         title: "جاسازی"
         host: "میزبان های مجاز"
         class_name: "نام کلاس"

@@ -1447,7 +1447,7 @@ da:
         invite:
           new_title: "Opret Invitation"
           edit_title: "Rediger Invitation"
-          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted"
+          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
           copy_link: "kopier link"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
@@ -1457,7 +1457,6 @@ da:
           send_invite_email: "Gem og send e-mail"
           save_invite: "Gem Invitation"
           invite_saved: "Invitation gemt."
-          invite_copied: "Inviteringslink kopieret."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2034,6 +2033,9 @@ da:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - afsluttet"
+      dismiss_confirmation:
+        dismiss: "Ignorer Alle"
+        cancel: "Afbryd"
       group_message_summary:
         one: "%{count} besked i din %{group_name} indbakke"
         other: "%{count} beskeder i din %{group_name} indbakke"
@@ -3675,7 +3677,6 @@ da:
         delete: Slet permanent
         not_shown_again: Denne nøgle vil ikke blive vist igen. Sørg for at tage en kopi før du fortsætter.
         continue: Fortsæt
-        use_global_key: Global nøgle (tillader alle handlinger)
         scopes:
           description: |
             Når du bruger anvendelsesområder, kan du begrænse en API-nøgle til et bestemt sæt endepunkter.
@@ -4902,7 +4903,6 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
-        help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
         add: "Tilføj ny emoji"
         uploading: "Overfører…"
         name: "Navn"
@@ -4913,7 +4913,6 @@ da:
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
         confirm_delete: "Er du sikker på at du vil slette denne server?"
-        sample: "Tilføj denne HTML til dit site for at oprette og indlejre emner fra discourse. Erstat <b>REPLACE_ME</b> med den kanoniske URL for den side du indlejrer den på,"
         title: "Indlejring"
         host: "Tilladte servere"
         class_name: "Klasse Navn"

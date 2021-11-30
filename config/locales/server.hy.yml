@@ -3006,10 +3006,8 @@ hy:
             label: "Ձեր համայնքի անվանումը"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Նկարագրեք Ձեր համայնքը մեկ կարճ նախադասությանբ"
             placeholder: "Ջեյնի և իր ընկերների համար ընտիր թեմաներ քննարկելու վայր"
           short_site_description:
-            label: "Նկարագրեք Ձեր համայնքը մի քանի բառով"
             placeholder: "Բոլոր ժամանակների ամենալավ համայնքը"
       introduction:
         title: "Ներածություն"

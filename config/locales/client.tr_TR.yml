@@ -1474,22 +1474,19 @@ tr_TR:
         invite:
           new_title: "Davet oluştur"
           edit_title: "Daveti düzenle"
-          instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın"
+          instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın:"
           copy_link: "bağlantıyı kopyala"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
-          restrict_email: "Bir e-posta adresiyle sınırla"
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
-          invite_to_topic: "Bu konuya gelin"
           expires_at: "Geçerliliğini yitireceği zaman"
           custom_message: "İsteğe bağlı kişisel mesaj"
           send_invite_email: "Kaydet ve Gönder"
           save_invite: "Daveti Kaydet"
           invite_saved: "Davet kaydedildi."
-          invite_copied: "Davet bağlantısı kopyalandı."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -2077,6 +2074,9 @@ tr_TR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - tamamlandı"
+      dismiss_confirmation:
+        dismiss: "Kapat"
+        cancel: "İptal"
       group_message_summary:
         one: "%{group_name} gelen kutunuzdaki %{count} mesaj var"
         other: "%{group_name} gelen kutunuzda %{count} mesajları"
@@ -3814,7 +3814,6 @@ tr_TR:
         delete: Kalıcı Olarak Sil
         not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
-        use_global_key: Genel Anahtar (tüm eylemlere izin verir)
         scopes:
           description: |
             Kapsamları kullanırken, bir API anahtarını ssadece belirli bir endpoint grubuyla kullanılacak şekilde kısıtlayabilirsiniz. Hangi parametrelere izin verileceğini de tanımlayabilirsiniz. Birden çok değer kullanacaksanız bunları ayırmak için virgül kullanın.
@@ -5067,7 +5066,6 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
-        help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsin)"
         add: "Yeni Emoji Ekle"
         uploading: "Yükleniyor..."
         name: "İsim"
@@ -5078,7 +5076,6 @@ tr_TR:
       embedding:
         get_started: "Eğer Discourse'u başka bir web sitesine yerleştirmek istiyorsan bu sitenin sunucusunu ekleyerek başla."
         confirm_delete: "Bu sunucuyu silmek istediğine emin misin?"
-        sample: "Discourse konuları oluşturmak ve yerleştirmek için aşağıdaki HTML kodunu sitende kullan. <b>REPLACE_ME</b>'yi Discourse'u yerleştirdiğin sayfanın tam URL'i ile değiştir."
         title: "Yerleştirme"
         host: "İzin Verilen Sunucular"
         class_name: "Sınıf adı"

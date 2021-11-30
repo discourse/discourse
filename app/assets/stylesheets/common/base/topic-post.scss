@@ -274,6 +274,22 @@ $quote-share-maxwidth: 150px;
   }
 }
 
+@keyframes heartBump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.has-like .d-icon.heart-animation {
+  animation: heartBump 0.4s;
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -414,6 +430,13 @@ aside.quote {
   .d-icon,
   .btn:hover .d-icon {
     color: var(--secondary-or-primary);
+  }
+
+  .btn-primary,
+  .btn-primary:hover,
+  .btn-primary .d-icon,
+  .btn-primary:hover .d-icon {
+    color: var(--secondary);
   }
 
   .insert-quote + .quote-sharing {
@@ -803,6 +826,14 @@ pre {
     color: var(--primary);
     background: var(--blend-primary-secondary-5);
     max-height: 500px;
+  }
+
+  .bidi-warning,
+  .bidi-warning span {
+    font-style: normal;
+    background-color: var(--highlight);
+    color: var(--danger);
+    cursor: help;
   }
 }
 
@@ -1253,7 +1284,8 @@ a.mention-group {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch; // aligns items by making them the same height
-    button {
+    button,
+    details {
       margin-right: 0.54em;
     }
     > * {

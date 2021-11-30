@@ -1,14 +1,22 @@
 <div class="backup-options">
   {{#if localBackupStorage}}
-    {{resumable-upload
-      target="/admin/backups/upload"
-      success=(route-action "uploadSuccess")
-      error=(route-action "uploadError")
-      uploadText=uploadLabel
-      title="admin.backups.upload.title"
-      class="btn-default"}}
+    {{#if siteSettings.enable_experimental_backup_uploader}}
+      {{uppy-backup-uploader done=(route-action "uploadSuccess") localBackupStorage=localBackupStorage}}
+    {{else}}
+      {{resumable-upload
+        target="/admin/backups/upload"
+        success=(route-action "uploadSuccess")
+        error=(route-action "uploadError")
+        uploadText=uploadLabel
+        title="admin.backups.upload.title"
+        class="btn-default"}}
+    {{/if}}
   {{else}}
-    {{backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{#if (and siteSettings.enable_direct_s3_uploads siteSettings.enable_experimental_backup_uploader)}}
+      {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{else}}
+      {{backup-uploader done=(route-action "remoteUploadSuccess")}}
+    {{/if}}
   {{/if}}
 
   {{#if site.isReadOnly}}

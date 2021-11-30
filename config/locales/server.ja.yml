@@ -1882,7 +1882,6 @@ ja:
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
-    show_copy_button_on_codeblocks: "コードブロックのコンテンツをユーザーのクリップボードにコピーするためのボタンをコードブロックに追加する。この機能は Internet Explorer ではサポートされていません。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
     embed_topics_list: "トピックリストの HTML 埋め込みをサポートする"
     embed_set_canonical_url: "埋め込みトピックの正規 URL を埋め込みコンテンツの URL に設定する。"
@@ -2357,47 +2356,6 @@ ja:
   test_mailer:
     title: "テストメーラー"
     subject_template: "[%{email_prefix}] メール配信可能性テスト"
-    text_body_template: |
-      これは次から送信されたテストメールです。
-
-      [**%{base_url}**][0]
-
-      メールの配信可能性は複雑な課題です。最初に確認すべき重要な事項を以下に示します。
-
-      - `notification email` の from: アドレスがサイト設定で正しく設定されていることを*確認してください*。**送信するメールの "from" アドレスに指定されたドメインがメールの検証対象のドメインです**。
-
-      - メールクライアントでメールの生のソースを表示する方法を確認してください。メールのヘッダーを調査すると、重要な手がかりを得ることができます。Gmail では、各メールの右上にあるドロップダウンメニューに含まれる "メッセージのソースを表示" オプションを使用できます。
-
-      - **重要:** あなたの ISP には、メールの送信元のドメイン名と IP アドレスを関連付ける逆引き DNS レコードが入力されていますか？こちらで[逆引き PTR レコードをテストしてください][2]。あなたの ISP が適切な逆引き DNS ポインターレコードを登録しない場合、メールが配信される可能性はほぼありません。
-
-      - あなたのドメインの [SPF レコード][8]は正しいですか？こちらで [SPF レコードをテストしてください][1]。TXT は SPF の正しい正式なレコードタイプであることに注意してください。
-
-      - ドメインの [DKIM レコード][3]は正しいですか？これによりメールの配信可能性が大幅に改善されます。こちらで [DKIM レコードをテストしてください][7]。
-
-      - 独自のメールサーバーを実行している場合は、メールサーバーの IP が[どのメールのブロックリストにも追加されていない][4]ことを確認してください。また、HELO メッセージで DNS に解決する完全修飾ホスト名を確実に送信していることを確認してください。送信していない場合は、多数のメールサーバーによってメールが拒否されることになります。
-
-      - **テストメールを [mail-tester.com][mt] に送信**して、上記すべてが正しく機能していることを確認することを強くお勧めします。
-
-      ([SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]、または [Mailjet][mj] でアカウントを作成するのが*簡単*な方法です。これらは安価なメールプランを提供しており、小規模のコミュニティに最適です。ただし、DNS に SPF と DKIM レコードをセットアップする必要はあります！)
-
-      このメールの配信可能性テストがあなたのところに届きますように！
-
-      それでは幸運を。
-
-      [Discourse](https://www.discourse.org) 一同より
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
@@ -4174,10 +4132,8 @@ ja:
             label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
-            label: "コミュニティについて簡単な一文で説明してください"
             placeholder: "純子と純子の仲間がワイワイする場所"
           short_site_description:
-            label: "コミュニティについて短い言葉で説明してください"
             placeholder: "史上最高のコミュニティ"
       introduction:
         title: "紹介"

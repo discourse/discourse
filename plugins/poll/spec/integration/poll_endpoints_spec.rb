@@ -4,8 +4,19 @@ require "rails_helper"
 
 describe "DiscoursePoll endpoints" do
   describe "fetch voters for a poll" do
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+
+    fab!(:post_with_multiple_poll) do
+      Fabricate(:post, raw: <<~SQL)
+      [poll type=multiple public=true min=1 max=2]
+      - A
+      - B
+      - C
+      [/poll]
+      SQL
+    end
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -35,13 +46,13 @@ describe "DiscoursePoll endpoints" do
     it 'should return the right response for a single option' do
       DiscoursePoll::Poll.vote(
         user,
-        post.id,
+        post_with_multiple_poll.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
         [option_a, option_b]
       )
 
       get "/polls/voters.json", params: {
-        post_id: post.id,
+        post_id: post_with_multiple_poll.id,
         poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
         option_id: option_b
       }
@@ -125,7 +136,16 @@ describe "DiscoursePoll endpoints" do
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
+
+    fab!(:post) do
+      Fabricate(:post, raw: <<~SQL)
+      [poll type=multiple public=true min=1 max=2]
+      - A
+      - B
+      [/poll]
+      SQL
+    end
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -135,6 +155,7 @@ describe "DiscoursePoll endpoints" do
         user_1: option_a,
         user_2: option_b,
       }
+
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
           user,

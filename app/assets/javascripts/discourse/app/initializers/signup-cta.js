@@ -14,6 +14,7 @@ export default {
     const siteSettings = container.lookup("site-settings:main");
     const keyValueStore = container.lookup("key-value-store:main");
     const user = container.lookup("current-user:main");
+    const appEvents = container.lookup("service:app-events");
 
     screenTrack.keyValueStore = keyValueStore;
 
@@ -72,6 +73,7 @@ export default {
 
       // Requirements met.
       session.set("showSignupCta", true);
+      appEvents.trigger("cta:shown");
     }
 
     screenTrack.registerAnonCallback(checkSignupCtaRequirements);

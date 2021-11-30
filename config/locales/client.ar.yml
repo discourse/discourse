@@ -1686,22 +1686,19 @@ ar:
         invite:
           new_title: "إنشاء دعوة"
           edit_title: "تعديل الدعوة"
-          instructions: "شارك هذا الرابط لمنح حق الوصول إلى هذا الموقع على الفور"
+          instructions: "شارك هذا الرابط لمنح حق الوصول إلى هذا الموقع على الفور:"
           copy_link: "نسخ الرابط"
           expires_in_time: "تنتهي صلاحيتها في %{time}"
           expired_at_time: "تنتهي صلاحيتها في %{time}"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
-          restrict_email: "التقييد على عنوان بريد إلكتروني واحد"
           max_redemptions_allowed: "الحد الأقصى لمرات الاستخدام"
           add_to_groups: "إضافة إلى المجموعات"
-          invite_to_topic: "الوصول إلى هذا الموضوع"
           expires_at: "تنتهي بعد"
           custom_message: "رسالة خاصة اختيارية"
           send_invite_email: "حفظ الرسالة الإلكترونية وإرسالها"
           save_invite: "حفظ الدعوة"
           invite_saved: "تم حفظ الدعوة."
-          invite_copied: "تم نسخ رابط الدعوة."
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة جماعية"
@@ -2389,6 +2386,9 @@ ar:
       reaction: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       reaction_2: "<span>%{username} و%{username2}</span> %{description}"
       votes_released: "%{description} - اكتمل"
+      dismiss_confirmation:
+        dismiss: "تجاهل"
+        cancel: "إلغاء"
       group_message_summary:
         zero: "%{count} رسالة في صندوق البريد الوارد للمجموعة %{group_name}"
         one: "رسالة واحدة (%{count}) في صندوق البريد الوارد للمجموعة %{group_name}"
@@ -4347,7 +4347,6 @@ ar:
         delete: الحذف بشكلٍ دائم
         not_shown_again: لن يتم عرض هذا المفتاح مرة أخرى. تأكَّد من أخذ نسخة قبل المتابعة.
         continue: متابعة
-        use_global_key: المفتاح العام (يسمح بجميع الإجراءات)
         scopes:
           description: |
             عند استخدام النطاقات، يمكنك تقييد مفتاح API على مجموعة محدَّدة من نقاط النهاية.
@@ -5622,7 +5621,6 @@ ar:
           grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:
         title: "الرمز التعبيري"
-        help: "إضافة رمز تعبيري جديد سيكون متاحًا للجميع. (تلميح احترافي: يمكنك سحب وإفلات عدة ملفات في الوقت نفسه)"
         add: "إضافة رمز تعبيري جديد"
         uploading: "جارٍ التحميل..."
         name: "الاسم"
@@ -5633,7 +5631,6 @@ ar:
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"
-        sample: "استخدم رمز HTML التالي في موقعك لإنشاء موضوعات discourse وتضمينها. استبدل <b>REPLACE_ME</b> بالرابط الأساسي للصفحة التي تضمِّنه فيها."
         title: "التضمين"
         host: "المضيفون المسموح بهم"
         class_name: "اسم الفئة"

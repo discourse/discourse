@@ -67,7 +67,7 @@ export default (inboxType, path, filter) => {
         tagsForUser: this.modelFor("user").get("username_lower"),
         selected: [],
         showToggleBulkSelect: true,
-        filter: filter,
+        filter,
         group: null,
         inbox: inboxType,
       });

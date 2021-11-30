@@ -7,7 +7,7 @@ let resolver;
 function lookupTemplate(assert, name, expectedTemplate, message) {
   let parseName = resolver.parseName(name);
   let result = resolver.resolveTemplate(parseName);
-  assert.equal(result, expectedTemplate, message);
+  assert.strictEqual(result, expectedTemplate, message);
 }
 
 function setTemplates(lookupTemplateStrings) {

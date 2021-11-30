@@ -1478,22 +1478,22 @@ de:
         invite:
           new_title: "Einladung erstellen"
           edit_title: "Einladung bearbeiten"
-          instructions: "Teile diesen Link, um sofort Zugriff auf diese Website zu gewähren"
+          instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
           copy_link: "Link kopieren"
           expires_in_time: "Läuft in %{time} ab"
           expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
-          restrict_email: "Auf eine E-Mail-Adresse beschränken"
+          restrict_email: "Auf E-Mail beschränken"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
-          invite_to_topic: "Dieses Thema aufrufen"
+          invite_to_topic: "Ankommen beim Thema"
           expires_at: "Verfällt nach"
           custom_message: "Optionale persönliche Nachricht"
           send_invite_email: "Speichern und E-Mail senden"
+          send_invite_email_instructions: "Einladung auf E-Mail beschränken, um eine Einladungs-E-Mail zu senden"
           save_invite: "Einladung speichern"
           invite_saved: "Einladung gespeichert."
-          invite_copied: "Einladungslink kopiert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2034,6 +2034,8 @@ de:
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
       reload: "Neu laden"
       ignore: "Ignorieren"
+      image_alt_text:
+        aria_label: Alternativ-Text für Bild
     notifications:
       tooltip:
         regular:
@@ -2082,6 +2084,12 @@ de:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – abgeschlossen"
+      dismiss_confirmation:
+        body:
+          one: "Bist du sicher? Du hast %{count} wichtige Benachrichtigung."
+          other: "Bist du sicher? Du hast %{count} wichtige Benachrichtigungen."
+        dismiss: "Alles gelesen"
+        cancel: "Abbrechen"
       group_message_summary:
         one: "%{count} Nachricht in deinem „%{group_name}“-Posteingang"
         other: "%{count} Nachrichten in deinem „%{group_name}“-Posteingang"
@@ -2581,6 +2589,9 @@ de:
         help: "teile einen Link zu diesem Thema"
         instructions: "Link zu diesem Thema teilen:"
         copied: "Themen-Link kopiert."
+        restricted_groups:
+          one: "Nur für Mitglieder der Gruppe sichtbar: %{groupNames}"
+          other: "Nur für Gruppenmitglieder sichtbar: %{groupNames}"
         notify_users:
           title: "Benachrichtige"
           instructions: "Folgende Benutzer über dieses Thema benachrichtigen:"
@@ -3409,6 +3420,7 @@ de:
         title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
         insert_url: "%{shortcut} Auswahl in geöffneten Editor einfügen"
+        full_page_search: "%{shortcut} Startet die ganzseitige Suche"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -3464,6 +3476,9 @@ de:
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
+      choose_for_topic_required:
+        one: "mindestens %{count} Schlagwort auswählen..."
+        other: "mindestens %{count} Schlagwörter auswählen..."
       info: "Info"
       default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
@@ -3815,6 +3830,7 @@ de:
         no_description: (keine Beschreibung)
         all_api_keys: Alle API-Schlüssel
         user_mode: Benutzerrang
+        scope_mode: Bereich
         impersonate_all_users: Als jeder Benutzer ausgeben
         single_user: "Einzelbenutzer"
         user_placeholder: Benutzernamen eingeben
@@ -3825,12 +3841,15 @@ de:
         delete: Endgültig löschen
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
-        use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
         scopes:
           description: |
             Wenn du Bereiche verwendest, kannst du einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
             Du kannst auch definieren, welche Parameter erlaubt sind. Verwende Kommas, um mehrere Werte zu trennen.
           title: Bereiche
+          granular: Granular
+          read_only: Schreibgeschützt
+          global: Global
+          global_description: Der API-Schlüssel hat keine Einschränkung und alle Endpunkte sind zugänglich.
           resource: Ressource
           action: Aktion
           allowed_parameters: Zulässige Parameter
@@ -3838,6 +3857,8 @@ de:
           any_parameter: (beliebiger Parameter)
           allowed_urls: Zulässige URLs
           descriptions:
+            global:
+              read: Schränke den API-Schlüssel auf schreibgeschützte Endpunkte ein.
             topics:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
@@ -3845,6 +3866,8 @@ de:
               wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
+            uploads:
+              create: Lade eine neue Datei hoch.
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
@@ -5079,7 +5102,7 @@ de:
           grant_existing_holders: Gewähre weiteren Abzeichen an bestehende Abzeicheninhaber
       emoji:
         title: "Emoji"
-        help: "Neues Emoji hinzufügen, das für alle verfügbar sein wird. (TIPP: Per Drag-and-drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
+        help: "Füge neue Emoji hinzu, die dann für alle verfügbar sind. Ziehe mehrere Dateien auf einmal per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen."
         add: "Neues Emoji hinzufügen"
         uploading: "Wird hochgeladen …"
         name: "Name"

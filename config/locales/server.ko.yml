@@ -1886,7 +1886,6 @@ ko:
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
-    show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립 보드에 복사합니다. 이 기능은 Internet Explorer에서 지원되지 않습니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
     embed_set_canonical_url: "포함된 글의 표준 URL을 포함된 콘텐츠의 URL로 설정합니다."
@@ -2368,47 +2367,6 @@ ko:
   test_mailer:
     title: "메일러 테스트"
     subject_template: "[%{email_prefix}] 이메일 전달 테스트"
-    text_body_template: |
-      이것은 다음의 테스트 이메일 입니다.
-
-      [**%{base_url}**][0]
-
-      이메일 전달은 복잡합니다. 다음은 먼저 확인해야 할 몇 가지 중요한 사항입니다:
-
-      - '알림 이메일의 발신' from: 주소를 사이트 설정에서 올바르게 설정했는지 *확인*하십시오. **보내는 이메일의 "보낸 사람" 주소에 지정된 도메인은 이메일의 유효성을 검사 할 도메인입니다**.
-
-      -메일 클라이언트에서 이메일의 중요한 단서를 찾기 위해 이메일 헤더를 조사 할 수 있습니다. Gmail에서는 각 메일의 오른쪽 상단에있는 드롭 다운 메뉴에있는 "원본보기" 옵션입니다.
-
-      -**중요: ** ISP에 메일을 보내는 도메인 이름과 IP 주소를 연결하기 위해 입력된 역 DNS 레코드가 있습니까? [Reverse PTR record 테스트][2]. 사용자님의 ISP에 적절한 역방향 DNS 포인터 레코드를 입력하지 않으면 이메일이 전달 될 가능성이 거의 없습니다.
-
-      -도메인의 [SPF 레코드][8]가 맞습니까? [SPF 레코드 테스트][1]. TXT는 SPF의 올바른 공식 레코드 유형입니다.
-
-      -도메인의 [DKIM 레코드][3]가 맞습니까? 이것은 이메일 전달성을 크게 향상시킵니다. [DKIM 레코드 테스트][7].
-
-      -자체 메일 서버를 운영하는 경우 메일 서버의 IP가 [이메일 차단 목록에 없음][4] 을 확인하십시오. 또한 HELO 메시지의 DNS에서 확인되는 정규화 된 호스트 이름을 확실히 보내고 있는지 확인합니다. 그렇지 않으면 많은 메일 서비스에서 이메일이 거부됩니다.
-
-      -위의 모든 사항이 올바르게 작동하는지 확인하려면 **[mail-tester.com][mt]**로 테스트 이메일을 보내는 것이 좋습니다.
-
-      (*쉬운* 방법은 [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] 또는 [Mailjet][mj]에 계정을 만드는 것입니다. 이 계정은 저렴한 메일링 계획을 가지고 있으며 괜찮습니다. 소규모 커뮤니티의 경우에도 DNS에 SPF 및 DKIM 레코드를 설정해야합니다!)
-
-      이 이메일 전달성 테스트를 성공하셨기를 바랍니다!
-
-      행운을 빕니다,
-
-      사용자님의 친구들 [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"
@@ -3521,9 +3479,9 @@ ko:
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
     optimize_failure_message: "업로드된 이미지를 최적화하는 동안 오류가 발생했습니다."
     download_failure: "외부 공급자로부터 파일을 다운로드하지 못했습니다."
-    create_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 생성하지 못했습니다."
-    abort_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 중단하지 못했습니다."
-    complete_mutlipart_failure: "외부 저장소에서 멀티파트 업로드를 완료하지 못했습니다."
+    create_multipart_failure: "외부 저장소에서 멀티파트 업로드를 생성하지 못했습니다."
+    abort_multipart_failure: "외부 저장소에서 멀티파트 업로드를 중단하지 못했습니다."
+    complete_multipart_failure: "외부 저장소에서 멀티파트 업로드를 완료하지 못했습니다."
     external_upload_not_found: "업로드를 외부 저장소에서 찾을 수 없습니다. %{additional_detail}"
     checksum_mismatch_failure: "업로드한 파일의 체크섬이 일치하지 않습니다. 업로드 시 파일 내용이 변경되었을 수 있습니다. 다시 시도해 주세요."
     cannot_promote_failure: "업로드를 완료할 수 없습니다. 이미 완료되었거나 이전에 실패했을 수 있습니다."
@@ -4106,10 +4064,8 @@ ko:
             label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
-            label: "당신의 커뮤니티를 짧은 문장으로 축약하여 설명해보세요"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           short_site_description:
-            label: "몇 마디로 커뮤니티를 설명하십시오"
             placeholder: "최고의 커뮤니티"
       introduction:
         title: "소개"

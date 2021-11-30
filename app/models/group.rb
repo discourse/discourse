@@ -289,11 +289,6 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
-    Discourse.deprecate("Editable group custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
-    DiscoursePluginRegistry.register_editable_group_custom_field(custom_field_name, plugin)
-  end
-
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
   end

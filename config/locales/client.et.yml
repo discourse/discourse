@@ -1461,6 +1461,9 @@ et:
       watching_first_post: "<span>New Topic</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Ignoreeri"
+        cancel: "Tühista"
       popup:
         mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
         group_mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -3481,7 +3484,6 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
-        help: "Lisa uued emotikonid kõigile kasutamiseks. (PRO-vihje: pukseeri korraga mitu faili)"
         add: "Lisa uus emotikon"
         uploading: "Laen üles..."
         name: "Nimi"
@@ -3491,7 +3493,6 @@ et:
       embedding:
         get_started: "Kui Sa soovid lisada Discourse teise veebisaidi sisse ehk sängitada, alusta lisades oma teenusepakkuja"
         confirm_delete: "Oled Sa kindel, et soovid kustutada selle teenusepakkuja?"
-        sample: "Kasuta järgnevat HTML koodi oma saidil, et luua ja lisada/sängitada discourse teemad oma saidile. Asenda <b>REPLACE_ME</b> kanoonilise lehe URL-viitega, kuhu Sa seda lisad."
         title: "Sängitamine"
         host: "Lubatud hostid"
         class_name: "Klassi nimi"

@@ -1475,22 +1475,19 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparte este enlace para dar acceso inmediato al sitio"
+          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          restrict_email: "Restringir a una dirección de correo electrónico"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
-          invite_to_topic: "Redirigir a este tema"
           expires_at: "Caducar tras"
           custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo electrónico"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
-          invite_copied: "Enlace de invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2031,6 +2028,8 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image_alt_text:
+        aria_label: Texto alternativo para imagen
     notifications:
       tooltip:
         regular:
@@ -2079,6 +2078,9 @@ es:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
         other: "%{count} mensajes en tu bandeja de %{group_name} "
@@ -3461,6 +3463,9 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas (opcional)"
+      choose_for_topic_required:
+        one: "selecciona al menos %{count} etiqueta…"
+        other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -3822,11 +3827,13 @@ es:
         delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas las acciones)
         scopes:
           description: |
             Al usar ámbitos, puedes restringir una clave de API a una lista de terminales específicos. También puedes definir qué parámetros permitir. Usa comas para separar varios valores.
           title: Ámbitos
+          granular: Granular
+          read_only: Solo lectura
+          global: Global
           resource: Recurso
           action: Acción
           allowed_parameters: Parámetros permitidos
@@ -5073,7 +5080,6 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade emojis nuevos que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"
@@ -5084,7 +5090,6 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde lo quieres incrustar."
         title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"

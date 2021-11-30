@@ -40,12 +40,12 @@ discourseModule("Integration | Component | topic-list", function (hooks) {
     },
 
     async test(assert) {
-      assert.equal(this.selected.length, 0, "defaults to 0");
+      assert.strictEqual(this.selected.length, 0, "defaults to 0");
       await click("button.bulk-select");
       assert.ok(this.bulkSelectEnabled, "bulk select is enabled");
 
       await click("button.bulk-select-all");
-      assert.equal(
+      assert.strictEqual(
         this.selected.length,
         2,
         "clicking Select All selects all loaded topics"
@@ -56,7 +56,7 @@ discourseModule("Integration | Component | topic-list", function (hooks) {
       );
 
       await click("button.bulk-clear-all");
-      assert.equal(
+      assert.strictEqual(
         this.selected.length,
         0,
         "clicking Clear All deselects all topics"

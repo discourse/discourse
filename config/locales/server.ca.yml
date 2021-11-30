@@ -3004,10 +3004,8 @@ ca:
             label: "El nom de la vostra comunitat"
             placeholder: "Cau de la Jane"
           site_description:
-            label: "Descriviu la vostra comunitat amb una frase curta"
             placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
           short_site_description:
-            label: "Descriviu la vostra comunitat en poques paraules"
             placeholder: "La millor comunitat de tots els temps"
       introduction:
         title: "Introducció"

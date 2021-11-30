@@ -8,8 +8,8 @@ begin:"\\b(0[oO][0-7]+)"},{begin:e.C_NUMBER_RE}],relevance:0},i={
 className:"subst",begin:"\\$\\{",end:"\\}",keywords:a,contains:[]},r={
 className:"string",begin:"`",end:"`",contains:[e.BACKSLASH_ESCAPE,i]}
 ;i.contains=[e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,r,t,e.REGEXP_MODE]
-;const s=i.contains.concat([e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE])
-;return{name:"ArcGIS Arcade",aliases:["arcade"],keywords:a,
+;const o=i.contains.concat([e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE])
+;return{name:"ArcGIS Arcade",keywords:a,
 contains:[e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,r,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{
 className:"symbol",
 begin:"\\$[datastore|feature|layer|map|measure|sourcefeature|sourcelayer|targetfeature|targetlayer|value|view]+"
@@ -19,8 +19,8 @@ begin:"("+e.RE_STARTERS_RE+"|\\b(return)\\b)\\s*",keywords:"return",
 contains:[e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,e.REGEXP_MODE,{
 className:"function",begin:"(\\(.*?\\)|"+n+")\\s*=>",returnBegin:!0,
 end:"\\s*=>",contains:[{className:"params",variants:[{begin:n},{begin:/\(\s*\)/
-},{begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:a,contains:s}]}]
+},{begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:a,contains:o}]}]
 }],relevance:0},{className:"function",beginKeywords:"function",end:/\{/,
 excludeEnd:!0,contains:[e.inherit(e.TITLE_MODE,{begin:n}),{className:"params",
-begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,contains:s}],illegal:/\[|%/},{
+begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,contains:o}],illegal:/\[|%/},{
 begin:/\$[(.]/}],illegal:/#(?!!)/}}})());

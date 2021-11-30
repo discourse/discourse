@@ -1476,22 +1476,19 @@ it:
         invite:
           new_title: "Crea invito"
           edit_title: "Modifica invito"
-          instructions: "Condividi questo link per garantire l'accesso istantaneo a questo sito"
+          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
           copy_link: "copia link"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
-          restrict_email: "Limita a un solo indirizzo email"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
-          invite_to_topic: "Invia a questo argomento"
           expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
-          invite_copied: "Link di invito copiato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2022,6 +2019,8 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
       reload: "Ricarica"
       ignore: "Ignora"
+      image_alt_text:
+        aria_label: Testo alternativo per l'immagine
     notifications:
       tooltip:
         regular:
@@ -2070,6 +2069,9 @@ it:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
+      dismiss_confirmation:
+        dismiss: "Ignora"
+        cancel: "Annulla"
       group_message_summary:
         one: "%{count} messaggio in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
@@ -2150,6 +2152,8 @@ it:
       in_topics_posts: "in tutti gli argomenti e i messaggi"
       enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "di nuovo per utilizzare la ricerca nativa del browser"
       type:
         users: "Utenti"
         categories: "Categorie"
@@ -3370,6 +3374,7 @@ it:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
         insert_url: "%{shortcut} Inserisci la selezione nello strumento di composizione aperto"
+        full_page_search: "%{shortcut} Avvia la ricerca a pagina intera"
     badges:
       earned_n_times:
         one: "Ha guadagnato questo distintivo %{count} volta"
@@ -3765,6 +3770,7 @@ it:
         no_description: (nessuna descrizione)
         all_api_keys: Tutte le Chiavi API
         user_mode: Livello utente
+        scope_mode: Ambito
         impersonate_all_users: Impersona qualsiasi utente
         single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
@@ -3775,12 +3781,15 @@ it:
         delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
-        use_global_key: Chiave globale (consente tutte le azioni)
         scopes:
           description: |
             Quando si utilizzano gli ambiti, è possibile limitare una chiave API a un set specifico di endpoint.
             È inoltre possibile definire quali parametri saranno consentiti. Utilizzare le virgole per separare più valori.
           title: Ambiti
+          granular: Granulare
+          read_only: Sola lettura
+          global: Globale
+          global_description: La chiave API non ha restrizioni e tutti gli endpoint sono accessibili.
           resource: Risorsa
           action: Azione
           allowed_parameters: Parametri consentiti
@@ -3788,6 +3797,8 @@ it:
           any_parameter: (qualsiasi parametro)
           allowed_urls: URL consentiti
           descriptions:
+            global:
+              read: Limita la chiave API agli endpoint di sola lettura.
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
@@ -3795,6 +3806,8 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
+            uploads:
+              create: Carica un nuovo file.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
@@ -5018,7 +5031,7 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuovi emoji da mettere a disposizione per tutti. (Suggerimento: trascina e rilascia più file in una volta sola)"
+        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"
@@ -5029,7 +5042,7 @@ it:
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
-        sample: "Utilizza il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti di Discourse. Sostituisci <b>REPLACE_ME</b> con l'URL canonico della pagina in cui lo stai incorporando."
+        sample: "Incolla il seguente codice HTML nel tuo sito per creare e incorporare argomenti Discourse. Sostituire <b>REPLACE_ME</b> con l'URL canonico della pagina su cui si sta incorporando."
         title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"

@@ -1661,6 +1661,9 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Չեղարկել"
+        cancel: "Չեղարկել"
       group_message_summary:
         one: "%{count} հաղորդագրություն Ձեր %{group_name} մուտքային արկղում"
         other: "%{count} հաղորդագրություն Ձեր %{group_name}-ի մուտքային արկղում"
@@ -4170,7 +4173,6 @@ hy:
           replace_owners: Հեռացնել նախորդ սեփականատիրոջ կրծքանշանը
       emoji:
         title: "Էմոջի"
-        help: "Ավելացրեք նոր էմոջի, որը հասանելի կլինի բոլորին: (ՀՈՒՇՈՒՄ՝ քաշեք և գցեք բազմակի ֆայլեր միանգամից)"
         add: "Ավելացնել Նոր Էմոջի"
         uploading: "Վերբեռնում..."
         name: "Անուն"
@@ -4181,7 +4183,6 @@ hy:
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հոսթը:"
-        sample: "Օգտագործեք հետևյալ HTML կոդը Ձեր կայքում՝ discourse-ի թեմաներ ստեղծելու և զետեղելու համար: Փոխարինեք <b>REPLACE_ME</b> տեքստը կանոնավոր URL-ով այն էջի վրա, որտեղ Դուք ներկառուցում եք այն:"
         title: "Զետեղում"
         host: "Թույլատրված Հոսթերը"
         class_name: "Class-ի Անունը"

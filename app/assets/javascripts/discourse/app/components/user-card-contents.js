@@ -206,9 +206,9 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       this._close();
     },
 
-    composePM(user) {
+    composePM(user, post) {
       this._close();
-      this.composePrivateMessage(user, this.topic);
+      this.composePrivateMessage(user, post);
     },
 
     cancelFilter() {

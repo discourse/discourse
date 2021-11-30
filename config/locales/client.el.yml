@@ -1801,6 +1801,9 @@ el:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
+      dismiss_confirmation:
+        dismiss: "Απόρριψη"
+        cancel: "Άκυρο"
       group_message_summary:
         one: "%{count} μήνυμα στα εισερχόμενα της ομάδας %{group_name}"
         other: "%{count} μηνύματα στα εισερχόμενα της ομάδας %{group_name} "
@@ -3281,7 +3284,6 @@ el:
         revoked: Ανακλήθηκε
         not_shown_again: Αυτό το κλειδί δε θα εμφανιστεί ξανά. Βεβαιωθείτε ότι έχετε λάβει ένα αντίγραφο πριν συνεχίσετε.
         continue: Συνεχίστε
-        use_global_key: Καθολικό κλειδί (επιτρέπει όλες τις ενέργειες)
         scopes:
           description: |
             Όταν χρησιμοποιείτε πεδία εφαρμογής, μπορείτε να περιορίσετε ένα κλειδί API σε ένα συγκεκριμένο σύνολο τελικών σημείων.
@@ -4405,7 +4407,6 @@ el:
           replace_owners: Αφαιρέστε το σήμα από προηγούμενους κατόχους
       emoji:
         title: "Emoji"
-        help: "Πρόσθεσε ένα νέο emoji που θα είναι διαθέσιμο σε όλους. (Συμβουλή: μπορείς να σύρεις πολλά αρχεία ταυτόχρονα)"
         add: "Προσθήκη νέου emoji"
         uploading: "Ανεβαίνει..."
         name: "Όνομα"
@@ -4416,7 +4417,6 @@ el:
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
-        sample: "Χρησιμοποιήστε τον ακόλουθο HTML κώδικα στον ιστότοπό σας για να ενθέσετε θέματα. Αντικαταστήστε <b>REPLACE_ME</b> με το κανονικό URL της σελίδας στην οποία θα ενθέσετε το θέμα. "
         title: "Ενσωμάτωση"
         host: "Επιτρεπόμενα hosts"
         class_name: "Class Name"

@@ -10,6 +10,7 @@ import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import { cloneJSON } from "discourse-common/lib/object";
 
 async function openBookmarkModal(postNumber = 1) {
   if (exists(`#post_${postNumber} button.show-more-actions`)) {
@@ -58,11 +59,11 @@ async function testTopicLevelBookmarkButtonIcon(assert, postNumber) {
 acceptance("Bookmarking", function (needs) {
   needs.user();
 
-  const topicResponse = topicFixtures["/t/280/1.json"];
+  const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
   topicResponse.post_stream.posts[0].cooked += `<span data-date="2036-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
   <span>
     <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-      <use xlink:href="#globe-americas"></use>
+      <use href="#globe-americas"></use>
     </svg>
     <span class="relative-time">January 15, 2036 12:35 AM</span>
   </span>
@@ -71,7 +72,7 @@ acceptance("Bookmarking", function (needs) {
   topicResponse.post_stream.posts[1].cooked += `<span data-date="2021-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
   <span>
     <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-      <use xlink:href="#globe-americas"></use>
+      <use href="#globe-americas"></use>
     </svg>
     <span class="relative-time">Today 10:30 AM</span>
   </span>
@@ -167,7 +168,10 @@ acceptance("Bookmarking", function (needs) {
       exists(".bookmark-options-panel"),
       "it should reopen the options panel"
     );
-    assert.equal(selectKit(".bookmark-option-selector").header().value(), 1);
+    assert.strictEqual(
+      selectKit(".bookmark-option-selector").header().value(),
+      "1"
+    );
   });
 
   test("Saving a bookmark with no reminder or name", async function (assert) {
@@ -236,17 +240,17 @@ acceptance("Bookmarking", function (needs) {
     await click("#tap_tile_tomorrow");
 
     await openEditBookmarkModal();
-    assert.equal(
+    assert.strictEqual(
       queryAll("#bookmark-name").val(),
       "Test name",
       "it should prefill the bookmark name"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll("#custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll("#custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
@@ -265,17 +269,17 @@ acceptance("Bookmarking", function (needs) {
     await click("#tap_tile_post_local_date");
 
     await openEditBookmarkModal();
-    assert.equal(
+    assert.strictEqual(
       queryAll("#bookmark-name").val(),
       "Test name",
       "it should prefill the bookmark name"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll("#custom-date > input").val(),
       postDateFormatted,
       "it should prefill the bookmark date"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll("#custom-time").val(),
       "10:35",
       "it should prefill the bookmark time"
@@ -342,7 +346,7 @@ acceptance("Bookmarking", function (needs) {
     await openBookmarkModal(1);
     await click("#save-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.edit_bookmark"),
       "A topic level bookmark button has a label 'Edit Bookmark'"
@@ -360,7 +364,7 @@ acceptance("Bookmarking", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("#discourse-modal-title").innerText,
       I18n.t("post.bookmarks.create_for_topic"),
       "The create modal says creating a topic bookmark"
@@ -373,7 +377,7 @@ acceptance("Bookmarking", function (needs) {
       "the first post is not marked as being bookmarked"
     );
 
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.edit_bookmark"),
       "A topic level bookmark button has a label 'Edit Bookmark'"
@@ -381,7 +385,7 @@ acceptance("Bookmarking", function (needs) {
 
     await click("#topic-footer-button-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("#discourse-modal-title").innerText,
       I18n.t("post.bookmarks.edit_for_topic"),
       "The edit modal says editing a topic bookmark"
@@ -392,7 +396,7 @@ acceptance("Bookmarking", function (needs) {
 
     await click("#topic-footer-button-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("input#bookmark-name").value,
       "Test name",
       "The topic level bookmark editing preserves the values entered"
@@ -409,7 +413,7 @@ acceptance("Bookmarking", function (needs) {
     );
 
     // deleting all bookmarks in the topic
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.clear_bookmarks"),
       "the footer button says Clear Bookmarks because there is more than one"
@@ -421,7 +425,7 @@ acceptance("Bookmarking", function (needs) {
       !exists(".topic-post:first-child button.bookmark.bookmarked"),
       "the first post bookmark is deleted"
     );
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.title"),
       "the topic level bookmark is deleted"
@@ -433,7 +437,7 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click("#save-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.edit_bookmark"),
       "A topic level bookmark button has a label 'Edit Bookmark'"
@@ -456,7 +460,7 @@ acceptance("Bookmarking", function (needs) {
 
     await click(".bootbox.modal .btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.title"),
       "A topic level bookmark button no longer says 'Edit Bookmark' after deletion"
@@ -468,7 +472,7 @@ acceptance("Bookmarking", function (needs) {
     await openBookmarkModal(2);
     await click("#save-bookmark");
 
-    assert.equal(
+    assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
       I18n.t("bookmarked.edit_bookmark"),
       "A topic level bookmark button has a label 'Edit Bookmark'"

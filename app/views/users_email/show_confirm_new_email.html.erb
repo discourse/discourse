@@ -24,7 +24,7 @@
     </p>
 
     <%=form_tag(u_confirm_new_email_path, method: :put) do %>
-      <%= hidden_field_tag 'token', @token.token %>
+      <%= hidden_field_tag 'token', params[:token] %>
       <%= hidden_field_tag 'second_factor_token', nil, id: 'security-key-credential' %>
       <div id="security-key-error"></div>
 
@@ -34,7 +34,7 @@
 
       <% if @show_backup_codes %>
         <div id="backup-second-factor-form" style="">
-          <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:backup_code] %>	
+          <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:backup_code] %>
           <h3><%= t('login.second_factor_backup_title') %></h3>
             <%= label_tag(:second_factor_token, t("login.second_factor_backup_description")) %>
             <div><%= render 'common/second_factor_backup_input' %></div>
@@ -44,8 +44,8 @@
         <%= link_to t("login.second_factor_toggle.totp"), show_backup: "false" %>
         <br/>
       <% elsif @show_security_key %>
-        <%= hidden_field_tag 'security_key_challenge', @security_key_challenge, id: 'security-key-challenge' %>	
-        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:security_key] %>	
+        <%= hidden_field_tag 'security_key_challenge', @security_key_challenge, id: 'security-key-challenge' %>
+        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:security_key] %>
         <%= hidden_field_tag 'security_key_allowed_credential_ids', @security_key_allowed_credential_ids.join(","), id: 'security-key-allowed-credential-ids' %>
         <div id="security-key-form">
           <h3><%= t('login.security_key_authenticate') %></h3>
@@ -61,7 +61,7 @@
         <% end %>
       <% elsif @show_second_factor %>
         <div id="primary-second-factor-form">
-        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:totp] %>	
+        <%= hidden_field_tag 'second_factor_method', UserSecondFactor.methods[:totp] %>
           <h3><%= t('login.second_factor_title') %></h3>
           <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
           <div><%= render 'common/second_factor_text_field' %></div>

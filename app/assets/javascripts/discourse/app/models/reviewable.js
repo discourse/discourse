@@ -1,4 +1,4 @@
-import Category from "discourse/models/category";
+import categoryFromId from "discourse-common/utils/category-macro";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
@@ -24,10 +24,7 @@ const Reviewable = RestModel.extend({
     });
   },
 
-  @discourseComputed("category_id")
-  category(categoryId) {
-    return Category.findById(categoryId);
-  },
+  category: categoryFromId("category_id"),
 
   update(updates) {
     // If no changes, do nothing
@@ -45,11 +42,6 @@ const Reviewable = RestModel.extend({
         this.payload || {},
         updated.payload || {}
       );
-
-      if (updated.category_id) {
-        updated.category = Category.findById(updated.category_id);
-        delete updated.category_id;
-      }
 
       this.setProperties(updated);
     });

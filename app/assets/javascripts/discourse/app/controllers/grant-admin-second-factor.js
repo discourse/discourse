@@ -5,6 +5,7 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import I18n from "I18n";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   showSecondFactor: false,

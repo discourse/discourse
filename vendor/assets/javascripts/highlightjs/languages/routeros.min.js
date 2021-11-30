@@ -4,8 +4,8 @@ className:"variable",variants:[{begin:/\$[\w\d#@][\w\d_]*/},{begin:/\$\{(.*?)\}/
 }]},s={className:"string",begin:/"/,end:/"/,contains:[e.BACKSLASH_ESCAPE,i,{
 className:"variable",begin:/\$\(/,end:/\)/,contains:[e.BACKSLASH_ESCAPE]}]},t={
 className:"string",begin:/'/,end:/'/};return{name:"Microtik RouterOS script",
-aliases:["routeros","mikrotik"],case_insensitive:!0,keywords:{
-$pattern:/:?[\w-]+/,literal:n,
+aliases:["mikrotik"],case_insensitive:!0,keywords:{$pattern:/:?[\w-]+/,
+literal:n,
 keyword:r+" :"+r.split(" ").join(" :")+" :"+"global local beep delay put len typeof pick log time set find environment terminal error execute parse resolve toarray tobool toid toip toip6 tonum tostr totime".split(" ").join(" :")
 },contains:[{variants:[{begin:/\/\*/,end:/\*\//},{begin:/\/\//,end:/$/},{
 begin:/<\//,end:/>/}],illegal:/./},e.COMMENT("^#","$"),s,t,i,{

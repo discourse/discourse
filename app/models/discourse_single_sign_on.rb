@@ -50,8 +50,10 @@ class DiscourseSingleSignOn < SingleSignOn
   def nonce_error
     if Discourse.cache.read(used_nonce_key).present?
       "Nonce has already been used"
+    elsif SiteSetting.discourse_connect_csrf_protection
+      "Nonce is incorrect, was generated in a different browser session, or has expired"
     else
-      "Nonce has expired"
+      "Nonce is incorrect, or has expired"
     end
   end
 

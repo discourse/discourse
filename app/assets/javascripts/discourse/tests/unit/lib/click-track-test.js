@@ -189,7 +189,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
     let link = fixture("a");
     assert.ok(link.classList.contains("no-href"));
-    assert.equal(link.dataset.href, "http://www.google.com/");
+    assert.strictEqual(link.dataset.href, "http://www.google.com/");
     assert.blank(link.getAttribute("href"));
     assert.ok(link.dataset.autoRoute);
     assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
@@ -204,7 +204,10 @@ module("Unit | Utility | click-track", function (hooks) {
 
     const done = assert.async();
     later(() => {
-      assert.equal(fixture("a").getAttribute("href"), "http://www.google.com");
+      assert.strictEqual(
+        fixture("a").getAttribute("href"),
+        "http://www.google.com"
+      );
       done();
     });
   });
@@ -212,7 +215,7 @@ module("Unit | Utility | click-track", function (hooks) {
   function badgeClickCount(assert, id, expected) {
     track(generateClickEventOn(`#${id}`));
     const badge = fixture(`#${id}`).querySelector("span.badge");
-    assert.equal(parseInt(badge.innerHTML, 10), expected);
+    assert.strictEqual(parseInt(badge.innerHTML, 10), expected);
   }
 
   test("does not update badge clicks on my own link", async function (assert) {

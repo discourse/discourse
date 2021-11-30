@@ -1650,7 +1650,6 @@ da:
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     autohighlight_all_code: "Gennemtving anvendelsen af kodefremhævning på alle præformaterede kodeblokke, selv når de ikke eksplicit angiver sproget."
-    show_copy_button_on_codeblocks: "Tilføj en knap til kodeblokke for at kopiere blokindholdet til brugerens udklipsholder. Denne funktion understøttes ikke i Internet Explorer."
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
@@ -1995,47 +1994,6 @@ da:
       [Bekræft administratorkonto](%{admin_confirm_url})
   test_mailer:
     subject_template: "[%{email_prefix}] E-mail-leveringstest"
-    text_body_template: |
-      Dette er en test e-mail fra
-
-      [**%{base_url}**][0]
-
-      E-mail leverbarhed er kompliceret. Her er et par vigtige ting, du bør tjekke først:
-
-      - Vær *sikker* på at angive `notifikations e-mail` from: adressen korrekt i dine indstillinger for webstedet. **Domænet angivet i "fra" adressen på de e-mails, du sender, er domænet din e-mail vil blive valideret imod**.
-
-      - Vid, hvordan du kan se den rå kilde til e-mailen i din mail-klient, så du kan undersøge e-mail-headere for vigtige indikatorer. I Gmail er det "vis original" i rullemenuen øverst til højre for hver mail.
-
-      - **VIGTIGT:** Har din internetudbyder en omvendt DNS-registrering indtastet for at tilknytte domænenavne og IP-adresser, du sender mail fra? [Test din omvendte PTR-registrering][2] her. Hvis din internetudbyder ikke indtaster den korrekte omvendte DNS pege-registrering, er det meget usandsynligt, at nogen af dine e-mails vil blive leveret.
-
-      - Er dit domænes [SPF-registrering][8] korrekt? [Test din SPF-registrering][1] her. Bemærk, at TXT er den korrekte officielle registreringstype for SPF.
-
-      - Er dit domænes [DKIM-registrering][3] korrekt? Dette vil forbedre leveringen af e-mails betydeligt. [Test din DKIM-registrering][7] her.
-
-      - Hvis du kører din egen mailserver, tjek for at sikre, at IP'erne på din mailserver [ikke er på nogen e-mail-bloklister][4]. Kontroller også, at den helt sikkert sender et fuldt kvalificeret værtsnavn (FQDN), der kan slås op i DNS i sin HELO besked. Hvis ikke, vil dette gøre at din e-mail vil blive afvist af mange posttjenester.
-
-      - Vi anbefaler dig at **sende en test e-mail til [mail-tester.com][mt]** for at verificere, at alt ovenstående fungerer korrekt.
-
-      (Den *lette* måde er at oprette en konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har lave mail-omkostnings abonnementer og vil være fint til små fællesskaber. Du skal dog stadig oprette SPF og DKIM-registreringer i din DNS, selvfølgelig!)
-
-      Vi håber, at du har modtaget denne e-mail leveringstest OK!
-
-      Held og lykke,
-
-      Dine venner på [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup. spx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester. om/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www. parkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Ny Discourse version, opdatering tilgængelig"
   new_version_mailer_with_notes:
@@ -3598,10 +3556,8 @@ da:
             label: "Dit fællesskabs navn"
             placeholder: "Janes Sted"
           site_description:
-            label: "Beskriv dit fællesskab med en kort sætning"
             placeholder: "Et sted hvor Jane og hendes venner kan diskutere fede emner"
           short_site_description:
-            label: "Beskriv dit fællesskab med nogle få ord"
             placeholder: "Bedste fællesskab nogensinde"
       introduction:
         title: "Introduktion"

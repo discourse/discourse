@@ -1821,6 +1821,9 @@ bs_BA:
       watching_first_post: "<span>Nova tema</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Odpusti"
+        cancel: "Odustani"
       group_message_summary:
         one: "%{count} poruka u vašem %{group_name} sandučiću"
         few: "%{count} poruke u vašem %{group_name} sandučiću"
@@ -4299,7 +4302,6 @@ bs_BA:
           badge_query_examples_title: "Primjeri upita za oznaku"
       emoji:
         title: "Emoji"
-        help: "Dodajte novi emotikon koji će biti dostupan svima. (PROTIP: povlačenje i ispuštanje više datoteka odjednom)"
         add: "Dodaj novi emoji"
         uploading: "Učitava se..."
         name: "Ime"

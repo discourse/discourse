@@ -30,7 +30,7 @@ export default DiscourseRoute.extend(OpenComposer, {
       const period = User.currentProp("redirected_to_top.period") || "all";
       this.replaceWith("discovery.top", {
         queryParams: {
-          period: period,
+          period,
         },
       });
     } else if (url && (matches = url.match(/top\/(.*)$/))) {
@@ -46,25 +46,24 @@ export default DiscourseRoute.extend(OpenComposer, {
 
   actions: {
     loading() {
-      this.controllerFor("discovery").set("loading", true);
+      this.controllerFor("discovery").loadingBegan();
+
+      // We don't want loading to bubble
       return true;
     },
 
     loadingComplete() {
-      this.controllerFor("discovery").set("loading", false);
+      this.controllerFor("discovery").loadingComplete();
       if (!this.session.get("topicListScrollPosition")) {
         scrollTop();
       }
-      return false;
     },
 
     didTransition() {
-      this.controllerFor("discovery")._showFooter();
       this.send("loadingComplete");
 
       const model = this.controllerFor("discovery/topics").get("model");
       setTopicList(model);
-      return false;
     },
 
     // clear a pinned topic

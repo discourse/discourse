@@ -247,7 +247,7 @@ class GroupsController < ApplicationController
 
     dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
     if params[:desc]
-      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true)
+      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0')
       dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     end
     order = ""

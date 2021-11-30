@@ -58,14 +58,14 @@ module("Unit | Utility | url", function () {
   });
 
   test("userPath", function (assert) {
-    assert.equal(userPath(), "/u");
-    assert.equal(userPath("eviltrout"), "/u/eviltrout");
+    assert.strictEqual(userPath(), "/u");
+    assert.strictEqual(userPath("eviltrout"), "/u/eviltrout");
   });
 
   test("userPath with prefix", function (assert) {
     setPrefix("/forum");
-    assert.equal(userPath(), "/forum/u");
-    assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
+    assert.strictEqual(userPath(), "/forum/u");
+    assert.strictEqual(userPath("eviltrout"), "/forum/u/eviltrout");
   });
 
   test("routeTo with prefix", async function (assert) {
@@ -82,16 +82,19 @@ module("Unit | Utility | url", function () {
   });
 
   test("prefixProtocol", async function (assert) {
-    assert.equal(
+    assert.strictEqual(
       prefixProtocol("mailto:mr-beaver@aol.com"),
       "mailto:mr-beaver@aol.com"
     );
-    assert.equal(prefixProtocol("discourse.org"), "https://discourse.org");
-    assert.equal(
+    assert.strictEqual(
+      prefixProtocol("discourse.org"),
+      "https://discourse.org"
+    );
+    assert.strictEqual(
       prefixProtocol("www.discourse.org"),
       "https://www.discourse.org"
     );
-    assert.equal(
+    assert.strictEqual(
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
     );

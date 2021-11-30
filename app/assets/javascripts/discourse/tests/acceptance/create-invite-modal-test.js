@@ -6,12 +6,10 @@ import {
   fakeTime,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
+import { test } from "qunit";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
-  let deleted;
-
   needs.user();
   needs.pretender((server, helper) => {
     const inviteData = {
@@ -41,30 +39,17 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     });
 
     server.delete("/invites", () => {
-      deleted = true;
       return helper.response({});
     });
-  });
-  needs.hooks.beforeEach(() => {
-    deleted = false;
   });
 
   test("basic functionality", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
-    assert.equal(
-      find("input.invite-link")[0].value,
-      "http://example.com/invites/52641ae8878790bc7b79916247cfe6ba",
-      "shows an invite link when modal is opened"
-    );
 
-    await click(".modal-footer .show-advanced");
-    await assert.ok(exists(".invite-to-groups"), "shows advanced options");
-    await assert.ok(exists(".invite-to-topic"), "shows advanced options");
-    await assert.ok(exists(".invite-expires-at"), "shows advanced options");
-
-    await click(".modal-close");
-    assert.ok(deleted, "deletes the invite if not saved");
+    await assert.ok(exists(".invite-to-groups"));
+    await assert.ok(exists(".invite-to-topic"));
+    await assert.ok(exists(".invite-expires-at"));
   });
 
   test("saving", async function (assert) {
@@ -75,32 +60,19 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
     await click(".btn-primary");
 
-    assert.equal(count("tbody tr"), 1, "adds invite to list after saving");
-
-    await click(".modal-close");
-    assert.notOk(deleted, "does not delete invite on close");
+    assert.strictEqual(
+      count("tbody tr"),
+      1,
+      "adds invite to list after saving"
+    );
   });
 
   test("copying saves invite", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
 
-    await click(".invite-link .btn");
-
-    await click(".modal-close");
-    assert.notOk(deleted, "does not delete invite on close");
-  });
-
-  test("copying an email invite without an email shows error message", async function (assert) {
-    await visit("/u/eviltrout/invited/pending");
-    await click(".user-invite-buttons .btn:first-child");
-
-    await fillIn("#invite-email", "error");
-    await click(".invite-link .btn");
-    assert.equal(
-      find("#modal-alert").text(),
-      "error isn't a valid email address."
-    );
+    await click(".save-invite");
+    assert.ok(exists(".invite-link .btn"));
   });
 });
 
@@ -154,7 +126,10 @@ acceptance("Invites - Email Invites", function (needs) {
       groups: [],
     };
 
-    server.post("/invites", () => helper.response(inviteData));
+    server.post("/invites", (request) => {
+      lastRequest = request;
+      return helper.response(inviteData);
+    });
 
     server.put("/invites/1", (request) => {
       lastRequest = request;
@@ -227,7 +202,6 @@ acceptance(
       await visit("/u/eviltrout/invited/pending");
 
       await click(".user-invite-buttons .btn:first-child");
-      await click(".modal-footer .show-advanced");
       await click(".future-date-input-selector-header");
 
       const options = Array.from(

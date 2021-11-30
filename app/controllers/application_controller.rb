@@ -41,13 +41,14 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
-  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
   after_action  :ensure_vary_header
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
+  after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -188,13 +189,21 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end
@@ -904,6 +913,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def add_noindex_header_to_non_canonical
+    canonical = (@canonical_url || @default_canonical)
+    if canonical.present? && canonical != request.url && !SiteSetting.allow_indexing_non_canonical_urls
+      response.headers['X-Robots-Tag'] ||= 'noindex'
+    end
+  end
+
   protected
 
   def honeypot_value
@@ -928,8 +944,11 @@ class ApplicationController < ActionController::Base
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ',')
-    if params[key]
+    case params[key]
+    when String
       params[key].split(delimiter).map(&:to_i)
+    when Array
+      params[key].map(&:to_i)
     end
   end
 

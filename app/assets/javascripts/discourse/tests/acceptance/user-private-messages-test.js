@@ -11,6 +11,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import selectKit from "../helpers/select-kit-helper";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -24,7 +25,11 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/eviltrout/messages");
 
-      assert.equal(count(".topic-list-item"), 1, "displays the topic list");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        1,
+        "displays the topic list"
+      );
 
       assert.ok(
         !exists(".group-notifications-button"),
@@ -79,7 +84,7 @@ acceptance(
       });
 
       server.get("/t/13.json", () => {
-        const response = { ...fixturesByUrl["/t/12/1.json"] };
+        const response = cloneJSON(fixturesByUrl["/t/12/1.json"]);
         response.suggested_group_name = "awesome_group";
         return helper.response(response);
       });
@@ -119,7 +124,7 @@ acceptance(
 
           return helper.response({
             topic_list: {
-              topics: topics,
+              topics,
             },
           });
         });
@@ -276,7 +281,7 @@ acceptance(
     test("viewing messages filtered by tags", async function (assert) {
       await visit("/u/charlie/messages/tags");
 
-      assert.equal(
+      assert.strictEqual(
         count(".action-list li"),
         3,
         "it does not expand personal or group inbox"
@@ -342,13 +347,13 @@ acceptance(
 
       await visit("/u/charlie/messages"); // wait for re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
@@ -362,7 +367,7 @@ acceptance(
 
       await visit("/u/charlie/messages/new"); // wait for re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
@@ -378,7 +383,7 @@ acceptance(
 
       await visit("/u/charlie/messages/unread"); // wait for re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
@@ -387,7 +392,7 @@ acceptance(
       assert.ok(exists(".show-mores"), "displays the topic incoming info");
     });
 
-    test("incoming unread messages while viewing group unread", async function (assert) {
+    test("incoming unread and new messages while viewing group unread", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
       publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
@@ -395,13 +400,13 @@ acceptance(
 
       await visit("/u/charlie/messages/group/awesome_group/unread"); // wait for re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
@@ -411,13 +416,13 @@ acceptance(
 
       await visit("/u/charlie/messages/unread");
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
@@ -446,7 +451,7 @@ acceptance(
       publishUnreadToMessageBus({ topicId: 2, userId: 5 });
       publishUnreadToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -455,13 +460,13 @@ acceptance(
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -471,7 +476,7 @@ acceptance(
     test("dismissing personal unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -480,7 +485,7 @@ acceptance(
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -490,7 +495,7 @@ acceptance(
     test("dismissing group unread messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -499,7 +504,7 @@ acceptance(
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -513,7 +518,7 @@ acceptance(
       publishNewToMessageBus({ topicId: 2, userId: 5 });
       publishNewToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -521,13 +526,13 @@ acceptance(
 
       await click(".btn.dismiss-read");
 
-      assert.equal(
+      assert.strictEqual(
         query(".messages-nav li a.new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
       );
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -537,7 +542,7 @@ acceptance(
     test("dismissing personal new messages", async function (assert) {
       await visit("/u/charlie/messages/new");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -545,7 +550,7 @@ acceptance(
 
       await click(".btn.dismiss-read");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -555,7 +560,7 @@ acceptance(
     test("dismissing new group messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/new");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -563,7 +568,7 @@ acceptance(
 
       await click(".btn.dismiss-read");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         0,
         "displays the right topic list"
@@ -573,7 +578,7 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/charlie/messages");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         3,
         "displays the right topic list"
@@ -581,7 +586,7 @@ acceptance(
 
       await visit("/u/charlie/messages/group/awesome_group");
 
-      assert.equal(
+      assert.strictEqual(
         count(".topic-list-item"),
         2,
         "displays the right topic list"
@@ -596,7 +601,7 @@ acceptance(
     test("suggested messages without new or unread", async function (assert) {
       await visit("/t/12");
 
-      assert.equal(
+      assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
         "Want to read more? Browse other messages in personal messages.",
         "displays the right browse more message"
@@ -610,7 +615,7 @@ acceptance(
 
       await visit("/t/12"); // await re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
         "There is 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
@@ -620,7 +625,7 @@ acceptance(
 
       await visit("/t/12"); // await re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
         "There is 1 unread and 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
@@ -630,7 +635,7 @@ acceptance(
 
       await visit("/t/12"); // await re-render
 
-      assert.equal(
+      assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
         "There is 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
@@ -817,7 +822,7 @@ acceptance(
 
       await click("#reply-control .save-or-cancel button");
 
-      assert.equal(
+      assert.strictEqual(
         currentURL(),
         "/t/testing-private-messages-with-tags/161",
         "it creates the private message"

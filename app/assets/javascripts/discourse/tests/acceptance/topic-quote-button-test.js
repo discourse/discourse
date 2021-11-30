@@ -6,7 +6,7 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`
@@ -54,7 +54,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
       await selectText("#post_3 aside.onebox p");
       await click(".insert-quote");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".d-editor-input").val().trim(),
         '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
         "quote only contains a link"

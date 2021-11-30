@@ -323,7 +323,7 @@ describe UsernameChanger do
 
       context 'quotes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
-        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
+        let(:avatar_url) { user.avatar_template_url.gsub("{size}", "40") }
 
         it 'replaces the username in quote tags and updates avatar' do
           post = create_post_and_change_username(raw: <<~RAW)
@@ -448,7 +448,7 @@ describe UsernameChanger do
         end
 
         def user_avatar_url(u)
-          u.avatar_template.gsub("{size}", "40")
+          u.avatar_template_url.gsub("{size}", "40")
         end
 
         it 'updates avatar for linked topics and posts' do

@@ -11,7 +11,7 @@ const ScreenedUrl = EmberObject.extend({
 });
 
 ScreenedUrl.reopenClass({
-  findAll: function () {
+  findAll() {
     return ajax("/admin/logs/screened_urls.json").then(function (
       screened_urls
     ) {

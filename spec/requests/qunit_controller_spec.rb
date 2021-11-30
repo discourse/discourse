@@ -108,7 +108,6 @@ describe QunitController do
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")
         expect(response.body).to include("/assets/discourse/tests/test_starter.js")
-        expect(response.body).to include("/extra-locales/admin")
       end
     end
   end

@@ -12,7 +12,7 @@ module("Unit | Utility | highlight-search", function () {
 
     const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
-    assert.equal(
+    assert.strictEqual(
       terms.join(" "),
       "some text",
       "it should highlight the terms correctly"
@@ -28,7 +28,7 @@ module("Unit | Utility | highlight-search", function () {
 
     const terms = [fixture(`.${CLASS_NAME}`).textContent];
 
-    assert.equal(
+    assert.strictEqual(
       terms.join(" "),
       "தமிழ் & русский",
       "it should highlight the terms correctly"

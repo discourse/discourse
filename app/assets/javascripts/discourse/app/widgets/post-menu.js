@@ -10,27 +10,27 @@ const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const _builders = {};
-const _extraButtons = {};
+let _extraButtons = {};
 export let apiExtraButtons = {};
+let _buttonsToRemove = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
 export function resetPostMenuExtraButtons() {
-  Object.keys(apiExtraButtons).forEach((button) => {
-    removeButton(button);
-  });
-
+  _buttonsToRemove = {};
   apiExtraButtons = {};
+  _extraButtons = {};
 }
 
-export function removeButton(name) {
-  if (_extraButtons[name]) {
-    delete _extraButtons[name];
-  }
-  if (_builders[name]) {
-    delete _builders[name];
+export function removeButton(name, callback) {
+  if (callback) {
+    _buttonsToRemove[name] = callback;
+  } else {
+    _buttonsToRemove[name] = () => {
+      return true;
+    };
   }
 }
 
@@ -40,8 +40,22 @@ function registerButton(name, builder) {
 
 export function buildButton(name, widget) {
   let { attrs, state, siteSettings, settings, currentUser } = widget;
+
+  let shouldAddButton = true;
+
+  if (_buttonsToRemove[name]) {
+    shouldAddButton = !_buttonsToRemove[name](
+      attrs,
+      state,
+      siteSettings,
+      settings,
+      currentUser
+    );
+  }
+
   let builder = _builders[name];
-  if (builder) {
+
+  if (shouldAddButton && builder) {
     let button = builder(attrs, state, siteSettings, settings, currentUser);
     if (button && !button.id) {
       button.id = name;
@@ -498,7 +512,19 @@ export default createWidget("post-menu", {
     }
 
     Object.values(_extraButtons).forEach((builder) => {
-      if (builder) {
+      let shouldAddButton = true;
+
+      if (_buttonsToRemove[name]) {
+        shouldAddButton = !_buttonsToRemove[name](
+          attrs,
+          this.state,
+          this.siteSettings,
+          this.settings,
+          this.currentUser
+        );
+      }
+
+      if (shouldAddButton && builder) {
         const buttonAtts = builder(
           attrs,
           this.state,
@@ -677,7 +703,7 @@ export default createWidget("post-menu", {
       `.toggle-like[data-post-id="${attrs.id}"] .d-icon`
     );
     heart.closest(".toggle-like").classList.add("has-like");
-    heart.classList.add("has-animation");
+    heart.classList.add("heart-animation");
 
     return new Promise((resolve) => {
       later(() => {

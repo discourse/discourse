@@ -296,15 +296,6 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed()
-  composerComponent() {
-    const defaultComposer = "composer-editor";
-    if (this.siteSettings.enable_experimental_composer_uploader) {
-      return "composer-editor-uppy";
-    }
-    return defaultComposer;
-  },
-
   @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
@@ -675,17 +666,19 @@ export default Controller.extend({
         groups.forEach((group) => {
           let body;
           const groupLink = getURL(`/g/${group.name}/members`);
+          const maxMentions = parseInt(group.max_mentions, 10);
+          const userCount = parseInt(group.user_count, 10);
 
-          if (group.max_mentions < group.user_count) {
+          if (maxMentions < userCount) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              count: group.max_mentions,
+              count: maxMentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
             body = I18n.t("composer.group_mentioned", {
               group: `@${group.name}`,
-              count: group.user_count,
+              count: userCount,
               group_link: groupLink,
             });
           }
@@ -714,6 +707,17 @@ export default Controller.extend({
           templateName: "custom-body",
           body,
         });
+      });
+    },
+
+    hereMention(count) {
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        body: I18n.t("composer.here_mention", {
+          here: this.siteSettings.here_mention,
+          count,
+        }),
       });
     },
 

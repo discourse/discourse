@@ -11,21 +11,17 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Post from "discourse/models/post";
 import bootbox from "bootbox";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { computed } from "@ember/object";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 
-function customTagArray(fieldName) {
-  return computed(fieldName, function () {
-    let val = this.get(fieldName);
-    if (!val) {
-      return val;
-    }
-    if (!Array.isArray(val)) {
-      val = [val];
-    }
-    return val;
-  });
+function customTagArray(val) {
+  if (!val) {
+    return [];
+  }
+  if (!Array.isArray(val)) {
+    val = [val];
+  }
+  return val;
 }
 
 // This controller handles displaying of history
@@ -43,8 +39,33 @@ export default Controller.extend(ModalFunctionality, {
   previousFeaturedLink: alias("model.featured_link_changes.previous"),
   currentFeaturedLink: alias("model.featured_link_changes.current"),
 
-  previousTagChanges: customTagArray("model.tags_changes.previous"),
-  currentTagChanges: customTagArray("model.tags_changes.current"),
+  @discourseComputed(
+    "model.tags_changes.previous",
+    "model.tags_changes.current"
+  )
+  previousTagChanges(previous, current) {
+    const previousArray = customTagArray(previous);
+    const currentSet = new Set(customTagArray(current));
+
+    return previousArray.map((name) => ({
+      name,
+      deleted: !currentSet.has(name),
+    }));
+  },
+
+  @discourseComputed(
+    "model.tags_changes.previous",
+    "model.tags_changes.current"
+  )
+  currentTagChanges(previous, current) {
+    const previousSet = new Set(customTagArray(previous));
+    const currentArray = customTagArray(current);
+
+    return currentArray.map((name) => ({
+      name,
+      inserted: !previousSet.has(name),
+    }));
+  },
 
   @discourseComputed("post.version")
   modalTitleKey(version) {

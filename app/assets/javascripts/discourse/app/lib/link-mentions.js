@@ -67,6 +67,7 @@ function updateFound(mentions, usernames) {
 }
 
 export function linkSeenMentions(elem, siteSettings) {
+  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     elem = elem[0];
 

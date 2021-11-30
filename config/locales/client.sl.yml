@@ -1427,7 +1427,7 @@ sl:
           expires_at: "Kdaj bo ta povezava povabila potekla?"
         invite:
           new_title: "Ustvari povabilo"
-          instructions: "Delite to povezavo in takoj omogočite dostop do te strani"
+          instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
           show_advanced: "Pokaži dodatne možnosti"
           add_to_groups: "Dodaj v skupine"
           expires_at: "Poteče po"
@@ -1983,6 +1983,9 @@ sl:
       membership_request_accepted: "Sprejeti v članstvo v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Opusti"
+        cancel: "Prekliči"
       group_message_summary:
         one: "%{count} sporočilo v%{group_name} predalu"
         two: "%{count} sporočili v %{group_name} predalu"
@@ -3576,7 +3579,6 @@ sl:
         delete: Trajno izbriši
         not_shown_again: Ta ključ ne bo več prikazan. Preden nadaljujete, si ustvarite kopijo.
         continue: Nadaljuj
-        use_global_key: Globalni ključ (omogoča vsa dejanja)
         scopes:
           action: Dejanje
           descriptions:
@@ -4269,7 +4271,6 @@ sl:
           badge_query_examples_title: "Primeri poizvedb SQL za značke"
       emoji:
         title: "Emoji"
-        help: "Dodaj nov emoji, ki bo na voljo vsem. (lahko prestavite in spustite več datotek naenkrat)"
         add: "Dodaj nov emoji"
         uploading: "Nalagam..."
         name: "Ime"

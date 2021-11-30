@@ -26,7 +26,7 @@ module("Unit | Model | email-log", function () {
       },
     };
     const emailLog = EmailLog.create(attrs);
-    assert.equal(
+    assert.strictEqual(
       emailLog.get("post_url"),
       "/forum/t/some-pro-tips-for-you/41/5",
       "includes the subfolder in the post url"

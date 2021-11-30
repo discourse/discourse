@@ -1,7 +1,7 @@
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
-import Category from "discourse/models/category";
+import categoryFromId from "discourse-common/utils/category-macro";
 import Bookmark from "discourse/models/bookmark";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
@@ -15,7 +15,7 @@ import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -209,10 +209,7 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @discourseComputed("category_id")
-  category(categoryId) {
-    return Category.findById(categoryId);
-  },
+  category: categoryFromId("category_id"),
 
   @discourseComputed("url")
   shareUrl(url) {
@@ -451,6 +448,8 @@ const Topic = RestModel.extend({
           deleted_by,
           "details.can_delete": false,
           "details.can_recover": true,
+          "details.can_permanently_delete":
+            this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (!deleted_by.staff) {
           DiscourseURL.redirectTo("/");
@@ -491,7 +490,10 @@ const Topic = RestModel.extend({
     keys.forEach((key) => this.set(key, json[key]));
 
     if (this.bookmarks.length) {
-      this.bookmarks = this.bookmarks.map((bm) => Bookmark.create(bm));
+      this.set(
+        "bookmarks",
+        this.bookmarks.map((bm) => Bookmark.create(bm))
+      );
     }
 
     return this;

@@ -177,23 +177,45 @@
       opacity: 1;
     }
   }
+
   .button-wrapper {
+    min-width: 10em;
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5em;
+
     position: absolute;
     height: var(--resizer-height);
     bottom: 0;
     left: 0;
     opacity: 0;
-    display: flex;
-    align-items: center;
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
-    width: 100%;
     background: var(--secondary); // for when images are wider than controls
 
+    &[editing] {
+      opacity: 1;
+    }
+
+    .scale-btn-container,
+    .alt-text-readonly-container,
+    .alt-text-edit-container {
+      background: var(--secondary);
+      display: flex;
+      height: var(--resizer-height);
+      align-items: center;
+
+      &[hidden] {
+        display: none;
+      }
+    }
+
     .scale-btn {
-      background: var(--secondary); // for when controls are wider than image
       color: var(--tertiary);
       padding: 0 1em;
+
       &:first-child,
       &:last-child {
         padding: 0;
@@ -208,6 +230,61 @@
         text-decoration: underline;
         cursor: pointer;
       }
+    }
+
+    .alt-text-readonly-container {
+      flex: 1 1;
+      width: 100%;
+
+      .alt-text {
+        margin-right: 0.5em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .alt-text-edit-btn {
+        cursor: pointer;
+
+        svg {
+          padding-right: 0.5em;
+        }
+      }
+    }
+
+    .alt-text-edit-container {
+      margin-top: 0.25em;
+      gap: 0 0.25em;
+      flex: 1;
+
+      .alt-text-input,
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        height: var(--resizer-height);
+      }
+
+      .alt-text-input {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        border: none;
+        width: var(--resizer-height);
+
+        svg {
+          margin: 0;
+        }
+      }
+    }
+
+    svg {
+      pointer-events: none;
     }
   }
 }

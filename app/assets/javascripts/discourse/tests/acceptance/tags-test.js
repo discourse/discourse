@@ -191,7 +191,7 @@ acceptance("Tags listed by group", function (needs) {
 
   test("list the tags in groups", async function (assert) {
     await visit("/tags");
-    assert.equal(
+    assert.strictEqual(
       $(".tag-list").length,
       4,
       "shows separate lists for the 3 groups and the ungrouped tags"
@@ -223,7 +223,7 @@ acceptance("Tags listed by group", function (needs) {
       ["/tag/focus", "/tag/escort"],
       "always uses lowercase URLs for mixed case tags"
     );
-    assert.equal(
+    assert.strictEqual(
       $("a[data-tag-name='private']").attr("href"),
       "/u/eviltrout/messages/tags/private",
       "links to private messages"
@@ -237,7 +237,7 @@ acceptance("Tags listed by group", function (needs) {
     assert.ok(!exists("#create-topic:disabled"));
 
     await visit("/tag/staff-only-tag");
-    assert.equal(count("#create-topic:disabled"), 1);
+    assert.strictEqual(count("#create-topic:disabled"), 1);
 
     updateCurrentUser({ moderator: true });
 
@@ -384,7 +384,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/planters");
-    assert.equal(count("#show-tag-info"), 1);
+    assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
     assert.ok(exists(".tag-info .tag-name"), "show tag");
@@ -392,12 +392,16 @@ acceptance("Tag info", function (needs) {
       queryAll(".tag-info .tag-associations").text().indexOf("Gardening") >= 0,
       "show tag group names"
     );
-    assert.equal(
+    assert.strictEqual(
       count(".tag-info .synonyms-list .tag-box"),
       2,
       "shows the synonyms"
     );
-    assert.equal(count(".tag-info .badge-category"), 1, "show the category");
+    assert.strictEqual(
+      count(".tag-info .badge-category"),
+      1,
+      "show the category"
+    );
     assert.ok(!exists("#rename-tag"), "can't rename tag");
     assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
     assert.ok(!exists("#delete-tag"), "can't delete tag");
@@ -407,7 +411,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/happy-monkey");
-    assert.equal(count("#show-tag-info"), 1);
+    assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
     assert.ok(exists(".tag-info .tag-name"), "show tag");
@@ -431,14 +435,14 @@ acceptance("Tag info", function (needs) {
     await click(".category-breadcrumb .category-drop-header");
     await click('.category-breadcrumb .category-row[data-name="faq"]');
 
-    assert.equal(currentURL(), "/tags/c/faq/4/planters");
+    assert.strictEqual(currentURL(), "/tags/c/faq/4/planters");
   });
 
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/planters");
-    assert.equal(count("#show-tag-info"), 1);
+    assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
     assert.ok(exists("#rename-tag"), "can rename tag");
@@ -446,11 +450,19 @@ acceptance("Tag info", function (needs) {
     assert.ok(exists("#delete-tag"), "can delete tag");
 
     await click("#edit-synonyms");
-    assert.ok(count(".unlink-synonym:visible"), 2, "unlink UI is visible");
-    assert.equal(count(".delete-synonym:visible"), 2, "delete UI is visible");
+    assert.strictEqual(
+      count(".unlink-synonym:visible"),
+      2,
+      "unlink UI is visible"
+    );
+    assert.strictEqual(
+      count(".delete-synonym:visible"),
+      2,
+      "delete UI is visible"
+    );
 
     await click(".unlink-synonym:nth-of-type(1)");
-    assert.equal(
+    assert.strictEqual(
       count(".tag-info .synonyms-list .tag-box"),
       1,
       "removed a synonym"
@@ -461,6 +473,6 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     let composer = this.owner.lookup("controller:composer");
-    assert.equal(composer.get("model").tags, null);
+    assert.strictEqual(composer.get("model").tags, undefined);
   });
 });

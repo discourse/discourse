@@ -598,6 +598,14 @@ class PostsController < ApplicationController
     render_serialized(posts, AdminUserActionSerializer)
   end
 
+  def pending
+    params.require(:username)
+    user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_edit_user?(user)
+
+    render_serialized(user.pending_posts.order(created_at: :desc), PendingPostSerializer, root: :pending_posts)
+  end
+
   protected
 
   # We can't break the API for making posts. The new, queue supporting API
@@ -776,7 +784,7 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     if recipients = result[:target_usernames]
-      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true, drop_from: '2.9.0')
     else
       recipients = result[:target_recipients]
     end

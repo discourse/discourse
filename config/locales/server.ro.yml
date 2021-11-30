@@ -1947,7 +1947,6 @@ ro:
             label: "Numele comunității tale"
             placeholder: "Bârlogul Mariei"
           site_description:
-            label: "Descrie-ți comunitatea într-o singură frază scurtă"
             placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
       introduction:
         title: "Introducere"

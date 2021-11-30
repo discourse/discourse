@@ -39,7 +39,7 @@ class TopicQuery
 
     def list_private_messages_new(user, type = :user)
       list = filter_private_message_new(user, type)
-      list = remove_muted_tags(list, user)
+      list = TopicQuery.remove_muted_tags(list, user)
       list = remove_dismissed(list, user)
 
       create_list(:private_messages, {}, list)

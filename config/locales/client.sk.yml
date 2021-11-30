@@ -1344,6 +1344,9 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      dismiss_confirmation:
+        dismiss: "Zahodiť"
+        cancel: "Zrušiť"
       popup:
         mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
         group_mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
@@ -3090,7 +3093,6 @@ sk:
             with_time: <span class="username">%{username}</span> v čase <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Pridaj nové emoji, ktoré bude dostupné pre všetkých (TIP: môžete pretiahnuť viac súborov naraz)"
         add: "Pridaj nové Emoji"
         uploading: "Upload prebieha..."
         name: "Meno"
@@ -3100,7 +3102,6 @@ sk:
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
         confirm_delete: "Ste si istý, že chcete zmazať tohoto hostiteľa?"
-        sample: "Použite nasledovný HTML kód vo Vašej stránke pre vytvorenie vloženej témy Discourse. Nahraďte <b>REPLACE_ME</b> kanonickou URL adresou stránky, do ktorej to vkladáte."
         title: "Vkladám"
         host: "Povolení hostitelia"
         edit: "uprav"

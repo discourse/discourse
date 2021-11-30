@@ -12,7 +12,7 @@ import {
   currentSettings,
   resetSettings,
 } from "discourse/tests/helpers/site-settings";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
@@ -25,10 +25,9 @@ import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { clearAppEventsCache } from "discourse/services/app-events";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
 import { run } from "@ember/runloop";
@@ -42,7 +41,7 @@ function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
     let $this = $(this);
     let data = $this.data("bs.modal");
-    let options = $.extend(
+    let options = Object.assign(
       {},
       Modal.DEFAULTS,
       $this.data(),
@@ -84,7 +83,7 @@ function createApplication(config, settings) {
   }
 
   app.SiteSettings = settings;
-  registerObjects(container, app);
+  registerObjects(app);
   return app;
 }
 
@@ -149,7 +148,7 @@ function writeSummaryLine(message) {
   if (window.Testem) {
     window.Testem.useCustomAdapter(function (socket) {
       socket.emit("test-metadata", "summary-line", {
-        message: message,
+        message,
       });
     });
   }
@@ -315,13 +314,6 @@ function setupTestsCommon(application, container, config) {
     $(".modal-backdrop").remove();
     flushMap();
 
-    if (isLegacyEmber()) {
-      // ensures any event not removed is not leaking between tests
-      // most likely in initializers, other places (controller, component...)
-      // should be fixed in code
-      clearAppEventsCache(getOwner(this));
-    }
-
     MessageBus.unsubscribe("*");
     server = null;
   });
@@ -379,6 +371,7 @@ function setupTestsCommon(application, container, config) {
   }
 
   // forces 0 as duration for all jquery animations
+  // eslint-disable-next-line no-undef
   jQuery.fx.off = true;
 
   setupToolbar();

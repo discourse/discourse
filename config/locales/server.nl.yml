@@ -1771,7 +1771,6 @@ nl:
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
-    show_copy_button_on_codeblocks: "Een knop voor codeblokken toevoegen om de inhoud van de blokken naar het klembord van de gebruiker te kopiëren. Deze functie wordt niet ondersteund in Internet Explorer."
     embed_any_origin: "Inbedbare inhoud toestaan, ongeacht oorsprong. Dit is vereist voor mobiele apps met statische HTML."
     embed_topics_list: "HTML-inbedding van topiclijsten ondersteunen"
     embed_truncate: "De ingebedde berichten inkorten."

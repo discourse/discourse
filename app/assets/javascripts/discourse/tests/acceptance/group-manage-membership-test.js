@@ -30,49 +30,49 @@ acceptance("Managing Group Membership", function (needs) {
 
     await visit("/g/alternative-group/manage/membership");
 
-    assert.equal(
+    assert.strictEqual(
       count('label[for="automatic_membership"]'),
       1,
       "it should display automatic membership label"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".groups-form-primary-group"),
       1,
       "it should display set as primary group checkbox"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".groups-form-grant-trust-level"),
       1,
       "it should display grant trust level selector"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-public-admission"),
       1,
       "it should display group public admission input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-public-exit"),
       1,
       "it should display group public exit input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-allow-membership-requests"),
       1,
       "it should display group allow_membership_request input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-allow-membership-requests[disabled]"),
       1,
       "it should disable group allow_membership_request input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-flair-inputs"),
       1,
       "it should display avatar flair inputs"
@@ -81,7 +81,7 @@ acceptance("Managing Group Membership", function (needs) {
     await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-public-admission[disabled]"),
       1,
       "it should disable group public admission input"
@@ -92,7 +92,7 @@ acceptance("Managing Group Membership", function (needs) {
       "it should not disable group public exit input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-membership-request-template"),
       1,
       "it should display the membership request template field"
@@ -105,7 +105,7 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.fillInFilter("foo.com");
     await emailDomains.selectRowByValue("foo.com");
 
-    assert.equal(emailDomains.header().value(), "foo.com");
+    assert.strictEqual(emailDomains.header().value(), "foo.com");
   });
 
   test("As an admin on a site that can associate groups", async function (assert) {
@@ -168,25 +168,25 @@ acceptance("Managing Group Membership", function (needs) {
       "it should not display grant trust level selector"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-public-admission"),
       1,
       "it should display group public admission input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-public-exit"),
       1,
       "it should display group public exit input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-allow-membership-requests"),
       1,
       "it should display group allow_membership_request input"
     );
 
-    assert.equal(
+    assert.strictEqual(
       count(".group-form-allow-membership-requests[disabled]"),
       1,
       "it should disable group allow_membership_request input"

@@ -639,6 +639,7 @@ sv:
   post:
     image_placeholder:
       broken: "Den här bilden är trasig"
+    hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
@@ -1906,6 +1907,7 @@ sv:
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
     disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
+    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -1929,7 +1931,7 @@ sv:
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "Lägg till en knapp i Codeblocks som kopierar blockinnehållet till användarens urklipp. Denna funktion stöds inte av Internet Explorer."
+    show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
@@ -2422,47 +2424,6 @@ sv:
   test_mailer:
     title: "Test per e-post"
     subject_template: "[%{email_prefix}] Leveranstest för e-post"
-    text_body_template: |
-      Detta är ett e-posttest från
-
-      [**%{base_url}**][0]
-
-      E-postleverans är komplicerat. Här är några viktiga saker som du bör kontrollera först:
-
-      - Var *säker* på att ange från-adressen för `notification email` korrekt i dina webbplatsinställningar. **Den domän som anges i "från"-adressen för e-postmeddelanden du skickar är den domän som din e-post kommer att valideras mot**.
-
-      - Ha kunskap om hur du ser e-postmeddelandets i rå-text för din e-postklient, så att du kan undersöka e-posthuvudena efter viktiga ledtrådar. I Gmail görs detta genom alternativet "visa original" i rullgardinsmenyn längst upp till höger i varje e-post.
-
-      - **VIKTIGT:** Har din ISP en omvänd DNS-post angiven för att koppla de domännamn och IP-adresser som du skickar e-post från? [Testa din omvända PTR-data][2] här. Om din ISP inte anger rätt omvänd DNS-pekardata är det mycket osannolikt att något av dina e-postmeddelanden kommer att levereras.
-
-      - Är din domäns [SPF-data][8] korrekt? [Testa din SPF-data][1] här. Observera att TXT är rätt officiell posttyp för SPF.
-
-      - Är din domäns [DKIM-data][3] korrekt? Detta kommer att förbättra e-postleveransen avsevärt. [Testa din DKIM-data][7] här.
-
-      - Om du kör din egen e-postserver, kontrollera att din e-postservers IP-adresser inte är [svartlistade][4]. Kontrollera också att den definitivt skickar ett fullt kvalificerat värdnamn som omvandlas till DNS i HELO-meddelandet. Annars kommer din e-post att avvisas av många e-posttjänster.
-
-      - Vi rekommenderar starkt att du **skickar ett testmeddelande till [mail-tester.com][mt]** för att verifiera att allt ovan fungerar korrekt.
-
-       (Det *enkla* sättet är att skapa ett konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har billiga e-postpaket och är tillräckligt för mindre gemenskaper. Du måste dock ställa in SPF- och DKIM-data för din DNS!)
-
-      Vi hoppas att detta e-postleveranstest kom fram!
-
-      Lycka till!
-
-      Dina vänner på [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
@@ -3405,9 +3366,9 @@ sv:
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
     size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
-    create_mutlipart_failure: "Det gick inte att skapa uppladdning med flera delar i den externa butiken."
-    abort_mutlipart_failure: "Det gick inte att avbryta uppladdning med flera delar i den externa butiken."
-    complete_mutlipart_failure: "Det gick inte att slutföra uppladdning med flera delar i den externa butiken."
+    create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
+    abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
+    complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
     external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
@@ -3990,10 +3951,10 @@ sv:
             label: "Ditt forums namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv ditt forum med en kort mening"
+            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
           short_site_description:
-            label: "Beskriv ditt forum med ett par ord"
+            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
             placeholder: "Bästa forumet någonsin"
       introduction:
         title: "Introduktion"

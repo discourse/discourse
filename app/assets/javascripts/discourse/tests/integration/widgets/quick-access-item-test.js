@@ -20,7 +20,7 @@ discourseModule(
 
       test(assert) {
         const contentDiv = query(CONTENT_DIV_SELECTOR);
-        assert.equal(contentDiv.innerText, "<b>bold</b>");
+        assert.strictEqual(contentDiv.innerText, "<b>bold</b>");
       },
     });
 
@@ -33,7 +33,7 @@ discourseModule(
 
       test(assert) {
         const contentDiv = query(CONTENT_DIV_SELECTOR);
-        assert.equal(contentDiv.innerText, '"quote"');
+        assert.strictEqual(contentDiv.innerText, '"quote"');
       },
     });
   }

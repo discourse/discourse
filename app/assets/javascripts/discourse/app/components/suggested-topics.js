@@ -37,12 +37,12 @@ export default Component.extend({
     const inboxFilter = suggestedGroupName ? "group" : "user";
 
     const unreadCount = this.pmTopicTrackingState.lookupCount("unread", {
-      inboxFilter: inboxFilter,
+      inboxFilter,
       groupName: suggestedGroupName,
     });
 
     const newCount = this.pmTopicTrackingState.lookupCount("new", {
-      inboxFilter: inboxFilter,
+      inboxFilter,
       groupName: suggestedGroupName,
     });
 
@@ -54,7 +54,7 @@ export default Component.extend({
           BOTH: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
-          username: username,
+          username,
           groupName: suggestedGroupName,
           groupLink: this._groupLink(username, suggestedGroupName),
           basePath: getURL(""),

@@ -233,14 +233,14 @@ export default Controller.extend(CanCheckEmails, {
             `${iconHTML("exclamation-triangle")} ` +
             I18n.t("admin.user.delete_and_block"),
           class: "btn btn-danger",
-          callback: function () {
+          callback() {
             performDestroy(true);
           },
         },
         {
           label: I18n.t("admin.user.delete_dont_block"),
           class: "btn btn-primary",
-          callback: function () {
+          callback() {
             performDestroy(false);
           },
         },

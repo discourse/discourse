@@ -33,7 +33,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll(".test").text(), "Hello Robin");
+      assert.strictEqual(queryAll(".test").text(), "Hello Robin");
     },
   });
 
@@ -51,7 +51,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll(".base-url-test").text(), "/");
+      assert.strictEqual(queryAll(".base-url-test").text(), "/");
     },
   });
 
@@ -67,7 +67,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("div.test").text(), "Hello Robin");
+      assert.strictEqual(queryAll("div.test").text(), "Hello Robin");
     },
   });
 
@@ -84,7 +84,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("div.test").text(), "Hello Robin");
+      assert.strictEqual(queryAll("div.test").text(), "Hello Robin");
     },
   });
 
@@ -98,7 +98,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("div.mydiv").data("my-test"), "hello world");
+      assert.strictEqual(queryAll("div.mydiv").data("my-test"), "hello world");
     },
   });
 
@@ -182,10 +182,10 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     async test(assert) {
       assert.ok(exists("button.test"), "it renders the button");
-      assert.equal(queryAll("button.test").text(), "0 clicks");
+      assert.strictEqual(queryAll("button.test").text(), "0 clicks");
 
       await click(query("button"));
-      assert.equal(queryAll("button.test").text(), "1 clicks");
+      assert.strictEqual(queryAll("button.test").text(), "1 clicks");
     },
   });
 
@@ -216,10 +216,10 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     async test(assert) {
-      assert.equal(queryAll("button.test").text().trim(), "No name");
+      assert.strictEqual(queryAll("button.test").text().trim(), "No name");
 
       await click(query("button"));
-      assert.equal(queryAll("button.test").text().trim(), "Robin");
+      assert.strictEqual(queryAll("button.test").text().trim(), "Robin");
     },
   });
 
@@ -276,7 +276,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       assert.ok(exists(".container"), "renders container");
-      assert.equal(queryAll(".container .value").text(), "hello world");
+      assert.strictEqual(queryAll(".container .value").text(), "hello world");
     },
   });
 
@@ -300,7 +300,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       assert.ok(queryAll(".container").length, "renders container");
-      assert.equal(queryAll(".container .value").text(), "hello world");
+      assert.strictEqual(queryAll(".container .value").text(), "hello world");
     },
   });
 
@@ -314,7 +314,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(count(".d-icon-arrow-down"), 1);
+      assert.strictEqual(count(".d-icon-arrow-down"), 1);
     },
   });
 
@@ -348,9 +348,9 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       // coming up
-      assert.equal(queryAll("span.string").text(), "evil");
-      assert.equal(queryAll("span.var").text(), "trout");
-      assert.equal(queryAll("a").prop("title"), "evil");
+      assert.strictEqual(queryAll("span.string").text(), "evil");
+      assert.strictEqual(queryAll("span.var").text(), "trout");
+      assert.strictEqual(queryAll("a").prop("title"), "evil");
     },
   });
 
@@ -373,8 +373,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(count("ul li"), 3);
-      assert.equal(queryAll("ul li:nth-of-type(1)").text(), "one");
+      assert.strictEqual(count("ul li"), 3);
+      assert.strictEqual(queryAll("ul li:nth-of-type(1)").text(), "one");
     },
   });
 
@@ -400,8 +400,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       assert.ok(exists(".decorate"));
-      assert.equal(queryAll(".decorate b").text(), "before");
-      assert.equal(queryAll(".decorate i").text(), "after");
+      assert.strictEqual(queryAll(".decorate b").text(), "before");
+      assert.strictEqual(queryAll(".decorate i").text(), "after");
     },
   });
 
@@ -417,7 +417,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll(".settings").text(), "age is 36");
+      assert.strictEqual(queryAll(".settings").text(), "age is 36");
     },
   });
 
@@ -437,7 +437,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll(".settings").text(), "age is 37");
+      assert.strictEqual(queryAll(".settings").text(), "age is 37");
     },
   });
 
@@ -457,7 +457,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("div.test").text(), "Hello eviltrout");
+      assert.strictEqual(queryAll("div.test").text(), "Hello eviltrout");
     },
   });
 

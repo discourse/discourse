@@ -160,6 +160,7 @@ export default Controller.extend(ModalFunctionality, {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
+            this.clearFlash();
 
             if (
               (result.security_key_enabled || result.totp_enabled) &&
@@ -273,9 +274,7 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       this.set("loggingIn", true);
-      loginMethod
-        .doLogin({ signup: signup })
-        .catch(() => this.set("loggingIn", false));
+      loginMethod.doLogin({ signup }).catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {

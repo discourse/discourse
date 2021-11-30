@@ -1585,22 +1585,22 @@ he:
         invite:
           new_title: "יצירת הזמנה"
           edit_title: "עריכת הזמנה"
-          instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר"
+          instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר:"
           copy_link: "העתקת קישור"
           expires_in_time: "תפוג בעוד %{time}"
           expired_at_time: "פגה ב־%{time}"
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
-          restrict_email: "להגביל לכתובת דוא״ל אחת"
+          restrict_email: "הגבלה לדוא״ל"
           max_redemptions_allowed: "כמות שימושים מרבית"
           add_to_groups: "הוספה לקבוצות"
-          invite_to_topic: "נחיתה בנושא הזה"
+          invite_to_topic: "נחיתה בנושא"
           expires_at: "תפוג לאחר"
           custom_message: "הודעה אישית כרשות"
           send_invite_email: "לשמור ולשלח דוא״ל"
+          send_invite_email_instructions: "הגבלת ההזמנה לדוא״ל כדי לשלוח הודעת הזמנה"
           save_invite: "שמירת הזמנה"
           invite_saved: "ההזמנה נשמרה."
-          invite_copied: "קישור ההזמנה הועתק."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -2182,6 +2182,8 @@ he:
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
       reload: "רענון"
       ignore: "התעלמות"
+      image_alt_text:
+        aria_label: כיתוב חלופי לתמונה
     notifications:
       tooltip:
         regular:
@@ -2242,6 +2244,9 @@ he:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - הסתיים"
+      dismiss_confirmation:
+        dismiss: "דחה"
+        cancel: "ביטול"
       group_message_summary:
         one: "הודעה %{count} בתיבת ה%{group_name} שלך"
         two: "%{count} הודעות בתיבת ה%{group_name} שלך"
@@ -2329,6 +2334,8 @@ he:
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
+      browser_tip: "‎%{modifier} + f"
+      browser_tip_description: "שוב כדי להשתמש בחיפוש המקורי של הדפדפן"
       type:
         default: "נושאים/פוסטים"
         users: "משתמשים"
@@ -2757,6 +2764,11 @@ he:
         help: "שתפו קישור לנושא זה"
         instructions: "שיתוף קישור לנושא זה:"
         copied: "קישור הנושא הועתק."
+        restricted_groups:
+          one: "גלוי רק לחברי הקבוצה: %{groupNames}"
+          two: "גלוי רק לחברי הקבוצות: %{groupNames}"
+          many: "גלוי רק לחברי הקבוצות: %{groupNames}"
+          other: "גלוי רק לחברי הקבוצות: %{groupNames}"
         notify_users:
           title: "להודיע"
           instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
@@ -3731,6 +3743,11 @@ he:
       changed: "תגיות ששונו:"
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
+      choose_for_topic_required:
+        one: "נא לבחור בתגית %{count} לפחות..."
+        two: "נא לבחור ב־%{count} תגיות לפחות…"
+        many: "נא לבחור ב־%{count} תגיות לפחות…"
+        other: "נא לבחור ב־%{count} תגיות לפחות…"
       info: "פרטים"
       default_info: "תגית זו אינה מוגבלת לאף קטגוריה ואין לה תגיות נרדפות. כדי להוסיף הגבלות, יש להציב את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
@@ -4098,6 +4115,7 @@ he:
         no_description: (אין תיאור)
         all_api_keys: כל מפתחות ה־API
         user_mode: דרגת משתמש
+        scope_mode: היקף
         impersonate_all_users: התחזות לכל משתמש שהוא
         single_user: "משתמש בודד"
         user_placeholder: נא להקליד שם משתמש
@@ -4108,12 +4126,15 @@ he:
         delete: למחוק לצמיתות
         not_shown_again: המפתח הזה לא יוצג עוד. נא לוודא שהעתקת אותו לפני המשך הפעילות שלך.
         continue: המשך
-        use_global_key: מפתח כללי (מאפשר את כל הפעולות)
         scopes:
           description: |
             בעת שימוש בתחומים, ניתן להגביל מפתח API לקבוצה מסוימת של נקודות גישה.
             ניתן גם להגדיר אילו משתנים יורשו. ניתן להשתמש בפסיקים כדי להפריד מגוון ערכים.
           title: תחומים
+          granular: נקודתי
+          read_only: לקריאה בלבד
+          global: גלובלי
+          global_description: למפתח ה־API אין מגבלה וכל נקודות הקצה נגישות לו.
           resource: משאב
           action: פעולה
           allowed_parameters: משתנים מורשים
@@ -4121,6 +4142,8 @@ he:
           any_parameter: (כל משתנה שהוא)
           allowed_urls: כתובות מורשות
           descriptions:
+            global:
+              read: הגבלת מפתח ה־API לנקודות קצה לקריאה בלבד.
             topics:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.
@@ -4128,6 +4151,8 @@ he:
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+            uploads:
+              create: העלאת קובץ חדש.
             users:
               bookmarks: הצגת סימניות המשתמשים. מחזירה תזכורות לסימניות בעת שימוש בתצורת ICS.
               sync_sso: סנכרון משתמש באמצעות DiscourseConnect.
@@ -5377,7 +5402,7 @@ he:
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:
         title: "אמוג׳י"
-        help: "הוספת אמוג׳י חדשים שיהיו זמינים לכולם. (עצה למקצוענים: עדיף לגרור לכאן כמה קבצים בבת אחת)"
+        help: "הוספת אמוג׳י חדש שיהיה זמין לכולם. אפשר לגרור ולשחרר לכאן מגוון קבצים בבת אחת ללא מילוי שם ליצירת אמוג׳ים לפי שמות הקבצים שלהם."
         add: "הוספת אמוג׳י חדש"
         uploading: "בהליכי העלאה..."
         name: "שם"
@@ -5388,7 +5413,7 @@ he:
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
-        sample: "יש להשתמש בקוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. עליך להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
+        sample: "יש להדביק את קוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. עליך להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
         class_name: "שם מחלקה"

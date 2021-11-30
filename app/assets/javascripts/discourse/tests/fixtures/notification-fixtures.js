@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 import { NOTIFICATION_TYPES } from "./concerns/notification-types";
 
 export default {

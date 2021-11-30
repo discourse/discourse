@@ -47,22 +47,20 @@ describe EmailUpdater do
 
       it "logs the admin user as the requester" do
         updater.change_to(new_email)
-        @change_req = user.email_change_requests.first
-        expect(@change_req.requested_by).to eq(admin)
+        expect(updater.change_req.requested_by).to eq(admin)
       end
 
       it "starts the new confirmation process" do
         updater.change_to(new_email)
-        @change_req = user.email_change_requests.first
         expect(updater.errors).to be_blank
 
-        expect(@change_req).to be_present
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+        expect(updater.change_req).to be_present
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
 
-        expect(@change_req.old_email).to eq(old_email)
-        expect(@change_req.new_email).to eq(new_email)
-        expect(@change_req.old_email_token).to be_blank
-        expect(@change_req.new_email_token.email).to eq(new_email)
+        expect(updater.change_req.old_email).to eq(old_email)
+        expect(updater.change_req.new_email).to eq(new_email)
+        expect(updater.change_req.old_email_token).to be_blank
+        expect(updater.change_req.new_email_token.email).to eq(new_email)
       end
     end
 
@@ -73,24 +71,22 @@ describe EmailUpdater do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_old_email, to_address: old_email }) do
           updater.change_to(new_email)
         end
-
-        @change_req = user.email_change_requests.first
       end
 
       it "starts the old confirmation process" do
         expect(updater.errors).to be_blank
 
-        expect(@change_req.old_email).to eq(old_email)
-        expect(@change_req.new_email).to eq(new_email)
-        expect(@change_req).to be_present
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
+        expect(updater.change_req.old_email).to eq(old_email)
+        expect(updater.change_req.new_email).to eq(new_email)
+        expect(updater.change_req).to be_present
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
 
-        expect(@change_req.old_email_token.email).to eq(old_email)
-        expect(@change_req.new_email_token).to be_blank
+        expect(updater.change_req.old_email_token.email).to eq(old_email)
+        expect(updater.change_req.new_email_token).to be_blank
       end
 
       it "does not immediately confirm the request" do
-        expect(@change_req.change_state).not_to eq(EmailChangeRequest.states[:complete])
+        expect(updater.change_req.change_state).not_to eq(EmailChangeRequest.states[:complete])
       end
     end
 
@@ -103,30 +99,27 @@ describe EmailUpdater do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_old_email, to_address: old_email }) do
           updater.change_to(new_email)
         end
-
-        @change_req = user.email_change_requests.first
       end
 
       it "logs the user as the requester" do
         updater.change_to(new_email)
-        @change_req = user.email_change_requests.first
-        expect(@change_req.requested_by).to eq(user)
+        expect(updater.change_req.requested_by).to eq(user)
       end
 
       it "starts the old confirmation process" do
         expect(updater.errors).to be_blank
 
-        expect(@change_req.old_email).to eq(old_email)
-        expect(@change_req.new_email).to eq(new_email)
-        expect(@change_req).to be_present
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
+        expect(updater.change_req.old_email).to eq(old_email)
+        expect(updater.change_req.new_email).to eq(new_email)
+        expect(updater.change_req).to be_present
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
 
-        expect(@change_req.old_email_token.email).to eq(old_email)
-        expect(@change_req.new_email_token).to be_blank
+        expect(updater.change_req.old_email_token.email).to eq(old_email)
+        expect(updater.change_req.new_email_token).to be_blank
       end
 
       it "does not immediately confirm the request" do
-        expect(@change_req.change_state).not_to eq(EmailChangeRequest.states[:complete])
+        expect(updater.change_req.change_state).not_to eq(EmailChangeRequest.states[:complete])
       end
     end
   end
@@ -140,20 +133,18 @@ describe EmailUpdater do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
           updater.change_to(new_email)
         end
-
-        @change_req = user.email_change_requests.first
       end
 
       it "starts the new confirmation process" do
         expect(updater.errors).to be_blank
 
-        expect(@change_req).to be_present
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+        expect(updater.change_req).to be_present
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
 
-        expect(@change_req.old_email).to eq(old_email)
-        expect(@change_req.new_email).to eq(new_email)
-        expect(@change_req.old_email_token).to be_blank
-        expect(@change_req.new_email_token.email).to eq(new_email)
+        expect(updater.change_req.old_email).to eq(old_email)
+        expect(updater.change_req.new_email).to eq(new_email)
+        expect(updater.change_req.old_email_token).to be_blank
+        expect(updater.change_req.new_email_token.email).to eq(new_email)
       end
 
       context 'confirming an invalid token' do
@@ -168,7 +159,7 @@ describe EmailUpdater do
         it "updates the user's email" do
           event = DiscourseEvent.track_events {
             expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email, to_address: old_email }) do
-              updater.confirm(@change_req.new_email_token.token)
+              updater.confirm(updater.change_req.new_email_token.token)
             end
           }.last
 
@@ -178,8 +169,8 @@ describe EmailUpdater do
           expect(event[:event_name]).to eq(:user_updated)
           expect(event[:params].first).to eq(user)
 
-          @change_req.reload
-          expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+          updater.change_req.reload
+          expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:complete])
         end
       end
     end
@@ -189,8 +180,6 @@ describe EmailUpdater do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
           updater.change_to(new_email, add: true)
         end
-
-        @change_req = user.email_change_requests.first
       end
 
       context 'confirming a valid token' do
@@ -199,7 +188,7 @@ describe EmailUpdater do
 
           event = DiscourseEvent.track_events {
             expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email_add, to_address: old_email }) do
-              updater.confirm(@change_req.new_email_token.token)
+              updater.confirm(updater.change_req.new_email_token.token)
             end
           }.last
 
@@ -209,15 +198,15 @@ describe EmailUpdater do
           expect(event[:event_name]).to eq(:user_updated)
           expect(event[:params].first).to eq(user)
 
-          @change_req.reload
-          expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+          updater.change_req.reload
+          expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:complete])
         end
       end
 
       context 'that was deleted before' do
         it 'works' do
           expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email_add, to_address: old_email }) do
-            updater.confirm(@change_req.new_email_token.token)
+            updater.confirm(updater.change_req.new_email_token.token)
           end
 
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
@@ -229,10 +218,8 @@ describe EmailUpdater do
             updater.change_to(new_email, add: true)
           end
 
-          @change_req = user.email_change_requests.first
-
           expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email_add, to_address: old_email }) do
-            updater.confirm(@change_req.new_email_token.token)
+            updater.confirm(updater.change_req.new_email_token.token)
           end
 
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
@@ -266,20 +253,18 @@ describe EmailUpdater do
       expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_old_email, to_address: old_email }) do
         updater.change_to(new_email)
       end
-
-      @change_req = user.email_change_requests.first
     end
 
     it "starts the old confirmation process" do
       expect(updater.errors).to be_blank
 
-      expect(@change_req.old_email).to eq(old_email)
-      expect(@change_req.new_email).to eq(new_email)
-      expect(@change_req).to be_present
-      expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
+      expect(updater.change_req.old_email).to eq(old_email)
+      expect(updater.change_req.new_email).to eq(new_email)
+      expect(updater.change_req).to be_present
+      expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
 
-      expect(@change_req.old_email_token.email).to eq(old_email)
-      expect(@change_req.new_email_token).to be_blank
+      expect(updater.change_req.old_email_token.email).to eq(old_email)
+      expect(updater.change_req.new_email_token).to be_blank
     end
 
     context 'confirming an invalid token' do
@@ -293,34 +278,33 @@ describe EmailUpdater do
     context 'confirming a valid token' do
       before do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
-          updater.confirm(@change_req.old_email_token.token)
+          @old_token = updater.change_req.old_email_token.token
+          updater.confirm(@old_token)
         end
-
-        @change_req.reload
       end
 
       it "starts the new update process" do
         expect(updater.errors).to be_blank
         expect(user.reload.email).to eq(old_email)
 
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
-        expect(@change_req.new_email_token).to be_present
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+        expect(updater.change_req.new_email_token).to be_present
       end
 
       it "cannot be confirmed twice" do
-        updater.confirm(@change_req.old_email_token.token)
+        updater.confirm(@old_token)
         expect(updater.errors).to be_present
         expect(user.reload.email).to eq(old_email)
 
-        @change_req.reload
-        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
-        expect(@change_req.new_email_token.email).to eq(new_email)
+        updater.change_req.reload
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+        expect(updater.change_req.new_email_token.email).to eq(new_email)
       end
 
       context "completing the new update process" do
         before do
           expect_not_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email, to_address: old_email }) do
-            updater.confirm(@change_req.new_email_token.token)
+            updater.confirm(updater.change_req.new_email_token.token)
           end
         end
 
@@ -328,8 +312,8 @@ describe EmailUpdater do
           expect(updater.errors).to be_blank
           expect(user.reload.email).to eq(new_email)
 
-          @change_req.reload
-          expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
+          updater.change_req.reload
+          expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:complete])
         end
       end
     end

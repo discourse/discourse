@@ -2025,7 +2025,6 @@ sw:
             label: "Jina la Jumuia"
             placeholder: "Sehemu ya Jeni ya Kuburudika"
           site_description:
-            label: "Elezea jamii yako ndani ya sentensi moja"
             placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
       introduction:
         title: "Utambulisho"

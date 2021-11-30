@@ -29,45 +29,74 @@ module("Unit | Model | site", function () {
     const store = createStore();
     const site = store.createRecord("site", {
       categories: [
-        { id: 1234, name: "Test" },
         { id: 3456, name: "Test Subcategory", parent_category_id: 1234 },
+        { id: 1234, name: "Test" },
         { id: 3458, name: "Invalid Subcategory", parent_category_id: 6666 },
       ],
     });
 
-    const categories = site.get("categories");
-    site.get("sortedCategories");
+    assert.present(site.categories, "The categories are present");
+    assert.deepEqual(site.categories.mapBy("name"), [
+      "Test Subcategory",
+      "Test",
+      "Invalid Subcategory",
+    ]);
 
-    assert.present(categories, "The categories are present");
-    assert.equal(categories.length, 3, "it loaded all three categories");
+    assert.deepEqual(site.sortedCategories.mapBy("name"), [
+      "Test",
+      "Test Subcategory",
+    ]);
 
-    const parent = categories.findBy("id", 1234);
+    const parent = site.categories.findBy("id", 1234);
     assert.present(parent, "it loaded the parent category");
-    assert.blank(parent.get("parentCategory"), "it has no parent category");
+    assert.blank(parent.parentCategory, "it has no parent category");
 
-    assert.equal(parent.get("subcategories").length, 1);
+    assert.strictEqual(parent.subcategories.length, 1);
 
-    const subcategory = categories.findBy("id", 3456);
+    const subcategory = site.categories.findBy("id", 3456);
     assert.present(subcategory, "it loaded the subcategory");
-    assert.equal(
-      subcategory.get("parentCategory"),
+    assert.strictEqual(
+      subcategory.parentCategory,
       parent,
       "it has associated the child with the parent"
     );
 
     // remove invalid category and child
-    categories.removeObject(categories[2]);
-    categories.removeObject(categories[1]);
+    site.categories.removeObject(site.categories[2]);
+    site.categories.removeObject(site.categories[0]);
 
-    assert.equal(
-      categories.length,
-      site.get("categoriesByCount").length,
-      "categories by count should change on removal"
+    assert.strictEqual(
+      site.categoriesByCount.length,
+      site.categories.length,
+      "categoriesByCount should change on removal"
     );
-    assert.equal(
-      categories.length,
-      site.get("sortedCategories").length,
-      "sorted categories should change on removal"
+    assert.strictEqual(
+      site.sortedCategories.length,
+      site.categories.length,
+      "sortedCategories should change on removal"
     );
+  });
+
+  test("deeply nested categories", function (assert) {
+    const store = createStore();
+    const site = store.createRecord("site", {
+      categories: [
+        { id: 1003, name: "Test Sub Sub", parent_category_id: 1002 },
+        { id: 1001, name: "Test" },
+        { id: 1004, name: "Test Sub Sub Sub", parent_category_id: 1003 },
+        { id: 1002, name: "Test Sub", parent_category_id: 1001 },
+        { id: 1005, name: "Test Sub Sub Sub2", parent_category_id: 1003 },
+        { id: 1006, name: "Test2" },
+      ],
+    });
+
+    assert.deepEqual(site.sortedCategories.mapBy("name"), [
+      "Test",
+      "Test Sub",
+      "Test Sub Sub",
+      "Test Sub Sub Sub",
+      "Test Sub Sub Sub2",
+      "Test2",
+    ]);
   });
 });

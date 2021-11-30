@@ -1663,6 +1663,9 @@ zh_TW:
       watching_first_post: "<span>新話題</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "忽略"
+        cancel: "取消"
       group_message_summary:
         other: "您的收件匣中有%{count}則訊息"
       popup:
@@ -3914,7 +3917,6 @@ zh_TW:
           badge_query_examples_title: "查詢徽章範例"
       emoji:
         title: "Emoji"
-        help: "新增新的emoji供所有人使用。(提示：一次拖放多個檔案)"
         add: "新增emoji"
         uploading: "正在上傳..."
         name: "名稱"
@@ -3924,7 +3926,6 @@ zh_TW:
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         confirm_delete: "你確定要刪除此主機？"
-        sample: "使用下列 HTML 代碼至你的站點開啟和嵌入 Discourse 話題。把<b>REPLACE_ME</b> 替換成你將嵌入至的網址。"
         title: "嵌入"
         host: "允許的主機"
         class_name: "階級名稱"

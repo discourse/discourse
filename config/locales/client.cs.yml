@@ -1684,6 +1684,9 @@ cs:
       watching_first_post: "<span>Nové téma</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Označit jako přečtené"
+        cancel: "Zrušit"
       group_message_summary:
         one: "%{count} zpráva ve schránce skupiny %{group_name}"
         few: "%{count} zprávy ve schránce skupiny %{group_name}"
@@ -3841,7 +3844,6 @@ cs:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        help: "Vložte nové emoji, které bude dostupné pro všechny na fóru. (Protip: můžete přetáhnout několik souborů najednou.)"
         add: "Vložit nový Emoji"
         uploading: "Nahrává se..."
         name: "Název"
@@ -3851,7 +3853,6 @@ cs:
       embedding:
         get_started: "Pokud chceš zabudovat Discourse do jiných stránek, začni s přidáním hostu."
         confirm_delete: "Opravdu chcete smazat tento host?"
-        sample: "Abyste vytvořili a zabudovali témata z discourse, použijte následující HTML kód na vašem webu. Nahraď <b>REPLACE_ME</b> celkovým URL stránky, do které je zabudováváš."
         title: "Zabudování"
         host: "Povolené hosty"
         class_name: "název třídy"

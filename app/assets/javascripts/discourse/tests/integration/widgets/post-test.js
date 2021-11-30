@@ -42,8 +42,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(queryAll(".badge.clicks:nth(0)").text(), "1");
-      assert.equal(queryAll(".badge.clicks:nth(1)").text(), "2");
+      assert.strictEqual(queryAll(".badge.clicks:nth(0)").text(), "1");
+      assert.strictEqual(queryAll(".badge.clicks:nth(1)").text(), "2");
     },
   });
 
@@ -70,9 +70,9 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(queryAll(".badge.clicks").length, 2);
-      assert.equal(queryAll(".badge.clicks:nth(0)").text(), "1");
-      assert.equal(queryAll(".badge.clicks:nth(1)").text(), "2");
+      assert.strictEqual(queryAll(".badge.clicks").length, 2);
+      assert.strictEqual(queryAll(".badge.clicks:nth(0)").text(), "1");
+      assert.strictEqual(queryAll(".badge.clicks:nth(1)").text(), "2");
     },
   });
 
@@ -178,8 +178,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { isWhisper: true });
     },
     test(assert) {
-      assert.equal(count(".topic-post.whisper"), 1);
-      assert.equal(count(".post-info.whisper"), 1);
+      assert.strictEqual(count(".topic-post.whisper"), 1);
+      assert.strictEqual(count(".post-info.whisper"), 1);
     },
   });
 
@@ -198,13 +198,13 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { likeCount: 1 });
     },
     async test(assert) {
-      assert.equal(count("button.like-count"), 1);
+      assert.strictEqual(count("button.like-count"), 1);
       assert.ok(!exists(".who-liked"));
 
       // toggle it on
       await click("button.like-count");
-      assert.equal(count(".who-liked"), 1);
-      assert.equal(count(".who-liked a.trigger-user-card"), 1);
+      assert.strictEqual(count(".who-liked"), 1);
+      assert.strictEqual(count(".who-liked a.trigger-user-card"), 1);
 
       // toggle it off
       await click("button.like-count");
@@ -255,7 +255,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       await click(".actions button.like");
       assert.ok(!exists(".actions button.like"));
       assert.ok(exists(".actions button.has-like"));
-      assert.equal(count(".actions button.like-count"), 1);
+      assert.strictEqual(count(".actions button.like-count"), 1);
 
       await click(".actions button.has-like");
       assert.ok(exists(".actions button.like"));
@@ -278,7 +278,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       assert.ok(exists(".actions button.like"));
       assert.ok(!exists(".actions button.like-count"));
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("button.like").attr("title"),
         I18n.t("post.controls.like"),
         `shows the right button title for anonymous users`
@@ -366,9 +366,13 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       async test(assert) {
         await click(".show-more-actions");
 
-        assert.equal(count("button.create-flag"), 1, `button is displayed`);
-        assert.equal(count("button.delete"), 1, `button is displayed`);
-        assert.equal(
+        assert.strictEqual(
+          count("button.create-flag"),
+          1,
+          `button is displayed`
+        );
+        assert.strictEqual(count("button.delete"), 1, `button is displayed`);
+        assert.strictEqual(
           queryAll("button.delete").attr("title"),
           I18n.t("post.controls.delete_topic_disallowed"),
           `shows the right button title for users without permissions`
@@ -474,7 +478,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("showFlags", () => (this.flagsShown = true));
     },
     async test(assert) {
-      assert.equal(count("button.create-flag"), 1);
+      assert.strictEqual(count("button.create-flag"), 1);
 
       await click("button.create-flag");
       assert.ok(this.flagsShown, "it triggered the action");
@@ -547,7 +551,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     test(assert) {
       assert.ok(exists("a.reply-to-tab"), "shows the tab");
-      assert.equal(count(".avoid-tab"), 1, "has the avoid tab class");
+      assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
     },
   });
 
@@ -562,10 +566,10 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.siteSettings.suppress_reply_directly_above = false;
     },
     async test(assert) {
-      assert.equal(count(".avoid-tab"), 1, "has the avoid tab class");
+      assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
       await click("a.reply-to-tab");
-      assert.equal(count("section.embedded-posts.top .cooked"), 1);
-      assert.equal(count("section.embedded-posts .d-icon-arrow-up"), 1);
+      assert.strictEqual(count("section.embedded-posts.top .cooked"), 1);
+      assert.strictEqual(count("section.embedded-posts .d-icon-arrow-up"), 1);
     },
   });
 
@@ -617,7 +621,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("toggleBookmark", () => (args.bookmarked = true));
     },
     async test(assert) {
-      assert.equal(count(".post-menu-area .bookmark"), 1);
+      assert.strictEqual(count(".post-menu-area .bookmark"), 1);
       assert.ok(!exists("button.bookmarked"));
     },
   });
@@ -640,7 +644,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     async test(assert) {
       assert.ok(!exists(".post-admin-menu"));
       await click(".post-menu-area .show-post-admin-menu");
-      assert.equal(count(".post-admin-menu"), 1, "it shows the popup");
+      assert.strictEqual(count(".post-admin-menu"), 1, "it shows the popup");
       await click(".post-menu-area");
       assert.ok(
         !exists(".post-admin-menu"),
@@ -652,7 +656,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
   componentTest("permanently delete topic", {
     template: hbs`{{mount-widget widget="post" args=args permanentlyDeletePost=permanentlyDeletePost}}`,
     beforeEach() {
-      this.set("args", { canManage: true, canPermanentlyDeleteTopic: true });
+      this.set("args", { canManage: true, canPermanentlyDelete: true });
       this.set("permanentlyDeletePost", () => (this.deleted = true));
     },
     async test(assert) {
@@ -805,7 +809,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { replyCount: 2, replyDirectlyBelow: true });
     },
     test(assert) {
-      assert.equal(count("button.show-replies"), 1);
+      assert.strictEqual(count("button.show-replies"), 1);
     },
   });
 
@@ -828,8 +832,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     async test(assert) {
       await click("button.show-replies");
-      assert.equal(count("section.embedded-posts.bottom .cooked"), 1);
-      assert.equal(count("section.embedded-posts .d-icon-arrow-down"), 1);
+      assert.strictEqual(count("section.embedded-posts.bottom .cooked"), 1);
+      assert.strictEqual(count("section.embedded-posts .d-icon-arrow-down"), 1);
     },
   });
 
@@ -859,7 +863,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       );
 
       await click("nav.buttons button");
-      assert.equal(
+      assert.strictEqual(
         count(".topic-map-expanded a.poster"),
         2,
         "shows all when expanded"
@@ -883,7 +887,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count("li.avatars a.poster"),
         3,
         "limits to three participants"
@@ -891,12 +895,12 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
 
       await click("nav.buttons button");
       assert.ok(!exists("li.avatars a.poster"));
-      assert.equal(
+      assert.strictEqual(
         count(".topic-map-expanded a.poster"),
         4,
         "shows all when expanded"
       );
-      assert.equal(count("a.poster.toggled"), 2, "two are toggled");
+      assert.strictEqual(count("a.poster.toggled"), 2, "two are toggled");
     },
   });
 
@@ -916,22 +920,22 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     async test(assert) {
-      assert.equal(count(".topic-map"), 1);
-      assert.equal(count(".map.map-collapsed"), 1);
+      assert.strictEqual(count(".topic-map"), 1);
+      assert.strictEqual(count(".map.map-collapsed"), 1);
       assert.ok(!exists(".topic-map-expanded"));
 
       await click("nav.buttons button");
       assert.ok(!exists(".map.map-collapsed"));
-      assert.equal(count(".topic-map .d-icon-chevron-up"), 1);
-      assert.equal(count(".topic-map-expanded"), 1);
-      assert.equal(
+      assert.strictEqual(count(".topic-map .d-icon-chevron-up"), 1);
+      assert.strictEqual(count(".topic-map-expanded"), 1);
+      assert.strictEqual(
         count(".topic-map-expanded .topic-link"),
         5,
         "it limits the links displayed"
       );
 
       await click(".link-summary button");
-      assert.equal(
+      assert.strictEqual(
         count(".topic-map-expanded .topic-link"),
         6,
         "all links now shown"
@@ -956,7 +960,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("showSummary", () => (this.summaryToggled = true));
     },
     async test(assert) {
-      assert.equal(count(".toggle-summary"), 1);
+      assert.strictEqual(count(".toggle-summary"), 1);
 
       await click(".toggle-summary button");
       assert.ok(this.summaryToggled);
@@ -974,8 +978,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(count(".private-message-map"), 1);
-      assert.equal(count(".private-message-map .user"), 1);
+      assert.strictEqual(count(".private-message-map"), 1);
+      assert.strictEqual(count(".private-message-map .user"), 1);
     },
   });
 
@@ -998,7 +1002,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".post-notice.returning-user:not(.old)").text().trim(),
         I18n.t("post.notice.returning_user", {
           user: "codinghorror",
@@ -1022,7 +1026,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       });
     },
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         queryAll(".post-notice.old.new-user").text().trim(),
         I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
       );
@@ -1039,8 +1043,8 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
     test(assert) {
       const link = queryAll(".group-request a");
-      assert.equal(link.text().trim(), I18n.t("groups.requests.handle"));
-      assert.equal(link.attr("href"), "/g/testGroup/requests?filter=foo");
+      assert.strictEqual(link.text().trim(), I18n.t("groups.requests.handle"));
+      assert.strictEqual(link.attr("href"), "/g/testGroup/requests?filter=foo");
     },
   });
 });

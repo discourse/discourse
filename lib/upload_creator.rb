@@ -200,7 +200,10 @@ class UploadCreator
 
       if should_move
         # move the file in the store instead of reuploading
-        url = Discourse.store.move_existing_stored_upload(@opts[:existing_external_upload_key], @upload)
+        url = Discourse.store.move_existing_stored_upload(
+          existing_external_upload_key: @opts[:existing_external_upload_key],
+          upload: @upload
+        )
       else
         # store the file and update its url
         File.open(@file.path) do |f|
@@ -402,9 +405,6 @@ class UploadCreator
     doc.css('use').each do |use_el|
       if use_el.attr('href')
         use_el.remove_attribute('href') unless use_el.attr('href').starts_with?('#')
-      end
-      if use_el.attr('xlink:href')
-        use_el.remove_attribute('xlink:href') unless use_el.attr('xlink:href').starts_with?('#')
       end
     end
     File.write(@file.path, doc.to_s)

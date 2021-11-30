@@ -397,6 +397,7 @@ fa_IR:
   post:
     image_placeholder:
       broken: "عکس خراب شده است."
+    hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
   rate_limiter:
     hours:
       one: "%{count} ساعت"
@@ -1154,6 +1155,7 @@ fa_IR:
     suppress_uncategorized_badge: "نشان برای موضوعات دسته‌بندی نشده را در فهرست موضوعات را نشان نده. "
     permalink_normalizations: "اعمال Regex زیر قبل از تطابق پیوند یکتا، برای مثال /(topic.*)\\?.*/\\1 نوار query string را از پیوند موضوع جدا می‌کند. فرمت regex+string از \\1 استفاده می‌کند. برای دسترسی به تصویر‌برداری."
     disable_system_edit_notifications: "ویرایش اعلان‌ها را از طریق کاربر سیستم کار بینداز وقتی 'download_remote_images_to_local' فعال است "
+    disable_tags_edit_notifications: "ویرایش برچسب‌های آگاه‌سازی مربوط به این موضوعات غیرفعال شود."
     automatically_unpin_topics: "وقتی کاربر به پایین صفحه می‌رسد سنجاق موضوع‌ها به‌صورت خودکار برداشته شود."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."
     share_anonymized_statistics: "اشتراک‌گذاری آمار استفاده ناشناس"
@@ -2229,7 +2231,6 @@ fa_IR:
             label: "نام انجمن شما"
             placeholder: "انجمن آزموده"
           site_description:
-            label: "انجمن خود را در یک جمله کوتاه توضیح دهید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
       introduction:
         title: "مقدمه"

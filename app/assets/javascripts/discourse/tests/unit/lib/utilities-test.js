@@ -21,15 +21,19 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
-    assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
+    assert.strictEqual(
+      escapeExpression(">"),
+      "&gt;",
+      "escapes unsafe characters"
+    );
 
-    assert.equal(
+    assert.strictEqual(
       escapeExpression(new Handlebars.SafeString("&gt;")),
       "&gt;",
       "does not double-escape safe strings"
     );
 
-    assert.equal(
+    assert.strictEqual(
       escapeExpression(undefined),
       "",
       "returns a falsy string when given a falsy value"
@@ -48,22 +52,22 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("extractDomainFromUrl", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       extractDomainFromUrl("http://meta.discourse.org:443/random"),
       "meta.discourse.org",
       "extract domain name from url"
     );
-    assert.equal(
+    assert.strictEqual(
       extractDomainFromUrl("meta.discourse.org:443/random"),
       "meta.discourse.org",
       "extract domain regardless of scheme presence"
     );
-    assert.equal(
+    assert.strictEqual(
       extractDomainFromUrl("http://192.168.0.1:443/random"),
       "192.168.0.1",
       "works for IP address"
     );
-    assert.equal(
+    assert.strictEqual(
       extractDomainFromUrl("http://localhost:443/random"),
       "localhost",
       "works for localhost"
@@ -73,12 +77,12 @@ discourseModule("Unit | Utilities", function () {
   test("avatarUrl", function (assert) {
     let rawSize = getRawSize;
     assert.blank(avatarUrl("", "tiny"), "no template returns blank");
-    assert.equal(
+    assert.strictEqual(
       avatarUrl("/fake/template/{size}.png", "tiny"),
       "/fake/template/" + rawSize(20) + ".png",
       "simple avatar url"
     );
-    assert.equal(
+    assert.strictEqual(
       avatarUrl("/fake/template/{size}.png", "large"),
       "/fake/template/" + rawSize(45) + ".png",
       "different size"
@@ -98,15 +102,15 @@ discourseModule("Unit | Utilities", function () {
     setDevicePixelRatio(2);
 
     let avatarTemplate = "/path/to/avatar/{size}.png";
-    assert.equal(
-      avatarImg({ avatarTemplate: avatarTemplate, size: "tiny" }),
+    assert.strictEqual(
+      avatarImg({ avatarTemplate, size: "tiny" }),
       "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
       "it returns the avatar html"
     );
 
-    assert.equal(
+    assert.strictEqual(
       avatarImg({
-        avatarTemplate: avatarTemplate,
+        avatarTemplate,
         size: "tiny",
         title: "evilest trout",
       }),
@@ -114,9 +118,9 @@ discourseModule("Unit | Utilities", function () {
       "it adds a title if supplied"
     );
 
-    assert.equal(
+    assert.strictEqual(
       avatarImg({
-        avatarTemplate: avatarTemplate,
+        avatarTemplate,
         size: "tiny",
         extraClasses: "evil fish",
       }),
@@ -138,7 +142,7 @@ discourseModule("Unit | Utilities", function () {
     meta.content = "hot";
     document.body.appendChild(meta);
     initializeDefaultHomepage(this.siteSettings);
-    assert.equal(
+    assert.strictEqual(
       defaultHomepage(),
       "hot",
       "default homepage is pulled from <meta name=discourse_current_homepage>"
@@ -149,7 +153,7 @@ discourseModule("Unit | Utilities", function () {
   test("defaultHomepage via site settings", function (assert) {
     this.siteSettings.top_menu = "top|latest|hot";
     initializeDefaultHomepage(this.siteSettings);
-    assert.equal(
+    assert.strictEqual(
       defaultHomepage(),
       "top",
       "default homepage is the first item in the top_menu site setting"
@@ -158,9 +162,9 @@ discourseModule("Unit | Utilities", function () {
 
   test("setDefaultHomepage", function (assert) {
     initializeDefaultHomepage(this.siteSettings);
-    assert.equal(defaultHomepage(), "latest");
+    assert.strictEqual(defaultHomepage(), "latest");
     setDefaultHomepage("top");
-    assert.equal(defaultHomepage(), "top");
+    assert.strictEqual(defaultHomepage(), "top");
   });
 
   test("caretRowCol", function (assert) {
@@ -173,12 +177,12 @@ discourseModule("Unit | Utilities", function () {
       setCaretPosition(textarea, setCaretPos);
 
       const result = caretRowCol(textarea);
-      assert.equal(
+      assert.strictEqual(
         result.rowNum,
         expectedRowNum,
         "returns the right row of the caret"
       );
-      assert.equal(
+      assert.strictEqual(
         result.colNum,
         expectedColNum,
         "returns the right col of the caret"
@@ -198,13 +202,13 @@ discourseModule("Unit | Utilities", function () {
     const accentedString = "Créme_Brûlée!";
     const unicodeString = "談話";
 
-    assert.equal(
+    assert.strictEqual(
       toAsciiPrintable(accentedString, "discourse"),
       "Creme_Brulee!",
       "it replaces accented characters with the appropriate ASCII equivalent"
     );
 
-    assert.equal(
+    assert.strictEqual(
       toAsciiPrintable(unicodeString, "discourse"),
       "discourse",
       "it uses the fallback string when unable to convert"
@@ -222,19 +226,23 @@ discourseModule("Unit | Utilities", function () {
     const accentedString = "Créme_Brûlée!";
     const unicodeString = "談話";
 
-    assert.equal(
+    assert.strictEqual(
       slugify(asciiString),
       "0-some-cool-discourse-site-0",
       "it properly slugifies an ASCII string"
     );
 
-    assert.equal(
+    assert.strictEqual(
       slugify(accentedString),
       "crme-brle",
       "it removes accented characters"
     );
 
-    assert.equal(slugify(unicodeString), "", "it removes unicode characters");
+    assert.strictEqual(
+      slugify(unicodeString),
+      "",
+      "it removes unicode characters"
+    );
   });
 
   test("fillMissingDates", function (assert) {
@@ -243,7 +251,7 @@ discourseModule("Unit | Utilities", function () {
     const data =
       '[{"x":"2017-11-12","y":3},{"x":"2017-11-27","y":2},{"x":"2017-12-06","y":9},{"x":"2017-12-11","y":2}]';
 
-    assert.equal(
+    assert.strictEqual(
       fillMissingDates(JSON.parse(data), startDate, endDate).length,
       31,
       "it returns a JSON array with 31 dates"
@@ -269,7 +277,7 @@ discourseModule("Unit | Utilities", function () {
     texts.forEach((text) => {
       for (let i = 0; i < text.length; ++i) {
         if (text[i] === "0" || text[i] === "1") {
-          assert.equal(inCodeBlock(text, i), text[i] === "1");
+          assert.strictEqual(inCodeBlock(text, i), text[i] === "1");
         }
       }
     });

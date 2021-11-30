@@ -185,7 +185,7 @@ export default Controller.extend(ModalFunctionality, {
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
-          "alert-error"
+          "error"
         );
         return;
       }
@@ -195,19 +195,13 @@ export default Controller.extend(ModalFunctionality, {
         !this.get("topicTimer.updateTime")
       ) {
         if (this.get("topicTimer.duration_minutes") <= 0) {
-          this.flash(
-            I18n.t("topic.topic_status_update.min_duration"),
-            "alert-error"
-          );
+          this.flash(I18n.t("topic.topic_status_update.min_duration"), "error");
           return;
         }
 
         // cannot be more than 20 years
         if (this.get("topicTimer.duration_minutes") > 20 * 365 * 1440) {
-          this.flash(
-            I18n.t("topic.topic_status_update.max_duration"),
-            "alert-error"
-          );
+          this.flash(I18n.t("topic.topic_status_update.max_duration"), "error");
           return;
         }
       }

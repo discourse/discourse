@@ -21,13 +21,13 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("a[data-user-card=eviltrout] img.avatar").attr("loading"),
       "lazy",
       "it adds loading=`lazy` to topic list avatars"

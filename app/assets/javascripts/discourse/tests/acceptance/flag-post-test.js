@@ -4,7 +4,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { skip, test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
@@ -29,9 +29,8 @@ function pressEnter(element, modifier) {
 acceptance("flagging", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    const userResponse = Object.assign({}, userFixtures["/u/charlie.json"]);
     server.get("/u/uwe_keim.json", () => {
-      return helper.response(userResponse);
+      return helper.response(userFixtures["/u/charlie.json"]);
     });
     server.get("/admin/users/255.json", () => {
       return helper.response({
@@ -141,14 +140,14 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-default");
     assert.ok(!exists(".bootbox.modal:visible"));
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.equal(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-primary");
     assert.ok(!exists(".bootbox.modal:visible"));

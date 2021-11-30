@@ -39,6 +39,10 @@ module FileStore
       File.join(Discourse.base_path, upload_path)
     end
 
+    def temporary_upload_path(filename)
+      FileStore::BaseStore.temporary_upload_path(filename, folder_prefix: relative_base_url)
+    end
+
     def external?
       false
     end

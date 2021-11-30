@@ -90,7 +90,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.queue_jobs=(val)
-    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead")
+    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead", drop_from: '2.9.0')
     val ? Jobs.run_later! : Jobs.run_immediately!
   end
 

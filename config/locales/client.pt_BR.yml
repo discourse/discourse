@@ -272,6 +272,7 @@ pt_BR:
       help:
         bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito neste tópico"
+        edit_bookmark_for_topic: "Clique para editar o favorito para este tópico"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
@@ -1458,22 +1459,19 @@ pt_BR:
         invite:
           new_title: "Criar convite"
           edit_title: "Editar convite"
-          instructions: "Compartilhar este link para conceder acesso imediato ao site"
+          instructions: "Compartilhar este link para conceder acesso imediato ao site:"
           copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
-          restrict_email: "Restringir a um endereço de e-mail"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Adicionar a grupos"
-          invite_to_topic: "Buscar tópico"
           expires_at: "Expira após"
           custom_message: "Mensagem pessoal opcional"
           send_invite_email: "Salvar e enviar e-mail"
           save_invite: "Salvar convite"
           invite_saved: "Convite salvo"
-          invite_copied: "Link de convite copiado"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2049,6 +2047,9 @@ pt_BR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensagem na caixa de entrada de %{group_name}"
         other: "%{count} mensagens na caixa de entrada de %{group_name}"
@@ -2122,16 +2123,25 @@ pt_BR:
       search_button: "Pesquisar"
       categories: "Categorias"
       tags: "Etiquetas"
+      in: "em"
+      in_this_topic: "neste tópico"
+      enter_hint: "ou pressione Enter"
+      in_posts_by: "em postagens por %{username}"
       type:
+        default: "Tópicos/postagens"
         users: "Usuários"
         categories: "Categorias"
+        categories_and_tags: "Categorias/etiquetas"
       context:
         user: "Pesquisar postagens de @%{username}"
         category: "Pesquisar a categoria #%{category}"
         tag: "Pesquisar a etiqueta #%{tag}"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
+      tips:
+        full_search_key: "%{modifier} + Enter"
       advanced:
+        title: Filtros avançados
         posted_by:
           label: Postado por
         in_category:
@@ -2691,7 +2701,9 @@ pt_BR:
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
     post:
       quote_reply: "Citação"
+      quote_reply_shortcut: "Ou pressione q"
       quote_edit: "Editar"
+      quote_edit_shortcut: "Ou pressione e"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -2870,7 +2882,9 @@ pt_BR:
             button: "HTML"
       bookmarks:
         create: "Criar favorito"
+        create_for_topic: "Criar favorito para o tópico"
         edit: "Editar favorito"
+        edit_for_topic: "Editar favorito para o tópico"
         created: "Criado"
         updated: "Atualizado"
         name: "Nome"
@@ -3718,7 +3732,6 @@ pt_BR:
         delete: Excluir permanentemente
         not_shown_again: Esta chave não será exibida novamente. Faça uma cópia antes de continuar.
         continue: Continuar
-        use_global_key: Chave global (permite todas as ações)
         scopes:
           description: |
             Ao usar escopos, é possível restringir uma chave de API a um conjunto específico de pontos de extremidade.
@@ -4957,7 +4970,6 @@ pt_BR:
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
-        help: "Adicionar novo emoji que estará disponível para todos(as). (DICA: arraste e solte diversos arquivos de uma vez)"
         add: "Adicionar novo emoji"
         uploading: "Enviando..."
         name: "Nome"
@@ -4968,7 +4980,6 @@ pt_BR:
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         confirm_delete: "Você tem certeza que deseja excluir este host?"
-        sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Substitua <b>REPLACE_ME</b> pela URL canônica da página na qual você está incorporando."
         title: "Incorporar"
         host: "Hosts permitidos"
         class_name: "Nome da classe"

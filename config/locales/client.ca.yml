@@ -1700,6 +1700,9 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Descarta-ho"
+        cancel: "Cancel·la"
       group_message_summary:
         one: "%{count} missatge en la vostra bústia de %{group_name}"
         other: "%{count} missatges en la vostra bústia de %{group_name}"
@@ -4094,7 +4097,6 @@ ca:
           badge_query_examples_title: "Exemples de consulta d'insígnies"
       emoji:
         title: "Emoji"
-        help: "Afegeix un nou emoji que estarà disponible per a tothom. (CONSELL: arrossegueu i deixeu anar molts fitxers de cop)"
         add: "Afegeix emoji nou"
         uploading: "Carregant..."
         name: "Nom"
@@ -4104,7 +4106,6 @@ ca:
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
-        sample: "Feu servir el següent codi HTML en el vostre lloc web per a crear i incrustar temes de Discourse. Reemplaceu <b>REEMPLAÇA'M</b> amb l'URL canònic de la pàgina en la qual ho esteu incrustant."
         title: "Incrustant"
         host: "Amfitrions permesos"
         class_name: "Nom de la classe"

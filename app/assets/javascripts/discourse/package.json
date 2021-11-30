@@ -17,18 +17,21 @@
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
+    "@discourse/itsatrap": "^2.0.10",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
-    "@popperjs/core": "2.9.3",
+    "@popperjs/core": "2.10.2",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/aws-s3-multipart": "^2.1.0",
     "@uppy/core": "^2.1.0",
     "@uppy/drop-target": "^1.1.0",
+    "@uppy/utils": "^4.0.3",
     "@uppy/xhr-upload": "^2.0.4",
     "admin": "^1.0.0",
     "bent": "^7.3.12",
     "broccoli-asset-rev": "^3.0.0",
+    "deepmerge": "^4.2.2",
     "discourse-common": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
@@ -42,11 +45,13 @@
     "ember-cli-inject-live-reload": "^2.0.1",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.1",
+    "ember-exam": "6.1.0",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^5.1.2",
     "ember-source": "~3.15.0",
+    "ember-test-selectors": "^6.0.0",
     "eslint": "^7.27.0",
     "html-entities": "^2.1.0",
     "js-yaml": "^4.0.0",
@@ -60,11 +65,10 @@
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
     "sinon": "^9.2.0",
-    "virtual-dom": "^2.1.1",
-    "@discourse/itsatrap": "^2.0.10"
+    "virtual-dom": "^2.1.1"
   },
   "engines": {
-    "node": ">= 12.*",
+    "node": "12.* || 14.* || >= 16",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },
@@ -75,5 +79,9 @@
     "paths": [
       "lib/bootstrap-json"
     ]
+  },
+  "devDependencies": {
+    "ember-exam": "6.1.0",
+    "ember-test-selectors": "^6.0.0"
   }
 }

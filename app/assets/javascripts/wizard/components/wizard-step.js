@@ -5,6 +5,7 @@ import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 
+// eslint-disable-next-line no-undef
 jQuery.fn.wiggle = function (times, duration) {
   if (times > 0) {
     this.animate(

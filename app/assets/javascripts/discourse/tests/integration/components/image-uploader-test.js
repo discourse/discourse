@@ -18,13 +18,13 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
     `,
 
     async test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count(".d-icon-far-image"),
         1,
         "it displays the upload icon"
       );
 
-      assert.equal(
+      assert.strictEqual(
         count(".d-icon-far-trash-alt"),
         1,
         "it displays the trash icon"
@@ -37,7 +37,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
 
       await click(".image-uploader-lightbox-btn");
 
-      assert.equal(
+      assert.strictEqual(
         document.querySelectorAll(".mfp-container").length,
         1,
         "it displays the image lightbox"
@@ -49,7 +49,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
     template: hbs`{{image-uploader}}`,
 
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count(".d-icon-far-image"),
         1,
         "it displays the upload icon"
@@ -71,7 +71,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
     template: hbs`{{image-uploader placeholderUrl='/images/avatar.png'}}`,
 
     test(assert) {
-      assert.equal(
+      assert.strictEqual(
         count(".d-icon-far-image"),
         1,
         "it displays the upload icon"
@@ -87,7 +87,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
         "it does not display the button to open image lightbox"
       );
 
-      assert.equal(
+      assert.strictEqual(
         count(".placeholder-overlay"),
         1,
         "it displays the placeholder image"

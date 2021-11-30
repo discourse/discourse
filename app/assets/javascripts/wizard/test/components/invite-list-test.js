@@ -1,5 +1,6 @@
 import { componentTest } from "wizard/test/helpers/component-test";
 import { moduleForComponent } from "ember-qunit";
+import { click, fillIn } from "@ember/test-helpers";
 
 moduleForComponent("invite-list", { integration: true });
 
@@ -21,7 +22,7 @@ componentTest("can add users", {
     );
 
     const firstVal = JSON.parse(this.get("field.value"));
-    assert.equal(firstVal.length, 0, "empty JSON at first");
+    assert.strictEqual(firstVal.length, 0, "empty JSON at first");
 
     assert.ok(
       this.get("field.warning"),
@@ -45,8 +46,8 @@ componentTest("can add users", {
     assert.ok(document.querySelectorAll(".new-user .invalid").length === 0);
 
     const val = JSON.parse(this.get("field.value"));
-    assert.equal(val.length, 1);
-    assert.equal(
+    assert.strictEqual(val.length, 1);
+    assert.strictEqual(
       val[0].email,
       "eviltrout@example.com",
       "adds the email to the JSON"

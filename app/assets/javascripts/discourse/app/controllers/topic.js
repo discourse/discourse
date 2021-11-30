@@ -1,3 +1,4 @@
+import Category from "discourse/models/category";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
@@ -103,7 +104,17 @@ export default Controller.extend(bufferedProperty("model"), {
   ),
 
   updateQueryParams() {
-    this.setProperties(this.get("model.postStream.streamFilters"));
+    const filters = this.get("model.postStream.streamFilters");
+
+    if (Object.keys(filters).length > 0) {
+      this.setProperties(filters);
+    } else {
+      this.setProperties({
+        username_filters: null,
+        filter: null,
+        replies_to_post_number: null,
+      });
+    }
   },
 
   @observes("model.title", "category")
@@ -202,11 +213,9 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("model.category")
-  minimumRequiredTags(category) {
-    return category && category.minimum_required_tags > 0
-      ? category.minimum_required_tags
-      : null;
+  @discourseComputed("buffered.category_id")
+  minimumRequiredTags(categoryId) {
+    return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {
@@ -1595,6 +1604,12 @@ export default Controller.extend(bufferedProperty("model"), {
           case "read": {
             postStream
               .triggerReadPost(data.id, data.readers_count)
+              .then(() => refresh({ id: data.id, refreshLikes: true }));
+            break;
+          }
+          case "liked": {
+            postStream
+              .triggerLikedPost(data.id, data.likes_count)
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }

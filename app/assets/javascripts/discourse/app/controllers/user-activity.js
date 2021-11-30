@@ -13,7 +13,7 @@ export default Controller.extend({
   canDownloadPosts: alias("user.viewingSelf"),
 
   @observes("userActionType", "model.stream.itemsLoaded")
-  _showFooter: function () {
+  _showFooter() {
     let showFooter;
     if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(
@@ -33,6 +33,13 @@ export default Controller.extend({
     return count > 0
       ? I18n.t("drafts.label_with_count", { count })
       : I18n.t("drafts.label");
+  },
+
+  @discourseComputed("model.pending_posts_count")
+  pendingLabel(count) {
+    return count > 0
+      ? I18n.t("pending_posts.label_with_count", { count })
+      : I18n.t("pending_posts.label");
   },
 
   actions: {
