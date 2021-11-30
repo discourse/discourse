@@ -547,3 +547,14 @@ export function chromeTest(name, testCase) {
 export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }
+
+export function createFile(name, type = "image/png", blobData = null) {
+  // the blob content doesn't matter at all, just want it to be random-ish
+  blobData = blobData || (Math.random() + 1).toString(36).substring(2);
+  const blob = new Blob([blobData]);
+  const file = new File([blob], name, {
+    type,
+    lastModified: new Date().getTime(),
+  });
+  return file;
+}
