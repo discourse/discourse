@@ -19,6 +19,7 @@ acceptance("Managing Group Membership", function (needs) {
             id: 123,
             name: "test-group",
             provider_name: "google_oauth2",
+            label: "google_oauth2:test-group",
           },
         ],
       })
