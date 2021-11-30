@@ -116,6 +116,7 @@ class Auth::Result
       end
 
       user.update(associated_group_ids: associated_group_ids)
+      AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
     end
   end
 

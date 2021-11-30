@@ -5,6 +5,7 @@ class CreateAssociatedGroups < ActiveRecord::Migration[6.1]
       t.string :name, null: false
       t.string :provider_name, null: false
       t.string :provider_id, null: false
+      t.datetime :last_used, null: false, default: -> { "CURRENT_TIMESTAMP" }
 
       t.timestamps
     end

@@ -12,6 +12,12 @@ class AssociatedGroup < ActiveRecord::Base
   def self.has_provider?
     Discourse.enabled_authenticators.any? { |a| a.provides_groups? }
   end
+
+  def self.cleanup!
+    AssociatedGroup.left_joins(:group_associated_groups, :user_associated_groups)
+      .where("group_associated_groups.id IS NULL AND user_associated_groups.id IS NULL")
+      .where("last_used < ?", 1.week.ago).delete_all
+  end
 end
 
 # == Schema Information
@@ -22,6 +28,7 @@ end
 #  name          :string           not null
 #  provider_name :string           not null
 #  provider_id   :string           not null
+#  last_used     :datetime         not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
