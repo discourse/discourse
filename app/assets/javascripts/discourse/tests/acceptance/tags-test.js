@@ -447,7 +447,7 @@ acceptance("Tag info", function (needs) {
       "happy-monkey",
       "it displays original tag name"
     );
-    assert.equal(
+    assert.strictEqual(
       query("#edit-description").value,
       "happy monkey description",
       "it displays original tag description"
