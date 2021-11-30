@@ -1,5 +1,6 @@
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { module, test } from "qunit";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 
 class FakeUppy {
@@ -9,17 +10,17 @@ class FakeUppy {
     this.files = {
       "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764": {
         meta: {},
-        data: createFile("test1.png"),
+        data: createFile("test1.png", "image/png", "testblobdata1"),
         size: 1024,
       },
       "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764": {
         meta: {},
-        data: createFile("test2.png"),
+        data: createFile("test2.png", "image/png", "testblobdata2"),
         size: 2048,
       },
       "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764": {
         meta: {},
-        data: createFile("test2.png"),
+        data: createFile("test2.png", "image/png", "testblobdata2"),
         size: 209715200,
       },
     };
@@ -164,11 +165,11 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
       // these checksums are the actual SHA1 hashes of the test file names
       assert.strictEqual(
         plugin.uppy.getFile(fileIds[0]).meta.sha1_checksum,
-        "d9bafe64b034b655db018ad0226c6865300ada31"
+        "2aa31a700d084c78cecbf030b041ad63eb4f6e8a"
       );
       assert.strictEqual(
         plugin.uppy.getFile(fileIds[1]).meta.sha1_checksum,
-        "cb10341e3efeab45f0bc309a1c497edca4c5a744"
+        "dfa8c725a5a6710ce4467f29655ec9d26a8de3d0"
       );
 
       done();
@@ -206,11 +207,3 @@ module("Unit | Utility | UppyChecksum Plugin", function () {
     });
   });
 });
-
-function createFile(name, type = "image/png") {
-  const file = new Blob([name], {
-    type,
-  });
-  file.name = name;
-  return file;
-}
