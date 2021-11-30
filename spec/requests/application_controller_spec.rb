@@ -941,4 +941,62 @@ RSpec.describe ApplicationController do
       ).to eq("user_api_key_limiter_1_day")
     end
   end
+
+  describe "crawlers in slow_down_crawler_user_agents site setting" do
+    before do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+    end
+
+    it "are rate limited" do
+      SiteSetting.slow_down_crawler_rate = 128
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
+      now = Time.zone.now
+      freeze_time now
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(200)
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("128")
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(200)
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("128")
+
+      freeze_time now + 100.seconds
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("28")
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("28")
+
+      freeze_time now + 150.seconds
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(200)
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(200)
+    end
+  end
 end
