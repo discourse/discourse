@@ -67,3 +67,75 @@ discourseModule(
     });
   }
 );
+
+discourseModule(
+  "Integration | Component | select-kit/multi-select | maximum=1",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
+
+    componentTest("content", {
+      template: hbs`
+      {{multi-select
+        value=value
+        content=content
+        options=(hash maximum=1)
+      }}
+    `,
+
+      beforeEach() {
+        setDefaultState(this);
+      },
+
+      async test(assert) {
+        await this.subject.expand();
+        await this.subject.selectRowByValue(1);
+
+        assert.notOk(this.subject.isExpanded(), "it closes the dropdown");
+
+        await this.subject.expand();
+        await this.subject.deselectItemByValue(1);
+
+        assert.ok(
+          this.subject.isExpanded(),
+          "it doesn’t close the dropdown when no selection has been made"
+        );
+      },
+    });
+  }
+);
+
+discourseModule(
+  "Integration | Component | select-kit/multi-select | maximum=2",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
+
+    componentTest("content", {
+      template: hbs`
+      {{multi-select
+        value=value
+        content=content
+        options=(hash maximum=2)
+      }}
+    `,
+
+      beforeEach() {
+        setDefaultState(this);
+      },
+
+      async test(assert) {
+        await this.subject.expand();
+        await this.subject.selectRowByValue(1);
+
+        assert.ok(this.subject.isExpanded(), "it doesn’t close the dropdown");
+      },
+    });
+  }
+);

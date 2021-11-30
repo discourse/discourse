@@ -3020,6 +3020,9 @@ gl:
         title: "Este tema é unha mensaxe privada"
         help: "Este tema é unha mensaxe privada"
     posts: "Publicacións"
+    pending_posts:
+      label: "Pendente"
+      label_with_count: "Pendentes (%{count})"
     posts_likes_MF: |
       Este tema ten {count, plural, one {# resposta} other {# respostas}} {ratio, select,
         low {cun alto nivel de valoración da publicación}

@@ -1042,6 +1042,7 @@ he:
           all: "הכל"
           read: "נקרא"
           unread: "לא-נקראו"
+          unseen: "לא נראו"
         ignore_duration_title: "התעלמות ממשתמש"
         ignore_duration_username: "שם משתמש"
         ignore_duration_when: "משך:"
@@ -2053,6 +2054,11 @@ he:
       cannot_see_mention:
         category: "הזכרת את %{username} אבל לא תישלח אליו/ה התרעה עקב העדר גישה לקטגוריה זו. יהיה עליך להוסיף אותו/ה לקבוצה שיש לה גישה לקטגוריה הזו."
         private: "הזכרתם את %{username} אבל הוא/היא לא יקבלו התראה כיוון שהם לא יכולים לראות את ההודעה הפרטית הזו. תצטרכו להזמין אותם להודעה פרטית זו."
+      here_mention:
+        one: "אזכור של <b>‎@%{here}</b> יודיע למשתמש %{count}, להמשיך?"
+        two: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
+        many: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
+        other: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
       duplicate_link: "נראה שהקישור שלך אל <b>%{domain}</b> כבר פורסם בנושא הזה על ידי <b>‎@%{username}‎</b> כ<a href='%{post_url}'>תגובה ב%{ago}</a> - לפרסם אותו שוב?"
       reference_topic_title: "תגובה: %{title}"
       error:
@@ -2336,6 +2342,8 @@ he:
       in_posts_by: "בפוסטים מאת %{username}"
       browser_tip: "‎%{modifier} + f"
       browser_tip_description: "שוב כדי להשתמש בחיפוש המקורי של הדפדפן"
+      recent: "חיפושים אחרונים"
+      clear_recent: "ניקוי חיפושים אחרונים"
       type:
         default: "נושאים/פוסטים"
         users: "משתמשים"
@@ -3460,6 +3468,9 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
     posts: "פוסטים"
+    pending_posts:
+      label: "בהמתנה"
+      label_with_count: "ממתינות (%{count})"
     posts_likes_MF: |
       לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} many {# תגובות} other {# תגובות}} {ratio, select,
         low {עם יחס גבוה של לייקים לפוסט}

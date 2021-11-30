@@ -1698,6 +1698,9 @@ sq:
       unlisted:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
+    pending_posts:
+      label: "Në pritje"
+      label_with_count: "Në pritje (%{count})"
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase:

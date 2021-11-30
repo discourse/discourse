@@ -155,9 +155,8 @@ class Users::OmniauthCallbacksController < ApplicationController
         user.update!(password: SecureRandom.hex)
 
         # Ensure there is an active email token
-        unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-          user.email_tokens.active.where(email: user.email).exists?
-          user.email_tokens.create!(email: user.email)
+        if !EmailToken.where(email: user.email, confirmed: true).exists? && !user.email_tokens.active.where(email: user.email).exists?
+          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
         end
 
         user.activate

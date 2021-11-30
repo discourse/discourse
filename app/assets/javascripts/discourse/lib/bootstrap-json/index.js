@@ -1,8 +1,7 @@
 "use strict";
 
 const express = require("express");
-const bent = require("bent");
-const getJSON = bent("json");
+const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
@@ -123,7 +122,9 @@ function bodyFooter(buffer, bootstrap, headers) {
 
   let v = generateUID();
   buffer.push(`
-		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers["x-miniprofiler-ids"]}"></script>
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers.get(
+    "x-miniprofiler-ids"
+  )}"></script>
 	`);
 }
 
@@ -175,7 +176,7 @@ async function applyBootstrap(bootstrap, template, response, baseURL) {
   }
 
   Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id, response, baseURL);
+    template = replaceIn(bootstrap, template, id, response.headers, baseURL);
   });
   return template;
 }
@@ -193,7 +194,8 @@ async function buildFromBootstrap(proxy, baseURL, req, response) {
       url += req.url.substr(queryLoc);
     }
 
-    const json = await getJSON(url, null, req.headers);
+    const res = await fetch(url, { headers: req.headers });
+    const json = await res.json();
 
     return applyBootstrap(json.bootstrap, template, response, baseURL);
   } catch (error) {
@@ -230,21 +232,24 @@ async function handleRequest(proxy, baseURL, req, res) {
     req.headers["X-Discourse-Asset-Path"] = req.path;
   }
 
-  const acceptedStatusCodes = [200, 301, 302, 303, 307, 308, 404, 403, 500];
-  const proxyRequest = bent(req.method, acceptedStatusCodes);
-  const requestBody = req.method === "GET" ? null : req.body;
-  const response = await proxyRequest(url, requestBody, req.headers);
+  const response = await fetch(url, {
+    method: req.method,
+    body: /GET|HEAD/.test(req.method) ? null : req.body,
+    headers: req.headers,
+  });
 
-  res.set(response.headers);
+  response.headers.forEach((value, header) => {
+    res.set(header, value);
+  });
   res.set("content-encoding", null);
 
-  const { location } = response.headers;
+  const location = response.headers.get("location");
   if (location) {
     const newLocation = location.replace(proxy, `http://${originalHost}`);
     res.set("location", newLocation);
   }
 
-  const csp = response.headers["content-security-policy"];
+  const csp = response.headers.get("content-security-policy");
   if (csp) {
     const newCSP = csp.replace(
       new RegExp(proxy, "g"),
@@ -253,7 +258,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     res.set("content-security-policy", newCSP);
   }
 
-  if (response.headers["x-discourse-bootstrap-required"] === "true") {
+  if (response.headers.get("x-discourse-bootstrap-required") === "true") {
     const html = await buildFromBootstrap(proxy, baseURL, req, response);
     res.set("content-type", "text/html");
     res.send(html);

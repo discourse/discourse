@@ -37,8 +37,6 @@ export default Component.extend(LoadMore, {
   },
 
   _inserted: on("didInsertElement", function () {
-    this.bindScrolling({ name: "user-stream-view" });
-
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
     $(this.element).on(
@@ -54,7 +52,6 @@ export default Component.extend(LoadMore, {
 
   // This view is being removed. Shut down operations
   _destroyed: on("willDestroyElement", function () {
-    this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
     $(this.element).off("click.details-disabled", "details.disabled");
 

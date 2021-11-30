@@ -2764,6 +2764,9 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
+    pending_posts:
+      label: "زیرِاِلتوَاء"
+      label_with_count: "زیرِاِلتوَاء (%{count})"
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:

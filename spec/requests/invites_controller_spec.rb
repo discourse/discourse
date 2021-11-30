@@ -13,9 +13,15 @@ describe InvitesController do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
       expect(response.body).to have_tag(:script, with: { src: '/assets/application.js' })
-      expect(response.body).to include('i*****g@a***********e.ooo')
       expect(response.body).not_to include(invite.email)
       expect(response.body).to_not include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+
+      expect(response.body).to have_tag('div#data-preloaded') do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['username']).to eq('')
+        expect(invite_info['email']).to eq('i*****g@a***********e.ooo')
+      end
     end
 
     it 'shows unobfuscated email if email data is present in authentication data' do

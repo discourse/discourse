@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -14,9 +15,8 @@ export default DiscourseRoute.extend({
     this.controllerFor("group-manage-logs").setProperties({ model });
   },
 
-  actions: {
-    willTransition() {
-      this.controllerFor("group-manage-logs").reset();
-    },
+  @action
+  willTransition() {
+    this.controllerFor("group-manage-logs").reset();
   },
 });

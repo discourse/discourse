@@ -3095,6 +3095,9 @@ da:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
     posts: "Indlæg"
+    pending_posts:
+      label: "Afventende"
+      label_with_count: "Ventende (%{count})"
     posts_likes_MF: |
       Dette emne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med et højt forhold i mellem antal 'Synes godt om' og antal indlæg}

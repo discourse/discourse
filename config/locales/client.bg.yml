@@ -2786,6 +2786,9 @@ bg:
       unlisted:
         help: "Тази тема е скрита; не се появява в списъка с теми и може да бъде достъпна само с директен линк."
     posts: "Публикации"
+    pending_posts:
+      label: "Чакащи"
+      label_with_count: "Чакащи (%{count})"
     original_post: "Оригинална публикация"
     views: "Прегледи"
     views_lowercase:

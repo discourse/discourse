@@ -37,4 +37,39 @@ describe UserCardSerializer do
       expect(json[:unconfirmed_emails]).to be_nil
     end
   end
+
+  describe "#pending_posts_count" do
+    let(:user) { Fabricate(:user) }
+    let(:serializer) { described_class.new(user, scope: guardian, root: false) }
+    let(:json) { serializer.as_json }
+
+    context "when guardian is another user" do
+      let(:guardian) { Guardian.new(other_user) }
+
+      context "when other user is not a staff member" do
+        let(:other_user) { Fabricate(:user) }
+
+        it "does not serialize pending_posts_count" do
+          expect(json.keys).not_to include :pending_posts_count
+        end
+      end
+
+      context "when other user is a staff member" do
+        let(:other_user) { Fabricate(:user, moderator: true) }
+
+        it "serializes pending_posts_count" do
+          expect(json[:pending_posts_count]).to eq 0
+        end
+      end
+    end
+
+    context "when guardian is the current user" do
+      let(:guardian) { Guardian.new(user) }
+
+      it "serializes pending_posts_count" do
+        expect(json[:pending_posts_count]).to eq 0
+      end
+    end
+
+  end
 end

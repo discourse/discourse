@@ -8,6 +8,7 @@ import User from "discourse/models/user";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Site from "discourse/models/site";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(OpenComposer, {
   queryParams: {
@@ -44,52 +45,57 @@ export default DiscourseRoute.extend(OpenComposer, {
     }
   },
 
-  actions: {
-    loading() {
-      this.controllerFor("discovery").loadingBegan();
+  @action
+  loading() {
+    this.controllerFor("discovery").loadingBegan();
 
-      // We don't want loading to bubble
-      return true;
-    },
+    // We don't want loading to bubble
+    return true;
+  },
 
-    loadingComplete() {
-      this.controllerFor("discovery").loadingComplete();
-      if (!this.session.get("topicListScrollPosition")) {
-        scrollTop();
-      }
-    },
+  @action
+  loadingComplete() {
+    this.controllerFor("discovery").loadingComplete();
+    if (!this.session.get("topicListScrollPosition")) {
+      scrollTop();
+    }
+  },
 
-    didTransition() {
-      this.send("loadingComplete");
+  @action
+  didTransition() {
+    this.send("loadingComplete");
 
-      const model = this.controllerFor("discovery/topics").get("model");
-      setTopicList(model);
-    },
+    const model = this.controllerFor("discovery/topics").get("model");
+    setTopicList(model);
+  },
 
-    // clear a pinned topic
-    clearPin(topic) {
-      topic.clearPin();
-    },
+  // clear a pinned topic
+  @action
+  clearPin(topic) {
+    topic.clearPin();
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        this.openComposer(this.controllerFor("discovery/topics"));
-      }
-    },
+  @action
+  createTopic() {
+    if (this.get("currentUser.has_topic_draft")) {
+      this.openTopicDraft();
+    } else {
+      this.openComposer(this.controllerFor("discovery/topics"));
+    }
+  },
 
-    dismissReadTopics(dismissTopics) {
-      const operationType = dismissTopics ? "topics" : "posts";
-      this.send("dismissRead", operationType);
-    },
+  @action
+  dismissReadTopics(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+    this.send("dismissRead", operationType);
+  },
 
-    dismissRead(operationType) {
-      const controller = this.controllerFor("discovery/topics");
-      controller.send("dismissRead", operationType, {
-        categoryId: controller.get("category.id"),
-        includeSubcategories: !controller.noSubcategories,
-      });
-    },
+  @action
+  dismissRead(operationType) {
+    const controller = this.controllerFor("discovery/topics");
+    controller.send("dismissRead", operationType, {
+      categoryId: controller.get("category.id"),
+      includeSubcategories: !controller.noSubcategories,
+    });
   },
 });

@@ -3114,6 +3114,9 @@ fr:
         title: "Ce sujet est un message direct"
         help: "Ce sujet est un message direct"
     posts: "Messages"
+    pending_posts:
+      label: "En attente"
+      label_with_count: "En attente (%{count})"
     posts_likes_MF: |
       Ce sujet comprend {count, plural, one {# réponse} other {# réponses}} {ratio, select,
        low {avec un taux élevé de « J'aime » par message}

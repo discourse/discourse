@@ -668,6 +668,33 @@ RSpec.describe ApplicationController do
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
 
+  it "adds a noindex header if non-canonical indexing is disabled" do
+    SiteSetting.allow_indexing_non_canonical_urls = false
+    get '/'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    get '/latest'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    get '/categories'
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    topic = create_post.topic
+    get "/t/#{topic.slug}/#{topic.id}"
+    expect(response.headers['X-Robots-Tag']).to be_nil
+    post = create_post(topic_id: topic.id)
+    get "/t/#{topic.slug}/#{topic.id}/2"
+    expect(response.headers['X-Robots-Tag']).to eq('noindex')
+
+    20.times do
+      create_post(topic_id: topic.id)
+    end
+    get "/t/#{topic.slug}/#{topic.id}/21"
+    expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    get "/t/#{topic.slug}/#{topic.id}?page=2"
+    expect(response.headers['X-Robots-Tag']).to be_nil
+  end
+
   context "default locale" do
     before do
       SiteSetting.default_locale = :fr
@@ -912,6 +939,64 @@ RSpec.describe ApplicationController do
       expect(
         response.headers["Discourse-Rate-Limit-Error-Code"]
       ).to eq("user_api_key_limiter_1_day")
+    end
+  end
+
+  describe "crawlers in slow_down_crawler_user_agents site setting" do
+    before do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+    end
+
+    it "are rate limited" do
+      SiteSetting.slow_down_crawler_rate = 128
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
+      now = Time.zone.now
+      freeze_time now
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(200)
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("128")
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(200)
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("128")
+
+      freeze_time now + 100.seconds
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("28")
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("28")
+
+      freeze_time now + 150.seconds
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam badcrawler"
+      }
+      expect(response.status).to eq(200)
+
+      get "/", headers: {
+        "HTTP_USER_AGENT" => "iam problematiccrawler"
+      }
+      expect(response.status).to eq(200)
     end
   end
 end

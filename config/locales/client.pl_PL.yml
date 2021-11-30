@@ -2340,6 +2340,8 @@ pl_PL:
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
+      recent: "Ostatnie wyszukiwania"
+      clear_recent: "Wyczyść ostatnie wyszukiwania"
       type:
         default: "Tematy/posty"
         users: "Użytkownicy"
@@ -3475,6 +3477,9 @@ pl_PL:
         title: "Ten temat jest wiadomością prywatną"
         help: "Ten temat jest wiadomością prywatną"
     posts: "Wpisy"
+    pending_posts:
+      label: "Oczekujące"
+      label_with_count: "Oczekujące (%{count})"
     posts_likes_MF: |
       Ten temat ma {count, plural, one {# odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
         low {z wysokim stosunkiem polubień na post}

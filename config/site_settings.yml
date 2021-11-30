@@ -267,6 +267,8 @@ basic:
     client: true
     default: true
     hidden: true
+  # TODO (martin) (2022-02-01) Remove this setting once plugins relying on
+  # it have been changed.
   enable_experimental_composer_uploader:
     client: true
     default: false
@@ -1602,6 +1604,9 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
+  allow_indexing_non_canonical_urls:
+    default: true
+    hidden: true
   moderators_manage_categories_and_groups: false
   moderators_change_post_ownership:
     client: true

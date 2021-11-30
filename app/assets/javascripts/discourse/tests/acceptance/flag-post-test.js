@@ -29,9 +29,8 @@ function pressEnter(element, modifier) {
 acceptance("flagging", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    const userResponse = Object.assign({}, userFixtures["/u/charlie.json"]);
     server.get("/u/uwe_keim.json", () => {
-      return helper.response(userResponse);
+      return helper.response(userFixtures["/u/charlie.json"]);
     });
     server.get("/admin/users/255.json", () => {
       return helper.response({

@@ -206,6 +206,9 @@
         "pending_count": {
           "type": "integer"
         },
+        "pending_posts_count": {
+          "type": "integer"
+        },
         "profile_view_count": {
           "type": "integer"
         },
@@ -778,6 +781,9 @@
             },
             "default_calendar": {
               "type": "string"
+            },
+            "oldest_search_log_date": {
+              "type": ["string", "null"]
             }
           },
           "required": [

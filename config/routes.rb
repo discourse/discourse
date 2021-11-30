@@ -428,6 +428,8 @@ Discourse::Application.routes.draw do
       put "#{root_path}/admin-login" => "users#admin_login"
       post "#{root_path}/toggle-anon" => "users#toggle_anon"
       post "#{root_path}/read-faq" => "users#read_faq"
+      get "#{root_path}/recent-searches" => "users#recent_searches", constraints: { format: 'json' }
+      delete "#{root_path}/recent-searches" => "users#reset_recent_searches", constraints: { format: 'json' }
       get "#{root_path}/search/users" => "users#search_users"
 
       get({ "#{root_path}/account-created/" => "users#account_created" }.merge(index == 1 ? { as: :users_account_created } : { as: :old_account_created }))
@@ -577,6 +579,7 @@ Discourse::Application.routes.draw do
     get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
     get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
+    get "posts/:username/pending" => "posts#pending", constraints: { username: RouteFormat.username }
 
     %w{groups g}.each do |root_path|
       resources :groups, id: RouteFormat.username, path: root_path do

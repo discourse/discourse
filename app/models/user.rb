@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
   has_many :user_custom_fields, dependent: :destroy
+  has_many :pending_posts, -> { merge(Reviewable.pending) }, class_name: 'ReviewableQueuedPost', foreign_key: :created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -1049,11 +1050,9 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token, skip_reviewable: true)
-    end
-    self.update!(active: true)
-    create_reviewable
+    email_token = self.email_tokens.create!(email: self.email, scope: EmailToken.scopes[:signup])
+    EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+    reload
   end
 
   def deactivate(performed_by)
@@ -1495,7 +1494,7 @@ class User < ActiveRecord::Base
   end
 
   def create_email_token
-    email_tokens.create!(email: email)
+    email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
   def ensure_password_is_hashed

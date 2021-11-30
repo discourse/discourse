@@ -1498,7 +1498,6 @@ fi:
     allowed_iframes: "Iframe src -verkkotunnusten etuliitteet, jotka Discourse voi turvallisesti sallia viesteissä"
     allowed_crawler_user_agents: "Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle. VAROITUS! TÄMÄ ASETUS ESTÄÄ KAIKKI HAKUROBOTIT, JOITA EI LISTATA TÄSSÄ!"
     blocked_crawler_user_agents: "Käyttäjäagentin nimessä oleva kirjainkoosta riippumaton yksilöllinen merkkijono, jolla tunnistetaan estettävät hakurobotit. Ei sovelleta, jos sallittujen hakurobottien luettelo on määriteltynä."
-    slow_down_crawler_user_agents: "Hakurobottien käyttäjäagentit, joiden toiminnan nopeutta rajoitetaan hakuviivemääräyksen (Crawl-delay directive) mukaisesti"
     slow_down_crawler_rate: "Jos slow_down_crawler_user_agents on määritelty, tämä nopeusrajoitus koskee kaikkia hakurobotteja (kuinka monta sekuntia pitää kulua pyyntöjen välillä)"
     content_security_policy: "Ota käyttöön epäilyttävän sisällön seulonta (Content-Security-Policy)"
     content_security_policy_report_only: "Ota käyttöön epäilyttävästä sisällöstä raportointi (Content-Security-Policy-Report-Only)"

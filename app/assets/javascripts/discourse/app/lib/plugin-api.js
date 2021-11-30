@@ -2,7 +2,6 @@ import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
-  addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import {
   addButton,
@@ -94,15 +93,17 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 
 // If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0.
-const PLUGIN_API_VERSION = "0.14.0";
+// based on Semantic Versioning 2.0.0. Please up the changelog at
+// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
+// using the format described at https://keepachangelog.com/en/1.0.0/.
+const PLUGIN_API_VERSION = "1.0.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
-      "To prevent errors, add a `pluginId` key to your changes when calling `modifyClass`"
+      "To prevent errors in tests, add a `pluginId` key to your `modifyClass` call. This will ensure the modification is only applied once."
     );
     return true;
   }
@@ -1021,42 +1022,20 @@ class PluginApi {
   }
 
   /**
-   * Registers a function to handle uploads for specified file types
+   * Registers a function to handle uploads for specified file types.
    * The normal uploading functionality will be bypassed if function returns
    * a falsy value.
-   * This only for uploads of individual files
    *
    * Example:
    *
-   * api.addComposerUploadHandler(["mp4", "mov"], (file, editor) => {
-   *   console.log("Handling upload for", file.name);
+   * api.addComposerUploadHandler(["mp4", "mov"], (files, editor) => {
+   *   files.forEach((file) => {
+   *     console.log("Handling upload for", file.name);
+   *   });
    * })
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
-  }
-
-  /**
-   * Registers a pre-processor for file uploads
-   * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
-   *
-   * Useful for transforming to-be uploaded files client-side
-   *
-   * Example:
-   *
-   * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
-   *    myFileTransformation(data, options) {
-   *      let p = new Promise((resolve, reject) => {
-   *        let file = data.files[data.index];
-   *        console.log(`Transforming ${file.name}`);
-   *        // do work...
-   *        resolve(data);
-   *      });
-   *      return p;
-   * });
-   */
-  addComposerUploadProcessor(queueItem, actionItem) {
-    addComposerUploadProcessor(queueItem, actionItem);
   }
 
   /**
@@ -1629,7 +1608,7 @@ function decorate(klass, evt, cb, id) {
   if (!id) {
     // eslint-disable-next-line no-console
     console.warn(
-      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks."
+      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
     );
   } else {
     if (!_decorated.has(klass)) {
