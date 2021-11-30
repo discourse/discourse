@@ -2028,6 +2028,9 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
+    pending_posts:
+      label: "Čakajúce správy"
+      label_with_count: "Čakajúce (%{count})"
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:

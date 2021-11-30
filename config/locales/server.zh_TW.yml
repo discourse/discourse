@@ -1174,7 +1174,6 @@ zh_TW:
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
     allowed_iframes: "允許 Discourse 可以在貼文中安全發布含有 iframe 及 src 網域前綴列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
-    slow_down_crawler_user_agents: "網路爬蟲的使用者代理，應使用 Crawl-delay 指令在 robots.txt 中進行速率限制"
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
     content_security_policy: "啟用內容安全性政策"
     content_security_policy_report_only: "僅啟用內容安全性政策報告"

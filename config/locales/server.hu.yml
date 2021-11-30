@@ -416,6 +416,7 @@ hu:
   post:
     image_placeholder:
       broken: "Ez a kép hibás"
+    hidden_bidi_character: "A kétirányú karakterek megváltoztathatják a szöveg megjelenítési sorrendjét. Ez felhasználható rosszindulatú kódok elrejtésére is."
     has_likes:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
@@ -866,11 +867,13 @@ hu:
   site_settings:
     disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
+    notify_users_after_responses_deleted_on_flagged_post: "Ha egy bejegyzést jelentenek, majd eltávolítanak, akkor minden olyan felhasználó értesítést kap, aki válaszolt a bejegyzésre, és ezért a válaszait eltávolították."
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     enable_badges: "A jelvény rendszer engedélyezése"
+    normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
@@ -882,6 +885,9 @@ hu:
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    here_mention: "Az @itt megemlítéshez használandó név. Nem lehet létező felhasználónév."
+    max_here_mentioned: "Az @itt által megemlített személyek maximális száma."
+    min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
     dark_mode_none: "Egyik sem"
     cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
@@ -902,6 +908,7 @@ hu:
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
+      valid_username: "Van egy ilyen nevű felhasználó."
       invalid_integer_min_max: "Az értéknek %{min} és %{max} között kell lennie."
       invalid_integer_min: "Az érték nem lehet kisebb, mint %{min}."
       invalid_integer_max: "Az érték nem lehet nagyobb, mint %{max}."
@@ -993,6 +1000,28 @@ hu:
       %{base_url}/u/password-reset /%{email_token}
 
       (Ha a fenti link lejárt, válaszd az "Elfelejtettem a jelszavamat" lehetőséget, amikor bejelentkezel ezzel az e-mail címeddel.)
+  test_mailer:
+    text_body_template: |
+      Ez egy teszt e-mail innen:
+
+      [**%{base_url}**][0]
+
+      Reméljük, hogy rendben megkapta ezt a kézbesítési teszt e-mailt!
+
+      Itt egy [hasznos ellenőrzőlista az e-mail kézbesítési beállításokról][1].
+
+      Sok szerencsét,
+
+      A barátai a [Discourse-nál](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
+  flag_reasons:
+    responder:
+      off_topic: "Ezt a bejegyzést **nem témába vágóként** jelentették: a közösség úgy érzi, hogy a cím és az első bejegyzés alapján nem felel meg a témának."
+      inappropriate: "Ezt a bejegyzést **nem helyénvalónak** jelentették: a közösség úgy érzi, hogy sértő, káros vagy megsérti a [közösségi irányelveket](%{base_path}/guidelines)."
+      spam: "Ezt a bejegyzést **kéretlen tatalomként** jelentették: a közösség úgy érzi, hogy reklám, túlságosan hirdetésjellege van, ahelyett hogy hasznos vagy releváns lenne a témában."
+      notify_moderators: "Ezt a bejegyzést **moderátori figyelmet igénylőnek** jelentették: a közösség úgy érzi, hogy a bejegyzéssel kapcsolatosan valami kézi beavatkozást igényel egy stábtag részéről."
   flags_dispositions:
     agreed: "Köszönjük, hogy szóltál! Mi is úgy látjuk, hogy van itt egy probléma, vizsgáljuk!"
     agreed_and_deleted: "Köszönjük, hogy szóltál! Mi is úgy látjuk, hogy van itt egy probléma, ezért letöröltük a posztot."
@@ -1059,6 +1088,23 @@ hu:
         %{flagged_post_raw_content}
         ```
         További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
+    flags_agreed_and_post_deleted_for_responders:
+      title: "A stáb eltávolította a választ egy jelentett bejegyzésről"
+      subject_template: "A stáb eltávolította a választ egy jelentett bejegyzésről"
+      text_body_template: |
+        Üdv!
+
+        Ez egy automatikus üzenet a(z) %{site_name} oldalról, hogy tudja, hogy a [bejegyzéshez](%{base_url}%{url}) küldött válaszát eltávolították.
+
+        %{flag_reason}
+
+        A bejegyzést a közösség jelentette, és egy stábtag úgy döntött, hogy eltávolítja.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Az eltávolítás további okaiért nézze meg a [közösségi irányelveket](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
       text_body_template: |

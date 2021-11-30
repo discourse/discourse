@@ -2989,6 +2989,9 @@ ja:
         title: "このトピックは個人メッセージです"
         help: "このトピックは個人メッセージです"
     posts: "投稿"
+    pending_posts:
+      label: "保留中"
+      label_with_count: "保留中 (%{count})"
     posts_likes_MF: |
       このトピックには{ratio, select,
         low {「いいね！」率が高い}

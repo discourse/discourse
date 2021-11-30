@@ -3008,6 +3008,9 @@ sl:
         title: "Ta tema je zasebno sporočilo"
         help: "Ta tema je zasebno sporočilo"
     posts: "Prispevki"
+    pending_posts:
+      label: "Za potrditev"
+      label_with_count: "V teku (%{count})"
     original_post: "Izvirni prispevek"
     views: "Ogledi"
     views_lowercase:

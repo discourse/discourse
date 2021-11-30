@@ -2738,6 +2738,9 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
+    pending_posts:
+      label: "در انتظار"
+      label_with_count: "(%{count}) در انتظار"
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:

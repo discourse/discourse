@@ -2535,6 +2535,9 @@ cs:
       unlisted:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
+    pending_posts:
+      label: "Čeká na schválení"
+      label_with_count: "Nevyřízeno (%{count})"
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase:

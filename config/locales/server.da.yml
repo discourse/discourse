@@ -1411,7 +1411,6 @@ da:
     allowed_iframes: "En liste over iframe src-domænepræfikser, som discourse på sikker vis kan tillade i indlæg"
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
-    slow_down_crawler_user_agents: "Brugeragenter for webcrawlere, der bør hastighedsbegrænses i robots.txt ved hjælp af Crawl-delay direktivet"
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     content_security_policy: "Aktivér indholds-sikkerheds-politik"
     content_security_policy_report_only: "Aktivér indholds-sikkerheds-politik-kun-rapportering"

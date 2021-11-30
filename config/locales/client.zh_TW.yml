@@ -2481,6 +2481,9 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
+    pending_posts:
+      label: "申請中"
+      label_with_count: "等待中 (%{count})"
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:

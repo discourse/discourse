@@ -3117,6 +3117,9 @@ fi:
         title: "Tämä ketju on yksityisviesti"
         help: "Tämä ketju on yksityisviesti"
     posts: "Viestejä"
+    pending_posts:
+      label: "Odottaa"
+      label_with_count: "Avoimet (%{count})"
     posts_likes_MF: |
       Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}}{ratio, select,
       low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}

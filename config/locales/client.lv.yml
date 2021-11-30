@@ -2569,6 +2569,9 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
+    pending_posts:
+      label: "Gaidošie"
+      label_with_count: "Gaidošie (%{count})"
     original_post: "Oriģinālais ieraksts"
     views: "Skatījumi"
     views_lowercase:

@@ -2729,6 +2729,9 @@ bs_BA:
         title: "Ova tema je lična poruka"
         help: "Ova tema je lična poruka"
     posts: "Odgovori"
+    pending_posts:
+      label: "Na čekanju"
+      label_with_count: "Na čekanju (%{count})"
     original_post: "Originalni Odgovor"
     views: "Pregledi"
     views_lowercase:

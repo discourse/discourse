@@ -1412,6 +1412,7 @@ es:
     tl2_post_edit_time_limit: "Un autor con NC2 puede editar su publicación durante (n) minutos luego de publicarla. Establece el valor en 0 para que siempre pueda hacerlo."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de una publicación editada. Si se desactiva, solo los miembros del equipo podrán verlas."
     delete_removed_posts_after: "Las publicaciones eliminadas por su autor se eliminarán automáticamente después de (n) horas. Si se establece este valor a 0, las publicaciones se eliminarán inmediatamente."
+    notify_users_after_responses_deleted_on_flagged_post: "Al borrar una publicación reportada, notificar a los usuarios que hayan respondido y se vaya a borrar su respuesta."
     max_image_width: "Anchura máxima de las miniaturas de las imágenes en una publicación"
     max_image_height: "Altura máxima de las miniaturas de las imágenes en una publicación"
     responsive_post_image_sizes: "Cambiar el tamaño de las imágenes de vista previa de lightbox para permitir su visualización en pantallas de alto DPI de las siguientes proporciones de píxeles. Eliminar todos los valores para desactivar las imágenes responsivas."
@@ -1511,7 +1512,6 @@ es:
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
-    slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
@@ -1548,6 +1548,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista separada con barras verticales de dominios de correo electrónico que los usuarios DEBEN usar para registrar sus cuentas. ¡CUIDADO! No se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados"
+    normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
     auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios serán aprobados automáticamente."
     hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con un correo electrónico dado durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
@@ -2073,6 +2074,7 @@ es:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
+      valid_username: "Ya hay otro usuario con ese nombre de usuario."
       invalid_group: "No existe ningún grupo con ese nombre."
       invalid_integer_min_max: "El valor debe estar establecido entre %{min} y %{max}."
       invalid_integer_min: "El valor debe ser igual o mayor que %{min}. "
@@ -2490,6 +2492,11 @@ es:
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."
     spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
     notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del equipo."
+    responder:
+      off_topic: "La publicación ha sido denunciada por **no tener relación con el tema**: la comunidad cree que no encaja con el tema, título y primer mensaje."
+      inappropriate: "La publicación ha sido denunciada por ser **inapropiada**: la comunidad cree que es ofensiva, abusiva o que incumple las [directrices de la comunidad](%{base_path}/guidelines)."
+      spam: "La publicación ha sido denunciada por ser **spam**: la comunidad cree que es un anuncio o algo de naturaleza promocional en vez de buscar ser útil o relevante para el tema."
+      notify_moderators: "La publicación ha sido denunciada para que sea **revisada por un moderador**: la comunidad cree que algo relacionado con ella requiere de la intervención de un miembro del equipo."
   flags_dispositions:
     agreed: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu denuncia en que hay un problema y hemos quitado la publicación."
@@ -2579,6 +2586,23 @@ es:
         ```
 
         Por favor, revisa las [normas de la comunidad](%{base_url}/guidelines) para más información.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Respuesta a un mensaje denunciado eliminada por el personal"
+      subject_template: "Respuesta a un mensaje denunciado eliminada por el personal"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático de %{site_name} para hacerte saber que hemos eliminado una [publicación](%{base_url}%{url}) a la que has respondido.
+
+        %{flag_reason}
+
+        Esta publicación fue denunciada por la comunidad, y un miembro del equipo decidió eliminarla.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Para más detalles sobre el motivo de la eliminación, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

@@ -3053,6 +3053,9 @@ pt:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Publicações"
+    pending_posts:
+      label: "Pendente"
+      label_with_count: "Pendentes (%{count})"
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:

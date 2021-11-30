@@ -1206,6 +1206,8 @@ be:
       pinned:
         title: "замацаваныя"
     posts: "паведамленні"
+    pending_posts:
+      label: "чакаецца"
     original_post: "першы паведамленне"
     views: "прагляды"
     replies: "адказы"

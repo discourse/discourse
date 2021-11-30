@@ -2174,6 +2174,9 @@ th:
         title: "กระทู้นี้เป็นข้อความส่วนตัว"
         help: "กระทู้นี้เป็นข้อความส่วนตัว"
     posts: "โพสต์"
+    pending_posts:
+      label: "อยู่ระหว่างการพิจารณา"
+      label_with_count: "กำลังรอ (%{count})"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:
