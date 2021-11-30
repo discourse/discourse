@@ -962,6 +962,8 @@ class ApplicationController < ActionController::Base
 
   def rate_limit_crawlers
     return if current_user.present?
+    return if SiteSetting.slow_down_crawler_user_agents.blank?
+
     user_agent = request.user_agent&.downcase
     return if user_agent.blank?
 
