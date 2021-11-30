@@ -978,7 +978,7 @@ class ApplicationController < ActionController::Base
           error_code: key
         )
         limiter.performed!
-        return
+        break
       end
     end
   end
