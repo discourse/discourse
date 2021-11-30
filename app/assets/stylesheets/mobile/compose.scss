@@ -11,7 +11,7 @@
 
   .reply-area {
     padding: 6px;
-    padding-bottom: max(env(safe-area-inset-bottom), 6px);
+    padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
     flex-grow: 1;
   }
 
