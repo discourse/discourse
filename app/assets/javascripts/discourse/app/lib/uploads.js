@@ -202,7 +202,11 @@ export function authorizesOneOrMoreExtensions(staff, siteSettings) {
 
   return (
     siteSettings.authorized_extensions.split("|").filter((ext) => ext).length >
-    0
+      0 ||
+    (siteSettings.authorized_extensions_for_staff
+      .split("|")
+      .filter((ext) => ext).length > 0 &&
+      staff)
   );
 }
 

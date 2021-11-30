@@ -240,6 +240,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     308,
     404,
     403,
+    422,
     500,
   ];
   const proxyRequest = bent(req.method, acceptedStatusCodes);

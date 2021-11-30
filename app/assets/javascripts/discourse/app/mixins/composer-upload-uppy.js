@@ -263,7 +263,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
 
       files.forEach((file) => {
-        this.inProgressUploads.push(
+        // The inProgressUploads is meant to be used to display these uploads
+        // in a UI, and Ember will only update the array in the UI if pushObject
+        // is used to notify it.
+        this.inProgressUploads.pushObject(
           EmberObject.create({
             fileName: file.name,
             id: file.id,
@@ -548,5 +551,36 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   showUploadSelector(toolbarEvent) {
     this.send("showUploadSelector", toolbarEvent);
+  },
+
+  _bindMobileUploadButton() {
+    if (this.site.mobileView) {
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButtonEventListener = () => {
+        document.getElementById(this.fileUploadElementId).click();
+      };
+      this.mobileUploadButton.addEventListener(
+        "click",
+        this.mobileUploadButtonEventListener,
+        false
+      );
+    }
+  },
+
+  _unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this.mobileUploadButtonEventListener
+    );
+  },
+
+  _filenamePlaceholder(data) {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  },
+
+  _resetUploadFilenamePlaceholder() {
+    this.set("uploadFilenamePlaceholder", null);
   },
 });
