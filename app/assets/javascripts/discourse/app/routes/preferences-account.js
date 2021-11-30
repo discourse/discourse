@@ -1,6 +1,7 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import UserBadge from "discourse/models/user-badge";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 
 export default RestrictedUserRoute.extend({
   showFooter: true,
@@ -33,9 +34,8 @@ export default RestrictedUserRoute.extend({
     });
   },
 
-  actions: {
-    showAvatarSelector(user) {
-      showModal("avatar-selector").setProperties({ user });
-    },
+  @action
+  showAvatarSelector(user) {
+    showModal("avatar-selector").setProperties({ user });
   },
 });

@@ -1,6 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
-import { get } from "@ember/object";
+import { action, get } from "@ember/object";
 
 export function buildGroupPage(type) {
   return DiscourseRoute.extend({
@@ -29,10 +29,9 @@ export function buildGroupPage(type) {
       this.render("group-activity-posts");
     },
 
-    actions: {
-      didTransition() {
-        return true;
-      },
+    @action
+    didTransition() {
+      return true;
     },
   });
 }
