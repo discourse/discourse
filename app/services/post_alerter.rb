@@ -327,15 +327,9 @@ class PostAlerter
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat && stat[:inbox_count] > 0
 
-    notification_type = Notification.types[:group_message_summary]
-
     DistributedMutex.synchronize("group_message_notify_#{user.id}") do
-      Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
-        n.destroy if n.data_hash[:group_id] == stat[:group_id]
-      end
-
-      Notification.create(
-        notification_type: notification_type,
+      Notification.consolidate_or_create!(
+        notification_type: Notification.types[:group_message_summary],
         user_id: user.id,
         data: {
           group_id: stat[:group_id],
@@ -509,7 +503,7 @@ class PostAlerter
     end
 
     # Create the notification
-    created = user.notifications.create!(
+    created = user.notifications.consolidate_or_create!(
       notification_type: type,
       topic_id: post.topic_id,
       post_number: post.post_number,
