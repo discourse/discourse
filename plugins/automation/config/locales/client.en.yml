@@ -17,7 +17,7 @@ en:
         fields_section:
           title: Script options
       destroy_automation:
-        confirm: Are you sure you want to delete this Automation?
+        confirm: "Are you sure you want to delete `%{name}`?"
       fields:
         user:
           label: User

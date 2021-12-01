@@ -15,7 +15,9 @@ export default Ember.Controller.extend({
   @action
   destroyAutomation(automation) {
     bootbox.confirm(
-      I18n.t("discourse_automation.destroy_automation.confirm"),
+      I18n.t("discourse_automation.destroy_automation.confirm", {
+        name: automation.name
+      }),
       result => {
         if (result) {
           automation
