@@ -6,6 +6,7 @@ const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const { promises: fs } = require("fs");
+const { JSDOM } = require("jsdom");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -168,12 +169,14 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
   return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
-async function applyBootstrap(bootstrap, template, response, baseURL) {
-  // If our initial page added some preload data let's not lose that.
-  let json = await response.json();
-  if (json && json.preloaded) {
-    bootstrap.preloaded = Object.assign(json.preloaded, bootstrap.preloaded);
-  }
+function extractPreloadJson(html) {
+  const dom = new JSDOM(html);
+  return dom.window.document.querySelector("#data-preloaded")?.dataset
+    ?.preloaded;
+}
+
+async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
+  bootstrap.preloaded = Object.assign(JSON.parse(preload), bootstrap.preloaded);
 
   Object.keys(BUILDERS).forEach((id) => {
     template = replaceIn(bootstrap, template, id, response.headers, baseURL);
@@ -181,23 +184,20 @@ async function applyBootstrap(bootstrap, template, response, baseURL) {
   return template;
 }
 
-async function buildFromBootstrap(proxy, baseURL, req, response) {
+async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
     const template = await fs.readFile(
       path.join(process.cwd(), "dist", "index.html"),
       "utf8"
     );
 
-    let url = `${proxy}${baseURL}bootstrap.json`;
-    const queryLoc = req.url.indexOf("?");
-    if (queryLoc !== -1) {
-      url += req.url.substr(queryLoc);
-    }
+    let url = new URL(`${proxy}${baseURL}bootstrap.json`);
+    url.searchParams.append("for_url", req.url);
 
     const res = await fetch(url, { headers: req.headers });
     const json = await res.json();
 
-    return applyBootstrap(json.bootstrap, template, response, baseURL);
+    return applyBootstrap(json.bootstrap, template, response, baseURL, preload);
   } catch (error) {
     throw new Error(
       `Could not get ${proxy}${baseURL}bootstrap.json\n\n${error}`
@@ -229,7 +229,6 @@ async function handleRequest(proxy, baseURL, req, res) {
 
   if (req.method === "GET") {
     req.headers["X-Discourse-Ember-CLI"] = "true";
-    req.headers["X-Discourse-Asset-Path"] = req.path;
   }
 
   const response = await fetch(url, {
@@ -251,20 +250,37 @@ async function handleRequest(proxy, baseURL, req, res) {
 
   const csp = response.headers.get("content-security-policy");
   if (csp) {
-    const newCSP = csp.replace(
-      new RegExp(proxy, "g"),
-      `http://${originalHost}`
-    );
+    const emberCliAdditions = [
+      `http://${originalHost}/assets/`,
+      `http://${originalHost}/ember-cli-live-reload.js`,
+      `http://${originalHost}/_lr/`,
+    ];
+    const newCSP = csp
+      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
+      .replace(
+        new RegExp("script-src ", "g"),
+        `script-src ${emberCliAdditions.join(" ")} `
+      );
     res.set("content-security-policy", newCSP);
   }
 
-  if (response.headers.get("x-discourse-bootstrap-required") === "true") {
-    const html = await buildFromBootstrap(proxy, baseURL, req, response);
+  const isHTML = response.headers["content-type"]?.startsWith("text/html");
+  const responseText = await response.text();
+  const preload = isHTML ? extractPreloadJson(responseText) : null;
+
+  if (preload) {
+    const html = await buildFromBootstrap(
+      proxy,
+      baseURL,
+      req,
+      response,
+      preload
+    );
     res.set("content-type", "text/html");
     res.send(html);
   } else {
     res.status(response.status);
-    res.send(await response.text());
+    res.send(responseText);
   }
 }
 

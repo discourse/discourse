@@ -119,23 +119,9 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
-  class EmberCLIHijacked < StandardError; end
-
-  def catch_ember_cli_hijack
-    yield
-  rescue ActionView::Template::Error => ex
-    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
-    send_ember_cli_bootstrap
-  end
 
   rescue_from RenderEmpty do
-    catch_ember_cli_hijack do
-      with_resolved_locale { render 'default/empty' }
-    end
-  end
-
-  rescue_from EmberCLIHijacked do
-    send_ember_cli_bootstrap
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
@@ -324,19 +310,11 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      catch_ember_cli_hijack do
-        with_resolved_locale do
-          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-          render html: build_not_found_page(error_page_opts)
-        end
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
       end
     end
-  end
-
-  def send_ember_cli_bootstrap
-    response.headers['X-Discourse-Bootstrap-Required'] = true
-    response.headers['Content-Type'] = "application/json"
-    render json: { preloaded: @preloaded }
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is

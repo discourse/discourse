@@ -647,10 +647,4 @@ module ApplicationHelper
       current_user ? nil : value
     end
   end
-
-  def hijack_if_ember_cli!
-    if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
-      raise ApplicationController::EmberCLIHijacked.new
-    end
-  end
 end
