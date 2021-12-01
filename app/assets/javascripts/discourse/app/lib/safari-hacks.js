@@ -1,75 +1,7 @@
-import {
-  iOSWithVisualViewport,
-  safariHacksDisabled,
-} from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";
 import { later } from "@ember/runloop";
-
-// TODO: remove calcHeight once iOS 13 adoption > 90%
-// In iOS 13 and up we use visualViewport API to calculate height
-
-// we can't tell what the actual visible window height is
-// because we cannot account for the height of the mobile keyboard
-// and any other mobile autocomplete UI that may appear
-// so let's be conservative here rather than trying to max out every
-// available pixel of height for the editor
-function calcHeight() {
-  // estimate 270 px for keyboard
-  let withoutKeyboard = window.innerHeight - 270;
-  const min = 270;
-
-  // iPhone shrinks header and removes footer controls ( back / forward nav )
-  // at 39px we are at the largest viewport
-  const portrait = window.innerHeight > window.innerWidth;
-  const smallViewport =
-    (portrait ? window.screen.height : window.screen.width) -
-      window.innerHeight >
-    40;
-
-  if (portrait) {
-    // iPhone SE, it is super small so just
-    // have a bit of crop
-    if (window.screen.height === 568) {
-      withoutKeyboard = 270;
-    }
-
-    // iPhone 6/7/8
-    if (window.screen.height === 667) {
-      withoutKeyboard = smallViewport ? 295 : 325;
-    }
-
-    // iPhone 6/7/8 plus
-    if (window.screen.height === 736) {
-      withoutKeyboard = smallViewport ? 353 : 383;
-    }
-
-    // iPhone X
-    if (window.screen.height === 812) {
-      withoutKeyboard = smallViewport ? 340 : 370;
-    }
-
-    // iPhone Xs Max and iPhone Xʀ
-    if (window.screen.height === 896) {
-      withoutKeyboard = smallViewport ? 410 : 440;
-    }
-
-    // iPad can use innerHeight cause it renders nothing in the footer
-    if (window.innerHeight > 920) {
-      withoutKeyboard -= 45;
-    }
-  } else {
-    // landscape
-    // iPad, we have a bigger keyboard
-    if (window.innerHeight > 665) {
-      withoutKeyboard -= 128;
-    }
-  }
-
-  // iPad portrait also has a bigger keyboard
-  return Math.max(withoutKeyboard, min);
-}
 
 let workaroundActive = false;
 
@@ -80,7 +12,7 @@ export function isWorkaroundActive() {
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
   let caps = helperContext().capabilities;
-  if (!caps.isIOS || safariHacksDisabled()) {
+  if (!caps.isIOS) {
     return;
   }
 
@@ -91,8 +23,6 @@ function positioningWorkaround($fixedElement) {
   });
 
   const fixedElement = $fixedElement[0];
-  const oldHeight = fixedElement.style.height;
-
   let originalScrollTop = 0;
   let lastTouchedElement = null;
 
@@ -106,11 +36,6 @@ function positioningWorkaround($fixedElement) {
       }
 
       workaroundActive = false;
-
-      if (!iOSWithVisualViewport()) {
-        fixedElement.style.height = oldHeight;
-        later(() => $(fixedElement).removeClass("no-transition"), 500);
-      }
     }
   };
 
@@ -172,8 +97,8 @@ function positioningWorkaround($fixedElement) {
 
     let delay = caps.isIpadOS ? 350 : 150;
 
-    later(function () {
-      if (caps.isIpadOS && iOSWithVisualViewport()) {
+    later(() => {
+      if (caps.isIpadOS) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar
         // whose height is currently 55px (using 75 for a bit of a buffer)
@@ -190,12 +115,6 @@ function positioningWorkaround($fixedElement) {
 
       document.body.classList.add("ios-safari-composer-hacks");
       window.scrollTo(0, 0);
-
-      if (!iOSWithVisualViewport()) {
-        const height = calcHeight();
-        fixedElement.style.height = height + "px";
-        $(fixedElement).addClass("no-transition");
-      }
 
       evt.preventDefault();
       _this.focus();

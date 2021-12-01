@@ -149,7 +149,7 @@ registerIconRenderer({
     if (params.label) {
       html += " aria-hidden='true'";
     }
-    html += ` xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
+    html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {
       html += `<span class='sr-only'>${escape(params.label)}</span>`;
     }
@@ -178,10 +178,7 @@ registerIconRenderer({
       },
       [
         h("use", {
-          "xlink:href": attributeHook(
-            "http://www.w3.org/1999/xlink",
-            `#${escape(id)}`
-          ),
+          href: attributeHook("http://www.w3.org/1999/xlink", `#${escape(id)}`),
           namespace: SVG_NAMESPACE,
         }),
       ]

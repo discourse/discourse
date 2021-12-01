@@ -1449,7 +1449,6 @@ ja:
     allowed_iframes: "Discourse が投稿で安全に許可できる iframe src ドメインプレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
-    slow_down_crawler_user_agents: "Crawl-delay ディレクティブを使用して robots.txt でレート制限する必要があるウェブクローラーのユーザーエージェント"
     slow_down_crawler_rate: "このレートに slow_down_crawler_user_agents が指定されている場合、このレートはすべてのクローラーに適用されます (リクエスト間の遅延秒数)"
     content_security_policy: "Content-Security-Policy を有効にする"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only を有効にする"
@@ -2356,47 +2355,6 @@ ja:
   test_mailer:
     title: "テストメーラー"
     subject_template: "[%{email_prefix}] メール配信可能性テスト"
-    text_body_template: |
-      これは次から送信されたテストメールです。
-
-      [**%{base_url}**][0]
-
-      メールの配信可能性は複雑な課題です。最初に確認すべき重要な事項を以下に示します。
-
-      - `notification email` の from: アドレスがサイト設定で正しく設定されていることを*確認してください*。**送信するメールの "from" アドレスに指定されたドメインがメールの検証対象のドメインです**。
-
-      - メールクライアントでメールの生のソースを表示する方法を確認してください。メールのヘッダーを調査すると、重要な手がかりを得ることができます。Gmail では、各メールの右上にあるドロップダウンメニューに含まれる "メッセージのソースを表示" オプションを使用できます。
-
-      - **重要:** あなたの ISP には、メールの送信元のドメイン名と IP アドレスを関連付ける逆引き DNS レコードが入力されていますか？こちらで[逆引き PTR レコードをテストしてください][2]。あなたの ISP が適切な逆引き DNS ポインターレコードを登録しない場合、メールが配信される可能性はほぼありません。
-
-      - あなたのドメインの [SPF レコード][8]は正しいですか？こちらで [SPF レコードをテストしてください][1]。TXT は SPF の正しい正式なレコードタイプであることに注意してください。
-
-      - ドメインの [DKIM レコード][3]は正しいですか？これによりメールの配信可能性が大幅に改善されます。こちらで [DKIM レコードをテストしてください][7]。
-
-      - 独自のメールサーバーを実行している場合は、メールサーバーの IP が[どのメールのブロックリストにも追加されていない][4]ことを確認してください。また、HELO メッセージで DNS に解決する完全修飾ホスト名を確実に送信していることを確認してください。送信していない場合は、多数のメールサーバーによってメールが拒否されることになります。
-
-      - **テストメールを [mail-tester.com][mt] に送信**して、上記すべてが正しく機能していることを確認することを強くお勧めします。
-
-      ([SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]、または [Mailjet][mj] でアカウントを作成するのが*簡単*な方法です。これらは安価なメールプランを提供しており、小規模のコミュニティに最適です。ただし、DNS に SPF と DKIM レコードをセットアップする必要はあります！)
-
-      このメールの配信可能性テストがあなたのところに届きますように！
-
-      それでは幸運を。
-
-      [Discourse](https://www.discourse.org) 一同より
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"

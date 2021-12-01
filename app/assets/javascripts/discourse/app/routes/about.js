@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model() {
@@ -36,10 +37,9 @@ export default DiscourseRoute.extend({
     return I18n.t("about.simple_title");
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("application").set("showFooter", true);
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("application").set("showFooter", true);
+    return true;
   },
 });

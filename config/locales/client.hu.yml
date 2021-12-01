@@ -1471,22 +1471,19 @@ hu:
         invite:
           new_title: "Meghívási hivatkozás létrehozása"
           edit_title: "Meghívó szerkesztése"
-          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez"
+          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez:"
           copy_link: "hivatkozás másolása"
           expires_in_time: "%{time} múlva lejár"
           expired_at_time: "Lejárt: %{time}"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
-          restrict_email: "Egy e-mail-címre korlátozás"
           max_redemptions_allowed: "Max. használat"
           add_to_groups: "Hozzáadás csoportokhoz"
-          invite_to_topic: "Érkezés erre a témára"
           expires_at: "Ennyi idő múlva lejár:"
           custom_message: "Nem kötelező személyes üzenet"
           send_invite_email: "Mentés és e-mail küldése"
           save_invite: "Meghívó mentése"
           invite_saved: "Meghívó mentve."
-          invite_copied: "Meghívási hivatkozás másolva."
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -1899,6 +1896,9 @@ hu:
       cannot_see_mention:
         category: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a témához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Említetted %{username} de nem lesznek értesítve mivel képtelenek megnézni ezt a személyes üzenetet. Megkell hívnod őket ehez a személyes üzenethez"
+      here_mention:
+        one: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
+        other: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
       duplicate_link: "Úgy tűnik, hogy a <b>%{domain}</b> re mutató linkjét <b>@%{username}</b> már <a href='%{post_url}'>ban közzétette a témában, válasz: %{ago}</a> - Biztosan újra el akarja küldeni?"
       reference_topic_title: "Válasz: %{title}"
       error:
@@ -2067,6 +2067,12 @@ hu:
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
+      dismiss_confirmation:
+        body:
+          one: "Biztos benne? %{count} fontos értesítése van."
+          other: "Biztos benne? %{count} fontos értesítése van."
+        dismiss: "Elvetés"
+        cancel: "Mégse"
       group_message_summary:
         one: "%{count} Üzenet a %{group_name} postaládában"
         other: "%{count} Üzenetek a %{group_name} postaládában"
@@ -2149,6 +2155,10 @@ hu:
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
       in_posts_by: "%{username} bejegyzéseiben"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "újra a böngésző natív keresőjének használata"
+      recent: "Legutóbbi keresések"
+      clear_recent: "Legutóbbi keresések törlése"
       type:
         default: "Témák/bejegyzések"
         users: "Felhasználók"
@@ -2904,6 +2914,9 @@ hu:
       unlisted:
         help: "Ez egy nem listázandó témakör, ezért nem fog megjelenni a témakörök listájában és csak közvetlen hivatkozással érhető el."
     posts: "Bejegyzések:"
+    pending_posts:
+      label: "Függőben"
+      label_with_count: "Függőben (%{count})"
     original_post: "Eredeti Bejegyzés"
     views: "Megtekintések"
     views_lowercase:
@@ -3324,6 +3337,8 @@ hu:
           resource: Forrás
           action: Művelet
           descriptions:
+            uploads:
+              create: Töltsön fel egy új fájlt.
             users:
               update: Felhasználói profil adatainak frissítése.
       web_hooks:

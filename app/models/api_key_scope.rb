@@ -35,6 +35,9 @@ class ApiKeyScope < ActiveRecord::Base
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
         },
+        uploads: {
+          create: { actions: %w[uploads#create] }
+        },
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },

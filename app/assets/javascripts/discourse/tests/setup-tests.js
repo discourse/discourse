@@ -27,7 +27,7 @@ import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
 import { run } from "@ember/runloop";

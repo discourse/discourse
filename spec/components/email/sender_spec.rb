@@ -414,6 +414,13 @@ describe Email::Sender do
           expect(message.header['Precedence']).to eq(nil)
           expect(message.header['List-Unsubscribe']).to eq(nil)
         end
+
+        it "removes the Auto-Submitted header" do
+          TopicAllowedGroup.create!(topic: post.topic, group: group)
+          email_sender.send
+
+          expect(message.header['Auto-Submitted']).to eq(nil)
+        end
       end
     end
 

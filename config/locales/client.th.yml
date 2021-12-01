@@ -1462,6 +1462,9 @@ th:
       membership_request_accepted: "ถูกรับเป็นสมาชิกในกลุ่ม '%{group_name}'"
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
+      dismiss_confirmation:
+        dismiss: "ซ่อน"
+        cancel: "ยกเลิก"
       group_message_summary:
         other: "%{count}ข้อความในกล่องขาเข้าของกลุ่ม %{group_name}"
       popup:
@@ -2171,6 +2174,9 @@ th:
         title: "กระทู้นี้เป็นข้อความส่วนตัว"
         help: "กระทู้นี้เป็นข้อความส่วนตัว"
     posts: "โพสต์"
+    pending_posts:
+      label: "อยู่ระหว่างการพิจารณา"
+      label_with_count: "กำลังรอ (%{count})"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:

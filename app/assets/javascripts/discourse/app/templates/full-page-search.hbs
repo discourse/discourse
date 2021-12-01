@@ -24,8 +24,10 @@
         id="search-type"
         value=search_type
         content=searchTypes
-        castInteger=true
         onChange=(action (mut search_type))
+        options=(hash
+          castInteger=true
+        )
       }}
       {{d-button
         action=(action "search" (hash collapseFilters=true))
@@ -90,9 +92,11 @@
             {{combo-box
               value=sortOrder
               content=sortOrders
-              castInteger=true
               onChange=(action (mut sortOrder))
               id="search-sort-by"
+              options=(hash
+                castInteger=true
+              )
             }}
           </div>
         </div>

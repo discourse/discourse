@@ -58,11 +58,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    // We need an empty method here for Ember to fire the action properly on all routes.
-    willTransition() {
-      this._super(...arguments);
-    },
-
     postWasEnqueued(details) {
       showModal("post-enqueued", {
         model: details,

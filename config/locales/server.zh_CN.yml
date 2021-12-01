@@ -635,6 +635,9 @@ zh_CN:
       broken: "此图片已损坏"
     has_likes:
       other: "%{count} 个赞"
+    cannot_permanently_delete:
+      many_posts: "您不能永久删除此主题，因为还有其他帖子。"
+      wait_or_different_admin: "您必须等待 %{time_left} 才能永久删除此帖子，否则必须由其他管理员执行此操作。"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
     too_many_requests: "您执行此操作的次数过多。请等待 %{time_left}后再试。"
@@ -901,6 +904,7 @@ zh_CN:
         remove: "此话题不再是横幅。它将不再显示在每个页面的顶部。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
+    description: "<b>%{email}</b> 的电子邮件偏好设置已更新。要更改您的电子邮件设置，请<a href='%{url}'>访问您的用户偏好设置</a>。"
     topic_description: "要重新订阅%{link}，请使用话题底部或右侧的通知控件。"
     private_topic_description: "要重新订阅，请使用话题底部或右侧的通知控件。"
   uploads:
@@ -1402,6 +1406,7 @@ zh_CN:
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
     summary_timeline_button: "在时间线中显示“总结”按钮"
+    enable_personal_messages: "允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_long_polling: "用于通知的消息总线可以使用长轮询"
     enable_chunked_encoding: "启用服务器的分块编码响应。此功能适用于大多数设置，但某些代理可能会缓冲，导致响应延迟"
@@ -1456,7 +1461,6 @@ zh_CN:
     allowed_iframes: "Discourse 可以安全地在帖子中允许的 iframe src 网域前缀列表"
     allowed_crawler_user_agents: "应被允许访问站点的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
-    slow_down_crawler_user_agents: "网络抓取工具的用户代理，应使用 Crawl-delay 指令在 robots.txt 中进行速率限制"
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "启用仅内容安全策略报告"
@@ -1732,6 +1736,7 @@ zh_CN:
     topic_view_duration_hours: "每个 IP/用户每 N 小时计算一次新话题浏览"
     user_profile_view_duration_hours: "每个 IP/用户每 N 小时计算一次新用户个人资料浏览"
     levenshtein_distance_spammer_emails: "在匹配垃圾信息发布者电子邮件时，仍然允许模糊匹配的字符数差异。"
+    max_new_accounts_per_registration_ip: "如果已经有 (n) 个来自此 IP 的信任级别 0 帐户（并且没有一个是管理人员或者是 TL2 或更高级别），则停止接受来自该 IP 的新注册。"
     min_ban_entries_for_roll_up: "点击“汇总”按钮时，如果至少有 (N) 个条目，将创建一个子网禁止条目"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽电子邮件条目。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽 IP 条目。"
@@ -2369,47 +2374,6 @@ zh_CN:
   test_mailer:
     title: "测试邮件"
     subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
-    text_body_template: |
-      这是一封测试电子邮件，来自
-
-      [**%{base_url}**][0]
-
-      电子邮件能否递送成功取决于很多因素。下面是几个您需要首先留意的重要方面：
-
-      - 请*确保*在站点设置中正确设置 `notification email` from: 地址。**您所发出的电子邮件的“发件人”地址中指定的网域需要进行验证**。
-
-      - 知道如何使用您的邮件客户端查看电子邮件原始内容，这样您能够检查电子邮件标头以获取重要线索。在 Gmail 中，每封邮件右上角的下拉菜单中都会提供“显示原始邮件”选项。
-
-      - **重要提示**：您的 ISP 是否输入了反向 DNS 记录以关联您用于发送邮件的域名和 IP 地址？[测试您的反向 PTR 记录][2]。如果您的 ISP 未输入正确的反向 DNS 记录，您的电子邮件不太可能递送成功。
-
-      - 您的网域的 [SPF 记录][8]正确吗？[测试您的 SPF 记录][1]。注意 SPF 的官方记录类型是 TXT。
-
-      - 您的网域的 [DKIM 记录][3]正确吗？这会显著提升电子邮件递送成功几率。[测试您的 DKIM 记录][7]。
-
-      - 如果您使用自建的邮件服务器，请确保您的邮件服务器的 IP [不在电子邮件屏蔽名单中][4]。还要验证它肯定发送一个可以在 HELO 消息中解析 DNS 的完全限定主机名。否则，您的电子邮件会被许多邮件服务拒绝。
-
-      - 强烈建议您**向 [mail-tester.com][mt] 发送一封测试邮件**以验证上述所有设置正常。
-
-      （一种*简单的*方法是创建一个 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 或 [Mailjet][mj] 帐户，这些平台提供适用于小型社区的低成本邮寄方案。不过，您仍然需要在 DNS 中设置 SPF 和 DKIM 记录！）
-
-      希望您能成功收到这封测试邮件！
-
-      祝君好运，
-
-      您在 [Discourse](https://www.discourse.org) 的伙伴
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"

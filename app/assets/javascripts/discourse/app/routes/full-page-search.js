@@ -9,6 +9,7 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -64,10 +65,9 @@ export default DiscourseRoute.extend({
     });
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("full-page-search")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("full-page-search")._showFooter();
+    return true;
   },
 });

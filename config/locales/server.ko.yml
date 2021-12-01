@@ -1459,7 +1459,6 @@ ko:
     allowed_iframes: "Discourse가 안전한 게시물로 허용 할 수있는 iframe src 도메인 접두사 목록"
     allowed_crawler_user_agents: "사이트에 대한 액세스를 허용해야하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스를 허용해서는 안되는 웹 크롤러를 식별하는 사용자 에이전트 문자열에서 대소 문자를 구분하지 않는 고유 한 단어입니다. 허용 목록이 정의 된 경우 적용되지 않습니다."
-    slow_down_crawler_user_agents: "Crawls-delay 지시문을 사용하여 robots.txt에서 속도를 제한해야하는 웹 크롤러의 사용자 에이전트"
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면이 비율이 모든 크롤러에 적용됩니다 (요청 사이의 지연 시간 (초))."
     content_security_policy: "콘텐츠 보안 정책 사용"
     content_security_policy_report_only: "콘텐츠 보안 정책 보고서 만 사용"
@@ -2367,47 +2366,6 @@ ko:
   test_mailer:
     title: "메일러 테스트"
     subject_template: "[%{email_prefix}] 이메일 전달 테스트"
-    text_body_template: |
-      이것은 다음의 테스트 이메일 입니다.
-
-      [**%{base_url}**][0]
-
-      이메일 전달은 복잡합니다. 다음은 먼저 확인해야 할 몇 가지 중요한 사항입니다:
-
-      - '알림 이메일의 발신' from: 주소를 사이트 설정에서 올바르게 설정했는지 *확인*하십시오. **보내는 이메일의 "보낸 사람" 주소에 지정된 도메인은 이메일의 유효성을 검사 할 도메인입니다**.
-
-      -메일 클라이언트에서 이메일의 중요한 단서를 찾기 위해 이메일 헤더를 조사 할 수 있습니다. Gmail에서는 각 메일의 오른쪽 상단에있는 드롭 다운 메뉴에있는 "원본보기" 옵션입니다.
-
-      -**중요: ** ISP에 메일을 보내는 도메인 이름과 IP 주소를 연결하기 위해 입력된 역 DNS 레코드가 있습니까? [Reverse PTR record 테스트][2]. 사용자님의 ISP에 적절한 역방향 DNS 포인터 레코드를 입력하지 않으면 이메일이 전달 될 가능성이 거의 없습니다.
-
-      -도메인의 [SPF 레코드][8]가 맞습니까? [SPF 레코드 테스트][1]. TXT는 SPF의 올바른 공식 레코드 유형입니다.
-
-      -도메인의 [DKIM 레코드][3]가 맞습니까? 이것은 이메일 전달성을 크게 향상시킵니다. [DKIM 레코드 테스트][7].
-
-      -자체 메일 서버를 운영하는 경우 메일 서버의 IP가 [이메일 차단 목록에 없음][4] 을 확인하십시오. 또한 HELO 메시지의 DNS에서 확인되는 정규화 된 호스트 이름을 확실히 보내고 있는지 확인합니다. 그렇지 않으면 많은 메일 서비스에서 이메일이 거부됩니다.
-
-      -위의 모든 사항이 올바르게 작동하는지 확인하려면 **[mail-tester.com][mt]**로 테스트 이메일을 보내는 것이 좋습니다.
-
-      (*쉬운* 방법은 [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] 또는 [Mailjet][mj]에 계정을 만드는 것입니다. 이 계정은 저렴한 메일링 계획을 가지고 있으며 괜찮습니다. 소규모 커뮤니티의 경우에도 DNS에 SPF 및 DKIM 레코드를 설정해야합니다!)
-
-      이 이메일 전달성 테스트를 성공하셨기를 바랍니다!
-
-      행운을 빕니다,
-
-      사용자님의 친구들 [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"

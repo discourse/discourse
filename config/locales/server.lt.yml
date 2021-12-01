@@ -482,6 +482,7 @@ lt:
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
+    hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     cannot_permanently_delete:
       many_posts: "Negalite visam laikui ištrinti šios temos, nes yra kitų įrašų."
       wait_or_different_admin: "Prieš visam laikui ištrindami šį įrašą, turite palaukti %{time_left} arba kitas administratorius turi tai padaryti."
@@ -754,6 +755,7 @@ lt:
       others: "Nieko neišsaugota"
     no_drafts:
       self: "Jūs neturite juodraščių; pradėkite kurti atsakymą bet kurioje temoje ir jis bus automatiškai išsaugotas kaip naujas juodraštis."
+    no_log_search_queries: "Paieškos žurnalo užklausos šiuo metu išjungtos (administratorius gali jas įjungti svetainės nustatymuose)."
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
     imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
@@ -1262,6 +1264,7 @@ lt:
     errors:
       invalid_email: "Neteisingas el. pašto adresas."
       invalid_username: "Nėra vartotojo su tokiu vartotojo vardu."
+      valid_username: "Yra vartotojas su tokiu vartotojo vardu."
       invalid_group: "Nėra grupės tokiu pavadinimu."
       invalid_integer_min_max: "Vertė turi būti nuo %{min} iki %{max}."
       invalid_integer_min: "Vertė turi būti %{min} arba didesnė."

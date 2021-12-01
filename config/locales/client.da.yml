@@ -1447,7 +1447,7 @@ da:
         invite:
           new_title: "Opret Invitation"
           edit_title: "Rediger Invitation"
-          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted"
+          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
           copy_link: "kopier link"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
@@ -1457,7 +1457,6 @@ da:
           send_invite_email: "Gem og send e-mail"
           save_invite: "Gem Invitation"
           invite_saved: "Invitation gemt."
-          invite_copied: "Inviteringslink kopieret."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2034,6 +2033,9 @@ da:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - afsluttet"
+      dismiss_confirmation:
+        dismiss: "Ignorer Alle"
+        cancel: "Afbryd"
       group_message_summary:
         one: "%{count} besked i din %{group_name} indbakke"
         other: "%{count} beskeder i din %{group_name} indbakke"
@@ -3093,6 +3095,9 @@ da:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
     posts: "Indlæg"
+    pending_posts:
+      label: "Afventende"
+      label_with_count: "Ventende (%{count})"
     posts_likes_MF: |
       Dette emne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med et højt forhold i mellem antal 'Synes godt om' og antal indlæg}

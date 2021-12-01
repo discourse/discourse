@@ -1419,22 +1419,19 @@ lt:
         invite:
           new_title: "Sukurti kvietimą"
           edit_title: "Redaguoti kvietimą"
-          instructions: "Bendrinkite šią nuorodą, kad akimirksniu suteiktumėte prieigą prie šios svetainės"
+          instructions: "Bendrinkite šią nuorodą, kad akimirksniu suteiktumėte prieigą prie šios svetainės:"
           copy_link: "nukopijuoti nuorodą"
           expires_in_time: "Baigia galioti %{time}"
           expired_at_time: "Galiojimo laikas baigėsi %{time}"
           show_advanced: "Rodyti išplėstines parinktis"
           hide_advanced: "Slėpti išplėstines parinktis"
-          restrict_email: "Apriboti vieną el. pašto adresą"
           max_redemptions_allowed: "Maksimaliai naudoja"
           add_to_groups: "Pridėti prie grupių"
-          invite_to_topic: "Atvykti į šią temą"
           expires_at: "Baigia galioti"
           custom_message: "Neprivaloma asmeninė žinutė"
           send_invite_email: "Išsaugoti ir siųsti el. laišką"
           save_invite: "Išsaugoti kvietimą"
           invite_saved: "Kvietimas išsaugotas."
-          invite_copied: "Kvietimo nuoroda nukopijuota."
         bulk_invite:
           text: "Masinis kvietimas"
           progress: "Įkelta %{progress}%..."
@@ -1933,6 +1930,9 @@ lt:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
+      dismiss_confirmation:
+        dismiss: "Praleisti"
+        cancel: "Atšaukti"
       group_message_summary:
         one: "%{count} žinutė, jūsų %{group_name}pato dėžutėje"
         few: "%{count} žinutės, jūsų %{group_name}pato dėžutėje"
@@ -2017,6 +2017,9 @@ lt:
       in_topics_posts: "visose temose ir žinutėse"
       enter_hint: "arba paspauskite Enter"
       in_posts_by: "pranešimuose %{username}"
+      browser_tip: "%{modifier} + f"
+      recent: "Naujausios paieškos"
+      clear_recent: "Išvalyti naujausias paieškas"
       type:
         default: "Temos/įrašai"
         users: "Nariai"
@@ -2984,6 +2987,9 @@ lt:
         title: "Ši tema yra asmeninė žinutė"
         help: "Ši tema yra asmeninė žinutė"
     posts: "Įrašai"
+    pending_posts:
+      label: "Laukiama"
+      label_with_count: "Neperskaityti (%{count})"
     original_post: "Originalus įrašas"
     views: "Peržiūros"
     views_lowercase:
@@ -3580,6 +3586,8 @@ lt:
               wordpress: Būtinas, kad „WordPress“ wp-diskurso papildinys veiktų.
             posts:
               edit: Redaguoti bet kokį įrašą arba konkretų.
+            uploads:
+              create: Įkelti naują failą.
             users:
               bookmarks: Sąrašas vartotojo žymių. Naudojant ICS formatą, jis grąžina priminimus apie žymes.
               show: Gauti informaciją apie vartotoją.

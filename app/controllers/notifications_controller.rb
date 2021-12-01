@@ -73,7 +73,7 @@ class NotificationsController < ApplicationController
   end
 
   def create
-    @notification = Notification.create!(notification_params)
+    @notification = Notification.consolidate_or_create!(notification_params)
     render_notification
   end
 

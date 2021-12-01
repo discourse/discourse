@@ -1,3 +1,4 @@
+import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
@@ -10,21 +11,24 @@ const ANON_MAX_TOPIC_IDS = 5;
 const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
-export default class {
-  constructor(
-    topicTrackingState,
-    siteSettings,
-    session,
-    currentUser,
-    appEvents
-  ) {
-    this.topicTrackingState = topicTrackingState;
-    this.siteSettings = siteSettings;
-    this.session = session;
-    this.currentUser = currentUser;
-    this.appEvents = appEvents;
+export default class ScreenTrack extends Service {
+  @service appEvents;
+
+  _consolidatedTimings = [];
+  _lastTick = null;
+  _lastScrolled = null;
+  _lastFlush = 0;
+  _timings = {};
+  _totalTimings = {};
+  _topicTime = 0;
+  _onscreen = [];
+  _readOnscreen = [];
+  _readPosts = {};
+  _inProgress = false;
+
+  constructor() {
+    super(...arguments);
     this.reset();
-    this._consolidatedTimings = [];
   }
 
   start(topicId, topicController) {

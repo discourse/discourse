@@ -773,6 +773,8 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      dismiss_confirmation:
+        cancel: "రద్దుచేయి"
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:
@@ -1196,6 +1198,8 @@ te:
       unlisted:
         help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
     posts: "టపాలు"
+    pending_posts:
+      label: "పెండింగు"
     original_post: "మూల టపా"
     views: "చూపులు"
     replies: "జవాబులు"

@@ -1478,22 +1478,22 @@ sv:
         invite:
           new_title: "Skapa inbjudan"
           edit_title: "Redigera inbjudan"
-          instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats"
+          instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
           copy_link: "kopiera länk"
           expires_in_time: "Utgår om %{time}"
           expired_at_time: "Utgår kl. %{time}"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
-          restrict_email: "Begränsa till en enda e-postadress"
+          restrict_email: "Begränsa till e-post"
           max_redemptions_allowed: "Max antal användningar"
           add_to_groups: "Lägg till i grupper"
-          invite_to_topic: "Kom fram till detta ämne"
+          invite_to_topic: "Anländ till ämne"
           expires_at: "Förfaller efter"
           custom_message: "Valfritt personligt meddelande"
           send_invite_email: "Spara och skicka e-post"
+          send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
           save_invite: "Spara inbjudan"
           invite_saved: "Inbjudan har sparats."
-          invite_copied: "Inbjudningslänken har kopierats."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -1913,6 +1913,9 @@ sv:
       cannot_see_mention:
         category: "Du nämnde %{username}, men hen kommer inte att få någon avisering för hen har inte tillgång till denna kategori. Du måste lägga till hen till en grupp som har tillgång till den här kategorin."
         private: "Du nämnde %{username}, men hen kommer inte få någon avisering eftersom hen inte kan se detta personliga meddelande. Du måste bjuda in hen till detta PM."
+      here_mention:
+        one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
+        other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
       duplicate_link: "Det verkar som din länk till <b>%{domain}</b> redan har lagts in i ämnet av <b>@%{username}</b> i <a href='%{post_url}'> ett svar den %{ago}</a> – är du säker på att du vill lägga upp den igen?"
       reference_topic_title: "SV: %{title}"
       error:
@@ -2084,6 +2087,12 @@ sv:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
       votes_released: "%{description} - slutförd"
+      dismiss_confirmation:
+        body:
+          one: "Är du säker? Du har %{count} viktig avisering."
+          other: "Är du säker? Du har %{count} viktiga aviseringar."
+        dismiss: "Avfärda"
+        cancel: "Avbryt"
       group_message_summary:
         one: "%{count} meddelande i din %{group_name}-inkorg"
         other: "%{count} meddelanden i din %{group_name}-inkorg"
@@ -2167,6 +2176,8 @@ sv:
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
       type:
         default: "Ämnen/inlägg"
         users: "Användare"
@@ -2583,6 +2594,9 @@ sv:
         help: "dela en länk till detta ämne"
         instructions: "Dela en länk till detta ämne:"
         copied: "Ämneslänken har kopierats."
+        restricted_groups:
+          one: "Endast synligt för medlemmar i grupp: %{groupNames}"
+          other: "Endast synligt för medlemmar i grupperna: %{groupNames}"
         notify_users:
           title: "Avisera"
           instructions: "Avisera följande användare om det här ämnet:"
@@ -3208,6 +3222,9 @@ sv:
         title: "Detta ämne är ett personligt meddelande"
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
+    pending_posts:
+      label: "Väntar"
+      label_with_count: "Pågående (%{count})"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med ett högt förhållande mellan gillningar/inlägg}
@@ -3411,6 +3428,7 @@ sv:
         title: "Sökmeny"
         prev_next: "%{shortcut} Flytta markering upp eller ner"
         insert_url: "%{shortcut} Infoga urval i öppen redigerare"
+        full_page_search: "%{shortcut} Startar helsidessökning"
     badges:
       earned_n_times:
         one: "Förtjänade den här utmärkelsen %{count} gång"
@@ -3856,6 +3874,8 @@ sv:
               wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
+            uploads:
+              create: Ladda upp en ny fil.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
               sync_sso: Synkronisera en användare med DiscourseConnect.

@@ -1,6 +1,6 @@
 import { and, equal, or } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
+import discourseComputed from "discourse-common/utils/decorators";
+import categoryFromId from "discourse-common/utils/category-macro";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
@@ -19,7 +19,6 @@ const UserActionTypes = {
   edits: 11,
   messages_sent: 12,
   messages_received: 13,
-  pending: 14,
 };
 const InvertedActionTypes = {};
 
@@ -28,13 +27,7 @@ Object.keys(UserActionTypes).forEach(
 );
 
 const UserAction = RestModel.extend({
-  @on("init")
-  _attachCategory() {
-    const categoryId = this.category_id;
-    if (categoryId) {
-      this.set("category", Category.findById(categoryId));
-    }
-  },
+  category: categoryFromId("category_id"),
 
   @discourseComputed("action_type")
   descriptionKey(action) {

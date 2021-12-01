@@ -21,7 +21,7 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -48,12 +48,15 @@ import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
-  cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import {
+  clearPresenceCallbacks,
+  setTestPresence,
+} from "discourse/lib/user-presence";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -201,7 +204,7 @@ export function acceptance(name, optionsOrCallback) {
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
       `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      { since: "2.6.0" }
+      { since: "2.6.0", dropFrom: "2.9.0.beta1" }
     );
     options = optionsOrCallback;
   }
@@ -290,13 +293,16 @@ export function acceptance(name, optionsOrCallback) {
       setTopicList(null);
       _clearSnapshots();
       cleanUpComposerUploadHandler();
-      cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
       clearTopicFooterDropdowns();
       clearTopicFooterButtons();
       resetLastEditNotificationClick();
       clearAuthMethods();
+      setTestPresence(true);
+      if (!LEGACY_ENV) {
+        clearPresenceCallbacks();
+      }
 
       app._runInitializer("instanceInitializers", (_, initializer) => {
         initializer.teardown?.();
@@ -540,4 +546,15 @@ export function chromeTest(name, testCase) {
 
 export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
+}
+
+export function createFile(name, type = "image/png", blobData = null) {
+  // the blob content doesn't matter at all, just want it to be random-ish
+  blobData = blobData || (Math.random() + 1).toString(36).substring(2);
+  const blob = new Blob([blobData]);
+  const file = new File([blob], name, {
+    type,
+    lastModified: new Date().getTime(),
+  });
+  return file;
 }

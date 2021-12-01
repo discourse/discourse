@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import getUrl from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -50,7 +51,7 @@ export default Mixin.create({
       data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
     }
 
-    return ajax("/uploads/create-multipart.json", {
+    return ajax(getUrl(`${this.uploadRootPath}/create-multipart.json`), {
       type: "POST",
       data,
       // uppy is inconsistent, an error here fires the upload-error event
@@ -70,13 +71,16 @@ export default Mixin.create({
     if (file.preparePartsRetryAttempts === undefined) {
       file.preparePartsRetryAttempts = 0;
     }
-    return ajax("/uploads/batch-presign-multipart-parts.json", {
-      type: "POST",
-      data: {
-        part_numbers: partData.partNumbers,
-        unique_identifier: file.meta.unique_identifier,
-      },
-    })
+    return ajax(
+      getUrl(`${this.uploadRootPath}/batch-presign-multipart-parts.json`),
+      {
+        type: "POST",
+        data: {
+          part_numbers: partData.partNumbers,
+          unique_identifier: file.meta.unique_identifier,
+        },
+      }
+    )
       .then((data) => {
         if (file.preparePartsRetryAttempts) {
           delete file.preparePartsRetryAttempts;
@@ -118,11 +122,15 @@ export default Mixin.create({
 
   @bind
   _completeMultipartUpload(file, data) {
+    if (file.meta.cancelled) {
+      return;
+    }
+
     this._uppyInstance.emit("complete-multipart", file.id);
     const parts = data.parts.map((part) => {
       return { part_number: part.PartNumber, etag: part.ETag };
     });
-    return ajax("/uploads/complete-multipart.json", {
+    return ajax(getUrl(`${this.uploadRootPath}/complete-multipart.json`), {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
@@ -155,7 +163,9 @@ export default Mixin.create({
       return;
     }
 
-    return ajax("/uploads/abort-multipart.json", {
+    file.meta.cancelled = true;
+
+    return ajax(getUrl(`${this.uploadRootPath}/abort-multipart.json`), {
       type: "POST",
       data: {
         external_upload_identifier: uploadId,

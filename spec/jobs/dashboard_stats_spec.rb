@@ -33,6 +33,23 @@ describe ::Jobs::DashboardStats do
     expect(new_topic.title).to eq(old_topic.title)
   end
 
+  it 'consolidates notifications when not tracking admins group' do
+    Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
+    Jobs.run_immediately!
+
+    admin = Fabricate(:admin)
+    Group[:admins].add(admin)
+
+    described_class.new.execute({})
+    clear_recently_sent!
+    new_topic = described_class.new.execute({}).topic
+    notifications = Notification.where(user: admin, notification_type: Notification.types[:private_message])
+
+    expect(notifications.count).to eq(1)
+    from_topic_id = Post.select(:topic_id).find_by(id: notifications.last.data_hash[:original_post_id]).topic_id
+    expect(from_topic_id).to eq(new_topic.id)
+  end
+
   it 'duplicates message if previous one has replies' do
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, 3.days.ago)
     expect { described_class.new.execute({}) }.to change { Topic.count }.by(1)

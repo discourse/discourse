@@ -13,19 +13,19 @@ export function isLTR(text) {
   return ltrDirCheck.test(text);
 }
 
-export function setTextDirections($elem) {
-  $elem.find("*").each((i, e) => {
-    let $e = $(e),
-      textContent = $e.text();
-    if (textContent) {
-      isRTL(textContent) ? $e.attr("dir", "rtl") : $e.attr("dir", "ltr");
+export function setTextDirections(elem) {
+  for (let e of elem.children) {
+    if (e.textContent) {
+      e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
     }
-  });
+  }
 }
 
 export function siteDir() {
   if (!_siteDir) {
-    _siteDir = $("html").hasClass("rtl") ? "rtl" : "ltr";
+    _siteDir = document.documentElement.classList.contains("rtl")
+      ? "rtl"
+      : "ltr";
   }
   return _siteDir;
 }

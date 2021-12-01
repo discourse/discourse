@@ -540,6 +540,10 @@ export default {
         pinned_globally: false,
         posters: [],
         tags: ["dev", "slow"],
+        tags_descriptions: {
+          "dev": "dev description",
+          "slow": "slow description",
+        }
       },
       {
         id: 14727,

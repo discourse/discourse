@@ -200,17 +200,17 @@ class UsersEmailController < ApplicationController
   def load_change_request(type)
     expires_now
 
-    @token = EmailToken.confirmable(params[:token])
+    token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:email_update])
 
-    if @token
+    if token
       if type == :old
-        @change_request = @token.user&.email_change_requests.where(old_email_token_id: @token.id).first
+        @change_request = token.user&.email_change_requests.where(old_email_token_id: token.id).first
       elsif type == :new
-        @change_request = @token.user&.email_change_requests.where(new_email_token_id: @token.id).first
+        @change_request = token.user&.email_change_requests.where(new_email_token_id: token.id).first
       end
     end
 
-    @user = @token&.user
+    @user = token&.user
 
     if (!@user || !@change_request)
       @error = I18n.t("change_email.already_done")

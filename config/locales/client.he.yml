@@ -1042,6 +1042,7 @@ he:
           all: "הכל"
           read: "נקרא"
           unread: "לא-נקראו"
+          unseen: "לא נראו"
         ignore_duration_title: "התעלמות ממשתמש"
         ignore_duration_username: "שם משתמש"
         ignore_duration_when: "משך:"
@@ -1585,22 +1586,22 @@ he:
         invite:
           new_title: "יצירת הזמנה"
           edit_title: "עריכת הזמנה"
-          instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר"
+          instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר:"
           copy_link: "העתקת קישור"
           expires_in_time: "תפוג בעוד %{time}"
           expired_at_time: "פגה ב־%{time}"
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
-          restrict_email: "להגביל לכתובת דוא״ל אחת"
+          restrict_email: "הגבלה לדוא״ל"
           max_redemptions_allowed: "כמות שימושים מרבית"
           add_to_groups: "הוספה לקבוצות"
-          invite_to_topic: "נחיתה בנושא הזה"
+          invite_to_topic: "נחיתה בנושא"
           expires_at: "תפוג לאחר"
           custom_message: "הודעה אישית כרשות"
           send_invite_email: "לשמור ולשלח דוא״ל"
+          send_invite_email_instructions: "הגבלת ההזמנה לדוא״ל כדי לשלוח הודעת הזמנה"
           save_invite: "שמירת הזמנה"
           invite_saved: "ההזמנה נשמרה."
-          invite_copied: "קישור ההזמנה הועתק."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -2053,6 +2054,11 @@ he:
       cannot_see_mention:
         category: "הזכרת את %{username} אבל לא תישלח אליו/ה התרעה עקב העדר גישה לקטגוריה זו. יהיה עליך להוסיף אותו/ה לקבוצה שיש לה גישה לקטגוריה הזו."
         private: "הזכרתם את %{username} אבל הוא/היא לא יקבלו התראה כיוון שהם לא יכולים לראות את ההודעה הפרטית הזו. תצטרכו להזמין אותם להודעה פרטית זו."
+      here_mention:
+        one: "אזכור של <b>‎@%{here}</b> יודיע למשתמש %{count}, להמשיך?"
+        two: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
+        many: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
+        other: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
       duplicate_link: "נראה שהקישור שלך אל <b>%{domain}</b> כבר פורסם בנושא הזה על ידי <b>‎@%{username}‎</b> כ<a href='%{post_url}'>תגובה ב%{ago}</a> - לפרסם אותו שוב?"
       reference_topic_title: "תגובה: %{title}"
       error:
@@ -2244,6 +2250,9 @@ he:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - הסתיים"
+      dismiss_confirmation:
+        dismiss: "דחה"
+        cancel: "ביטול"
       group_message_summary:
         one: "הודעה %{count} בתיבת ה%{group_name} שלך"
         two: "%{count} הודעות בתיבת ה%{group_name} שלך"
@@ -2331,6 +2340,10 @@ he:
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
+      browser_tip: "‎%{modifier} + f"
+      browser_tip_description: "שוב כדי להשתמש בחיפוש המקורי של הדפדפן"
+      recent: "חיפושים אחרונים"
+      clear_recent: "ניקוי חיפושים אחרונים"
       type:
         default: "נושאים/פוסטים"
         users: "משתמשים"
@@ -2759,6 +2772,11 @@ he:
         help: "שתפו קישור לנושא זה"
         instructions: "שיתוף קישור לנושא זה:"
         copied: "קישור הנושא הועתק."
+        restricted_groups:
+          one: "גלוי רק לחברי הקבוצה: %{groupNames}"
+          two: "גלוי רק לחברי הקבוצות: %{groupNames}"
+          many: "גלוי רק לחברי הקבוצות: %{groupNames}"
+          other: "גלוי רק לחברי הקבוצות: %{groupNames}"
         notify_users:
           title: "להודיע"
           instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
@@ -3450,6 +3468,9 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
     posts: "פוסטים"
+    pending_posts:
+      label: "בהמתנה"
+      label_with_count: "ממתינות (%{count})"
     posts_likes_MF: |
       לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} many {# תגובות} other {# תגובות}} {ratio, select,
         low {עם יחס גבוה של לייקים לפוסט}
@@ -4141,6 +4162,8 @@ he:
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+            uploads:
+              create: העלאת קובץ חדש.
             users:
               bookmarks: הצגת סימניות המשתמשים. מחזירה תזכורות לסימניות בעת שימוש בתצורת ICS.
               sync_sso: סנכרון משתמש באמצעות DiscourseConnect.

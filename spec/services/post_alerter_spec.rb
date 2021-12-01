@@ -29,6 +29,7 @@ describe PostAlerter do
 
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
@@ -100,6 +101,33 @@ describe PostAlerter do
 
         notification_payload = JSON.parse(group_summary_notification.first.data)
         expect(notification_payload["group_name"]).to eq(group.name)
+      end
+
+      it 'consolidates group summary notifications by bumping an existing one' do
+        TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
+        PostAlerter.post_created(op)
+
+        group_summary_notification = Notification.where(
+          user_id: user2.id,
+          notification_type: Notification.types[:group_message_summary]
+        ).last
+        starting_count = group_summary_notification.data_hash[:inbox_count]
+
+        expect(starting_count).to eq(1)
+
+        another_pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group])
+        another_post = Fabricate(:post, user: another_pm.user, topic: another_pm)
+        TopicUser.change(user2.id, another_pm.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(another_post)
+        consolidated_summary = Notification.where(
+          user_id: user2.id,
+          notification_type: Notification.types[:group_message_summary]
+        ).last
+        updated_inbox_count = consolidated_summary.data_hash[:inbox_count]
+
+        expect(group_summary_notification.id).to eq(consolidated_summary.id)
+        expect(updated_inbox_count).to eq(starting_count + 1)
       end
     end
   end
@@ -340,6 +368,53 @@ describe PostAlerter do
 
       staged_user.reload
       expect(staged_user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(0)
+    end
+  end
+
+  context '@here' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
+    let(:other_post) { Fabricate(:post, topic: topic) }
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'does not notify unrelated users' do
+      expect { post }.to change(evil_trout.notifications, :count).by(0)
+    end
+
+    it 'does not work if user here exists' do
+      Fabricate(:user, username: SiteSetting.here_mention)
+      expect { post }.to change(other_post.user.notifications, :count).by(0)
+    end
+
+    it 'notifies users who replied' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(0)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies users who whispered' do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      post3 = Fabricate(:post, topic: topic)
+
+      tl2_user.grant_admin!
+
+      expect { post }
+        .to change(other_post.user.notifications, :count).by(1)
+        .and change(post2.user.notifications, :count).by(1)
+        .and change(post3.user.notifications, :count).by(1)
+    end
+
+    it 'notifies only last max_here_mentioned users' do
+      SiteSetting.max_here_mentioned = 2
+      3.times { Fabricate(:post, topic: topic) }
+      expect { post }.to change { Notification.count }.by(2)
     end
   end
 
@@ -848,7 +923,7 @@ describe PostAlerter do
   end
 
   describe "create_notification_alert" do
-    it "does not nothing for suspended users" do
+    it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
       post = Fabricate(:post)
 
@@ -868,6 +943,35 @@ describe PostAlerter do
       expect(events.size).to eq(0)
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(0)
+    end
+
+    it "does not publish to MessageBus /notification-alert if the user has not been seen for > 30 days, but still sends a push notification" do
+      evil_trout.update_columns(last_seen_at: 31.days.ago)
+      post = Fabricate(:post)
+
+      SiteSetting.allowed_user_api_push_urls = "https://site2.com/push"
+      UserApiKey.create!(user_id: evil_trout.id,
+                         client_id: "xxx#1",
+                         application_name: "iPhone1",
+                         scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                         push_url: "https://site2.com/push")
+
+      events = nil
+      messages = MessageBus.track_publish do
+        events = DiscourseEvent.track_events do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:custom],
+            excerpt: "excerpt",
+            username: "username"
+          )
+        end
+      end
+
+      expect(events.size).to eq(2)
+      expect(messages.size).to eq(0)
+      expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
   end
 
@@ -1181,6 +1285,33 @@ describe PostAlerter do
         notification_data = JSON.parse(notification.data)
         expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
       end
+
+      it "does not add notification if user does not belong to tag group with permissions" do
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+        post = Fabricate(:post, topic: topic)
+        tag_group = Fabricate(:tag_group, tags: [tag])
+        group = Fabricate(:group)
+        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+
+        expect { PostAlerter.post_created(post) }.not_to change { Notification.count }
+      end
+
+      it "adds notification if user belongs to tag group with permissions" do
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+        post = Fabricate(:post, topic: topic)
+        tag_group = Fabricate(:tag_group, tags: [tag])
+        group = Fabricate(:group)
+        Fabricate(:group_user, group: group, user: user)
+        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+
+        expect { PostAlerter.post_created(post) }.to change { Notification.count }.by(1)
+      end
     end
 
     context "on change" do
@@ -1245,6 +1376,64 @@ describe PostAlerter do
         expect(Notification.where(user_id: admin.id).count).to eq(0)
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
         expect(Notification.where(user_id: admin.id).count).to eq(1)
+      end
+    end
+
+    context "with tag groups" do
+      fab!(:tag)  { Fabricate(:tag) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      shared_examples "tag user with notification level" do |notification_level, notification_type|
+        it "notifies a user who is watching a tag that does not belong to a tag group" do
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+          PostAlerter.post_created(post)
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
+
+        it "does not notify a user watching a tag with tag group permissions that he does not belong to" do
+          tag_group = Fabricate(:tag_group, tags: [tag])
+          Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(0)
+        end
+
+        it "notifies a user watching a tag with tag group permissions that he belongs to" do
+          Fabricate(:group_user, group: group, user: user)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
+
+        it "notifies a staff watching a tag with tag group permissions that he does not belong to" do
+          tag_group = Fabricate(:tag_group, tags: [tag])
+          Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+          staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+          Fabricate(:group_user, group: staff_group, user: user)
+
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
+
+          PostAlerter.post_created(post)
+
+          expect(user.notifications.where(notification_type: Notification.types[notification_type]).count).to eq(1)
+        end
+      end
+
+      context "with :watching notification level" do
+        include_examples "tag user with notification level", :watching, :posted
+      end
+
+      context "with :watching_first_post notification level" do
+        include_examples "tag user with notification level", :watching_first_post, :watching_first_post
       end
     end
   end

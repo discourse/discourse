@@ -1583,22 +1583,19 @@ uk:
         invite:
           new_title: "Створити запрошення"
           edit_title: "Редагувати запрошення"
-          instructions: "Поділіться цим посиланням для миттєвого надання доступу до цього сайту"
+          instructions: "Поділіться цим посиланням для миттєвого надання доступу до цього сайту:"
           copy_link: "копіювати посилання"
           expires_in_time: "Термін дії мине через %{time}"
           expired_at_time: "Термін дії минув о %{time}"
           show_advanced: "Показати додаткові параметри"
           hide_advanced: "Сховати додаткові параметри"
-          restrict_email: "Обмежити однією адресою електронної пошти"
           max_redemptions_allowed: "Максимальна кількість використань"
           add_to_groups: "Додати до груп"
-          invite_to_topic: "Перейти до цієї теми"
           expires_at: "Завершується після"
           custom_message: "Необов’язкове особисте повідомлення"
           send_invite_email: "Зберегти та надіслати Email"
           save_invite: "Зберегти запрошення"
           invite_saved: "Запрошення збережено."
-          invite_copied: "Посилання на запрошення скопійовано."
         bulk_invite:
           none: "Немає запрошень для відображення на цій сторінці."
           text: "Масове запрошення"
@@ -2245,6 +2242,9 @@ uk:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - завершено"
+      dismiss_confirmation:
+        dismiss: "Відкинути"
+        cancel: "Скасувати"
       group_message_summary:
         one: "%{count} повідомлення в вашій групі: %{group_name} "
         few: "%{count} повідомлень в вашій групі: %{group_name} "
@@ -3462,6 +3462,9 @@ uk:
         title: "Ця тема є особистим повідомленням"
         help: "Ця тема є особистим повідомленням"
     posts: "Дописи"
+    pending_posts:
+      label: "Очікують"
+      label_with_count: "Очікують (%{count})"
     posts_likes_MF: |
       В цій темі {count, plural, one {1 повідомлення} other {# повідомлень}} {ratio, select,
       low {з високим рейтингом симпатій}

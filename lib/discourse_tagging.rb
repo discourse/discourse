@@ -77,6 +77,9 @@ module DiscourseTagging
           only_tag_names: tag_names
         )
 
+        # keep existent tags that current user cannot use
+        tags += Tag.where(name: old_tag_names & tag_names)
+
         tags = Tag.where(id: tags.map(&:id)).all.to_a if tags.size > 0
 
         if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
@@ -253,7 +256,7 @@ module DiscourseTagging
     end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count,
+      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t

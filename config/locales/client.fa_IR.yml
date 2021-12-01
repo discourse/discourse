@@ -1326,16 +1326,18 @@ fa_IR:
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
-          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید"
+          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          restrict_email: "محدود کردن به ایمیل"
           add_to_groups: "افزودن به گروه‌ها"
+          invite_to_topic: "وارد شدن به موضوع"
           expires_at: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
+          send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوتنامه ذخیره شد."
-          invite_copied: "لینک دعوت کپی شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -1850,6 +1852,12 @@ fa_IR:
       membership_request_accepted: "عضویت در %{group_name} پذیرفته‌شد"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        body:
+          one: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+          other: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+        dismiss: "نادیده گرفتن"
+        cancel: "انصراف"
       group_message_summary:
         one: "%{count}پیام در اینباکس %{group_name}"
         other: "%{count}پیام در اینباکس %{group_name}"
@@ -1914,6 +1922,7 @@ fa_IR:
       search_button: "جسنجو"
       categories: "دسته‌بندی‌ها"
       tags: "برچسب‌ها"
+      browser_tip: "%{modifier} + f"
       type:
         users: "کاربران"
         categories: "دسته‌بندی‌ها"
@@ -2729,6 +2738,9 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
+    pending_posts:
+      label: "در انتظار"
+      label_with_count: "(%{count}) در انتظار"
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
@@ -2902,6 +2914,8 @@ fa_IR:
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
         defer: "تاپیک‌های به تعویق افتاده %{shortcut}"
+      search_menu:
+        full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -3198,6 +3212,9 @@ fa_IR:
           read_only: فقط خواندنی
           global: جهانی
           action: اقدام
+          descriptions:
+            uploads:
+              create: یک پرونده جدید بارگذاری کنید.
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"

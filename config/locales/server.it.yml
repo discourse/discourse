@@ -206,6 +206,8 @@ it:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Gli user agent devono essere lunghi almeno 3 caratteri per evitare di limitare erroneamente la velocità degli utenti umani."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Non puoi aggiungere nessuno dei seguenti valori all'impostazione: %{values}."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché non è stato trovato il server '%{hostname}'. Nel tuo post apparirà solo un link senza anteprima. :cry:"
@@ -656,6 +658,7 @@ it:
   post:
     image_placeholder:
       broken: "Questa immagine è assente"
+    hidden_bidi_character: "I caratteri bidirezionali possono cambiare l'ordine di visualizzazione del testo. Ciò potrebbe essere utilizzato per nascondere del codice maligno."
     has_likes:
       one: "%{count} Mi Piace"
       other: "%{count} Mi Piace"
@@ -1410,6 +1413,7 @@ it:
     tl2_post_edit_time_limit: "Un autore TL2+ può modificare il proprio messaggio per (n) minuti dopo la pubblicazione. Impostando l'opzione a 0, essa è sempre attiva."
     edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un messaggio modificato. Se disabilitato solo i membri dello staff possono vederle."
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
+    notify_users_after_responses_deleted_on_flagged_post: "Quando un messaggio viene segnalato e poi cancellato, tutti gli utenti che avevano risposto al messaggio e le cui risposte di conseguenza sono state cancellate, riceveranno una notifica."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
     max_image_height: "Altezza massima delle miniature delle immagini in un messaggio"
     responsive_post_image_sizes: "Ridimensiona le immagini di anteprima del lightbox per consentire schermate ad alto DPI per le proporzioni pixel seguenti. Rimuovi tutti i valori per disabilitare le immagini reattive."
@@ -1508,7 +1512,7 @@ it:
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     allowed_crawler_user_agents: "User Agent dei crawler Web che dovrebbero poter accedere al sito. ATTENZIONE! IMPOSTANDO TALE OPZIONE SARANNO BLOCCATI TUTTI I CRAWLER NON ELENCATI QUI!"
     blocked_crawler_user_agents: "Parola univoca, senza distinzione tra maiuscole e minuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l'accesso al sito. L'impostazione non si applica se è stata definita una lista di elementi consentiti."
-    slow_down_crawler_user_agents: "User agent di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva Crawl-delay"
+    slow_down_crawler_user_agents: "Gli user agent dei web crawler a cui impostare limiti di velocità come configurato nell'impostazione \"rallenta la velocità dei crawler\". Ogni valore deve essere lungo almeno 3 caratteri."
     slow_down_crawler_rate: "Se viene specificato slow_down_crawler_user_agents, tale frequenza verrà applicata a tutti i crawler (numero di secondi di ritardo tra le richieste)"
     content_security_policy: "Abilita Content-Security-Policy"
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only"
@@ -1545,6 +1549,7 @@ it:
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     blocked_email_domains: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
+    normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
     auto_approve_email_domains: "Gli utenti con indirizzi email appartenenti a questo elenco di domini verranno approvati automaticamente."
     hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
@@ -2435,46 +2440,20 @@ it:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
     text_body_template: |
-      Questa è un'e-mail di prova da
+      Questa è una mail di prova da
 
       [**%{base_url}**][0]
 
-      La consegna delle e-mail è complicata. Ecco alcune cose importanti da controllare prima:
+      Ci auguriamo che ti sia stata recapitata senza problemi!
 
-      - *Assicurati* di impostare correttamente l'indirizzo da: `notification email` nelle impostazioni del sito. **Il dominio specificato nell'indirizzo "da" delle e-mail inviate è il dominio rispetto al quale avverrà la convalida delle tue e-mail**.
+      Ecco un'utile [lista per verificare le impostazioni di consegna del tuo servizio di posta elettronica][1].
 
-      - Mettiti in condizione di poter analizzare il sorgente non elaborato dell'e-mail nel client di posta, in modo da poter esaminare le intestazioni e-mail per individuare indizi importanti. In Gmail, puoi usare l'opzione "mostra originale" nel menu a discesa in alto a destra di ogni messaggio email.
+      In bocca al lupo,
 
-      - **IMPORTANTE: ** Il tuo ISP ha inserito un record DNS inverso per associare i nomi di dominio e gli indirizzi IP da cui invii la posta? [Prova il tuo record PTR inverso][2] qui. Se il tuo ISP non inserisce il record del puntatore DNS inverso corretto, l'e-mail molto probabilmente non verrà recapitata.
-
-      - Il [record SPF][8] del tuo dominio è corretto? [Prova il tuo record SPF][1] qui. Si noti che TXT è il tipo di record ufficiale corretto per SPF.
-
-      - Il [record DKIM][3] del tuo dominio è corretto? Ciò migliorerà significativamente il corretto recapito delle e-mail. [Prova il tuo record DKIM][7] qui.
-
-      - Se gestisci personalmente il tuo server di posta elettronica, verifica che gli IP del tuo server di posta [non si trovino in elenchi di e-mail bloccate][4]. Verifica inoltre che il server stia inviando un nome host completo traducibile in DNS nel suo messaggio HELO. In caso contrario, si verificherà il rifiuto della tua e-mail da parte di molti servizi di posta elettronica.
-
-      - Consigliamo vivamente di **inviare un'e-mail di prova a [mail-tester.com][mt]** per verificare che tutto quanto sopra indicato funzioni correttamente.
-
-      (Il modo *facile* consiste nel creare un account su [SendGrid],[sg], [SparkPost],[sp], [Mailgun],[mg] o [Mailjet][mj], che offrono piani di abbonamento a servizi e-mail a basso costo e adatti a piccole comunità di utenti. Dovrai comunque configurare i record SPF e DKIM nel tuo DNS!)
-
-      Ci auguriamo che tu abbia ricevuto correttamente questa e-mail di verifica della consegna dei messaggi!
-
-      Cordiali saluti,
-
-      I tuoi amici del team [Discourse](https://www.discourse.org)
+      I tuoi amici di [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
@@ -2486,6 +2465,11 @@ it:
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](%{base_path}/guidelines)."
     spam: "Il tuo messaggio è stato segnalato come **spam**: la comunità ritiene che sia pubblicità o qualcosa di natura meramente promozionale invece di essere utile o rilevante per l'argomento, come invece ci si aspetterebbe."
     notify_moderators: "Il tuo messaggio è stato segnalato **all'attenzione dei moderatori**: la comunità ritiene che ci sia qualcosa nel messaggio che richiede l'intervento manuale di un membro dello staff."
+    responder:
+      off_topic: "Il messaggio è stato segnalato come **fuori-tema**: la comunità ritiene che non sia adatto all'argomento, così come definito dal titolo e dal primo messaggio."
+      inappropriate: "Il messaggio è stato segnalato come **inappropriato**: la comunità ritiene che sia offensivo, ingiurioso oppure rappresenti una violazione delle [nostre linee guida](%{base_path}/guidelines)."
+      spam: "Il messaggio è stato segnalato come **spam**: la comunità ritiene che sia una pubblicità, o qualcosa eccessivamente promozionale invece di essere utile o pertinente all'argomento come previsto."
+      notify_moderators: "Il messaggio è stato contrassegnato **all'attenzione del moderatore**: la comunità ritiene che qualcosa nel messaggio richieda l'intervento manuale di un membro dello staff."
   flags_dispositions:
     agreed: "Grazie per averci informato. Sappiamo che c'è un problema e lo stiamo analizzando."
     agreed_and_deleted: "Grazie per averci informato. Sappiamo che c'è un problema e abbiamo cancellato il messaggio."
@@ -2551,6 +2535,10 @@ it:
       title: "Post segnalato rimosso dallo staff"
       subject_template: "Post segnalato rimosso dallo staff"
       text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [il tuo messaggio](%{base_url}%{url}) è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità e un membro dello staff ha deciso di rimuoverlo. \n \n```markdown\n%{flagged_post_raw_content}\n```\n\nPer ulteriori dettagli, consulta le nostre [linee guida della community](%{base_url}/guidelines).\n"
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Risposta rimossa dal messaggio segnalato da parte dello staff"
+      subject_template: "Risposta rimossa dal messaggio segnalato da parte dello staff"
+      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [un messaggio](%{base_url}%{url}) al quale avevi risposto è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità quindi un membro dello staff ha deciso di rimuoverlo. \n \n```markdown\n%{flagged_post_raw_content}\n```\n\nPer ulteriori dettagli sul motivo della cancellazione, consulta le [linee guida della comunità](%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)

@@ -998,6 +998,7 @@ pl_PL:
       others: "Brak zakładek."
     no_drafts:
       self: "Nie masz żadnych zapisanych wersji roboczych. Zacznij pisać odpowiedź w jakimś temacie, a zostanie ona automatycznie zapisana jako nowa wersja robocza."
+    no_log_search_queries: "Zapytania dziennika wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
   email_settings:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
@@ -1617,7 +1618,6 @@ pl_PL:
     allowed_iframes: "Lista prefiksów domeny src iframe, które dyskurs może bezpiecznie dopuścić w wpisach"
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
-    slow_down_crawler_user_agents: "Programy klienckie robotów indeksujących, które powinny mieć ograniczoną szybkość w pliku robots.txt, korzystając z dyrektywy o opóźnieniu indeksowania"
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
     content_security_policy: "Włącz politykę bezpieczeństwa treści"
     content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
@@ -2605,47 +2605,6 @@ pl_PL:
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{email_prefix}] Test dostarczania poczty"
-    text_body_template: |
-      To jest wiadomość testowa od
-
-      [**%{base_url}**][0]
-
-      Dostarczanie wiadomości e-mail jest dość skomplikowane. Oto kilka ważnych rzeczy, które powinieneś najpierw sprawdzić:
-
-      - Bądź *pewien* aby zmienić "From:" na poprawny adres w ustawieniach witryny. **Domena określona w adresie "Od:/From:" wysyłanych wiadomości to domena, w której Twój e-mail zostanie zweryfikowany **.
-
-      - Dowiedz się, jak przeglądać surowe źródło wiadomości e-mail w kliencie poczty, dzięki czemu możesz sprawdzić nagłówki wiadomości e-mail w poszukiwaniu ważnych wskazówek. W Gmail jest to opcja "Pokaż oryginał" w rozwijanym menu w prawym górnym rogu każdej wiadomości.
-
-      - **WAŻNE:** Czy twój dostawca usług internetowych ma odwrotny rekord DNS (revDNS) wprowadzony do powiązania nazw domen z adresami IP, z których wysyłasz pocztę? [Przetestuj swój odwrotny rekord PTR][2] tutaj. Jeśli Twój dostawca usług internetowych nie wprowadził poprawnego odwrotnego rekordu DNS, jest bardzo mało prawdopodobne, aby którakolwiek z Twoich korespondencji została dostarczona.
-
-      - Czy [rekord SPF][8] jest poprawnie ustawiony dla Twojej domeny? [Sprawdź swój rekord SPF][1] tutaj. Należy zauważyć, że rekord TXT jest prawidłowym oficjalnym typem dla rekordu SPF.
-
-      - Czy [rekord DKIM][3] jest poprawnie ustawiony dla Twojej domeny? To znacznie poprawi dostarczanie wiadomości e-mail. [Sprawdź swój rekord DKIM][7] tutaj.
-
-      - Jeśli używasz własnego serwera poczty, sprawdź, aby upewnić się, że adresy IP serwera pocztowego [nie znajdują się na blokowanych listach][4]. Sprawdź, czy na pewno wysyłasz w pełni kwalifikowaną nazwę hosta, która rozwiązuje się przez DNS w wiadomości HELO. Jeśli nie, to spowoduje, że Twój e-mail zostanie odrzucony przez wiele serwisów pocztowych.
-
-      - Zalecamy **wysłanie wiadomości testowej na adres [mail-tester.com][mt]**, aby sprawdzić, czy wszystkie powyższe punkty zostały spełnione.
-
-      (*Najłatwiejszy* sposób to utworzenie konta na [SendGrid][sg], [SparkPost][sp] [Mailgun][mg] lub [Mailjet][mj], które mają tanie plany mailingowe i będą dobre dla małych społeczności. Nadal będziesz musiał skonfigurować rekordy SPF i DKIM w swoim DNS!)
-
-      Mamy nadzieję, że otrzymałeś/łaś ten testowy e-mail.
-
-      Powodzenia,
-
-      Twoi przyjaciele na [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{email_prefix}] Nowa wersja Discourse jest dostępna"

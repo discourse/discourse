@@ -1399,22 +1399,19 @@ ja:
         invite:
           new_title: "招待の作成"
           edit_title: "招待の編集"
-          instructions: "このサイトへのアクセスと即時に許可するにはこのリンクを共有します"
+          instructions: "このサイトへのアクセスと即時に許可するにはこのリンクを共有します:"
           copy_link: "リンクをコピー"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
-          restrict_email: "1 つのメールアドレスに制限"
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
-          invite_to_topic: "このトピックに到着"
           expires_at: "有効期限"
           custom_message: "オプションの個人メッセージ"
           send_invite_email: "保存してメールを送信"
           save_invite: "招待を保存"
           invite_saved: "招待は保存されました。"
-          invite_copied: "招待リンクがコピーされました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -1962,6 +1959,9 @@ ja:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
+      dismiss_confirmation:
+        dismiss: "閉じる"
+        cancel: "キャンセル"
       group_message_summary:
         other: "%{group_name} の受信トレイに %{count} 件のメッセージがあります"
       popup:
@@ -2989,6 +2989,9 @@ ja:
         title: "このトピックは個人メッセージです"
         help: "このトピックは個人メッセージです"
     posts: "投稿"
+    pending_posts:
+      label: "保留中"
+      label_with_count: "保留中 (%{count})"
     posts_likes_MF: |
       このトピックには{ratio, select,
         low {「いいね！」率が高い}

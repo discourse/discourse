@@ -1476,22 +1476,19 @@ it:
         invite:
           new_title: "Crea invito"
           edit_title: "Modifica invito"
-          instructions: "Condividi questo link per garantire l'accesso istantaneo a questo sito"
+          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
           copy_link: "copia link"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
-          restrict_email: "Limita a un solo indirizzo email"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
-          invite_to_topic: "Invia a questo argomento"
           expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
-          invite_copied: "Link di invito copiato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -1901,6 +1898,9 @@ it:
       cannot_see_mention:
         category: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questo messaggio personale. Dovrai invitarlo a questo MP."
+      here_mention:
+        one: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utente – confermi?"
+        other: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utenti – confermi?"
       duplicate_link: "Sembra che il tuo collegamento a <b>%{domain}</b> sia già stato pubblicato in questo argomento da <b>@%{username}</b> in <a href='%{post_url}'>una risposta di %{ago}</a> - sei sicuro di volerlo pubblicare ancora?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2072,6 +2072,9 @@ it:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
+      dismiss_confirmation:
+        dismiss: "Ignora"
+        cancel: "Annulla"
       group_message_summary:
         one: "%{count} messaggio in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
@@ -2152,6 +2155,8 @@ it:
       in_topics_posts: "in tutti gli argomenti e i messaggi"
       enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "di nuovo per utilizzare la ricerca nativa del browser"
       type:
         users: "Utenti"
         categories: "Categorie"
@@ -3174,6 +3179,9 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
+    pending_posts:
+      label: "In attesa"
+      label_with_count: "In sospeso (%{count})"
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
         low {con un'alta percentuale di 'mi piace' sulle risposte}
@@ -3372,6 +3380,7 @@ it:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
         insert_url: "%{shortcut} Inserisci la selezione nello strumento di composizione aperto"
+        full_page_search: "%{shortcut} Avvia la ricerca a pagina intera"
     badges:
       earned_n_times:
         one: "Ha guadagnato questo distintivo %{count} volta"
@@ -3803,6 +3812,8 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
+            uploads:
+              create: Carica un nuovo file.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.

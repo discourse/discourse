@@ -36,6 +36,7 @@ class WebHookUserSerializer < UserSerializer
     user_auth_tokens
     user_auth_token_logs
     use_logo_small_as_avatar
+    pending_posts_count
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

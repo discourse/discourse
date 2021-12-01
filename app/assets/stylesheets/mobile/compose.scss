@@ -8,12 +8,10 @@
 
 #reply-control {
   z-index: z("mobile-composer");
+
   .reply-area {
-    padding: 0 10px;
-    padding-bottom: env(safe-area-inset-bottom);
-    @media screen and (max-width: 374px) {
-      padding: 0 5px;
-    }
+    padding: 6px;
+    padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
     flex-grow: 1;
   }
 
@@ -33,7 +31,9 @@
   }
 
   .reply-to {
-    margin: 5px 0;
+    justify-content: space-between;
+    margin-bottom: 6px;
+
     .reply-details {
       max-width: calc(100% - 75px);
     }
@@ -81,12 +81,13 @@
   }
 
   .category-input {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
   }
 
   .submit-panel {
-    margin-bottom: 5px;
+    margin-top: 6px;
     align-items: baseline;
+
     .save-or-cancel {
       flex: 1 1 auto;
       #draft-status,
