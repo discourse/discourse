@@ -54,7 +54,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     "DISCOURSE_SKIP_CSS_WATCHER" => "1",
     "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
     "LOGSTASH_UNICORN_URI" => nil,
-    "UNICORN_WORKERS" => "3"
+    "UNICORN_WORKERS" => "1",
+    "UNICORN_TIMEOUT" => "90",
   }
 
   cmd = if ember_cli
