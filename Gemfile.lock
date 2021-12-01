@@ -233,7 +233,7 @@ GEM
     mini_scheduler (0.13.0)
       sidekiq (>= 4.2.3)
     mini_sql (1.1.3)
-    mini_suffix (0.3.2)
+    mini_suffix (0.3.3)
       ffi (~> 1.9)
     minitest (5.14.4)
     mocha (1.13.0)
