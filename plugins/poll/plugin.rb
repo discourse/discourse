@@ -85,6 +85,7 @@ after_initialize do
           available_options = poll.poll_options.map { |o| o.digest }.to_set
           options.select! { |o| available_options.include?(o) }
 
+          self.validate_votes!(poll, options)
           raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
 
           new_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
@@ -116,6 +117,26 @@ after_initialize do
           post.publish_message!("/polls/#{post.topic_id}", payload)
 
           [serialized_poll, options]
+        end
+      end
+
+      def validate_votes!(poll, options)
+        num_of_options = options.length
+
+        if poll.multiple?
+          if num_of_options < poll.min
+            raise StandardError.new(I18n.t(
+              "poll.min_vote_per_user",
+              count: poll.min
+            ))
+          elsif num_of_options > poll.max
+            raise StandardError.new(I18n.t(
+              "poll.max_vote_per_user",
+              count: poll.max
+            ))
+          end
+        elsif num_of_options > 1
+          raise StandardError.new(I18n.t("poll.one_vote_per_user"))
         end
       end
 
