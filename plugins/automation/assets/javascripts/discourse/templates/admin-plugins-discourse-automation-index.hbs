@@ -29,7 +29,7 @@
           <td tabindex="0" role="button" {{on "keypress" (fn this.editAutomation automation)}} {{on "click" (fn this.editAutomation automation)}}>{{automation.name}}</td>
           <td role="button" {{on "click" (fn this.editAutomation automation)}}>{{if automation.trigger.id automation.trigger.name "-"}}</td>
           <td role="button" {{on "click" (fn this.editAutomation automation)}}>{{automation.script.name}} (v{{automation.script.version}})</td>
-          <td role="button" {{on "click" (fn this.editAutomation automation)}}>
+          <td>
             <a href={{automation.last_updated_by.userPath}} data-user-card={{automation.last_updated_by.username}}>
               {{avatar automation.last_updated_by imageSize="small"}}
             </a>

@@ -12,85 +12,81 @@
 
   {{#each field.metadata.value as |pm|}}
     <div class="pm-field">
-      <details>
-        <summary>{{if pm.title pm.title (i18n "discourse_automation.fields.pms.placeholder_title")}}</summary>
+      <div class="control-group">
+        {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label") field=field}}
+        <div class="controls">
+          <div class="field-wrapper">
+            {{input
+              id=(concat field.target field.name "title")
+              value=pm.title
+              class="pm-input pm-title"
+              input=(action (mut pm.title) value="target.value")
+              disabled=field.isDisabled
+            }}
 
-        <div class="control-group">
-          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label") field=field}}
-          <div class="controls">
-            <div class="field-wrapper">
-              {{input
-                id=(concat field.target field.name "title")
-                value=pm.title
-                class="pm-input pm-title"
-                input=(action (mut pm.title) value="target.value")
-                disabled=field.isDisabled
+            {{#if displayPlaceholders}}
+              {{placeholders-list
+                currentValue=pm.title
+                placeholders=placeholders
               }}
-
-              {{#if displayPlaceholders}}
-                {{placeholders-list
-                  currentValue=pm.title
-                  placeholders=placeholders
-                }}
-              {{/if}}
-            </div>
+            {{/if}}
           </div>
         </div>
+      </div>
 
-        <div class="control-group">
-          {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label") field=field}}
-          <div class="controls">
-            <div class="field-wrapper">
-              {{d-editor value=pm.raw}}
+      <div class="control-group">
+        {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label") field=field}}
+        <div class="controls">
+          <div class="field-wrapper">
+            {{d-editor value=pm.raw}}
 
-              {{#if displayPlaceholders}}
-                {{placeholders-list
-                  currentValue=pm.raw
-                  placeholders=placeholders
-                }}
-              {{/if}}
-            </div>
+            {{#if displayPlaceholders}}
+              {{placeholders-list
+                currentValue=pm.raw
+                placeholders=placeholders
+              }}
+            {{/if}}
           </div>
         </div>
+      </div>
 
-        <div class="control-group">
-          <label class="control-label">
-            {{i18n "discourse_automation.fields.pms.delay.label"}}
-          </label>
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.delay.label"}}
+        </label>
 
-          <div class="controls">
-            {{input
-              value=pm.delay
-              class="input-large pm-input"
-              input=(action (mut pm.delay) value="target.value")
-              disabled=field.isDisabled
-            }}
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">
-            {{i18n "discourse_automation.fields.pms.encrypt.label"}}
-          </label>
-
-          <div class="controls">
-            {{input
-              type="checkbox"
-              checked=pm.encrypt
-              click=(action (mut pm.encrypt) value="target.checked")
-              disabled=field.isDisabled
-            }}
-          </div>
-        </div>
-        <section class="actions">
-          {{d-button
-            icon="trash-alt"
-            action=(action "removePM" pm)
-            class="btn-danger"
+        <div class="controls">
+          {{input
+            value=pm.delay
+            class="input-large pm-input"
+            input=(action (mut pm.delay) value="target.value")
             disabled=field.isDisabled
           }}
-        </section>
-      </details>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.encrypt.label"}}
+        </label>
+
+        <div class="controls">
+          {{input
+            type="checkbox"
+            checked=pm.encrypt
+            click=(action (mut pm.encrypt) value="target.checked")
+            disabled=field.isDisabled
+          }}
+        </div>
+      </div>
+      <section class="actions">
+        {{d-button
+          icon="trash-alt"
+          action=(action "removePM" pm)
+          class="btn-danger"
+          disabled=field.isDisabled
+        }}
+      </section>
     </div>
   {{else}}
     <div class="no-pm">

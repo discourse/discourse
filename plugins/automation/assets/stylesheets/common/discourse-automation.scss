@@ -195,20 +195,6 @@
     .pm-field {
       margin-bottom: 1em;
 
-      details {
-        padding: 0.5em;
-        border: 1px solid var(--primary-low);
-      }
-
-      summary {
-        padding: 0.5em;
-        &:focus {
-          &:before {
-            color: var(--tertiary);
-          }
-        }
-      }
-
       .control-group {
         display: flex;
         flex-direction: column;
