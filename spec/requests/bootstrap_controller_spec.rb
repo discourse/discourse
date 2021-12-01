@@ -93,4 +93,38 @@ describe BootstrapController do
       expect(bootstrap['authentication_data']).to eq(cookie_data)
     end
   end
+
+  context 'with a plugin asset filter' do
+    let :plugin do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin.register_asset_filter do |type, request|
+        next true if request.path == "/mypluginroute"
+        false
+      end
+      plugin
+    end
+
+    before do
+      Discourse.plugins << plugin
+      plugin.activate!
+    end
+
+    after do
+      Discourse.plugins.delete plugin
+    end
+
+    it "filters assets using the given path" do
+      get "/bootstrap.json"
+      expect(response.status).to eq(200)
+      plugin_assets = response.parsed_body.dig("bootstrap", "plugin_js")
+      expect(plugin_assets).not_to include(a_string_matching "my_plugin")
+
+      get "/bootstrap.json?for_url=/mypluginroute"
+      expect(response.status).to eq(200)
+      plugin_assets = response.parsed_body.dig("bootstrap", "plugin_js")
+      expect(plugin_assets).to include(a_string_matching "my_plugin")
+    end
+
+  end
 end

@@ -25,6 +25,9 @@ module.exports = function (defaults) {
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
+    autoImport: {
+      forbidEval: true,
+    },
   });
 
   // Ember CLI does this by default for the app tree, but for our extra bundles we
