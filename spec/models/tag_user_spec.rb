@@ -50,7 +50,7 @@ describe TagUser do
       Fabricate(:group_user, group: group1, user: user1)
 
       expect(TagUser.notification_level_visible.pluck(:id)).to match_array([
-        @tag_user1.id, @tag_user3.id, @tag_user4.id
+        tag_user1.id, tag_user3.id, tag_user4.id
       ])
     end
 
