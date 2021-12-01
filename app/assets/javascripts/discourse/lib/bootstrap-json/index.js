@@ -264,7 +264,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     res.set("content-security-policy", newCSP);
   }
 
-  const isHTML = response.headers["content-type"]?.startsWith("text/html");
+  const isHTML = response.headers.get("content-type")?.startsWith("text/html");
   const responseText = await response.text();
   const preload = isHTML ? extractPreloadJson(responseText) : null;
 
