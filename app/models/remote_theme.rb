@@ -40,7 +40,7 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
       existing = false
     end
 
