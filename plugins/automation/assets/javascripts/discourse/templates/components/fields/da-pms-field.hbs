@@ -18,19 +18,38 @@
         <div class="control-group">
           {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label") field=field}}
           <div class="controls">
-            {{input
-              value=pm.title
-              class="pm-input pm-title"
-              input=(action (mut pm.title) value="target.value")
-              disabled=field.isDisabled
-            }}
+            <div class="field-wrapper">
+              {{input
+                id=(concat field.target field.name "title")
+                value=pm.title
+                class="pm-input pm-title"
+                input=(action (mut pm.title) value="target.value")
+                disabled=field.isDisabled
+              }}
+
+              {{#if displayPlaceholders}}
+                {{placeholders-list
+                  currentValue=pm.title
+                  placeholders=placeholders
+                }}
+              {{/if}}
+            </div>
           </div>
         </div>
 
         <div class="control-group">
           {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label") field=field}}
           <div class="controls">
-            {{d-editor value=pm.raw}}
+            <div class="field-wrapper">
+              {{d-editor value=pm.raw}}
+
+              {{#if displayPlaceholders}}
+                {{placeholders-list
+                  currentValue=pm.raw
+                  placeholders=placeholders
+                }}
+              {{/if}}
+            </div>
           </div>
         </div>
 

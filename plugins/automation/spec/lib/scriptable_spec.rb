@@ -13,6 +13,14 @@ describe DiscourseAutomation::Scriptable do
       field :cat, component: :text
       field :dog, component: :text, accepts_placeholders: true
       field :bird, component: :text, triggerable: 'recurring'
+
+      script do
+        p 'script'
+      end
+
+      on_reset do
+        p 'on_reset'
+      end
     end
 
     DiscourseAutomation::Triggerable.add('dog') do
@@ -46,7 +54,21 @@ describe DiscourseAutomation::Scriptable do
 
   describe '#script' do
     it 'returns the script proc' do
-      expect(automation.scriptable.script.class).to eq(Proc)
+      output = capture_stdout do
+        automation.scriptable.script.call
+      end
+
+      expect(output).to include('script')
+    end
+  end
+
+  describe '#on_reset' do
+    it 'returns the on_reset proc' do
+      output = capture_stdout do
+        automation.scriptable.on_reset.call
+      end
+
+      expect(output).to include('on_reset')
     end
   end
 

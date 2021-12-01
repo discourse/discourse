@@ -88,6 +88,7 @@ module DiscourseAutomation
     def reset!
       pending_automations.delete_all
       pending_pms.delete_all
+      scriptable&.on_reset&.call(self)
     end
   end
 end

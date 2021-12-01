@@ -24,6 +24,7 @@ module DiscourseAutomation
       @placeholders = [:site_title]
       @triggerables = (@@plugin_triggerables[name&.to_sym] || [])
       @script = proc {}
+      @on_reset = proc {}
       @not_found = false
       @forced_triggerable = nil
 
@@ -93,6 +94,14 @@ module DiscourseAutomation
         @script = block
       else
         @script
+      end
+    end
+
+    def on_reset(&block)
+      if block_given?
+        @on_reset_block = block
+      else
+        @on_reset_block
       end
     end
 

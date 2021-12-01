@@ -1,0 +1,15 @@
+<section class="field categories-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label field=field}}
+
+    <div class="controls">
+      {{category-selector
+        categories=categories
+        onChange=(action "onChangeCategories")
+        options=(hash clearable=true disabled=field.isDisabled)
+      }}
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>

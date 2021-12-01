@@ -1,6 +1,7 @@
 import { set } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { reads, filterBy } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
@@ -38,9 +39,11 @@ export default Ember.Controller.extend({
         contentType: "application/json"
       }
     )
-      .catch(e => this.set("error", extractError(e)))
-      .finally(() => {
+      .then(() => {
         this.send("refreshRoute");
+      })
+      .catch(e => this._showError(e))
+      .finally(() => {
         this.set("isUpdatingAutomation", false);
       });
   },
@@ -112,5 +115,13 @@ export default Ember.Controller.extend({
         }
       }
     );
+  },
+
+  _showError(error) {
+    this.set("error", extractError(error));
+
+    schedule("afterRender", () => {
+      window.scrollTo(0, 0);
+    });
   }
 });

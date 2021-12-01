@@ -8,7 +8,7 @@ module Jobs
       name = DiscourseAutomation::Triggerable::STALLED_WIKI
 
       DiscourseAutomation::Automation
-        .where(trigger: name)
+        .where(trigger: name, enabled: true)
         .find_each do |automation|
 
           stalled_after = automation.trigger_field('stalled_after')

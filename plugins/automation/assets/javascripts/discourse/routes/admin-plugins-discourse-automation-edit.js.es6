@@ -46,6 +46,7 @@ export default DiscourseRoute.extend({
     const automation = model.automation;
     controller.setProperties({
       model,
+      error: null,
       automationForm: {
         name: automation.name,
         enabled: automation.enabled,

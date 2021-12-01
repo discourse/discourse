@@ -18,8 +18,6 @@ en:
           title: Script options
       destroy_automation:
         confirm: Are you sure you want to delete this Automation?
-      placeholders:
-        description: "Placeholders are usable in most text inputs to be dynamically replaced. Click to copy:"
       fields:
         user:
           label: User
@@ -47,6 +45,23 @@ en:
           label: Text
       triggerables:
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
+        stalled_topic:
+          durations:
+            PT1H: "One hour"
+            P1D: "One day"
+            P1W: "One week"
+            P2W: "Two weeks"
+            P1M: "One month"
+            P3M: "Three months"
+            P6M: "Six months"
+            P1Y: "One year"
+          fields:
+            categories:
+              label: Limited to categories
+            tags:
+              label: Limited to tags
+            stalled_after:
+              label: Stalled after
         recurring:
           recurrences:
             every_minute: Every minute
@@ -112,6 +127,18 @@ en:
               description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        user_global_notice:
+          fields:
+            level:
+              label: Level
+            notice:
+              label: Notice
+              description: Accepts HTML, do not fill this with untrusted input!
+          levels:
+            warning: Warning
+            info: Info
+            success: Success
+            error: Error
         suspend_user_by_email:
           fields:
             suspend_until:

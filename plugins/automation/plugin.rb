@@ -20,7 +20,7 @@ def handle_post_created_edited(post, action)
   name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
 
   DiscourseAutomation::Automation
-    .where(trigger: name)
+    .where(trigger: name, enabled: true)
     .find_each do |automation|
       restricted_category = automation.trigger_field('restricted_category')
       if restricted_category['value']
@@ -73,13 +73,16 @@ require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
 
 after_initialize do
   [
+    '../app/queries/stalled_topic_finder',
     '../app/lib/discourse_automation/triggers/stalled_wiki',
+    '../app/lib/discourse_automation/triggers/stalled_topic',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
     '../app/lib/discourse_automation/triggers/api_call',
     '../app/controllers/discourse_automation/automations_controller',
+    '../app/controllers/discourse_automation/user_global_notices_controller',
     '../app/controllers/admin/discourse_automation/admin_discourse_automation_controller',
     '../app/controllers/admin/discourse_automation/admin_discourse_automation_automations_controller',
     '../app/controllers/admin/discourse_automation/admin_discourse_automation_scriptables_controller',
@@ -88,17 +91,21 @@ after_initialize do
     '../app/serializers/discourse_automation/template_serializer',
     '../app/serializers/discourse_automation/automation_field_serializer',
     '../app/serializers/discourse_automation/trigger_serializer',
+    '../app/serializers/discourse_automation/user_global_notice_serializer',
     '../app/models/discourse_automation/automation',
     '../app/models/discourse_automation/pending_automation',
     '../app/models/discourse_automation/pending_pm',
+    '../app/models/discourse_automation/user_global_notice',
     '../app/models/discourse_automation/field',
     '../app/jobs/scheduled/discourse_automation_tracker',
     '../app/jobs/scheduled/stalled_wiki_tracker',
+    '../app/jobs/scheduled/stalled_topic_tracker',
     '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/user_promoted',
     '../app/lib/discourse_automation/scripts/banner_topic',
     '../app/lib/discourse_automation/scripts/suspend_user_by_email',
     '../app/lib/discourse_automation/scripts/pin_topic',
+    '../app/lib/discourse_automation/scripts/user_global_notice',
     '../app/lib/discourse_automation/scripts/gift_exchange',
     '../app/lib/discourse_automation/scripts/send_pms',
     '../app/lib/discourse_automation/scripts/topic_required_words',
@@ -118,7 +125,23 @@ after_initialize do
 
   add_api_key_scope(:automations_trigger, { post: { actions: %w[discourse_automation/automations#trigger], params: %i[context], formats: :json }})
 
+  add_to_serializer(:current_user, :global_notices) do
+    notices = DiscourseAutomation::UserGlobalNotice.where(user_id: object.id)
+    ActiveModel::ArraySerializer.new(
+      notices,
+      each_serializer: DiscourseAutomation::UserGlobalNoticeSerializer
+    ).as_json
+  end
+
   DiscourseAutomation::Engine.routes.draw do
+    scope format: :json, constraints: AdminConstraint.new do
+      post '/automations/:id/trigger' => 'automations#trigger'
+    end
+
+    scope format: :json do
+      delete '/user-global-notices/:id' => 'user_global_notices#destroy'
+    end
+
     scope format: :json, constraints: AdminConstraint.new do
       post '/automations/:id/trigger' => 'automations#trigger'
     end

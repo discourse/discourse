@@ -1,0 +1,9 @@
+<div class="placeholders-list">
+  {{#each placeholders as |placeholder|}}
+    {{d-button
+      translatedLabel=placeholder
+      class="placeholder-item"
+      action=(action "copyPlaceholder" placeholder)
+    }}
+  {{/each}}
+</div>

@@ -73,6 +73,12 @@ module DiscourseAutomation
           'items' => [{ 'type': 'string' }]
         }
       },
+      'categories' => {
+        'value' => {
+          'type' => 'array',
+          'items' => [{ 'type': 'string' }]
+        }
+      },
       'category' => {
         'value' => {
           'type' => ['string', 'integer', 'null']
@@ -84,6 +90,11 @@ module DiscourseAutomation
         }
       },
       'text' => {
+        'value' => {
+          'type' => ['string', 'integer', 'null']
+        }
+      },
+      'message' => {
         'value' => {
           'type' => ['string', 'integer', 'null']
         }

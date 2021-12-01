@@ -8,6 +8,9 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}.`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      stalled_topic:
+        title: Stalled topic
+        doc: Triggers an automation when the topic has not received a new reply from topic owner for a specified period of time. It is recommended to scope this trigger to a tag/category as the number of topics impacted can be very high. As a safety measure, the number of impacted topics is capped at 250.
       api_call:
         title: API call
         description: Making a POST request to trigger an automation
@@ -55,8 +58,13 @@ en:
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
       suspend_user_by_email:
         title: Suspend user by email
+      user_global_notice:
+        title: User global notice
+        description: Allows to display a global notice for a user
       suspend_user_by_email_with_api_call:
         doc: When triggering `suspend_user_by_email` with an api call, the endpoint expects a valid `email` to be present in the params sent. `reasons` and `suspend_until (ISO 8601 format)` can also be used to override default fields values.
+      user_global_notice_with_stalled_topic:
+        doc: When triggered through stalled topic, the topic owner will receive the global notice.
       send_pms_with_api_call:
         doc: When using `send pms` script with `api call` trigger, the `usernames` param of your request will be used to fill the receivers list.
       topic_required_words:
