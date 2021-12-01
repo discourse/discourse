@@ -273,6 +273,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             fileName: file.name,
             id: file.id,
             progress: 0,
+            extension: file.extension,
           })
         );
         const placeholder = this._uploadPlaceholder(file);
