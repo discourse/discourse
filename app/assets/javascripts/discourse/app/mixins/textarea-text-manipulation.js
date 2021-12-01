@@ -285,7 +285,8 @@ export default Mixin.create({
       this._cachedLinkify &&
       plainText &&
       !handled &&
-      selected.end > selected.start
+      selected.end > selected.start &&
+      !this._cachedLinkify.test(selectedValue)
     ) {
       if (this._cachedLinkify.test(plainText)) {
         const match = this._cachedLinkify.match(plainText)[0];
