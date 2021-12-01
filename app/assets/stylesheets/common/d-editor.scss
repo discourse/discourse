@@ -20,7 +20,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-low);
 
   textarea {
     background: transparent;
@@ -54,9 +54,6 @@
   overflow: auto;
   cursor: default;
   -webkit-overflow-scrolling: touch;
-  // the below gives text little space to overflow without being cropped (e.g., Õ in headings)
-  padding-top: 1em;
-  margin-top: -1em;
 }
 
 .d-editor-input,
@@ -179,6 +176,9 @@
   }
 
   .button-wrapper {
+    min-width: 10em;
+    width: 100%;
+
     display: flex;
     flex-wrap: wrap;
     gap: 0 0.5em;
@@ -190,15 +190,23 @@
     opacity: 0;
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
-    width: 100%;
     background: var(--secondary); // for when images are wider than controls
 
+    &[editing] {
+      opacity: 1;
+    }
+
     .scale-btn-container,
-    .alt-text-readonly-container {
+    .alt-text-readonly-container,
+    .alt-text-edit-container {
       background: var(--secondary);
       display: flex;
       height: var(--resizer-height);
       align-items: center;
+
+      &[hidden] {
+        display: none;
+      }
     }
 
     .scale-btn {
@@ -222,8 +230,8 @@
     }
 
     .alt-text-readonly-container {
-      max-width: 100%;
       flex: 1 1;
+      width: 100%;
 
       .alt-text {
         margin-right: 0.5em;
@@ -233,24 +241,47 @@
         max-width: 100%;
       }
 
-      .alt-text-edit-btn svg {
-        padding-right: 0.5em;
-        pointer-events: none;
+      .alt-text-edit-btn {
+        cursor: pointer;
+
+        svg {
+          padding-right: 0.5em;
+        }
+      }
+    }
+
+    .alt-text-edit-container {
+      margin-top: 0.25em;
+      gap: 0 0.25em;
+      flex: 1;
+
+      .alt-text-input,
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        height: var(--resizer-height);
       }
 
       .alt-text-input {
-        height: var(--resizer-height);
-        width: 100%;
+        flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 100%;
         margin: 0;
+      }
 
-        &[hidden="true"] {
-          display: none;
+      .alt-text-edit-ok,
+      .alt-text-edit-cancel {
+        border: none;
+        width: var(--resizer-height);
+
+        svg {
+          margin: 0;
         }
       }
+    }
+
+    svg {
+      pointer-events: none;
     }
   }
 }
@@ -272,8 +303,9 @@
   .d-editor-spacer {
     height: 1em;
     display: inline-block;
-    border-left: 1px solid var(--primary-low-mid);
+    border-left: 1px solid var(--primary-low);
     margin: 0 0.25em;
+
     .mobile-view & {
       display: none;
     }

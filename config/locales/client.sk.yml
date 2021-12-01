@@ -1344,6 +1344,9 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      dismiss_confirmation:
+        dismiss: "Zahodiť"
+        cancel: "Zrušiť"
       popup:
         mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
         group_mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
@@ -2025,6 +2028,9 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
+    pending_posts:
+      label: "Čakajúce správy"
+      label_with_count: "Čakajúce (%{count})"
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:

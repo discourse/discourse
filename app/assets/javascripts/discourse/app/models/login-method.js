@@ -15,7 +15,10 @@ const LoginMethod = EmberObject.extend({
 
   @discourseComputed
   screenReaderTitle() {
-    return this.title_override || I18n.t(`login.${this.name}.sr_title`);
+    return (
+      this.title_override ||
+      I18n.t(`login.${this.name}.sr_title`, { defaultValue: this.title })
+    );
   },
 
   @discourseComputed

@@ -65,7 +65,8 @@ class UserCardSerializer < BasicUserSerializer
              :flair_bg_color,
              :flair_color,
              :featured_topic,
-             :timezone
+             :timezone,
+             :pending_posts_count
 
   untrusted_attributes :bio_excerpt,
                        :website,
@@ -76,6 +77,13 @@ class UserCardSerializer < BasicUserSerializer
   staff_attributes :staged
 
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
+
+  delegate :user_stat, to: :object, private: true
+  delegate :pending_posts_count, to: :user_stat
+
+  def include_pending_posts_count?
+    scope.is_me?(object) || scope.is_staff?
+  end
 
   def include_email?
     (object.id && object.id == scope.user.try(:id)) ||

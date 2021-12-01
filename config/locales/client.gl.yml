@@ -1403,7 +1403,7 @@ gl:
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
-          instructions: "Compartir esta ligazón para conceder acceso a este sitio"
+          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
@@ -1974,6 +1974,9 @@ gl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Desbotar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaxe na caixa %{group_name}"
         other: "%{count} mensaxes na caixa %{group_name}"
@@ -3017,6 +3020,9 @@ gl:
         title: "Este tema é unha mensaxe privada"
         help: "Este tema é unha mensaxe privada"
     posts: "Publicacións"
+    pending_posts:
+      label: "Pendente"
+      label_with_count: "Pendentes (%{count})"
     posts_likes_MF: |
       Este tema ten {count, plural, one {# resposta} other {# respostas}} {ratio, select,
         low {cun alto nivel de valoración da publicación}
@@ -3584,7 +3590,6 @@ gl:
         delete: Eliminar definitivamente
         not_shown_again: Esta clave non se amosará de novo. Asegúrese de ter unha copia antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas as accións)
         scopes:
           description: |
             Ao utilizar ámbitos, pode restrinxir unha clave API a un conxunto específico de resultados.

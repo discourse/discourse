@@ -44,6 +44,17 @@ he:
     user_cant_post_in_topic: "אין לך אפשרות להצביע כיוון שאין לך אפשרות לפרסם בנושא זה."
     topic_must_be_open_to_vote: "הנושא חייב להיות פתוח להצבעות."
     poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."
+    one_vote_per_user: "רק הצבעה אחת מותרת לסקר זה."
+    max_vote_per_user:
+      one: רק הצבעה %{count} מותרת לסקר זה.
+      two: רק %{count} הצבעות מותרות לסקר זה.
+      many: רק %{count} הצבעות מותרות לסקר זה.
+      other: רק %{count} הצבעות מותרות לסקר זה.
+    min_vote_per_user:
+      one: כמות מזערית של הצבעה %{count} נדרשת לסקר זה.
+      two: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+      many: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+      other: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
     topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויי מצב."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכולים לשנות מצב של סקר."
     insufficient_rights_to_create: "אין לך הרשאה ליצור סקרים."

@@ -313,7 +313,7 @@ ko:
     saved: "저장되었습니다!"
     upload: "업로드"
     uploading: "업로드 중..."
-    uploading_filename: "업르도 중: %{filename}..."
+    uploading_filename: "업로드 중: %{filename}..."
     processing_filename: "처리 중: %{filename}..."
     clipboard: "클립보드"
     uploaded: "업로드 되었습니다!"
@@ -1414,22 +1414,19 @@ ko:
         invite:
           new_title: "초대 링크 만들기"
           edit_title: "초대 수정"
-          instructions: "이 링크를 공유하여이 사이트에 대한 액세스 권한을 즉시 부여하세요."
+          instructions: "이 링크를 공유하여 이 사이트에 대한 사용 권한을 즉시 부여할 수 있습니다."
           copy_link: "링크 복사"
           expires_in_time: "%{time}후에 만료"
           expired_at_time: "%{time}에 만료됨"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
-          restrict_email: "하나의 이메일 주소로 제한"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
-          invite_to_topic: "이 글로 이동합니다"
           expires_at: "다음 후 만료"
           custom_message: "개인 메시지 옵션"
           send_invite_email: "이메일 저장 및 보내기"
           save_invite: "초대 저장"
           invite_saved: "초대가 저장되었습니다."
-          invite_copied: "초대 링크가 복사되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -1946,6 +1943,8 @@ ko:
           desc: "최신 회신 날짜를 변경하지 않고 회신"
       reload: "새로 고침"
       ignore: "무시"
+      image_alt_text:
+        aria_label: 이미지의 대체 텍스트
     notifications:
       tooltip:
         regular:
@@ -1988,6 +1987,9 @@ ko:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
+      dismiss_confirmation:
+        dismiss: "읽음"
+        cancel: "취소"
       group_message_summary:
         other: " %{group_name} 사서함에 %{count}개의 메시지가 있습니다"
       popup:
@@ -3059,6 +3061,9 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
+    pending_posts:
+      label: "보류중"
+      label_with_count: "보류중 (%{count})"
     original_post: "원본 글"
     views: "조회수"
     views_lowercase:
@@ -3293,6 +3298,8 @@ ko:
       changed: "바뀐 태그:"
       tags: "태그"
       choose_for_topic: "태그 선택"
+      choose_for_topic_required:
+        other: "최소한 %{count}개의 태그를 선택해야합니다..."
       info: "정보"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다. 제한을 추가하려면 이 태그를 <a href=%{basePath}/tag_groups>태그 그룹</a>에 넣으십시오."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
@@ -3640,12 +3647,13 @@ ko:
         delete: 영구적으로 삭제
         not_shown_again: 이 키는 다시 표시되지 않습니다. 계속하기 전에 사본을 작성하십시오.
         continue: 계속
-        use_global_key: 전역 키 (모든 작업 허용)
         scopes:
           description: |
             범위를 사용할 때 API키를 특정 엔드 포인트 세트로 제한 할 수 있습니다.
             허용 할 매개 변수를 정의 할 수도 있습니다. 여러 값을 구분하려면 쉼표를 사용하십시오.
           title: 범위
+          read_only: 읽기 전용
+          global: 글로벌
           resource: 자원
           action: 동작
           allowed_parameters: 허용된 매개 변수

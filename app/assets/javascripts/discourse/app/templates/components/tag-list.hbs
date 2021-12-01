@@ -9,7 +9,7 @@
 {{/if}}
 {{#each sortedTags as |tag|}}
   <div class="tag-box">
-    {{discourse-tag tag.id isPrivateMessage=isPrivateMessage pmOnly=tag.pmOnly tagsForUser=tagsForUser}} {{#if tag.pmOnly}}{{d-icon "far-envelope"}}{{/if}}{{#if tag.totalCount}} <span class="tag-count">x {{tag.totalCount}}</span>{{/if}}
+    {{discourse-tag tag.id description=tag.description isPrivateMessage=isPrivateMessage pmOnly=tag.pmOnly tagsForUser=tagsForUser}} {{#if tag.pmOnly}}{{d-icon "far-envelope"}}{{/if}}{{#if tag.totalCount}} <span class="tag-count">x {{tag.totalCount}}</span>{{/if}}
   </div>
 {{/each}}
 <div class="clearfix"></div>

@@ -1143,6 +1143,7 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
+        read_more: "¿Quieres leer más? Busca otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1475,22 +1476,22 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparte este enlace para dar acceso inmediato al sitio"
+          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          restrict_email: "Restringir a una dirección de correo electrónico"
+          restrict_email: "Restringir al correo electrónico"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
-          invite_to_topic: "Redirigir a este tema"
+          invite_to_topic: "Llegar al tema"
           expires_at: "Caducar tras"
           custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo electrónico"
+          send_invite_email_instructions: "Restringir la invitación al correo electrónico para enviar un correo electrónico de invitación"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
-          invite_copied: "Enlace de invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2031,6 +2032,8 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image_alt_text:
+        aria_label: Texto alternativo para imagen
     notifications:
       tooltip:
         regular:
@@ -2079,6 +2082,9 @@ es:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
         other: "%{count} mensajes en tu bandeja de %{group_name} "
@@ -2162,6 +2168,10 @@ es:
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "otra vez para usar la búsqueda nativa de tu navegador"
+      recent: "Búsquedas recientes"
+      clear_recent: "Borrar búsquedas recientes"
       type:
         default: "Temas/respuestas"
         users: "Usuarios"
@@ -2578,6 +2588,9 @@ es:
         help: "comparte el enlace a este tema"
         instructions: "Comparte el enlace a este tema:"
         copied: "Enlace al tema copiado."
+        restricted_groups:
+          one: "Sólo visible para los miembros del grupo: %{groupNames}"
+          other: "Sólo visible para los miembros de los grupos: %{groupNames}"
         notify_users:
           title: "Notificar"
           instructions: "Notificar sobre este tema a los siguientes usuarios:"
@@ -3203,6 +3216,9 @@ es:
         title: "Este tema es un mensaje personal"
         help: "Este tema es un mensaje personal"
     posts: "Publicaciones"
+    pending_posts:
+      label: "Pendiente"
+      label_with_count: "Pendientes (%{count})"
     posts_likes_MF: |
       Este tema tiene {count,  plural, one {# respuesta} other {# respuestas}} {ratio, select,
        low {con una proporción de me gusta por publicación alta}
@@ -3406,6 +3422,7 @@ es:
         title: "Menú de búsqueda"
         prev_next: "%{shortcut} Mover selección arriba y abajo"
         insert_url: "%{shortcut} Insertar selección dentro del editor abierto"
+        full_page_search: "%{shortcut} Lanza la página de búsqueda"
     badges:
       earned_n_times:
         one: "Insignia ganada %{count} vez"
@@ -3461,6 +3478,9 @@ es:
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas (opcional)"
+      choose_for_topic_required:
+        one: "selecciona al menos %{count} etiqueta…"
+        other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -3822,11 +3842,13 @@ es:
         delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
-        use_global_key: Clave global (permite todas las acciones)
         scopes:
           description: |
             Al usar ámbitos, puedes restringir una clave de API a una lista de terminales específicos. También puedes definir qué parámetros permitir. Usa comas para separar varios valores.
           title: Ámbitos
+          granular: Granular
+          read_only: Solo lectura
+          global: Global
           resource: Recurso
           action: Acción
           allowed_parameters: Parámetros permitidos
@@ -3841,6 +3863,8 @@ es:
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             posts:
               edit: Edita cualquier publicación o una específica.
+            uploads:
+              create: Sube un nuevo archivo.
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.

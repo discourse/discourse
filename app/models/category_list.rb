@@ -70,6 +70,7 @@ class CategoryList
         .where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
     end
 
+    @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user)
     @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
     @all_topics.each do |t|
       # hint for the serializer

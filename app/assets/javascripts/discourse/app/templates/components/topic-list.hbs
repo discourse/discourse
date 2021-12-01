@@ -1,5 +1,5 @@
 {{#unless skipHeader}}
-  <thead>
+  <thead class="topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
       toggleInTitle=toggleInTitle
@@ -29,7 +29,7 @@
   tagName=""
   connectorTagName=""}}
 
-<tbody>
+<tbody class="topic-list-body">
   {{#each filteredTopics as |topic|}}
     {{topic-list-item topic=topic
                       bulkSelectEnabled=bulkSelectEnabled

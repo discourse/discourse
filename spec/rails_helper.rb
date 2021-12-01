@@ -84,6 +84,10 @@ if ENV['LOAD_PLUGINS'] == "1"
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
     require f
   end
+
+  Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each do |f|
+    require f
+  end
 end
 
 # let's not run seed_fu every test
@@ -457,6 +461,44 @@ def track_log_messages(level: nil)
   logger.messages
 ensure
   Rails.logger = old_logger
+end
+
+# this takes a string and returns a copy where 2 different
+# characters are swapped.
+# e.g.
+#   swap_2_different_characters("abc") => "bac"
+#   swap_2_different_characters("aac") => "caa"
+def swap_2_different_characters(str)
+  swap1 = 0
+  swap2 = str.split("").find_index { |c| c != str[swap1] }
+  # if the string is made up of 1 character
+  return str if !swap2
+  str = str.dup
+  str[swap1], str[swap2] = str[swap2], str[swap1]
+  str
+end
+
+def create_request_env(path: nil)
+  env = Rails.application.env_config.dup
+  env.merge!(Rack::MockRequest.env_for(path)) if path
+  env
+end
+
+def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.zone.now)
+  request = ActionDispatch::Request.new(create_request_env)
+  data = {
+    token: token,
+    user_id: user_id,
+    trust_level: trust_level,
+    issued_at: issued_at.to_i
+  }
+  cookie = request.cookie_jar.encrypted["_t"] = { value: data }
+  cookie[:value]
+end
+
+def decrypt_auth_cookie(cookie)
+  request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
+  request.cookie_jar.encrypted["_t"]
 end
 
 class SpecSecureRandom

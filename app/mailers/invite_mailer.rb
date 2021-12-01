@@ -56,7 +56,7 @@ class InviteMailer < ActionMailer::Base
 
   def send_password_instructions(user)
     if user.present?
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
       build_email(user.email,
                   template: 'invite_password_instructions',
                   email_token: email_token.token)

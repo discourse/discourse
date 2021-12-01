@@ -92,6 +92,40 @@ RSpec.describe Admin::EmojisController do
       expect(response.status).to eq(200)
       expect(custom_emoji.group).to eq("foo")
     end
+
+    it 'should fix up the emoji name' do
+      Emoji.expects(:clear_cache).times(3)
+
+      post "/admin/customize/emojis.json", params: {
+        name: 'test.png',
+        file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
+      }
+
+      custom_emoji = CustomEmoji.last
+      upload = custom_emoji.upload
+
+      expect(upload.original_filename).to eq('logo.png')
+      expect(custom_emoji.name).to eq("test")
+      expect(response.status).to eq(200)
+
+      post "/admin/customize/emojis.json", params: {
+        name: 'st&#* onk$',
+        file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
+      }
+
+      custom_emoji = CustomEmoji.last
+      expect(custom_emoji.name).to eq("st_onk_")
+      expect(response.status).to eq(200)
+
+      post "/admin/customize/emojis.json", params: {
+        name: 'PaRTYpaRrot',
+        file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
+      }
+
+      custom_emoji = CustomEmoji.last
+      expect(custom_emoji.name).to eq("partyparrot")
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#destroy' do

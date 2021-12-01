@@ -7,22 +7,81 @@
 cs:
   js:
     styleguide:
+      title: "Průvodce styly"
+      welcome: "Pro začátek, vyberte položku z menu po levé straně."
+      categories:
+        atoms: Atomy
+        molecules: Molekuly
+        organisms: Organismy
       sections:
         typography:
+          title: "Typografie"
           example: "Vítejte v Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Kromě sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Vstupy data/času"
+        font_scale:
+          title: "Systém písem"
         colors:
           title: "Barvy"
         icons:
           title: "Ikony"
+          full_list: "Podívejte se na úplný seznam Font Awesome Icons"
+        input_fields:
+          title: "Vstupní pole"
+        buttons:
+          title: "Tlačítka"
+        dropdowns:
+          title: "Rozbalovací seznamy"
         categories:
           title: "Kategorie"
+        bread_crumbs:
+          title: "Strouhanka"
         navigation:
           title: "Navigace"
+        navigation_bar:
+          title: "Navigační lišta"
+        navigation_stacked:
+          title: "Složená navigace"
         categories_list:
           title: "Seznam kategorií"
+        topic_link:
+          title: "Odkaz na téma"
+        topic_list_item:
+          title: "Položka seznamu témat"
+        topic_statuses:
+          title: "Stavy témat"
+        topic_list:
+          title: "Seznam témat"
+        basic_topic_list:
+          title: "Seznam základních témat"
+        footer_message:
+          title: "Zpráva v zápatí"
+        signup_cta:
+          title: "CTA registrace"
         topic_timer_info:
           title: "Časovače tématu "
+        topic_footer_buttons:
+          title: "Tlačítka zápatí tématu"
+        topic_notifications:
+          title: "Upozornění na téma"
         post:
           title: "Příspěvek"
+        topic_map:
+          title: "Mapa tématu"
+        site_header:
+          title: "Záhlaví webu"
         suggested_topics:
           title: "Doporučená témata"
+        post_menu:
+          title: "Nabídka příspěvku"
+        modal:
+          title: "Modální"
+          header: "Modální název"
+          footer: "Modální zápatí"
+        user_about:
+          title: "O uživateli"
+        header_icons:
+          title: "Ikony záhlaví"
+        spinners:
+          title: "Spinnery"

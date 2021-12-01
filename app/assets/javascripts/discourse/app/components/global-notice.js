@@ -1,11 +1,11 @@
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Component from "@ember/component";
 import I18n from "I18n";
-import LogsNotice from "discourse/services/logs-notice";
-import { bind } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 const _pluginNotices = [];
 
@@ -16,6 +16,8 @@ export function addGlobalNotice(text, id, options = {}) {
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
 const Notice = EmberObject.extend({
+  logsNoticeService: service("logsNotice"),
+
   text: null,
   id: null,
   options: null,
@@ -48,186 +50,190 @@ const Notice = EmberObject.extend({
 });
 
 export default Component.extend({
+  logsNoticeService: service("logsNotice"),
   logNotice: null,
 
   init() {
     this._super(...arguments);
 
-    this._setupObservers();
+    this.logsNoticeService.addObserver("hidden", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    this._tearDownObservers();
+    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.removeObserver(
+      "hidden",
+      this._handleLogsNoticeUpdate
+    );
   },
 
-  notices: computed(
+  @discourseComputed(
     "site.isReadOnly",
+    "site.wizard_required",
+    "siteSettings.login_required",
     "siteSettings.disable_emails",
-    "logNotice.{id,text,hidden}",
-    function () {
-      let notices = [];
+    "siteSettings.global_notice",
+    "siteSettings.bootstrap_mode_enabled",
+    "siteSettings.bootstrap_mode_min_users",
+    "session.safe_mode",
+    "logNotice.{id,text,hidden}"
+  )
+  notices(
+    isReadOnly,
+    wizardRequired,
+    loginRequired,
+    disableEmails,
+    globalNotice,
+    bootstrapModeEnabled,
+    bootstrapModeMinUsers,
+    safeMode,
+    logNotice
+  ) {
+    let notices = [];
 
-      if (cookie("dosp") === "1") {
-        removeCookie("dosp", { path: "/" });
+    if (cookie("dosp") === "1") {
+      removeCookie("dosp", { path: "/" });
+      notices.push(
+        Notice.create({
+          text: loginRequired
+            ? I18n.t("forced_anonymous_login_required")
+            : I18n.t("forced_anonymous"),
+          id: "forced-anonymous",
+        })
+      );
+    }
+
+    if (safeMode) {
+      notices.push(
+        Notice.create({ text: I18n.t("safe_mode.enabled"), id: "safe-mode" })
+      );
+    }
+
+    if (isReadOnly) {
+      notices.push(
+        Notice.create({
+          text: I18n.t("read_only_mode.enabled"),
+          id: "alert-read-only",
+        })
+      );
+    }
+
+    if (disableEmails === "yes" || disableEmails === "non-staff") {
+      notices.push(
+        Notice.create({
+          text: I18n.t("emails_are_disabled"),
+          id: "alert-emails-disabled",
+        })
+      );
+    }
+
+    if (wizardRequired) {
+      const requiredText = I18n.t("wizard_required", {
+        url: getURL("/wizard"),
+      });
+      notices.push(
+        Notice.create({ text: htmlSafe(requiredText), id: "alert-wizard" })
+      );
+    }
+
+    if (this.currentUser?.staff && bootstrapModeEnabled) {
+      if (bootstrapModeMinUsers > 0) {
         notices.push(
           Notice.create({
-            text: this.siteSettings.login_required
-              ? I18n.t("forced_anonymous_login_required")
-              : I18n.t("forced_anonymous"),
-            id: "forced-anonymous",
+            text: I18n.t("bootstrap_mode_enabled", {
+              count: bootstrapModeMinUsers,
+            }),
+            id: "alert-bootstrap-mode",
+          })
+        );
+      } else {
+        notices.push(
+          Notice.create({
+            text: I18n.t("bootstrap_mode_disabled"),
+            id: "alert-bootstrap-mode",
           })
         );
       }
+    }
 
-      if (this.session && this.session.safe_mode) {
-        notices.push(
-          Notice.create({ text: I18n.t("safe_mode.enabled"), id: "safe-mode" })
-        );
+    if (globalNotice?.length > 0) {
+      notices.push(
+        Notice.create({
+          text: globalNotice,
+          id: "alert-global-notice",
+        })
+      );
+    }
+
+    if (logNotice) {
+      notices.push(logNotice);
+    }
+
+    return notices.concat(_pluginNotices).filter((notice) => {
+      if (notice.options.visibility) {
+        return notice.options.visibility(notice);
       }
 
-      if (this.site.isReadOnly) {
-        notices.push(
-          Notice.create({
-            text: I18n.t("read_only_mode.enabled"),
-            id: "alert-read-only",
-          })
-        );
+      const key = `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`;
+      const value = this.keyValueStore.get(key);
+
+      // banner has never been dismissed
+      if (!value) {
+        return true;
       }
 
-      if (
-        this.siteSettings.disable_emails === "yes" ||
-        this.siteSettings.disable_emails === "non-staff"
-      ) {
-        notices.push(
-          Notice.create({
-            text: I18n.t("emails_are_disabled"),
-            id: "alert-emails-disabled",
-          })
-        );
+      // banner has no persistent dismiss and should always show on load
+      if (!notice.options.persistentDismiss) {
+        return true;
       }
 
-      if (this.site.wizard_required) {
-        const requiredText = I18n.t("wizard_required", {
-          url: getURL("/wizard"),
-        });
-        notices.push(
-          Notice.create({ text: htmlSafe(requiredText), id: "alert-wizard" })
-        );
+      if (notice.options.dismissDuration) {
+        const resetAt = moment(value).add(notice.options.dismissDuration);
+        return moment().isAfter(resetAt);
+      } else {
+        return false;
       }
+    });
+  },
 
-      if (
-        this.get("currentUser.staff") &&
-        this.siteSettings.bootstrap_mode_enabled
-      ) {
-        if (this.siteSettings.bootstrap_mode_min_users > 0) {
-          notices.push(
-            Notice.create({
-              text: I18n.t("bootstrap_mode_enabled", {
-                count: this.siteSettings.bootstrap_mode_min_users,
-              }),
-              id: "alert-bootstrap-mode",
-            })
-          );
-        } else {
-          notices.push(
-            Notice.create({
-              text: I18n.t("bootstrap_mode_disabled"),
-              id: "alert-bootstrap-mode",
-            })
-          );
-        }
-      }
+  @action
+  dismissNotice(notice) {
+    if (notice.options.onDismiss) {
+      notice.options.onDismiss(notice);
+    }
 
-      if (
-        this.siteSettings.global_notice &&
-        this.siteSettings.global_notice.length
-      ) {
-        notices.push(
-          Notice.create({
-            text: this.siteSettings.global_notice,
-            id: "alert-global-notice",
-          })
-        );
-      }
-
-      if (this.logNotice) {
-        notices.push(this.logNotice);
-      }
-
-      return notices.concat(_pluginNotices).filter((notice) => {
-        if (notice.options.visibility) {
-          return notice.options.visibility(notice);
-        } else {
-          const key = `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`;
-          const value = this.keyValueStore.get(key);
-
-          // banner has never been dismissed
-          if (!value) {
-            return true;
-          }
-
-          // banner has no persistent dismiss and should always show on load
-          if (!notice.options.persistentDismiss) {
-            return true;
-          }
-
-          if (notice.options.dismissDuration) {
-            const resetAt = moment(value).add(notice.options.dismissDuration);
-            return moment().isAfter(resetAt);
-          } else {
-            return false;
-          }
-        }
+    if (notice.options.persistentDismiss) {
+      this.keyValueStore.set({
+        key: `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`,
+        value: moment().toISOString(true),
       });
     }
-  ),
 
-  actions: {
-    dismissNotice(notice) {
-      if (notice.options.onDismiss) {
-        notice.options.onDismiss(notice);
-      }
-
-      if (notice.options.persistentDismiss) {
-        this.keyValueStore.set({
-          key: `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`,
-          value: moment().toISOString(true),
-        });
-      }
-
-      const alert = document.getElementById(`global-notice-${notice.id}`);
-      if (alert) {
-        alert.style.display = "none";
-      }
-    },
-  },
-
-  _setupObservers() {
-    LogsNotice.current().addObserver("hidden", this._handleLogsNoticeUpdate);
-    LogsNotice.current().addObserver("text", this._handleLogsNoticeUpdate);
-  },
-
-  _tearDownObservers() {
-    LogsNotice.current().removeObserver("text", this._handleLogsNoticeUpdate);
-    LogsNotice.current().removeObserver("hidden", this._handleLogsNoticeUpdate);
+    const alert = document.getElementById(`global-notice-${notice.id}`);
+    if (alert) {
+      alert.style.display = "none";
+    }
   },
 
   @bind
   _handleLogsNoticeUpdate() {
     const logNotice = Notice.create({
-      text: htmlSafe(LogsNotice.currentProp("message")),
+      text: htmlSafe(this.logsNoticeService.message),
       id: "alert-logs-notice",
       options: {
         dismissable: true,
         persistentDismiss: false,
         visibility() {
-          return !LogsNotice.currentProp("hidden");
+          return !this.logsNoticeService.hidden;
         },
         onDismiss() {
-          LogsNotice.currentProp("hidden", true);
-          LogsNotice.currentProp("text", "");
+          this.logsNoticeService.setProperties({
+            hidden: true,
+            text: "",
+          });
         },
       },
     });

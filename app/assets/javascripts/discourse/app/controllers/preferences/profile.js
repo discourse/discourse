@@ -34,21 +34,20 @@ export default Controller.extend({
 
   @discourseComputed("model.user_fields.@each.value")
   userFields() {
-    let siteUserFields = this.site.get("user_fields");
-    if (!isEmpty(siteUserFields)) {
-      const userFields = this.get("model.user_fields");
-
-      // Staff can edit fields that are not `editable`
-      if (!this.get("currentUser.staff")) {
-        siteUserFields = siteUserFields.filterBy("editable", true);
-      }
-      return siteUserFields.sortBy("position").map(function (field) {
-        const value = userFields
-          ? userFields[field.get("id").toString()]
-          : null;
-        return EmberObject.create({ value, field });
-      });
+    let siteUserFields = this.site.user_fields;
+    if (isEmpty(siteUserFields)) {
+      return;
     }
+
+    // Staff can edit fields that are not `editable`
+    if (!this.currentUser.staff) {
+      siteUserFields = siteUserFields.filterBy("editable", true);
+    }
+
+    return siteUserFields.sortBy("position").map((field) => {
+      const value = this.model.user_fields?.[field.id.toString()];
+      return EmberObject.create({ field, value });
+    });
   },
 
   @discourseComputed("model.default_calendar")

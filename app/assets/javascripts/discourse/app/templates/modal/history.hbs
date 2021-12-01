@@ -84,12 +84,12 @@
       <div class="row">
         {{i18n "tagging.changed"}}
         {{#each previousTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.deleted "diff-del")}}
         {{/each}}
         &rarr;
         &nbsp;
         {{#each currentTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.inserted "diff-ins")}}
         {{/each}}
       </div>
     {{/if}}

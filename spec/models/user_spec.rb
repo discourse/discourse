@@ -3,11 +3,13 @@
 require 'rails_helper'
 
 describe User do
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
   end
+
+  it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
 
   context 'validations' do
     describe '#username' do
@@ -234,7 +236,7 @@ describe User do
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_blank
 
-      EmailToken.confirm(user.email_tokens.first.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       expect(user.reload.active).to eq(true)
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_present
@@ -876,7 +878,7 @@ describe User do
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
+      email_token = Fabricate(:email_token, user: @user, email: 'pasta@delicious.com')
 
       UserAuthToken.generate!(user_id: @user.id)
 
@@ -1073,7 +1075,7 @@ describe User do
 
     context 'when email has been confirmed' do
       it 'should return true' do
-        token = user.email_tokens.find_by(email: user.email)
+        token = Fabricate(:email_token, user: user)
         EmailToken.confirm(token.token)
         expect(user.email_confirmed?).to eq(true)
       end
@@ -1549,14 +1551,14 @@ describe User do
 
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
-      EmailToken.confirm(staged_user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: staged_user).token)
       group.reload
       expect(group.users.include?(staged_user)).to eq(false)
     end
 
     it "is automatically added to a group when the email matches" do
       user = Fabricate(:user, active: true, email: "foo@bar.com")
-      EmailToken.confirm(user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1585,7 +1587,7 @@ describe User do
 
       user.password_required!
       user.save!
-      EmailToken.confirm(user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       user.reload
 
       expect(user.title).to eq("bars and wats")
@@ -1920,6 +1922,18 @@ describe User do
       #       to be removed in 2.5
       expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
+    end
+
+    it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      user.update(last_seen_at: 31.days.ago)
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message).to eq(nil)
     end
   end
 

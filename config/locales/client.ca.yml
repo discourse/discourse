@@ -41,6 +41,7 @@ ca:
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH:mm"
       wrap_ago: "fa %{date} "
+      wrap_on: "el %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -1700,6 +1701,9 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Descarta-ho"
+        cancel: "Cancel·la"
       group_message_summary:
         one: "%{count} missatge en la vostra bústia de %{group_name}"
         other: "%{count} missatges en la vostra bústia de %{group_name}"
@@ -2569,6 +2573,9 @@ ca:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
+    pending_posts:
+      label: "Pendent"
+      label_with_count: "Pendents (%{count})"
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:

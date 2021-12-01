@@ -1287,7 +1287,6 @@ ca:
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
-    slow_down_crawler_user_agents: "Agents d'usuari dels rastrejadors web que haurien de ser limitats en robots.txt utilitzant la directiva de retard (Crawl-delay)."
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy: "Activa Content-Security-Policy (CSP)"
     content_security_policy_report_only: "Activa Content-Security-Policy-Report-Only"

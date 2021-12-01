@@ -3,6 +3,7 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -55,10 +56,9 @@ export default DiscourseRoute.extend({
     ]);
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("users")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("users")._showFooter();
+    return true;
   },
 });

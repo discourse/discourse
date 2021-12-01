@@ -26,6 +26,10 @@ class String
   def cyan
     "\e[36m#{self}\e[0m"
   end
+
+  def red
+    "\033[31m#{self}\e[0m"
+  end
 end
 
 if ARGV.include?("-h") || ARGV.include?("--help")
@@ -46,7 +50,13 @@ if !args.include?("test") && !args.include?("--proxy")
   args << PROXY
 end
 
-system "yarn -s install --cwd #{yarn_dir}"
+exit 1 if !system "yarn -s install --cwd #{yarn_dir}"
+
+if !system("node -p 'require(\"crypto\").createHash(\"md4\")'", out: "/dev/null", err: "/dev/null")
+  $stderr << "#{"ERROR".red}: Node 17 with OpenSSL 3 is currently unsupported\n"
+  $stderr << "Please use node LTS (16.x) instead\n"
+  exit 1
+end
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
@@ -72,7 +82,6 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   end
 
   Process.wait(unicorn_pid)
-
 else
   exec "yarn", *args.to_a.flatten
 end

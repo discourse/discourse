@@ -659,6 +659,7 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+    hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
@@ -1413,6 +1414,7 @@ de:
     tl2_post_edit_time_limit: "Verfasser der Vertrauensstufen 2 und höher können ihre Beiträge (n) Minuten nach dem Schreiben noch ändern. 0 bedeutet immer."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert, sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
+    notify_users_after_responses_deleted_on_flagged_post: "Wenn ein Beitrag markiert und dann entfernt wird, werden alle Benutzer, die auf den Beitrag geantwortet haben und deren Antworten entfernt wurden, benachrichtigt."
     max_image_width: "Maximale Breite von Vorschaubildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einem Beitrag."
     responsive_post_image_sizes: "Ändere die Größe der Lightbox-Vorschaubilder, um High-DPI-Bildschirme mit den folgenden Pixelverhältnissen zu ermöglichen. Entferne alle Werte, um responsive Bilder zu deaktivieren."
@@ -1513,7 +1515,6 @@ de:
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
-    slow_down_crawler_user_agents: "Browserkennungen von Webcrawlern, deren Anfragezahl über die Direktive Crawl-delay in der Datei „robots.txt“ begrenzt werden soll."
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
     content_security_policy: "Aktiviere Content-Security-Policy"
     content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only"
@@ -1550,6 +1551,7 @@ de:
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche („|“) getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
+    normalize_emails: "Überprüfe, ob normalisierte E-Mails eindeutig sind. Normalisierte E-Mail entfernt alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen."
     auto_approve_email_domains: "Benutzer mit E-Mail-Adressen aus dieser Liste von Domains werden automatisch genehmigt."
     hide_email_address_taken: "Teile Benutzern während der Registrierung und beim „Passwort vergessen“-Formular nicht mit, wenn ein Konto mit der angegebenen E-Mail-Adresse existiert."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
@@ -1739,6 +1741,9 @@ de:
     max_mentions_per_post: "Maximale Anzahl der Namenserwähnungen mit @, die Benutzer in Beiträgen nutzen dürfen."
     max_users_notified_per_group_mention: "Maximale Anzahl von Benutzern, die eine Benachrichtigung erhalten können, wenn eine Gruppe erwähnt wird (wenn der Schwellenwert erreicht ist, werden keine Benachrichtigungen ausgelöst)"
     enable_mentions: "Erlaube Benutzern, andere Benutzer zu erwähnen."
+    here_mention: "Name, der für die @here-Erwähnung verwendet wird. Darf kein bestehender Benutzername sein."
+    max_here_mentioned: "Maximale Anzahl der erwähnten Personen von @here."
+    min_trust_level_for_here_mention: "Die minimale Vertrauensstufe, die @hier erwähnt werden darf."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     personal_email_time_window_seconds: "Warte (n) Sekunden, bevor E-Mail-Benachrichtigungen zu persönlichen Nachrichten verschickt werden, um Benutzern die Gelegenheit zu geben, ihre Nachrichten abschließend bearbeiten zu können."
@@ -1950,7 +1955,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
-    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Blockinhalt in die Zwischenablage des Benutzers zu kopieren. Diese Funktion wird im Internet Explorer nicht unterstützt."
+    show_copy_button_on_codeblocks: "Füge eine Schaltfläche zu Codeblöcken hinzu, um den Inhalt des Blocks in die Zwischenablage des Nutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
     embed_topics_list: "HTML-Einbettung von Themenlisten unterstützen"
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
@@ -2076,6 +2081,7 @@ de:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
+      valid_username: "Es gibt einen Benutzer mit diesem Benutzernamen."
       invalid_group: "Es gibt keine Gruppe mit diesem Namen."
       invalid_integer_min_max: "Der Wert muss zwischen %{min} und %{max} liegen."
       invalid_integer_min: "Der Wert muss %{min} oder größer sein."
@@ -2462,42 +2468,16 @@ de:
 
       [**%{base_url}**][0]
 
-      Die Zustellbarkeit von E-Mails ist eine komplizierte Angelegenheit. Nachfolgend ein paar wichtige Aspekte, die du zuerst überprüfen solltest:
+      Wir hoffen, Du hast diesen E-Mail-Zustellbarkeitstest erhalten. OK!
 
-      - Stelle *sicher*, dass du die „from:“-Adresse für die `notification email` in den Einstellungen deiner Website korrekt festlegst. **Die Domain, die in der „from“-Adresse deiner E-Mails angegeben ist, ist die Domain, gegen die deine E-Mail validiert wird.**
+      Hier ist eine [praktische Checkliste zum Überprüfen der Konfiguration der E-Mail-Zustellung][1].
 
-      - Du solltest wissen, wie du den Roh-Quelltext der E-Mail in deinem Mail-Client anzeigst, damit du die E-Mail-Header auf wichtige Hinweise untersuchen kannst. In Gmail ist es die Option „Original anzeigen“ im Drop-down-Menü oben rechts bei jeder Mail.
+      Viel Glück,
 
-      - **WICHTIG:** Hat dein ISP einen Reverse-DNS-Eintrag festgelegt, um die Domain-Namen und IP-Adressen, von denen du Mails sendest, zu verknüpfen? [Teste deinen Reverse-PTR-Eintrag][2] hier. Wenn dein ISP nicht den richtigen Reverse-DNS-Pointer-Record einträgt, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden können.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? [Teste deinen SPF-Eintrag][1] hier. Beachte, dass TXT der korrekte offizielle Eintragstyp für SPF ist.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Dies wird die Zustellbarkeit von E-Mails deutlich verbessern. [Teste deinen DKIM-Eintrag][7] hier.
-
-      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, ob die IPs deines Mailservers [nicht auf irgendwelchen E-Mail-Negativlisten][4] stehen. Überprüfe auch, ob er definitiv einen vollqualifizierten Hostnamen, der im DNS aufgelöst wird, in seiner HELO-Nachricht sendet. Wenn nicht, wird deine E-Mail von vielen Maildiensten abgelehnt.
-
-      - Wir empfehlen dir dringend, **eine Test-E-Mail an [mail-tester.com][mt]** zu senden, um zu überprüfen, ob alles oben genannte korrekt funktioniert.
-
-      (Am *einfachsten* ist es, ein Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] zu erstellen, die günstige Mailing-Tarife anbieten und für kleine Communitys gut geeignet sind. Du musst allerdings trotzdem noch die SPF- und DKIM-Einträge in deinem DNS einrichten!)
-
-      Wir hoffen, dass du diesen E-Mail-Zustellbarkeitstest erhalten hast!
-
-      Viel Erfolg!
-
-      Deine Freunde von [Discourse](https://www.discourse.org)
+      Deine Freunde bei [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
@@ -2535,6 +2515,11 @@ de:
     inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
     notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
+    responder:
+      off_topic: "Der Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
+      inappropriate: "Der Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
+      spam: "Der Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
+      notify_moderators: "Der Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
   flags_dispositions:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt, und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt, und haben den Beitrag gelöscht."
@@ -2624,6 +2609,23 @@ de:
         ```
 
         Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Antwort wurde von Mitarbeitern aus dem markierten Beitrag entfernt"
+      subject_template: "Antwort wurde von Mitarbeitern aus dem markierten Beitrag entfernt"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatische Nachricht von %{site_name} , um dich zu informieren, dass ein [Beitrag](%{base_url}%{url}), auf den du geantwortet hast, entfernt wurde.
+
+        %{flag_reason}
+
+        Dieser Beitrag wurde von der Community markiert und ein Mitarbeiter hat sich entschieden, ihn zu entfernen.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Weitere Einzelheiten zum Grund für die Entfernung findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -3611,9 +3613,9 @@ de:
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
     size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Abschnittes überein. %{additional_detail}"
-    create_mutlipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
-    abort_mutlipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
-    complete_mutlipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
+    create_multipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
+    abort_multipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
+    complete_multipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
     external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
@@ -4367,8 +4369,10 @@ de:
             label: "Name deiner Community"
             placeholder: "Erikas Stammtisch"
           site_description:
+            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
           short_site_description:
+            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
             placeholder: "Beste Community aller Zeiten"
       introduction:
         title: "Einführung"

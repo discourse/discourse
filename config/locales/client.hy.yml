@@ -1661,6 +1661,9 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Չեղարկել"
+        cancel: "Չեղարկել"
       group_message_summary:
         one: "%{count} հաղորդագրություն Ձեր %{group_name} մուտքային արկղում"
         other: "%{count} հաղորդագրություն Ձեր %{group_name}-ի մուտքային արկղում"
@@ -2563,6 +2566,9 @@ hy:
         title: "Այս թեման անձնական հաղորդագրություն է"
         help: "Այս թեման անձնական հաղորդագրություն է"
     posts: "Գրառումներ"
+    pending_posts:
+      label: "Սպասող"
+      label_with_count: "Սպասող (%{count})"
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:

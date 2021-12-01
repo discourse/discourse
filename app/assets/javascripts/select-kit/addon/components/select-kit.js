@@ -27,9 +27,7 @@ const SELECT_KIT_OPTIONS = Mixin.create({
 });
 
 function isDocumentRTL() {
-  return (
-    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
-  );
+  return document.documentElement.classList.contains("rtl");
 }
 
 export default Component.extend(
@@ -446,7 +444,10 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (this.selectKit.options.closeOnChange) {
+          if (
+            this.selectKit.options.closeOnChange ||
+            (isPresent(value) && this.selectKit.options.maximum === 1)
+          ) {
             this.selectKit.close(event);
           }
 
@@ -863,7 +864,10 @@ export default Component.extend(
           `#${this.selectKit.uniqueID}-body`
         );
 
-        const placementStrategy = this?.site?.mobileView ? "absolute" : "fixed";
+        const placementStrategy =
+          this.capabilities?.isIpadOS || this.site?.mobileView
+            ? "absolute"
+            : "fixed";
         const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
@@ -1038,7 +1042,7 @@ export default Component.extend(
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0" });
+        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
       }
     },
 

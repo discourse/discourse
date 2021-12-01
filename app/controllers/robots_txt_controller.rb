@@ -84,16 +84,6 @@ class RobotsTxtController < ApplicationController
       result[:agents] << { name: 'Googlebot', disallow: deny_paths_googlebot }
     end
 
-    if SiteSetting.slow_down_crawler_user_agents.present?
-      SiteSetting.slow_down_crawler_user_agents.split('|').each do |agent|
-        result[:agents] << {
-          name: agent,
-          delay: SiteSetting.slow_down_crawler_rate,
-          disallow: deny_paths
-        }
-      end
-    end
-
     result
   end
 end

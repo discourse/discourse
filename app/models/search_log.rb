@@ -187,5 +187,6 @@ end
 #
 # Indexes
 #
-#  index_search_logs_on_created_at  (created_at)
+#  index_search_logs_on_created_at              (created_at)
+#  index_search_logs_on_user_id_and_created_at  (user_id,created_at) WHERE (user_id IS NOT NULL)
 #

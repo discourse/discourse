@@ -116,6 +116,7 @@ nl:
       previous_month: "Vorige maand"
       next_month: "Volgende maand"
       placeholder: datum
+      from_placeholder: "vanaf datum"
       to_placeholder: "tot datum"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
@@ -1438,7 +1439,7 @@ nl:
         invite:
           new_title: "Uitnodiging maken"
           edit_title: "Uitnodiging bewerken"
-          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen"
+          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen:"
           copy_link: "koppeling kopiëren"
           show_advanced: "Geavanceerde opties tonen"
           hide_advanced: "Geavanceerde opties verbergen"
@@ -1448,7 +1449,6 @@ nl:
           send_invite_email: "E-mail opslaan en versturen"
           save_invite: "Uitnodiging opslaan"
           invite_saved: "Uitnodiging opgeslagen."
-          invite_copied: "Uitnodigingskoppeling gekopieerd."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -1893,6 +1893,7 @@ nl:
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
+      title: "Of druk op %{modifier}Enter"
       users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
@@ -2029,6 +2030,9 @@ nl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
+      dismiss_confirmation:
+        dismiss: "Negeren"
+        cancel: "Annuleren"
       group_message_summary:
         one: "%{count} bericht in uw Postvak IN voor %{group_name}"
         other: "%{count} berichten in uw Postvak IN voor %{group_name}"
@@ -2666,7 +2670,9 @@ nl:
           other: "U hebt <b>%{count}</b> berichten geselecteerd."
     post:
       quote_reply: "Citeren"
+      quote_reply_shortcut: "Of druk op q"
       quote_edit: "Bewerken"
+      quote_edit_shortcut: "Of druk op e"
       quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
@@ -3102,6 +3108,9 @@ nl:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
+    pending_posts:
+      label: "In wachtrij"
+      label_with_count: "Uitstaand (%{count})"
     posts_likes_MF: |
       Dit topic heeft {count, plural, one {# antwoord} other {# antwoorden}} {ratio, select,
       low {met een hoge verhouding likes per bericht}
@@ -3128,6 +3137,7 @@ nl:
       other: "gebruikers"
     category_title: "Categorie"
     history_capped_revisions: "Geschiedenis, laatste 100 herzieningen"
+    history: "Geschiedenis"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -3426,6 +3436,7 @@ nl:
         usable_only_by_groups: "Tags zijn voor iedereen zichtbaar, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
         cannot_save: "Kan tag-groep niet opslaan. Zorg ervoor dat er ten minste één tag aanwezig is, de tag-group naam niet leeg is en een groep geselecteerd is voor tags toestemming."
+        parent_tag_placeholder: "Optioneel"
       topics:
         none:
           unread: "U hebt geen ongelezen topics."
@@ -3569,6 +3580,7 @@ nl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeklogboeken</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
+          average_chart_label: Gemiddeld
           filters:
             file_extension:
               label: Bestandsextensie
@@ -3672,7 +3684,6 @@ nl:
         delete: Definitief verwijderen
         not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg ervoor dat u een kopie maakt voordat u doorgaat.
         continue: Doorgaan
-        use_global_key: Algemene sleutel (staat alle acties toe)
         scopes:
           description: |
             Bij het gebruik van scopes kunt u een API-sleutel tot een bepaalde groep eindpunten beperken.
@@ -4498,6 +4509,7 @@ nl:
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
         delete_posts_failed: "Er is een probleem opgetreden bij het verwijderen van de berichten."
         post_edits: "Berichtbewerkingen"
+        view_edits: "Bewerkingen bekijken"
         penalty_post_actions: "Wat wilt u met het gekoppelde bericht doen?"
         penalty_post_delete: "Het bericht verwijderen"
         penalty_post_delete_replies: "Het bericht + alle antwoorden verwijderen"

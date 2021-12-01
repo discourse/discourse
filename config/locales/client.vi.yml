@@ -1347,22 +1347,19 @@ vi:
         invite:
           new_title: "Tạo lời mời"
           edit_title: "Chỉnh sửa lời mời"
-          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này"
+          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này:"
           copy_link: "sao chép liên kết"
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
-          restrict_email: "Giới hạn đến một địa chỉ email"
           max_redemptions_allowed: "Sử dụng tối đa"
           add_to_groups: "Thêm vào nhóm"
-          invite_to_topic: "Đến chủ đề này"
           expires_at: "Hết hạn sau"
           custom_message: "Tin nhắn cá nhân tùy chọn"
           send_invite_email: "Lưu và Gửi Email"
           save_invite: "Lưu lời mời"
           invite_saved: "Đã lưu lời mời."
-          invite_copied: "Đã sao chép liên kết mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
@@ -1898,6 +1895,9 @@ vi:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - hoàn thành"
+      dismiss_confirmation:
+        dismiss: "Hủy bỏ"
+        cancel: "Hủy"
       group_message_summary:
         other: "%{count} thư trong %{group_name} hộp thư đến của bạn"
       popup:
@@ -2875,6 +2875,9 @@ vi:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
     posts: "Bài viết"
+    pending_posts:
+      label: "Đang treo"
+      label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
       Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}
@@ -3416,7 +3419,6 @@ vi:
         delete: Xóa vĩnh viễn
         not_shown_again: Khóa này sẽ không được hiển thị lại. Đảm bảo bạn chụp một bản sao trước khi tiếp tục.
         continue: Tiếp tục
-        use_global_key: Khóa toàn cầu (cho phép tất cả các hành động)
         scopes:
           description: |
             Khi sử dụng phạm vi, bạn có thể hạn chế khóa API đối với một tập hợp các điểm cuối cụ thể.

@@ -161,12 +161,8 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(UrlHelper.escape_uri(src))
-          unless uri.host
-            uri.scheme = original_uri.scheme
-            uri.host = original_uri.host
-            node[url_param] = uri.to_s
-          end
+          # convert URL to absolute form
+          node[url_param] = URI.join(url, UrlHelper.escape_uri(src)).to_s
         rescue URI::Error, Addressable::URI::InvalidURIError
           # If there is a mistyped URL, just do nothing
         end
@@ -211,15 +207,13 @@ class TopicEmbed < ActiveRecord::Base
 
     fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
-      href = a['href']
-      if href.present? && href.start_with?('/')
-        a['href'] = "#{prefix}/#{href.sub(/^\/+/, '')}"
+      if a['href'].present?
+        a['href'] = URI.join(prefix, a['href']).to_s
       end
     end
     fragment.css('img').each do |a|
-      src = a['src']
-      if src.present? && src.start_with?('/')
-        a['src'] = "#{prefix}/#{src.sub(/^\/+/, '')}"
+      if a['src'].present?
+        a['src'] = URI.join(prefix, a['src']).to_s
       end
     end
     fragment.at('div').inner_html

@@ -49,7 +49,7 @@ def process_uploads
   SQL
 
   if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
-    scope = scope.where("id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
+    scope = scope.where("uploads.id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
   end
 
   skipped = 0

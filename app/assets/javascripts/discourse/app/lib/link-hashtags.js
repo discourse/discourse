@@ -14,6 +14,7 @@ export function linkSeenHashtags(elem) {
 
     deprecated("linkSeenHashtags now expects a DOM node as first parameter", {
       since: "2.8.0.beta7",
+      dropFrom: "2.9.0.beta1",
     });
   }
 
