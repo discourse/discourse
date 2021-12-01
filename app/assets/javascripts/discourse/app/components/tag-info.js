@@ -93,12 +93,13 @@ export default Component.extend({
     },
 
     finishedEditing() {
+      const oldTagName = this.tag.id;
       this.tag
         .update({ id: this.newTagName, description: this.newTagDescription })
         .then((result) => {
           this.set("editing", false);
           this.tagInfo.set("description", this.newTagDescription);
-          if (result.payload) {
+          if (result.payload && oldTagName !== result.payload.id) {
             this.router.transitionTo("tag.show", result.payload.id);
           }
         })
