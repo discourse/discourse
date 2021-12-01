@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConvertDateComponentToDateTime < ActiveRecord::Migration[6.1]
   def change
     DB.query("SELECT id,metadata FROM discourse_automation_fields WHERE component = 'date'").each do |field|

@@ -14,5 +14,5 @@ export default Component.extend({
       "currentValue",
       this.currentValue + ` %%${placeholder.toUpperCase()}%%`
     );
-  }
+  },
 });

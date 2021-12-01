@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 DiscourseAutomation::Scriptable.add('something_about_us') do

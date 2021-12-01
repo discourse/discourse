@@ -1,8 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { isPresent } from "@ember/utils";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { action } from "@ember/object";
 import { hash } from "rsvp";
 
 export default DiscourseRoute.extend({
@@ -12,18 +11,18 @@ export default DiscourseRoute.extend({
     return hash({
       scriptables: this.store
         .findAll("discourse-automation-scriptable")
-        .then(result => result.content),
+        .then((result) => result.content),
       triggerables: ajax(
         `/admin/plugins/discourse-automation/triggerables.json?automation_id=${params.id}`
-      ).then(result => (result ? result.triggerables : [])),
-      automation: this.store.find("discourse-automation-automation", params.id)
+      ).then((result) => (result ? result.triggerables : [])),
+      automation: this.store.find("discourse-automation-automation", params.id),
     });
   },
 
   _fieldsForTarget(automation, target) {
-    return (automation[target].templates || []).map(template => {
+    return (automation[target].templates || []).map((template) => {
       const field = automation[target].fields.find(
-        f => f.name === template.name && f.component === template.component
+        (f) => f.name === template.name && f.component === template.component
       );
 
       return EmberObject.create({
@@ -33,11 +32,11 @@ export default DiscourseRoute.extend({
         component: template.component,
         metadata: {
           value:
-            template.default_value || template.value || field?.metadata?.value
+            template.default_value || template.value || field?.metadata?.value,
         },
         isDisabled: isPresent(template.default_value),
         isRequired: template.is_required,
-        extra: template.extra
+        extra: template.extra,
       });
     });
   },
@@ -54,13 +53,13 @@ export default DiscourseRoute.extend({
         script: automation.script?.id,
         fields: this._fieldsForTarget(automation, "script").concat(
           this._fieldsForTarget(automation, "trigger")
-        )
-      }
+        ),
+      },
     });
   },
 
   @action
   refreshRoute() {
     return this.refresh();
-  }
+  },
 });

@@ -11,5 +11,5 @@ export default DiscourseRoute.extend({
   @action
   triggerRefresh() {
     this.refresh();
-  }
+  },
 });

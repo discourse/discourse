@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostMigrateGiftFromPmToPms < ActiveRecord::Migration[6.1]
   def up
     query = DB.query(<<~SQL, name: 'giftee_assignment_message')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddsDiscourseAutomationUserGlobalNotice < ActiveRecord::Migration[6.1]
   def change
     create_table :discourse_automation_user_global_notices do |t|

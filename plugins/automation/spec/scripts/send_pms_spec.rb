@@ -30,8 +30,8 @@ describe 'SendPms' do
         post = Post.last
         expect(post.topic.title).to eq("A message from #{Discourse.system_user.username}")
         expect(post.raw).to eq("This is a message sent to @#{post_creator_1.username}")
-        expect(post.topic.topic_allowed_users.exists?(user_id: post_creator_1.id))
-        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id))
+        expect(post.topic.topic_allowed_users.exists?(user_id: post_creator_1.id)).to eq(true)
+        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id)).to eq(true)
       }.to change { Post.count }.by(1)
     end
   end
@@ -52,8 +52,8 @@ describe 'SendPms' do
         post = Post.last
         expect(post.topic.title).to eq("A message from #{Discourse.system_user.username}")
         expect(post.raw).to eq("This is a message sent to @#{user_1.username}")
-        expect(post.topic.topic_allowed_users.exists?(user_id: user_1.id))
-        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id))
+        expect(post.topic.topic_allowed_users.exists?(user_id: user_1.id)).to eq(true)
+        expect(post.topic.topic_allowed_users.exists?(user_id: Discourse.system_user.id)).to eq(true)
       }.to change { Post.count }.by(1)
     end
   end

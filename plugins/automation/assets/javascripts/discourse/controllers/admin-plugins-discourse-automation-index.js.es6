@@ -16,9 +16,9 @@ export default Ember.Controller.extend({
   destroyAutomation(automation) {
     bootbox.confirm(
       I18n.t("discourse_automation.destroy_automation.confirm", {
-        name: automation.name
+        name: automation.name,
       }),
-      result => {
+      (result) => {
         if (result) {
           automation
             .destroyRecord()
@@ -27,5 +27,5 @@ export default Ember.Controller.extend({
         }
       }
     );
-  }
+  },
 });

@@ -17,7 +17,7 @@ export default BaseField.extend({
       I18n.t("discourse_automation.fields.pms.confirm_remove_pm"),
       I18n.t("no_value"),
       I18n.t("yes_value"),
-      result => {
+      (result) => {
         if (result) {
           this.field.metadata.value.removeObject(pm);
         }
@@ -31,7 +31,7 @@ export default BaseField.extend({
       title: "",
       raw: "",
       delay: 0,
-      encrypt: true
+      encrypt: true,
     });
-  }
+  },
 });

@@ -10,7 +10,7 @@ function _initializeDiscourseAutomation(api) {
 function _initializeGLobalUserNotices(api) {
   const currentUser = api.getCurrentUser();
 
-  makeArray(currentUser?.global_notices).forEach(userGlobalNotice => {
+  makeArray(currentUser?.global_notices).forEach((userGlobalNotice) => {
     api.addGlobalNotice("", userGlobalNotice.identifier, {
       html: userGlobalNotice.notice,
       level: userGlobalNotice.level,
@@ -18,9 +18,9 @@ function _initializeGLobalUserNotices(api) {
       dismissDuration: moment.duration(1, "week"),
       onDismiss() {
         ajax(`/user-global-notices/${userGlobalNotice.id}.json`, {
-          type: "DELETE"
+          type: "DELETE",
         }).catch(popupAjaxError);
-      }
+      },
     });
   });
 }
@@ -30,5 +30,5 @@ export default {
 
   initialize() {
     withPluginApi("0.8.24", _initializeDiscourseAutomation);
-  }
+  },
 };

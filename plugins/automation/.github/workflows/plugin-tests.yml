@@ -1,0 +1,133 @@
+name: Plugin Tests
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:release
+    timeout-minutes: 60
+
+    env:
+      DISCOURSE_HOSTNAME: www.example.com
+      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
+      RAILS_ENV: test
+      PGHOST: postgres
+      PGUSER: discourse
+      PGPASSWORD: discourse
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_type: ['backend', 'frontend']
+        ruby: ['2.7']
+        postgres: ['13']
+
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: discourse
+          POSTGRES_PASSWORD: discourse
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: discourse/discourse
+          fetch-depth: 1
+
+      - name: Install plugin
+        uses: actions/checkout@v2
+        with:
+          path: plugins/${{ github.event.repository.name }}
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Bundler cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Lint English locale
+        if: matrix.build_type == 'backend'
+        run: bundle exec ruby script/i18n_lint.rb "plugins/${{ github.event.repository.name }}/locales/{client,server}.en.yml"
+
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.os }}-yarn-
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Migrate database
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
+
+      - name: Check spec existence
+        id: check_spec
+        shell: bash
+        run: |
+          if [ 0 -lt $(find plugins/${{ github.event.repository.name }}/spec -type f -name "*.rb" 2> /dev/null | wc -l) ]; then
+            echo "::set-output name=files_exist::true"
+          fi
+
+      - name: Plugin RSpec
+        if: matrix.build_type == 'backend' && steps.check_spec.outputs.files_exist == 'true'
+        run: bin/rake plugin:spec[${{ github.event.repository.name }}]
+
+      - name: Check qunit existence
+        id: check_qunit
+        shell: bash
+        run: |
+          if [ 0 -lt $(find plugins/${{ github.event.repository.name }}/test/javascripts -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
+            echo "::set-output name=files_exist::true"
+          fi
+
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && steps.check_qunit.outputs.files_exist == 'true'
+        run: bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
+        timeout-minutes: 30

@@ -7,7 +7,7 @@ describe DiscourseAutomation::UserGlobalNotice do
 
   context 'creating duplicates' do
     it 'prevents creating duplicates' do
-      row = {user_id: user_1.id, notice: 'foo', identifier: 'bar', created_at: Time.now, updated_at: Time.now}
+      row = { user_id: user_1.id, notice: 'foo', identifier: 'bar', created_at: Time.now, updated_at: Time.now }
 
       described_class.upsert(row)
 

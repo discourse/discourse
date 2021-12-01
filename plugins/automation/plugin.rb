@@ -4,7 +4,8 @@
 # about:
 # version: 0.1
 # authors: jjaffeux
-# url: https://github.com/jjaffeux/discourse-automation
+# url: https://github.com/discourse/discourse-automation
+
 gem 'iso8601', '0.13.0'
 gem 'json_schemer', '0.2.18'
 gem 'rrule', '0.4.2'
@@ -123,7 +124,7 @@ after_initialize do
 
   add_admin_route 'discourse_automation.title', 'discourse-automation'
 
-  add_api_key_scope(:automations_trigger, { post: { actions: %w[discourse_automation/automations#trigger], params: %i[context], formats: :json }})
+  add_api_key_scope(:automations_trigger, { post: { actions: %w[discourse_automation/automations#trigger], params: %i[context], formats: :json } })
 
   add_to_serializer(:current_user, :global_notices) do
     notices = DiscourseAutomation::UserGlobalNotice.where(user_id: object.id)

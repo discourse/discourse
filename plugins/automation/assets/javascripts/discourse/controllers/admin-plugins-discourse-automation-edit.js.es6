@@ -1,8 +1,7 @@
-import { set } from "@ember/object";
+import { action, set } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { reads, filterBy } from "@ember/object/computed";
+import { filterBy, reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -36,13 +35,13 @@ export default Ember.Controller.extend({
         type: "PUT",
         data: JSON.stringify({ automation: this.automationForm }),
         dataType: "json",
-        contentType: "application/json"
+        contentType: "application/json",
       }
     )
       .then(() => {
         this.send("refreshRoute");
       })
-      .catch(e => this._showError(e))
+      .catch((e) => this._showError(e))
       .finally(() => {
         this.set("isUpdatingAutomation", false);
       });
@@ -72,9 +71,9 @@ export default Ember.Controller.extend({
       this.set("isTriggeringAutomation", true);
 
       return ajax(`/automations/${id}/trigger.json`, {
-        type: "post"
+        type: "post",
       })
-        .catch(e => this.set("error", extractError(e)))
+        .catch((e) => this.set("error", extractError(e)))
         .finally(() => {
           this.set("isTriggeringAutomation", false);
         });
@@ -96,7 +95,7 @@ export default Ember.Controller.extend({
       I18n.t("discourse_automation.confirm_automation_reset"),
       I18n.t("no_value"),
       I18n.t("yes_value"),
-      result => {
+      (result) => {
         if (result) {
           callback && callback();
         }
@@ -109,7 +108,7 @@ export default Ember.Controller.extend({
       I18n.t("discourse_automation.confirm_automation_trigger"),
       I18n.t("no_value"),
       I18n.t("yes_value"),
-      result => {
+      (result) => {
         if (result) {
           callback && callback();
         }
@@ -123,5 +122,5 @@ export default Ember.Controller.extend({
     schedule("afterRender", () => {
       window.scrollTo(0, 0);
     });
-  }
+  },
 });

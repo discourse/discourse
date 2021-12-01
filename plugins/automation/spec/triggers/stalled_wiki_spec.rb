@@ -46,8 +46,8 @@ describe 'StalledWiki' do
 
       context 'trigger has a category' do
         before do
-          automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H'}, target: 'trigger')
-          automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H'}, target: 'trigger')
+          automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H' }, target: 'trigger')
+          automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H' }, target: 'trigger')
           automation.upsert_field!('restricted_category', 'category', { value: Category.last.id }, target: 'trigger')
         end
 

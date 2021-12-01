@@ -8,7 +8,7 @@ export default BaseField.extend({
   init() {
     this._super(...arguments);
 
-    Group.findAll().then(groups => {
+    Group.findAll().then((groups) => {
       this.set("allGroups", groups);
     });
   },
@@ -16,5 +16,5 @@ export default BaseField.extend({
   @action
   setGroupField(groupIds) {
     this.onChangeField(this.field, "value", groupIds && groupIds.firstObject);
-  }
+  },
 });

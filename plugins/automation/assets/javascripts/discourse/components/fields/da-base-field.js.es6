@@ -9,5 +9,5 @@ export default Component.extend({
   @discourseComputed("placeholders.length", "field.acceptsPlaceholders")
   displayPlaceholders(hasPlaceholders, acceptsPlaceholders) {
     return hasPlaceholders && acceptsPlaceholders;
-  }
+  },
 });

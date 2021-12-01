@@ -1,5 +1,10 @@
 {
+  "name": "discourse-automation",
+  "version": "0.1",
+  "repository": "https://github.com/discourse/discourse-automation",
+  "author": "jjaffeux",
+  "license": "MIT",
   "devDependencies": {
-    "eslint-config-discourse": "latest"
+    "eslint-config-discourse": "^1.1.9"
   }
 }
