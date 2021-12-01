@@ -171,8 +171,13 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
 
 function extractPreloadJson(html) {
   const dom = new JSDOM(html);
-  return dom.window.document.querySelector("#data-preloaded")?.dataset
-    ?.preloaded;
+  const dataElement = dom.window.document.querySelector("#data-preloaded");
+
+  if (!dataElement || !dataElement.dataset) {
+    return;
+  }
+
+  return dataElement.dataset.preloaded;
 }
 
 async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
@@ -264,17 +269,16 @@ async function handleRequest(proxy, baseURL, req, res) {
     res.set("content-security-policy", newCSP);
   }
 
-  const isHTML = response.headers.get("content-type")?.startsWith("text/html");
+  const contentType = response.headers.get("content-type");
   const responseText = await response.text();
-  const preload = isHTML ? extractPreloadJson(responseText) : null;
 
-  if (preload) {
+  if (contentType && contentType.startsWith("text/html")) {
     const html = await buildFromBootstrap(
       proxy,
       baseURL,
       req,
       response,
-      preload
+      extractPreloadJson(responseText)
     );
     res.set("content-type", "text/html");
     res.send(html);
