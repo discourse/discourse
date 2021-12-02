@@ -45,7 +45,7 @@ describe 'api keys' do
 
     # Confirm not allowed for json
     get "/latest.json?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-    expect(response.status).to eq(302)
+    expect(response.status).to eq(403)
   end
 
   context "with a plugin registered filter" do
@@ -96,7 +96,7 @@ describe 'user api keys' do
 
     # Confirm not allowed for json
     get "/latest.json?user_api_key=#{user_api_key.key}"
-    expect(response.status).to eq(302)
+    expect(response.status).to eq(403)
   end
 
   it "can restrict scopes by parameters" do
