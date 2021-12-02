@@ -27,7 +27,7 @@
   }
 
   .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
-    padding-bottom: 0px;
+    padding-bottom: 6px;
   }
 
   .reply-to {
@@ -68,7 +68,7 @@
 
     .toggle-toolbar,
     .toggle-minimize {
-      top: 8px;
+      top: 6px;
     }
     .draft-text {
       width: calc(100% - 40px);
@@ -78,6 +78,7 @@
 
   #reply-title {
     width: calc(100% - 20px);
+    margin-bottom: 6px;
   }
 
   .category-input {
@@ -86,10 +87,10 @@
 
   .submit-panel {
     margin-top: 6px;
-    align-items: baseline;
 
     .save-or-cancel {
       flex: 1 1 auto;
+
       #draft-status,
       #file-uploading {
         margin-left: 6px;
@@ -116,10 +117,6 @@
     .mobile-preview {
       margin-left: 0.25em;
     }
-  }
-
-  .d-editor-textarea-wrapper {
-    width: 100%;
   }
 
   &.show-preview {
@@ -176,7 +173,7 @@
   .user-selector {
     margin: 0;
     .users-input {
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
   }
 
@@ -184,7 +181,10 @@
     .mini-tag-chooser,
     .category-chooser {
       z-index: z("base");
-      margin-bottom: 5px;
+    }
+
+    .mini-tag-chooser {
+      margin: 0 0 6px 6px;
     }
 
     .selected-name {
@@ -203,7 +203,7 @@
 
   .without-tags {
     .category-input {
-      margin-left: 5px;
+      margin-left: 6px;
     }
   }
 
@@ -216,11 +216,15 @@
     width: 100%;
   }
 
+  .users-input .select-kit.multi-select {
+    width: 100%;
+  }
+
   .add-warning {
-    margin: 0 0 5px 5px;
+    margin-bottom: 6px;
   }
 
   .whisper {
-    margin-right: 5px;
+    margin-right: 6px;
   }
 }
