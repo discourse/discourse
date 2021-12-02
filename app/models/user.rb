@@ -1455,6 +1455,10 @@ class User < ActiveRecord::Base
     seen_since?(30.days.ago)
   end
 
+  def username_equals_to?(another_username)
+    username_lower == User.normalize_username(another_username)
+  end
+
   protected
 
   def badge_grant
