@@ -10,6 +10,10 @@ class MigrateEmailToNormalizedEmail < ActiveRecord::Migration[6.1]
     min, max, total = DB.query_single "SELECT MIN(id), MAX(id), COUNT(*) FROM user_emails"
     # scaling is needed to compensate for "holes" where records were deleted
     # and pathological cases where for some reason id 100_000_000 and 0 exist
+
+    # avoid doing any work on empty dbs
+    return if min.nil?
+
     scaling = total.to_f / (max - min).to_f
 
     batch_size = 100_000
