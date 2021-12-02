@@ -7,11 +7,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  after_save do |site_setting|
-    DiscourseEvent.trigger(:site_setting_saved, site_setting)
-    true
-  end
-
   def self.load_settings(file, plugin: nil)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
       setting(name, default, opts.merge(category: category, plugin: plugin))

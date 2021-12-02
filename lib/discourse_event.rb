@@ -17,7 +17,7 @@ class DiscourseEvent
 
   def self.on(event_name, &block)
     if event_name == :site_setting_saved
-      Discourse.deprecate("The :site_setting_saved event is deprecated. Please use :site_setting_changed instead", since: "2.3.0beta8", drop_from: "2.4")
+      Discourse.deprecate("The :site_setting_saved event is deprecated. Please use :site_setting_changed instead", since: "2.3.0beta8", drop_from: "2.4", raise_error: true)
     end
     events[event_name] << block
   end
