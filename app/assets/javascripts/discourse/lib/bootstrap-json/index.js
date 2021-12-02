@@ -321,8 +321,8 @@ to serve API requests. For example:
       } catch (error) {
         res.send(`
           <html>
-            <h1>Discourse Build Error</h1>
-            <pre><code>${error}</code></pre>
+            <h1>Discourse Ember CLI Proxy Error</h1>
+            <pre><code>${error.stack}</code></pre>
           </html>
         `);
       } finally {
