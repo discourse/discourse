@@ -262,6 +262,8 @@ export function createData(store) {
       { name: "admin", id: 3, automatic: false },
     ],
 
+    groupNames: ["staff", "lounge", "admin"],
+
     selectedGroups: [1, 2],
 
     settings: "bold|italic|strike|underline",
