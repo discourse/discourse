@@ -14,7 +14,12 @@ class MigrateEmailToNormalizedEmail < ActiveRecord::Migration[6.1]
     # avoid doing any work on empty dbs
     return if min.nil?
 
-    scaling = total.to_f / (max - min).to_f
+    scaling =
+      if min == max
+        1
+      else
+        total.to_f / (max - min).to_f
+      end
 
     batch_size = 100_000
 
