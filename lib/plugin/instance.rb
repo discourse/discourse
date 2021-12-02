@@ -157,7 +157,7 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6")
+    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6", raise_error: true)
     allow_staff_user_custom_field(field)
   end
 
@@ -166,7 +166,7 @@ class Plugin::Instance
   end
 
   def whitelist_public_user_custom_field(field)
-    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6")
+    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6", raise_error: true)
     allow_public_user_custom_field(field)
   end
 
@@ -319,7 +319,7 @@ class Plugin::Instance
   end
 
   def topic_view_post_custom_fields_whitelister(&block)
-    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6")
+    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6", raise_error: true)
     topic_view_post_custom_fields_allowlister(&block)
   end
 
