@@ -240,6 +240,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     method: req.method,
     body: /GET|HEAD/.test(req.method) ? null : req.body,
     headers: req.headers,
+    redirect: "manual",
   });
 
   response.headers.forEach((value, header) => {
