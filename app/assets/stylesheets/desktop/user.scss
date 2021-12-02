@@ -29,7 +29,10 @@
 
     li {
       border-bottom: none;
-
+      &:hover,
+      &.active {
+        background: var(--primary-very-low);
+      }
       &.archive {
         padding-left: 1.4em;
       }

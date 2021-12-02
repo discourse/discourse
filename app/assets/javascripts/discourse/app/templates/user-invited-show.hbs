@@ -28,7 +28,7 @@
             {{#if invitePending}}
               {{#if reinvitedAll}}
                 <span class="reinvited-all">
-                  {{d-button icon="check" disabled=true label="user.invited.reinvited_all" class="ok"}}
+                  {{d-button icon="check" disabled=true label="user.invited.reinvited_all"}}
                 </span>
               {{else if hasEmailInvites}}
                 {{d-button class="btn-default" icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
