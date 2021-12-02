@@ -1080,11 +1080,11 @@ module Email
     end
 
     def message_id_post_id_regexp
-      @message_id_post_id_regexp ||= Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+      @message_id_post_id_regexp ||= Regexp.new "topic/\\d+/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
     end
 
     def message_id_topic_id_regexp
-      @message_id_topic_id_regexp ||= Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
+      @message_id_topic_id_regexp ||= Regexp.new "topic/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)

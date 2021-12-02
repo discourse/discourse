@@ -121,15 +121,9 @@ module Email
         return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
 
         add_attachments(post)
-        first_post = topic.ordered_posts.first
 
-        topic_message_id = first_post.incoming_email&.message_id.present? ?
-          "<#{first_post.incoming_email.message_id}>" :
-          "<topic/#{topic_id}@#{host}>"
-
-        post_message_id = post.incoming_email&.message_id.present? ?
-          "<#{post.incoming_email.message_id}>" :
-          "<topic/#{topic_id}/#{post_id}@#{host}>"
+        topic_message_id = Email::MessageIdGenerator.for_topic(topic, use_incoming_email_if_present: true)
+        post_message_id = Email::MessageIdGenerator.for_post(post, use_incoming_email_if_present: true)
 
         referenced_posts = Post.includes(:incoming_email)
           .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
@@ -141,9 +135,9 @@ module Email
             "<#{referenced_post.incoming_email.message_id}>"
           else
             if referenced_post.post_number == 1
-              "<topic/#{topic_id}@#{host}>"
+              Email::MessageIdGenerator.for_topic(topic)
             else
-              "<topic/#{topic_id}/#{referenced_post.id}@#{host}>"
+              Email::MessageIdGenerator.for_post(referenced_post)
             end
           end
         end

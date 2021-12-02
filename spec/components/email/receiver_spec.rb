@@ -1161,6 +1161,7 @@ describe Email::Receiver do
         NotificationEmailer.enable
         SiteSetting.disallow_reply_by_email_after_days = 10000
         Jobs.run_immediately!
+        Email::MessageIdGenerator.stubs(:random_chunk).returns("blah123")
       end
 
       def reply_as_group_user
@@ -1185,7 +1186,7 @@ describe Email::Receiver do
 
       it "creates an EmailLog when someone from the group replies, and does not create an IncomingEmail record for the reply" do
         email_log, group_post = reply_as_group_user
-        expect(email_log.message_id).to eq("topic/#{original_inbound_email_topic.id}/#{group_post.id}@test.localhost")
+        expect(email_log.message_id).to eq("topic/#{original_inbound_email_topic.id}/#{group_post.id}.blah123@test.localhost")
         expect(email_log.to_address).to eq("two@foo.com")
         expect(email_log.email_type).to eq("user_private_message")
         expect(email_log.post_id).to eq(group_post.id)
