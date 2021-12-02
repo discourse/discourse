@@ -88,9 +88,9 @@ export default Component.extend({
         return;
       }
 
-      if (!this.site.isMobileDevice) {
+      const textareaWrapper = document.querySelector(".d-editor-textarea-wrapper");
+      if (!this.site.isMobileDevice && textareaWrapper) {
         this._popper = createPopper(
-          document.querySelector(".d-editor-textarea-wrapper"),
           emojiPicker,
           {
             placement: "auto",
