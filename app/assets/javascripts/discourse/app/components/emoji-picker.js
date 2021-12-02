@@ -88,25 +88,24 @@ export default Component.extend({
         return;
       }
 
-      const textareaWrapper = document.querySelector(".d-editor-textarea-wrapper");
+      const textareaWrapper = document.querySelector(
+        ".d-editor-textarea-wrapper"
+      );
       if (!this.site.isMobileDevice && textareaWrapper) {
-        this._popper = createPopper(
-          emojiPicker,
-          {
-            placement: "auto",
-            modifiers: [
-              {
-                name: "preventOverflow",
+        this._popper = createPopper(textareaWrapper, emojiPicker, {
+          placement: "auto",
+          modifiers: [
+            {
+              name: "preventOverflow",
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [5, 5],
               },
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 5],
-                },
-              },
-            ],
-          }
-        );
+            },
+          ],
+        });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
