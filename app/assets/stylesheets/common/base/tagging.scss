@@ -340,51 +340,82 @@ section.tag-info {
 
   .edit-tag-wrapper {
     display: flex;
-
-    input {
+    flex-wrap: wrap;
+    #edit-name {
+      flex: 1 1 auto;
       margin-right: 0.5em;
     }
+    #edit-description {
+      flex: 10 1 auto;
+    }
+    .edit-controls {
+      width: 100%;
+    }
   }
-  .tag-name-wrapper,
+
+  .tag-name-wrapper {
+    display: flex;
+    font-size: var(--font-up-4);
+    align-items: baseline;
+    button {
+      font-size: var(--font-down-1);
+      .d-icon {
+        color: var(--primary-high);
+      }
+      .discourse-no-touch & {
+        &:hover {
+          background: transparent;
+        }
+      }
+    }
+  }
+
   .tag-description-wrapper {
     display: flex;
-  }
-  .tag-name-wrapper a {
-    color: var(--primary-high);
-    margin-left: 0.5em;
+    font-size: var(--font-up-1);
   }
 
-  .tag-name-wrapper a {
-    font-size: var(--font-up-3);
-  }
-
-  .tag-name .discourse-tag {
-    display: block;
+  .tag-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25em;
+    a {
+      margin-left: 0.5em;
+    }
   }
 
   .tag-description-wrapper {
     margin-bottom: 1em;
   }
 
-  .synonyms-list,
-  .add-synonyms,
   .tag-associations {
-    margin-top: 1em;
-    @include clearfix;
+    margin-bottom: 1em;
   }
 
-  .synonyms-list {
-    margin: 2em 0 0;
+  .tag-actions {
+    margin-top: 2em;
+  }
+
+  .add-synonyms {
+    margin-top: 1em;
+    div {
+      display: flex;
+    }
+    .ok {
+      margin-left: 0.5em;
+      display: none;
+    }
+    .has-selection + .ok {
+      display: flex;
+    }
   }
 
   .tag-list {
-    margin: 1em 0 0 0;
+    margin: 0.5em 0 1em;
     padding: 0;
     border: none;
-    @include clearfix;
     a {
       color: var(--primary-medium);
-      margin-left: 0.25em;
     }
   }
 }
