@@ -270,9 +270,11 @@ async function handleRequest(proxy, baseURL, req, res) {
   }
 
   const contentType = response.headers.get("content-type");
+  const isHTML = contentType && contentType.startsWith("text/html");
   const responseText = await response.text();
+  const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
 
-  if (contentType && contentType.startsWith("text/html")) {
+  if (preloadJson) {
     const html = await buildFromBootstrap(
       proxy,
       baseURL,
