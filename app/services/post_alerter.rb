@@ -28,7 +28,11 @@ class PostAlerter
       }
 
       DiscourseEvent.trigger(:pre_notification_alert, user, payload)
-      MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+
+      if user.allow_live_notifications?
+        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      end
+
       push_notification(user, payload)
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
@@ -107,9 +111,9 @@ class PostAlerter
     notified = [post.user, post.last_editor].uniq
 
     # mentions (users/groups)
-    mentioned_groups, mentioned_users = extract_mentions(post)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
 
-    if mentioned_groups || mentioned_users
+    if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
       editor = post.last_editor
 
@@ -126,6 +130,12 @@ class PostAlerter
       expand_group_mentions(mentioned_groups, post) do |group, users|
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
+      end
+
+      if mentioned_here
+        users = expand_here_mention(post, exclude_ids: notified.map(&:id))
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
       end
     end
 
@@ -175,9 +185,10 @@ class PostAlerter
   end
 
   def tag_watchers(topic)
-    topic.tag_users
-      .where(notification_level: TagUser.notification_levels[:watching_first_post])
-      .pluck(:user_id)
+    topic
+      .tag_users
+      .notification_level_visible([TagUser.notification_levels[:watching_first_post]])
+      .distinct(:user_id).pluck(:user_id)
   end
 
   def category_watchers(topic)
@@ -317,15 +328,9 @@ class PostAlerter
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat && stat[:inbox_count] > 0
 
-    notification_type = Notification.types[:group_message_summary]
-
     DistributedMutex.synchronize("group_message_notify_#{user.id}") do
-      Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
-        n.destroy if n.data_hash[:group_id] == stat[:group_id]
-      end
-
-      Notification.create(
-        notification_type: notification_type,
+      Notification.consolidate_or_create!(
+        notification_type: Notification.types[:group_message_summary],
         user_id: user.id,
         data: {
           group_id: stat[:group_id],
@@ -499,7 +504,7 @@ class PostAlerter
     end
 
     # Create the notification
-    created = user.notifications.create!(
+    created = user.notifications.consolidate_or_create!(
       notification_type: type,
       topic_id: post.topic_id,
       post_number: post.post_number,
@@ -539,6 +544,21 @@ class PostAlerter
 
   end
 
+  def expand_here_mention(post, exclude_ids: nil)
+    posts = Post.where(topic_id: post.topic_id)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+
+    if post.user.staff?
+      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
+    else
+      posts = posts.where(post_type: Post.types[:regular])
+    end
+
+    User.real
+      .where(id: posts.select(:user_id))
+      .limit(SiteSetting.max_here_mentioned)
+  end
+
   # TODO: Move to post-analyzer?
   def extract_mentions(post)
     mentions = post.raw_mentions
@@ -553,7 +573,10 @@ class PostAlerter
       users = nil if users.empty?
     end
 
-    [groups, users]
+    # @here can be a user mention and then this feature is disabled
+    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(post.user).can_mention_here?
+
+    [groups, users, here]
   end
 
   # TODO: Move to post-analyzer?
@@ -639,8 +662,21 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
-    post.topic.allowed_groups.where(smtp_enabled: true).first
+    return if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+    return if post.topic.allowed_groups.none?
+
+    if post.topic.allowed_groups.count == 1
+      return post.topic.first_smtp_enabled_group
+    end
+
+    topic_incoming_email = post.topic.incoming_email.first
+    return if topic_incoming_email.blank?
+
+    group = Group.find_by_email(topic_incoming_email.to_addresses)
+    if !group&.smtp_enabled
+      return post.topic.first_smtp_enabled_group
+    end
+    group
   end
 
   def email_using_group_smtp_if_configured(post)
@@ -748,9 +784,13 @@ class PostAlerter
           FROM tag_users
      LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id
                              AND tu.topic_id = :topic_id
-         WHERE tag_users.notification_level = :watching
-           AND tag_users.tag_id IN (:tag_ids)
-           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
+     LEFT JOIN tag_group_memberships tgm ON tag_users.tag_id = tgm.tag_id
+     LEFT JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
+     LEFT JOIN group_users gu ON gu.user_id = tag_users.user_id
+         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id OR gu.group_id = :staff_group_id)
+               AND (tag_users.notification_level = :watching
+                    AND tag_users.tag_id IN (:tag_ids)
+                    AND (tu.user_id IS NULL OR tu.notification_level = :watching))
       SQL
     end
 
@@ -758,7 +798,8 @@ class PostAlerter
       watching: TopicUser.notification_levels[:watching],
       topic_id: post.topic_id,
       category_id: post.topic.category_id,
-      tag_ids: tag_ids
+      tag_ids: tag_ids,
+      staff_group_id: Group::AUTO_GROUPS[:staff]
     )
 
     if group_ids.present?

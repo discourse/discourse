@@ -3,12 +3,13 @@ import { click, visit } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User Card - Show Local Time", function (needs) {
   needs.user();
   needs.settings({ display_local_time_in_user_card: true });
   needs.pretender((server, helper) => {
-    let cardResponse = Object.assign({}, userFixtures["/u/charlie/card.json"]);
+    const cardResponse = cloneJSON(userFixtures["/u/charlie/card.json"]);
     delete cardResponse.user.timezone;
     server.get("/u/charlie/card.json", () => helper.response(cardResponse));
   });

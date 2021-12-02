@@ -1092,6 +1092,9 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      dismiss_confirmation:
+        dismiss: "Hiqe"
+        cancel: "Anulo"
       popup:
         mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
         group_mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1695,6 +1698,9 @@ sq:
       unlisted:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
+    pending_posts:
+      label: "Në pritje"
+      label_with_count: "Në pritje (%{count})"
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase:

@@ -33,7 +33,7 @@ export default Component.extend({
     }
   },
 
-  _updateFormattedLogsFunc: function () {
+  _updateFormattedLogsFunc() {
     const logs = this.logs;
     if (logs.length === 0) {
       return;

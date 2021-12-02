@@ -1452,22 +1452,19 @@ fr:
         invite:
           new_title: "Créer une invitation"
           edit_title: "Modifier l'invitation"
-          instructions: "Partagez ce lien pour donner instantanément accès au forum"
+          instructions: "Partagez ce lien pour donner instantanément accès au site :"
           copy_link: "copier le lien"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
-          restrict_email: "Restreindre l'invitation à une adresse de courriel donnée"
           max_redemptions_allowed: "Nombre max. d'utilisations"
           add_to_groups: "Ajouter la personne invitée à ces groupes"
-          invite_to_topic: "Diriger vers ce sujet"
           expires_at: "Ce lien expirera dans"
           custom_message: "Message personnel (facultatif)"
           send_invite_email: "Enregistrer et envoyer le courriel"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
-          invite_copied: "Lien d'invitation copié."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -2039,6 +2036,9 @@ fr:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - terminé"
+      dismiss_confirmation:
+        dismiss: "Vu"
+        cancel: "Annuler"
       group_message_summary:
         one: "%{count} message dans la boîte de réception de %{group_name}"
         other: "%{count} messages dans la boîte de réception de %{group_name}"
@@ -3114,6 +3114,9 @@ fr:
         title: "Ce sujet est un message direct"
         help: "Ce sujet est un message direct"
     posts: "Messages"
+    pending_posts:
+      label: "En attente"
+      label_with_count: "En attente (%{count})"
     posts_likes_MF: |
       Ce sujet comprend {count, plural, one {# réponse} other {# réponses}} {ratio, select,
        low {avec un taux élevé de « J'aime » par message}
@@ -3701,7 +3704,6 @@ fr:
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
-        use_global_key: Clé globale (autorise toutes les actions)
         scopes:
           description: |
             En configurant des permissions, vous pouvez restreindre une clé d'API à certaines actions spécifiques.

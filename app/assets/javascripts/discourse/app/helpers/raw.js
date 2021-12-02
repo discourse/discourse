@@ -18,7 +18,7 @@ function lookupView(templateName) {
 }
 
 function renderRaw(ctx, template, templateName, params) {
-  params = jQuery.extend({}, params);
+  params = Object.assign({}, params);
   params.parent = params.parent || ctx;
 
   let context = helperContext();
@@ -30,7 +30,7 @@ function renderRaw(ctx, template, templateName, params) {
     }
 
     if (!params.view) {
-      params = jQuery.extend({}, params, context);
+      params = Object.assign({}, params, context);
     }
   }
 

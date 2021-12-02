@@ -1,1 +1,1 @@
-<td class='category'>{{category-link category}}</td>
+<td class='category topic-list-data'>{{category-link category}}</td>

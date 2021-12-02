@@ -32,7 +32,7 @@
     display: none;
     padding-left: 10px;
     .spinner {
-      margin-left: 5px;
+      margin-left: 8px;
       border-color: var(--secondary);
       border-right-color: transparent;
     }
@@ -63,7 +63,7 @@
     .composer-controls {
       margin-left: auto;
       display: flex;
-      padding-right: 5px;
+      padding-right: 8px;
       .toggle-toolbar {
         display: none;
       }
@@ -94,23 +94,24 @@
 
   .reply-to {
     color: var(--primary-high);
-    margin: 5px 0 10px 0;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     .reply-details {
-      max-width: calc(100% - 175px);
       flex: 1 1 auto;
       display: flex;
       align-items: center;
       white-space: nowrap;
+      overflow: auto;
 
       .d-icon {
         color: var(--primary-medium);
       }
     }
     .composer-action-title {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       width: auto;
       max-width: 100%;
@@ -127,7 +128,7 @@
       .topic-link,
       .user-link,
       .post-link {
-        margin-right: 5px;
+        margin-right: 8px;
       }
 
       .username {
@@ -140,16 +141,22 @@
       }
 
       .d-icon {
-        margin-right: 5px;
+        margin-right: 8px;
       }
 
       img.avatar {
         margin-right: 3px;
       }
     }
+
     .composer-controls {
       display: flex;
-      margin-left: auto;
+      margin-left: 8px;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
       .toggle-minimize {
         order: 2;
       }
@@ -189,7 +196,7 @@
     display: flex;
     width: 100%;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     position: relative;
     &.with-preview {
       width: 50%;
@@ -223,7 +230,7 @@
     display: flex;
     flex: 1 0 40%;
     max-width: 40%;
-    margin: 0 0 5px 10px;
+    margin: 0 0 8px 8px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
@@ -280,12 +287,12 @@
     margin-bottom: 0;
     display: flex;
     input {
-      margin-right: 5px;
+      margin-right: 8px;
     }
   }
 
   #reply-title {
-    margin: 0 0 5px 0;
+    margin: 0 0 8px 0;
     flex-basis: 50%;
     width: unset;
     &:focus {
@@ -315,14 +322,14 @@
   .submit-panel {
     display: flex;
     flex-shrink: 0;
-    margin: 7px 0 3px 0;
+    margin-top: 8px;
   }
 
   .save-or-cancel {
-    flex-basis: 50%;
     display: flex;
     align-items: center;
-    margin-right: auto;
+    flex: 1 1 auto;
+
     .btn-primary {
       flex: 0 0 auto;
     }
@@ -537,7 +544,12 @@ body:not(.ios-safari-composer-hacks) {
 
 .toggle-preview {
   transition: all 0.33s ease-out;
+
   &.active {
     transform: rotate(180deg);
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
   }
 }

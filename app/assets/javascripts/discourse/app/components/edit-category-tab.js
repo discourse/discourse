@@ -39,7 +39,7 @@ export default Component.extend({
     });
   },
 
-  _addToCollection: function () {
+  _addToCollection() {
     this.panels.addObject(this.tabClassName);
   },
 
@@ -50,7 +50,7 @@ export default Component.extend({
   },
 
   actions: {
-    select: function () {
+    select() {
       this.set("selectedTab", this.tab);
 
       if (!this.newCategory) {

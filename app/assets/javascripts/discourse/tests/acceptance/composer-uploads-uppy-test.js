@@ -1,5 +1,6 @@
 import {
   acceptance,
+  createFile,
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -46,20 +47,10 @@ function pretender(server, helper) {
   );
 }
 
-function createFile(name, type = "image/png") {
-  // the blob content doesn't matter at all, just want it to be random-ish
-  const file = new Blob([(Math.random() + 1).toString(36).substring(2)], {
-    type,
-  });
-  file.name = name;
-  return file;
-}
-
 acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
 
@@ -197,7 +188,6 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     });
   });
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
 
@@ -229,13 +219,16 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.14", (api) => {
-      api.addComposerUploadHandler(["png"], (file) => {
-        bootbox.alert(`This is an upload handler test for ${file.name}`);
+      api.addComposerUploadHandler(["png"], (files) => {
+        const file = files[0];
+        const isNativeFile = file instanceof File ? "WAS" : "WAS NOT";
+        bootbox.alert(
+          `This is an upload handler test for ${file.name}. The file ${isNativeFile} a native file object.`
+        );
       });
     });
   });
@@ -250,7 +243,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     appEvents.on("composer:uploads-aborted", async () => {
       assert.strictEqual(
         queryAll(".bootbox .modal-body").html(),
-        "This is an upload handler test for handlertest.png",
+        "This is an upload handler test for handlertest.png. The file WAS a native file object.",
         "it should show the bootbox triggered by the upload handler"
       );
       await click(".modal-footer .btn");

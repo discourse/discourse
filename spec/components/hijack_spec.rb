@@ -58,7 +58,7 @@ describe Hijack do
         end
       end
 
-      env = {}
+      env = create_request_env(path: "/")
       middleware = Middleware::RequestTracker.new(app)
 
       middleware.call(env)

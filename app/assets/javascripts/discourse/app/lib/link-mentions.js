@@ -67,11 +67,13 @@ function updateFound(mentions, usernames) {
 }
 
 export function linkSeenMentions(elem, siteSettings) {
+  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     elem = elem[0];
 
     deprecated("linkSeenMentions now expects a DOM node as first parameter", {
       since: "2.8.0.beta7",
+      dropFrom: "2.9.0.beta1",
     });
   }
 

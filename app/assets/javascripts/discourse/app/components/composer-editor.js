@@ -3,6 +3,7 @@ import {
   authorizesAllExtensions,
   authorizesOneOrMoreImageExtensions,
 } from "discourse/lib/uploads";
+import { alias } from "@ember/object/computed";
 import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import {
@@ -12,6 +13,7 @@ import {
   tinyAvatar,
 } from "discourse/lib/utilities";
 import discourseComputed, {
+  bind,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -26,7 +28,7 @@ import {
 import { later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import ComposerUpload from "discourse/mixins/composer-upload";
+import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
@@ -70,17 +72,6 @@ export function cleanUpComposerUploadHandler() {
   uploadHandlers.length = 0;
 }
 
-let uploadProcessorQueue = [];
-let uploadProcessorActions = {};
-export function addComposerUploadProcessor(queueItem, actionItem) {
-  uploadProcessorQueue.push(queueItem);
-  Object.assign(uploadProcessorActions, actionItem);
-}
-export function cleanUpComposerUploadProcessor() {
-  uploadProcessorQueue = [];
-  uploadProcessorActions = {};
-}
-
 let uploadPreProcessors = [];
 export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
   if (!(pluginClass.prototype instanceof BasePlugin)) {
@@ -106,18 +97,22 @@ export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];
 }
 
-export default Component.extend(ComposerUpload, {
+export default Component.extend(ComposerUploadUppy, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
+  eventPrefix: "composer",
+  uploadType: "composer",
+  uppyId: "composer-editor-uppy",
+  composerModel: alias("composer"),
+  composerModelContentKey: "reply",
+  editorInputClass: ".d-editor-input",
   shouldBuildScrollMap: true,
   scrollMap: null,
   processPreview: true,
 
   uploadMarkdownResolvers,
-  uploadProcessorActions,
-  uploadProcessorQueue,
   uploadPreProcessors,
   uploadHandlers,
 
@@ -138,9 +133,7 @@ export default Component.extend(ComposerUpload, {
 
   @discourseComputed
   showLink() {
-    return (
-      this.currentUser && this.currentUser.get("link_posting_access") !== "none"
-    );
+    return this.currentUser && this.currentUser.link_posting_access !== "none";
   },
 
   @observes("focusTarget")
@@ -189,7 +182,8 @@ export default Component.extend(ComposerUpload, {
     };
   },
 
-  userSearchTerm(term) {
+  @bind
+  _userSearchTerm(term) {
     const topicId = this.get("topic.id");
     // maybe this is a brand new topic, so grab category from composer
     const categoryId =
@@ -218,34 +212,42 @@ export default Component.extend(ComposerUpload, {
     return extensions.map((ext) => `.${ext}`).join();
   },
 
+  @bind
+  _afterMentionComplete(value) {
+    this.composer.set("reply", value);
+
+    // ensures textarea scroll position is correct
+    schedule("afterRender", () => {
+      const input = this.element.querySelector(".d-editor-input");
+      input?.blur();
+      input?.focus();
+    });
+  },
+
   @on("didInsertElement")
   _composerEditorInit() {
     const $input = $(this.element.querySelector(".d-editor-input"));
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: (term) => this.userSearchTerm.call(this, term),
+        dataSource: this._userSearchTerm,
         key: "@",
         transformComplete: (v) => v.username || v.name,
-        afterComplete: (value) => {
-          this.composer.set("reply", value);
-
-          // ensures textarea scroll position is correct
-          schedule("afterRender", () => $input.blur().focus());
-        },
+        afterComplete: this._afterMentionComplete,
         triggerRule: (textarea) =>
           !inCodeBlock(textarea.value, caretPosition(textarea)),
       });
     }
 
     if (this._enableAdvancedEditorPreviewSync()) {
-      this._initInputPreviewSync($input, $preview);
+      const input = this.element.querySelector(".d-editor-input");
+      const preview = this.element.querySelector(".d-editor-preview-wrapper");
+      this._initInputPreviewSync(input, preview);
     } else {
-      $input.on("scroll", () =>
-        throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, 20)
-      );
+      this.element
+        .querySelector(".d-editor-input")
+        ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
     }
 
     // Focus on the body unless we have a title
@@ -316,30 +318,51 @@ export default Component.extend(ComposerUpload, {
     this.set("shouldBuildScrollMap", true);
   },
 
-  _initInputPreviewSync($input, $preview) {
+  @bind
+  _handleInputInteraction(event) {
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+
+    if (!$(preview).is(":visible")) {
+      return;
+    }
+
+    preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
+    event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
+  },
+
+  @bind
+  _handleInputOrPreviewScroll(event) {
+    this._syncScroll(
+      this._syncEditorAndPreviewScroll,
+      $(event.target),
+      $(this.element.querySelector(".d-editor-preview-wrapper"))
+    );
+  },
+
+  @bind
+  _handlePreviewInteraction(event) {
+    this.element
+      .querySelector(".d-editor-input")
+      ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
+
+    event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
+  },
+
+  _initInputPreviewSync(input, preview) {
     REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
     schedule("afterRender", () => {
-      $input.on("touchstart mouseenter", () => {
-        if (!$preview.is(":visible")) {
-          return;
-        }
-        $preview.off("scroll");
-
-        $input.on("scroll", () => {
-          this._syncScroll(this._syncEditorAndPreviewScroll, $input, $preview);
-        });
+      input?.addEventListener("touchstart", this._handleInputInteraction, {
+        passive: true,
       });
+      input?.addEventListener("mouseenter", this._handleInputInteraction);
 
-      $preview.on("touchstart mouseenter", () => {
-        $input.off("scroll");
-
-        $preview.on("scroll", () => {
-          this._syncScroll(this._syncPreviewAndEditorScroll, $input, $preview);
-        });
+      preview?.addEventListener("touchstart", this._handlePreviewInteraction, {
+        passive: true,
       });
+      preview?.addEventListener("mouseenter", this._handlePreviewInteraction);
     });
   },
 
@@ -353,13 +376,15 @@ export default Component.extend(ComposerUpload, {
   },
 
   _teardownInputPreviewSync() {
-    [
-      $(this.element.querySelector(".d-editor-input")),
-      $(this.element.querySelector(".d-editor-preview-wrapper")),
-    ].forEach(($element) => {
-      $element.off("mouseenter touchstart");
-      $element.off("scroll");
-    });
+    const input = this.element.querySelector(".d-editor-input");
+    input?.removeEventListener("mouseEnter", this._handleInputInteraction);
+    input?.removeEventListener("touchstart", this._handleInputInteraction);
+    input?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
+
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+    preview?.removeEventListener("mouseEnter", this._handlePreviewInteraction);
+    preview?.removeEventListener("touchstart", this._handlePreviewInteraction);
+    preview?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
 
     REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
@@ -453,6 +478,19 @@ export default Component.extend(ComposerUpload, {
     return scrollMap;
   },
 
+  @bind
+  _throttledSyncEditorAndPreviewScroll(event) {
+    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
+
+    throttle(
+      this,
+      this._syncEditorAndPreviewScroll,
+      $(event.target),
+      $preview,
+      20
+    );
+  },
+
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
     if (this._enableAdvancedEditorPreviewSync()) {
       let scrollTop;
@@ -518,41 +556,41 @@ export default Component.extend(ComposerUpload, {
     $input.stop(true).animate({ scrollTop }, 100, "linear");
   },
 
-  _renderUnseenMentions($preview, unseen) {
+  _renderUnseenMentions(preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then(() => {
-      linkSeenMentions($preview[0], this.siteSettings);
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
+      linkSeenMentions(preview, this.siteSettings);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
+      this._warnHereMention(r.here_count);
     });
   },
 
-  _renderUnseenHashtags($preview) {
-    const unseen = linkSeenHashtags($preview);
+  _renderUnseenHashtags(preview) {
+    const unseen = linkSeenHashtags(preview);
     if (unseen.length > 0) {
       fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags($preview);
+        linkSeenHashtags(preview);
       });
     }
   },
 
-  _warnMentionedGroups($preview) {
+  _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
       let found = this.warnedGroupMentions || [];
-      $preview.find(".mention-group.notify").each((idx, e) => {
-        if (this._isInQuote(e)) {
+      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
+        if (this._isInQuote(mention)) {
           return;
         }
 
-        const $e = $(e);
-        let name = $e.data("name");
+        let name = mention.dataset.name;
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
               name,
-              user_count: $e.data("mentionable-user-count"),
-              max_mentions: $e.data("max-mentions"),
+              user_count: mention.dataset.mentionableUserCount,
+              max_mentions: mention.dataset.maxMentions,
             },
           ]);
           found.push(name);
@@ -563,7 +601,7 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
-  _warnCannotSeeMention($preview) {
+  _warnCannotSeeMention(preview) {
     const composerDraftKey = this.get("composer.draftKey");
 
     if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
@@ -573,9 +611,8 @@ export default Component.extend(ComposerUpload, {
     schedule("afterRender", () => {
       let found = this.warnedCannotSeeMentions || [];
 
-      $preview.find(".mention.cannot-see").each((idx, e) => {
-        const $e = $(e);
-        let name = $e.data("name");
+      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
+        let name = mention.dataset.name;
 
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
@@ -584,8 +621,9 @@ export default Component.extend(ComposerUpload, {
             this,
             () => {
               if (
-                $preview.find('.mention.cannot-see[data-name="' + name + '"]')
-                  .length > 0
+                preview?.querySelectorAll(
+                  `.mention.cannot-see[data-name="${name}"]`
+                )?.length > 0
               ) {
                 this.cannotSeeMention([{ name }]);
                 found.push(name);
@@ -600,91 +638,159 @@ export default Component.extend(ComposerUpload, {
     });
   },
 
-  _registerImageScaleButtonClick($preview) {
-    $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
-      const index = parseInt(
-        $(e.target).closest(".button-wrapper").attr("data-image-index"),
-        10
-      );
-
-      const scale = e.target.attributes["data-scale"].value;
-      const matchingPlaceholder = this.get("composer.reply").match(
-        IMAGE_MARKDOWN_REGEX
-      );
-
-      if (matchingPlaceholder) {
-        const match = matchingPlaceholder[index];
-
-        if (match) {
-          const replacement = match.replace(
-            IMAGE_MARKDOWN_REGEX,
-            `![$1|$2, ${scale}%$4]($5)`
-          );
-
-          this.appEvents.trigger(
-            "composer:replace-text",
-            matchingPlaceholder[index],
-            replacement,
-            { regex: IMAGE_MARKDOWN_REGEX, index }
-          );
-        }
-      }
-
-      e.preventDefault();
+  _warnHereMention(hereCount) {
+    if (!hereCount || hereCount === 0) {
       return;
-    });
+    }
+
+    later(
+      this,
+      () => {
+        this.hereMention(hereCount);
+      },
+      2000
+    );
   },
 
-  _registerImageAltTextButtonClick($preview) {
-    $preview
-      .off("click", ".alt-text-edit-btn")
-      .on("click", ".alt-text-edit-btn", (e) => {
-        const parentContainer = $(e.target).closest(
-          ".alt-text-readonly-container"
+  @bind
+  _handleImageScaleButtonClick(event) {
+    if (!event.target.classList.contains("scale-btn")) {
+      return;
+    }
+
+    const index = parseInt(
+      event.target.closest(".button-wrapper").dataset.imageIndex,
+      10
+    );
+
+    const scale = event.target.dataset.scale;
+    const matchingPlaceholder = this.get("composer.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
+
+    if (matchingPlaceholder) {
+      const match = matchingPlaceholder[index];
+
+      if (match) {
+        const replacement = match.replace(
+          IMAGE_MARKDOWN_REGEX,
+          `![$1|$2, ${scale}%$4]($5)`
         );
-        const altText = parentContainer.find(".alt-text");
-        const correspondingInput = parentContainer.find(".alt-text-input");
 
-        $(e.target).hide();
-        altText.hide();
-        correspondingInput.val(altText.text());
-        correspondingInput.show();
-        e.preventDefault();
-      });
+        this.appEvents.trigger(
+          "composer:replace-text",
+          matchingPlaceholder[index],
+          replacement,
+          { regex: IMAGE_MARKDOWN_REGEX, index }
+        );
+      }
+    }
 
-    $preview
-      .off("keypress", ".alt-text-input")
-      .on("keypress", ".alt-text-input", (e) => {
-        if (e.key === "[" || e.key === "]") {
-          e.preventDefault();
-        }
+    event.preventDefault();
+    return;
+  },
 
-        if (e.key === "Enter") {
-          const index = parseInt(
-            $(e.target).closest(".button-wrapper").attr("data-image-index"),
-            10
-          );
-          const matchingPlaceholder = this.get("composer.reply").match(
-            IMAGE_MARKDOWN_REGEX
-          );
-          const match = matchingPlaceholder[index];
-          const replacement = match.replace(
-            IMAGE_MARKDOWN_REGEX,
-            `![${$(e.target).val()}|$2$3$4]($5)`
-          );
+  resetImageControls(buttonWrapper) {
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const readonlyContainer = buttonWrapper.querySelector(
+      ".alt-text-readonly-container"
+    );
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
 
-          this.appEvents.trigger("composer:replace-text", match, replacement);
+    imageResize.removeAttribute("hidden");
+    readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
+    editContainer.setAttribute("hidden", "true");
+  },
 
-          const parentContainer = $(e.target).closest(
-            ".alt-text-readonly-container"
-          );
-          const altText = parentContainer.find(".alt-text");
-          const altTextButton = parentContainer.find(".alt-text-edit-btn");
-          altText.show();
-          altTextButton.show();
-          $(e.target).hide();
-        }
-      });
+  commitAltText(buttonWrapper) {
+    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
+    const matchingPlaceholder = this.get("composer.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
+    const match = matchingPlaceholder[index];
+    const input = buttonWrapper.querySelector("input.alt-text-input");
+    const replacement = match.replace(
+      IMAGE_MARKDOWN_REGEX,
+      `![${input.value}|$2$3$4]($5)`
+    );
+
+    this.appEvents.trigger("composer:replace-text", match, replacement);
+
+    this.resetImageControls(buttonWrapper);
+  },
+
+  @bind
+  _handleAltTextInputKeypress(event) {
+    if (!event.target.classList.contains("alt-text-input")) {
+      return;
+    }
+
+    if (event.key === "[" || event.key === "]") {
+      event.preventDefault();
+    }
+
+    if (event.key === "Enter") {
+      const buttonWrapper = event.target.closest(".button-wrapper");
+      this.commitAltText(buttonWrapper);
+    }
+  },
+
+  @bind
+  _handleAltTextEditButtonClick(event) {
+    if (!event.target.classList.contains("alt-text-edit-btn")) {
+      return;
+    }
+
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+
+    const readonlyContainer = buttonWrapper.querySelector(
+      ".alt-text-readonly-container"
+    );
+    const altText = readonlyContainer.querySelector(".alt-text");
+
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+    const editContainerInput = editContainer.querySelector(".alt-text-input");
+
+    buttonWrapper.setAttribute("editing", "true");
+    imageResize.setAttribute("hidden", "true");
+    readonlyContainer.setAttribute("hidden", "true");
+    editContainerInput.value = altText.textContent;
+    editContainer.removeAttribute("hidden");
+    editContainerInput.focus();
+    event.preventDefault();
+  },
+
+  @bind
+  _handleAltTextOkButtonClick(event) {
+    if (!event.target.classList.contains("alt-text-edit-ok")) {
+      return;
+    }
+
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    this.commitAltText(buttonWrapper);
+  },
+
+  @bind
+  _handleAltTextCancelButtonClick(event) {
+    if (!event.target.classList.contains("alt-text-edit-cancel")) {
+      return;
+    }
+
+    const buttonWrapper = event.target.closest(".button-wrapper");
+    this.resetImageControls(buttonWrapper);
+  },
+
+  _registerImageAltTextButtonClick(preview) {
+    preview.addEventListener("click", this._handleAltTextEditButtonClick);
+    preview.addEventListener("click", this._handleAltTextOkButtonClick);
+    preview.addEventListener("click", this._handleAltTextCancelButtonClick);
+    preview.addEventListener("keypress", this._handleAltTextInputKeypress);
   },
 
   @on("willDestroyElement")
@@ -702,6 +808,22 @@ export default Component.extend(ComposerUpload, {
     if (this._enableAdvancedEditorPreviewSync()) {
       this._teardownInputPreviewSync();
     }
+
+    if (!this._enableAdvancedEditorPreviewSync()) {
+      this.element
+        .querySelector(".d-editor-input")
+        ?.removeEventListener(
+          "scroll",
+          this._throttledSyncEditorAndPreviewScroll
+        );
+    }
+
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
+    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
   },
 
   onExpandPopupMenuOptions(toolbarEvent) {
@@ -802,26 +924,29 @@ export default Component.extend(ComposerUpload, {
       });
     },
 
-    previewUpdated($preview) {
+    previewUpdated(preview) {
+      // cache jquery objects for functions still using jquery
+      const $preview = $(preview);
+
       // Paint mentions
-      const unseenMentions = linkSeenMentions($preview[0], this.siteSettings);
+      const unseenMentions = linkSeenMentions(preview, this.siteSettings);
       if (unseenMentions.length) {
         discourseDebounce(
           this,
           this._renderUnseenMentions,
-          $preview,
+          preview,
           unseenMentions,
           450
         );
       }
 
-      this._warnMentionedGroups($preview);
-      this._warnCannotSeeMention($preview);
+      this._warnMentionedGroups(preview);
+      this._warnCannotSeeMention(preview);
 
       // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags($preview);
+      const unseenHashtags = linkSeenHashtags(preview);
       if (unseenHashtags.length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }
 
       // Paint oneboxes
@@ -835,7 +960,7 @@ export default Component.extend(ComposerUpload, {
         }
 
         const paintedCount = loadOneboxes(
-          $preview[0],
+          preview,
           ajax,
           this.get("composer.topic.id"),
           this.get("composer.category.id"),
@@ -851,7 +976,7 @@ export default Component.extend(ComposerUpload, {
       discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
-      resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);
+      resolveAllShortUrls(ajax, this.siteSettings, preview);
 
       if (this._enableAdvancedEditorPreviewSync()) {
         this._syncScroll(
@@ -861,10 +986,10 @@ export default Component.extend(ComposerUpload, {
         );
       }
 
-      this._registerImageScaleButtonClick($preview);
-      this._registerImageAltTextButtonClick($preview);
+      preview.addEventListener("click", this._handleImageScaleButtonClick);
+      this._registerImageAltTextButtonClick(preview);
 
-      this.trigger("previewRefreshed", $preview[0]);
+      this.trigger("previewRefreshed", preview);
       this.afterRefresh($preview);
     },
   },

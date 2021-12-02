@@ -639,6 +639,7 @@ sv:
   post:
     image_placeholder:
       broken: "Den här bilden är trasig"
+    hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
@@ -1493,7 +1494,6 @@ sv:
     allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
-    slow_down_crawler_user_agents: "Användaragenter för webbsökare som bör begränsas i robots.txt med hjälp av Crawl-delay-direktivet"
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
@@ -1530,6 +1530,7 @@ sv:
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
+    normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
     auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
     hide_email_address_taken: "Informera inte användare om att det finns ett konto med en given e-postadress vid registreringen eller från det glömda lösenordsformuläret."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
@@ -1719,6 +1720,9 @@ sv:
     max_mentions_per_post: "Max antal @namn-aviseringar vem som helst kan göra i ett inlägg."
     max_users_notified_per_group_mention: "Maximalt antal användare som kan få ett meddelande om en grupp anges (om tröskeln har uppfyllts kommer inga aviseringar att skickas)"
     enable_mentions: "Tillåt användare att nämna andra användare."
+    here_mention: "Namn som används för att omnämna genom @namn. Får inte vara ett befintligt användarnamn."
+    max_here_mentioned: "Maximalt antal omnämnda personer genom @namn."
+    min_trust_level_for_here_mention: "Lägsta förtroendenivå som krävs för att omnämna genom @namn."
     create_thumbnails: "Skapa miniatyrer och \"lightboxa\" bilder som är för stora för att passa in i ett inlägg."
     email_time_window_mins: "Vänta (n) minuter innan e-postaviseringar skickas ut, för att ge användare chansen att redigera och slutföra deras inlägg."
     personal_email_time_window_seconds: "Vänta (n) sekunder innan en privat e-postavisering skickas ut för att ge användare chansen att redigera och slutföra deras meddelande."
@@ -1930,7 +1934,7 @@ sv:
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
-    show_copy_button_on_codeblocks: "Lägg till en knapp i Codeblocks som kopierar blockinnehållet till användarens urklipp. Denna funktion stöds inte av Internet Explorer."
+    show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
@@ -2056,6 +2060,7 @@ sv:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
+      valid_username: "Det finns redan en användare med det användarnamnet."
       invalid_group: "Det finns ingen grupp med det namnet."
       invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
       invalid_integer_min: "Värdet måste vara %{min} eller större."
@@ -2424,46 +2429,20 @@ sv:
     title: "Test per e-post"
     subject_template: "[%{email_prefix}] Leveranstest för e-post"
     text_body_template: |
-      Detta är ett e-posttest från
+      Det här är ett testmeddelande från
 
       [**%{base_url}**][0]
 
-      E-postleverans är komplicerat. Här är några viktiga saker som du bör kontrollera först:
+      Vi hoppas att du har fått detta leveranstest av e-post OK!
 
-      - Var *säker* på att ange från-adressen för `notification email` korrekt i dina webbplatsinställningar. **Den domän som anges i "från"-adressen för e-postmeddelanden du skickar är den domän som din e-post kommer att valideras mot**.
+      Här är en [händig checklista för att verifiera konfigurationen av e-postleverans][1].
 
-      - Ha kunskap om hur du ser e-postmeddelandets i rå-text för din e-postklient, så att du kan undersöka e-posthuvudena efter viktiga ledtrådar. I Gmail görs detta genom alternativet "visa original" i rullgardinsmenyn längst upp till höger i varje e-post.
-
-      - **VIKTIGT:** Har din ISP en omvänd DNS-post angiven för att koppla de domännamn och IP-adresser som du skickar e-post från? [Testa din omvända PTR-data][2] här. Om din ISP inte anger rätt omvänd DNS-pekardata är det mycket osannolikt att något av dina e-postmeddelanden kommer att levereras.
-
-      - Är din domäns [SPF-data][8] korrekt? [Testa din SPF-data][1] här. Observera att TXT är rätt officiell posttyp för SPF.
-
-      - Är din domäns [DKIM-data][3] korrekt? Detta kommer att förbättra e-postleveransen avsevärt. [Testa din DKIM-data][7] här.
-
-      - Om du kör din egen e-postserver, kontrollera att din e-postservers IP-adresser inte är [svartlistade][4]. Kontrollera också att den definitivt skickar ett fullt kvalificerat värdnamn som omvandlas till DNS i HELO-meddelandet. Annars kommer din e-post att avvisas av många e-posttjänster.
-
-      - Vi rekommenderar starkt att du **skickar ett testmeddelande till [mail-tester.com][mt]** för att verifiera att allt ovan fungerar korrekt.
-
-       (Det *enkla* sättet är att skapa ett konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har billiga e-postpaket och är tillräckligt för mindre gemenskaper. Du måste dock ställa in SPF- och DKIM-data för din DNS!)
-
-      Vi hoppas att detta e-postleveranstest kom fram!
-
-      Lycka till!
+      Lycka till,
 
       Dina vänner på [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
@@ -3406,9 +3385,9 @@ sv:
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
     size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
-    create_mutlipart_failure: "Det gick inte att skapa uppladdning med flera delar i den externa butiken."
-    abort_mutlipart_failure: "Det gick inte att avbryta uppladdning med flera delar i den externa butiken."
-    complete_mutlipart_failure: "Det gick inte att slutföra uppladdning med flera delar i den externa butiken."
+    create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
+    abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
+    complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
     external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."

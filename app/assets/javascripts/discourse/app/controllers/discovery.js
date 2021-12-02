@@ -2,7 +2,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal, not } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
-import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend({
@@ -14,7 +13,6 @@ export default Controller.extend({
     "router.currentRouteName",
     "discovery.categories"
   ),
-
   loading: false,
 
   category: alias("navigationCategory.category"),
@@ -22,8 +20,13 @@ export default Controller.extend({
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
-  @observes("loadedAllItems")
-  _showFooter: function () {
+  loadingBegan() {
+    this.set("loading", true);
+    this.set("application.showFooter", false);
+  },
+
+  loadingComplete() {
+    this.set("loading", false);
     this.set("application.showFooter", this.loadedAllItems);
   },
 

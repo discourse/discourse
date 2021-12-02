@@ -1,5 +1,6 @@
 import { componentTest } from "wizard/test/helpers/component-test";
 import { moduleForComponent } from "ember-qunit";
+import { click, fillIn } from "@ember/test-helpers";
 
 moduleForComponent("invite-list", { integration: true });
 

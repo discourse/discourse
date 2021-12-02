@@ -21,6 +21,8 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
+    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
+    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "locales/#{I18n.locale}" %>
@@ -113,11 +115,12 @@
     <% end %>
 
     <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
-    <%= preload_script "start-discourse" %>
+
+    <script src="<%= script_asset_path "start-discourse" %>"></script>
 
     <%= yield :data %>
 
-    <%= preload_script 'browser-update' %>
+    <script src="<%= script_asset_path "browser-update" %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>
@@ -128,4 +131,3 @@
     <%- end %>
   </body>
 </html>
-<%- hijack_if_ember_cli! -%>

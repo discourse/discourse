@@ -17,7 +17,7 @@ discourseModule("Integration | Component | d-icon", function (hooks) {
       const html = queryAll(".test").html().trim();
       assert.strictEqual(
         html,
-        '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#bars"></use></svg>'
+        '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#bars"></use></svg>'
       );
     },
   });
@@ -29,7 +29,7 @@ discourseModule("Integration | Component | d-icon", function (hooks) {
       const html = queryAll(".test").html().trim();
       assert.strictEqual(
         html,
-        '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#discourse-bell-exclamation"></use></svg>'
+        '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-bell-exclamation"></use></svg>'
       );
     },
   });

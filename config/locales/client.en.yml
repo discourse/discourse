@@ -1613,7 +1613,7 @@ en:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
 
-          instructions: "Share this link to instantly grant access to this site"
+          instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
@@ -1621,20 +1621,20 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict to one email address"
+          restrict_email: "Restrict to email"
 
           max_redemptions_allowed: "Max uses"
 
           add_to_groups: "Add to groups"
-          invite_to_topic: "Arrive at this topic"
+          invite_to_topic: "Arrive at topic"
           expires_at: "Expire after"
           custom_message: "Optional personal message"
 
           send_invite_email: "Save and Send Email"
+          send_invite_email_instructions: "Restrict invite to email to send an invite email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite saved."
-          invite_copied: "Invite link copied."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -2105,6 +2105,9 @@ en:
       cannot_see_mention:
         category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+      here_mention:
+        one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
+        other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 
@@ -2285,6 +2288,12 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      dismiss_confirmation:
+        body:
+          one: "Are you sure? You have %{count} important notification."
+          other: "Are you sure? You have %{count} important notifications."
+        dismiss: "Dismiss"
+        cancel: "Cancel"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -2373,6 +2382,10 @@ en:
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "again to use native browser search"
+      recent: "Recent Searches"
+      clear_recent: "Clear Recent Searches"
 
       type:
         default: "Topics/posts"
@@ -2825,6 +2838,9 @@ en:
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
         copied: "Topic link copied."
+        restricted_groups:
+          one: "Only visible to members of group: %{groupNames}"
+          other: "Only visible to members of groups: %{groupNames}"
         notify_users:
           title: "Notify"
           instructions: "Notify the following users about this topic:"
@@ -3498,6 +3514,9 @@ en:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
     posts: "Posts"
+    pending_posts:
+      label: "Pending"
+      label_with_count: "Pending (%{count})"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
@@ -3711,6 +3730,7 @@ en:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
         insert_url: "%{shortcut} Insert selection into open composer"
+        full_page_search: "%{shortcut} Launches full page search"
 
     badges:
       earned_n_times:
@@ -3768,11 +3788,15 @@ en:
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
+      choose_for_topic_required:
+        one: "select at least %{count} tag..."
+        other: "select at least %{count} tags..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      save: "Save name and description of the tag"
       tag_groups_info:
         one: 'This tag belongs to the group "%{tag_groups}".'
         other: "This tag belongs to these groups: %{tag_groups}."
@@ -3796,8 +3820,8 @@ en:
       delete_confirm_synonyms:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
-      rename_tag: "Rename Tag"
-      rename_instructions: "Choose a new name for the tag:"
+      edit_tag: "Edit tag name and description"
+      description: "Description"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
@@ -4180,6 +4204,8 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            uploads:
+              create: Upload a new file.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.

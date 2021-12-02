@@ -4,6 +4,8 @@ require "backup_restore"
 require "backup_restore/backup_store"
 
 class Admin::BackupsController < Admin::AdminController
+  include ExternalUploadHelpers
+
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
@@ -176,14 +178,13 @@ class Admin::BackupsController < Admin::AdminController
     chunk_number = params.fetch(:resumableChunkNumber).to_i
     chunk_size = params.fetch(:resumableChunkSize).to_i
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
+    previous_chunk_number = chunk_number - 1
 
-    # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
-    # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
-    uploaded_file_size = chunk_number * chunk_size
     # when all chunks are uploaded
+    uploaded_file_size = previous_chunk_number * chunk_size
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread
       Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
@@ -232,5 +233,25 @@ class Admin::BackupsController < Admin::AdminController
 
   def render_error(message_key)
     render json: failed_json.merge(message: I18n.t(message_key))
+  end
+
+  def validate_before_create_multipart(file_name:, file_size:, upload_type:)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
+  end
+
+  def self.serialize_upload(_upload)
+    {} # noop, the backup does not create an upload record
+  end
+
+  def create_direct_multipart_upload
+    begin
+      yield
+    rescue BackupRestore::BackupStore::StorageError => err
+      message = debug_upload_error(err, I18n.t("upload.create_multipart_failure", additional_detail: err.message))
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+    rescue BackupRestore::BackupStore::BackupFileExists
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
+    end
   end
 end

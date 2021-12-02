@@ -56,6 +56,9 @@ class Guardian
     def has_trust_level?(level)
       false
     end
+    def has_trust_level_or_staff?(level)
+      false
+    end
     def email
       nil
     end
@@ -362,7 +365,6 @@ class Guardian
 
   def can_invite_to_forum?(groups = nil)
     authenticated? &&
-    (is_staff? || !SiteSetting.must_approve_users?) &&
     (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
     (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
     (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
@@ -444,9 +446,7 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
-    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
-    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
+    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)
@@ -529,9 +529,29 @@ class Guardian
   end
 
   def auth_token
-    if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
-      UserAuthToken.hash_token(cookie)
+    return if !request
+
+    token = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).presence
+
+    if !token
+      cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(request.env)
+      token = cookie[:token] if cookie
     end
+
+    UserAuthToken.hash_token(token) if token
+  end
+
+  def can_mention_here?
+    return false if SiteSetting.here_mention.blank?
+    return false if SiteSetting.max_here_mentioned < 1
+    return false if !authenticated?
+    return false if User.where(username_lower: SiteSetting.here_mention).exists?
+
+    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+  end
+
+  def is_me?(other)
+    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   private
@@ -544,10 +564,6 @@ class Guardian
     end
 
     false
-  end
-
-  def is_me?(other)
-    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)

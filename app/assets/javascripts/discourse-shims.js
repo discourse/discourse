@@ -45,3 +45,19 @@ define("@uppy/xhr-upload", ["exports"], function (__exports__) {
 define("@uppy/drop-target", ["exports"], function (__exports__) {
   __exports__.default = window.Uppy.DropTarget;
 });
+
+define("@uppy/utils/lib/delay", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.Utils.delay;
+});
+
+define("@uppy/utils/lib/EventTracker", ["exports"], function (__exports__) {
+  __exports__.default = window.Uppy.Utils.EventTracker;
+});
+
+define("@uppy/utils/lib/AbortController", ["exports"], function (__exports__) {
+  __exports__.AbortController =
+    window.Uppy.Utils.AbortControllerLib.AbortController;
+  __exports__.AbortSignal = window.Uppy.Utils.AbortControllerLib.AbortSignal;
+  __exports__.createAbortError =
+    window.Uppy.Utils.AbortControllerLib.createAbortError;
+});

@@ -11,6 +11,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import selectKit from "../helpers/select-kit-helper";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -83,7 +84,7 @@ acceptance(
       });
 
       server.get("/t/13.json", () => {
-        const response = { ...fixturesByUrl["/t/12/1.json"] };
+        const response = cloneJSON(fixturesByUrl["/t/12/1.json"]);
         response.suggested_group_name = "awesome_group";
         return helper.response(response);
       });
@@ -391,7 +392,7 @@ acceptance(
       assert.ok(exists(".show-mores"), "displays the topic incoming info");
     });
 
-    test("incoming unread messages while viewing group unread", async function (assert) {
+    test("incoming unread and new messages while viewing group unread", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
       publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });

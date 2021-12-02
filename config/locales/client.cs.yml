@@ -1684,6 +1684,9 @@ cs:
       watching_first_post: "<span>Nové téma</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Označit jako přečtené"
+        cancel: "Zrušit"
       group_message_summary:
         one: "%{count} zpráva ve schránce skupiny %{group_name}"
         few: "%{count} zprávy ve schránce skupiny %{group_name}"
@@ -2532,6 +2535,9 @@ cs:
       unlisted:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
+    pending_posts:
+      label: "Čeká na schválení"
+      label_with_count: "Nevyřízeno (%{count})"
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase:

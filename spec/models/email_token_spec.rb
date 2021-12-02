@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe EmailToken do
-
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }
@@ -11,14 +10,14 @@ describe EmailToken do
   context '#create' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
-    let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adventuretime.ooo') }
+    let!(:email_token) { Fabricate(:email_token, user: user, email: 'bubblegum@adventuretime.ooo') }
 
     it 'should create the email token' do
       expect(email_token).to be_present
     end
 
     it 'should downcase the email' do
-      token = user.email_tokens.create(email: "UpperCaseSoWoW@GMail.com")
+      token = Fabricate(:email_token, user: user, email: "UpperCaseSoWoW@GMail.com")
       expect(token.email).to eq "uppercasesowow@gmail.com"
     end
 
@@ -45,20 +44,15 @@ describe EmailToken do
   end
 
   context '#confirm' do
-
     fab!(:user) { Fabricate(:user, active: false) }
-    let(:email_token) { user.email_tokens.first }
+    let!(:email_token) { Fabricate(:email_token, user: user) }
 
     it 'returns nil with a nil token' do
       expect(EmailToken.confirm(nil)).to be_blank
     end
 
-    it 'returns nil with a made up token' do
-      expect(EmailToken.confirm(EmailToken.generate_token)).to be_blank
-    end
-
-    it 'returns nil unless the token is the right length' do
-      expect(EmailToken.confirm('a')).to be_blank
+    it 'returns nil with an invalid token' do
+      expect(EmailToken.confirm("random token")).to be_blank
     end
 
     it 'returns nil when a token is expired' do
@@ -73,7 +67,6 @@ describe EmailToken do
     end
 
     context 'taken email address' do
-
       before do
         @other_user = Fabricate(:coding_horror)
         email_token.update_attribute :email, @other_user.email
@@ -82,7 +75,6 @@ describe EmailToken do
       it 'returns nil when the email has been taken since the token has been generated' do
         expect(EmailToken.confirm(email_token.token)).to be_blank
       end
-
     end
 
     context 'welcome message' do
@@ -94,7 +86,6 @@ describe EmailToken do
     end
 
     context 'success' do
-
       let!(:confirmed_user) { EmailToken.confirm(email_token.token) }
 
       it "returns the correct user" do
@@ -124,7 +115,7 @@ describe EmailToken do
 
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
-      let(:user_email_token) { invited_user.email_tokens.first }
+      let!(:user_email_token) { Fabricate(:email_token, user: invited_user) }
       let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
 
       it "returns the correct user" do
@@ -151,5 +142,4 @@ describe EmailToken do
       end
     end
   end
-
 end

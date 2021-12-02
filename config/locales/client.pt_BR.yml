@@ -1459,22 +1459,19 @@ pt_BR:
         invite:
           new_title: "Criar convite"
           edit_title: "Editar convite"
-          instructions: "Compartilhar este link para conceder acesso imediato ao site"
+          instructions: "Compartilhar este link para conceder acesso imediato ao site:"
           copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
-          restrict_email: "Restringir a um endereço de e-mail"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Adicionar a grupos"
-          invite_to_topic: "Buscar tópico"
           expires_at: "Expira após"
           custom_message: "Mensagem pessoal opcional"
           send_invite_email: "Salvar e enviar e-mail"
           save_invite: "Salvar convite"
           invite_saved: "Convite salvo"
-          invite_copied: "Link de convite copiado"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2050,6 +2047,9 @@ pt_BR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído(a)"
+      dismiss_confirmation:
+        dismiss: "Descartar"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensagem na caixa de entrada de %{group_name}"
         other: "%{count} mensagens na caixa de entrada de %{group_name}"
@@ -3142,6 +3142,9 @@ pt_BR:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
+    pending_posts:
+      label: "Pendentes"
+      label_with_count: "Pendentes (%{count})"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {# resposta} other {# respostas}} {ratio, select,
         low {com uma alta taxa de postagns para curtidas}
@@ -3732,7 +3735,6 @@ pt_BR:
         delete: Excluir permanentemente
         not_shown_again: Esta chave não será exibida novamente. Faça uma cópia antes de continuar.
         continue: Continuar
-        use_global_key: Chave global (permite todas as ações)
         scopes:
           description: |
             Ao usar escopos, é possível restringir uma chave de API a um conjunto específico de pontos de extremidade.

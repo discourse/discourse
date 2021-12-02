@@ -258,8 +258,9 @@ export default Controller.extend(ModalFunctionality, {
       let params = this.get("selected.is_custom_flag")
         ? { message: this.message }
         : {};
+
       if (opts) {
-        params = $.extend(params, opts);
+        params = Object.assign(params, opts);
       }
 
       this.appEvents.trigger(
@@ -274,6 +275,10 @@ export default Controller.extend(ModalFunctionality, {
       postAction
         .act(this.model, params)
         .then(() => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           if (!params.skipClose) {
             this.send("closeModal");
           }
@@ -285,7 +290,9 @@ export default Controller.extend(ModalFunctionality, {
           });
         })
         .catch((error) => {
-          this.send("closeModal");
+          if (!this.isDestroying && !this.isDestroyed) {
+            this.send("closeModal");
+          }
           popupAjaxError(error);
         });
     },

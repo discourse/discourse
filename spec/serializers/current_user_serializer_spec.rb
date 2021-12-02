@@ -3,11 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe CurrentUserSerializer do
+  subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
+
+  let(:guardian) { Guardian.new }
+
   context "when SSO is not enabled" do
     fab!(:user) { Fabricate(:user) }
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
-    end
 
     it "should not include the external_id field" do
       payload = serializer.as_json
@@ -20,10 +21,6 @@ RSpec.describe CurrentUserSerializer do
       user = Fabricate(:user)
       SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', last_payload: '')
       user
-    end
-
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
     end
 
     it "should include the external_id" do
@@ -40,9 +37,6 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
-    end
 
     it "should include empty top_category_ids array" do
       payload = serializer.as_json
@@ -77,9 +71,6 @@ RSpec.describe CurrentUserSerializer do
                       tag_id: tag.id
                      )
     end
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
-    end
 
     it 'include muted tag ids' do
       payload = serializer.as_json
@@ -89,9 +80,7 @@ RSpec.describe CurrentUserSerializer do
 
   context "#second_factor_enabled" do
     fab!(:user) { Fabricate(:user) }
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
-    end
+    let(:guardian) { Guardian.new(user) }
     let(:json) { serializer.as_json }
 
     it "is false by default" do
@@ -120,18 +109,15 @@ RSpec.describe CurrentUserSerializer do
   end
 
   context "#groups" do
-    fab!(:member) { Fabricate(:user) }
-    let :serializer do
-      CurrentUserSerializer.new(member, scope: Guardian.new, root: false)
-    end
+    fab!(:user) { Fabricate(:user) }
 
     it "should only show visible groups" do
       Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
       public_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:public], name: "UppercaseGroupName")
-      hidden_group.add(member)
+      hidden_group.add(user)
       hidden_group.save!
-      public_group.add(member)
+      public_group.add(user)
       public_group.save!
       payload = serializer.as_json
 
@@ -143,9 +129,6 @@ RSpec.describe CurrentUserSerializer do
 
   context "#has_topic_draft" do
     fab!(:user) { Fabricate(:user) }
-    let :serializer do
-      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
-    end
 
     it "is not included by default" do
       payload = serializer.as_json
@@ -169,23 +152,36 @@ RSpec.describe CurrentUserSerializer do
 
   end
 
-  context '#can_review' do
-    it 'return false for regular users' do
-      serializer = serializer(Fabricate(:user))
-      payload = serializer.as_json
+  context "#can_review" do
+    let(:guardian) { Guardian.new(user) }
+    let(:payload) { serializer.as_json }
 
-      expect(payload[:can_review]).to eq(false)
+    context "when user is a regular one" do
+      let(:user) { Fabricate(:user) }
+
+      it "return false for regular users" do
+        expect(payload[:can_review]).to eq(false)
+      end
     end
 
-    it 'returns trus for staff' do
-      serializer = serializer(Fabricate(:admin))
-      payload = serializer.as_json
+    context "when user is a staff member" do
+      let(:user) { Fabricate(:admin) }
 
-      expect(payload[:can_review]).to eq(true)
+      it "returns true" do
+        expect(payload[:can_review]).to eq(true)
+      end
     end
+  end
 
-    def serializer(user)
-      CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
+  describe "#pending_posts_count" do
+    subject(:pending_posts_count) { serializer.pending_posts_count }
+
+    let(:user) { Fabricate(:user) }
+
+    before { user.user_stat.pending_posts_count = 3 }
+
+    it "serializes 'pending_posts_count'" do
+      expect(pending_posts_count).to eq 3
     end
   end
 end

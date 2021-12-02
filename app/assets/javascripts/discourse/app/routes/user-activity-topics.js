@@ -6,7 +6,7 @@ import I18n from "I18n";
 export default UserTopicListRoute.extend({
   userActionType: UserAction.TYPES.topics,
 
-  model: function () {
+  model() {
     return this.store
       .findFiltered("topicList", {
         filter:
@@ -30,7 +30,7 @@ export default UserTopicListRoute.extend({
   },
 
   @action
-  refresh() {
+  triggerRefresh() {
     this.refresh();
   },
 });

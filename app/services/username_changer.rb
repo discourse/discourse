@@ -40,7 +40,7 @@ class UsernameChanger
       UsernameChanger.update_username(user_id: @user.id,
                                       old_username: @old_username,
                                       new_username: @new_username,
-                                      avatar_template: @user.avatar_template,
+                                      avatar_template: @user.avatar_template_url,
                                       asynchronous: asynchronous) if run_update_job
       return true
     end

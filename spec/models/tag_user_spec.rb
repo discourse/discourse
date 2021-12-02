@@ -22,6 +22,58 @@ describe TagUser do
     TagUser.notification_levels[:watching]
   end
 
+  context "notification_level_visible" do
+    let!(:tag1) { Fabricate(:tag) }
+    let!(:tag2) { Fabricate(:tag) }
+    let!(:tag3) { Fabricate(:tag) }
+    let!(:tag4) { Fabricate(:tag) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    let!(:tag_user1) { TagUser.create(user: user1, tag: tag1, notification_level: TagUser.notification_levels[:watching]) }
+    let!(:tag_user2) { TagUser.create(user: user1, tag: tag2, notification_level: TagUser.notification_levels[:tracking]) }
+    let!(:tag_user3) { TagUser.create(user: user2, tag: tag3, notification_level: TagUser.notification_levels[:watching_first_post]) }
+    let!(:tag_user4) { TagUser.create(user: user2, tag: tag4, notification_level: TagUser.notification_levels[:muted]) }
+
+    it "scopes to notification levels visible due to absence of tag group" do
+      expect(TagUser.notification_level_visible.length).to be(4)
+    end
+
+    it "scopes to notification levels visible by tag group permission" do
+      group1 = Fabricate(:group)
+      tag_group1 = Fabricate(:tag_group, tags: [tag1])
+      Fabricate(:tag_group_permission, tag_group: tag_group1, group: group1)
+
+      group2 = Fabricate(:group)
+      tag_group2 = Fabricate(:tag_group, tags: [tag2])
+      Fabricate(:tag_group_permission, tag_group: tag_group2, group: group2)
+
+      Fabricate(:group_user, group: group1, user: user1)
+
+      expect(TagUser.notification_level_visible.pluck(:id)).to match_array([
+        tag_user1.id, tag_user3.id, tag_user4.id
+      ])
+    end
+
+    it "scopes to notification levels visible because user is staff" do
+      group2 = Fabricate(:group)
+      tag_group2 = Fabricate(:tag_group, tags: [tag2])
+      Fabricate(:tag_group_permission, tag_group: tag_group2, group: group2)
+
+      staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+      Fabricate(:group_user, group: staff_group, user: user1)
+
+      expect(TagUser.notification_level_visible.length).to be(4)
+    end
+
+    it "scopes to notification levels visible by specified notification level" do
+      expect(TagUser.notification_level_visible([TagUser.notification_levels[:watching]]).length).to be(1)
+      expect(TagUser.notification_level_visible(
+        [TagUser.notification_levels[:watching],
+         TagUser.notification_levels[:tracking]]
+      ).length).to be(2)
+    end
+  end
+
   context "change" do
     it "watches or tracks on change" do
       user = Fabricate(:user)
@@ -264,6 +316,7 @@ describe TagUser do
         TagUser.create(user: user, tag: tag3, notification_level: TagUser.notification_levels[:watching_first_post])
         TagUser.create(user: user, tag: tag4, notification_level: TagUser.notification_levels[:muted])
       end
+
       it "gets the tag_user notification levels for all tags the user is tracking and does not
       include tags the user is not tracking at all" do
         tag5 = Fabricate(:tag)
@@ -273,6 +326,14 @@ describe TagUser do
         expect(levels[tag3.name]).to eq(TagUser.notification_levels[:watching_first_post])
         expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
         expect(levels.key?(tag5.name)).to eq(false)
+      end
+
+      it "does not show a tag is tracked if the user does not belong to the tag group with permissions" do
+        group = Fabricate(:group)
+        tag_group = Fabricate(:tag_group, tags: [tag2])
+        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        expect(TagUser.notification_levels_for(user).keys).to match_array([tag1.name, tag3.name, tag4.name])
       end
     end
   end

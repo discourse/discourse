@@ -6,6 +6,7 @@ export default Component.extend({
   tagName: "td",
   classNames: ["admin-report-table-cell"],
   classNameBindings: ["type", "property"],
+  attributeBindings: ["value:title"],
   options: null,
 
   @discourseComputed("label", "data", "options")

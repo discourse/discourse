@@ -3,16 +3,15 @@
 require "rails_helper"
 
 describe Middleware::RequestTracker do
-
   def env(opts = {})
-    {
+    create_request_env.merge(
       "HTTP_HOST" => "http://test.com",
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
       "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      "rack.input" => ""
-    }.merge(opts)
+      "rack.input" => StringIO.new
+    ).merge(opts)
   end
 
   before do
@@ -140,9 +139,15 @@ describe Middleware::RequestTracker do
       let(:logged_in_data) do
         user = Fabricate(:user, active: true)
         token = UserAuthToken.generate!(user_id: user.id)
+        cookie = create_auth_cookie(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          issued_at: 5.minutes.ago
+        )
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
-          "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};"
+          "HTTP_COOKIE" => "_t=#{cookie};"
         ), ["200", { "Content-Type" => 'text/html' }], 0.1)
       end
 
@@ -195,6 +200,7 @@ describe Middleware::RequestTracker do
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
+      RateLimiter.clear_all!
 
       @old_logger = Rails.logger
       Rails.logger = TestLogger.new
@@ -386,6 +392,177 @@ describe Middleware::RequestTracker do
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
     end
+
+    describe "diagnostic information" do
+      it "is included when the requests-per-10-seconds limit is reached" do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        called = 0
+        app = lambda do |_|
+          called += 1
+          [200, {}, ["OK"]]
+        end
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env)
+        expect(status).to eq(200)
+        expect(called).to eq(1)
+
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env)
+        expect(status).to eq(429)
+        expect(called).to eq(1)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+        expect(response.first).to include("Error code: ip_10_secs_limit.")
+      end
+
+      it "is included when the requests-per-minute limit is reached" do
+        global_setting :max_reqs_per_ip_per_minute, 1
+        called = 0
+        app = lambda do |_|
+          called += 1
+          [200, {}, ["OK"]]
+        end
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env)
+        expect(status).to eq(200)
+        expect(called).to eq(1)
+
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env)
+        expect(status).to eq(429)
+        expect(called).to eq(1)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("Error code: ip_60_secs_limit.")
+      end
+
+      it "is included when the assets-requests-per-10-seconds limit is reached" do
+        global_setting :max_asset_reqs_per_ip_per_10_seconds, 1
+        called = 0
+        app = lambda do |env|
+          called += 1
+          env["DISCOURSE_IS_ASSET_PATH"] = true
+          [200, {}, ["OK"]]
+        end
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env)
+        expect(status).to eq(200)
+        expect(called).to eq(1)
+
+        env = env("REMOTE_ADDR" => "1.1.1.1")
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env)
+        expect(status).to eq(429)
+        expect(called).to eq(1)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
+        expect(response.first).to include("Error code: ip_assets_10_secs_limit.")
+      end
+    end
+
+    it "users with high enough trust level are not rate limited per ip" do
+      global_setting :max_reqs_per_ip_per_minute, 1
+      global_setting :skip_per_ip_rate_limit_trust_level, 3
+
+      envs = 3.times.map do |n|
+        user = Fabricate(:user, trust_level: 3)
+        token = UserAuthToken.generate!(user_id: user.id)
+        cookie = create_auth_cookie(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          issued_at: 5.minutes.ago
+        )
+        env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
+      end
+
+      called = 0
+      app = lambda do |env|
+        called += 1
+        [200, {}, ["OK"]]
+      end
+      envs.each do |env|
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env)
+        expect(status).to eq(200)
+      end
+      expect(called).to eq(3)
+
+      envs.each do |env|
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env)
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
+        expect(response.first).to include("Error code: id_60_secs_limit.")
+      end
+      expect(called).to eq(3)
+    end
+
+    it "falls back to IP rate limiting if the cookie is too old" do
+      unfreeze_time
+      global_setting :max_reqs_per_ip_per_minute, 1
+      global_setting :skip_per_ip_rate_limit_trust_level, 3
+      user = Fabricate(:user, trust_level: 3)
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        issued_at: 5.minutes.ago
+      )
+      env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
+
+      called = 0
+      app = lambda do |_|
+        called += 1
+        [200, {}, ["OK"]]
+      end
+      freeze_time(12.minutes.from_now) do
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env)
+        expect(status).to eq(200)
+
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env)
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("Error code: ip_60_secs_limit.")
+      end
+    end
+
+    it "falls back to IP rate limiting if the cookie is tampered with" do
+      unfreeze_time
+      global_setting :max_reqs_per_ip_per_minute, 1
+      global_setting :skip_per_ip_rate_limit_trust_level, 3
+      user = Fabricate(:user, trust_level: 3)
+      token = UserAuthToken.generate!(user_id: user.id)
+      cookie = create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+        issued_at: Time.zone.now
+      )
+      cookie = swap_2_different_characters(cookie)
+      env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
+
+      called = 0
+      app = lambda do |_|
+        called += 1
+        [200, {}, ["OK"]]
+      end
+
+      middleware = Middleware::RequestTracker.new(app)
+      status, = middleware.call(env)
+      expect(status).to eq(200)
+
+      middleware = Middleware::RequestTracker.new(app)
+      status, headers, response = middleware.call(env)
+      expect(status).to eq(429)
+      expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(response.first).to include("Error code: ip_60_secs_limit.")
+    end
   end
 
   context "callbacks" do
@@ -480,5 +657,4 @@ describe Middleware::RequestTracker do
       expect(headers["X-Runtime"].to_f).to be > 0
     end
   end
-
 end

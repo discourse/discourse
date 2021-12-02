@@ -50,10 +50,12 @@ export function longDateNoYear(dt) {
 }
 
 export function updateRelativeAge(elems) {
+  // eslint-disable-next-line no-undef
   if (elems instanceof jQuery) {
     elems = elems.toArray();
     deprecated("updateRelativeAge now expects a DOM NodeList", {
       since: "2.8.0.beta7",
+      dropFrom: "2.9.0.beta1",
     });
   }
 

@@ -236,9 +236,9 @@ describe TopicViewSerializer do
   end
 
   describe 'tags order' do
-    fab!(:tag1) { Fabricate(:tag, name: 'ctag', topic_count: 5) }
-    fab!(:tag2) { Fabricate(:tag, name: 'btag', topic_count: 9) }
-    fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
+    fab!(:tag1) { Fabricate(:tag, name: 'ctag', description: "c description", topic_count: 5) }
+    fab!(:tag2) { Fabricate(:tag, name: 'btag', description: "b description", topic_count: 9) }
+    fab!(:tag3) { Fabricate(:tag, name: 'atag', description: "a description", topic_count: 3) }
 
     before do
       topic.tags << tag1
@@ -249,6 +249,7 @@ describe TopicViewSerializer do
     it 'tags are automatically sorted by tag popularity' do
       json = serialize_topic(topic, user)
       expect(json[:tags]).to eq(%w(btag ctag atag))
+      expect(json[:tags_descriptions]).to eq({ btag: "b description", ctag: "c description", atag: "a description" })
     end
 
     it 'tags can be sorted alphabetically' do

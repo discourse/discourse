@@ -1461,6 +1461,9 @@ et:
       watching_first_post: "<span>New Topic</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Ignoreeri"
+        cancel: "Tühista"
       popup:
         mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
         group_mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -2293,6 +2296,9 @@ et:
       unlisted:
         help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
+    pending_posts:
+      label: "Ootel"
+      label_with_count: "Ootel (%{count})"
     original_post: "Algne postitus"
     views: "Vaatamisi"
     views_lowercase:

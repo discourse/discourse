@@ -5,7 +5,7 @@ export default Controller.extend({
   application: controller(),
 
   @observes("model.canLoadMore")
-  _showFooter: function () {
+  _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 });

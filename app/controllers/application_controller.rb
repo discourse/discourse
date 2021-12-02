@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -41,13 +42,14 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
-  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
   after_action  :ensure_vary_header
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
+  after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -117,23 +119,9 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
-  class EmberCLIHijacked < StandardError; end
-
-  def catch_ember_cli_hijack
-    yield
-  rescue ActionView::Template::Error => ex
-    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
-    send_ember_cli_bootstrap
-  end
 
   rescue_from RenderEmpty do
-    catch_ember_cli_hijack do
-      with_resolved_locale { render 'default/empty' }
-    end
-  end
-
-  rescue_from EmberCLIHijacked do
-    send_ember_cli_bootstrap
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
@@ -188,13 +176,21 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end
@@ -314,19 +310,11 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      catch_ember_cli_hijack do
-        with_resolved_locale do
-          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-          render html: build_not_found_page(error_page_opts)
-        end
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
       end
     end
-  end
-
-  def send_ember_cli_bootstrap
-    response.headers['X-Discourse-Bootstrap-Required'] = true
-    response.headers['Content-Type'] = "application/json"
-    render json: { preloaded: @preloaded }
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
@@ -904,6 +892,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def add_noindex_header_to_non_canonical
+    canonical = (@canonical_url || @default_canonical)
+    if canonical.present? && canonical != request.url && !SiteSetting.allow_indexing_non_canonical_urls
+      response.headers['X-Robots-Tag'] ||= 'noindex'
+    end
+  end
+
   protected
 
   def honeypot_value
@@ -928,8 +923,11 @@ class ApplicationController < ActionController::Base
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ',')
-    if params[key]
+    case params[key]
+    when String
       params[key].split(delimiter).map(&:to_i)
+    when Array
+      params[key].map(&:to_i)
     end
   end
 
@@ -938,5 +936,28 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  def rate_limit_crawlers
+    return if current_user.present?
+    return if SiteSetting.slow_down_crawler_user_agents.blank?
+
+    user_agent = request.user_agent&.downcase
+    return if user_agent.blank?
+
+    SiteSetting.slow_down_crawler_user_agents.downcase.split("|").each do |crawler|
+      if user_agent.include?(crawler)
+        key = "#{crawler}_crawler_rate_limit"
+        limiter = RateLimiter.new(
+          nil,
+          key,
+          1,
+          SiteSetting.slow_down_crawler_rate,
+          error_code: key
+        )
+        limiter.performed!
+        break
+      end
+    end
   end
 end

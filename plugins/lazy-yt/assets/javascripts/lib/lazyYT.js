@@ -162,10 +162,10 @@ export default function initLazyYt($) {
   $.fn.lazyYT = function (newSettings) {
     let defaultSettings = {
       default_ratio: "16:9",
-      callback: null, // ToDO execute callback if given
+      callback: null, // TODO: execute callback if given
       container_class: "lazyYT-container",
     };
-    let settings = $.extend(defaultSettings, newSettings);
+    let settings = Object.assign(defaultSettings, newSettings);
 
     return this.each(function () {
       let $el = $(this).addClass(settings.container_class);

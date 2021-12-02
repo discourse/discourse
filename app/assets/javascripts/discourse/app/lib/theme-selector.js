@@ -16,7 +16,7 @@ export function currentThemeKey() {
 
 export function currentThemeIds() {
   const themeIds = [];
-  const elem = $(keySelector)[0];
+  const elem = document.querySelector(keySelector);
   if (elem) {
     elem.content.split(",").forEach((num) => {
       num = parseInt(num, 10);

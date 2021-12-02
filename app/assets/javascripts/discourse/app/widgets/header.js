@@ -146,7 +146,7 @@ createWidget("header-notifications", {
 
 createWidget(
   "user-dropdown",
-  jQuery.extend(
+  Object.assign(
     {
       tagName: "li.header-dropdown-toggle.current-user",
 
@@ -176,7 +176,7 @@ createWidget(
 
 createWidget(
   "header-dropdown",
-  jQuery.extend(
+  Object.assign(
     {
       tagName: "li.header-dropdown-toggle",
 
@@ -328,7 +328,7 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
-  services: ["router"],
+  services: ["router", "search"],
 
   defaultState() {
     let states = {
@@ -402,14 +402,13 @@ export default createWidget("header", {
     let contentsAttrs = { contents, minimized: !!attrs.topic };
     return h(
       "div.wrap",
-      this.attach("header-contents", $.extend({}, attrs, contentsAttrs))
+      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
     );
   },
 
   updateHighlight() {
     if (!this.state.searchVisible) {
-      const service = this.register.lookup("search-service:main");
-      service.set("highlightTerm", "");
+      this.search.set("highlightTerm", "");
     }
   },
 
@@ -447,8 +446,7 @@ export default createWidget("header", {
 
   toggleSearchMenu() {
     if (this.site.mobileView) {
-      const searchService = this.register.lookup("search-service:main");
-      const context = searchService.get("searchContext");
+      const context = this.search.searchContext;
       let params = "";
 
       if (context) {

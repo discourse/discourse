@@ -17,11 +17,10 @@ function topicWithStream(streamDetails) {
 
 discourseModule("Unit | Controller | topic", function (hooks) {
   hooks.beforeEach(function () {
-    this.registry.register("service:screen-track", {}, { instantiate: false });
     this.registry.injection("controller", "appEvents", "service:app-events");
   });
+
   hooks.afterEach(function () {
-    this.registry.unregister("service:screen-track");
     this.registry.unregister("current-user:main");
     let topic = this.container.lookup("controller:topic");
     topic.setProperties({

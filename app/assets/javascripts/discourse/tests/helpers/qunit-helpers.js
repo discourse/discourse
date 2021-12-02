@@ -4,14 +4,14 @@ import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
-import { clearRewrites, setURLContainer } from "discourse/lib/url";
+import { clearRewrites } from "discourse/lib/url";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
 import { moduleFor, setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
@@ -21,7 +21,7 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -48,10 +48,15 @@ import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
-  cleanUpComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
+import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import {
+  clearPresenceCallbacks,
+  setTestPresence,
+} from "discourse/lib/user-presence";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -95,7 +100,11 @@ export function withFrozenTime(timeString, timezone, callback) {
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {
-  let siteAttrs = $.extend({}, siteFixtures["site.json"].site, extras || {});
+  let siteAttrs = Object.assign(
+    {},
+    siteFixtures["site.json"].site,
+    extras || {}
+  );
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
   return Site.resetCurrent(Site.create(siteAttrs));
@@ -195,7 +204,7 @@ export function acceptance(name, optionsOrCallback) {
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
       `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      { since: "2.6.0" }
+      { since: "2.6.0", dropFrom: "2.9.0.beta1" }
     );
     options = optionsOrCallback;
   }
@@ -245,8 +254,6 @@ export function acceptance(name, optionsOrCallback) {
         });
       }
 
-      setURLContainer(this.container);
-      setDefaultOwner(this.container);
       if (!this.owner) {
         this.owner = this.container;
       }
@@ -285,24 +292,24 @@ export function acceptance(name, optionsOrCallback) {
       clearNavItems();
       setTopicList(null);
       _clearSnapshots();
-      setURLContainer(null);
-      setDefaultOwner(null);
       cleanUpComposerUploadHandler();
-      cleanUpComposerUploadProcessor();
       cleanUpComposerUploadMarkdownResolver();
       cleanUpComposerUploadPreProcessor();
+      clearTopicFooterDropdowns();
+      clearTopicFooterButtons();
       resetLastEditNotificationClick();
       clearAuthMethods();
+      setTestPresence(true);
+      if (!LEGACY_ENV) {
+        clearPresenceCallbacks();
+      }
 
-      app._runInitializer("instanceInitializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
+      app._runInitializer("instanceInitializers", (_, initializer) => {
+        initializer.teardown?.();
       });
-      app._runInitializer("initializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
+
+      app._runInitializer("initializers", (_, initializer) => {
+        initializer.teardown?.(this.container);
       });
 
       if (LEGACY_ENV) {
@@ -477,7 +484,7 @@ export function exists(selector) {
 export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .map((c) => c.func(...args));
+    .forEach((c) => c.func(...args));
 }
 
 export async function selectText(selector, endOffset = null) {
@@ -539,4 +546,15 @@ export function chromeTest(name, testCase) {
 
 export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
+}
+
+export function createFile(name, type = "image/png", blobData = null) {
+  // the blob content doesn't matter at all, just want it to be random-ish
+  blobData = blobData || (Math.random() + 1).toString(36).substring(2);
+  const blob = new Blob([blobData]);
+  const file = new File([blob], name, {
+    type,
+    lastModified: new Date().getTime(),
+  });
+  return file;
 }

@@ -744,9 +744,9 @@ class Plugin::Instance
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
+          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.", drop_from: '2.9.0')
           return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
-          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.", drop_from: '2.9.0')
           true
         end
       end
@@ -974,6 +974,23 @@ class Plugin::Instance
   #   </a>
   def add_reviewable_score_link(reason, setting_name)
     DiscoursePluginRegistry.register_reviewable_score_link({ reason: reason.to_sym, setting: setting_name }, self)
+  end
+
+  # If your plugin creates notifications, and you'd like to consolidate/collapse similar ones,
+  # you're in the right place.
+  # This method receives a plan object, which must be an instance of `Notifications::ConsolidateNotifications`.
+  #
+  # Instead of using `Notification#create!`, you should use `Notification#consolidate_or_save!`,
+  # which will automatically pick your plan and apply it, updating an already consolidated notification,
+  # consolidating multiple ones, or creating a regular one.
+  #
+  # The rule object is quite complex. We strongly recommend you write tests to ensure your plugin consolidates notifications correctly.
+  #
+  # - Plan's documentation: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidate_notifications.rb
+  # - Base plans: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidation_planner.rb
+  def register_notification_consolidation_plan(plan)
+    raise ArgumentError.new("Not a consolidation plan") if plan.class != Notifications::ConsolidateNotifications
+    DiscoursePluginRegistry.register_notification_consolidation_plan(plan, self)
   end
 
   protected

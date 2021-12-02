@@ -5,27 +5,19 @@ import PrivateMessageTopicTrackingState from "discourse/models/private-message-t
 import DiscourseLocation from "discourse/lib/discourse-location";
 import KeyValueStore from "discourse/lib/key-value-store";
 import MessageBus from "message-bus-client";
-import ScreenTrack from "discourse/lib/screen-track";
-import SearchService from "discourse/services/search";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import Store from "discourse/models/store";
 import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
-export function registerObjects(container, app) {
+export function registerObjects(app) {
   if (app.__registeredObjects__) {
     // don't run registrations twice.
     return;
   }
   app.__registeredObjects__ = true;
-
-  app.register("store:main", Store);
-  app.register("service:store", Store);
-
-  // backwards compatibility: remove when plugins have updated
-  app.appEvents = container.lookup("service:app-events");
 
   // TODO: This should be included properly
   app.register("message-bus:main", MessageBus, { instantiate: false });
@@ -39,22 +31,24 @@ export default {
   after: "discourse-bootstrap",
 
   initialize(container, app) {
-    registerObjects(container, app);
+    registerObjects(app);
+
+    app.register("store:main", {
+      create() {
+        deprecated(`"store:main" is deprecated, use "service:store" instead`, {
+          since: "2.8.0.beta8",
+          dropFrom: "2.9.0.beta1",
+        });
+
+        return container.lookup("service:store");
+      },
+    });
 
     let siteSettings = container.lookup("site-settings:main");
-
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "appEvents", "service:app-events")
-    );
 
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
     app.currentUser = currentUser;
-
-    ALL_TARGETS.forEach((t) => {
-      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
-      app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
-    });
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus: MessageBus,
@@ -81,50 +75,46 @@ export default {
     const session = Session.current();
     app.register("session:main", session, { instantiate: false });
 
-    // TODO: Automatically register this service
-    const screenTrack = new ScreenTrack(
-      topicTrackingState,
-      siteSettings,
-      session,
-      currentUser,
-      app.appEvents
-    );
-    app.register("service:screen-track", screenTrack, { instantiate: false });
-
     app.register("location:discourse-location", DiscourseLocation);
 
     const keyValueStore = new KeyValueStore("discourse_");
     app.register("key-value-store:main", keyValueStore, { instantiate: false });
-    app.register("search-service:main", SearchService);
 
-    ALL_TARGETS.forEach((t) => app.inject(t, "store", "service:store"));
+    app.register("search-service:main", {
+      create() {
+        deprecated(
+          `"search-service:main" is deprecated, use "service:search" instead`,
+          {
+            since: "2.8.0.beta8",
+            dropFrom: "2.9.0.beta1",
+          }
+        );
 
-    ALL_TARGETS.concat("service").forEach((t) =>
-      app.inject(t, "messageBus", "message-bus:main")
-    );
+        return container.lookup("service:search");
+      },
+    });
 
-    ALL_TARGETS.concat("service").forEach((t) =>
-      app.inject(t, "siteSettings", "site-settings:main")
-    );
+    ALL_TARGETS.forEach((t) => {
+      app.inject(t, "appEvents", "service:app-events");
+      app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
+      app.inject(t, "store", "service:store");
+      app.inject(t, "site", "site:main");
+      app.inject(t, "searchService", "service:search");
+    });
 
-    ALL_TARGETS.forEach((t) => app.inject(t, "site", "site:main"));
-
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "searchService", "search-service:main")
-    );
-
-    ALL_TARGETS.forEach((t) => app.inject(t, "session", "session:main"));
-    app.inject("service", "session", "session:main");
+    ALL_TARGETS.concat("service").forEach((t) => {
+      app.inject(t, "session", "session:main");
+      app.inject(t, "messageBus", "message-bus:main");
+      app.inject(t, "siteSettings", "site-settings:main");
+      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
+      app.inject(t, "keyValueStore", "key-value-store:main");
+    });
 
     if (currentUser) {
-      ["component", "route", "controller", "service"].forEach((t) => {
+      ["controller", "component", "route", "service"].forEach((t) => {
         app.inject(t, "currentUser", "current-user:main");
       });
     }
-
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "keyValueStore", "key-value-store:main")
-    );
 
     startTracking(topicTrackingState);
   },

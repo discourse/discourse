@@ -2,6 +2,8 @@
 
 module CanonicalURL
   module ControllerExtensions
+    ALLOWED_CANONICAL_PARAMS = %w(page)
+
     def canonical_url(url_for_options = {})
       case url_for_options
       when Hash
@@ -10,21 +12,26 @@ module CanonicalURL
         @canonical_url = url_for_options
       end
     end
+
+    def default_canonical
+      @default_canonical ||= begin
+        canonical = +"#{Discourse.base_url_no_prefix}#{request.path}"
+        allowed_params = params.select { |key| ALLOWED_CANONICAL_PARAMS.include?(key) }
+        if allowed_params.present?
+          canonical << "?#{allowed_params.keys.zip(allowed_params.values).map { |key, value| "#{key}=#{value}" }.join("&")}"
+        end
+        canonical
+      end
+    end
+
+    def self.included(base)
+      base.helper_method :default_canonical
+    end
   end
 
   module Helpers
-    ALLOWED_CANONICAL_PARAMS = %w(page)
     def canonical_link_tag(url = nil)
       tag('link', rel: 'canonical', href: url || @canonical_url || default_canonical)
-    end
-
-    def default_canonical
-      canonical = +"#{Discourse.base_url_no_prefix}#{request.path}"
-      allowed_params = params.select { |key| ALLOWED_CANONICAL_PARAMS.include?(key) }
-      if allowed_params.present?
-        canonical << "?#{allowed_params.keys.zip(allowed_params.values).map { |key, value| "#{key}=#{value}" }.join("&")}"
-      end
-      canonical
     end
   end
 end

@@ -432,6 +432,13 @@ aside.quote {
     color: var(--secondary-or-primary);
   }
 
+  .btn-primary,
+  .btn-primary:hover,
+  .btn-primary .d-icon,
+  .btn-primary:hover .d-icon {
+    color: var(--secondary);
+  }
+
   .insert-quote + .quote-sharing {
     border-left: 1px solid rgba(255, 255, 255, 0.3);
   }
@@ -819,6 +826,14 @@ pre {
     color: var(--primary);
     background: var(--blend-primary-secondary-5);
     max-height: 500px;
+  }
+
+  .bidi-warning,
+  .bidi-warning span {
+    font-style: normal;
+    background-color: var(--highlight);
+    color: var(--danger);
+    cursor: help;
   }
 }
 
@@ -1269,7 +1284,8 @@ a.mention-group {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch; // aligns items by making them the same height
-    button {
+    button,
+    details {
       margin-right: 0.54em;
     }
     > * {

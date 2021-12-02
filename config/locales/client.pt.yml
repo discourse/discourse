@@ -1103,6 +1103,7 @@ pt:
         rejected_posts: "mensagens rejeitadas"
       messages:
         inbox: "Caixa de Entrada"
+        personal: "Pessoal"
         latest: "Recentes"
         sent: "Enviado"
         unread: "Não Lido"
@@ -1451,22 +1452,19 @@ pt:
         invite:
           new_title: "Criar Convite"
           edit_title: "Editar Convite"
-          instructions: "Compartilhe este link para conceder acesso instantâneo a este site"
+          instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
           copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
-          restrict_email: "Restringir a um endereço de e-mail"
           max_redemptions_allowed: "Máximo de utilizações"
           add_to_groups: "Adicionar aos grupos"
-          invite_to_topic: "Chegue neste tópico"
           expires_at: "Expira após"
           custom_message: "Mensagem pessoal opcional"
           send_invite_email: "Guardar e Enviar E-mail"
           save_invite: "Salvar Convite"
           invite_saved: "Convite salvo."
-          invite_copied: "Link de convite copiado."
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -1614,6 +1612,7 @@ pt:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
+      short_label: "Resumir"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -2008,6 +2007,9 @@ pt:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - concluído"
+      dismiss_confirmation:
+        dismiss: "Marcar como visto"
+        cancel: "Cancelar"
       group_message_summary:
         one: "%{count} mensagem no seu grupo %{group_name}"
         other: "%{count} mensagens no seu grupo %{group_name}"
@@ -2063,6 +2065,8 @@ pt:
       select_all: "Selecionar Tudo"
       clear_all: "Limpar Tudo"
       too_short: "O seu termo de pesquisa é muito curto."
+      open_advanced: "Abrir pesquisa avançada"
+      clear_search: "Limpar pesquisa"
       result_count:
         one: "<span>%{count} resultado para</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
@@ -2081,6 +2085,7 @@ pt:
       search_button: "Pesquisar"
       categories: "Categorias"
       tags: "Etiquetas"
+      in_this_topic: "neste tópico"
       type:
         users: "Utilizadores"
         categories: "Categorias"
@@ -2091,6 +2096,7 @@ pt:
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
+        title: Filtros avançados
         posted_by:
           label: Publicado por
         in_category:
@@ -2177,6 +2183,7 @@ pt:
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
+        notification_level: "Notificações..."
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -2916,6 +2923,7 @@ pt:
       position_disabled_click: 'ative a definição "categoria em posição fixa".'
       parent: "Categoria Principal"
       notifications:
+        title: "alterar o nível de notificação desta categoria"
         watching:
           title: "A vigiar"
         watching_first_post:
@@ -3045,6 +3053,9 @@ pt:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Publicações"
+    pending_posts:
+      label: "Pendente"
+      label_with_count: "Pendentes (%{count})"
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -3261,6 +3272,7 @@ pt:
       favorite_count: "%{count}/%{max} emblemas marcado como favorito"
     download_calendar:
       download: "Transferir"
+      add_to_calendar: "Adicionar ao calendário"
     tagging:
       all_tags: "Todas as Etiquetas"
       other_tags: "Outras Tags"
@@ -3283,6 +3295,7 @@ pt:
       edit_synonyms: "Gerenciar Sinônimos"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
+      remove_synonym: "Remover Sinônimo"
       delete_tag: "Remover Etiqueta"
       delete_confirm:
         one: "Tem certeza que deseja excluir esta tag e removê-la de %{count} tópico ao qual ela está atribuída?"
@@ -3497,15 +3510,25 @@ pt:
           no_data: "Sem dados para exibir."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pesquisar logs</a>'
+          average_chart_label: Média
           filters:
             group:
               label: Grupo
             category:
               label: Categoria
+            include_subcategories:
+              label: "Incluir Subcategorias"
       groups:
         new:
           title: "Novo Grupo"
           create: "Criar"
+          name:
+            too_short: "O nome do grupo é demasiado curto"
+            too_long: "O nome do grupo é demasiado longo"
+            checking: "A verificar a disponibilidade do nome de grupo..."
+            available: "O nome de grupo está disponível"
+            not_available: "O nome de grupo não está disponível"
+            blank: "O nome de grupo não pode ficar em branco"
         manage:
           interaction:
             email: E-mail
@@ -3544,6 +3567,7 @@ pt:
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
+        delete_automatic_group: Este é um grupo automático e não pode ser apagado.
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
         add: "Adicionar"
         custom: "Personalizar"
@@ -3552,6 +3576,8 @@ pt:
         default_title_description: "será aplicado a todos os usuários do grupo"
         group_owners: Proprietários
         add_owners: Adicionar proprietários
+        none_selected: "Selecione um grupo para começar"
+        no_custom_groups: "Criar um novo grupo personalizado"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
@@ -3583,12 +3609,12 @@ pt:
         delete: Excluir Permanentemente
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
-        use_global_key: Chave Global (permite todas as ações)
         scopes:
           description: |
             Ao usar escopos, você pode restringir uma chave de API a um conjunto específico de endpoints.
             Você também pode definir quais parâmetros serão permitidos. Use vírgulas para separar valores múltiplos.
           title: Escopos
+          global: Global
           resource: Recurso
           action: Ação
           allowed_parameters: Parâmetros Permitidos
@@ -3599,6 +3625,8 @@ pt:
             topics:
               read: Ler um tópico ou um post específico nele. RSS também é suportado.
               write: Criar um novo tópico ou poste em um já existente.
+            users:
+              show: Obter informações sobre um utilizador.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."

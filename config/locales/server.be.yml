@@ -958,7 +958,6 @@ be:
     blocked_ip_blocks: "Спіс прыватных IP-блокаў, якія ніколі не павінны сканіравацца дыскурсе"
     allowed_internal_hosts: "Спіс ўнутраных хастоў, дыскурс можа бяспечна паўзці для oneboxing і іншых мэтаў"
     allowed_iframes: "Спіс прэфіксаў дамена IFrame Src Дыскурс можа бяспечна дазволіць у паведамленнях"
-    slow_down_crawler_user_agents: "Агенты карыстальнікаў вэб-робатаў, якія павінны быць абмежаваныя ў хуткасці robots.txt з дапамогай дырэктывы Crawl затрымкі"
     slow_down_crawler_rate: "Калі slow_down_crawler_user_agents паказаны гэтая стаўка будзе прымяняцца да ўсіх сканэра (колькасць секунд затрымкі паміж запытамі)"
     content_security_policy: "Ўключыць Content-Security-Policy"
     content_security_policy_report_only: "Ўключыць Content-Security-Policy-Report-Only"

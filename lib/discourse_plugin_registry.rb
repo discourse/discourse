@@ -93,6 +93,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :push_notification_filters
 
+  define_filtered_register :notification_consolidation_plans
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

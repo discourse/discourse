@@ -42,6 +42,19 @@ const Category = RestModel.extend({
     }
   },
 
+  @discourseComputed(
+    "required_tag_groups",
+    "min_tags_from_required_group",
+    "minimum_required_tags"
+  )
+  minimumRequiredTags() {
+    if (this.required_tag_groups) {
+      return this.min_tags_from_required_group;
+    } else {
+      return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
+    }
+  },
+
   @discourseComputed
   availablePermissions() {
     return [
