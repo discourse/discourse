@@ -729,6 +729,18 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(cookies['authentication_data']).to be_nil
       end
+
+      it "removes disallowed characters from username" do
+        username = "strange_name*&^"
+        fixed_username = "strange_name"
+
+        mock_auth("user.with.strange.username@gmail.com", username)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq(fixed_username)
+      end
     end
 
     context 'when attempting reconnect' do
@@ -880,6 +892,60 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response['authenticated']).to eq(nil)
         expect(response['email']).to eq(new_email)
       end
+    end
+
+    context "when user is staged" do
+      fab!(:staged_user) { Fabricate(
+          :user,
+          username: "staged_user",
+          email: "staged.user@gmail.com",
+          staged: true
+        )
+      }
+
+      it "should use username of the staged user if username is not present in payload" do
+        mock_auth(staged_user.email, nil)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq(staged_user.username)
+      end
+
+      it "should use username of the staged user if username in payload is the same" do
+        mock_auth(staged_user.email, staged_user.username)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq(staged_user.username)
+      end
+
+      it "should override username of the staged user if payload contains a new username" do
+        new_username = "new_username"
+        mock_auth(staged_user.email, new_username)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq(new_username)
+      end
+    end
+
+    def mock_auth(email, nickname)
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+        provider: 'google_oauth2',
+        uid: '123545',
+        info: OmniAuth::AuthHash::InfoHash.new(
+          email: email,
+          nickname: nickname
+        ),
+        extra: {
+          raw_info: OmniAuth::AuthHash.new(email_verified: true)
+        }
+      )
+
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
   end
 end
