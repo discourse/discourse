@@ -63,7 +63,8 @@ describe 'users' do
         expected_response_schema = load_spec_schema('user_get_response')
         schema expected_response_schema
 
-        let(:username) { 'system' }
+        let(:username) { Fabricate(:user).username }
+
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
@@ -574,6 +575,29 @@ describe 'users' do
             'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
           }
         end
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/u/{username}/emails.json' do
+    get 'Get email addresses belonging to a user' do
+      tags 'Users'
+      operationId 'getUserEmails'
+      consumes 'application/json'
+      expected_request_schema = nil
+      parameter name: :username, in: :path, type: :string, required: true
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('user_emails_response')
+        schema expected_response_schema
+
+        let(:username) { Fabricate(:user).username }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

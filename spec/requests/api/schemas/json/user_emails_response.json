@@ -1,0 +1,26 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "secondary_emails": {
+      "type": "array",
+      "items": []
+    },
+    "unconfirmed_emails": {
+      "type": "array",
+      "items": []
+    },
+    "associated_accounts": {
+      "type": "array",
+      "items": []
+    }
+  },
+  "required": [
+    "email",
+    "secondary_emails",
+    "unconfirmed_emails",
+    "associated_accounts"
+  ]
+}
