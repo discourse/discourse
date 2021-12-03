@@ -157,12 +157,9 @@ class Auth::Result
   private
 
   def staged_user
-    @staged_user ||= begin
-      if email.present? && email_valid
-        User.where(staged: true).find_by_email(email)
-      else
-        nil
-      end
+    return @staged_user if defined?(@staged_user)
+    if email.present? && email_valid
+      @staged_user = User.where(staged: true).find_by_email(email)
     end
   end
 
