@@ -441,7 +441,7 @@ acceptance("Tag info", function (needs) {
     await click("#show-tag-info");
     assert.ok(exists(".tag-info .tag-name"), "show tag");
 
-    await click("#edit-tag");
+    await click(".edit-tag");
     assert.strictEqual(
       query("#edit-name").value,
       "happy-monkey",
@@ -470,7 +470,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists("#edit-tag"), "can rename tag");
+    assert.ok(exists(".edit-tag"), "can rename tag");
     assert.ok(exists("#edit-synonyms"), "can edit synonyms");
     assert.ok(exists("#delete-tag"), "can delete tag");
 

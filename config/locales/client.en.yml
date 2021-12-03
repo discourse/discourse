@@ -3792,7 +3792,8 @@ en:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
       info: "Info"
-      default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
+      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
@@ -3803,7 +3804,7 @@ en:
       category_restrictions:
         one: "It can only be used in this category:"
         other: "It can only be used in these categories:"
-      edit_synonyms: "Manage Synonyms"
+      edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"
       add_synonyms_explanation:
