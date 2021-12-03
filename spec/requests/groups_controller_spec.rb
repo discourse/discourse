@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
-  let(:other_user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin) { Fabricate(:admin) }
@@ -92,7 +92,7 @@ describe GroupsController do
         sign_in(user)
       end
 
-      let!(:other_group) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
+      fab!(:other_group) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
 
       context "with default (descending) order" do
         it "sorts by name" do
@@ -213,7 +213,7 @@ describe GroupsController do
         expect(group_names).to contain_exactly("0_0")
 
         # logged in user
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/groups.json", params: { username: u.username }
 
         expect(response.status).to eq(200)
@@ -256,8 +256,6 @@ describe GroupsController do
     end
 
     context 'viewing as an admin' do
-      fab!(:admin) { Fabricate(:admin) }
-
       before do
         sign_in(admin)
         group.add(admin)
@@ -356,7 +354,7 @@ describe GroupsController do
 
   describe '#show' do
     it "ensures the group can be seen" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       group.update!(visibility_level: Group.visibility_levels[:owners])
 
       get "/groups/#{group.name}.json"
@@ -397,7 +395,7 @@ describe GroupsController do
 
     context 'as an admin' do
       it "returns the right response" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/groups/#{group.name}.json"
 
         expect(response.status).to eq(200)
@@ -448,7 +446,7 @@ describe GroupsController do
 
   describe "#posts" do
     it "ensures the group can be seen" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       group.update!(visibility_level: Group.visibility_levels[:owners])
 
       get "/groups/#{group.name}/posts.json"
@@ -457,7 +455,7 @@ describe GroupsController do
     end
 
     it "ensures the group members can be seen" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       group.update!(members_visibility_level: Group.visibility_levels[:owners])
 
       get "/groups/#{group.name}/posts.json"
@@ -487,7 +485,7 @@ describe GroupsController do
   describe "#members" do
 
     it "returns correct error code with invalid params" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
 
       get "/groups/#{group.name}/members.json?limit=-1"
       expect(response.status).to eq(400)
@@ -500,7 +498,7 @@ describe GroupsController do
     end
 
     it "ensures the group can be seen" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       group.update!(visibility_level: Group.visibility_levels[:owners])
 
       get "/groups/#{group.name}/members.json"
@@ -1188,7 +1186,7 @@ describe GroupsController do
     end
 
     it "can show group requests" do
-      sign_in(Fabricate(:admin))
+      sign_in(admin)
 
       user4 = Fabricate(:user)
       request4 = Fabricate(:group_request, user: user4, group: group)
@@ -1217,7 +1215,7 @@ describe GroupsController do
 
       describe 'as an admin' do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         it "should allow members to be filterable by username" do
@@ -1296,11 +1294,10 @@ describe GroupsController do
     end
 
     context 'when user is an admin' do
-      fab!(:user) { Fabricate(:admin) }
-      let(:group) { Fabricate(:group, users: [user], automatic: true) }
+      fab!(:group) { Fabricate(:group, users: [admin], automatic: true) }
 
       before do
-        sign_in(user)
+        sign_in(admin)
       end
 
       it "cannot add members to automatic groups" do
@@ -1314,8 +1311,6 @@ describe GroupsController do
   end
 
   describe "membership edits" do
-    fab!(:admin) { Fabricate(:admin) }
-
     context '#add_members' do
       before do
         sign_in(admin)
@@ -1370,7 +1365,7 @@ describe GroupsController do
         group.add_owner(user)
         sign_in(user)
 
-        put "/groups/#{group.id}/members.json", params: { usernames: Fabricate(:user).username }
+        put "/groups/#{group.id}/members.json", params: { usernames: other_user.username }
         expect(response.status).to eq(200)
       end
 
@@ -1564,8 +1559,6 @@ describe GroupsController do
       end
 
       context 'public group' do
-        fab!(:other_user) { Fabricate(:user) }
-
         before do
           group.update!(
             public_admission: true,
@@ -1713,7 +1706,6 @@ describe GroupsController do
         end
 
         context 'public group' do
-          fab!(:other_user) { Fabricate(:user) }
           let(:group) { Fabricate(:public_group, users: [other_user]) }
 
           context "admin" do
@@ -1923,8 +1915,6 @@ describe GroupsController do
     end
 
     context 'when user is an admin' do
-      fab!(:admin) { Fabricate(:admin) }
-
       before do
         sign_in(admin)
       end
@@ -2106,7 +2096,7 @@ describe GroupsController do
 
     context 'as an admin' do
       it "returns the right response" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         get '/groups/search.json?ignore_automatic=true'
 
@@ -2141,7 +2131,7 @@ describe GroupsController do
     end
 
     describe 'for an admin user' do
-      before { sign_in(Fabricate(:admin)) }
+      before { sign_in(admin) }
 
       it 'should return 200' do
         get '/groups/custom/new'
