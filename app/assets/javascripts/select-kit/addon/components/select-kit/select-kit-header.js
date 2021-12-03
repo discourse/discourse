@@ -56,6 +56,10 @@ export default Component.extend(UtilsMixin, {
     }
   },
 
+  mouseDown() {
+    return false;
+  },
+
   click(event) {
     event.preventDefault();
     event.stopPropagation();
