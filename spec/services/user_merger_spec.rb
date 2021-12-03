@@ -7,6 +7,13 @@ describe UserMerger do
   fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
   fab!(:walter) { Fabricate(:walter_white) }
 
+  fab!(:p1) { Fabricate(:post) }
+  fab!(:p2) { Fabricate(:post) }
+  fab!(:p3) { Fabricate(:post) }
+  fab!(:p4) { Fabricate(:post) }
+  fab!(:p5) { Fabricate(:post) }
+  fab!(:p6) { Fabricate(:post) }
+
   def merge_users!(source = nil, target =  nil)
     source ||= source_user
     target ||= target_user
@@ -154,13 +161,6 @@ describe UserMerger do
     end
 
     it "merges likes" do
-      p1 = Fabricate(:post)
-      p2 = Fabricate(:post)
-      p3 = Fabricate(:post)
-      p4 = Fabricate(:post)
-      p5 = Fabricate(:post)
-      p6 = Fabricate(:post)
-
       now = Time.zone.now
 
       freeze_time(now - 1.day)
@@ -334,9 +334,6 @@ describe UserMerger do
 
   context "post actions" do
     it "merges post actions" do
-      p1 = Fabricate(:post)
-      p2 = Fabricate(:post)
-      p3 = Fabricate(:post)
       type_ids = PostActionType.public_type_ids + [PostActionType.flag_types.values.first]
 
       type_ids.each do |type|
@@ -357,11 +354,6 @@ describe UserMerger do
     end
 
     it "updates post actions" do
-      p1 = Fabricate(:post)
-      p2 = Fabricate(:post)
-      p3 = Fabricate(:post)
-      p4 = Fabricate(:post)
-
       action1 = PostActionCreator.create(source_user, p1, :off_topic).post_action
       action1.update_attribute(:deleted_by_id, source_user.id)
 
@@ -384,7 +376,7 @@ describe UserMerger do
   end
 
   it "updates post revisions" do
-    post = Fabricate(:post)
+    post = p1
     post_revision = Fabricate(:post_revision, post: post, user: source_user)
 
     merge_users!
@@ -410,9 +402,9 @@ describe UserMerger do
     end
 
     it "merges post timings" do
-      post1 = Fabricate(:post)
-      post2 = Fabricate(:post)
-      post3 = Fabricate(:post)
+      post1 = p1
+      post2 = p2
+      post3 = p3
 
       create_post_timing(post1, source_user, 12345)
       create_post_timing(post2, source_user, 9876)
@@ -678,8 +670,8 @@ describe UserMerger do
     # action_type and user_id are not nullable
     # target_topic_id and acting_user_id are nullable, but always have a value
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
+    fab!(:post1) { p1 }
+    fab!(:post2) { p2 }
 
     def log_like_action(acting_user, user, post)
       UserAction.log_action!(action_type: UserAction::LIKE,

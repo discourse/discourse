@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe PostActionCreator do
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
@@ -147,8 +148,6 @@ describe PostActionCreator do
       end
 
       describe "When the post was already reviewed by staff" do
-        fab!(:admin) { Fabricate(:admin) }
-
         before { reviewable.perform(admin, :ignore) }
 
         it "fails because the post was recently reviewed" do
@@ -221,7 +220,6 @@ describe PostActionCreator do
   end
 
   context "queue_for_review" do
-    fab!(:admin) { Fabricate(:admin) }
 
     it 'fails if the user is not a staff member' do
       creator = PostActionCreator.new(

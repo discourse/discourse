@@ -23,11 +23,14 @@
   }
 
   .keyboard-visible &.open {
-    height: calc(var(--composer-vh, 1vh) * 100);
+    height: 100%; // Android: Reduces composer jumpiness when the keyboard toggles
   }
 
-  .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
-    padding-bottom: 6px;
+  .keyboard-visible body.ios-safari-composer-hacks &.open {
+    height: calc(var(--composer-vh, 1vh) * 100);
+    .reply-area {
+      padding-bottom: 6px;
+    }
   }
 
   .reply-to {
