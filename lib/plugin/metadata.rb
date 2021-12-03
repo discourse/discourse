@@ -52,7 +52,7 @@ class Plugin::Metadata
     "discourse-openid-connect",
     "discourse-patreon",
     "discourse-perspective-api",
-    "discourse-plugin-linkedin-auth",
+    "discourse-linkedin-auth",
     "discourse-microsoft-auth",
     "discourse-policy",
     "discourse-presence",
