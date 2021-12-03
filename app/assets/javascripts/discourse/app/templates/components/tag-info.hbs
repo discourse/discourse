@@ -40,7 +40,7 @@
         {{#if tagInfo.category_restricted}}
           {{i18n "tagging.category_restricted"}}
         {{else}}
-          {{html-safe (i18n "tagging.default_info" )}}
+          {{html-safe (i18n "tagging.default_info")}}
           {{#if canAdminTag}}
             {{html-safe (i18n "tagging.staff_info" basePath=(base-path))}}
           {{/if}}
