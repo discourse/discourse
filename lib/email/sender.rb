@@ -109,7 +109,7 @@ module Email
       ).pluck_first(:id)
 
       # always set a default Message ID from the host
-      @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
+      @message.header['Message-ID'] = Email::MessageIdService.generate_default
 
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
@@ -122,8 +122,8 @@ module Email
 
         add_attachments(post)
 
-        topic_message_id = Email::MessageIdGenerator.for_topic(topic, use_incoming_email_if_present: true)
-        post_message_id = Email::MessageIdGenerator.for_post(post, use_incoming_email_if_present: true)
+        topic_message_id = Email::MessageIdService.generate_for_topic(topic, use_incoming_email_if_present: true)
+        post_message_id = Email::MessageIdService.generate_for_post(post, use_incoming_email_if_present: true)
 
         referenced_posts = Post.includes(:incoming_email)
           .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
@@ -135,9 +135,9 @@ module Email
             "<#{referenced_post.incoming_email.message_id}>"
           else
             if referenced_post.post_number == 1
-              Email::MessageIdGenerator.for_topic(topic)
+              Email::MessageIdService.generate_for_topic(topic)
             else
-              Email::MessageIdGenerator.for_post(referenced_post)
+              Email::MessageIdService.generate_for_post(referenced_post)
             end
           end
         end

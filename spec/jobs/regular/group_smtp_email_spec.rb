@@ -35,7 +35,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     TopicAllowedUser.create(user: staged1, topic: topic)
     TopicAllowedUser.create(user: staged2, topic: topic)
     TopicAllowedUser.create(user: normaluser, topic: topic)
-    Email::MessageIdGenerator.stubs(:random_suffix).returns(random_message_id_suffix)
+    Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
   end
 
   it "sends an email using the GroupSmtpMailer and Email::Sender" do

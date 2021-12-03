@@ -274,7 +274,7 @@ describe Email::Sender do
 
       before do
         message.header['X-Discourse-Topic-Id'] = topic.id
-        Email::MessageIdGenerator.stubs(:random_suffix).returns(random_message_id_suffix)
+        Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
       end
 
       it "doesn't set the 'In-Reply-To' and 'References' headers on the first post" do
