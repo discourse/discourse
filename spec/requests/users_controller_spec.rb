@@ -202,7 +202,7 @@ describe UsersController do
     end
 
     context 'valid token' do
-      let!(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:user_auth_token) { UserAuthToken.generate!(user_id: user.id) }
       let!(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]) }
 
