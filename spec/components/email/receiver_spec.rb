@@ -1161,7 +1161,7 @@ describe Email::Receiver do
         NotificationEmailer.enable
         SiteSetting.disallow_reply_by_email_after_days = 10000
         Jobs.run_immediately!
-        Email::MessageIdGenerator.stubs(:random_chunk).returns("blah123")
+        Email::MessageIdGenerator.stubs(:random_suffix).returns("blah123")
       end
 
       def reply_as_group_user

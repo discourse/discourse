@@ -10,7 +10,7 @@ module Email
           return "<#{post.incoming_email.message_id}>"
         end
 
-        "<topic/#{post.topic_id}/#{post.id}.#{random_chunk}@#{host}>"
+        "<topic/#{post.topic_id}/#{post.id}.#{random_suffix}@#{host}>"
       end
 
       def for_topic(topic, use_incoming_email_if_present: false)
@@ -21,10 +21,10 @@ module Email
           return "<#{first_post.incoming_email.message_id}>"
         end
 
-        "<topic/#{topic.id}.#{random_chunk}@#{host}>"
+        "<topic/#{topic.id}.#{random_suffix}@#{host}>"
       end
 
-      def random_chunk
+      def random_suffix
         SecureRandom.hex(12)
       end
     end
