@@ -13,15 +13,12 @@ export default {
       return;
     } // must be logged in
 
-    this.notifications =
-      user.unread_notifications + user.unread_high_priority_notifications;
+    const appEvents = container.lookup("service:app-events");
+    appEvents.on("notifications:changed", () => {
+      const notifications =
+        user.unread_notifications + user.unread_high_priority_notifications;
 
-    container
-      .lookup("service:app-events")
-      .on("notifications:changed", this, "_updateBadge");
-  },
-
-  _updateBadge() {
-    navigator.setAppBadge(this.notifications);
+      navigator.setAppBadge(notifications);
+    });
   },
 };
