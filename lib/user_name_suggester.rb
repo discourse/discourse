@@ -6,6 +6,7 @@ module UserNameSuggester
 
   def self.suggest(name_or_email,  current_username = nil)
     name = parse_name_from_email(name_or_email)
+    name = fix_username(name)
     find_available_username_based_on(name, current_username)
   end
 
@@ -21,7 +22,6 @@ module UserNameSuggester
   end
 
   def self.find_available_username_based_on(name, current_username = nil)
-    name = fix_username(name)
     offset = nil
     i = 1
 
