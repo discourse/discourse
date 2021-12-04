@@ -30,7 +30,8 @@
   .saving-text,
   .draft-text {
     display: none;
-    padding-left: 10px;
+    padding-left: 8px;
+
     .spinner {
       margin-left: 8px;
       border-color: var(--secondary);
@@ -59,14 +60,17 @@
     background: var(--tertiary);
     color: var(--secondary);
     flex-direction: row;
-    width: 100%;
+    justify-content: space-between;
+
     .composer-controls {
-      margin-left: auto;
       display: flex;
+      gap: 8px;
       padding-right: 8px;
+
       .toggle-toolbar {
         display: none;
       }
+
       .d-icon {
         color: var(--secondary);
       }
@@ -100,11 +104,11 @@
     justify-content: flex-end;
 
     .reply-details {
-      flex: 1 1 auto;
+      flex: 1;
       display: flex;
       align-items: center;
+      min-width: 0;
       white-space: nowrap;
-      overflow: auto;
 
       .d-icon {
         color: var(--primary-medium);
@@ -151,6 +155,7 @@
 
     .composer-controls {
       display: flex;
+      gap: 8px;
       margin-left: 8px;
 
       .d-icon {
@@ -345,13 +350,14 @@
   }
 
   .submit-panel {
-    align-items: stretch;
+    align-items: center;
     display: flex;
     flex-shrink: 0;
     margin-top: 8px;
   }
 
   .save-or-cancel {
+    align-items: center;
     display: flex;
     flex: 1 1 auto;
 
@@ -573,6 +579,7 @@ body:not(.ios-safari-composer-hacks) {
 }
 
 .toggle-preview {
+  margin-left: 8px;
   transition: all 0.33s ease-out;
 
   &.active {

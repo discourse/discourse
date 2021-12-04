@@ -274,10 +274,7 @@ a.toggle-preview {
       .reply-to {
         border-bottom: 1px solid var(--primary-low);
         margin-bottom: 0;
-
-        .composer-controls {
-          margin-right: 0;
-        }
+        padding-bottom: 8px;
       }
 
       .d-editor-textarea-wrapper {
