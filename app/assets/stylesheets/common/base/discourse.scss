@@ -372,7 +372,7 @@ table {
 }
 
 .profiler-results.profiler-left {
-  top: 60px !important;
+  top: var(--header-offset) !important;
 }
 
 .flex-center-align {
