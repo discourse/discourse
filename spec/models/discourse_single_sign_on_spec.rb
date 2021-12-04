@@ -366,6 +366,30 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq "testuser"
   end
 
+  it 'should preserve username when several users login with the same username' do
+    SiteSetting.auth_overrides_username = true
+
+    # if several users have username "bill" on the external site,
+    # they will have usernames bill, bill1, bill2 etc in Discourse:
+    Fabricate(:user, username: "bill")
+    Fabricate(:user, username: "bill1")
+    Fabricate(:user, username: "bill2")
+    Fabricate(:user, username: "bill4")
+
+    # the number should be preserved during subsequent logins
+    # bill3 should remain bill3
+    sso = new_discourse_sso
+    sso.username = "bill3"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+    sso.lookup_or_create_user(ip_address)
+
+    sso.username = "bill"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq "bill3"
+  end
+
   it "doesn't use email as a source for username suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
