@@ -947,6 +947,52 @@ describe Email::Receiver do
         ordered_posts[1..-1].each(&:trash!)
         expect { process(:email_reply_4) }.to change { topic.posts.count }.by(1)
       end
+
+      describe "replying with various message-id formats" do
+        let!(:topic) do
+          process(:email_reply_1)
+          Topic.last
+        end
+        let!(:post) { Fabricate(:post, topic: topic) }
+
+        def process_mail_with_message_id(message_id)
+          mail_string = <<~REPLY
+          Return-Path: <two@foo.com>
+          From: Two <two@foo.com>
+          To: one@foo.com
+          Subject: RE: Testing email threading
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <44@foo.bar.mail>
+          In-Reply-To: <#{message_id}>
+          Mime-Version: 1.0
+          Content-Type: text/plain
+          Content-Transfer-Encoding: 7bit
+
+          This is email reply testing with Message-ID formats.
+          REPLY
+          Email::Receiver.new(mail_string).process!
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID/POST_ID@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID/POST_ID.RANDOM_SUFFIX@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}.rjc3yr79834y@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID.RANDOM_SUFFIX@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}.x3487nxy877843x@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+      end
     end
 
     it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
