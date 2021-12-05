@@ -2,11 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Email::MessageIdService do
-  # let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
-  # before do
-  #   Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
-  # end
+describe Email::MessageIdService do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:second_post) { Fabricate(:post, topic: topic) }
