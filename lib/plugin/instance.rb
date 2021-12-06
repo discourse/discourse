@@ -907,14 +907,14 @@ class Plugin::Instance
                               format: nil, formats: nil)
 
     if Array(format).include?("*")
-      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7")
+      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7", raise_error: true)
       # Old API used * as wildcard. New api uses `nil`
       format = nil
     end
 
     # Backwards compatibility with old parameter names:
     if method || route || format
-      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7")
+      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7", raise_error: true)
       methods ||= method
       actions ||= route
       formats ||= format
