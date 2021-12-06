@@ -1,3 +1,5 @@
+$flair-size: 18px;
+
 .select-kit.flair-chooser {
   .select-kit-header,
   .flair-row {
@@ -5,31 +7,27 @@
       align-items: center;
       background-position: center;
       background-repeat: no-repeat;
-      background-size: 30px 30px;
+      background-size: $flair-size $flair-size;
       display: flex;
       justify-content: center;
       margin-right: 5px;
-      height: 30px;
-      width: 30px;
+      height: $flair-size;
+      width: $flair-size;
 
       &.rounded {
-        background-size: (30px / 1.4) (30px / 1.4);
+        background-size: ($flair-size / 1.4) ($flair-size / 1.4);
         border-radius: 50%;
       }
 
       .d-icon {
         display: block;
-        height: (30px / 1.8);
-        width: (30px / 1.8);
+        height: ($flair-size / 1.8);
+        width: ($flair-size / 1.8);
       }
     }
 
     span {
       white-space: nowrap;
     }
-  }
-
-  .select-kit-header {
-    padding: 2px 4px;
   }
 }
