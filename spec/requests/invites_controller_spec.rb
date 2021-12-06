@@ -896,6 +896,8 @@ describe InvitesController do
 
       let(:csv_file_with_headers) { File.new("#{Rails.root}/spec/fixtures/csv/discourse_headers.csv") }
       let(:file_with_headers) { Rack::Test::UploadedFile.new(File.open(csv_file_with_headers)) }
+      let(:csv_file_with_locales) { File.new("#{Rails.root}/spec/fixtures/csv/invites_with_locales.csv") }
+      let(:file_with_locales) { Rack::Test::UploadedFile.new(File.open(csv_file_with_locales)) }
 
       it 'fails if you cannot bulk invite to the forum' do
         sign_in(Fabricate(:user))
@@ -946,6 +948,20 @@ describe InvitesController do
 
         user2 = User.where(staged: true).find_by_email('test2@example.com')
         expect(user2.user_fields[user_field.id.to_s]).to eq('europe')
+      end
+
+      it 'can pre-set user locales' do
+        Jobs.run_immediately!
+        sign_in(admin)
+
+        post '/invites/upload_csv.json', params: { file: file_with_locales, name: 'discourse_headers.csv' }
+        expect(response.status).to eq(200)
+
+        user = User.where(staged: true).find_by_email('test@example.com')
+        expect(user.locale).to eq('de')
+
+        user2 = User.where(staged: true).find_by_email('test2@example.com')
+        expect(user2.locale).to eq('pl')
       end
     end
   end

@@ -19,7 +19,7 @@ class UsernameChanger
       UsernameChanger.change(user, new_username, user)
       true
     elsif user.username != UserNameSuggester.fix_username(new_username)
-      suggested_username = UserNameSuggester.suggest(new_username)
+      suggested_username = UserNameSuggester.suggest(new_username, user.username)
       UsernameChanger.change(user, suggested_username, user)
       true
     else

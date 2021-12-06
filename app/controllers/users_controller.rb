@@ -928,6 +928,8 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
 
       if user_presence
+        DiscourseEvent.trigger(:before_email_login, user)
+
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
 
         Jobs.enqueue(:critical_user_email,
