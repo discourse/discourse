@@ -206,10 +206,6 @@
 
   .user-selector {
     margin-bottom: 8px;
-
-    .select-kit-header {
-      border-color: var(--primary-low);
-    }
   }
 
   .title-input {
@@ -245,6 +241,7 @@
       flex: 1 0 100%;
       margin-left: 0;
     }
+
     .category-chooser {
       display: flex;
       flex: 1 0 auto;
@@ -252,7 +249,6 @@
       width: auto;
 
       .select-kit-header {
-        border-color: var(--primary-low);
         color: var(--primary-high);
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -311,7 +307,6 @@
   }
 
   #reply-title {
-    border-color: var(--primary-low);
     margin-bottom: 8px;
     flex-basis: 50%;
     width: unset;
@@ -332,7 +327,6 @@
     }
 
     .select-kit-header {
-      border-color: var(--primary-low);
       color: var(--primary-high);
     }
   }
