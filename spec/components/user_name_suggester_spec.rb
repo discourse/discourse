@@ -118,6 +118,21 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest('uuuuuuu_u')).to eq('uuuuuuu1')
     end
 
+    it 'preserves current username' do
+      # if several users have username "bill" on the external site,
+      # they will have usernames bill, bill1, bill2 etc in Discourse:
+      Fabricate(:user, username: "bill")
+      Fabricate(:user, username: "bill1")
+      Fabricate(:user, username: "bill2")
+      Fabricate(:user, username: "bill3")
+      Fabricate(:user, username: "bill4")
+
+      # the number should be preserved, bill3 should remain bill3
+      suggestion = UserNameSuggester.suggest("bill", "bill3")
+
+      expect(suggestion).to eq "bill3"
+    end
+
     context "with Unicode usernames disabled" do
       before { SiteSetting.unicode_usernames = false }
 

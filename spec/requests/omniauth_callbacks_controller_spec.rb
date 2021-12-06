@@ -467,6 +467,30 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.name).to eq('Some name')
       end
 
+      it "should preserve username when several users login with the same username" do
+        SiteSetting.auth_overrides_username = true
+
+        # if several users have username "bill" on the external site,
+        # they will have usernames bill, bill1, bill2 etc in Discourse:
+        Fabricate(:user, username: "bill")
+        Fabricate(:user, username: "bill1")
+        Fabricate(:user, username: "bill2")
+        Fabricate(:user, username: "bill4")
+
+        # the number should be preserved during subsequent logins
+        # bill3 should remain bill3
+        user.update!(username: 'bill3')
+
+        uid = "12345"
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: uid)
+        mock_auth(user.email, "bill", uid)
+
+        get "/auth/google_oauth2/callback.json"
+
+        user.reload
+        expect(user.username).to eq('bill3')
+      end
+
       it "will not update email if not verified" do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true
@@ -932,10 +956,10 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
-    def mock_auth(email, nickname)
+    def mock_auth(email, nickname, uid = '12345')
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: 'google_oauth2',
-        uid: '123545',
+        uid: uid,
         info: OmniAuth::AuthHash::InfoHash.new(
           email: email,
           nickname: nickname
