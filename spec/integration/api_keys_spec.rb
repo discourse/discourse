@@ -51,7 +51,7 @@ describe 'api keys' do
   context "with a plugin registered filter" do
     before do
       plugin = Plugin::Instance.new
-      plugin.add_api_parameter_route method: :get, route: "session#current", format: "*"
+      plugin.add_api_parameter_route methods: [:get], actions: ["session#current"]
     end
 
     it 'allows parameter access to the registered route' do
