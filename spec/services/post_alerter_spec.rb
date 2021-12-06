@@ -103,7 +103,8 @@ describe PostAlerter do
         expect(notification_payload["group_name"]).to eq(group.name)
       end
 
-      it 'consolidates group summary notifications by bumping an existing one' do
+      it 'updates the consolidated group summary inbox count and bumps the notification' do
+        user2.update!(last_seen_at: 5.minutes.ago)
         TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
         PostAlerter.post_created(op)
 
@@ -113,21 +114,25 @@ describe PostAlerter do
         ).last
         starting_count = group_summary_notification.data_hash[:inbox_count]
 
-        expect(starting_count).to eq(1)
+        # Create another notification to ensure summary is correctly bumped
+        user2_post = Fabricate(:post, topic: pm, user: user2)
+        PostAlerter.new.create_notification(
+          user2, Notification.types[:liked], user2_post, user_id: pm.user, display_username: pm.user.username
+        )
 
+        Notification.where(user: user2).update_all('read = true')
         another_pm = Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group])
         another_post = Fabricate(:post, user: another_pm.user, topic: another_pm)
         TopicUser.change(user2.id, another_pm.id, notification_level: TopicUser.notification_levels[:tracking])
 
-        PostAlerter.post_created(another_post)
-        consolidated_summary = Notification.where(
-          user_id: user2.id,
-          notification_type: Notification.types[:group_message_summary]
-        ).last
-        updated_inbox_count = consolidated_summary.data_hash[:inbox_count]
+        message_data = MessageBus.track_publish("/notification/#{user2.id}") do
+          PostAlerter.post_created(another_post)
+        end.first.data
 
-        expect(group_summary_notification.id).to eq(consolidated_summary.id)
-        expect(updated_inbox_count).to eq(starting_count + 1)
+        expect(Notification.recent_report(user2, 1).first.notification_type).to eq(Notification.types[:group_message_summary])
+        expect(message_data.dig(:last_notification, :notification, :id)).to eq(group_summary_notification.id)
+        expect(message_data.dig(:last_notification, :notification, :data, :inbox_count)).to eq(starting_count + 1)
+        expect(message_data[:unread_notifications]).to eq(1)
       end
     end
   end

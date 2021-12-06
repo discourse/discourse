@@ -14,6 +14,7 @@
 # - consolidation_window: Only consolidate notifications created since this value (Pass a ActiveSupport::Duration instance, and we'll call #ago on it).
 # - unconsolidated_query_blk: A block with additional queries to apply when fetching for unconsolidated notifications.
 # - consolidated_query_blk: A block with additional queries to apply when fetching for a consolidated notification.
+# - bump_notification: Bump the consolidated notification to the top after updating it.
 #
 # Need to call #set_precondition to configure this:
 #
@@ -25,7 +26,7 @@
 
 module Notifications
   class ConsolidateNotifications
-    def initialize(from:, to:, consolidation_window: nil, unconsolidated_query_blk: nil, consolidated_query_blk: nil, threshold:)
+    def initialize(from:, to:, consolidation_window: nil, unconsolidated_query_blk: nil, consolidated_query_blk: nil, threshold:, bump_notification: true)
       @from = from
       @to = to
       @threshold = threshold
@@ -34,6 +35,7 @@ module Notifications
       @unconsolidated_query_blk = unconsolidated_query_blk
       @precondition_blk = nil
       @set_data_blk = nil
+      @bump_notification = bump_notification
     end
 
     def set_precondition(precondition_blk: nil)
@@ -69,7 +71,10 @@ module Notifications
 
     private
 
-    attr_reader :notification, :from, :to, :data, :threshold, :consolidated_query_blk, :unconsolidated_query_blk, :consolidation_window
+    attr_reader(
+      :notification, :from, :to, :data, :threshold, :consolidated_query_blk,
+      :unconsolidated_query_blk, :consolidation_window, :bump_notification
+    )
 
     def consolidated_data(notification)
       return notification.data_hash if @set_data_blk.nil?
@@ -91,11 +96,17 @@ module Notifications
       # Hack: We don't want to cache the old data if we're about to update it.
       consolidated.instance_variable_set(:@data_hash, nil)
 
-      consolidated.update!(
+      attrs = {
         data: data_hash.to_json,
         read: false,
-        updated_at: timestamp
-      )
+        updated_at: timestamp,
+      }
+
+      # Updating created_at may seem wrong, but it's the only way of bumping the notification.
+      # We cannot order by updated_at because marking them as read will move them to the top.
+      attrs[:created_at] = timestamp if bump_notification
+
+      consolidated.update!(attrs)
 
       consolidated
     end
