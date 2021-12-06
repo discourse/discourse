@@ -121,6 +121,7 @@ end
 #
 # Indexes
 #
-#  index_email_tokens_on_token    (token) UNIQUE
-#  index_email_tokens_on_user_id  (user_id)
+#  index_email_tokens_on_token       (token) UNIQUE
+#  index_email_tokens_on_token_hash  (token_hash) UNIQUE
+#  index_email_tokens_on_user_id     (user_id)
 #
