@@ -52,20 +52,7 @@ module Email
     SiteSetting.email_site_title.presence || SiteSetting.title
   end
 
-  # https://tools.ietf.org/html/rfc850#section-2.1.7
-  def self.message_id_rfc_format(message_id)
-    message_id.present? && !is_message_id_rfc?(message_id) ? "<#{message_id}>" : message_id
-  end
-
-  def self.message_id_clean(message_id)
-    message_id.present? && is_message_id_rfc?(message_id) ? message_id.gsub(/^<|>$/, "") : message_id
-  end
-
   private
-
-  def self.is_message_id_rfc?(message_id)
-    message_id.start_with?('<') && message_id.include?('@') && message_id.end_with?('>')
-  end
 
   def self.obfuscate_part(part)
     if part.size < 3

@@ -23,6 +23,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
   let(:staged1) { Fabricate(:staged, email: "otherguy@test.com") }
   let(:staged2) { Fabricate(:staged, email: "cormac@lit.com") }
   let(:normaluser) { Fabricate(:user, email: "justanormalguy@test.com", username: "normaluser") }
+  let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
 
   before do
     SiteSetting.enable_smtp = true
@@ -34,6 +35,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     TopicAllowedUser.create(user: staged1, topic: topic)
     TopicAllowedUser.create(user: staged2, topic: topic)
     TopicAllowedUser.create(user: normaluser, topic: topic)
+    Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
   end
 
   it "sends an email using the GroupSmtpMailer and Email::Sender" do
@@ -61,7 +63,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     PostReply.create(post: second_post, reply: post)
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_headers).to include("In-Reply-To: <topic/#{post.topic_id}/#{second_post.id}@#{Email::Sender.host_for(Discourse.base_url)}>")
+    expect(email_log.raw_headers).to include("In-Reply-To: <topic/#{post.topic_id}/#{second_post.id}.#{random_message_id_suffix}@#{Email::Sender.host_for(Discourse.base_url)}>")
     expect(email_log.as_mail_message.html_part.to_s).not_to include(I18n.t("user_notifications.in_reply_to"))
   end
 
@@ -82,7 +84,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log).not_to eq(nil)
-    expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}.#{random_message_id_suffix}@test.localhost")
   end
 
   it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
@@ -91,7 +93,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
     incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
     expect(incoming_email).not_to eq(nil)
-    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}.#{random_message_id_suffix}@test.localhost")
     expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
     expect(incoming_email.to_addresses).to eq("test@test.com")
     expect(incoming_email.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
@@ -115,7 +117,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
     email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log).not_to eq(nil)
-    expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(email_log.message_id).to eq("topic/#{post.topic_id}/#{post.id}.#{random_message_id_suffix}@test.localhost")
   end
 
   it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
@@ -124,7 +126,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
     incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
     expect(incoming_email).not_to eq(nil)
-    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(incoming_email.message_id).to eq("topic/#{post.topic_id}/#{post.id}.#{random_message_id_suffix}@test.localhost")
     expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
     expect(incoming_email.to_addresses).to eq("test@test.com")
     expect(incoming_email.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
