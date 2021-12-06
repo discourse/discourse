@@ -51,6 +51,15 @@ class ApiKeyScope < ActiveRecord::Base
         },
         email: {
           receive_emails: { actions: %w[admin/email#handle_mail] }
+        },
+        badges: {
+          create: { actions: %w[admin/badges#create] },
+          show: { actions: %w[badges#show] },
+          update: { actions: %w[admin/badges#update] },
+          delete: { actions: %w[admin/badges#destroy] },
+          list_user_badges: { actions: %w[user_badges#username], params: %i[username] },
+          assign_badge_to_user: { actions: %w[user_badges#create], params: %i[username] },
+          revoke_badge_from_user: { actions: %w[user_badges#destroy] },
         }
       }
 

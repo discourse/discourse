@@ -4219,6 +4219,14 @@ en:
               list: Get a list of users.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            badges:
+              create: Create a new badge.
+              show: Obtain information about a badge.
+              update: Update a badge.
+              delete: Delete a badge.
+              list_user_badges: List user badges.
+              assign_badge_to_user: Assign a badge to a user.
+              revoke_badge_from_user: Revoke a badge from a user.
 
       web_hooks:
         title: "Webhooks"
