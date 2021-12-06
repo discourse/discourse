@@ -13,7 +13,6 @@ class EmailToken < ActiveRecord::Base
   after_initialize do
     if self.token_hash.blank?
       @token ||= SecureRandom.hex
-      self.token = @token
       self.token_hash = self.class.hash_token(@token)
     end
   end
@@ -36,6 +35,9 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
+  # TODO(2022-01-01): Remove
+  self.ignored_columns = %w{token}
+
   def self.scopes
     @scopes ||= Enum.new(
       signup: 1,
@@ -47,7 +49,8 @@ class EmailToken < ActiveRecord::Base
 
   def token
     raise TokenAccessError.new if @token.blank?
-    self[:token]
+
+    @token
   end
 
   def self.confirm(token, scope: nil, skip_reviewable: false)
@@ -111,7 +114,6 @@ end
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
 #  email      :string           not null
-#  token      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
 #  created_at :datetime         not null
@@ -121,7 +123,6 @@ end
 #
 # Indexes
 #
-#  index_email_tokens_on_token       (token) UNIQUE
 #  index_email_tokens_on_token_hash  (token_hash) UNIQUE
 #  index_email_tokens_on_user_id     (user_id)
 #
