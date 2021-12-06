@@ -135,18 +135,9 @@ class Auth::Result
       return result
     end
 
-    suggested_username = UserNameSuggester.suggest(username_suggester_attributes)
-    if email_valid && email.present?
-      if username.present? && User.username_available?(username, email)
-        suggested_username = username
-      elsif staged_user = User.where(staged: true).find_by_email(email)
-        suggested_username = staged_user.username
-      end
-    end
-
     result = {
       email: email,
-      username: suggested_username,
+      username: resolve_username,
       auth_provider: authenticator_name,
       email_valid: !!email_valid,
       can_edit_username: can_edit_username,
@@ -165,7 +156,24 @@ class Auth::Result
 
   private
 
+  def staged_user
+    return @staged_user if defined?(@staged_user)
+    if email.present? && email_valid
+      @staged_user = User.where(staged: true).find_by_email(email)
+    end
+  end
+
   def username_suggester_attributes
     username || name || email
+  end
+
+  def resolve_username
+    if staged_user
+      if !username.present? || UserNameSuggester.fix_username(username) == staged_user.username
+        return staged_user.username
+      end
+    end
+
+    UserNameSuggester.suggest(username_suggester_attributes)
   end
 end
