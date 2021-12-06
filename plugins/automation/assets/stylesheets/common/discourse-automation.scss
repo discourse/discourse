@@ -35,6 +35,13 @@
 }
 
 .discourse-automation-form {
+  .scriptables,
+  .triggerables {
+    .select-kit-body {
+      max-height: 250px;
+    }
+  }
+
   .alert {
     padding: 1em;
     background: var(--primary-very-low);

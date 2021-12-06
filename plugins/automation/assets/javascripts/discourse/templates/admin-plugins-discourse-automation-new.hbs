@@ -24,10 +24,12 @@
 
       <div class="controls">
         {{dropdown-select-box
+          class="scriptables"
           value=form.script
           content=model.scriptables.content
           onChange=(action (mut form.script))
           options=(hash
+            filterable=true
             none="discourse_automation.select_script"
           )
         }}

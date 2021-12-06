@@ -41,11 +41,13 @@
 
         <div class="controls">
           {{combo-box
+            class="scriptables"
             value=automationForm.script
             content=model.scriptables
             onChange=(action "onChangeScript")
             options=(hash
               none="discourse_automation.select_script"
+              filterable=true
             )
           }}
         </div>
@@ -71,10 +73,12 @@
 
         <div class="controls">
           {{combo-box
+            class="triggerables"
             value=automationForm.trigger
             content=model.triggerables
             onChange=(action "onChangeTrigger")
             options=(hash
+              filterable=true
               none="discourse_automation.select_trigger"
               disabled=model.automation.script.forced_triggerable
             )
