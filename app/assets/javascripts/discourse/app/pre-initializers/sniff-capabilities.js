@@ -41,6 +41,10 @@ export default {
     caps.hasContactPicker =
       "contacts" in navigator && "ContactsManager" in window;
     caps.canVibrate = "vibrate" in navigator;
+    caps.isPwa =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://");
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });
