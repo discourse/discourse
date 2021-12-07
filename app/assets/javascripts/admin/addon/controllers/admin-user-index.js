@@ -11,11 +11,16 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  extractError,
+  extractSecondFactorAuthNonce,
+  popupAjaxError,
+} from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
+  router: service(),
   adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
@@ -228,7 +233,16 @@ export default Controller.extend(CanCheckEmails, {
             controller.setResult(result);
           }
         })
-        .catch(popupAjaxError);
+        .catch((error) => {
+          const nonce = extractSecondFactorAuthNonce(error);
+          if (nonce) {
+            this.router.transitionTo("second-factor-auth", {
+              queryParams: { nonce },
+            });
+          } else {
+            popupAjaxError(error);
+          }
+        });
     },
     revokeModeration() {
       return this.model.revokeModeration();

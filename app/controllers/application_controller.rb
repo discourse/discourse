@@ -247,6 +247,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from SecondFactorVerificationManager::SecondFactorRequired do |e|
+    render json: {
+      second_factor_challenge_nonce: e.nonce
+    }, status: 403
+  end
+
   def redirect_with_client_support(url, options)
     if request.xhr?
       response.headers['Discourse-Xhr-Redirect'] = 'true'

@@ -6,6 +6,8 @@ class SessionController < ApplicationController
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
+  skip_before_action :check_xhr, only: %i(second_factor_auth_show)
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -424,6 +426,72 @@ class SessionController < ApplicationController
     render layout: 'no_ember', locals: { hide_auth_buttons: true }
   end
 
+  def second_factor_auth_show
+    user = current_user
+    raise Discourse::NotFound if !user
+
+    nonce = params.require(:nonce)
+    challenge = find_second_factor_challenge(nonce)
+
+    json = {
+      totp_enabled: user.totp_enabled?,
+      backup_enabled: user.backup_codes_enabled?,
+      allowed_methods: challenge[:allowed_methods]
+    }
+
+    if user.security_keys_enabled?
+      Webauthn.stage_challenge(user, secure_session)
+      json.merge!(Webauthn.allowed_credentials(user, secure_session))
+      json[:security_keys_enabled] = true
+    end
+
+    respond_to do |format|
+      format.html do
+        store_preloaded("2fa_challenge_data", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+
+      format.json do
+        render json: json
+      end
+    end
+  end
+
+  def second_factor_auth_perform
+    raise Discourse::NotFound if !current_user
+
+    nonce = params.require(:nonce)
+    challenge = find_second_factor_challenge(nonce)
+    allowed_methods = challenge[:allowed_methods]
+    if !allowed_methods.include?(params[:second_factor_method].to_i)
+      raise Discourse::InvalidAccess.new
+    end
+
+    # TODO: rate limits
+    if !challenge[:successful]
+      second_factor_auth_result = current_user.authenticate_second_factor(params, secure_session)
+      if second_factor_auth_result.ok
+        challenge[:successful] = true
+        secure_session.set(
+          "current_second_factor_auth_challenge",
+          challenge.to_json,
+          expires: 5.minutes
+        )
+      else
+        return render(
+          json: failed_json.merge(second_factor_auth_result.to_h),
+          status: 400
+        )
+      end
+    end
+    render json: {
+      success: true,
+      callback_method: challenge[:callback_method],
+      callback_path: challenge[:callback_path],
+      redirect_path: challenge[:redirect_path]
+    }, status: 200
+  end
+
   def forgot_password
     params.require(:login)
 
@@ -673,5 +741,16 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
+  end
+
+  def find_second_factor_challenge(nonce)
+    challenge_json = secure_session["current_second_factor_auth_challenge"]
+    raise Discourse::NotFound.new if challenge_json.blank?
+
+    challenge = JSON.parse(challenge_json).deep_symbolize_keys
+    if challenge[:nonce] != nonce
+      raise Discourse::NotFound.new
+    end
+    challenge
   end
 end

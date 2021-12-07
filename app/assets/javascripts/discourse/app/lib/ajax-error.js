@@ -66,3 +66,7 @@ export function throwAjaxError(undoCallback) {
 export function popupAjaxError(error) {
   bootbox.alert(extractError(error));
 }
+
+export function extractSecondFactorAuthNonce(error) {
+  return error.jqXHR?.responseJSON.second_factor_challenge_nonce;
+}

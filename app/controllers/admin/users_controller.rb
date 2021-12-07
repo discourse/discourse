@@ -6,7 +6,6 @@ class Admin::UsersController < Admin::AdminController
                                     :unsuspend,
                                     :log_out,
                                     :revoke_admin,
-                                    :grant_admin,
                                     :revoke_moderation,
                                     :grant_moderation,
                                     :approve,
@@ -191,25 +190,31 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    guardian.ensure_can_grant_admin!(@user)
-    if current_user.has_any_second_factor_methods_enabled?
-      second_factor_authentication_result = current_user.authenticate_second_factor(params, secure_session)
-      if second_factor_authentication_result.ok
-        @user.grant_admin!
-        StaffActionLogger.new(current_user).log_grant_admin(@user)
-        render json: success_json
-      else
-        failure_payload = second_factor_authentication_result.to_h
-        if current_user.security_keys_enabled?
-          Webauthn.stage_challenge(current_user, secure_session)
-          failure_payload.merge!(Webauthn.allowed_credentials(current_user, secure_session))
-        end
-        render json: failed_json.merge(failure_payload)
-      end
-    else
-      AdminConfirmation.new(@user, current_user).create_confirmation
+    manager = SecondFactorVerificationManager.new(current_user)
+    manager.on_no_second_factors_enabled do
+      user = User.find_by(id: params[:user_id])
+      guardian.ensure_can_grant_admin!(user)
+      AdminConfirmation.new(user, current_user).create_confirmation
       render json: success_json.merge(email_confirmation_required: true)
     end
+
+    manager.on_second_factor_auth_required do |config|
+      user = User.find_by(id: params[:user_id])
+      guardian.ensure_can_grant_admin!(user)
+      config.callback_params = { user_id: user.id }
+      config.redirect_path = admin_user_show_path(id: user.id, username: user.username)
+    end
+
+    manager.on_second_factor_auth_successful do |callback_params|
+      user_id = callback_params[:user_id]
+      user = User.find_by(id: user_id)
+      guardian.ensure_can_grant_admin!(user)
+      user.grant_admin!
+      StaffActionLogger.new(current_user).log_grant_admin(user)
+      render json: success_json
+    end
+
+    manager.run!(request, params, secure_session)
   end
 
   def revoke_moderation
