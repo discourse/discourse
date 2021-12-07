@@ -176,10 +176,7 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
-      discourse/tests/theme_qunit_ember_jquery.js
-      discourse/tests/theme_qunit_vendor.js
-      discourse/tests/theme_qunit_tests_vendor.js
-      discourse/tests/theme_qunit_helper.js
+      discourse/tests/active-plugins.js
       discourse/tests/test_starter.js
     }
 
@@ -370,7 +367,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              discourse/tests/test_helper.js
+              discourse/tests/test-boot-rails.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||
