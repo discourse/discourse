@@ -160,24 +160,48 @@ module JsLocaleHelper
     result
   end
 
-  def self.output_client_overrides(locale)
-    translations = (I18n.overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
-    return "" if translations.blank?
+  def self.output_client_overrides(main_locale)
+    overrides = {}
+    has_overrides = false
 
-    message_formats = {}
-
-    translations.delete_if do |key, value|
-      if key.to_s.end_with?("_MF")
-        message_formats[key] = value
-      end
+    I18n.fallbacks[main_locale].each do |locale|
+      overrides[locale] = (I18n.overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
+      has_overrides ||= overrides[locale].present?
     end
 
-    message_formats = message_formats.map { |k, v| "#{k.inspect}: #{v}" }.join(", ")
+    return "" if !has_overrides
 
-    <<~JS
-      I18n._mfOverrides = {#{message_formats}};
-      I18n._overrides = #{translations.to_json};
+    result = +<<~JS
+      I18n._mfOverrides = {};
+      I18n._overrides = {};
     JS
+
+    existing_keys = Set.new
+
+    overrides.each do |locale, translations|
+      message_formats = {}
+
+      translations.delete_if do |key, value|
+        delete = false
+        if existing_keys.include?(key)
+          delete = true
+        else
+          existing_keys << key
+          if key.to_s.end_with?("_MF")
+            message_formats[key] = value
+            delete = true
+          end
+        end
+        delete
+      end
+
+      message_formats = message_formats.map { |k, v| "#{k.inspect}: #{v}" }.join(", ")
+
+      result << "I18n._mfOverrides['#{locale}'] = {#{message_formats}};" if message_formats.present?
+      result << "I18n._overrides['#{locale}'] = #{translations.to_json};" if translations.present?
+    end
+
+    result
   end
 
   def self.output_extra_locales(bundle, locale)
