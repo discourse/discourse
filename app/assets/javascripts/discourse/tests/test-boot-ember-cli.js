@@ -34,3 +34,4 @@ document.addEventListener("discourse-booted", () => {
     setupEmberOnerrorValidation: !skippingCore,
   });
 });
+window.EmberENV.TESTS_FILE_LOADED = true;
