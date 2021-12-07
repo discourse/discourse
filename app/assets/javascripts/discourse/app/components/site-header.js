@@ -184,8 +184,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const offset = info.offset();
       const headerRect = header.getBoundingClientRect();
-      const headerOffset = headerRect.top + headerRect.height;
       const doc = document.documentElement;
+      let headerOffset = headerRect.top + headerRect.height;
 
       if (window.scrollY < 0) {
         headerOffset -= window.scrollY;
