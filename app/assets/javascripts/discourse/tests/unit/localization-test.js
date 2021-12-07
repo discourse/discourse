@@ -66,6 +66,7 @@ module("initializer:localization", {
     I18n.locale = this._locale;
     I18n.translations = this._translations;
     I18n.extras = this._extras;
+    I18n._compiledMFs = this._compiledMFs;
     I18n._overrides = this._overrides;
     I18n._mfOverrides = this._mfOverrides;
   },
