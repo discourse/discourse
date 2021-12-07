@@ -465,7 +465,7 @@ acceptance("Tag info", function (needs) {
       "it doesn't change URL"
     );
 
-    await click("#edit-tag");
+    await click(".edit-tag");
     await fillIn("#edit-name", "happy-monkey2");
     await click(".submit-edit");
     assert.strictEqual(
