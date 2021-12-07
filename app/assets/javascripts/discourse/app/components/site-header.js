@@ -183,9 +183,13 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const offset = info.offset();
-      const headerRect = header.getBoundingClientRect(),
-        headerOffset = headerRect.top + headerRect.height,
-        doc = document.documentElement;
+      const headerRect = header.getBoundingClientRect();
+      const headerOffset = headerRect.top + headerRect.height;
+      const doc = document.documentElement;
+
+      if (window.scrollY < 0) {
+        headerOffset -= window.scrollY;
+      }
 
       const newValue = `${headerOffset}px`;
       if (newValue !== this.currentHeaderOffsetValue) {
