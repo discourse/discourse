@@ -167,29 +167,11 @@ RSpec.describe Users::OmniauthCallbacksController do
 
     describe 'when user not found' do
       let(:email) { "somename@gmail.com" }
-      before do
-        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-          provider: 'google_oauth2',
-          uid: '123545',
-          info: OmniAuth::AuthHash::InfoHash.new(
-            email: email,
-            name: 'Some Name',
-            first_name: "Some",
-            last_name: "Name"
-          ),
-          extra: {
-            raw_info: OmniAuth::AuthHash.new(
-              email_verified: true,
-              email: email,
-              family_name: 'Huh',
-              given_name: "Some Name",
-              gender: 'male',
-              name: "Some name Huh",
-            )
-          }
-        )
+      let(:username) { "somename" }
+      let(:name) { "Some Name" }
 
-        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      before do
+        mock_auth(email, username, name)
       end
 
       it 'should return the right response' do
@@ -205,16 +187,16 @@ RSpec.describe Users::OmniauthCallbacksController do
         data = JSON.parse(cookies[:authentication_data])
 
         expect(data["email"]).to eq(email)
-        expect(data["username"]).to eq("Some_Name")
+        expect(data["username"]).to eq(username)
+        expect(data["name"]).to eq(name)
         expect(data["auth_provider"]).to eq("google_oauth2")
         expect(data["email_valid"]).to eq(true)
         expect(data["can_edit_username"]).to eq(true)
-        expect(data["name"]).to eq("Some Name")
         expect(data["destination_url"]).to eq(destination_url)
       end
 
       it 'should return the right response for staged users' do
-        Fabricate(:user, username: "Staged_User", email: email, staged: true)
+        Fabricate(:user, username: username, email: email, staged: true)
 
         destination_url = '/somepath'
         Rails.application.env_config["omniauth.origin"] = destination_url
@@ -228,7 +210,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         data = JSON.parse(cookies[:authentication_data])
 
         expect(data["email"]).to eq(email)
-        expect(data["username"]).to eq("Staged_User")
+        expect(data["username"]).to eq(username)
         expect(data["auth_provider"]).to eq("google_oauth2")
         expect(data["email_valid"]).to eq(true)
         expect(data["can_edit_username"]).to eq(true)
@@ -303,28 +285,10 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     describe 'when user has been verified' do
-      before do
-        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-          provider: 'google_oauth2',
-          uid: '123545',
-          info: OmniAuth::AuthHash::InfoHash.new(
-            email: user.email,
-            name: 'Some name',
-            nickname: 'Somenickname'
-          ),
-          extra: {
-            raw_info: OmniAuth::AuthHash.new(
-              email_verified: true,
-              email: user.email,
-              family_name: 'Huh',
-              given_name: user.name,
-              gender: 'male',
-              name: "#{user.name} Huh",
-            )
-          },
-        )
+      let(:uid) { 12345 }
 
-        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+      before do
+        mock_auth(user.email, "Somenickname", "Some name", uid)
       end
 
       it 'should return the right response' do
@@ -453,7 +417,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         SiteSetting.auth_overrides_name = true
         SiteSetting.auth_overrides_username = true
 
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: uid)
 
         old_email = user.email
         user.update!(name: 'somename', username: 'somusername', email: 'email@example.com')
@@ -513,7 +477,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true
 
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: uid)
 
         google_email = user.email
         user.update!(email: 'anotheremail@example.com')
@@ -585,28 +549,10 @@ RSpec.describe Users::OmniauthCallbacksController do
           @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
           cookies[:sso_payload] = @sso.payload
 
-          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
+          provider_uid = 12345
+          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: provider_uid, user: user)
 
-          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-            provider: 'google_oauth2',
-            uid: '12345',
-            info: OmniAuth::AuthHash::InfoHash.new(
-              email: 'someother_email@test.com',
-              name: 'Some name'
-            ),
-            extra: {
-              raw_info: OmniAuth::AuthHash.new(
-                email_verified: true,
-                email: 'someother_email@test.com',
-                family_name: 'Huh',
-                given_name: user.name,
-                gender: 'male',
-                name: "#{user.name} Huh",
-              )
-            },
-          )
-
-          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+          mock_auth(user.email, nil, nil, provider_uid)
         end
 
         it 'should return the right response' do
@@ -622,29 +568,12 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       context 'when user has not verified his email' do
         before do
-          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
+          provider_uid = "12345"
+          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: provider_uid, user: user)
           user.update!(active: false)
 
-          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-            provider: 'google_oauth2',
-            uid: '12345',
-            info: OmniAuth::AuthHash::InfoHash.new(
-              email: 'someother_email@test.com',
-              name: 'Some name'
-            ),
-            extra: {
-              raw_info: OmniAuth::AuthHash.new(
-                email_verified: true,
-                email: 'someother_email@test.com',
-                family_name: 'Huh',
-                given_name: user.name,
-                gender: 'male',
-                name: "#{user.name} Huh",
-              )
-            },
-          )
-
-          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+          another_email = "another_email@test.com"
+          mock_auth(another_email, nil, nil, provider_uid)
         end
 
         it 'should return the right response' do
@@ -769,30 +698,14 @@ RSpec.describe Users::OmniauthCallbacksController do
 
     context 'when attempting reconnect' do
       fab!(:user2) { Fabricate(:user) }
+      let(:user1_provider_id) { "12345" }
+      let(:user2_provider_id) { "123456" }
+
       before do
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '123456', user: user2)
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: user1_provider_id, user: user)
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: user2_provider_id, user: user2)
 
-        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-          provider: 'google_oauth2',
-          uid: '12345',
-          info: OmniAuth::AuthHash::InfoHash.new(
-            email: 'someother_email@test.com',
-            name: 'Some name'
-          ),
-          extra: {
-            raw_info: OmniAuth::AuthHash.new(
-              email_verified: true,
-              email: 'someother_email@test.com',
-              family_name: 'Huh',
-              given_name: user.name,
-              gender: 'male',
-              name: "#{user.name} Huh",
-            )
-          },
-        )
-
-        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        mock_auth("someother_email@test.com", nil, nil, user1_provider_id)
       end
 
       it 'should not reconnect normally' do
@@ -806,7 +719,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(session[:current_user_id]).to eq(user.id)
 
         # Log into another user
-        OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+        OmniAuth.config.mock_auth[:google_oauth2].uid = user2_provider_id
         post "/auth/google_oauth2"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(false)
@@ -838,7 +751,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
 
-        OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+        OmniAuth.config.mock_auth[:google_oauth2].uid = user2_provider_id
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(302)
         expect(response.redirect_url).to start_with("http://test.localhost/associate/")
@@ -861,26 +774,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
     context 'after changing email' do
       def login(identity)
-        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-          provider: 'google_oauth2',
-          uid: "123545#{identity[:username]}",
-          info: OmniAuth::AuthHash::InfoHash.new(
-            email: identity[:email],
-            name: 'Some name'
-          ),
-          extra: {
-            raw_info: OmniAuth::AuthHash.new(
-              email_verified: true,
-              email: identity[:email],
-              family_name: 'Huh',
-              given_name: identity[:name],
-              gender: 'male',
-              name: "#{identity[:name]} Huh",
-            )
-          },
-        )
-
-        Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        mock_auth(identity[:email], nil, nil, "123545#{identity[:username]}")
 
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(302)
@@ -956,13 +850,14 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
-    def mock_auth(email, nickname, uid = '12345')
+    def mock_auth(email, nickname = nil, name = nil, uid = '12345')
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: 'google_oauth2',
         uid: uid,
         info: OmniAuth::AuthHash::InfoHash.new(
           email: email,
-          nickname: nickname
+          nickname: nickname,
+          name: name
         ),
         extra: {
           raw_info: OmniAuth::AuthHash.new(email_verified: true)
