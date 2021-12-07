@@ -1449,7 +1449,6 @@ ja:
     allowed_iframes: "Discourse が投稿で安全に許可できる iframe src ドメインプレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
-    slow_down_crawler_user_agents: "Crawl-delay ディレクティブを使用して robots.txt でレート制限する必要があるウェブクローラーのユーザーエージェント"
     slow_down_crawler_rate: "このレートに slow_down_crawler_user_agents が指定されている場合、このレートはすべてのクローラーに適用されます (リクエスト間の遅延秒数)"
     content_security_policy: "Content-Security-Policy を有効にする"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only を有効にする"

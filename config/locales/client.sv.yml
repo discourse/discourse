@@ -1913,6 +1913,9 @@ sv:
       cannot_see_mention:
         category: "Du nämnde %{username}, men hen kommer inte att få någon avisering för hen har inte tillgång till denna kategori. Du måste lägga till hen till en grupp som har tillgång till den här kategorin."
         private: "Du nämnde %{username}, men hen kommer inte få någon avisering eftersom hen inte kan se detta personliga meddelande. Du måste bjuda in hen till detta PM."
+      here_mention:
+        one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
+        other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
       duplicate_link: "Det verkar som din länk till <b>%{domain}</b> redan har lagts in i ämnet av <b>@%{username}</b> i <a href='%{post_url}'> ett svar den %{ago}</a> – är du säker på att du vill lägga upp den igen?"
       reference_topic_title: "SV: %{title}"
       error:
@@ -3219,6 +3222,9 @@ sv:
         title: "Detta ämne är ett personligt meddelande"
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
+    pending_posts:
+      label: "Väntar"
+      label_with_count: "Pågående (%{count})"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med ett högt förhållande mellan gillningar/inlägg}

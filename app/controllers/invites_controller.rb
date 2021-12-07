@@ -69,11 +69,17 @@ class InvitesController < ApplicationController
 
       hidden_email = email != invite.email
 
+      if hidden_email || invite.email.nil?
+        username = ""
+      else
+        username = UserNameSuggester.suggest(invite.email)
+      end
+
       info = {
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: email,
         hidden_email: hidden_email,
-        username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
+        username: username,
         is_invite_link: invite.is_invite_link?,
         email_verified_by_link: email_verified_by_link
       }

@@ -1459,7 +1459,6 @@ ko:
     allowed_iframes: "Discourse가 안전한 게시물로 허용 할 수있는 iframe src 도메인 접두사 목록"
     allowed_crawler_user_agents: "사이트에 대한 액세스를 허용해야하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스를 허용해서는 안되는 웹 크롤러를 식별하는 사용자 에이전트 문자열에서 대소 문자를 구분하지 않는 고유 한 단어입니다. 허용 목록이 정의 된 경우 적용되지 않습니다."
-    slow_down_crawler_user_agents: "Crawls-delay 지시문을 사용하여 robots.txt에서 속도를 제한해야하는 웹 크롤러의 사용자 에이전트"
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면이 비율이 모든 크롤러에 적용됩니다 (요청 사이의 지연 시간 (초))."
     content_security_policy: "콘텐츠 보안 정책 사용"
     content_security_policy_report_only: "콘텐츠 보안 정책 보고서 만 사용"

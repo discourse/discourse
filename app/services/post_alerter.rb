@@ -185,9 +185,10 @@ class PostAlerter
   end
 
   def tag_watchers(topic)
-    topic.tag_users
-      .where(notification_level: TagUser.notification_levels[:watching_first_post])
-      .pluck(:user_id)
+    topic
+      .tag_users
+      .notification_level_visible([TagUser.notification_levels[:watching_first_post]])
+      .distinct(:user_id).pluck(:user_id)
   end
 
   def category_watchers(topic)
@@ -327,15 +328,9 @@ class PostAlerter
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat && stat[:inbox_count] > 0
 
-    notification_type = Notification.types[:group_message_summary]
-
     DistributedMutex.synchronize("group_message_notify_#{user.id}") do
-      Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
-        n.destroy if n.data_hash[:group_id] == stat[:group_id]
-      end
-
-      Notification.create(
-        notification_type: notification_type,
+      Notification.consolidate_or_create!(
+        notification_type: Notification.types[:group_message_summary],
         user_id: user.id,
         data: {
           group_id: stat[:group_id],
@@ -509,7 +504,7 @@ class PostAlerter
     end
 
     # Create the notification
-    created = user.notifications.create!(
+    created = user.notifications.consolidate_or_create!(
       notification_type: type,
       topic_id: post.topic_id,
       post_number: post.post_number,
@@ -789,9 +784,13 @@ class PostAlerter
           FROM tag_users
      LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id
                              AND tu.topic_id = :topic_id
-         WHERE tag_users.notification_level = :watching
-           AND tag_users.tag_id IN (:tag_ids)
-           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
+     LEFT JOIN tag_group_memberships tgm ON tag_users.tag_id = tgm.tag_id
+     LEFT JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
+     LEFT JOIN group_users gu ON gu.user_id = tag_users.user_id
+         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id OR gu.group_id = :staff_group_id)
+               AND (tag_users.notification_level = :watching
+                    AND tag_users.tag_id IN (:tag_ids)
+                    AND (tu.user_id IS NULL OR tu.notification_level = :watching))
       SQL
     end
 
@@ -799,7 +798,8 @@ class PostAlerter
       watching: TopicUser.notification_levels[:watching],
       topic_id: post.topic_id,
       category_id: post.topic.category_id,
-      tag_ids: tag_ids
+      tag_ids: tag_ids,
+      staff_group_id: Group::AUTO_GROUPS[:staff]
     )
 
     if group_ids.present?

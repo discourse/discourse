@@ -157,7 +157,7 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6")
+    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6", raise_error: true)
     allow_staff_user_custom_field(field)
   end
 
@@ -166,7 +166,7 @@ class Plugin::Instance
   end
 
   def whitelist_public_user_custom_field(field)
-    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6")
+    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6", raise_error: true)
     allow_public_user_custom_field(field)
   end
 
@@ -319,7 +319,7 @@ class Plugin::Instance
   end
 
   def topic_view_post_custom_fields_whitelister(&block)
-    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6")
+    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6", raise_error: true)
     topic_view_post_custom_fields_allowlister(&block)
   end
 
@@ -907,14 +907,14 @@ class Plugin::Instance
                               format: nil, formats: nil)
 
     if Array(format).include?("*")
-      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7")
+      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7", raise_error: true)
       # Old API used * as wildcard. New api uses `nil`
       format = nil
     end
 
     # Backwards compatibility with old parameter names:
     if method || route || format
-      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7")
+      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7", raise_error: true)
       methods ||= method
       actions ||= route
       formats ||= format
@@ -974,6 +974,23 @@ class Plugin::Instance
   #   </a>
   def add_reviewable_score_link(reason, setting_name)
     DiscoursePluginRegistry.register_reviewable_score_link({ reason: reason.to_sym, setting: setting_name }, self)
+  end
+
+  # If your plugin creates notifications, and you'd like to consolidate/collapse similar ones,
+  # you're in the right place.
+  # This method receives a plan object, which must be an instance of `Notifications::ConsolidateNotifications`.
+  #
+  # Instead of using `Notification#create!`, you should use `Notification#consolidate_or_save!`,
+  # which will automatically pick your plan and apply it, updating an already consolidated notification,
+  # consolidating multiple ones, or creating a regular one.
+  #
+  # The rule object is quite complex. We strongly recommend you write tests to ensure your plugin consolidates notifications correctly.
+  #
+  # - Plan's documentation: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidate_notifications.rb
+  # - Base plans: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidation_planner.rb
+  def register_notification_consolidation_plan(plan)
+    raise ArgumentError.new("Not a consolidation plan") if plan.class != Notifications::ConsolidateNotifications
+    DiscoursePluginRegistry.register_notification_consolidation_plan(plan, self)
   end
 
   protected

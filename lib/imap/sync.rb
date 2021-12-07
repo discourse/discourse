@@ -138,7 +138,7 @@ module Imap
         else
           # try finding email by message-id instead, we may be able to set the uid etc.
           incoming_email = IncomingEmail.where(
-            message_id: Email.message_id_clean(email['ENVELOPE'].message_id),
+            message_id: Email::MessageIdService.message_id_clean(email['ENVELOPE'].message_id),
             imap_uid: nil,
             imap_uid_validity: nil
           ).where("to_addresses LIKE ?", "%#{@group.email_username}%").first

@@ -833,6 +833,19 @@ third line`
     }
   );
 
+  testCase(
+    `pasting a url onto a selection that contains urls and other content will use default paste behavior`,
+    async function (assert, textarea) {
+      this.set("value", "Try https://www.discourse.org");
+      setTextareaSelection(textarea, 0, 29);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.com/");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "Try https://www.discourse.org");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
+
   (() => {
     // Tests to check cursor/selection after replace-text event.
     const BEFORE = "red green blue";

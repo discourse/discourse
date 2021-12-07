@@ -43,7 +43,7 @@ class SiteSerializer < ApplicationSerializer
     cache_fragment("user_themes") do
       Theme.where('id = :default OR user_selectable',
                     default: SiteSetting.default_theme_id)
-        .order(:name)
+        .order("lower(name)")
         .pluck(:id, :name, :color_scheme_id)
         .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
         .as_json

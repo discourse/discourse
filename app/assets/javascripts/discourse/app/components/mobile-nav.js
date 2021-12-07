@@ -17,6 +17,7 @@ export default Component.extend({
     if (this.currentPath) {
       deprecated("{{mobile-nav}} no longer requires the currentPath property", {
         since: "2.7.0.beta4",
+        dropFrom: "2.9.0.beta1",
       });
     }
   },

@@ -4,6 +4,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { PresenceChannelNotFound } from "discourse/services/presence";
+import { setTestPresence } from "discourse/lib/user-presence";
 
 function usersFixture() {
   return [
@@ -324,6 +325,57 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     assert.notOk(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows absent"
+    );
+  });
+
+  test("handles the onlyWhileActive flag", async function (assert) {
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+    await channel.enter();
+    requests.pop(); // Throw away this request
+
+    const channel2 = presenceService.getChannel("/test/ch2");
+    await channel2.enter({ onlyWhileActive: false });
+
+    assert.strictEqual(requests.length, 1, "updated the server");
+    let presentChannels = requests.pop().getAll("present_channels[]");
+    assert.deepEqual(
+      presentChannels,
+      ["/test/ch1", "/test/ch2"],
+      "included both channels when active"
+    );
+
+    setTestPresence(false);
+    await presenceService._updateServer();
+    assert.strictEqual(
+      requests.length,
+      1,
+      "updated the server after going idle"
+    );
+    let request = requests.pop();
+    assert.deepEqual(
+      request.getAll("present_channels[]"),
+      ["/test/ch2"],
+      "ch2 remained present"
+    );
+    assert.ok(
+      request.getAll("leave_channels[]").includes("/test/ch1"),
+      "left ch1"
+    );
+
+    await channel2.leave();
+    assert.strictEqual(requests.length, 1, "updated the server");
+    request = requests.pop();
+    assert.ok(
+      request.getAll("leave_channels[]").includes("/test/ch2"),
+      "left ch2"
+    );
+
+    await presenceService._updateServer();
+    assert.strictEqual(
+      requests.length,
+      0,
+      "skips sending empty updates to the server"
     );
   });
 });

@@ -31,7 +31,7 @@
 
   {{#if tag}}
     {{#if showToggleInfo}}
-      {{d-button icon="wrench" class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
+      {{d-button icon=(if currentUser.staff "wrench" "info-circle") class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
     {{/if}}
   {{/if}}
 

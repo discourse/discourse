@@ -30,6 +30,7 @@ export default Mixin.create(UppyS3Multipart, {
   inProgressUploads: null,
   id: null,
   uploadRootPath: "/uploads",
+  fileInputSelector: ".hidden-upload-field",
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -57,7 +58,7 @@ export default Mixin.create(UppyS3Multipart, {
   @on("didInsertElement")
   _initialize() {
     this.setProperties({
-      fileInputEl: this.element.querySelector(".hidden-upload-field"),
+      fileInputEl: this.element.querySelector(this.fileInputSelector),
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
@@ -96,7 +97,11 @@ export default Mixin.create(UppyS3Multipart, {
           this.validateUploadedFilesOptions()
         );
         const isValid = validateUploadedFile(currentFile, validationOpts);
-        this.setProperties({ uploadProgress: 0, uploading: isValid });
+        this.setProperties({
+          uploadProgress: 0,
+          uploading: isValid && this.autoStartUploads,
+          filesAwaitingUpload: !this.autoStartUploads,
+        });
         return isValid;
       },
 
@@ -221,6 +226,16 @@ export default Mixin.create(UppyS3Multipart, {
     }
   },
 
+  _startUpload() {
+    if (!this.filesAwaitingUpload) {
+      return;
+    }
+    if (!this._uppyInstance?.getFiles().length) {
+      return;
+    }
+    return this._uppyInstance?.upload();
+  },
+
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
@@ -327,6 +342,7 @@ export default Mixin.create(UppyS3Multipart, {
       uploading: false,
       processing: false,
       uploadProgress: 0,
+      filesAwaitingUpload: false,
     });
     this.fileInputEl.value = "";
   },

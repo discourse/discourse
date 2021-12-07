@@ -159,7 +159,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             } else {
               handlerBuckets[matchingHandler.method] = {
                 fn: matchingHandler.method,
-                files: [file],
+                // file.data is the native File object, which is all the plugins
+                // should need, not the uppy wrapper
+                files: [file.data],
               };
             }
           } else {
@@ -271,6 +273,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             fileName: file.name,
             id: file.id,
             progress: 0,
+            extension: file.extension,
           })
         );
         const placeholder = this._uploadPlaceholder(file);

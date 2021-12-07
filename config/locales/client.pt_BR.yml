@@ -3142,6 +3142,9 @@ pt_BR:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
+    pending_posts:
+      label: "Pendentes"
+      label_with_count: "Pendentes (%{count})"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {# resposta} other {# respostas}} {ratio, select,
         low {com uma alta taxa de postagns para curtidas}

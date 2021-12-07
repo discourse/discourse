@@ -51,6 +51,15 @@ class ApiKeyScope < ActiveRecord::Base
         },
         email: {
           receive_emails: { actions: %w[admin/email#handle_mail] }
+        },
+        badges: {
+          create: { actions: %w[admin/badges#create] },
+          show: { actions: %w[badges#show] },
+          update: { actions: %w[admin/badges#update] },
+          delete: { actions: %w[admin/badges#destroy] },
+          list_user_badges: { actions: %w[user_badges#username], params: %i[username] },
+          assign_badge_to_user: { actions: %w[user_badges#create], params: %i[username] },
+          revoke_badge_from_user: { actions: %w[user_badges#destroy] },
         }
       }
 
@@ -79,32 +88,29 @@ class ApiKeyScope < ActiveRecord::Base
     end
 
     def find_urls(actions:, methods:)
-      action_urls = []
-      method_urls = []
+      urls = []
 
       if actions.present?
-        Rails.application.routes.routes.reduce([]) do |memo, route|
+        Rails.application.routes.routes.each do |route|
           defaults = route.defaults
           action = "#{defaults[:controller].to_s}##{defaults[:action]}"
           path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
           api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
           excluded_paths = %w[/new-topic /new-message /exception]
 
-          memo.tap do |m|
-            if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
-              m << "#{path} (#{route.verb})"
-            end
+          if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+            urls << "#{path} (#{route.verb})"
           end
         end
       end
 
       if methods.present?
         methods.each do |method|
-          method_urls << "* (#{method})"
+          urls << "* (#{method})"
         end
       end
 
-      action_urls + method_urls
+      urls
     end
   end
 

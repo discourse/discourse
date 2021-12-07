@@ -29,7 +29,6 @@
     "@uppy/utils": "^4.0.3",
     "@uppy/xhr-upload": "^2.0.4",
     "admin": "^1.0.0",
-    "bent": "^7.3.12",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
     "discourse-common": "^1.0.0",
@@ -55,9 +54,11 @@
     "eslint": "^7.27.0",
     "html-entities": "^2.1.0",
     "js-yaml": "^4.0.0",
+    "jsdom": "^18.1.1",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
     "messageformat": "0.1.5",
+    "node-fetch": "^2.6.6",
     "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
     "qunit": "^2.14.0",
@@ -81,7 +82,6 @@
     ]
   },
   "devDependencies": {
-    "ember-exam": "6.1.0",
-    "ember-test-selectors": "^6.0.0"
+    "ember-exam": "6.1.0"
   }
 }

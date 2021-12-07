@@ -308,4 +308,65 @@ describe SiteSettings::Validations do
       end
     end
   end
+
+  context "slow_down_crawler_user_agents" do
+    let(:too_short_message) do
+      I18n.t(
+        "errors.site_settings.slow_down_crawler_user_agent_must_be_at_least_3_characters"
+      )
+    end
+    let(:popular_browser_message) do
+      I18n.t(
+        "errors.site_settings.slow_down_crawler_user_agent_cannot_be_popular_browsers",
+        values: SiteSettings::Validations::PROHIBITED_USER_AGENT_STRINGS.join(I18n.t("word_connector.comma"))
+      )
+    end
+
+    it "cannot contain a user agent that's shorter than 3 characters" do
+      expect {
+        subject.validate_slow_down_crawler_user_agents("ao|acsw")
+      }.to raise_error(Discourse::InvalidParameters, too_short_message)
+      expect {
+        subject.validate_slow_down_crawler_user_agents("up")
+      }.to raise_error(Discourse::InvalidParameters, too_short_message)
+      expect {
+        subject.validate_slow_down_crawler_user_agents("a|")
+      }.to raise_error(Discourse::InvalidParameters, too_short_message)
+      expect {
+        subject.validate_slow_down_crawler_user_agents("|a")
+      }.to raise_error(Discourse::InvalidParameters, too_short_message)
+    end
+
+    it "allows user agents that are 3 characters or longer" do
+      expect {
+        subject.validate_slow_down_crawler_user_agents("aoc")
+      }.not_to raise_error
+      expect {
+        subject.validate_slow_down_crawler_user_agents("anuq")
+      }.not_to raise_error
+      expect {
+        subject.validate_slow_down_crawler_user_agents("pupsc|kcx")
+      }.not_to raise_error
+    end
+
+    it "allows the setting to be empty" do
+      expect {
+        subject.validate_slow_down_crawler_user_agents("")
+      }.not_to raise_error
+    end
+
+    it "cannot contain a token of a popular browser user agent" do
+      expect {
+        subject.validate_slow_down_crawler_user_agents("mOzilla")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
+
+      expect {
+        subject.validate_slow_down_crawler_user_agents("chRome|badcrawler")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
+
+      expect {
+        subject.validate_slow_down_crawler_user_agents("html|badcrawler")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
+    end
+  end
 end

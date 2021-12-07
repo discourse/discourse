@@ -20,7 +20,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-low);
 
   textarea {
     background: transparent;
@@ -54,9 +54,6 @@
   overflow: auto;
   cursor: default;
   -webkit-overflow-scrolling: touch;
-  // the below gives text little space to overflow without being cropped (e.g., Õ in headings)
-  padding-top: 1em;
-  margin-top: -1em;
 }
 
 .d-editor-input,
@@ -306,8 +303,9 @@
   .d-editor-spacer {
     height: 1em;
     display: inline-block;
-    border-left: 1px solid var(--primary-low-mid);
+    border-left: 1px solid var(--primary-low);
     margin: 0 0.25em;
+
     .mobile-view & {
       display: none;
     }

@@ -3792,17 +3792,19 @@ en:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
       info: "Info"
-      default_info: "This tag isn't restricted to any categories, and has no synonyms. To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
+      default_info: "This tag isn't restricted to any categories, and has no synonyms."
+      staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      save: "Save name and description of the tag"
       tag_groups_info:
         one: 'This tag belongs to the group "%{tag_groups}".'
         other: "This tag belongs to these groups: %{tag_groups}."
       category_restrictions:
         one: "It can only be used in this category:"
         other: "It can only be used in these categories:"
-      edit_synonyms: "Manage Synonyms"
+      edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"
       add_synonyms_explanation:
@@ -3819,8 +3821,8 @@ en:
       delete_confirm_synonyms:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
-      rename_tag: "Rename Tag"
-      rename_instructions: "Choose a new name for the tag:"
+      edit_tag: "Edit tag name and description"
+      description: "Description"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
@@ -4218,6 +4220,14 @@ en:
               list: Get a list of users.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            badges:
+              create: Create a new badge.
+              show: Obtain information about a badge.
+              update: Update a badge.
+              delete: Delete a badge.
+              list_user_badges: List user badges.
+              assign_badge_to_user: Assign a badge to a user.
+              revoke_badge_from_user: Revoke a badge from a user.
 
       web_hooks:
         title: "Webhooks"

@@ -338,11 +338,6 @@ module Discourse
     path = request.fullpath
     result[:path] = path if path.present?
 
-    # When we bootstrap using the JSON method, we want to be able to filter assets on
-    # the path we're bootstrapping for.
-    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
-    result[:path] = asset_path if asset_path.present?
-
     result
   end
 

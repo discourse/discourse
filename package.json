@@ -55,7 +55,6 @@
     "pretender": "^3.4.7",
     "puppeteer": "1.20",
     "qunit": "2.8.0",
-    "qunit-dom": "^2.0.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^9.0.2",
     "squoosh": "discourse/squoosh#dc9649d"

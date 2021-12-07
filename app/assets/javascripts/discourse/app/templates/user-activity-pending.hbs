@@ -1,5 +1,5 @@
 <ul class="user-stream">
-  {{#each @model as |pending_post|}}
+  {{#each this.model as |pending_post|}}
     <PendingPost @post={{pending_post}} />
   {{/each}}
 </ul>

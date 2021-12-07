@@ -208,11 +208,6 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    let showCreateTopic = false;
-    if (this.action === CREATE_SHARED_DRAFT) {
-      showCreateTopic = true;
-    }
-
     if (this.action === CREATE_TOPIC) {
       if (this.site.shared_drafts_category_id) {
         // Shared Drafts Choice
@@ -223,24 +218,6 @@ export default DropdownSelectBoxComponent.extend({
           id: "shared_draft",
         });
       }
-
-      // Edge case: If personal messages are disabled, it is possible to have
-      // no items which still renders a button that pops up nothing. In this
-      // case, add an option for what you're currently doing.
-      if (items.length === 0) {
-        showCreateTopic = true;
-      }
-    }
-
-    if (showCreateTopic) {
-      items.push({
-        name: I18n.t("composer.composer_actions.create_topic.label"),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_new_topic.desc"
-        ),
-        icon: "share",
-        id: "create_topic",
-      });
     }
 
     const showToggleTopicBump =
@@ -253,6 +230,17 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t("composer.composer_actions.toggle_topic_bump.desc"),
         icon: "anchor",
         id: "toggle_topic_bump",
+      });
+    }
+
+    if (items.length === 0) {
+      items.push({
+        name: I18n.t("composer.composer_actions.create_topic.label"),
+        description: I18n.t(
+          "composer.composer_actions.reply_as_new_topic.desc"
+        ),
+        icon: "share",
+        id: "create_topic",
       });
     }
 

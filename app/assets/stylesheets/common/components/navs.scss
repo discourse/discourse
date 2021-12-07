@@ -21,9 +21,12 @@
   @extend %nav;
   @extend .clearfix;
 
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
   > li {
     display: flex;
-    float: left;
     margin-right: 0.5em;
 
     > a {
@@ -36,7 +39,7 @@
       min-height: 30px;
       display: flex;
       align-items: center;
-      transition: background 0.15s;
+      transition: background-color 0.2s, color 0.2s;
 
       .d-icon {
         margin-right: 5px;

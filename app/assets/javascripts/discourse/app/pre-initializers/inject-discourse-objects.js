@@ -37,6 +37,7 @@ export default {
       create() {
         deprecated(`"store:main" is deprecated, use "service:store" instead`, {
           since: "2.8.0.beta8",
+          dropFrom: "2.9.0.beta1",
         });
 
         return container.lookup("service:store");
@@ -85,6 +86,7 @@ export default {
           `"search-service:main" is deprecated, use "service:search" instead`,
           {
             since: "2.8.0.beta8",
+            dropFrom: "2.9.0.beta1",
           }
         );
 
