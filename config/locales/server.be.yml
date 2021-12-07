@@ -878,6 +878,18 @@ be:
         ignores_count: ігнаруе падлік
         mutes_count: колькасць Mutes
       description: "Карыстальнікі, якія былі прыглушаны і"
+    top_users_by_likes_received:
+      labels:
+        user: Карыстальнік
+        qtt_like: атрыманыя перавагі
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Карыстальнік
+        qtt_like: атрыманыя перавагі
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Карыстальнік
+        qtt_like: атрыманыя перавагі
   dashboard:
     rails_env_warning: "Сервер працуе ў рэжыме %{env}."
   site_settings:

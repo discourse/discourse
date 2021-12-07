@@ -206,6 +206,8 @@ sv:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
       cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -876,6 +878,7 @@ sv:
       others: "Inga bokmärken."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
+    no_log_search_queries: "Sökloggsfrågor är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
     imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
@@ -1315,6 +1318,25 @@ sv:
         ignores_count: Räknade ignoreringar
         mutes_count: Räknade tystningar
       description: "Användare som har tystats och/eller ignorerats av många andra användare."
+    top_users_by_likes_received:
+      title: "Toppanvändare efter mottagna gillningar"
+      labels:
+        user: Användare
+        qtt_like: Mottagna gillningar
+      description: "Topp 10 användare som har fått fler gillningar."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Toppanvändare efter gillningar givna av en användare med lägre förtroendenivå"
+      labels:
+        user: Användare
+        trust_level: Förtroendenivå
+        qtt_like: Mottagna gillningar
+      description: "Topp 10 användare i en högre förtroendenivå som gillas av personer med en lägre förtroendenivå."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Toppanvändare efter gillningar utifrån en mängd olika personer"
+      labels:
+        user: Användare
+        qtt_like: Mottagna gillningar
+      description: "Topp 10 användare som har haft gillningar från ett brett spektrum av personer."
   dashboard:
     rails_env_warning: "Din server kör i %{env}-läge."
     host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
@@ -1394,6 +1416,7 @@ sv:
     tl2_post_edit_time_limit: "En författare på fn2+ kan redigera eller radera sitt inlägg i (n) minuter efter att ha lagt upp ett inlägg. Ange 0 för att alltid tillåta."
     edit_history_visible_to_public: "Tillåt att alla ser tidigare versioner av ett redigerat inlägg. Om detta inaktiveras kan endast personal se detta."
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
+    notify_users_after_responses_deleted_on_flagged_post: "När ett inlägg flaggas och sedan tas bort kommer alla användare som har svarat på inlägget och fått sina svar borttagna att meddelas."
     max_image_width: "Maxbredd för bildikoner i ett inlägg"
     max_image_height: "Maxhöjd för bildikoner i ett inlägg"
     responsive_post_image_sizes: "Ändra storlek på förhandsgranskningsbilder i Lightbox för att möjliggöra höga DPI-skärmar med följande pixelkvot. Ta bort alla värden för att inaktivera responsiva bilder."
@@ -1494,6 +1517,7 @@ sv:
     allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
+    slow_down_crawler_user_agents: "Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen \"sakta ned sökrobots hastighet\". Varje värde måste vara minst 3 tecken långt."
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
@@ -2470,6 +2494,11 @@ sv:
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
     spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
     notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
+    responder:
+      off_topic: "Inlägget flaggades som **off-topic**: gemenskapen tycker inte att det passar in i ämnet, vilket för närvarande definieras av titeln samt det första inlägget."
+      inappropriate: "Inlägget flaggades som **olämpligt**: gemenskapen tycker att det är stötande, kränkande eller ett brott mot [våra riktlinjer för gemenskapen](%{base_path}/guidelines)."
+      spam: "Inlägget flaggades som **skräppost**: gemenskapen tycker att det är en reklam, något som är överdrivet marknadsföringsmässigt i stället för att vara användbart eller relevant för ämnet vilket förväntas."
+      notify_moderators: "Inlägget flaggades **för moderators uppmärksamhet**: gemenskapen anser att något med inlägget kräver manuellt ingripande av en medarbetare."
   flags_dispositions:
     agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det."
     agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
@@ -2560,6 +2589,23 @@ sv:
         ```
 
         Läs mer ingående information i våra [forumriktlinjer](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Svar borttaget från flaggat inlägg av personal"
+      subject_template: "Svar borttaget från flaggat inlägg av personal"
+      text_body_template: |
+        Hejsan,
+
+        Detta är ett automatiskt meddelande från %{site_name} för att informera dig om att ett [inlägg](%{base_url}%{url}) som du svarade på togs bort.
+
+        %{flag_reason}
+
+        Detta inlägg flaggades av forumet och personalen valde att radera det.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        För mer detaljerad förklaring av orsaken vänligen studera våra [forumriktlinjer](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

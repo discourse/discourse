@@ -713,6 +713,18 @@ sl:
     top_uploads:
       labels:
         filename: Ime datoteke
+    top_users_by_likes_received:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
   dashboard:
     s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"

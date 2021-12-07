@@ -3222,7 +3222,6 @@ ja:
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
       info: "情報"
-      default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加してください。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
       synonyms: "同義語"
       synonyms_description: "次のタグが使用されている場合、<b>%{base_tag_name}</b> に置き換えられます。"
@@ -3230,7 +3229,6 @@ ja:
         other: "このタグは次のグループに属しています: %{tag_groups}。"
       category_restrictions:
         other: "次のカテゴリでのみ使用できます:"
-      edit_synonyms: "同義語を管理"
       add_synonyms_label: "同義語の追加:"
       add_synonyms: "追加"
       add_synonyms_explanation:
@@ -3244,8 +3242,7 @@ ja:
       delete_confirm_no_topics: "このタグを削除してもよろしいですか？"
       delete_confirm_synonyms:
         other: "その %{count} 個の同義語も削除されます。"
-      rename_tag: "タグの名前を変更"
-      rename_instructions: "タグの新しい名前を選択:"
+      description: "説明"
       sort_by: "並べ替え:"
       sort_by_count: "件数"
       sort_by_name: "名前"

@@ -386,7 +386,7 @@ hu:
         score_to_hide: "Pontszám a bejegyzés elrejtéséhez"
         take_action_bonus:
           name: "intézkedett"
-          title: "Ha egy stábtag úgy dönt, hogy intézkedik, akkor a a jelzés bónuszt kap."
+          title: "Ha egy stábtag úgy dönt, hogy intézkedik, akkor a jelzés bónuszt kap."
         user_accuracy_bonus:
           name: "felhasználói pontosság"
           title: "Azok a felhasználók, akik előzőleg egyetértettek a jelzéssel, bónuszt kapnak."
@@ -1639,14 +1639,14 @@ hu:
       hide_session: "Emlékeztessen holnap"
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
-      intro: "Szia! Úgy tűnik, tetszik neked a fórumunk, de még nem regisztráltál fiókot."
+      intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
       value_prop: "Onnantól, hogy létrehozol egy fiókot, a rendszer emlékezni fog arra, hogy mit olvastál, így mindig oda térhetsz vissza, ahol korábban abbahagytad. Értesítéseket is kapsz, itt is és e-mailben is, valahányszor valaki válaszol neked. A bejegyzéseket pedig kedvelheted is. :heartpulse:"
     summary:
-      enabled_description: "A téma összefoglalását látod: a legérdekesebb bejegyzéseket a közösség határozta meg."
+      enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
-      description_time_MF: "{replyCount, plural, one {is <b>#</b> válasz} other {are <b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
+      description_time_MF: "{replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
       enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Összefoglalás"
@@ -1659,7 +1659,7 @@ hu:
     private_message_info:
       title: "Üzenet"
       invite: "Mások meghívása…"
-      edit: "Hozzáadás és eltávolítás"
+      edit: "Hozzáadás vagy eltávolítás…"
       remove: "Eltávolítás…"
       add: "Hozzáadás…"
       leave_message: "Biztos, hogy elhagyja a beszélgetést?"
@@ -1677,16 +1677,16 @@ hu:
       subheader_title: "Hozzuk létre a fiókját"
       disclaimer: "Csak akkor regisztráljon, ha elfogadja az <a href='%{privacy_link}' target='blank'>adatvédelmi szabályzatot</a> és a <a href='%{tos_link}' target='blank'>szolgáltatási feltételeket</a>."
       title: "Regisztráció"
-      failed: "Valami hiba történt, talán ez az e-mail cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
+      failed: "Valami hiba történt, talán ez az e-mail-cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
       associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
-      invite: "Adja meg a felhasználónevét vagy az e-mail címét és küldünk egy jelszó-visszaállító e-mailt."
+      invite: "Adja meg a felhasználónevét vagy az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
       reset: "Jelszó visszaállítása"
-      complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amiben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
-      complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amiben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
-      complete_username_found: "Találtunk egy fiókot, amelynek a felhasználóneve megegyezik ezzel: <b>%{username}</b>. Perceken belül egy e-mailt kell kapnod arról, hogy hogyan állíthatod vissza a jelszavadat."
+      complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
+      complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
+      complete_username_found: "Találtunk egy fiókot, amelynek a felhasználóneve megegyezik ezzel: <b>%{username}</b>. Perceken belül egy levelet kell kapnia arról, hogyan állíthatja vissza a jelszavát."
       complete_email_found: "Találtunk egy fiókot, amelynek a beállított e-mail címe megegyezik ezzel: <b>%{email}</b>. Perceken belül egy e-mailt kell kapnod arról, hogy hogyan állíthatod vissza a jelszavadat."
       complete_username_not_found: "Nincs fiók regisztrálva a következő felhasználónévvel: <b>%{username}</b>"
       complete_email_not_found: "Nincs fiók regisztrálva a következő e-mail-címmel: <b>%{email}</b>"
@@ -3118,11 +3118,15 @@ hu:
       selector_no_tags: "címke nélküli"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
+      default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
+      staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
+      save: "Címke nevének és leírásának mentése"
+      edit_synonyms: "Szinonimák szerkesztése"
       add_synonyms: "Hozzáadás"
       delete_tag: "Címke törlése"
       delete_confirm_no_topics: "Biztos vagy benne hogy elakarod távolítani ezt a címkét?"
-      rename_tag: "Címke átnevezése"
-      rename_instructions: "Válassz egy úgy nevet a címkének:"
+      edit_tag: "Címke nevének és leírásának szerkesztése"
+      description: "Leírás"
       sort_by: "Rendezés"
       sort_by_count: "besorol"
       sort_by_name: "név"
@@ -3341,6 +3345,14 @@ hu:
               create: Töltsön fel egy új fájlt.
             users:
               update: Felhasználói profil adatainak frissítése.
+            badges:
+              create: Új jelvény létrehozása.
+              show: Információ szerzése egy jelvényről.
+              update: Jelvény frissítése.
+              delete: Jelvény törlése.
+              list_user_badges: A felhasználó jelvényeinek felsorolása.
+              assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
+              revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"

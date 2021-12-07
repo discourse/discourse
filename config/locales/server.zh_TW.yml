@@ -1048,6 +1048,18 @@ zh_TW:
         ignores_count: 忽略數
         mutes_count: 禁言數
       description: "使用者被許多使用者靜音或忽略。"
+    top_users_by_likes_received:
+      labels:
+        user: 使用者
+        qtt_like: 收到的讚
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: 使用者
+        qtt_like: 收到的讚
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: 使用者
+        qtt_like: 收到的讚
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"

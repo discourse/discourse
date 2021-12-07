@@ -1274,6 +1274,18 @@ ja:
         ignores_count: 無視数
         mutes_count: ミュート数
       description: "多数のユーザーによってミュートまたは無視されたユーザー。"
+    top_users_by_likes_received:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
   dashboard:
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"

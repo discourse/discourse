@@ -1283,6 +1283,18 @@ zh_CN:
         ignores_count: 被忽略次数
         mutes_count: 被设为免打扰的次数
       description: "被许多其他用户设为免打扰和/或忽略的用户。"
+    top_users_by_likes_received:
+      labels:
+        user: 用户
+        qtt_like: 获赞
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: 用户
+        qtt_like: 获赞
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: 用户
+        qtt_like: 获赞
   dashboard:
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"

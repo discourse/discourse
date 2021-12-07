@@ -1334,6 +1334,25 @@ it:
         ignores_count: Conteggio ignorati
         mutes_count: Conteggio silenziati
       description: "Utenti che sono stati silenziati e/o ignorati da molti altri utenti."
+    top_users_by_likes_received:
+      title: "Migliori utenti per Mi piace ricevuti"
+      labels:
+        user: Utente
+        qtt_like: Mi piace - Ricevuti
+      description: "I 10 migliori utenti che hanno ricevuto più Mi piace."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Migliori utenti per Mi piace ricevuti da un utente con un basso livello di attendibilità"
+      labels:
+        user: Utente
+        trust_level: Livello di attendibilità
+        qtt_like: Mi piace - Ricevuti
+      description: "I migliori 10 utenti con un livello di attendibilità superiore che hanno ricevuto Mi piace da persone con un livello di attendibilità inferiore."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "I migliori utenti per Mi piace ricevuti da varie persone"
+      labels:
+        user: Utente
+        qtt_like: Mi piace - Ricevuti
+      description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."

@@ -909,6 +909,18 @@ nb_NO:
       labels:
         filename: Filnavn
         author: Forfatter
+    top_users_by_likes_received:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."

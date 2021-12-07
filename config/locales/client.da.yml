@@ -3343,6 +3343,7 @@ da:
       tags: "Mærker"
       choose_for_topic: "valgfrie mærker"
       info: "Info"
+      default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende mærker bruges, vil de blive erstattet med <b>%{base_tag_name}</b>."
@@ -3352,7 +3353,6 @@ da:
       category_restrictions:
         one: "Den kan kun bruges i denne kategori:"
         other: "Det kan kun bruges i disse kategorier:"
-      edit_synonyms: "Administrer Synonymer"
       add_synonyms_label: "Tilføj synonymer:"
       add_synonyms: "Tilføj"
       add_synonyms_explanation:
@@ -3369,8 +3369,7 @@ da:
       delete_confirm_synonyms:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
-      rename_tag: "Omdøb Mærke"
-      rename_instructions: "Vælg et nyt navn for det mærke:"
+      description: "Beskrivelse"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -3709,6 +3708,14 @@ da:
               list: Hent en liste over brugere.
             email:
               receive_emails: Kombiner dette anvendelsesområde med mail-modtageren til at behandle indgående e-mails.
+            badges:
+              create: Opret et nyt emblem.
+              show: Hent oplysninger om et emblem.
+              update: Opdatér et emblem
+              delete: Slet et emblem
+              list_user_badges: Se liste over bruger emblemer.
+              assign_badge_to_user: Tildel et emblem til en bruger.
+              revoke_badge_from_user: Tilbagekald et emblem fra en bruger.
       web_hooks:
         title: "Webhooks"
         none: "Der er ingen webhooks i øjeblikket"

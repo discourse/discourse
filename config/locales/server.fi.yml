@@ -1325,6 +1325,18 @@ fi:
         ignores_count: Estojen määrä
         mutes_count: Vaimennusten määrä
       description: "Käyttäjät, jotka monet muista on vaimentaneet tai estäneet."
+    top_users_by_likes_received:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan tilassa %{env}."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."

@@ -278,6 +278,18 @@ th:
     top_uploads:
       labels:
         filename: ชื่อไฟล์
+    top_users_by_likes_received:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"

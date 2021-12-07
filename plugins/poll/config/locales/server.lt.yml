@@ -10,12 +10,14 @@ lt:
     poll_maximum_options: "Maskimalus įterpiamų įrašų skaičius"
     poll_edit_window_mins: "Minutės po įrašo sukūrimo, per kurias galima redaguoti apklausas."
     poll_minimum_trust_level_to_create: "Nustatykite minimalų patikimumo lygį, reikalingą apklausoms kurti."
+    poll_export_data_explorer_query_id: "„Data Explorer“ užklausos ID, naudojamas eksportuoti apklausos rezultatus (0, kad išjungtumėte)."
   poll:
     poll: "apklausa"
     invalid_argument: "Netinkama argumento „%{argument}“ reikšmė „%{value}“."
     multiple_polls_without_name: "Yra keli baseinai be pavadinimo. Naudokite '<code> vardą </ code>' atributas vienareikšmiškai identifikuoti savo apklausas."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
     default_poll_must_have_at_least_1_option: "Apklausoje turi būti bent 1 pasirinkimas."
+    named_poll_must_have_at_least_1_option: "Apklausa, pavadinta <strong>%{name}</strong> , turi turėti bent 1 variantą."
     default_poll_must_have_less_options:
       one: "Apklausa turi turėti mažiau nei %{count} variantą."
       few: "Apklausa turi turėti mažiau nei %{count} variantų."
@@ -28,9 +30,13 @@ lt:
       other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
     default_poll_must_have_different_options: "Apklausa turi turėti skirtingus atsakymus."
     named_poll_must_have_different_options: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau 2 variantus."
+    default_poll_must_not_have_any_empty_options: "Apklausa neturi turėti jokių tuščių variantų."
+    named_poll_must_not_have_any_empty_options: "Apklausa, pavadinta <strong>%{name}</strong> , neturi turėti jokių tuščių variantų."
     default_poll_with_multiple_choices_has_invalid_parameters: "Apklausa su keliais pasirinkimų yra neleistinų parametrus."
     named_poll_with_multiple_choices_has_invalid_parameters: "Apklausa pavadintas <strong>% {name} </ strong>, su daug pasirinkimo yra neleistinų parametrus."
     requires_at_least_1_valid_option: "Jūs privalote pasirinkti bent 1 galiojantį variantą."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Negalite pakeisti apklausos po pirmųjų %{minutes} minučių."
     no_poll_with_this_name: "Nėra baseinas pavadintas <strong>% {name} </ strong>, susijęs su šio pranešimo."
     post_is_deleted: "Negali veikti ištrintų paštu."
     user_cant_post_in_topic: "Negalite balsuoti, nes negalite rašyti šioje temoje."

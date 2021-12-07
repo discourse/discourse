@@ -887,6 +887,18 @@ el:
     top_uploads:
       labels:
         filename: Όνομα αρχείου
+    top_users_by_likes_received:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
   dashboard:
     rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
     host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."

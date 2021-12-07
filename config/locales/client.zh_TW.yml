@@ -2677,8 +2677,7 @@ zh_TW:
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
-      rename_tag: "重命名標籤"
-      rename_instructions: "標籤的新名稱："
+      description: "描述"
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"

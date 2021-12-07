@@ -1111,6 +1111,18 @@ ur:
         ignores_count: شمار کو نظر انداز
         mutes_count: شمار کو خاموش
       description: "جو صارفین بہت سے دوسرے صارفین کی طرف سے خاموش اور/یا نظر انداز کیے گئے ہیں۔"
+    top_users_by_likes_received:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
   dashboard:
     rails_env_warning: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
     host_names_warning: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"

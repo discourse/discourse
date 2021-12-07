@@ -53,6 +53,7 @@ lt:
         percentage: "Procentas"
         count: "Skaičiuoti"
       error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
+      error_while_casting_votes: "Atsiprašome, balsuojant įvyko klaida."
       error_while_fetching_voters: "Atsiprašome, rodant rinkėjus įvyko klaida."
       error_while_exporting_results: "Apgailestaujame, eksportuojant apklausos rezultatus įvyko klaida."
       ui_builder:
@@ -78,6 +79,7 @@ lt:
           label: Balsavimo apribojimas šioms grupėms
         poll_chart_type:
           label: Rezultatų diagrama
+          bar: Juosta
         poll_config:
           max: Maksimalūs pasirinkimai
           min: Minimalūs pasirinkimai
