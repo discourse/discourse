@@ -964,10 +964,6 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_bookmarks:
-      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
-      search: "No bookmarks found with the provided search query."
-      others: "No bookmarks."
     no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:

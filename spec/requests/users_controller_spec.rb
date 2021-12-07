@@ -5074,9 +5074,6 @@ describe UsersController do
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body['bookmarks']).to eq([])
-      expect(response.parsed_body['no_results_help']).to eq(
-        I18n.t('user_activity.no_bookmarks.self')
-      )
     end
 
     it "shows a helpful message if no bookmarks are found for the search" do
@@ -5086,9 +5083,6 @@ describe UsersController do
       }
       expect(response.status).to eq(200)
       expect(response.parsed_body['bookmarks']).to eq([])
-      expect(response.parsed_body['no_results_help']).to eq(
-        I18n.t('user_activity.no_bookmarks.search')
-      )
     end
   end
 
