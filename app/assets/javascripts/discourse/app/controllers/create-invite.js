@@ -1,9 +1,10 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { empty, notEmpty } from "@ember/object/computed";
+import { not } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { getNativeContact } from "discourse/lib/pwa-utils";
+import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Group from "discourse/models/group";
@@ -28,8 +29,17 @@ export default Controller.extend(
     inviteToTopic: false,
     limitToEmail: false,
 
-    isLink: empty("buffered.email"),
-    isEmail: notEmpty("buffered.email"),
+    @discourseComputed("buffered.emailOrDomain")
+    isEmail(emailOrDomain) {
+      return emailValid(emailOrDomain);
+    },
+
+    @discourseComputed("buffered.emailOrDomain")
+    isDomain(emailOrDomain) {
+      return hostnameValid(emailOrDomain);
+    },
+
+    isLink: not("isEmail"),
 
     onShow() {
       Group.findAll().then((groups) => {
@@ -66,6 +76,15 @@ export default Controller.extend(
 
     save(opts) {
       const data = { ...this.buffered.buffer };
+
+      if (data.emailOrDomain) {
+        if (emailValid(data.emailOrDomain)) {
+          data.email = data.emailOrDomain;
+        } else if (hostnameValid(data.emailOrDomain)) {
+          data.domain = data.emailOrDomain;
+        }
+        delete data.emailOrDomain;
+      }
 
       if (data.groupIds !== undefined) {
         data.group_ids = data.groupIds.length > 0 ? data.groupIds : "";

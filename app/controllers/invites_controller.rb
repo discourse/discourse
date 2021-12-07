@@ -134,6 +134,7 @@ class InvitesController < ApplicationController
     begin
       invite = Invite.generate(current_user,
         email: params[:email],
+        domain: params[:domain],
         skip_email: params[:skip_email],
         invited_by: current_user,
         custom_message: params[:custom_message],
@@ -209,6 +210,17 @@ class InvitesController < ApplicationController
           else
             Invite.emailed_status_types[:not_required]
           end
+        end
+
+        invite.domain = nil if invite.email.present?
+      end
+
+      if params.has_key?(:domain)
+        invite.domain = params[:domain]
+
+        if invite.domain.present?
+          invite.email = nil
+          invite.emailed_status = Invite.emailed_status_types[:not_required]
         end
       end
 
