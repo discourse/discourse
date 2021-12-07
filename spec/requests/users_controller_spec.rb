@@ -4,6 +4,10 @@ require 'rails_helper'
 require 'rotp'
 
 describe UsersController do
+  fab!(:user1) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+
   let(:user) { Fabricate(:user) }
 
   describe "#full account registration flow" do
@@ -139,7 +143,7 @@ describe UsersController do
   end
 
   describe '#password_reset' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     let(:token) { SecureRandom.hex }
 
     context "you can view it even if login is required" do
@@ -202,7 +206,7 @@ describe UsersController do
     end
 
     context 'valid token' do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
       let!(:user_auth_token) { UserAuthToken.generate!(user_id: user.id) }
       let!(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]) }
 
@@ -485,7 +489,7 @@ describe UsersController do
   end
 
   describe '#confirm_email_token' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     let!(:email_token) { Fabricate(:email_token, user: user) }
 
     it "token doesn't match any records" do
@@ -502,8 +506,7 @@ describe UsersController do
   end
 
   describe '#admin_login' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
 
     context 'enqueues mail' do
       it 'enqueues mail with admin email and sso enabled' do
@@ -638,7 +641,7 @@ describe UsersController do
         end
 
         it "works with an admin api key" do
-          api_key = Fabricate(:api_key, user: Fabricate(:admin))
+          api_key = Fabricate(:api_key, user: admin)
           post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
         end
@@ -751,7 +754,7 @@ describe UsersController do
       end
 
       context "with a regular api key" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user) { user1 }
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as active with a regular key" do
@@ -764,7 +767,6 @@ describe UsersController do
       end
 
       context "with an admin api key" do
-        fab!(:admin) { Fabricate(:admin) }
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
         it "creates the user as active with a an admin key" do
@@ -864,7 +866,7 @@ describe UsersController do
       end
 
       context "with a regular api key" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user) { user1 }
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "won't create the user as staged with a regular key" do
@@ -877,7 +879,7 @@ describe UsersController do
       end
 
       context "with an admin api key" do
-        fab!(:user) { Fabricate(:admin) }
+        fab!(:user) { admin }
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: user) }
 
         it "creates the user as staged with a regular key" do
@@ -1514,7 +1516,7 @@ describe UsersController do
       end
 
       it 'should create a staff action log when a staff member changes the username' do
-        acting_user = Fabricate(:admin)
+        acting_user = admin
         sign_in(acting_user)
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
@@ -1534,7 +1536,7 @@ describe UsersController do
         SiteSetting.discourse_connect_url = 'http://someurl.com'
         SiteSetting.enable_discourse_connect = true
         SiteSetting.auth_overrides_username = true
-        acting_user = Fabricate(:admin)
+        acting_user = admin
         sign_in(acting_user)
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
@@ -1579,7 +1581,7 @@ describe UsersController do
     end
 
     context 'username is unavailable' do
-      let!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
       before do
         get "/u/check_username.json", params: { username: user.username }
       end
@@ -1620,7 +1622,7 @@ describe UsersController do
 
     describe 'different case of existing username' do
       context "it's my username" do
-        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        fab!(:user) { Fabricate(:user, username: 'hansolo') }
         before do
           sign_in(user)
 
@@ -1630,7 +1632,7 @@ describe UsersController do
       end
 
       context "it's someone else's username" do
-        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        fab!(:user) { Fabricate(:user, username: 'hansolo') }
         before do
           sign_in(Fabricate(:user))
 
@@ -1640,9 +1642,9 @@ describe UsersController do
       end
 
       context "an admin changing it for someone else" do
-        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        fab!(:user) { Fabricate(:user, username: 'hansolo') }
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
 
           get "/u/check_username.json", params: { username: 'HanSolo', for_user_id: user.id }
         end
@@ -2220,7 +2222,7 @@ describe UsersController do
   end
 
   describe '#badge_title' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     fab!(:badge) { Fabricate(:badge) }
     let(:user_badge) { BadgeGranter.grant(badge, user) }
 
@@ -2589,7 +2591,12 @@ describe UsersController do
 
     context 'while logged in' do
 
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user) { user1 }
+
+      before do
+        sign_in(user)
+      end
+
       fab!(:avatar1) { Fabricate(:upload) }
       fab!(:avatar2) { Fabricate(:upload) }
       let(:url) { "https://www.discourse.org" }
@@ -2671,7 +2678,7 @@ describe UsersController do
 
     context 'while logged in' do
       fab!(:another_user) { Fabricate(:user) }
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
 
       before do
         sign_in(user)
@@ -2708,7 +2715,7 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
       fab!(:another_user) { Fabricate(:user) }
       before do
         sign_in(user)
@@ -2830,7 +2837,11 @@ describe UsersController do
     end
 
     context "when the user is logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user) { user1 }
+
+      before do
+        sign_in(user)
+      end
 
       it "will not redirect to an invalid path" do
         get "/my/wat/..password.txt"
@@ -2955,7 +2966,7 @@ describe UsersController do
 
     context 'while logged in' do
       let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
 
       it "raises an error when you aren't allowed to check sso payload" do
         sign_in(Fabricate(:user))
@@ -2976,7 +2987,7 @@ describe UsersController do
   end
 
   describe '#update_primary_email' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     fab!(:user_email) { user.primary_email }
     fab!(:other_email) { Fabricate(:secondary_email, user: user) }
 
@@ -3007,7 +3018,7 @@ describe UsersController do
   end
 
   describe '#destroy_email' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     fab!(:user_email) { user.primary_email }
     fab!(:other_email) { Fabricate(:secondary_email, user: user) }
 
@@ -3074,7 +3085,7 @@ describe UsersController do
   end
 
   describe '#is_local_username' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     fab!(:group) { Fabricate(:group, name: "Discourse", mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
     let(:unmentionable) {
       Fabricate(:group, name: "Unmentionable", mentionable_level: Group::ALIAS_LEVELS[:nobody])
@@ -3177,7 +3188,7 @@ describe UsersController do
   end
 
   describe '#topic_tracking_state' do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
 
     context 'anon' do
       it "raises an error on anon for topic_tracking_state" do
@@ -3215,7 +3226,7 @@ describe UsersController do
     end
 
     context '`hide_profile_and_presence` user option is checked' do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
 
       before do
         user.user_option.update_columns(hide_profile_and_presence: true)
@@ -3284,6 +3295,8 @@ describe UsersController do
   end
 
   describe '#confirm_admin' do
+    fab!(:user) { user1 }
+
     it "fails without a valid token" do
       get "/u/confirm-admin/invalid-token.json"
       expect(response).not_to be_successful
@@ -3295,7 +3308,6 @@ describe UsersController do
     end
 
     it "succeeds with a valid code as anonymous" do
-      user = Fabricate(:user)
       ac = AdminConfirmation.new(user, Fabricate(:admin))
       ac.create_confirmation
       get "/u/confirm-admin/#{ac.token}.json"
@@ -3306,8 +3318,7 @@ describe UsersController do
     end
 
     it "succeeds with a valid code when logged in as that user" do
-      admin = sign_in(Fabricate(:admin))
-      user = Fabricate(:user)
+      sign_in(admin)
 
       ac = AdminConfirmation.new(user, admin)
       ac.create_confirmation
@@ -3319,8 +3330,7 @@ describe UsersController do
     end
 
     it "fails if you're logged in as a different account" do
-      sign_in(Fabricate(:admin))
-      user = Fabricate(:user)
+      sign_in(admin)
 
       ac = AdminConfirmation.new(user, Fabricate(:admin))
       ac.create_confirmation
@@ -3333,8 +3343,7 @@ describe UsersController do
 
     describe "post" do
       it "gives the user admin access when POSTed" do
-        user = Fabricate(:user)
-        ac = AdminConfirmation.new(user, Fabricate(:admin))
+        ac = AdminConfirmation.new(user, admin)
         ac.create_confirmation
         post "/u/confirm-admin/#{ac.token}.json"
         expect(response.status).to eq(200)
@@ -3552,8 +3561,6 @@ describe UsersController do
       end
 
       describe "user profile views" do
-        fab!(:other_user) { Fabricate(:user) }
-
         it "should track a user profile view for an anon user" do
           get "/"
           UserProfileView.expects(:add).with(other_user.user_profile.id, request.remote_ip, nil)
@@ -3572,7 +3579,7 @@ describe UsersController do
         sign_in(user)
       end
 
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
 
       it 'returns success' do
         get "/u/#{user.username}.json"
@@ -3609,8 +3616,6 @@ describe UsersController do
       end
 
       describe "user profile views" do
-        fab!(:other_user) { Fabricate(:user) }
-
         it "should track a user profile view for a signed in user" do
           UserProfileView.expects(:add).with(other_user.user_profile.id, request.remote_ip, user.id)
           get "/u/#{other_user.username}.json"
@@ -3674,11 +3679,9 @@ describe UsersController do
       end
 
       describe "include_post_count_for" do
-
-        fab!(:admin) { Fabricate(:admin) }
         fab!(:topic) { Fabricate(:topic) }
 
-        before do
+        before_all do
           Fabricate(:post, user: user, topic: topic)
           Fabricate(:post, user: admin, topic: topic)
           Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper])
@@ -3747,7 +3750,7 @@ describe UsersController do
         sign_in(user)
       end
 
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { user1 }
 
       it 'works correctly' do
         get "/u/#{user.username}/card.json"
@@ -3829,6 +3832,8 @@ describe UsersController do
   end
 
   describe "#account_created" do
+    fab!(:user) { user1 }
+
     it "returns a message when no session is present" do
       get "/u/account-created"
 
@@ -3840,7 +3845,8 @@ describe UsersController do
     end
 
     it "redirects when the user is logged in" do
-      sign_in(Fabricate(:user))
+      sign_in(user)
+
       get "/u/account-created"
 
       expect(response).to redirect_to("/")
@@ -3848,7 +3854,8 @@ describe UsersController do
 
     context 'when cookies contains a destination URL' do
       it 'should redirect to the URL' do
-        sign_in(Fabricate(:user))
+        sign_in(user)
+
         destination_url = 'http://thisisasite.com/somepath'
         cookies[:destination_url] = destination_url
 
@@ -4670,7 +4677,6 @@ describe UsersController do
   end
 
   describe '#revoke_account' do
-    fab!(:other_user) { Fabricate(:user) }
     it 'errors for unauthorised users' do
       post "/u/#{user.username}/preferences/revoke-account.json", params: {
         provider_name: 'facebook'
@@ -4909,7 +4915,6 @@ describe UsersController do
   describe '#feature_topic' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:other_topic) { Fabricate(:topic) }
-    fab!(:other_user) { Fabricate(:user) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: other_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
 
@@ -4983,7 +4988,6 @@ describe UsersController do
 
   describe '#clear_featured_topic' do
     fab!(:topic) { Fabricate(:topic) }
-    fab!(:other_user) { Fabricate(:user) }
 
     it 'requires the user to be logged in' do
       put "/u/#{user.username}/clear-featured-topic.json"
@@ -5089,7 +5093,7 @@ describe UsersController do
   end
 
   describe "#private_message_topic_tracking_state" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
     fab!(:user_2) { Fabricate(:user) }
 
     fab!(:private_message) do
@@ -5126,7 +5130,7 @@ describe UsersController do
   end
 
   describe "#reset_recent_searches" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
 
     it 'does nothing for anon' do
       delete "/u/recent-searches.json"
@@ -5144,7 +5148,7 @@ describe UsersController do
   end
 
   describe "#recent_searches" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { user1 }
 
     it 'does nothing for anon' do
       get "/u/recent-searches.json"
