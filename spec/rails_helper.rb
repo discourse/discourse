@@ -235,6 +235,12 @@ RSpec.configure do |config|
     SiteSetting.provider = TestLocalProcessProvider.new
 
     WebMock.disable_net_connect!
+
+    if ENV['ELEVATED_UPLOADS_ID']
+      DB.exec "SELECT setval('uploads_id_seq', 10000)"
+    else
+      DB.exec "SELECT setval('uploads_id_seq', 1)"
+    end
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
