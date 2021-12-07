@@ -37,14 +37,18 @@ module Email
         "<topic/#{post.topic_id}/#{post.id}.#{random_suffix}@#{host}>"
       end
 
-      def generate_for_topic(topic, use_incoming_email_if_present: false)
+      def generate_for_topic(topic, use_incoming_email_if_present: false, canonical: false)
         first_post = topic.ordered_posts.first
 
         if use_incoming_email_if_present && first_post.incoming_email&.message_id.present?
           return "<#{first_post.incoming_email.message_id}>"
         end
 
-        "<topic/#{topic.id}.#{random_suffix}@#{host}>"
+        if canonical
+          "<topic/#{topic.id}@#{host}>"
+        else
+          "<topic/#{topic.id}.#{random_suffix}@#{host}>"
+        end
       end
 
       def find_post_from_message_ids(message_ids)
