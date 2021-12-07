@@ -3320,7 +3320,7 @@ zh_CN:
       choose_for_topic_required:
         other: "您必须至少选择 %{count} 个标签。"
       info: "信息"
-      default_info: "此标签不限于任何类别，也没有同义词。要添加限制，请将此标签置于<a href=%{basePath}/tag_groups>标签组</a>中。"
+      default_info: "该标签不限于任何类别，并且没有同义词。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
@@ -3328,7 +3328,6 @@ zh_CN:
         other: "此标签属于以下组：%{tag_groups}。"
       category_restrictions:
         other: "它只能用于以下类别："
-      edit_synonyms: "管理同义词"
       add_synonyms_label: "添加同义词："
       add_synonyms: "添加"
       add_synonyms_explanation:
@@ -3342,8 +3341,7 @@ zh_CN:
       delete_confirm_no_topics: "确定要删除此标签吗？"
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
-      rename_tag: "重命名标签"
-      rename_instructions: "为标签选择一个新名称："
+      description: "描述"
       sort_by: "排序依据："
       sort_by_count: "计数"
       sort_by_name: "名称"

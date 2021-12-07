@@ -584,6 +584,18 @@ sq:
     top_uploads:
       labels:
         filename: Filename
+    top_users_by_likes_received:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."

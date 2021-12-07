@@ -1325,6 +1325,7 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
+      description: "వివరణ"
       sort_by_name: "పేరు"
       cancel_delete_unused: "రద్దుచేయి"
       filters:

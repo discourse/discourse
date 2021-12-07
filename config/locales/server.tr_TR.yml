@@ -1329,6 +1329,18 @@ tr_TR:
         ignores_count: Yoksayma toplamı
         mutes_count: Susturma toplamı
       description: "Diğer birçok kullanıcı tarafından susturulmuş veya yok sayılmış kullanıcılar."
+    top_users_by_likes_received:
+      labels:
+        user: Kullanıcı
+        qtt_like: Alınan Beğeniler
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Kullanıcı
+        qtt_like: Alınan Beğeniler
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Kullanıcı
+        qtt_like: Alınan Beğeniler
   dashboard:
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak öntanımlı değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."

@@ -220,6 +220,7 @@ pl_PL:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -1438,6 +1439,18 @@ pl_PL:
         ignores_count: Licznik ignorowanych
         mutes_count: Licznik wyciszonych
       description: "Użytkownicy, którzy zostali wyciszeni i / lub zignorowani przez wielu innych użytkowników."
+    top_users_by_likes_received:
+      labels:
+        user: Użytkownik
+        qtt_like: Polubienia otrzymane
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Użytkownik
+        qtt_like: Polubienia otrzymane
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Użytkownik
+        qtt_like: Polubienia otrzymane
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."

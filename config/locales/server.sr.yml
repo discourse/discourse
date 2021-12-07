@@ -327,6 +327,18 @@ sr:
     top_uploads:
       labels:
         filename: Ime datoteke
+    top_users_by_likes_received:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"

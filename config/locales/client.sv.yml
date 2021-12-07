@@ -2178,6 +2178,8 @@ sv:
       in_posts_by: "i inlägg av %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
+      recent: "Senaste sökningar"
+      clear_recent: "Rensa senaste sökningar"
       type:
         default: "Ämnen/inlägg"
         users: "Användare"
@@ -3223,8 +3225,8 @@ sv:
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
     pending_posts:
-      label: "Väntar"
-      label_with_count: "Pågående (%{count})"
+      label: "Väntande"
+      label_with_count: "Väntande (%{count})"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med ett högt förhållande mellan gillningar/inlägg}
@@ -3488,17 +3490,19 @@ sv:
         one: "välj minst %{count} tagg..."
         other: "välj minst %{count} taggar..."
       info: "Info"
-      default_info: "Denna tagg är inte begränsad till några kategorier, och har inga synonymer. Om du vill lägga till begränsningar lägger du denna tagg i en <a href=%{basePath}/tag_groups>taggrupp</a>."
+      default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
+      staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."
       synonyms: "Synonymer"
       synonyms_description: "När följande taggar används, kommer de att ersättas med <b>%{base_tag_name}</b>."
+      save: "Spara namn och beskrivning av taggen"
       tag_groups_info:
         one: 'Denna tagg tillhör gruppen "%{tag_groups}".'
         other: "Denna tagg tillhör dessa grupper: %{tag_groups}."
       category_restrictions:
         one: "Den kan enbart användas i denna kategori:"
         other: "Den kan enbart användas i dessa kategorier:"
-      edit_synonyms: "Hantera synonymer"
+      edit_synonyms: "Redigera synonymer"
       add_synonyms_label: "Lägg till synonymer:"
       add_synonyms: "Lägg till"
       add_synonyms_explanation:
@@ -3515,8 +3519,8 @@ sv:
       delete_confirm_synonyms:
         one: "Dess synonym kommer också att raderas."
         other: "Dess %{count} synonymer kommer också att raderas."
-      rename_tag: "Döp om taggen"
-      rename_instructions: "Välj ett nytt namn för taggen:"
+      edit_tag: "Redigera taggnamn och beskrivning"
+      description: "Beskrivning"
       sort_by: "Sortera efter:"
       sort_by_count: "summa"
       sort_by_name: "namn"

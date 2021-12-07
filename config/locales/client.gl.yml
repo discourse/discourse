@@ -3261,6 +3261,7 @@ gl:
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
+      default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
       synonyms_description: "Cando se usen as seguintes etiquetas, substituílas por <b>%{base_tag_name}</b>."
@@ -3270,7 +3271,6 @@ gl:
       category_restrictions:
         one: "Só pode usarse nesta categoría:"
         other: "Só pode usarse nestas categorías:"
-      edit_synonyms: "Xestionar sinónimos"
       add_synonyms_label: "Engadir sinónimos:"
       add_synonyms: "Engadir"
       add_synonyms_explanation:
@@ -3287,8 +3287,7 @@ gl:
       delete_confirm_synonyms:
         one: "Tamén se eliminará o seu sinónimo."
         other: "Tamén se eliminarán os seus %{count} sinónimos."
-      rename_tag: "Renomear etiqueta"
-      rename_instructions: "Seleccione un novo nome para a etiqueta:"
+      description: "Descrición"
       sort_by: "Ordenar por:"
       sort_by_count: "número"
       sort_by_name: "nome"

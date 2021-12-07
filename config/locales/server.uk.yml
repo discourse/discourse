@@ -1432,6 +1432,18 @@ uk:
         ignores_count: Проігноровано
         mutes_count: Приглушено
       description: "Користувачі, які були відключені та/або проігноровані іншими користувачами."
+    top_users_by_likes_received:
+      labels:
+        user: Користувач
+        qtt_like: Отримані вподобання
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Користувач
+        qtt_like: Отримані вподобання
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Користувач
+        qtt_like: Отримані вподобання
   dashboard:
     rails_env_warning: "Ваш сервер працює в режимі %{env}."
     host_names_warning: "Ваш файл config/database.yml використовує локальне ім’я хоста за замовчуванням. Поміняйте його на ім’я хоста вашого веб-сайту."
