@@ -322,6 +322,86 @@ export default Mixin.create({
     }
   },
 
+  /**
+   * Removes the provided char from the provided str up
+   * until the limit, or until a character that is _not_
+   * the provided one is encountered.
+   */
+  _indentConsumer(str, char, limit) {
+    let eaten = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (eaten !== limit && str[i] === char) {
+        eaten += 1;
+      } else {
+        return str.slice(eaten);
+        break;
+      }
+    }
+    return str;
+  },
+
+  @bind
+  _indentSelection(event, direction) {
+    const selected = this._getSelected(null, { lineVal: true });
+    const { lineVal } = selected;
+    let value = selected.value;
+
+    // we want to include all the spaces on the selected line as
+    // well, because we want to indent those too, but only if
+    // the user's selection starts at the first character on the
+    // line and not a space. * below indicates the start + end position
+    // of the selection, and the . are spaces:
+    //
+    // YES
+    //
+    //     *
+    // ....text here
+    // ....some more text
+    //                  *
+    //
+    // NO
+    //
+    //   *
+    // ....text here
+    // ....some more text
+    //                  *
+    const lineStartsWithSpace = lineVal.match(/^ +/);
+    const selectionStartsWithSpace = value.match(/^ +/);
+    if (lineStartsWithSpace && !selectionStartsWithSpace) {
+      value = lineStartsWithSpace[0] + value;
+    }
+
+    // perhaps this is a bit simplistic, but it is a fairly reliable
+    // guess to say whether we are indenting with tabs or spaces. for
+    // example some programming languages prefer tabs, others prefer
+    // spaces, and for the cases with no tabs it's safer to use spaces
+    let indentationSteps, indentationChar;
+    let linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
+    let linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
+    if (linesStartingWithTabCount > linesStartingWithSpaceCount) {
+      indentationSteps = 1;
+      indentationChar = "\t";
+    } else {
+      indentationChar = " ";
+      indentationSteps = 2;
+    }
+
+    const splitSelection = value.split("\n");
+    const newValue = splitSelection
+      .map((line) => {
+        if (direction === "left") {
+          return this._indentConsumer(line, indentationChar, indentationSteps);
+        } else {
+          return `${Array(indentationSteps + 1).join(indentationChar)}${line}`;
+        }
+      })
+      .join("\n");
+
+    if (newValue.trim() !== "") {
+      this._replaceText(value, newValue);
+    }
+  },
+
   @action
   emojiSelected(code) {
     let selected = this._getSelected();

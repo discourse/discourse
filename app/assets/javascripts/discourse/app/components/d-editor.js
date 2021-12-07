@@ -285,6 +285,13 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
+    this._itsatrap.bind("tab", (event) =>
+      this._indentSelection(event, "right")
+    );
+    this._itsatrap.bind("shift+tab", (event) =>
+      this._indentSelection(event, "left")
+    );
+
     // disable clicking on links in the preview
     this.element
       .querySelector(".d-editor-preview")
