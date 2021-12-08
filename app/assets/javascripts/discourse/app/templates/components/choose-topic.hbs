@@ -27,7 +27,7 @@
             type="radio"
             name="choose_topic_id"
           }}
-          {{raw "topic-status" topic=t}}
+          {{topic-status topic=t disableActions=true}}
           <span class="topic-title">
             {{replace-emoji t.fancy_title}}
           </span>
