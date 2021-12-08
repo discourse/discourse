@@ -129,7 +129,7 @@ GEM
       sprockets (>= 3.3, < 4.1)
     ember-source (2.18.2)
     erubi (1.10.0)
-    excon (0.88.0)
+    excon (0.89.0)
     execjs (2.8.1)
     exifr (1.3.9)
     fabrication (2.22.0)
