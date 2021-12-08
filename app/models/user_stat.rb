@@ -207,16 +207,19 @@ class UserStat < ActiveRecord::Base
 
   def self.update_draft_count(user_id = nil)
     if user_id.present?
-      draft_count = DB.query_single <<~SQL, user_id: user_id
+      draft_count, has_topic_draft = DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
-        RETURNING draft_count
+        RETURNING draft_count, (SELECT 1 FROM drafts WHERE user_id = :user_id AND draft_key = :new_topic)
       SQL
 
       MessageBus.publish(
         '/user',
-        { draft_count: draft_count.first },
+        {
+          draft_count: draft_count,
+          has_topic_draft: !!has_topic_draft
+        },
         user_ids: [user_id]
       )
     else

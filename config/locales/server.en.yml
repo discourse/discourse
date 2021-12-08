@@ -259,6 +259,7 @@ en:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite saved. To give access to the specified topic, add one of the following groups: %{groups}."
+    domain_not_allowed: "Your email cannot be used to redeem this invite."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
