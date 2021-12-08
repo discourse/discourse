@@ -25,20 +25,7 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    if stream.empty? && (help_key = params['no_results_help_key'])
-      if user.id == guardian.user.try(:id)
-        help_key += ".self"
-      else
-        help_key += ".others"
-      end
-      render json: {
-        user_action: [],
-        no_results_help: I18n.t(help_key)
-      }
-    else
-      render_serialized(stream, UserActionSerializer, root: 'user_actions')
-    end
-
+    render_serialized(stream, UserActionSerializer, root: 'user_actions')
   end
 
   def show
