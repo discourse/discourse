@@ -52,32 +52,15 @@
 }
 
 .composer-fields .presence-users {
-  position: absolute;
-  top: 20px;
-  right: 95px;
-  @media screen and (max-width: $small-width) {
-    max-width: 318px;
-    .presence-avatars {
-      flex-wrap: nowrap;
-    }
+  overflow: hidden;
+  flex-shrink: 1;
+  .presence-avatars {
+    flex-wrap: nowrap;
   }
 }
 
-.mobile-view {
-  .presence-users {
-    font-size: $font-down-1;
-  }
-  .composer-fields .presence-users {
-    top: 7px;
-    right: 65px;
-    max-width: 70px;
-    .presence-avatars {
-      flex-wrap: nowrap;
-    }
-    .description {
-      display: none;
-    }
-  }
+.mobile-view .composer-fields .presence-users .description {
+  display: none;
 }
 
 // TMP: RTL overrides
