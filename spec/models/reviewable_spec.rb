@@ -427,8 +427,8 @@ RSpec.describe Reviewable, type: :model do
 
       expect { PostActionCreator.spam(Fabricate(:user), post) }
         .to change { reviewable.reload.status }
-        .from(Reviewable.statuses[:rejected])
-        .to(Reviewable.statuses[:pending])
+        .from("rejected")
+        .to("pending")
         .and change { Jobs::NotifyReviewable.jobs.size }
         .by(1)
     end
@@ -521,77 +521,77 @@ RSpec.describe Reviewable, type: :model do
   describe ".score_required_to_hide_post" do
 
     it "will return the default visibility if it's higher" do
-      Reviewable.set_priorities(low: 40.0, high: 100.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_required_to_hide_post).to eq(40.0)
+      described_class.set_priorities(low: 40.0, high: 100.0)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.score_required_to_hide_post).to eq(40.0)
     end
 
     it "returns a default if we can't calculated any percentiles" do
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_required_to_hide_post).to eq(12.5)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_required_to_hide_post).to eq(8.33)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_required_to_hide_post).to eq(4.16)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.score_required_to_hide_post).to eq(12.5)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.score_required_to_hide_post).to eq(8.33)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.score_required_to_hide_post).to eq(4.16)
     end
 
     it "returns a fraction of the high percentile" do
-      Reviewable.set_priorities(high: 100.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
-      expect(Reviewable.score_required_to_hide_post.to_f.truncate(2)).to eq(Float::MAX)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_required_to_hide_post.to_f.truncate(2)).to eq(100.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_required_to_hide_post.to_f.truncate(2)).to eq(66.66)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_required_to_hide_post.to_f.truncate(2)).to eq(33.33)
+      described_class.set_priorities(high: 100.0)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:disabled]
+      expect(described_class.score_required_to_hide_post.to_f.truncate(2)).to eq(Float::MAX)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.score_required_to_hide_post.to_f.truncate(2)).to eq(100.0)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.score_required_to_hide_post.to_f.truncate(2)).to eq(66.66)
+      SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.score_required_to_hide_post.to_f.truncate(2)).to eq(33.33)
     end
   end
 
   describe ".spam_score_to_silence_new_user" do
     it "returns a default value if we can't calculated any percentiles" do
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(7.5)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(4.99)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user).to eq(2.49)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.spam_score_to_silence_new_user).to eq(7.5)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.spam_score_to_silence_new_user).to eq(4.99)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.spam_score_to_silence_new_user).to eq(2.49)
     end
 
     it "returns a fraction of the high percentile" do
-      Reviewable.set_priorities(high: 100.0)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:disabled]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(Float::MAX)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(60.0)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(39.99)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.spam_score_to_silence_new_user.to_f).to eq(19.99)
+      described_class.set_priorities(high: 100.0)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:disabled]
+      expect(described_class.spam_score_to_silence_new_user.to_f).to eq(Float::MAX)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.spam_score_to_silence_new_user.to_f).to eq(60.0)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.spam_score_to_silence_new_user.to_f).to eq(39.99)
+      SiteSetting.silence_new_user_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.spam_score_to_silence_new_user.to_f).to eq(19.99)
     end
   end
 
   describe ".score_to_auto_close_topic" do
 
     it "returns the default if we can't calculated any percentiles" do
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_to_auto_close_topic).to eq(31.25)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_to_auto_close_topic).to eq(20.83)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_to_auto_close_topic).to eq(10.41)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.score_to_auto_close_topic).to eq(31.25)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.score_to_auto_close_topic).to eq(20.83)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.score_to_auto_close_topic).to eq(10.41)
     end
 
     it "returns a fraction of the high percentile" do
-      Reviewable.set_priorities(high: 100.0)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:disabled]
-      expect(Reviewable.score_to_auto_close_topic.to_f.truncate(2)).to eq(Float::MAX)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
-      expect(Reviewable.score_to_auto_close_topic.to_f.truncate(2)).to eq(250.0)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:medium]
-      expect(Reviewable.score_to_auto_close_topic.to_f.truncate(2)).to eq(166.66)
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
-      expect(Reviewable.score_to_auto_close_topic.to_f.truncate(2)).to eq(83.33)
+      described_class.set_priorities(high: 100.0)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:disabled]
+      expect(described_class.score_to_auto_close_topic.to_f.truncate(2)).to eq(Float::MAX)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:low]
+      expect(described_class.score_to_auto_close_topic.to_f.truncate(2)).to eq(250.0)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:medium]
+      expect(described_class.score_to_auto_close_topic.to_f.truncate(2)).to eq(166.66)
+      SiteSetting.auto_close_topic_sensitivity = described_class.sensitivities[:high]
+      expect(described_class.score_to_auto_close_topic.to_f.truncate(2)).to eq(83.33)
     end
   end
 

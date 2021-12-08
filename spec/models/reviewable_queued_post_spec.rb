@@ -85,7 +85,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           post = Fabricate(:post, user: newuser)
           PostActionCreator.spam(moderator, post)
           Reviewable.set_priorities(high: 1.0)
-          SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
+          SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:low]
           SiteSetting.num_users_to_silence_new_user = 1
           expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
 
@@ -212,7 +212,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       context "when status changes from 'pending' to something else" do
         it "updates user stats" do
           user_stats.expects(:update_pending_posts)
-          reviewable.update!(status: described_class.statuses[:approved])
+          reviewable.update!(status: :approved)
         end
       end
 
