@@ -86,7 +86,9 @@ export default Mixin.create({
     });
 
     this.appEvents.trigger("user-card:show", { username });
-    this._showCallback(username, $(target));
+    this._showCallback(username, $(target)).then(() => {
+      this.appEvents.trigger("user-card:after-show", { username });
+    });
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
     if (this.site.mobileView) {
