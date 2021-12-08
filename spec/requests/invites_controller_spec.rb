@@ -680,7 +680,7 @@ describe InvitesController do
     context 'with a domain invite' do
       fab!(:invite) { Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required], domain: 'example.com') }
 
-      it 'creates an user if email ests' do
+      it 'creates an user if email matches domain' do
         expect { put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' } }
           .to change { User.count }
 
@@ -692,7 +692,7 @@ describe InvitesController do
         expect(invited_user).to be_present
       end
 
-      it 'creates an user if email ests' do
+      it 'does not create an user if email does not match domain' do
         expect { put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example2.com', password: 'verystrongpassword' } }
           .not_to change { User.count }
 
