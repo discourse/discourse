@@ -180,16 +180,18 @@ describe Draft do
 
   it 'updates draft count when a draft is created or destroyed' do
     messages = MessageBus.track_publish("/user") do
-      Draft.set(user, "test", 0, "data")
+      Draft.set(user, Draft::NEW_TOPIC, 0, "data")
     end
 
     expect(messages.first.data[:draft_count]).to eq(1)
+    expect(messages.first.data[:has_topic_draft]).to eq(true)
 
     messages = MessageBus.track_publish("/user") do
       Draft.where(user: user).destroy_all
     end
 
     expect(messages.first.data[:draft_count]).to eq(0)
+    expect(messages.first.data[:has_topic_draft]).to eq(false)
   end
 
   describe '#stream' do
