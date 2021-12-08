@@ -211,7 +211,7 @@ class UserStat < ActiveRecord::Base
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
-        RETURNING draft_count, (SELECT 1 FROM drafts WHERE draft_key = :new_topic)
+        RETURNING draft_count, (SELECT 1 FROM drafts WHERE user_id = :user_id AND draft_key = :new_topic)
       SQL
 
       MessageBus.publish(
