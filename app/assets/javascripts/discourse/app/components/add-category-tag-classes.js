@@ -27,7 +27,7 @@ export default Component.extend({
 
     this.tags?.forEach((t) => classes.push(`tag-${t}`));
 
-    document.documentElement.classList.add(...classes);
+    document.body.classList.add(...classes);
   },
 
   @observes("category.fullSlug", "tags")
@@ -44,14 +44,14 @@ export default Component.extend({
     const invalidClasses = [];
     const regex = /\b(?:category|tag)-\S+|( category )/g;
 
-    document.documentElement.classList.forEach((name) => {
+    document.body.classList.forEach((name) => {
       if (name.match(regex)) {
         invalidClasses.push(name);
       }
     });
 
     if (invalidClasses.length) {
-      document.documentElement.classList.remove(...[invalidClasses]);
+      document.body.classList.remove(...[invalidClasses]);
     }
   },
 });
