@@ -25,13 +25,7 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    if stream.empty?
-      render json: {
-        user_action: []
-      }
-    else
-      render_serialized(stream, UserActionSerializer, root: 'user_actions')
-    end
+    render_serialized(stream, UserActionSerializer, root: 'user_actions')
   end
 
   def show
