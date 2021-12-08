@@ -327,14 +327,13 @@ export default Mixin.create({
    * until the limit, or until a character that is _not_
    * the provided one is encountered.
    */
-  _indentConsumer(str, char, limit) {
+  _deindentLine(str, char, limit) {
     let eaten = 0;
     for (let i = 0; i < str.length; i++) {
-      if (eaten !== limit && str[i] === char) {
+      if (eaten < limit && str[i] === char) {
         eaten += 1;
       } else {
         return str.slice(eaten);
-        break;
       }
     }
     return str;
@@ -390,7 +389,7 @@ export default Mixin.create({
     const newValue = splitSelection
       .map((line) => {
         if (direction === "left") {
-          return this._indentConsumer(line, indentationChar, indentationSteps);
+          return this._deindentLine(line, indentationChar, indentationSteps);
         } else {
           return `${Array(indentationSteps + 1).join(indentationChar)}${line}`;
         }
