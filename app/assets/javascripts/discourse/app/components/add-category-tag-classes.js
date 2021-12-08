@@ -45,7 +45,7 @@ export default Component.extend({
     const regex = /\b(?:category|tag)-\S+|( category )/g;
 
     document.body.classList.forEach((name) => {
-      if (name.match(regex)) {
+      if (regex.test(name)) {
         invalidClasses.push(name);
       }
     });
