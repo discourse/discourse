@@ -2602,35 +2602,44 @@ RSpec.describe User do
   end
 
   describe 'Granting admin or moderator status' do
-    fab!(:reviewable_user) { Fabricate(:reviewable_user) }
+    context 'when granting admin status' do
+      context 'when there is a reviewable' do
+        fab!(:user) { Fabricate(:reviewable_user) }
 
-    it 'approves the associated reviewable when granting admin status' do
-      reviewable_user.target.grant_admin!
+        context 'when the user isn’t approved yet' do
+          it 'approves the associated reviewable' do
+            expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
+          end
+        end
 
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+        context "when the user is already approved" do
+          before do
+            user.perform(Discourse.system_user, :approve_user)
+          end
+
+          it 'does nothing' do
+            expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
+          end
+        end
+      end
+
+      context 'when there is no reviewable' do
+        let(:user) { Fabricate(:user, approved: false) }
+
+        it 'approves the user' do
+          expect { user.grant_admin! }.to change { user.reload.approved }.to true
+        end
+      end
     end
 
-    it 'does nothing when the user is already approved' do
-      reviewable_user = Fabricate(:reviewable_user)
-      reviewable_user.perform(Discourse.system_user, :approve_user)
+    context 'when granting moderator status' do
+      context 'when there is a reviewable' do
+        let(:user) { Fabricate(:reviewable_user) }
 
-      reviewable_user.target.grant_admin!
-
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
-
-    it 'approves the associated reviewable when granting moderator status' do
-      reviewable_user.target.grant_moderation!
-
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
-
-    it 'approves the user if there is no reviewable' do
-      user = Fabricate(:user, approved: false)
-
-      user.grant_admin!
-
-      expect(user.approved).to eq(true)
+        it 'approves the associated reviewable' do
+          expect { user.target.grant_moderation! }.to change { user.reload.dup }.to be_approved
+        end
+      end
     end
   end
 

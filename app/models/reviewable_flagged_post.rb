@@ -13,7 +13,7 @@ class ReviewableFlaggedPost < Reviewable
   def self.counts_for(posts)
     result = {}
 
-    counts = DB.query(<<~SQL, pending: Reviewable.statuses[:pending])
+    counts = DB.query(<<~SQL, pending: statuses[:pending])
       SELECT r.target_id AS post_id,
         rs.reviewable_score_type,
         count(*) as total
@@ -336,7 +336,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
-#  status                  :integer          default(0), not null
+#  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
