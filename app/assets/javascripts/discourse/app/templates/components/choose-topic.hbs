@@ -22,7 +22,7 @@
         <label class="radio">
           {{input
             id=(concat "choose-topic-" t.id)
-            checked=(eq t.id selectedTopicI)
+            checked=(eq t.id selectedTopicId)
             click=(action "chooseTopic" t)
             type="radio"
             name="choose_topic_id"
