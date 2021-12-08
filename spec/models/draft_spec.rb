@@ -179,6 +179,8 @@ describe Draft do
   end
 
   it 'updates draft count when a draft is created or destroyed' do
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, "data")
+
     messages = MessageBus.track_publish("/user") do
       Draft.set(user, Draft::NEW_TOPIC, 0, "data")
     end
