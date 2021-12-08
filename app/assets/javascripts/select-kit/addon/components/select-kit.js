@@ -714,7 +714,7 @@ export default Component.extend(
         rowContainer = this.element.querySelector(".select-kit-row.is-none");
       }
 
-      rowContainer && rowContainer.focus({ preventScroll });
+      rowContainer?.focus({ preventScroll });
     },
 
     _highlightLast() {
@@ -989,7 +989,7 @@ export default Component.extend(
         }
 
         if (highlighted) {
-          this._scrollToRow(highlighted);
+          this._scrollToRow(highlighted, false);
           this.set("selectKit.highlighted", highlighted);
         }
       }
