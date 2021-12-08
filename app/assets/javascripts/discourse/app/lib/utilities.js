@@ -134,6 +134,7 @@ export function highlightPost(postNumber) {
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
+  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
