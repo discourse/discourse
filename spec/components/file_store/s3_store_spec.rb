@@ -30,15 +30,15 @@ describe FileStore::S3Store do
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object)
         s3_object.expects(:put).with(
           acl: "public-read",
           cache_control: "max-age=31556952, public, immutable",
           content_type: "image/png",
           body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-        expect(store.store_upload(uploaded_file, upload)).to eq(
-          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+        expect(store.store_upload(uploaded_file, upload)).to match(
+          %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png}
         )
         expect(upload.etag).to eq(etag)
       end
@@ -52,10 +52,10 @@ describe FileStore::S3Store do
         it "returns an absolute schemaless url" do
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
 
-          s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_bucket.expects(:object).with(regexp_matches(%r{discourse-uploads/original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object)
 
-          expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
+          expect(store.store_upload(uploaded_file, upload)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/discourse-uploads/original/\d+X.*/#{upload.sha1}\.png}
           )
           expect(upload.etag).to eq(etag)
         end
@@ -68,7 +68,7 @@ describe FileStore::S3Store do
           upload = Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
+          s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf})).returns(s3_object)
           s3_object.expects(:put).with(
             acl: "private",
             cache_control: "max-age=31556952, public, immutable",
@@ -76,8 +76,8 @@ describe FileStore::S3Store do
             content_disposition: "attachment; filename=\"#{upload.original_filename}\"; filename*=UTF-8''#{upload.original_filename}",
             body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-          expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.pdf"
+          expect(store.store_upload(uploaded_file, upload)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.pdf}
           )
         end
 
@@ -85,15 +85,15 @@ describe FileStore::S3Store do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object).at_least_once
+          s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object).at_least_once
           s3_object.expects(:put).with(
             acl: "public-read",
             cache_control: "max-age=31556952, public, immutable",
             content_type: "image/png",
             body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-          expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+          expect(store.store_upload(uploaded_file, upload)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png}
           )
 
           expect(store.url_for(upload)).to eq(upload.url)
@@ -108,12 +108,12 @@ describe FileStore::S3Store do
 
       it "returns an absolute schemaless url" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
+        path = %r{optimized/\d+X.*/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png}
 
-        s3_bucket.expects(:object).with(path).returns(s3_object)
+        s3_bucket.expects(:object).with(regexp_matches(path)).returns(s3_object)
 
-        expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
-          "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
+        expect(store.store_optimized_image(optimized_image_file, optimized_image)).to match(
+          %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/#{path}}
         )
         expect(optimized_image.etag).to eq(etag)
       end
@@ -125,12 +125,12 @@ describe FileStore::S3Store do
 
         it "returns an absolute schemaless url" do
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
+          path = %r{discourse-uploads/optimized/\d+X.*/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png}
 
-          s3_bucket.expects(:object).with(path).returns(s3_object)
+          s3_bucket.expects(:object).with(regexp_matches(path)).returns(s3_object)
 
-          expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
-            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
+          expect(store.store_optimized_image(optimized_image_file, optimized_image)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/#{path}}
           )
           expect(optimized_image.etag).to eq(etag)
         end
@@ -404,7 +404,7 @@ describe FileStore::S3Store do
 
       it "sets acl to public by default" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
+        s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf})).returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: "public-read").returns(s3_object)
 
@@ -414,7 +414,7 @@ describe FileStore::S3Store do
       it "sets acl to private when upload is marked secure" do
         upload.update!(secure: true)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.pdf").returns(s3_object)
+        s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf})).returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: "private").returns(s3_object)
 
@@ -447,7 +447,7 @@ describe FileStore::S3Store do
   describe ".url_for" do
     it "returns signed URL with content disposition when requesting to download image" do
       s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-      s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+      s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object)
       opts = {
         expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
         response_content_disposition: %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|
