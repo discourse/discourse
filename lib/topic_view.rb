@@ -198,11 +198,16 @@ class TopicView
   end
 
   def next_page
-    @next_page ||= begin
-      if last_post && highest_post_number && (highest_post_number > last_post.post_number)
-        @page + 1
+    return @next_page if defined?(@next_page)
+
+    @next_page =
+      if last_post
+        last_post_number_in_post_stream = @filtered_posts.reverse_order.pluck_first(:post_number)
+
+        if last_post_number_in_post_stream != last_post.post_number
+          @page + 1
+        end
       end
-    end
   end
 
   def prev_page_path
@@ -788,11 +793,11 @@ class TopicView
   end
 
   def apply_default_scope(scope)
-    scope = scope.order(sort_order: :asc)
-
     self.class.custom_default_scopes.each do |block|
       scope = block.call(scope, self)
     end
+
+    scope = scope.order(sort_order: :asc)
 
     scope
   end

@@ -327,18 +327,35 @@ RSpec.describe TopicView do
     end
 
     describe "#next_page" do
-      let!(:post) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post2) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post3) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post4) { Fabricate(:post, topic: topic, user: user) }
-      let!(:post5) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:post2) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:post3) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:post4) { Fabricate(:post, topic: topic, user: user) }
+      fab!(:post5) { Fabricate(:post, topic: topic, user: user) }
 
       before do
         TopicView.stubs(:chunk_size).returns(2)
       end
 
+      after do
+        TopicView.reset_custom_default_scopes
+      end
+
       it "should return the next page" do
-        expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
+        expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eq(2)
+        expect(TopicView.new(topic.id, user, { post_number: post3.post_number }).next_page).to eq(3)
+        expect(TopicView.new(topic.id, user, { post_number: post5.post_number }).next_page).to eq(nil)
+      end
+
+      it "should return the right next page with a custom default scope" do
+        TopicView.apply_custom_default_scope do |scope|
+          scope.order(created_at: :desc)
+        end
+
+        expect(TopicView.new(topic.id, user, page: 1).next_page).to eq(2)
+        expect(TopicView.new(topic.id, user, page: 2).next_page).to eq(3)
+        expect(TopicView.new(topic.id, user, page: 3).next_page).to eq(nil)
       end
     end
 
