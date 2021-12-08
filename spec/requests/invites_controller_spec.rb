@@ -677,6 +677,31 @@ describe InvitesController do
       end
     end
 
+    context 'with a domain invite' do
+      fab!(:invite) { Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required], domain: 'example.com') }
+
+      it 'creates an user if email matches domain' do
+        expect { put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' } }
+          .to change { User.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['message']).to eq(I18n.t('invite.confirm_email'))
+        expect(invite.reload.redemption_count).to eq(1)
+
+        invited_user = User.find_by_email('test@example.com')
+        expect(invited_user).to be_present
+      end
+
+      it 'does not create an user if email does not match domain' do
+        expect { put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example2.com', password: 'verystrongpassword' } }
+          .not_to change { User.count }
+
+        expect(response.status).to eq(412)
+        expect(response.parsed_body['message']).to eq(I18n.t('invite.domain_not_allowed'))
+        expect(invite.reload.redemption_count).to eq(0)
+      end
+    end
+
     context 'with an invite link' do
       fab!(:invite) { Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required]) }
 

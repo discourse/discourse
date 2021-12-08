@@ -49,6 +49,11 @@ const Invite = EmberObject.extend({
     return topicData ? Topic.create(topicData) : null;
   },
 
+  @discourseComputed("email", "domain")
+  emailOrDomain(email, domain) {
+    return email || domain;
+  },
+
   topicId: alias("topics.firstObject.id"),
   topicTitle: alias("topics.firstObject.title"),
 });
