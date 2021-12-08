@@ -18,7 +18,7 @@ export default Component.extend({
 
     this._removeClass();
 
-    let classes = [];
+    const classes = [];
 
     if (slug) {
       classes.push("category");
