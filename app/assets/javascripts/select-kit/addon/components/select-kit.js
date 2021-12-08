@@ -714,7 +714,12 @@ export default Component.extend(
         rowContainer = this.element.querySelector(".select-kit-row.is-none");
       }
 
-      rowContainer && rowContainer.focus({ preventScroll });
+      if (rowContainer) {
+        const collectionContainer = rowContainer.parentNode;
+        collectionContainer.scrollTop =
+          rowContainer.offsetTop - collectionContainer.offsetTop;
+        rowContainer.focus({ preventScroll });
+      }
     },
 
     _highlightLast() {
