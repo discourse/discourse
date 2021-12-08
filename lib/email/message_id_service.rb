@@ -80,11 +80,11 @@ module Email
       end
 
       def message_id_post_id_regexp
-        @message_id_post_id_regexp ||= Regexp.new "topic/\\d+/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
+        Regexp.new "topic/\\d+/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
       end
 
       def message_id_topic_id_regexp
-        @message_id_topic_id_regexp ||= Regexp.new "topic/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
+        Regexp.new "topic/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
       end
 
       def message_id_rfc_format(message_id)
@@ -100,7 +100,7 @@ module Email
       end
 
       def host
-        @host ||= Email::Sender.host_for(Discourse.base_url)
+        Email::Sender.host_for(Discourse.base_url)
       end
     end
   end

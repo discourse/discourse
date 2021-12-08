@@ -120,4 +120,12 @@ describe Email::MessageIdService do
       expect(Email::MessageIdService.message_id_clean(message_id)).to eq(message_id)
     end
   end
+
+  describe "#host" do
+    it "handles hostname changes at runtime" do
+      expect(Email::MessageIdService.host).to eq("test.localhost")
+      SiteSetting.force_hostname = "other.domain.example.com"
+      expect(Email::MessageIdService.host).to eq("other.domain.example.com")
+    end
+  end
 end
