@@ -51,7 +51,7 @@ export default Component.extend({
     });
 
     if (invalidClasses.length) {
-      document.body.classList.remove(...[invalidClasses]);
+      document.body.classList.remove(...invalidClasses);
     }
   },
 });
