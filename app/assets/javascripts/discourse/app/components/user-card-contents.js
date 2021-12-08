@@ -183,6 +183,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           );
         }
         this.setProperties({ user });
+        return user;
       })
       .catch(() => this._close())
       .finally(() => this.set("loading", null));
