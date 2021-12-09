@@ -283,14 +283,16 @@ export function determinePostReplaceSelection({
       // ... and spans needle completely.
       return { start: selection.start, end: selection.end + diff };
     }
-  } else if (needle.start < selection.start) {
-    // Needle starts before the selection (de-indent/expand selection to start of line)...
-    return { start: replacement.start, end: replacement.end };
   } else if (selection.start < needle.end) {
     // Selection starts inside needle...
     if (selection.end <= needle.end) {
-      // ... and ends inside needle.
-      return { start: replacement.end, end: replacement.end };
+      if (selection.start >= needle.start && replacement.end <= needle.end) {
+        // ... and ends inside needle but also replacement ends inside needle (for text de-indent).
+        return { start: replacement.start, end: replacement.end };
+      } else {
+        // ... and ends inside needle.
+        return { start: replacement.end, end: replacement.end };
+      }
     } else {
       // ... and spans end of needle.
       return { start: replacement.end, end: selection.end + diff };
