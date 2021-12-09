@@ -285,12 +285,8 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
-    this._itsatrap.bind("tab", (event) =>
-      this._indentSelection(event, "right")
-    );
-    this._itsatrap.bind("shift+tab", (event) =>
-      this._indentSelection(event, "left")
-    );
+    this._itsatrap.bind("tab", () => this._indentSelection("right"));
+    this._itsatrap.bind("shift+tab", () => this._indentSelection("left"));
 
     // disable clicking on links in the preview
     this.element
