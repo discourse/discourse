@@ -198,10 +198,7 @@ createWidget("post-avatar", {
       }
     }
 
-    const result = [
-      h("div.post-avatar", postAvatarBody),
-      h("div.poster-avatar-extra"),
-    ];
+    const result = [h("div.post-avatar", postAvatarBody)];
 
     if (this.settings.displayPosterName) {
       result.push(this.attach("post-avatar-user-info", attrs));
