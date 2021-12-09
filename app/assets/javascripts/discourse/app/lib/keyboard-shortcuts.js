@@ -682,6 +682,12 @@ export default {
     if ($article.length > 0) {
       $articles.removeClass("selected");
       $article.addClass("selected");
+      this.container
+        .lookup("service:app-events")
+        .trigger("keyboard:move-selection", {
+          articles: $articles.get(),
+          selectedArticle: $article.get(0),
+        });
 
       const articleRect = $article[0].getBoundingClientRect();
       if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
