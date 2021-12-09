@@ -17,7 +17,7 @@ export default Component.extend({
     }
 
     if (this.bodyClass) {
-      document.body.classList.add(this.bodyClass);
+      document.body.classList.add(...this.bodyClass.split(" "));
     }
 
     if (this.scrollTop === "false") {
@@ -44,7 +44,7 @@ export default Component.extend({
     }
 
     if (this.bodyClass) {
-      document.body.classList.remove(this.bodyClass);
+      document.body.classList.remove(...this.bodyClass.split(" "));
     }
   },
 });
