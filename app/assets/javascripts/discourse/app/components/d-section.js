@@ -22,8 +22,8 @@ export default Component.extend({
 
     if (this.scrollTop === "false") {
       deprecated("Uses boolean instead of string for scrollTop.", {
-        since: "2.8",
-        dropFrom: "2.9",
+        since: "2.8.0.beta9",
+        dropFrom: "2.9.0.beta1",
       });
 
       return;
