@@ -1,19 +1,20 @@
 import Component from "@ember/component";
 import UrlRefresh from "discourse/mixins/url-refresh";
-import { on } from "discourse-common/utils/decorators";
 
 const CATEGORIES_LIST_BODY_CLASS = "categories-list";
 
 export default Component.extend(UrlRefresh, {
   classNames: ["contents"],
 
-  @on("didInsertElement")
-  addBodyClass() {
-    $("body").addClass(CATEGORIES_LIST_BODY_CLASS);
+  didInsertElement() {
+    this._super(...arguments);
+
+    document.body.classList.add(CATEGORIES_LIST_BODY_CLASS);
   },
 
-  @on("willDestroyElement")
-  removeBodyClass() {
-    $("body").removeClass(CATEGORIES_LIST_BODY_CLASS);
+  willDestroyElement() {
+    this._super(...arguments);
+
+    document.body.classList.remove(CATEGORIES_LIST_BODY_CLASS);
   },
 });
