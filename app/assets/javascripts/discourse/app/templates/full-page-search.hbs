@@ -81,8 +81,23 @@
           {{/if}}
 
           {{#if bulkSelectEnabled}}
-            {{d-button icon="check-square" class="btn-default" action=(action "selectAll") label="search.select_all"~}}
-            {{d-button icon="far-square" class="btn-default" action=(action "clearAll") label="search.clear_all"}}
+            {{#if hasUnselectedResults}}
+              {{d-button
+                icon="check-square"
+                class="btn-default"
+                action=(action "selectAll")
+                label="search.select_all"
+              }}
+            {{/if}}
+
+            {{#if hasSelection}}
+              {{d-button
+                icon="far-square"
+                class="btn-default"
+                action=(action "clearAll")
+                label="search.clear_all"
+              }}
+            {{/if}}
           {{/if}}
 
           <div class="sort-by inline-form">
