@@ -1275,6 +1275,7 @@ module Email
       # emails, we skip the jobs here and enqueue them only _after_
       # the incoming email has been updated with the post and topic.
       options[:skip_jobs] = true
+      options[:skip_events] = true
       result = NewPostManager.new(user, options).perform
 
       errors = result.errors.full_messages
@@ -1305,6 +1306,8 @@ module Email
                              import_mode: options[:import_mode],
                              post_alert_options: options[:post_alert_options]
                             ).enqueue_jobs
+        DiscourseEvent.trigger(:topic_created, result.post.topic, options, user)
+        DiscourseEvent.trigger(:post_created, result.post, options, user)
       end
 
       result.post
