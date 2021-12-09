@@ -16,6 +16,9 @@ const isInside = (text, regex) => {
   return matches && matches.length % 2;
 };
 
+const INDENT_DIRECTION_LEFT = "left";
+const INDENT_DIRECTION_RIGHT = "right";
+
 export default Mixin.create({
   init() {
     this._super(...arguments);
@@ -340,7 +343,11 @@ export default Mixin.create({
   },
 
   @bind
-  _indentSelection(event, direction) {
+  _indentSelection(direction) {
+    if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
+      return;
+    }
+
     const selected = this._getSelected(null, { lineVal: true });
     const { lineVal } = selected;
     let value = selected.value;
@@ -388,7 +395,7 @@ export default Mixin.create({
     const splitSelection = value.split("\n");
     const newValue = splitSelection
       .map((line) => {
-        if (direction === "left") {
+        if (direction === INDENT_DIRECTION_LEFT) {
           return this._deindentLine(line, indentationChar, indentationSteps);
         } else {
           return `${Array(indentationSteps + 1).join(indentationChar)}${line}`;

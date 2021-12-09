@@ -728,6 +728,100 @@ third line`
     assert.strictEqual(this.value, "red yellow blue");
   });
 
+  async function indentSelection(container, direction) {
+    await container
+      .lookup("service:app-events")
+      .trigger("composer:indent-selected-text", direction);
+  }
+
+  composerTestCase(
+    "indent-selected-text event (simple, one line, right)",
+    async function (assert, textarea) {
+      this.set("value", "Hello world");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "  Hello world",
+        "a single line of selection is indented correctly"
+      );
+    }
+  );
+
+  composerTestCase(
+    "indent-selected-text event (simple, one line, left)",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "left");
+
+      assert.strictEqual(
+        this.value,
+        "Hello world",
+        "a single line of selection is deindented correctly"
+      );
+    }
+  );
+
+  composerTestCase(
+    "indent-selected-text event (simple, multiline, right)",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 2, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "    Hello world\n  This is me",
+        "multiple lines are indented correctly without selecting preceding space"
+      );
+
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "    Hello world\n  This is me",
+        "multiple lines are indented correctly with selecting preceding space"
+      );
+    }
+  );
+
+  composerTestCase(
+    "indent-selected-text event (simple, multiline, left)",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 2, textarea.value.length);
+      await indentSelection(this.container, "left");
+
+      assert.strictEqual(
+        this.value,
+        "Hello world\nThis is me",
+        "multiple lines are de-indented correctly without selecting preceding space"
+      );
+    }
+  );
+
+  composerTestCase(
+    "indent-selected-text event (indentation char detect, multiline, right)",
+    async function (assert, textarea) {
+      this.set(
+        "value",
+        "```\nfunc init() {\n	strings = generateStrings()\n}\n```"
+      );
+      setTextareaSelection(textarea, 4, textarea.value.length - 4);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "```\n	func init() {\n		strings = generateStrings()\n	}\n```",
+        "detects the prevalent indentation character and uses that (tab)"
+      );
+    }
+  );
+
   async function paste(element, text) {
     let e = new Event("paste", { cancelable: true });
     e.clipboardData = { getData: () => text };
