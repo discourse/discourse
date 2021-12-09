@@ -1,11 +1,13 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { computed } from "@ember/object";
-import { not } from "@ember/object/computed";
+import { not, readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
+import AssociatedGroup from "discourse/models/associated-group";
 
 export default Component.extend({
   tokenSeparator: "|",
+  showAssociatedGroups: readOnly("site.can_associate_groups"),
 
   init() {
     this._super(...arguments);
@@ -20,6 +22,10 @@ export default Component.extend({
       { name: 3, value: 3 },
       { name: 4, value: 4 },
     ];
+
+    if (this.showAssociatedGroups) {
+      this.loadAssociatedGroups();
+    }
   },
 
   canEdit: not("model.automatic"),
@@ -53,6 +59,10 @@ export default Component.extend({
   emailDomains: computed("model.emailDomains", function () {
     return this.model.emailDomains.split(this.tokenSeparator).filter(Boolean);
   }),
+
+  loadAssociatedGroups() {
+    AssociatedGroup.list().then((ags) => this.set("associatedGroups", ags));
+  },
 
   actions: {
     onChangeEmailDomainsSetting(value) {

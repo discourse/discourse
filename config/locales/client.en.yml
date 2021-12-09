@@ -4124,6 +4124,7 @@ en:
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"

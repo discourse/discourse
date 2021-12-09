@@ -694,6 +694,91 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         expect(data["username"]).to eq(fixed_username)
       end
+
+      context "groups are enabled" do
+        let(:strategy_class) { Auth::OmniAuthStrategies::DiscourseGoogleOauth2 }
+        let(:groups_url) { "#{strategy_class::GROUPS_DOMAIN}#{strategy_class::GROUPS_PATH}" }
+        let(:groups_scope) { strategy_class::DEFAULT_SCOPE + strategy_class::GROUPS_SCOPE }
+        let(:group1) { { id: "12345", name: "group1" } }
+        let(:group2) { { id: "67890", name: "group2" } }
+        let(:uid) { "12345" }
+        let(:token) { "1245678" }
+        let(:domain) { "mydomain.com" }
+
+        def mock_omniauth_for_groups(groups)
+          raw_groups = groups.map { |group| OmniAuth::AuthHash.new(group) }
+          mock_auth = OmniAuth.config.mock_auth[:google_oauth2]
+          mock_auth[:extra][:raw_groups] = raw_groups
+          OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
+          Rails.application.env_config["omniauth.auth"] = mock_auth
+        end
+
+        before do
+          SiteSetting.google_oauth2_hd = domain
+          SiteSetting.google_oauth2_hd_groups = true
+        end
+
+        it "updates associated groups" do
+          mock_omniauth_for_groups([group1, group2])
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+          expect(response.status).to eq(302)
+
+          associated_groups = AssociatedGroup.where(provider_name: 'google_oauth2')
+          expect(associated_groups.length).to eq(2)
+          expect(associated_groups.exists?(name: group1[:name])).to eq(true)
+          expect(associated_groups.exists?(name: group2[:name])).to eq(true)
+
+          user_associated_groups = UserAssociatedGroup.where(user_id: user.id)
+          expect(user_associated_groups.length).to eq(2)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(true)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(true)
+
+          mock_omniauth_for_groups([group1])
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+          expect(response.status).to eq(302)
+
+          user_associated_groups = UserAssociatedGroup.where(user_id: user.id)
+          expect(user_associated_groups.length).to eq(1)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(true)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(false)
+
+          mock_omniauth_for_groups([])
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+          expect(response.status).to eq(302)
+
+          user_associated_groups = UserAssociatedGroup.where(user_id: user.id)
+          expect(user_associated_groups.length).to eq(0)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.first.id)).to eq(false)
+          expect(user_associated_groups.exists?(associated_group_id: associated_groups.second.id)).to eq(false)
+        end
+
+        it "handles failure to retrieve groups" do
+          mock_omniauth_for_groups([])
+
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: groups_scope.split(' '),
+            code: 'abcde',
+            hd: domain
+          }
+
+          expect(response.status).to eq(302)
+
+          associated_groups = AssociatedGroup.where(provider_name: 'google_oauth2')
+          expect(associated_groups.exists?).to eq(false)
+        end
+      end
     end
 
     context 'when attempting reconnect' do

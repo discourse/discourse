@@ -411,6 +411,9 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
   enable_twitter_logins:
     default: false
   twitter_consumer_key:

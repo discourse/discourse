@@ -634,6 +634,8 @@ Discourse::Application.routes.draw do
       end
     end
 
+    resources :associated_groups, only: %i[index], constraints: AdminConstraint.new
+
     # aliases so old API code works
     delete "admin/groups/:id/members" => "groups#remove_member", constraints: AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
