@@ -1,10 +1,19 @@
 import DiscourseURL from "discourse/lib/url";
 import interceptClick from "discourse/lib/intercept-click";
 
+function interceptClickOnLinks(event) {
+  if (event.target.tagName === "A") {
+    interceptClick(event);
+  }
+}
+
 export default {
   name: "click-interceptor",
+
   initialize() {
-    $("#main").on("click.discourse", "a", interceptClick);
+    document
+      .getElementById("main")
+      .addEventListener("click", interceptClickOnLinks);
     window.addEventListener("hashchange", this.hashChanged);
   },
 
@@ -13,7 +22,9 @@ export default {
   },
 
   teardown() {
-    $("#main").off("click.discourse", "a", interceptClick);
+    document
+      .getElementById("main")
+      .removeEventListener("click", interceptClickOnLinks);
     window.removeEventListener("hashchange", this.hashChanged);
   },
 };
