@@ -75,7 +75,7 @@ $topic-progress-height: 42px;
         top: 10px;
         color: var(--primary);
         opacity: 0.5;
-        font-size: $font-up-1;
+        font-size: var(--font-up-1);
       }
     }
   }
