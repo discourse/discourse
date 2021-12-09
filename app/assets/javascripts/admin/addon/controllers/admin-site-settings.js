@@ -5,6 +5,7 @@ import { alias } from "@ember/object/computed";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 export default Controller.extend({
   filter: null,
@@ -126,13 +127,16 @@ export default Controller.extend({
     );
   },
 
-  actions: {
-    clearFilter() {
-      this.setProperties({ filter: "", onlyOverridden: false });
-    },
+  @action
+  clearFilter() {
+    this.setProperties({ filter: "", onlyOverridden: false });
+  },
 
-    toggleMenu() {
-      $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    },
+  @action
+  toggleMenu() {
+    const adminDetail = document.querySelector(".admin-detail");
+    ["mobile-closed", "mobile-open"].forEach((state) => {
+      adminDetail.classList.toggle(state);
+    });
   },
 });
