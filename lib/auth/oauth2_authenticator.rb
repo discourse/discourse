@@ -45,13 +45,10 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
 
   def after_create_account(user, auth)
     data = auth[:extra_data]
-    Oauth2UserInfo.create(
-      uid: data[:uid],
-      provider: data[:provider],
-      name: auth[:name],
-      email: auth[:email],
-      user_id: user.id
-    )
+    association = Oauth2UserInfo.find_or_initialize_by(provider: data[:provider], uid: data[:uid])
+    association.user = user
+    association.email = auth[:email]
+    association.save!
   end
 
   def description_for_user(user)
