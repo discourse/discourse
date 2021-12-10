@@ -56,6 +56,7 @@
     {{#if canLoginLocal}}
       {{#unless showSecurityKey }}
         {{d-button action=(action "login")
+          id="login-button"
           icon="unlock"
           label=loginButtonLabel
           disabled=loginDisabled
