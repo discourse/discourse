@@ -3352,6 +3352,7 @@ nl:
       tags: "Tags"
       choose_for_topic: "optionele tags"
       info: "Info"
+      default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe u geen toegang hebt."
       synonyms: "Synoniemen"
       synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
@@ -3361,7 +3362,6 @@ nl:
       category_restrictions:
         one: "Deze kan alleen worden gebruikt in deze categorie:"
         other: "Deze kan alleen worden gebruikt in deze categorieën:"
-      edit_synonyms: "Synoniemen beheren"
       add_synonyms_label: "Synoniemen toevoegen:"
       add_synonyms: "Toevoegen"
       add_synonyms_explanation:
@@ -3378,8 +3378,7 @@ nl:
       delete_confirm_synonyms:
         one: "Het synoniem ervan wordt ook verwijderd."
         other: "De %{count} synoniemen ervan worden ook verwijderd."
-      rename_tag: "Tag hernoemen"
-      rename_instructions: "Kies een nieuwe naam voor de tag:"
+      description: "Omschrijving"
       sort_by: "Sorteren op:"
       sort_by_count: "aantal"
       sort_by_name: "naam"

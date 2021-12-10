@@ -289,7 +289,10 @@ export default Mixin.create({
       plainText &&
       !handled &&
       selected.end > selected.start &&
-      !this._cachedLinkify.test(selectedValue)
+      // text selection does not contain url
+      !this._cachedLinkify.test(selectedValue) &&
+      // text selection does not contain a bbcode-like tag
+      !selectedValue.match(/\[\/?[a-z =]+?\]/g)
     ) {
       if (this._cachedLinkify.test(plainText)) {
         const match = this._cachedLinkify.match(plainText)[0];

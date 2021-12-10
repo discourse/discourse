@@ -1364,6 +1364,14 @@ describe Email::Receiver do
     end
 
     it "works" do
+      handler_calls = 0
+      handler = proc { |topic|
+        expect(topic.incoming_email_addresses).to contain_exactly("discourse@bar.com", "category@foo.com")
+        handler_calls += 1
+      }
+
+      DiscourseEvent.on(:topic_created, &handler)
+
       user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       group = Fabricate(:group)
 
@@ -1380,6 +1388,9 @@ describe Email::Receiver do
 
       # allows new user to create a topic
       expect { process(:new_user) }.to change(Topic, :count)
+
+      DiscourseEvent.off(:topic_created, &handler)
+      expect(handler_calls).to eq(1)
     end
 
     it "creates visible topic for ham" do

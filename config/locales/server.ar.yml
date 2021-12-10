@@ -1530,6 +1530,18 @@ ar:
         ignores_count: عدد التجاهلات
         mutes_count: عدد مرات الكتم
       description: "المستخدمون الذين تم كتمهم أو تجاهلهم بواسطة العديد من المستخدمين الآخرين"
+    top_users_by_likes_received:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
   dashboard:
     rails_env_warning: "الخادم يعمل في وضع %{env}."
     host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."

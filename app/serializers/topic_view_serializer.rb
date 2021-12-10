@@ -244,7 +244,7 @@ class TopicViewSerializer < ApplicationSerializer
   alias_method :include_is_shared_draft?, :include_destination_category_id?
 
   def include_pending_posts?
-    scope.authenticated? && object.queued_posts_enabled
+    scope.authenticated? && object.queued_posts_enabled?
   end
 
   def queued_posts_count
@@ -252,7 +252,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_queued_posts_count?
-    scope.is_staff? && object.queued_posts_enabled
+    scope.is_staff? && object.queued_posts_enabled?
   end
 
   def show_read_indicator

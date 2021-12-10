@@ -171,6 +171,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       begin
         user.save! if @auth_result.apply_user_attributes!
+        @auth_result.apply_associated_attributes!
       rescue ActiveRecord::RecordInvalid => e
         @auth_result.failed = true
         @auth_result.failed_reason = e.record.errors.full_messages.join(", ")

@@ -940,6 +940,19 @@ third line`
     }
   );
 
+  testCase(
+    `pasting a url onto a selection that contains bbcode-like tags will use default paste behavior`,
+    async function (assert, textarea) {
+      this.set("value", "hello [url=foobar]foobar[/url]");
+      setTextareaSelection(textarea, 0, 30);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.com/");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "hello [url=foobar]foobar[/url]");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
+
   (() => {
     // Tests to check cursor/selection after replace-text event.
     const BEFORE = "red green blue";

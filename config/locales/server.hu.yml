@@ -150,6 +150,8 @@ hu:
     site_settings:
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
     onebox:
       invalid_address: "Sajnos nem tudtunk előnézetet generálni ehhez a weboldalhoz, mert a (z) „%{hostname}” szerver nem található. Az előnézet helyett csak egy link jelenik meg a bejegyzésben. :cry:"
   invite:
@@ -860,6 +862,25 @@ hu:
         ignores_count: Letiltások száma
         mutes_count: Némítások száma
       description: "Olyan felhasználók, akiket sok más felhasználó némított el és / vagy tiltott le."
+    top_users_by_likes_received:
+      title: "Legnépszerűbb felhasználók a kapott kedvelések alapján"
+      labels:
+        user: Felhasználó
+        qtt_like: Kapott kedvelések
+      description: "A 10 legnépszerűbb felhasználó, akik a legtöbb kedvelést kapták."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Legnépszerűbb felhasználók az alacsonyabb szintű felhasználóktól kapott kedvelések alapján"
+      labels:
+        user: Felhasználó
+        trust_level: Bizalmi szint
+        qtt_like: Kapott kedvelések
+      description: "10 legnépszerűbb magasabb szintű felhasználó, akiket az alacsonyabb szintű felhasználók kedveltek."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Legnépszerűbb felhasználók a különböző emberektől kapott kedvelések alapján"
+      labels:
+        user: Felhasználó
+        qtt_like: Kapott kedvelések
+      description: "A 10 legnépszerűbb felhasználó, akiket sokféle ember kedvelt."
   dashboard:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
@@ -872,6 +893,7 @@ hu:
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
+    slow_down_crawler_user_agents: "A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie."
     enable_badges: "A jelvény rendszer engedélyezése"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     min_password_length: "Minimum jelszóhossz."

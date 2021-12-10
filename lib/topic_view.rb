@@ -35,6 +35,7 @@ class TopicView
     :personal_message,
     :can_review_topic
   )
+  alias queued_posts_enabled? queued_posts_enabled
 
   attr_accessor(
     :draft,
@@ -44,6 +45,9 @@ class TopicView
     :post_custom_fields,
     :post_number
   )
+
+  delegate :category, to: :topic, allow_nil: true, private: true
+  delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
 
   def self.print_chunk_size
     1000
@@ -146,7 +150,7 @@ class TopicView
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
     @can_review_topic = @guardian.can_review_topic?(@topic)
-    @queued_posts_enabled = NewPostManager.queue_enabled?
+    @queued_posts_enabled = NewPostManager.queue_enabled? || category_require_reply_approval?
     @personal_message = @topic.private_message?
   end
 

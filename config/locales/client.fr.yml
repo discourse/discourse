@@ -3361,7 +3361,7 @@ fr:
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       info: "Détails"
-      default_info: "Cette étiquette n'est restreinte à aucune catégorie et n'a aucun synonyme défini. Pour restreindre l'utilisation de cette étiquette, ajoutez-là à un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
+      default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
       synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
@@ -3371,7 +3371,6 @@ fr:
       category_restrictions:
         one: "Elle ne peut être utilisée que dans cette catégorie :"
         other: "Elle ne peut être utilisée que dans ces catégories :"
-      edit_synonyms: "Gérer les synonymes"
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
       add_synonyms_explanation:
@@ -3388,8 +3387,7 @@ fr:
       delete_confirm_synonyms:
         one: "Son synonyme sera aussi supprimé."
         other: "Ses %{count} synonymes seront aussi supprimés."
-      rename_tag: "Renommer l'étiquette"
-      rename_instructions: "Choisissez un nouveau nom pour l'étiquette :"
+      description: "Description"
       sort_by: "Trier par :"
       sort_by_count: "nombre"
       sort_by_name: "nom"

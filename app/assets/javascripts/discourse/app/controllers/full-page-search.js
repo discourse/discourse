@@ -13,7 +13,7 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
-import { or } from "@ember/object/computed";
+import { gt, or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
 import { Promise } from "rsvp";
@@ -248,6 +248,13 @@ export default Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
+  hasSelection: gt("selected.length", 0),
+
+  @discourseComputed("selected.length", "model.posts.length")
+  hasUnselectedResults(selectionCount, postsCount) {
+    return selectionCount < postsCount;
+  },
+
   @discourseComputed("model.grouped_search_result.can_create_topic")
   canCreateTopic(userCanCreateTopic) {
     return this.currentUser && userCanCreateTopic;
@@ -399,18 +406,28 @@ export default Controller.extend({
     },
 
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").map((r) => r.topic));
+      this.selected.addObjects(this.get("model.posts")).mapBy("topic");
+
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
       // in the component, however, when we select ANYTHING, we would force
       // 50 traversals of the list
       // This hack is cheap and easy
-      $(".fps-result input[type=checkbox]").prop("checked", true);
+      document
+        .querySelectorAll(".fps-result input[type=checkbox]")
+        .forEach((checkbox) => {
+          checkbox.checked = true;
+        });
     },
 
     clearAll() {
       this.selected.clear();
-      $(".fps-result input[type=checkbox]").prop("checked", false);
+
+      document
+        .querySelectorAll(".fps-result input[type=checkbox]")
+        .forEach((checkbox) => {
+          checkbox.checked = false;
+        });
     },
 
     toggleBulkSelect() {

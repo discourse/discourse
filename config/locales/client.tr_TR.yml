@@ -3464,7 +3464,7 @@ tr_TR:
       tags: "Etiketler"
       choose_for_topic: "opsiyonel etiketler"
       info: "Bilgi"
-      default_info: "Bu etiket herhangi bir kategoriyle sınırlı değil ve eş anlamlısı yok. Kısıtlama eklemek için bu etiketi <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
+      default_info: "Bu etiket hiçbir kategoriyle sınırlandırılmamıştır, ve eş anlamlısı yoktur."
       category_restricted: "Bu etiket, erişim izniniz olmayan kategorilerle sınırlıdır."
       synonyms: "Eş Anlamlılar"
       synonyms_description: "İlgili etiketler kullanılıyorsa, <b>%{base_tag_name}</b> ile değiştirilecektir."
@@ -3474,7 +3474,6 @@ tr_TR:
       category_restrictions:
         one: "Sadece bu kategoride kullanılabilir:"
         other: "Sadece bu kategorilerde kullanılabilir:"
-      edit_synonyms: "Eş anlamlıları Yönet"
       add_synonyms_label: "Eş anlamlılarını ekle:"
       add_synonyms: "Ekle"
       add_synonyms_explanation:
@@ -3491,8 +3490,7 @@ tr_TR:
       delete_confirm_synonyms:
         one: "Eş anlamlısı da silinecek."
         other: "%{count} tane eşanlamlısı da silinecek."
-      rename_tag: "Etiketi Yeniden Adlandır"
-      rename_instructions: "Bu etiket için yeni bir ad seç:"
+      description: "Açıklama"
       sort_by: "Sırala:"
       sort_by_count: "say"
       sort_by_name: "ad"

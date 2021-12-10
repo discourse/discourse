@@ -3482,7 +3482,7 @@ es:
         one: "selecciona al menos %{count} etiqueta…"
         other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
-      default_info: "Esta etiqueta no está restringida a ninguna categoría y no tiene sinónimos. Para añadir restricciones, añádela a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
+      default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
@@ -3492,7 +3492,6 @@ es:
       category_restrictions:
         one: "Solo se puede utilizar en esta categoría:"
         other: "Solo se puede utilizar en estas categorías:"
-      edit_synonyms: "Gestionar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
       add_synonyms: "Añadir"
       add_synonyms_explanation:
@@ -3509,8 +3508,7 @@ es:
       delete_confirm_synonyms:
         one: "Su sinónimo también se eliminará"
         other: "Sus %{count} sinónimos también se eliminarán."
-      rename_tag: "Cambiar nombre de etiqueta"
-      rename_instructions: "Elige un nuevo nombre para la etiqueta:"
+      description: "Descripción"
       sort_by: "Ordenar por:"
       sort_by_count: "cantidad"
       sort_by_name: "nombre"

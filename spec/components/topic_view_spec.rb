@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'topic_view'
 
-describe TopicView do
+RSpec.describe TopicView do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
@@ -989,6 +989,40 @@ describe TopicView do
       topic_view = TopicView.new(topic, admin)
 
       expect(topic_view.filtered_post_ids).to eq([post_2.id, post.id])
+    end
+  end
+
+  describe "#queued_posts_enabled?" do
+    subject(:topic_view) { described_class.new(topic, user) }
+
+    let(:topic) { Fabricate.build(:topic) }
+    let(:user) { Fabricate.build(:user, id: 1) }
+    let(:category) { topic.category }
+
+    before do
+      NewPostManager.stubs(:queue_enabled?).returns(queue_enabled)
+    end
+
+    context "when queue is enabled globally" do
+      let(:queue_enabled) { true }
+
+      it { is_expected.to be_queued_posts_enabled }
+    end
+
+    context "when queue is not enabled globally" do
+      let(:queue_enabled) { false }
+
+      context "when category is moderated" do
+        before do
+          category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        end
+
+        it { is_expected.to be_queued_posts_enabled }
+      end
+
+      context "when category is not moderated" do
+        it { is_expected.not_to be_queued_posts_enabled }
+      end
     end
   end
 end

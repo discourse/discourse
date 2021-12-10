@@ -24,14 +24,20 @@ describe Email::MessageIdService do
 
   describe "#generate_for_topic" do
     it "generates for the topic using the message_id on the first post's incoming_email" do
-      Fabricate(:incoming_email, message_id: "test@test.localhost", post: post)
+      Fabricate(:incoming_email, message_id: "test213428@somemailservice.com", post: post)
       post.reload
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq("<test@test.localhost>")
+      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq("<test213428@somemailservice.com>")
     end
 
     it "generates for the topic without an incoming_email record" do
       expect(subject.generate_for_topic(topic)).to match(subject.message_id_topic_id_regexp)
       expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(subject.message_id_topic_id_regexp)
+    end
+
+    it "generates canonical for the topic" do
+      canonical_topic_id = subject.generate_for_topic(topic, canonical: true)
+      expect(canonical_topic_id).to match(subject.message_id_topic_id_regexp)
+      expect(canonical_topic_id).to eq("<topic/#{topic.id}@test.localhost>")
     end
   end
 
@@ -112,6 +118,14 @@ describe Email::MessageIdService do
     it "returns input if a clean message ID is not in RFC format" do
       message_id = "<" + "@" * 50
       expect(Email::MessageIdService.message_id_clean(message_id)).to eq(message_id)
+    end
+  end
+
+  describe "#host" do
+    it "handles hostname changes at runtime" do
+      expect(Email::MessageIdService.host).to eq("test.localhost")
+      SiteSetting.force_hostname = "other.domain.example.com"
+      expect(Email::MessageIdService.host).to eq("other.domain.example.com")
     end
   end
 end

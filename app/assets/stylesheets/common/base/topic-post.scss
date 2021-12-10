@@ -482,6 +482,7 @@ aside.quote {
   }
 }
 
+.post-avatar,
 .topic-avatar,
 .user-card-avatar {
   position: relative;
@@ -713,9 +714,6 @@ aside.quote {
   .d-icon {
     font-size: $font-down-2;
   }
-}
-.topic-avatar .poster-avatar-extra {
-  display: none;
 }
 
 .map {

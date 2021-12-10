@@ -2178,6 +2178,8 @@ de:
       in_posts_by: "in Beiträgen von %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "nochmal um die native Browsersuche zu verwenden"
+      recent: "Letzte Suchanfragen"
+      clear_recent: "Letzte Suchanfragen löschen"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
@@ -3488,17 +3490,19 @@ de:
         one: "mindestens %{count} Schlagwort auswählen..."
         other: "mindestens %{count} Schlagwörter auswählen..."
       info: "Info"
-      default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
+      default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
+      staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort in eine <a href=%{basePath}/tag_groups>Tag-Gruppe</a>ein."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
+      save: "Name und Beschreibung des Schlagwortes speichern"
       tag_groups_info:
         one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
         other: "Es kann nur in folgenden Kategorien verwendet werden:"
-      edit_synonyms: "Synonyme Verwalten"
+      edit_synonyms: "Synonyme bearbeiten"
       add_synonyms_label: "Synonyme hinzufügen:"
       add_synonyms: "Hinzufügen"
       add_synonyms_explanation:
@@ -3515,8 +3519,8 @@ de:
       delete_confirm_synonyms:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
-      rename_tag: "Schlagwort umbenennen"
-      rename_instructions: "Neuen Namen für das Schlagwort wählen:"
+      edit_tag: "Schlagwortname und Beschreibung bearbeiten"
+      description: "Beschreibung"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"

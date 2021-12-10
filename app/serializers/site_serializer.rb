@@ -21,6 +21,7 @@ class SiteSerializer < ApplicationSerializer
     :can_tag_pms,
     :tags_filter_regexp,
     :top_tags,
+    :can_associate_groups,
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
@@ -132,6 +133,14 @@ class SiteSerializer < ApplicationSerializer
 
   def can_tag_pms
     scope.can_tag_pms?
+  end
+
+  def can_associate_groups
+    scope.can_associate_groups?
+  end
+
+  def include_can_associate_groups?
+    scope.is_admin?
   end
 
   def include_tags_filter_regexp?

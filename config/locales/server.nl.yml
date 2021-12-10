@@ -1236,6 +1236,18 @@ nl:
         ignores_count: Aantal genegeerd
         mutes_count: Aantal gedempt
       description: "Gebruikers die door veel andere gebruikers zijn gedempt en/of genegeerd."
+    top_users_by_likes_received:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."

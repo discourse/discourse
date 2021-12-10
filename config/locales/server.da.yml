@@ -1273,6 +1273,18 @@ da:
         ignored_user: Ignoreret Bruger
         mutes_count: Tavsheds tæller
       description: "Brugere, der er gjort tavse og/eller ignoreret af mange andre brugere."
+    top_users_by_likes_received:
+      labels:
+        user: Bruger
+        qtt_like: Likes modtaget
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Bruger
+        qtt_like: Likes modtaget
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Bruger
+        qtt_like: Likes modtaget
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     host_names_warning: "Din config/database.yml fil bruger standardnavnet localhost som værtsnavn. Opdatér den med webstedets værtsnavn."

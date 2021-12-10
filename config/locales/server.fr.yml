@@ -1325,6 +1325,18 @@ fr:
         ignores_count: Ignorés
         mutes_count: Mis en sourdine
       description: "Les utilisateurs qui ont été mis en sourdine ou ignorés par de nombreux autres utilisateurs."
+    top_users_by_likes_received:
+      labels:
+        user: Utilisateur
+        qtt_like: '« J''aime » reçus'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilisateur
+        qtt_like: '« J''aime » reçus'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilisateur
+        qtt_like: '« J''aime » reçus'
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."

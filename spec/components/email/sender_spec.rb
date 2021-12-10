@@ -277,23 +277,34 @@ describe Email::Sender do
         Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
       end
 
-      it "doesn't set the 'In-Reply-To' and 'References' headers on the first post" do
+      it "doesn't set the 'In-Reply-To' header but does set the 'References' header on the first post" do
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
 
         expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
         expect(message.header['In-Reply-To'].to_s).to be_blank
-        expect(message.header['References'].to_s).to be_blank
+        expect(message.header['References'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
       end
 
-      it "sets the 'In-Reply-To' header to the topic by default" do
+      it "sets the 'References' header with the incoming email Message-ID if it exists on the first post" do
+        incoming = Fabricate(:incoming_email, topic: topic, post: post_1, message_id: "blah1234@someemailprovider.com")
+        message.header['X-Discourse-Post-Id'] = post_1.id
+
+        email_sender.send
+
+        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to be_blank
+        expect(message.header['References'].to_s).to eq("<blah1234@someemailprovider.com>")
+      end
+
+      it "sets the 'In-Reply-To' header to the topic canonical reference by default" do
         message.header['X-Discourse-Post-Id'] = post_2.id
 
         email_sender.send
 
         expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>")
-        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
       end
 
       it "sets the 'In-Reply-To' header to the newest replied post" do
@@ -305,13 +316,13 @@ describe Email::Sender do
         expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>")
       end
 
-      it "sets the 'References' header to the topic and all replied posts" do
+      it "sets the 'References' header to the topic canonical reference and all replied posts" do
         message.header['X-Discourse-Post-Id'] = post_4.id
 
         email_sender.send
 
         references = [
-          "<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>",
+          "<topic/#{topic.id}@test.localhost>",
           "<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>",
           "<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>",
         ]
@@ -319,7 +330,7 @@ describe Email::Sender do
         expect(message.header['References'].to_s).to eq(references.join(" "))
       end
 
-      it "uses the incoming_email message_id when available" do
+      it "uses the incoming_email message_id when available, but always uses a random message-id" do
         topic_incoming_email  = IncomingEmail.create(topic: topic, post: post_1, message_id: "foo@bar")
         post_2_incoming_email = IncomingEmail.create(topic: topic, post: post_2, message_id: "bar@foo")
         post_4_incoming_email = IncomingEmail.create(topic: topic, post: post_4, message_id: "wat@wat")
@@ -328,7 +339,7 @@ describe Email::Sender do
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<#{post_4_incoming_email.message_id}>")
+        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_4.id}.5f1330cfd941f323d7f99b9e@test.localhost>")
 
         references = [
           "<#{topic_incoming_email.message_id}>",
