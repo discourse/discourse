@@ -16,9 +16,7 @@
   padding: 0.5em;
   z-index: z("tooltip");
   cursor: pointer;
-  animation-duration: 0.15s;
-  animation-name: slidein;
-  animation-iteration-count: 3;
+  animation: 0.15s slidein 3;
 
   &.bad {
     background: var(--danger-medium);
