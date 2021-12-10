@@ -1756,11 +1756,13 @@ RSpec.describe TopicsController do
   end
 
   describe '#show' do
-    fab!(:private_topic) { Fabricate(:private_message_topic) }
-    let!(:topic) { Fabricate(:post).topic }
+    use_redis_snapshotting
 
-    let!(:p1) { Fabricate(:post, user: topic.user) }
-    let!(:p2) { Fabricate(:post, user: topic.user) }
+    fab!(:private_topic) { Fabricate(:private_message_topic) }
+    fab!(:topic) { Fabricate(:post).topic }
+
+    fab!(:p1) { Fabricate(:post, user: topic.user) }
+    fab!(:p2) { Fabricate(:post, user: topic.user) }
 
     describe 'when topic is not allowed' do
       it 'should return the right response' do
