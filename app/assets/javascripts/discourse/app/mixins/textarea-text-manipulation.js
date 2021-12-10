@@ -137,7 +137,10 @@ export default Mixin.create({
       this.set("value", val.replace(oldVal, newVal));
     }
 
-    if (opts.forceFocus || this._$textarea.is(":focus")) {
+    if (
+      (opts.forceFocus || this._$textarea.is(":focus")) &&
+      !opts.skipNewSelection
+    ) {
       // Restore cursor.
       this._selectText(
         newSelection.start,
@@ -355,32 +358,7 @@ export default Mixin.create({
     const { lineVal } = selected;
     let value = selected.value;
 
-    // we want to include all the spaces on the selected line as
-    // well, because we want to indent those too, but only if
-    // the user's selection starts at the first character on the
-    // line and not a space. * below indicates the start + end position
-    // of the selection, and the . are spaces:
-    //
-    // YES
-    //
-    //     *
-    // ....text here
-    // ....some more text
-    //                  *
-    //
-    // NO
-    //
-    //   *
-    // ....text here
-    // ....some more text
-    //                  *
-    const lineStartsWithSpace = lineVal.match(/^ +/);
-    const selectionStartsWithSpace = value.match(/^ +/);
-    if (lineStartsWithSpace && !selectionStartsWithSpace) {
-      value = lineStartsWithSpace[0] + value;
-    }
-
-    // perhaps this is a bit simplistic, but it is a fairly reliable
+    // Perhaps this is a bit simplistic, but it is a fairly reliable
     // guess to say whether we are indenting with tabs or spaces. for
     // example some programming languages prefer tabs, others prefer
     // spaces, and for the cases with no tabs it's safer to use spaces
@@ -395,6 +373,35 @@ export default Mixin.create({
       indentationSteps = 2;
     }
 
+    // We want to include all the spaces on the selected line as
+    // well, no matter where the cursor begins on the first line,
+    // because we want to indent those too. * is the cursor/selection
+    // and . are spaces:
+    //
+    // BEFORE               AFTER
+    //
+    //     *                *
+    // ....text here        ....text here
+    // ....some more text   ....some more text
+    //                  *                    *
+    //
+    // BEFORE               AFTER
+    //
+    //  *                   *
+    // ....text here        ....text here
+    // ....some more text   ....some more text
+    //                  *                    *
+    const indentationRegexp = new RegExp(`^${indentationChar}+`);
+    const lineStartsWithIndentationChar = lineVal.match(indentationRegexp);
+    const intentationCharsBeforeSelection = value.match(indentationRegexp);
+    if (lineStartsWithIndentationChar) {
+      const charsToSubtract = intentationCharsBeforeSelection
+        ? intentationCharsBeforeSelection[0]
+        : "";
+      value =
+        lineStartsWithIndentationChar[0].replace(charsToSubtract, "") + value;
+    }
+
     const splitSelection = value.split("\n");
     const newValue = splitSelection
       .map((line) => {
@@ -407,7 +414,8 @@ export default Mixin.create({
       .join("\n");
 
     if (newValue.trim() !== "") {
-      this._replaceText(value, newValue);
+      this._replaceText(value, newValue, { skipNewSelection: true });
+      this._selectText(this.value.indexOf(newValue), newValue.length);
     }
   },
 

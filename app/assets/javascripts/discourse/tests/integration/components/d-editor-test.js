@@ -735,7 +735,7 @@ third line`
   }
 
   composerTestCase(
-    "indent-selected-text event (simple, one line, right)",
+    "indents a single line of text to the right",
     async function (assert, textarea) {
       this.set("value", "Hello world");
       setTextareaSelection(textarea, 0, textarea.value.length);
@@ -750,7 +750,7 @@ third line`
   );
 
   composerTestCase(
-    "indent-selected-text event (simple, one line, left)",
+    "de-indents a single line of text to the left",
     async function (assert, textarea) {
       this.set("value", "  Hello world");
       setTextareaSelection(textarea, 0, textarea.value.length);
@@ -765,7 +765,7 @@ third line`
   );
 
   composerTestCase(
-    "indent-selected-text event (simple, multiline, right)",
+    "indents multiple lines of text to the right",
     async function (assert, textarea) {
       this.set("value", "  Hello world\nThis is me");
       setTextareaSelection(textarea, 2, textarea.value.length);
@@ -790,7 +790,7 @@ third line`
   );
 
   composerTestCase(
-    "indent-selected-text event (simple, multiline, left)",
+    "de-indents multiple lines of text to the left",
     async function (assert, textarea) {
       this.set("value", "  Hello world\nThis is me");
       setTextareaSelection(textarea, 2, textarea.value.length);
@@ -805,7 +805,7 @@ third line`
   );
 
   composerTestCase(
-    "indent-selected-text event (indentation char detect, multiline, right)",
+    "detects the indentation character (tab vs. string) and uses that",
     async function (assert, textarea) {
       this.set(
         "value",
