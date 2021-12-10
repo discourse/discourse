@@ -1,6 +1,7 @@
 import { alias, not } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Component.extend({
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
@@ -16,8 +17,8 @@ export default Component.extend({
   },
 
   click() {
-    this.set("shownAt", null);
-    this.set("validation.lastShownAt", null);
+    const composer = getOwner(this).lookup("controller:composer");
+    composer.clearLastValidatedAt();
   },
 
   bad: alias("validation.failed"),
