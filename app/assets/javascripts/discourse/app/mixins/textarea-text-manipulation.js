@@ -315,8 +315,10 @@ export default Mixin.create({
           markdown = pre.match(/\S$/) ? ` ${markdown}` : markdown;
         }
 
-        this.appEvents.trigger("composer:insert-text", markdown);
-        handled = true;
+        if (isComposer) {
+          this.appEvents.trigger("composer:insert-text", markdown);
+          handled = true;
+        }
       }
     }
 
