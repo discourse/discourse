@@ -37,6 +37,7 @@ export default Component.extend({
   hoveredEmoji: null,
   isActive: false,
   isLoading: true,
+  usePopper: true,
 
   init() {
     this._super(...arguments);
@@ -91,7 +92,7 @@ export default Component.extend({
       const textareaWrapper = document.querySelector(
         ".d-editor-textarea-wrapper"
       );
-      if (!this.site.isMobileDevice && textareaWrapper) {
+      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
         this._popper = createPopper(textareaWrapper, emojiPicker, {
           placement: "auto",
           modifiers: [
