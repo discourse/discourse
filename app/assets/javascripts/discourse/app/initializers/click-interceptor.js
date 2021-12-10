@@ -11,9 +11,7 @@ export default {
   name: "click-interceptor",
 
   initialize() {
-    document
-      .getElementById("main")
-      .addEventListener("click", interceptClickOnLinks);
+    window.addEventListener("click", interceptClickOnLinks);
     window.addEventListener("hashchange", this.hashChanged);
   },
 
@@ -22,9 +20,7 @@ export default {
   },
 
   teardown() {
-    document
-      .getElementById("main")
-      .removeEventListener("click", interceptClickOnLinks);
+    window.removeEventListener("click", interceptClickOnLinks);
     window.removeEventListener("hashchange", this.hashChanged);
   },
 };
