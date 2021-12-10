@@ -11,10 +11,9 @@
 }
 
 .popup-tip {
+  @include form-item-sizing;
   position: absolute;
-  display: block;
-  padding: 0.5em;
-  z-index: z("tooltip");
+  z-index: z("composer", "dropdown") + 1;
   cursor: pointer;
   animation: 0.15s slidein 3;
 

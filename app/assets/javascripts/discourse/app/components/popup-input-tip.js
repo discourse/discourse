@@ -1,4 +1,4 @@
-import { alias, not } from "@ember/object/computed";
+import { alias, not, or } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -8,6 +8,9 @@ export default Component.extend({
   attributeBindings: ["role"],
   rerenderTriggers: ["validation.reason"],
   tipReason: null,
+  lastShownAt: or("shownAt", "validation.lastShownAt"),
+  bad: alias("validation.failed"),
+  good: not("bad"),
 
   @discourseComputed("bad")
   role(bad) {
@@ -17,16 +20,9 @@ export default Component.extend({
   },
 
   click() {
+    this.set("shownAt", null);
     const composer = getOwner(this).lookup("controller:composer");
     composer.clearLastValidatedAt();
-  },
-
-  bad: alias("validation.failed"),
-  good: not("bad"),
-
-  @discourseComputed("shownAt", "validation.lastShownAt")
-  lastShownAt(shownAt, lastShownAt) {
-    return shownAt || lastShownAt;
   },
 
   didReceiveAttrs() {
