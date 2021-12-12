@@ -16,6 +16,9 @@ const isInside = (text, regex) => {
   return matches && matches.length % 2;
 };
 
+const INDENT_DIRECTION_LEFT = "left";
+const INDENT_DIRECTION_RIGHT = "right";
+
 export default Mixin.create({
   init() {
     this._super(...arguments);
@@ -134,7 +137,10 @@ export default Mixin.create({
       this.set("value", val.replace(oldVal, newVal));
     }
 
-    if (opts.forceFocus || this._$textarea.is(":focus")) {
+    if (
+      (opts.forceFocus || this._$textarea.is(":focus")) &&
+      !opts.skipNewSelection
+    ) {
       // Restore cursor.
       this._selectText(
         newSelection.start,
@@ -324,6 +330,94 @@ export default Mixin.create({
 
     if (handled || (canUpload && !plainText)) {
       e.preventDefault();
+    }
+  },
+
+  /**
+   * Removes the provided char from the provided str up
+   * until the limit, or until a character that is _not_
+   * the provided one is encountered.
+   */
+  _deindentLine(str, char, limit) {
+    let eaten = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (eaten < limit && str[i] === char) {
+        eaten += 1;
+      } else {
+        return str.slice(eaten);
+      }
+    }
+    return str;
+  },
+
+  @bind
+  _indentSelection(direction) {
+    if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
+      return;
+    }
+
+    const selected = this._getSelected(null, { lineVal: true });
+    const { lineVal } = selected;
+    let value = selected.value;
+
+    // Perhaps this is a bit simplistic, but it is a fairly reliable
+    // guess to say whether we are indenting with tabs or spaces. for
+    // example some programming languages prefer tabs, others prefer
+    // spaces, and for the cases with no tabs it's safer to use spaces
+    let indentationSteps, indentationChar;
+    let linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
+    let linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
+    if (linesStartingWithTabCount > linesStartingWithSpaceCount) {
+      indentationSteps = 1;
+      indentationChar = "\t";
+    } else {
+      indentationChar = " ";
+      indentationSteps = 2;
+    }
+
+    // We want to include all the spaces on the selected line as
+    // well, no matter where the cursor begins on the first line,
+    // because we want to indent those too. * is the cursor/selection
+    // and . are spaces:
+    //
+    // BEFORE               AFTER
+    //
+    //     *                *
+    // ....text here        ....text here
+    // ....some more text   ....some more text
+    //                  *                    *
+    //
+    // BEFORE               AFTER
+    //
+    //  *                   *
+    // ....text here        ....text here
+    // ....some more text   ....some more text
+    //                  *                    *
+    const indentationRegexp = new RegExp(`^${indentationChar}+`);
+    const lineStartsWithIndentationChar = lineVal.match(indentationRegexp);
+    const intentationCharsBeforeSelection = value.match(indentationRegexp);
+    if (lineStartsWithIndentationChar) {
+      const charsToSubtract = intentationCharsBeforeSelection
+        ? intentationCharsBeforeSelection[0]
+        : "";
+      value =
+        lineStartsWithIndentationChar[0].replace(charsToSubtract, "") + value;
+    }
+
+    const splitSelection = value.split("\n");
+    const newValue = splitSelection
+      .map((line) => {
+        if (direction === INDENT_DIRECTION_LEFT) {
+          return this._deindentLine(line, indentationChar, indentationSteps);
+        } else {
+          return `${Array(indentationSteps + 1).join(indentationChar)}${line}`;
+        }
+      })
+      .join("\n");
+
+    if (newValue.trim() !== "") {
+      this._replaceText(value, newValue, { skipNewSelection: true });
+      this._selectText(this.value.indexOf(newValue), newValue.length);
     }
   },
 
