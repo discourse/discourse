@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# This class is a part of DiscourseConnect.
+# We renamed Discourse Single Sign On to DiscourseConnect in the documentation and
+# the site settings but this class still have the old name
+# see https://meta.discourse.org/t/discourseconnect-official-single-sign-on-for-discourse-sso/13045
 class SingleSignOnProvider < SingleSignOn
   class BlankSecret < RuntimeError; end
 
