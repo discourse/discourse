@@ -103,8 +103,10 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     uri = URI("http://localhost:#{port}/#{qunit_path}")
     puts "Warming up Rails server"
     begin
+      puts "GET #{uri}"
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError => e
+      puts e
       sleep 1
       retry unless elapsed() > 60
       puts "Timed out. Can not connect to forked server!"
