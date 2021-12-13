@@ -1621,10 +1621,10 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email_or_domain: "Restrict to email or domain"
-          email_or_domain_placeholder: "name@example.com or example.com"
+          restrict: "Restrict to"
           restrict_email: "Restrict to email"
           restrict_domain: "Restrict to domain"
+          email_or_domain_placeholder: "name@example.com or example.com"
 
           max_redemptions_allowed: "Max uses"
 

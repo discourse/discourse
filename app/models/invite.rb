@@ -15,7 +15,7 @@ class Invite < ActiveRecord::Base
   }
 
   BULK_INVITE_EMAIL_LIMIT = 200
-  HOSTNAME_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
+  DOMAIN_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
 
   rate_limit :limit_invites_per_day
 
@@ -292,7 +292,7 @@ class Invite < ActiveRecord::Base
 
     self.domain.downcase!
 
-    if self.domain !~ Invite::HOSTNAME_REGEX
+    if self.domain !~ Invite::DOMAIN_REGEX
       self.errors.add(:base, I18n.t('invite.domain_not_allowed', domain: self.domain))
     end
   end
