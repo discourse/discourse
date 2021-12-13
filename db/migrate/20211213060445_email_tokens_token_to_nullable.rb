@@ -11,7 +11,9 @@ class EmailTokensTokenToNullable < ActiveRecord::Migration[6.1]
       Migration::SafeMigrate.disable!
       if DB.query_single(<<~SQL).length > 0
         SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE table_name = 'email_tokens' AND column_name = 'token'
+        WHERE table_schema='public'
+        AND table_name = 'email_tokens'
+        AND column_name = 'token'
       SQL
         execute <<~SQL
           ALTER TABLE email_tokens ALTER COLUMN token DROP NOT NULL
