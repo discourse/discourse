@@ -52,7 +52,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     "UNICORN_PORT" => unicorn_port.to_s,
     "UNICORN_SIDEKIQS" => "0",
     "DISCOURSE_SKIP_CSS_WATCHER" => "1",
-    "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
+    "UNICORN_LISTENER" => "localhost:#{unicorn_port}",
     "LOGSTASH_UNICORN_URI" => nil,
     "UNICORN_WORKERS" => "1",
     "UNICORN_TIMEOUT" => "90",
