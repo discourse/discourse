@@ -81,6 +81,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
@@ -773,6 +774,19 @@ class PluginApi {
    **/
   registerTopicFooterDropdown(dropdownOptions) {
     registerTopicFooterDropdown(dropdownOptions);
+  }
+
+  /**
+   * Register a desktop notificaiton handler
+   *
+   * ```javascript
+   * api.registerDesktopNotificationHandler((data, siteSettings, user) => {
+   *   // Do something!
+   * });
+   * ```
+   **/
+  registerDesktopNotificationHandler(handler) {
+    registerDesktopNotificationHandler(handler);
   }
 
   /**
