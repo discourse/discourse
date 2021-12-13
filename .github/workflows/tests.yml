@@ -29,11 +29,13 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, annotations]
+        build_type: [backend, frontend, frontend-embercli, annotations]
         target: [core, plugins]
         exclude:
           - build_type: annotations
             target: plugins
+          - build_type: frontend-embercli
+            target: core
 
     steps:
       - uses: actions/checkout@master
@@ -154,6 +156,11 @@ jobs:
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: bin/rake plugin:qunit['*','1200000']
+        timeout-minutes: 30
+
+      - name: Plugin EmberCLI QUnit
+        if: matrix.build_type == 'frontend-embercli' && matrix.target == 'plugins'
+        run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Check Annotations
