@@ -547,12 +547,58 @@ task "import:update_avatars_from_sso" => :environment do
     )
   SQL
 
-  DB.query_each(sql) do |row|
-    Jobs.enqueue(
-      :download_avatar_from_url,
-      url: row.external_avatar_url,
-      user_id: row.user_id,
-      override_gravatar: true
-    )
+  queue = SizedQueue.new(1000)
+  threads = []
+
+  threads << Thread.new do ||
+    DB.query_each(sql) do |row|
+      queue << { user_id: row.user_id, url: row.external_avatar_url }
+    end
+    queue.close
   end
+
+  max_count = DB.query_single(<<~SQL).first
+    SELECT COUNT(*)
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  status_queue = Queue.new
+  status_thread = Thread.new do
+    error_count = 0
+    current_count = 0
+
+    while !(status = status_queue.pop).nil?
+      error_count += 1 if !status
+      current_count += 1
+
+      print "\r%7d / %7d (%d errors)" % [current_count, max_count, error_count]
+    end
+  end
+
+  20.times do
+    threads << Thread.new do
+      while row = queue.pop
+        begin
+          UserAvatar.import_url_for_user(
+            row[:url],
+            User.find(row[:user_id]),
+            override_gravatar: true,
+            skip_rate_limit: true
+          )
+          status_queue << true
+        rescue
+          status_queue << false
+        end
+      end
+    end
+  end
+
+  threads.each(&:join)
+  status_queue.close
+  status_thread.join
 end
