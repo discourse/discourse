@@ -53,7 +53,7 @@
     "chrome-remote-interface": "^0.25",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^3.4.7",
-    "puppeteer": "1.20",
+    "puppeteer-core": "^13.0.0",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^9.0.2",
