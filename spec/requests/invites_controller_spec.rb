@@ -664,13 +664,13 @@ describe InvitesController do
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
 
-              tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false).pluck(:token)
+              tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false)
               expect(tokens.size).to eq(1)
 
               job_args = Jobs::CriticalUserEmail.jobs.first['args'].first
               expect(job_args['type']).to eq('signup')
               expect(job_args['user_id']).to eq(invited_user.id)
-              expect(job_args['email_token']).to eq(tokens.first)
+              expect(EmailToken.hash_token(job_args['email_token'])).to eq(tokens.first.token_hash)
             end
           end
         end
@@ -720,13 +720,13 @@ describe InvitesController do
         expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
 
-        tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false).pluck(:token)
+        tokens = EmailToken.where(user_id: invited_user.id, confirmed: false, expired: false)
         expect(tokens.size).to eq(1)
 
         job_args = Jobs::CriticalUserEmail.jobs.first['args'].first
         expect(job_args['type']).to eq('signup')
         expect(job_args['user_id']).to eq(invited_user.id)
-        expect(job_args['email_token']).to eq(tokens.first)
+        expect(EmailToken.hash_token(job_args['email_token'])).to eq(tokens.first.token_hash)
       end
     end
 
