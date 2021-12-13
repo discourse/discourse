@@ -11,11 +11,6 @@ import {
 } from "discourse/lib/utilities";
 import { next, schedule } from "@ember/runloop";
 
-const isInside = (text, regex) => {
-  const matches = text.match(regex);
-  return matches && matches.length % 2;
-};
-
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
 
@@ -240,6 +235,11 @@ export default Mixin.create({
     return null;
   },
 
+  _isInside(text, regex) {
+    const matches = text.match(regex);
+    return matches && matches.length % 2;
+  },
+
   @bind
   paste(e) {
     if (!this._$textarea.is(":focus") && !isTesting()) {
@@ -259,7 +259,7 @@ export default Mixin.create({
     const selected = this._getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = isInside(pre, /(^|\n)```/g);
+    const isCodeBlock = this._isInside(pre, /(^|\n)```/g);
 
     if (
       plainText &&
@@ -279,7 +279,7 @@ export default Mixin.create({
       if (isInlinePasting) {
         canPasteHtml = !(
           lineVal.match(/^```/) ||
-          isInside(pre, /`/g) ||
+          this._isInside(pre, /`/g) ||
           lineVal.match(/^    /)
         );
       } else {
