@@ -62,6 +62,7 @@ class Plugin::Metadata
     "discourse-reactions",
     "discourse-restricted-replies",
     "discourse-rss-polling",
+    "discourse-saml",
     "discourse-saved-searches",
     "discourse-shared-edits",
     "discourse-signatures",
