@@ -111,7 +111,8 @@ module Jobs
       email = invite[:email]
       groups = get_groups(invite[:groups])
       topic = get_topic(invite[:topic_id])
-      user_fields = get_user_fields(invite.except(:email, :groups, :topic_id))
+      locale = invite[:locale]
+      user_fields = get_user_fields(invite.except(:email, :groups, :topic_id, :locale))
 
       begin
         if user = Invite.find_user_by_email(email)
@@ -133,13 +134,26 @@ module Jobs
             end
             user.save_custom_fields
           end
+
+          if locale.present?
+            user.locale = locale
+            user.save!
+          end
         else
-          if user_fields.present?
+          if user_fields.present? || locale.present?
             user = User.where(staged: true).find_by_email(email)
             user ||= User.new(username: UserNameSuggester.suggest(email), email: email, staged: true)
-            user_fields.each do |user_field, value|
-              user.set_user_field(user_field, value)
+
+            if user_fields.present?
+              user_fields.each do |user_field, value|
+                user.set_user_field(user_field, value)
+              end
             end
+
+            if locale.present?
+              user.locale = locale
+            end
+
             user.save!
           end
 

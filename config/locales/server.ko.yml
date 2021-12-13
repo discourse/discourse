@@ -1283,6 +1283,18 @@ ko:
         ignores_count: 카운트 무시
         mutes_count: 음소거 수
       description: "다른 많은 사용자가 음소거하거나 무시한 사용자"
+    top_users_by_likes_received:
+      labels:
+        user: 사용자
+        qtt_like: '''좋아요'' 받은 횟수'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: 사용자
+        qtt_like: '''좋아요'' 받은 횟수'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: 사용자
+        qtt_like: '''좋아요'' 받은 횟수'
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     host_names_warning: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
@@ -2008,6 +2020,7 @@ ko:
       invalid_css_color: "잘못된 색상입니다. 색상 이름 또는 16진수 값을 입력해야 합니다."
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
+      valid_username: "해당 아이디의 사용자가 없습니다."
       invalid_group: "그 이름을 가진 그룹이 없습니다."
       invalid_integer_min_max: "%{min}이상 %{max}이하이어야 합니다."
       invalid_integer_min: "%{min}이상 이어야 합니다."

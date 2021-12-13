@@ -13,13 +13,6 @@
     "avatar_template": {
       "type": "string"
     },
-    "email": {
-      "type": "string"
-    },
-    "secondary_emails": {
-      "type": "array",
-      "items": []
-    },
     "active": {
       "type": "boolean"
     },

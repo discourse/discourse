@@ -64,30 +64,4 @@ describe Email do
     end
 
   end
-
-  describe "message_id_rfc_format" do
-
-    it "returns message ID in RFC format" do
-      expect(Email.message_id_rfc_format("test@test")).to eq("<test@test>")
-    end
-
-    it "returns input if already in RFC format" do
-      expect(Email.message_id_rfc_format("<test@test>")).to eq("<test@test>")
-    end
-
-  end
-
-  describe "message_id_clean" do
-
-    it "returns message ID if in RFC format" do
-      expect(Email.message_id_clean("<test@test>")).to eq("test@test")
-    end
-
-    it "returns input if a clean message ID is not in RFC format" do
-      message_id = "<" + "@" * 50
-      expect(Email.message_id_clean(message_id)).to eq(message_id)
-    end
-
-  end
-
 end

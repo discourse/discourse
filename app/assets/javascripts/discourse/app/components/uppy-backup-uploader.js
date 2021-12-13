@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { alias, not } from "@ember/object/computed";
+import { alias } from "@ember/object/computed";
 import I18n from "I18n";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -12,15 +12,11 @@ export default Component.extend(UppyUploadMixin, {
   uploadRootPath: "/admin/backups",
   uploadUrl: "/admin/backups/upload",
 
-  // TODO (martin) Add functionality to make this usable _without_ multipart
-  // uploads, direct to S3, which needs to call get-presigned-put on the
-  // BackupsController (which extends ExternalUploadHelpers) rather than
-  // the old create_upload_url route. The two are functionally equivalent;
-  // they both generate a presigned PUT url for the upload to S3, and do
-  // the whole thing in one request rather than multipart.
-
   // direct s3 backups
-  useMultipartUploadsIfAvailable: not("localBackupStorage"),
+  @discourseComputed("localBackupStorage")
+  useMultipartUploadsIfAvailable(localBackupStorage) {
+    return !localBackupStorage && this.siteSettings.enable_direct_s3_uploads;
+  },
 
   // local backups
   useChunkedUploads: alias("localBackupStorage"),

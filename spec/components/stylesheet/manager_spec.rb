@@ -135,6 +135,20 @@ describe Stylesheet::Manager do
       )
     end
 
+    it "includes the escaped theme name" do
+      manager = manager(theme.id)
+
+      theme.update(name: "a strange name\"with a quote in it")
+
+      tag = manager.stylesheet_link_tag(:desktop_theme)
+      expect(tag).to have_tag("link", with: {
+        "data-theme-name" => theme.name.downcase
+      })
+      expect(tag).to have_tag("link", with: {
+        "data-theme-name" => child_theme.name.downcase
+      })
+    end
+
     context "stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|

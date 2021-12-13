@@ -12,7 +12,7 @@
         class="btn-default"}}
     {{/if}}
   {{else}}
-    {{#if (and siteSettings.enable_direct_s3_uploads siteSettings.enable_experimental_backup_uploader)}}
+    {{#if siteSettings.enable_experimental_backup_uploader}}
       {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
     {{else}}
       {{backup-uploader done=(route-action "remoteUploadSuccess")}}

@@ -186,18 +186,19 @@ createWidget("post-avatar", {
       });
     }
 
-    const result = [body];
+    const postAvatarBody = [body];
 
     if (attrs.flair_url || attrs.flair_bg_color) {
-      result.push(this.attach("avatar-flair", attrs));
+      postAvatarBody.push(this.attach("avatar-flair", attrs));
     } else {
       const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+
       if (autoFlairAttrs) {
-        result.push(this.attach("avatar-flair", autoFlairAttrs));
+        postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
       }
     }
 
-    result.push(h("div.poster-avatar-extra"));
+    const result = [h("div.post-avatar", postAvatarBody)];
 
     if (this.settings.displayPosterName) {
       result.push(this.attach("post-avatar-user-info", attrs));

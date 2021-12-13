@@ -39,7 +39,7 @@ module TurboTests
     end
   end
 
-  FakeExecutionResult = Struct.new(:example_skipped?, :pending_message, :status, :pending_fixed?, :exception)
+  FakeExecutionResult = Struct.new(:example_skipped?, :pending_message, :status, :pending_fixed?, :exception, :pending_exception)
   class FakeExecutionResult
     def self.from_obj(obj)
       obj = obj.symbolize_keys
@@ -48,7 +48,8 @@ module TurboTests
         obj[:pending_message],
         obj[:status].to_sym,
         obj[:pending_fixed?],
-        FakeException.from_obj(obj[:exception])
+        FakeException.from_obj(obj[:exception]),
+        FakeException.from_obj(obj[:pending_exception])
       )
     end
   end

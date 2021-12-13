@@ -15,6 +15,7 @@ class Invite < ActiveRecord::Base
   }
 
   BULK_INVITE_EMAIL_LIMIT = 200
+  DOMAIN_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
 
   rate_limit :limit_invites_per_day
 
@@ -30,6 +31,7 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
+  validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist
 
   before_create do
@@ -143,7 +145,7 @@ class Invite < ActiveRecord::Base
         emailed_status: emailed_status
       )
     else
-      create_args = opts.slice(:email, :moderator, :custom_message, :max_redemptions_allowed)
+      create_args = opts.slice(:email, :domain, :moderator, :custom_message, :max_redemptions_allowed)
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
@@ -236,12 +238,10 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    i = Invite.find_by(email: Email.downcase(email))
-    if i
-      i.invalidated_at = Time.zone.now
-      i.save
-    end
-    i
+    invite = Invite.find_by(email: Email.downcase(email))
+    invite.update!(invalidated_at: Time.zone.now) if invite
+
+    invite
   end
 
   def resend_invite
@@ -286,6 +286,16 @@ class Invite < ActiveRecord::Base
       end
     end
   end
+
+  def valid_domain
+    return if self.domain.blank?
+
+    self.domain.downcase!
+
+    if self.domain !~ Invite::DOMAIN_REGEX
+      self.errors.add(:base, I18n.t('invite.domain_not_allowed', domain: self.domain))
+    end
+  end
 end
 
 # == Schema Information
@@ -308,6 +318,7 @@ end
 #  redemption_count        :integer          default(0), not null
 #  expires_at              :datetime         not null
 #  email_token             :string
+#  domain                  :string
 #
 # Indexes
 #

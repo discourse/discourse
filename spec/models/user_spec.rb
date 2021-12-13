@@ -2601,4 +2601,30 @@ describe User do
       expect(user.invited_by).to eq(invite.invited_by)
     end
   end
+
+  describe "#username_equals_to?" do
+    [
+      ["returns true for equal usernames", "john", "john", true],
+      ["returns false for different usernames", "john", "bill", false],
+      ["considers usernames that are different only in case as equal", "john", "JoHN", true]
+    ].each do |testcase_name, current_username, another_username, is_equal|
+      it "#{testcase_name}" do
+        user = Fabricate(:user, username: current_username)
+        result = user.username_equals_to?(another_username)
+
+        expect(result).to be(is_equal)
+      end
+    end
+
+    it "considers usernames that are equal after unicode normalization as equal" do
+      SiteSetting.unicode_usernames = true
+
+      raw = "Lo\u0308we" # Löwe, u0308 stands for ¨, so o\u0308 adds up to ö
+      normalized = "l\u00F6we" # Löwe normilized, \u00F6 stands for ö
+      user = Fabricate(:user, username: normalized)
+      result = user.username_equals_to?(raw)
+
+      expect(result).to be(true)
+    end
+  end
 end

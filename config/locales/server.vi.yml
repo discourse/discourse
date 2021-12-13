@@ -850,6 +850,18 @@ vi:
       labels:
         filename: Tên tập tin
         author: Tác giả
+    top_users_by_likes_received:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"

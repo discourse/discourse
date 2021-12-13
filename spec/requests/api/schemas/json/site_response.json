@@ -358,6 +358,9 @@
     "wizard_required": {
       "type": "boolean"
     },
+    "can_associate_groups": {
+      "type": "boolean"
+    },
     "topic_featured_link_allowed_category_ids": {
       "type": "array",
       "items": [

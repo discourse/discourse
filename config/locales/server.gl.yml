@@ -1280,6 +1280,18 @@ gl:
         ignores_count: Número de ignorados
         mutes_count: Número de silenciados
       description: "Usuarios que foron silenciados e/ou ignorados por moitos outros usuarios."
+    top_users_by_likes_received:
+      labels:
+        user: Usuario
+        qtt_like: Gústames recibidos
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuario
+        qtt_like: Gústames recibidos
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuario
+        qtt_like: Gústames recibidos
   dashboard:
     rails_env_warning: "O seu servidor está a executarse en modo %{env}."
     host_names_warning: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."

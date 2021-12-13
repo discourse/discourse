@@ -6,6 +6,7 @@ require 'rails_helper'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
@@ -249,8 +250,6 @@ describe Topic do
   end
 
   context 'admin topic title' do
-    let(:admin) { Fabricate(:admin) }
-
     it 'allows really short titles' do
       pm = Fabricate.build(:private_message_topic, user: admin, title: 'a')
       expect(pm).to be_valid
@@ -747,7 +746,6 @@ describe Topic do
 
         context "when invited_user has enabled allow_list" do
           fab!(:user2) { Fabricate(:user) }
-          fab!(:admin) { Fabricate(:admin) }
           fab!(:pm) { Fabricate(:private_message_topic, user: user, topic_allowed_users: [
             Fabricate.build(:topic_allowed_user, user: user),
             Fabricate.build(:topic_allowed_user, user: user2)
@@ -1864,7 +1862,6 @@ describe Topic do
       Fabricate(:topic_timer, execute_at: 5.hours.from_now).topic
     end
 
-    fab!(:admin) { Fabricate(:admin) }
     fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
     it 'can take a number of hours as an integer' do
@@ -2955,7 +2952,6 @@ describe Topic do
   describe "#cannot_permanently_delete_reason" do
     fab!(:post) { Fabricate(:post) }
     let!(:topic) { post.topic }
-    fab!(:admin) { Fabricate(:admin) }
 
     before do
       freeze_time

@@ -2962,11 +2962,12 @@ fa_IR:
         one: "حداقل برچسب %{count} را انتخاب کنید..."
         other: "حداقل برچسب %{count} را انتخاب کنید..."
       info: "اطلاعات"
+      save: "ذخیره نام و توضیحات برچسب"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
       delete_confirm_no_topics: "ایا از حذف این برچسب مطمعن هستید؟"
-      rename_tag: "تغییر نام برچسب"
-      rename_instructions: "انتخاب نام جدید برای برچسب:"
+      edit_tag: "ویرایش نام و توضیحات برچسب"
+      description: "توضیحات"
       sort_by: "مرتب سازی بر اساس:"
       sort_by_count: "تعداد"
       sort_by_name: "نام"
@@ -3215,6 +3216,13 @@ fa_IR:
           descriptions:
             uploads:
               create: یک پرونده جدید بارگذاری کنید.
+            badges:
+              create: ایجاد نشان جدید
+              update: به‌روزرسانی نشان
+              delete: حذف نشان
+              list_user_badges: فهرست نشان‌های کاربر.
+              assign_badge_to_user: یک نشان را به یک کاربر اختصاص دهید.
+              revoke_badge_from_user: یک نشان را از کاربر بگیرید.
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"

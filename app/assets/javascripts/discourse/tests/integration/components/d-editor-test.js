@@ -728,6 +728,100 @@ third line`
     assert.strictEqual(this.value, "red yellow blue");
   });
 
+  async function indentSelection(container, direction) {
+    await container
+      .lookup("service:app-events")
+      .trigger("composer:indent-selected-text", direction);
+  }
+
+  composerTestCase(
+    "indents a single line of text to the right",
+    async function (assert, textarea) {
+      this.set("value", "Hello world");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "  Hello world",
+        "a single line of selection is indented correctly"
+      );
+    }
+  );
+
+  composerTestCase(
+    "de-indents a single line of text to the left",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "left");
+
+      assert.strictEqual(
+        this.value,
+        "Hello world",
+        "a single line of selection is deindented correctly"
+      );
+    }
+  );
+
+  composerTestCase(
+    "indents multiple lines of text to the right",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 2, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "    Hello world\n  This is me",
+        "multiple lines are indented correctly without selecting preceding space"
+      );
+
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 0, textarea.value.length);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "    Hello world\n  This is me",
+        "multiple lines are indented correctly with selecting preceding space"
+      );
+    }
+  );
+
+  composerTestCase(
+    "de-indents multiple lines of text to the left",
+    async function (assert, textarea) {
+      this.set("value", "  Hello world\nThis is me");
+      setTextareaSelection(textarea, 2, textarea.value.length);
+      await indentSelection(this.container, "left");
+
+      assert.strictEqual(
+        this.value,
+        "Hello world\nThis is me",
+        "multiple lines are de-indented correctly without selecting preceding space"
+      );
+    }
+  );
+
+  composerTestCase(
+    "detects the indentation character (tab vs. string) and uses that",
+    async function (assert, textarea) {
+      this.set(
+        "value",
+        "```\nfunc init() {\n	strings = generateStrings()\n}\n```"
+      );
+      setTextareaSelection(textarea, 4, textarea.value.length - 4);
+      await indentSelection(this.container, "right");
+
+      assert.strictEqual(
+        this.value,
+        "```\n	func init() {\n		strings = generateStrings()\n	}\n```",
+        "detects the prevalent indentation character and uses that (tab)"
+      );
+    }
+  );
+
   async function paste(element, text) {
     let e = new Event("paste", { cancelable: true });
     e.clipboardData = { getData: () => text };
@@ -830,6 +924,32 @@ third line`
       const event = await paste(element, "mailto:team@discourse.org");
       assert.strictEqual(this.value, "team [email](mailto:team@discourse.org)");
       assert.strictEqual(event.defaultPrevented, true);
+    }
+  );
+
+  testCase(
+    `pasting a url onto a selection that contains urls and other content will use default paste behavior`,
+    async function (assert, textarea) {
+      this.set("value", "Try https://www.discourse.org");
+      setTextareaSelection(textarea, 0, 29);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.com/");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "Try https://www.discourse.org");
+      assert.strictEqual(event.defaultPrevented, false);
+    }
+  );
+
+  testCase(
+    `pasting a url onto a selection that contains bbcode-like tags will use default paste behavior`,
+    async function (assert, textarea) {
+      this.set("value", "hello [url=foobar]foobar[/url]");
+      setTextareaSelection(textarea, 0, 30);
+      const element = query(".d-editor");
+      const event = await paste(element, "https://www.discourse.com/");
+      // Synthetic paste events do not manipulate document content.
+      assert.strictEqual(this.value, "hello [url=foobar]foobar[/url]");
+      assert.strictEqual(event.defaultPrevented, false);
     }
   );
 

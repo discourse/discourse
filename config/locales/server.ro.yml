@@ -774,6 +774,18 @@ ro:
     top_uploads:
       labels:
         filename: Numele fișierului
+    top_users_by_likes_received:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."

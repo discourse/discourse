@@ -78,6 +78,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
+require_relative './helpers/redis_snapshot_helper'
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV['LOAD_PLUGINS'] == "1"
@@ -181,6 +182,7 @@ end
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
   config.silence_filter_announcements = ENV['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] == "1"
+  config.extend RedisSnapshotHelper
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -235,6 +237,12 @@ RSpec.configure do |config|
     SiteSetting.provider = TestLocalProcessProvider.new
 
     WebMock.disable_net_connect!
+
+    if ENV['ELEVATED_UPLOADS_ID']
+      DB.exec "SELECT setval('uploads_id_seq', 10000)"
+    else
+      DB.exec "SELECT setval('uploads_id_seq', 1)"
+    end
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider

@@ -1326,6 +1326,18 @@ pt_BR:
         ignores_count: Contagem de ações de ignorar
         mutes_count: Contagem de ações de silenciar
       description: "Usuários(as) que foram silenciados(as) e/ou ignorados(as) por muitos outros(as) usuários(as)."
+    top_users_by_likes_received:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."

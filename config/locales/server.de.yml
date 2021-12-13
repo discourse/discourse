@@ -206,6 +206,8 @@ de:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kannst die lokale Anmeldung nicht deaktivieren, wenn 2FA erzwungen wird. Deaktiviere die erzwungene 2FA vor dem Deaktivieren lokaler Anmeldungen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kannst S3-Uploads nicht aktivieren, weil S3-Uploads bereits global aktiviert sind. Aktivieren auf Website-Ebene kann zu kritischen Problemen mit Uploads führen"
       cors_origins_should_not_have_trailing_slash: "Du solltest den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -896,6 +898,7 @@ de:
       others: "Keine Lesezeichen."
     no_drafts:
       self: "Du hast keine Entwürfe; verfasse eine Antwort in einem beliebigen Thema und sie wird automatisch als neuer Entwurf gespeichert."
+    no_log_search_queries: "Suchprotokollabfragen sind derzeit deaktiviert (ein Administrator kann sie in den Website-Einstellungen aktivieren)."
   email_settings:
     pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
     imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
@@ -1335,6 +1338,25 @@ de:
         ignores_count: Anzahl ignoriert
         mutes_count: Anzahl stummgeschaltet
       description: "Benutzer, die von vielen anderen Benutzern stummgeschaltet und/oder ignoriert wurden."
+    top_users_by_likes_received:
+      title: "Top-Benutzer nach erhaltenen Likes"
+      labels:
+        user: Benutzer
+        qtt_like: Erhaltene „Gefällt mir“
+      description: "Top 10 Benutzer, die mehr Likes erhalten haben."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Top-Benutzer nach Likes, die von einem Benutzer mit einer niedrigeren Vertrauensstufe erhalten wurden"
+      labels:
+        user: Benutzer
+        trust_level: Vertrauensstufe
+        qtt_like: Erhaltene „Gefällt mir“
+      description: "Top 10 Benutzer mit einer höheren Vertrauensstufe, die von Personen mit einer niedrigeren Vertrauensstufe gemocht werden."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Top-Benutzer nach Likes, die von einer Vielzahl von Personen erhalten wurden"
+      labels:
+        user: Benutzer
+        qtt_like: Erhaltene „Gefällt mir“
+      description: "Top 10 Benutzer, die von einer Vielzahl von Leuten Likes bekommen haben."
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
@@ -1515,6 +1537,7 @@ de:
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
+    slow_down_crawler_user_agents: "Benutzeragenten von Web-Crawlern, die wie in der Einstellung \"Crawler-Rate verlangsamen\" konfiguriert, begrenzt werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein."
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
     content_security_policy: "Aktiviere Content-Security-Policy"
     content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only"

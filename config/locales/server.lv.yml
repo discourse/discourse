@@ -359,6 +359,18 @@ lv:
     top_uploads:
       labels:
         filename: Faila nosaukums
+    top_users_by_likes_received:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
   site_settings:
     disabled: "atslēgt"
     dark_mode_none: "Nav"

@@ -37,12 +37,21 @@
     {{/if}}
 
     <div class="input-group input-email">
-      <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
+      <label for="invite-email">
+        {{d-icon "envelope"}}
+        {{#if isEmail}}
+          {{i18n "user.invited.invite.restrict_email"}}
+        {{else if isDomain}}
+          {{i18n "user.invited.invite.restrict_domain"}}
+        {{else}}
+          {{i18n "user.invited.invite.restrict"}}
+        {{/if}}
+      </label>
       <div class="invite-email-container">
         {{input
           id="invite-email"
-          value=buffered.email
-          placeholderKey="topic.invite_reply.email_placeholder"
+          value=buffered.emailOrDomain
+          placeholderKey="user.invited.invite.email_or_domain_placeholder"
         }}
         {{#if capabilities.hasContactPicker}}
           {{d-button

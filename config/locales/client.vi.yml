@@ -3103,6 +3103,7 @@ vi:
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       info: "Thông tin"
+      default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
       synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
@@ -3110,7 +3111,6 @@ vi:
         other: "Thẻ này thuộc các nhóm sau: %{tag_groups}."
       category_restrictions:
         other: "Nó chỉ có thể được sử dụng trong các danh mục sau:"
-      edit_synonyms: "Quản lý từ đồng nghĩa"
       add_synonyms_label: "Thêm từ đồng nghĩa:"
       add_synonyms: "Thêm"
       add_synonyms_explanation:
@@ -3124,8 +3124,7 @@ vi:
       delete_confirm_no_topics: "Bạn có chắc chắn muốn xóa thẻ này không?"
       delete_confirm_synonyms:
         other: "%{count} từ đồng nghĩa của nó cũng sẽ bị xóa."
-      rename_tag: "Đổi tên thẻ"
-      rename_instructions: "Chọn tên mới cho thẻ:"
+      description: "Mô tả"
       sort_by: "Xếp theo:"
       sort_by_count: "đếm"
       sort_by_name: "tên"

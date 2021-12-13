@@ -115,8 +115,10 @@ sub sub {
 .topic-timeline {
   .start-date,
   .now-date {
-    font-size: $font-up-1;
-    padding: 5px;
+    padding: 0.5em 0;
+  }
+  .timeline-scrollarea-wrapper .timeline-date-wrapper {
+    @include ellipsis;
   }
   .topic-category {
     margin-bottom: 0.5rem;

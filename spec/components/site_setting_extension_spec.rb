@@ -176,62 +176,15 @@ describe SiteSettingExtension do
       no_change_events = DiscourseEvent.track_events { settings.test_setting = 2 }
       default_events = DiscourseEvent.track_events { settings.test_setting = 1 }
 
-      expect(override_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
-      expect(no_change_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_saved)
-      expect(default_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
+      expect(override_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed)
+      expect(no_change_events.map { |e| e[:event_name] }).to be_empty
+      expect(default_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed)
 
       changed_event_1 = override_events.find { |e| e[:event_name] == :site_setting_changed }
       changed_event_2 = default_events.find { |e| e[:event_name] == :site_setting_changed }
 
       expect(changed_event_1[:params]).to eq([:test_setting, 1, 2])
       expect(changed_event_2[:params]).to eq([:test_setting, 2, 1])
-    end
-
-    it "provides the correct values when using site_setting_changed" do
-      event_new_value = nil
-      event_old_value = nil
-      site_setting_value = nil
-
-      test_lambda = -> (name, old_val, new_val) do
-        event_old_value = old_val
-        event_new_value = new_val
-        site_setting_value = settings.test_setting
-      end
-
-      begin
-        DiscourseEvent.on(:site_setting_changed, &test_lambda)
-        settings.test_setting = 2
-      ensure
-        DiscourseEvent.off(:site_setting_changed, &test_lambda)
-      end
-
-      expect(event_old_value).to eq(1)
-      expect(event_new_value).to eq(2)
-      expect(site_setting_value).to eq(2)
-    end
-
-    it "can produce confusing results when using site_setting_saved" do
-      # site_setting_saved is deprecated. This test case illustrates why it can be confusing
-
-      active_record_value = nil
-      site_setting_value = nil
-
-      test_lambda = -> (setting) do
-        active_record_value = setting.value
-        site_setting_value = settings.test_setting
-      end
-
-      begin
-        DiscourseEvent.on(:site_setting_saved, &test_lambda)
-        settings.test_setting = 2
-      ensure
-        DiscourseEvent.off(:site_setting_saved, &test_lambda)
-      end
-
-      # Problem 1, the site_setting_changed event gives us the database value, not the ruby value
-      expect(active_record_value).to eq("2")
-      # Problem 2, calling SiteSetting.test_setting inside the event will still return the old value
-      expect(site_setting_value).to eq(1)
     end
   end
 

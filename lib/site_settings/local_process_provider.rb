@@ -45,7 +45,6 @@ class SiteSettings::LocalProcessProvider
       settings[name] = setting
     end
     setting.value = value.to_s
-    DiscourseEvent.trigger(:site_setting_saved, setting)
     setting
   end
 

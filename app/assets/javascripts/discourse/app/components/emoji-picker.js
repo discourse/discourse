@@ -37,6 +37,7 @@ export default Component.extend({
   hoveredEmoji: null,
   isActive: false,
   isLoading: true,
+  usePopper: true,
 
   init() {
     this._super(...arguments);
@@ -88,25 +89,24 @@ export default Component.extend({
         return;
       }
 
-      if (!this.site.isMobileDevice) {
-        this._popper = createPopper(
-          document.querySelector(".d-editor-textarea-wrapper"),
-          emojiPicker,
-          {
-            placement: "auto",
-            modifiers: [
-              {
-                name: "preventOverflow",
+      const textareaWrapper = document.querySelector(
+        ".d-editor-textarea-wrapper"
+      );
+      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+        this._popper = createPopper(textareaWrapper, emojiPicker, {
+          placement: "auto",
+          modifiers: [
+            {
+              name: "preventOverflow",
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [5, 5],
               },
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 5],
-                },
-              },
-            ],
-          }
-        );
+            },
+          ],
+        });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis

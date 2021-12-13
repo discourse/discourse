@@ -1756,11 +1756,13 @@ RSpec.describe TopicsController do
   end
 
   describe '#show' do
-    fab!(:private_topic) { Fabricate(:private_message_topic) }
-    let!(:topic) { Fabricate(:post).topic }
+    use_redis_snapshotting
 
-    let!(:p1) { Fabricate(:post, user: topic.user) }
-    let!(:p2) { Fabricate(:post, user: topic.user) }
+    fab!(:private_topic) { Fabricate(:private_message_topic) }
+    fab!(:topic) { Fabricate(:post).topic }
+
+    fab!(:p1) { Fabricate(:post, user: topic.user) }
+    fab!(:p2) { Fabricate(:post, user: topic.user) }
 
     describe 'when topic is not allowed' do
       it 'should return the right response' do
@@ -1928,19 +1930,21 @@ RSpec.describe TopicsController do
       let!(:nonexistent_topic_id) { Topic.last.id + 10000 }
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
-      shared_examples "various scenarios" do |expected|
+      shared_examples "various scenarios" do |expected, request_json: false|
         expected.each do |key, value|
           it "returns #{value} for #{key}" do
             slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
             topic_id = key == :nonexistent ? nonexistent_topic_id : send(key.to_s).id
-            get "/t/#{slug}/#{topic_id}.json"
+            format = request_json ? ".json" : ""
+            get "/t/#{slug}/#{topic_id}#{format}"
             expect(response.status).to eq(value)
           end
         end
 
         expected_slug_response = expected[:secure_topic] == 200 ? 301 : expected[:secure_topic]
         it "will return a #{expected_slug_response} when requesting a secure topic by slug" do
-          get "/t/#{secure_topic.slug}"
+          format = request_json ? ".json" : ""
+          get "/t/#{secure_topic.slug}#{format}"
           expect(response.status).to eq(expected_slug_response)
         end
       end
@@ -1979,6 +1983,23 @@ RSpec.describe TopicsController do
             secure_accessible_topic: 302
           }
           include_examples "various scenarios", expected
+        end
+
+        context 'anonymous with login required, requesting json' do
+          before do
+            SiteSetting.login_required = true
+          end
+          expected = {
+            normal_topic: 403,
+            secure_topic: 403,
+            private_topic: 403,
+            deleted_topic: 403,
+            deleted_secure_topic: 403,
+            deleted_private_topic: 403,
+            nonexistent: 403,
+            secure_accessible_topic: 403
+          }
+          include_examples "various scenarios", expected, request_json: true
         end
 
         context 'normal user' do
@@ -2070,7 +2091,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: true
         end
 
         context 'anonymous with login required' do
@@ -2105,7 +2126,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: true
         end
 
         context 'allowed user' do
@@ -2395,10 +2416,14 @@ RSpec.describe TopicsController do
       context 'and the user is not logged in' do
         let(:api_key) { Fabricate(:api_key, user: topic.user) }
 
-        it 'redirects to the login page' do
-          get "/t/#{topic.slug}/#{topic.id}.json"
-
+        it 'redirects browsers to the login page' do
+          get "/t/#{topic.slug}/#{topic.id}"
           expect(response).to redirect_to login_path
+        end
+
+        it 'raises a 403 for json requests' do
+          get "/t/#{topic.slug}/#{topic.id}.json"
+          expect(response.status).to eq(403)
         end
 
         it 'shows the topic if valid api key is provided' do

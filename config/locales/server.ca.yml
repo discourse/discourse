@@ -1151,6 +1151,18 @@ ca:
         ignores_count: Recompte d'ignorats
         mutes_count: Recompte de silenciats
       description: "Usuaris que han estat silenciats i/o ignorats per molts altres usuaris."
+    top_users_by_likes_received:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
   dashboard:
     rails_env_warning: "El vostre servidor s'executa en mode %{env}."
     host_names_warning: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
