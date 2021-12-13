@@ -130,9 +130,9 @@ RSpec.describe TopicsController do
               title: 'Logan is a good movie',
               post_ids: [p2.id],
               category_id: category.id,
-              tags: ["tag1", "tag2"]
+              tags: ["foo", "bar"]
             }
-          end.to change { Topic.count }.by(1)
+          end.to change { Topic.count }.by(1).and change { Tag.count }.by(2)
 
           expect(response.status).to eq(200)
 
@@ -143,7 +143,7 @@ RSpec.describe TopicsController do
           new_topic = Topic.last
           expect(result['url']).to eq(new_topic.relative_url)
           expect(new_topic.excerpt).to eq(p2.excerpt_for_topic)
-          expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
+          expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
         describe 'when topic has been deleted' do
@@ -400,9 +400,9 @@ RSpec.describe TopicsController do
               title: 'Logan is a good movie',
               post_ids: [p2.id],
               archetype: 'private_message',
-              tags: ["tag1", "tag2"]
+              tags: ["foo", "bar"]
             }
-          end.to change { Topic.count }.by(1)
+          end.to change { Topic.count }.by(1).and change { Tag.count }.by(2)
 
           expect(response.status).to eq(200)
 
@@ -410,7 +410,7 @@ RSpec.describe TopicsController do
 
           expect(result['success']).to eq(true)
           expect(result['url']).to eq(Topic.last.relative_url)
-          expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
+          expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
         describe 'when message has been deleted' do
