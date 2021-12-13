@@ -78,6 +78,7 @@ class Plugin::Metadata
     "discourse-translator",
     "discourse-user-card-badges",
     "discourse-user-notes",
+    "discourse-vk-auth",
     "discourse-voting",
     "discourse-yearly-review",
     "discourse-zendesk-plugin",
