@@ -14,6 +14,7 @@ class Plugin::Metadata
     "discourse-affiliate",
     "discourse-akismet",
     "discourse-algolia",
+    "discourse-apple-auth",
     "discourse-assign",
     "discourse-auto-deactivate",
     "discourse-bbcode",
