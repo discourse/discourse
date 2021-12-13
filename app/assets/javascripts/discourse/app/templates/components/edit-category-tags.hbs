@@ -1,5 +1,5 @@
 <section class="field allowed-tags">
-  <label for="category-allowed-tags">{{i18n "category.tags_allowed_tags"}}</label>
+  <label>{{i18n "category.tags_allowed_tags"}}</label>
   {{tag-chooser
     id="category-allowed-tags"
     tags=category.allowed_tags
@@ -14,7 +14,7 @@
 </section>
 
 <section class="field allowed-tag-groups">
-  <label for="category-allowed-tag-groups">{{i18n "category.tags_allowed_tag_groups"}}</label>
+  <label>{{i18n "category.tags_allowed_tag_groups"}}</label>
   {{tag-group-chooser
     id="category-allowed-tag-groups"
     tagGroups=category.allowed_tag_groups
@@ -39,7 +39,7 @@
 
 <section class="field with-items">
   <section class="field-item min-tags-from-required-group">
-    <label>{{i18n "category.min_tags_from_required_group_label"}}</label>
+    <label for="category-min-tags-from-group">{{i18n "category.min_tags_from_required_group_label"}}</label>
     {{text-field value=category.min_tags_from_required_group id="category-min-tags-from-group" type="number" min="1"}}
   </section>
   <section class="field-item required-tag-group">
