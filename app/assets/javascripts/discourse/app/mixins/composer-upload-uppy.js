@@ -205,8 +205,6 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this._useXHRUploads();
     }
 
-    // TODO (martin) develop upload handler guidance and an API to use; will
-    // likely be using uppy plugins for this
     this._uppyInstance.on("file-added", (file) => {
       if (isPrivateMessage) {
         file.meta.for_private_message = true;
