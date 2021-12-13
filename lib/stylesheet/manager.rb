@@ -195,7 +195,7 @@ class Stylesheet::Manager
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
       theme_name = stylesheet[:theme_name]
-      data_theme_name = theme_name ? "data-theme-name=\"#{theme_name}\"" : ""
+      data_theme_name = theme_name ? "data-theme-name=\"#{CGI.escapeHTML(theme_name)}\"" : ""
       %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
     end.join("\n").html_safe
   end
