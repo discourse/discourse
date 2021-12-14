@@ -61,7 +61,7 @@ jobs:
 
       - name: Rubocop
         if: ${{ always() }}
-        run: bundle exec rubocop .
+        run: bundle exec rubocop --parallel .
 
       - name: ESLint (core)
         if: ${{ always() }}
@@ -74,8 +74,8 @@ jobs:
       - name: Prettier
         if: ${{ always() }}
         run: |
-          yarn prettier -v
-          yarn prettier --list-different \
+          yarn pprettier -v
+          yarn pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
