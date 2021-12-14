@@ -154,6 +154,8 @@ module TestSetup
 
     # Don't queue badge grant in test mode
     BadgeGranter.disable_queue
+
+    OmniAuth.config.test_mode = false
   end
 end
 

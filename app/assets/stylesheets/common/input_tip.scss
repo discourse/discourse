@@ -1,8 +1,22 @@
+@keyframes slidein {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
 .popup-tip {
+  @include form-item-sizing;
   position: absolute;
-  display: block;
-  padding: 5px 10px;
-  z-index: z("tooltip");
+  z-index: z("composer", "dropdown") + 1;
+  cursor: pointer;
+  animation: 0.15s slidein 3;
+
   &.bad {
     background: var(--danger-medium);
     color: white;
@@ -12,15 +26,12 @@
   &.good {
     display: none;
   }
-  .close {
-    float: right;
+  .d-icon {
     color: var(--primary);
     opacity: 0.5;
-    font-size: $font-0;
-    margin: 0 0 0 4px;
-    cursor: pointer;
-  }
-  .close:hover {
-    opacity: 1;
+    font-size: var(--font-0);
+    &:hover {
+      opacity: 1;
+    }
   }
 }
