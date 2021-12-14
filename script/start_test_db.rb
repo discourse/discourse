@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'optparse'
-
 BIN = "/usr/lib/postgresql/#{ENV["PG_MAJOR"]}/bin"
-DATA = "tmp/test_data/pg"
+DATA = "/tmp/test_data/pg"
 
 def run(*args)
   system(*args, exception: true)
