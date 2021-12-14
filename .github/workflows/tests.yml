@@ -54,11 +54,7 @@ jobs:
       - name: Start Postgres
         run: |
           chown -R postgres /var/run/postgresql
-          sudo -u postgres /usr/lib/postgresql/${{ matrix.postgres }}/bin/initdb -D /tmp/test_data/pg
-          echo fsync = off >> /tmp/test_data/pg/postgresql.conf
-          echo full_page_writes = off >> /tmp/test_data/pg/postgresql.conf
-          echo shared_buffers = 500MB >> /tmp/test_data/pg/postgresql.conf
-          sudo -u postgres /usr/lib/postgresql/13/bin/pg_ctl -D /tmp/test_data/pg start
+          sudo -u postgres script/start_test_db.rb
           sudo -u postgres /usr/lib/postgresql/13/bin/createuser -s $PGUSER
           sudo -u postgres psql -c "ALTER USER $PGUSER PASSWORD '$PGPASSWORD'"
 
