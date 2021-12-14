@@ -55,7 +55,7 @@ jobs:
       - name: Start Postgres
         run: |
           chown -R postgres /var/run/postgresql
-          sudo -u postgres script/start_test_db.rb
+          sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres /usr/lib/postgresql/13/bin/createuser -s $PGUSER
           sudo -u postgres psql -c "ALTER USER $PGUSER PASSWORD '$PGPASSWORD'"
 
