@@ -97,6 +97,9 @@
         },
         "chat_message": {
           "type": "integer"
+        },
+        "chat_invitation": {
+          "type": "integer"
         }
       },
       "required": [
