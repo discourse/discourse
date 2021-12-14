@@ -848,13 +848,6 @@ da:
   draft_backup:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
-  user_activity:
-    no_bookmarks:
-      self: "Du har ingen bogmærkede indlæg; bogmærker giver dig mulighed for hurtigt at henvise til bestemte indlæg."
-      search: "Ingen bogmærker fundet med den angivne søgeforespørgsel."
-      others: "Ingen bogmærker"
-    no_drafts:
-      self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
   email_settings:
     pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
     imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."

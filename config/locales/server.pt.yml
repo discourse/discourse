@@ -667,10 +667,6 @@ pt:
       title: "Gostar"
       description: "Gostar desta mensagem"
       short_description: "Gostar desta publicação"
-  user_activity:
-    no_bookmarks:
-      self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
-      others: "Sem marcadores."
   topic_flag_types:
     spam:
       title: "Spam"

@@ -837,13 +837,6 @@ zh_CN:
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
-  user_activity:
-    no_bookmarks:
-      self: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
-      search: "使用提供的搜索查询未找到书签。"
-      others: "无书签。"
-    no_drafts:
-      self: "您没有草稿；开始在任何话题中撰写回复，它将自动保存为新草稿。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
@@ -2274,11 +2267,6 @@ zh_CN:
     already_suspended: "用户已在 %{time_ago}被 %{staff} 封禁。"
     cannot_delete_has_posts:
       other: "用户 %{username} 在公开话题或个人消息中有 %{count} 个帖子，因此无法被删除。"
-  reviewables_reminder:
-    submitted:
-      other: "条目于 %{count} 小时前提交。[请审核](%{base_path}/review)。"
-    subject_template:
-      other: "%{count} 个条目需要审核"
   unsubscribe_mailer:
     title: "退订邮件"
     subject_template: "确认您不再希望收到%{site_title}的电子邮件动态"

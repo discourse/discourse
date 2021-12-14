@@ -40,12 +40,12 @@ de:
     user_cant_post_in_topic: "Du kannst nicht abstimmen, weil du in diesem Thema nicht schreiben kannst."
     topic_must_be_open_to_vote: "Das Thema muss zum Abstimmen geöffnet sein."
     poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
-    one_vote_per_user: "Für diese Umfrage ist nur 1 Stimme erlaubt."
+    one_vote_per_user: "Für diese Umfrage ist nur eine Stimme erlaubt."
     max_vote_per_user:
       one: Nur %{count} Stimmen sind für diese Umfrage erlaubt.
       other: Für diese Umfrage sind maximal %{count} Stimmen erlaubt.
     min_vote_per_user:
-      one: Für diese Umfrage ist mindestens %{count} Stimmen erforderlich.
+      one: Für diese Umfrage ist mindestens %{count} Stimme erforderlich.
       other: Für diese Umfrage sind mindestens %{count} Stimmen erforderlich.
     topic_must_be_open_to_toggle_status: "Damit du den Status ändern kannst, muss das Thema geöffnet sein."
     only_staff_or_op_can_toggle_status: "Nur ein Team-Mitglied und der Autor des Beitrags können den Status der Umfrage ändern."

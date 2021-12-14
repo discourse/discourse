@@ -161,6 +161,7 @@ hu:
     confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
     disabled_errors:
       invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
+    domain_not_allowed: "Az Ön e-mail-címe nem használható a meghívó beváltásához."
   topic_invite:
     receiver_does_not_allow_pm: "Sajnáljuk, de a felhasználó nem engedélyezi, hogy privát üzeneteket küldj nekik."
     sender_does_not_allow_pm: "Sajnáljuk, nem engedélyezed, hogy a felhasználó személyes üzeneteket küldjön neked."
@@ -573,12 +574,6 @@ hu:
       title: "Kedvelés"
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
-  user_activity:
-    no_bookmarks:
-      self: "Nincsenek könyvjelzővel ellátott bejegyzéseid; a könyvjelzők segítségével gyorsan hivatkozhatsz bizonyos bejegyzésekre."
-      others: "Nincsenek könyvjelzők."
-    no_drafts:
-      self: "Nincsenek még piszkozataid. Kezdj választ írni bármelyik témához, és ha nem küldöd el, automatikusan elmentjük piszkozatként."
   topic_flag_types:
     spam:
       title: "Szemét"
@@ -898,6 +893,7 @@ hu:
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    google_oauth2_hd_groups: "(kísérleti) A felhasználók a kiszolgálóhoz tartozó domainben lévő Google-csoportjainak lekérése hitelesítéskor. A lekért Google-csoportok segítségével automatikusan állíthat be Discourse csoporttagságot (lásd a csoportbeállításokat)."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
@@ -942,6 +938,7 @@ hu:
       invalid_string_max: "Nem lehet hosszabb, mint %{max} karakter."
       min_username_length_range: "Nem lehet a legnagyobb értéknél nagyobb legkisebb értéket beállítani."
       max_username_length_range: "Nem lehet a legkisebb értéknél kisebb legnagyobb értéket beállítani."
+      google_oauth2_hd_groups: "A beállítás engedélyezése előtt be kell ezt állítania: „google oauth2 hd”."
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:

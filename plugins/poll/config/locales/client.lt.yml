@@ -18,9 +18,14 @@ lt:
         many: "balsų iš viso"
         other: "balsų iš viso"
       average_rating: "Vidutinis reitingas: <strong>%{average}</strong>."
+      public:
+        title: "Balsai yra <strong>vieši</strong>."
       results:
         groups:
           title: "Jūs turite būti %{groups} narys, norėdami balsuoti šioje apklausoje."
+      multiple:
+        help:
+          between_min_and_max_options: "Pasirinkite tarp <strong>%{min}</strong> ir <strong>%{max}</strong> parinkčių."
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
@@ -47,6 +52,9 @@ lt:
         title: "Uždaryti balsavimą"
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
+      automatic_close:
+        closes_in: "Užsidaro po <strong>%{timeLeft}</strong>."
+        age: "Uždaryta <strong>%{age}</strong>"
       breakdown:
         title: "Apklausos rezultatai"
         votes: "%{count} balsų"
@@ -80,6 +88,7 @@ lt:
         poll_chart_type:
           label: Rezultatų diagrama
           bar: Juosta
+          pie: Pyragas
         poll_config:
           max: Maksimalūs pasirinkimai
           min: Minimalūs pasirinkimai

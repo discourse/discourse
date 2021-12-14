@@ -1484,7 +1484,10 @@ sv:
           expired_at_time: "Utgår kl. %{time}"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
+          restrict: "Begränsa till"
           restrict_email: "Begränsa till e-post"
+          restrict_domain: "Begränsa till domän"
+          email_or_domain_placeholder: "namn@exempel.se eller exempel.se"
           max_redemptions_allowed: "Max antal användningar"
           add_to_groups: "Lägg till i grupper"
           invite_to_topic: "Anländ till ämne"
@@ -3795,6 +3798,7 @@ sv:
             automatic_membership_user_count:
               one: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
               other: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
+            automatic_membership_associated_groups: "Användare som är medlemmar i en grupp på en tjänst som listas här kommer automatiskt att läggas till i denna grupp när de loggar in med tjänsten."
             primary_group: "Automatiskt inställd som primär grupp"
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
@@ -3892,6 +3896,14 @@ sv:
               list: Få en lista över användare.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
+            badges:
+              create: Skapa ett nytt märke.
+              show: Hämta information om ett märke.
+              update: Uppdatera ett märke.
+              delete: Radera ett märke.
+              list_user_badges: Lista användarens märken.
+              assign_badge_to_user: Tilldela ett märke till en användare.
+              revoke_badge_from_user: Återkalla ett märke från en användare.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."

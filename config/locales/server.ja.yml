@@ -829,13 +829,6 @@ ja:
   draft_backup:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
-  user_activity:
-    no_bookmarks:
-      self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
-      search: "指定された検索クエリでブックマークは見つかりませんでした。"
-      others: "ブックマークはありません。"
-    no_drafts:
-      self: "下書きはありません。トピックで返信の作成を始めると、新しい下書きとして自動保存されます。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
     imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
@@ -2258,11 +2251,6 @@ ja:
     already_suspended: "ユーザーは %{staff} によって %{time_ago}に凍結されています。"
     cannot_delete_has_posts:
       other: "ユーザー %{username} には公開トピックまたは個人メッセージに %{count} 件の投稿があるため、削除できません。"
-  reviewables_reminder:
-    submitted:
-      other: "%{count} 時間前に項目が送信されました。[レビューしてください](%{base_path}/review)。"
-    subject_template:
-      other: "%{count} 個の項目にレビューが必要です"
   unsubscribe_mailer:
     title: "購読解除メーラー"
     subject_template: "今後 %{site_title} からの更新メールの受信を希望しないことを確認してください"

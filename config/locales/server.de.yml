@@ -242,6 +242,7 @@ de:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
     requires_groups: "Einladung gespeichert. Um Zugriff auf das angegebene Thema zu gewähren, füge eine der folgenden Gruppen hinzu: %{groups}."
+    domain_not_allowed: "Diese E-Mail-Adresse kann nicht verwendet werden, um diese Einladung einzulösen."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datei in kleinere Teile aufzuteilen."
@@ -892,12 +893,6 @@ de:
     pm_title: "Sichere Entwürfe aus laufenden Themen"
     pm_body: "Thema enthält gesicherte Entwürfe"
   user_activity:
-    no_bookmarks:
-      self: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
-      search: "Keine Lesezeichen mit der angegebenen Suchanfrage gefunden."
-      others: "Keine Lesezeichen."
-    no_drafts:
-      self: "Du hast keine Entwürfe; verfasse eine Antwort in einem beliebigen Thema und sie wird automatisch als neuer Entwurf gespeichert."
     no_log_search_queries: "Suchprotokollabfragen sind derzeit deaktiviert (ein Administrator kann sie in den Website-Einstellungen aktivieren)."
   email_settings:
     pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
@@ -1621,6 +1616,7 @@ de:
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."
     google_oauth2_prompt: "Eine optionale, durch Leerzeichen getrennte Liste von String-Werten, die angibt, ob der Autorisierungsserver den Benutzer zur erneuten Authentifizierung und Zustimmung auffordert. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> für die möglichen Werte."
     google_oauth2_hd: "Eine optionale, bei Google Apps gehostete Domain, auf welche die Anmeldung beschränkt wird. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> für weitere Details."
+    google_oauth2_hd_groups: "(experimentell) Rufe die Google-Gruppen der Nutzer der gehosteten Domain bei der Authentifizierung ab. Die abgerufenen Google-Gruppen können verwendet werden, um die automatische Mitgliedschaft in Discourse-Gruppen zu gewähren (siehe Gruppeneinstellungen)."
     enable_twitter_logins: "Twitter-Authentifizierung aktivieren, erfordert twitter_consumer_key und twitter_consumer_secret. Siehe <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter-Anmeldung (und Rich Embeds) für Discourse konfigurieren</a>."
     twitter_consumer_key: "Consumer-Key für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer-Secret für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2147,6 +2143,7 @@ de:
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2369,13 +2366,6 @@ de:
     cannot_delete_has_posts:
       one: "Benutzer %{username} hat %{count} Beitrag in einem öffentlichen Thema oder einer persönlichen Nachricht verfasst. Löschen nicht möglich."
       other: "Benutzer %{username} hat %{count} Beiträge in öffentlichen Themen oder persönlichen Nachrichten verfasst. Löschen nicht möglich."
-  reviewables_reminder:
-    submitted:
-      one: "Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
-      other: "Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
-    subject_template:
-      one: "%{count} Element benötigt eine Überprüfung"
-      other: "%{count} Elemente benötigen eine Überprüfung"
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
@@ -2553,6 +2543,11 @@ de:
     one: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunde geschlossen."
     other: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunden geschlossen."
   system_messages:
+    reviewables_reminder:
+      subject_template: "Es gibt Elemente in der Überprüfungswarteschlange, die überprüft werden müssen"
+      text_body_template:
+        one: "%{mentions} Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
+        other: "%{mentions} Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
     private_topic_title: "Thema #%{id}"
     contents_hidden: "Bitte besuche den Beitrag, um die Inhalte zu sehen."
     post_hidden:

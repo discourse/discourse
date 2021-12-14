@@ -260,6 +260,7 @@ he:
       discourse_connect_enabled: "הזמנות מושבתות כיוון ש־DiscourseConnect מופעל."
       invalid_access: "אין לך הרשאות לצפות במשאב המבוקש."
     requires_groups: "ההזמנה נשמרה. כדי להעניק גישה לנושא שצוין, יש להוסיף את אחת מהקבוצות הבאות: %{groups}."
+    domain_not_allowed: "אי אפשר להשתמש בכתובת הדוא״ל שלך למימוש הזמנה זו."
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
@@ -974,12 +975,6 @@ he:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
-    no_bookmarks:
-      self: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
-      search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
-      others: "אין סימניות."
-    no_drafts:
-      self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
     no_log_search_queries: "שאילתות מול יומן החיפושים מושבתות (הנהלת המערכת יכולה להפעיל אותן בהגדרות האתר)."
   email_settings:
     pop3_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור POP3, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
@@ -1703,6 +1698,7 @@ he:
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
+    google_oauth2_hd_groups: "(ניסיוני) למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצת של Discourse (ניתן להציץ בהגדרות הקבוצה)."
     enable_twitter_logins: "הפעלת אימות עם טוויטר, דורש twitter_consumer_key ו־twitter_consumer_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13395' target='_blank'>הגדרת כניסה עם טוויטר (לרבות הטמעות עשירות) ל־Discourse</a>."
     twitter_consumer_key: "מפתח צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "סוד צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2227,6 +2223,7 @@ he:
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+      google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2490,17 +2487,6 @@ he:
       two: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
       many: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
       other: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
-  reviewables_reminder:
-    submitted:
-      one: "הוגשו פריטים לפני למעלה משעה (%{count}). [נא לסקור אותם](%{base_path}/review)."
-      two: "הוגשו פריטים לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_path}/review)."
-      many: "הוגשו פריטים לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
-      other: "הוגשו פריטים לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
-    subject_template:
-      one: "פריט %{count} ממתין לסקירה"
-      two: "%{count} פריטים ממתינים לסקירה"
-      many: "%{count} פריטים ממתינים לסקירה"
-      other: "%{count} פריטים ממתינים לסקירה"
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "נא לאשר שלא מעניין אותך לקבל עוד עדכוני דוא״ל מאת %{site_title}"
@@ -2679,6 +2665,13 @@ he:
     many: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
     other: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
   system_messages:
+    reviewables_reminder:
+      subject_template: "יש פריטים בתור הביקורת שדורשים סקירה"
+      text_body_template:
+        one: "%{mentions} פריטים הוגשו לפני למעלה משעה %{count}. [נא לסקור אותם](%{base_path}/review)."
+        two: "%{mentions} פריטים הוגשו לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_path}/review)."
+        many: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
+        other: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
     post_hidden:

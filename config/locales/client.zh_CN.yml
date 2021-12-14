@@ -1425,6 +1425,8 @@ zh_CN:
           expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
+          restrict: "限制在"
+          email_or_domain_placeholder: "name@example.com 或者 example.com"
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
           expires_at: "过期时间"
@@ -1832,6 +1834,8 @@ zh_CN:
       cannot_see_mention:
         category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
         private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
+      here_mention:
+        other: "通过提及 <b>@%{here}</b>，您将要通知 %{count} 用户 – 您确定吗？"
       duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
       reference_topic_title: "回复：%{title}"
       error:
@@ -1994,6 +1998,8 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       dismiss_confirmation:
+        body:
+          other: "您确定吗？您有 %{count} 个重要通知。"
         dismiss: "关闭"
         cancel: "取消"
       group_message_summary:
@@ -2077,6 +2083,9 @@ zh_CN:
       in_topics_posts: "在所有主题和帖子中"
       enter_hint: "或按 Enter"
       in_posts_by: "搜索 @%{username} 的帖子"
+      browser_tip: "%{modifier} + f"
+      recent: "最近的搜索"
+      clear_recent: "清除搜索历史"
       type:
         default: "主题/帖子"
         users: "用户"
@@ -2479,6 +2488,8 @@ zh_CN:
         help: "分享此话题的链接"
         instructions: "分享此话题的链接："
         copied: "话题链接已复制。"
+        restricted_groups:
+          other: "仅对 %{groupNames} 群组成员可见"
         notify_users:
           title: "通知"
           instructions: "通知以下用户有关此话题的信息："
@@ -3324,10 +3335,12 @@ zh_CN:
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
+      save: "保存标签的名称和描述"
       tag_groups_info:
         other: "此标签属于以下组：%{tag_groups}。"
       category_restrictions:
         other: "它只能用于以下类别："
+      edit_synonyms: "编辑同义标签"
       add_synonyms_label: "添加同义词："
       add_synonyms: "添加"
       add_synonyms_explanation:
@@ -3341,6 +3354,7 @@ zh_CN:
       delete_confirm_no_topics: "确定要删除此标签吗？"
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
+      edit_tag: "编辑标签名称和描述"
       description: "描述"
       sort_by: "排序依据："
       sort_by_count: "计数"
@@ -3689,6 +3703,8 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
+            uploads:
+              create: 上传一个新文件。
             users:
               bookmarks: 列出用户书签。使用 ICS 格式时返回书签提醒。
               sync_sso: 使用 DiscourseConnect 同步用户。
@@ -3701,6 +3717,14 @@ zh_CN:
               list: 获取用户列表。
             email:
               receive_emails: 将此范围与邮件收件人结合来处理传入电子邮件。
+            badges:
+              create: 创建一个新徽章。
+              show: 获取有关该徽章的信息。
+              update: 更新一个徽章。
+              delete: 删除一个徽章
+              list_user_badges: 列出用户拥有的徽章。
+              assign_badge_to_user: 授予用户徽章。
+              revoke_badge_from_user: 撤销用户的徽章。
       web_hooks:
         title: "网络钩子"
         none: "当前没有网络钩子。"
@@ -4063,8 +4087,11 @@ zh_CN:
               %{example}
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
+          head_tag:
+            title: "将在 </head> tag 前插入的 HTML"
           body_tag:
             text: "正文"
+            title: "将在 </body> tag前插入的 HTML"
           yaml:
             text: "YAML"
             title: "使用 YAML 格式定义主题设置"
@@ -4910,6 +4937,7 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
+        help: "添加可供所有人使用的新表情符号。一次拖放多个文件且不输入名称即可使用文件名创建表情符号。"
         add: "添加新表情符号"
         uploading: "正在上传…"
         name: "名称"
@@ -4920,6 +4948,7 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
+        sample: "将以下 HTML 代码粘贴到您的站点来创建discourse嵌入式话题。将 <b>REPLACE_ME</b> 替换为目标页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"

@@ -231,9 +231,6 @@ sr:
       title: "Nepoželjno"
     bookmark:
       title: "Markiraj"
-  user_activity:
-    no_bookmarks:
-      self: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
   topic_flag_types:
     spam:
       title: "Nepoželjno"

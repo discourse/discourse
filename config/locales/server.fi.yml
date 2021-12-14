@@ -880,13 +880,6 @@ fi:
   draft_backup:
     pm_title: "Varmuuskopiot käynnissä olevien ketjujen luonnoksista"
     pm_body: "Ketju, joka sisältää varmuuskopioluonnoksia"
-  user_activity:
-    no_bookmarks:
-      self: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
-      search: "Kirjanmerkkejä ei löytynyt näillä hakusanoilla."
-      others: "Ei kirjanmerkkejä."
-    no_drafts:
-      self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan vastausta mihin tahansa ketjuun, niin se tallentuu automaattiseksi uudeksi luonnokseksi."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
     imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
@@ -2320,13 +2313,6 @@ fi:
     cannot_delete_has_posts:
       one: "Käyttäjällä %{username} on %{count} viesti julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
       other: "Käyttäjällä %{username} on %{count} viestiä julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
-  reviewables_reminder:
-    submitted:
-      one: "Kohteet lähetettiin yli %{count} tunti sitten. [Tarkasta ne](%{base_path}/review)."
-      other: "Kohteet lähetettiin yli %{count} tuntia sitten. [Tarkasta ne](%{base_path}/review)."
-    subject_template:
-      one: "%{count} kohde odottaa tarkastusta"
-      other: "%{count} kodetta odottaa tarkastusta"
   unsubscribe_mailer:
     title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."

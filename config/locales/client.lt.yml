@@ -1454,6 +1454,8 @@ lt:
           expired_at_time: "Galiojimo laikas baigėsi %{time}"
           show_advanced: "Rodyti išplėstines parinktis"
           hide_advanced: "Slėpti išplėstines parinktis"
+          restrict: "Apriboti"
+          email_or_domain_placeholder: "vardas@example.com arba example.com"
           max_redemptions_allowed: "Maksimaliai naudoja"
           add_to_groups: "Pridėti prie grupių"
           expires_at: "Baigia galioti"
@@ -1624,6 +1626,7 @@ lt:
     create_account:
       header_title: "Sveiki!"
       subheader_title: "Sukurti naują paskyrą"
+      disclaimer: "Registruodamiesi sutinkate su <a href='%{privacy_link}' target='blank'>privatumo politika</a> ir <a href='%{tos_link}' target='blank'>paslaugų teikimo sąlygomis</a>."
       title: "Sukurti naują paskyrą"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
@@ -2078,7 +2081,7 @@ lt:
         author: "filtruoti pagal įrašo autorių"
         in: "filtruoja pagal metaduomenis (pvz .: į: pavadinimą, į: asmeninį, į: prisegtą)"
         status: "filtruoti pagal temos būseną"
-        full_search: "pradeda viso puslapio paiešką"
+        full_search: "paleidžiama viso puslapio paieška"
         full_search_key: "%{modifier} + Įveskite"
       advanced:
         title: Išplėstiniai filtrai
@@ -2358,6 +2361,7 @@ lt:
         auto_close_after_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
         auto_delete: "Ši tema bus automatiškai ištrinta %{timeLeft}."
         auto_reminder: "Jums bus priminta apie šią temą %{timeLeft}."
+        auto_delete_replies: "Atsakymai šia tema automatiškai ištrinami po %{duration}."
       auto_close_title: "Automatinio uždarymo nustatymai"
       timeline:
         back: "Atgal"
@@ -3208,7 +3212,7 @@ lt:
         up_down: "%{shortcut} Perkelti pasirinkimus &uarr; &darr;"
         open: "%{shortcut} Atidaryti pažymetą temą"
         next_prev: "%{shortcut} Kitas/sekantis skyrius"
-        go_to_unread_post: "%{shortcut} Eiti į pirmąją neskaitą temą"
+        go_to_unread_post: "%{shortcut} Eiti į pirmąją neskaitytą temą"
       application:
         title: "Aplikacija"
         create: "%{shortcut} Sukurti naują temą"
@@ -3261,6 +3265,7 @@ lt:
       search_menu:
         title: "Paieškos meniu"
         prev_next: "%{shortcut} Perkelti pasirinkimą aukštyn ir žemyn"
+        full_page_search: "%{shortcut} Paleidžiama viso puslapio paieška"
     badges:
       granted_on: "Suteikta %{date}"
       others_count: "Kiti, turintys šį ženklelį (%{count})"
@@ -3588,6 +3593,7 @@ lt:
             effects: Efektai
             trust_levels_none: "Nieko"
             automatic_membership_email_domains: "Vartotojai, kurie užsiregistravo su el. paštu, kuris sutampa su šiame sąraše esančiu el. paštu bus automatiškai pridėti į šią grupę:"
+            automatic_membership_associated_groups: "Vartotojai, kurie yra čia išvardytos paslaugos grupės nariai, bus automatiškai įtraukti į šią grupę, kai jie prisijungs prie paslaugos."
             primary_group: "Automatiškai nustatyk pagrindinę grupę"
         name_placeholder: "Grupės pavadinimas, be tarpų, taisyklės kaip ir slapyvardžiui"
         primary: "Pagrindinė Grupė"
@@ -4449,7 +4455,7 @@ lt:
         last_100_days: "per paskutines 100 dienų"
         private_topics_count: Privačios temos
         posts_read_count: Perskaityti pranešimai
-        post_count: Sukurti pranešimai
+        post_count: Sukurta įrašų
         second_factor_enabled: Įgalintas dviejų veiksnių autentifikavimas
         topics_entered: Perskaitytos temos
         flags_given_count: Suteiktos Vėliavos
