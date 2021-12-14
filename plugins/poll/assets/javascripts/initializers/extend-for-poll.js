@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { cancel, later } from "@ember/runloop";
 import WidgetGlue from "discourse/widgets/glue";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
@@ -7,15 +6,17 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PLUGIN_ID = "discourse-poll";
 let _glued = [];
-let _rerenderer = null;
+let _interval = null;
 
 function rerender() {
   _glued.forEach((g) => g.queueRerender());
-  _rerenderer = later(rerender, 30000);
 }
 
 function cleanUpPolls() {
-  cancel(_rerenderer);
+  if (_interval) {
+    clearInterval(_interval);
+    _interval = null;
+  }
 
   _glued.forEach((g) => g.cleanUp());
   _glued = [];
@@ -23,7 +24,6 @@ function cleanUpPolls() {
 
 function initializePolls(api) {
   const register = getRegister(api);
-  cleanUpPolls();
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
@@ -80,7 +80,7 @@ function initializePolls(api) {
     const polls = post.pollsObject || {};
     const votes = post.polls_votes || {};
 
-    _rerenderer = _rerenderer || later(rerender, 30000);
+    _interval = _interval || setInterval(rerender, 30000);
 
     pollNodes.forEach((pollNode) => {
       const pollName = pollNode.dataset.pollName;
