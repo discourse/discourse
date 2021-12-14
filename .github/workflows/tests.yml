@@ -15,7 +15,6 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ubuntu-latest
     container: ${{ (matrix.build_type == 'frontend' && 'discourse/discourse_test:release' || 'discourse/base:slim') }}
-      
     timeout-minutes: 60
 
     env:
@@ -32,7 +31,6 @@ jobs:
       matrix:
         build_type: [backend, frontend, annotations]
         target: [core, plugins]
-        postgres: ["13"]
         exclude:
           - build_type: annotations
             target: plugins
@@ -55,8 +53,7 @@ jobs:
         run: |
           chown -R postgres /var/run/postgresql
           sudo -E -u postgres script/start_test_db.rb
-          sudo -u postgres /usr/lib/postgresql/13/bin/createuser -s $PGUSER
-          sudo -u postgres psql -c "ALTER USER $PGUSER PASSWORD '$PGPASSWORD'"
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
         uses: actions/cache@v2
