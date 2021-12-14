@@ -68,9 +68,9 @@ function initializePolls(api) {
     },
   });
 
-  function attachPolls($elem, helper) {
-    const $polls = $(".poll", $elem);
-    if (!$polls.length || !helper) {
+  function attachPolls(elem, helper) {
+    const pollNodes = elem.querySelectorAll(".poll");
+    if (!pollNodes.length || !helper) {
       return;
     }
 
@@ -83,26 +83,23 @@ function initializePolls(api) {
 
     _interval = _interval || setInterval(rerender, 30000);
 
-    $polls.each((idx, pollElem) => {
-      const $poll = $(pollElem);
-      const pollName = $poll.data("poll-name");
+    pollNodes.forEach((pollNode) => {
+      const pollName = pollNode.dataset.pollName;
       let poll = polls[pollName];
       let pollPost = post;
       let vote = votes[pollName] || [];
 
-      const quotedId = $poll.parent(".expanded-quote").data("post-id");
+      const quotedId = pollNode.closest(".expanded-quote")?.dataset.postId;
       if (quotedId && post.quoted[quotedId]) {
         pollPost = post.quoted[quotedId];
         pollPost = EmberObject.create(pollPost);
-        poll = EmberObject.create(
-          pollPost.polls.find((p) => p.name === pollName)
-        );
+        poll = EmberObject.create(pollPost.polls.findBy("name", pollName));
         vote = pollPost.polls_votes || {};
         vote = vote[pollName] || [];
       }
 
       if (poll) {
-        const titleElement = pollElem.querySelector(".poll-title");
+        const titleElement = pollNode.querySelector(".poll-title");
 
         const attrs = {
           id: `${pollName}-${pollPost.id}`,
@@ -110,7 +107,7 @@ function initializePolls(api) {
           poll,
           vote,
           hasSavedVote: vote.length > 0,
-          titleHTML: titleElement && titleElement.outerHTML,
+          titleHTML: titleElement?.outerHTML,
           groupableUserFields: (
             api.container.lookup("site-settings:main")
               .poll_groupable_user_fields || ""
@@ -119,14 +116,17 @@ function initializePolls(api) {
             .filter(Boolean),
         };
         const glue = new WidgetGlue("discourse-poll", register, attrs);
-        glue.appendTo(pollElem);
+        glue.appendTo(pollNode);
         _glued.push(glue);
       }
     });
   }
 
   api.includePostAttributes("polls", "polls_votes");
-  api.decorateCooked(attachPolls, { onlyStream: true, id: "discourse-poll" });
+  api.decorateCookedElement(attachPolls, {
+    onlyStream: true,
+    id: "discourse-poll",
+  });
   api.cleanupStream(cleanUpPolls);
 }
 
