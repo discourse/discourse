@@ -15,13 +15,13 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ubuntu-latest
     container: ${{ (matrix.build_type == 'frontend' && 'discourse/discourse_test:release' || 'discourse/base:slim') }}
+      
     timeout-minutes: 60
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
       RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
       RAILS_ENV: test
-      PGHOST: postgres
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
@@ -37,22 +37,6 @@ jobs:
           - build_type: annotations
             target: plugins
 
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres }}
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: discourse
-          POSTGRES_PASSWORD: discourse
-          POSTGRES_DB: discourse_test
-        options: >-
-          --mount type=tmpfs,destination=/var/lib/postgresql/data
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - uses: actions/checkout@master
         with:
@@ -66,6 +50,17 @@ jobs:
       - name: Start redis
         run: |
           redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -u postgres /usr/lib/postgresql/${{ matrix.postgres }}/bin/initdb -D /tmp/test_data/pg
+          echo fsync = off >> /tmp/test_data/pg/postgresql.conf
+          echo full_page_writes = off >> /tmp/test_data/pg/postgresql.conf
+          echo shared_buffers = 500MB >> /tmp/test_data/pg/postgresql.conf
+          sudo -u postgres /usr/lib/postgresql/13/bin/pg_ctl -D /tmp/test_data/pg start
+          sudo -u postgres /usr/lib/postgresql/13/bin/createuser -s $PGUSER
+          sudo -u postgres psql -c "ALTER USER $PGUSER PASSWORD '$PGPASSWORD'"
 
       - name: Bundler cache
         uses: actions/cache@v2
