@@ -24,6 +24,7 @@ function cleanUpPolls() {
 
 function initializePolls(api) {
   const register = getRegister(api);
+  cleanUpPolls();
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
