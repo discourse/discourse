@@ -916,6 +916,9 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "should use username of the staged user if username in payload is the same" do
+        # it's important to check this, because we had regressions
+        # when usernames were changed to the same username with "1" added at the end
+
         mock_auth(staged_user.email, staged_user.username)
 
         get "/auth/google_oauth2/callback.json"
