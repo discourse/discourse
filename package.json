@@ -9,7 +9,7 @@
     "@discourse/itsatrap": "^2.0.10",
     "@fortawesome/fontawesome-free": "5.11.2",
     "@highlightjs/cdn-assets": "^10.7.0",
-    "@json-editor/json-editor": "^2.5.2",
+    "@json-editor/json-editor": "^2.6.1",
     "@popperjs/core": "v2.10.2",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/utils": "^4.0.3",

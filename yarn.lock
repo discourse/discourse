@@ -157,12 +157,12 @@
   resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.7.3.tgz#bccdef5cdfe4bf74ed9393cba528539f94753306"
   integrity sha512-Bz1c7NOPQE1h/0S3lYaDyA5wTimP9b8ppeN3HBfv+SF0IEeLsu86xneMcBvCaXBMwcwLc6/xGpyPOmPhCM8hAg==
 
-"@json-editor/json-editor@^2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.5.2.tgz#d6f348d7e2f5bf9ccf2e3b34f637143674265e7f"
-  integrity sha512-OqrPtRw8FM2mSZbAFFvvxW6j8JvXCoQbhMgSiryhmcoByh3tQk+PuhK+2+bk9K/zn9PAt9KQsAiSc9sv6WIr/A==
+"@json-editor/json-editor@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.6.1.tgz#169e8b88305d71ccac391c3ae22d4145bc63c9f7"
+  integrity sha512-8jH0n+BLO/jqBCZ3XXaes3NYzvQ+6KfO1p79MsIsTClIi5AvSvEzg3EWk4lsMWrUAFRwcM/CaififsoYDXMdMw==
   dependencies:
-    core-js "^3.6.5"
+    core-js "^3.12.1"
 
 "@mixer/parallel-prettier@^2.0.1":
   version "2.0.1"
@@ -1137,10 +1137,10 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
-core-js@^3.6.5:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.9.0.tgz#790b1bb11553a2272b36e2625c7179db345492f8"
-  integrity sha512-PyFBJaLq93FlyYdsndE5VaueA9K5cNB7CGzeCj191YYLhkQM0gdZR2SKihM70oF0wdqKSKClv/tEBOpoRmdOVQ==
+core-js@^3.12.1:
+  version "3.19.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.3.tgz#6df8142a996337503019ff3235a7022d7cdf4559"
+  integrity sha512-LeLBMgEGSsG7giquSzvgBrTS7V5UL6ks3eQlUSbN8dJStlLFiRzUm5iqsRyzUB8carhfKjkJ2vzKqE6z1Vga9g==
 
 core-util-is@~1.0.0:
   version "1.0.2"
