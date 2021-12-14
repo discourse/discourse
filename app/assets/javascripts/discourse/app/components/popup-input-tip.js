@@ -1,4 +1,4 @@
-import { alias, not, or } from "@ember/object/computed";
+import { not, or, reads } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -9,7 +9,7 @@ export default Component.extend({
   rerenderTriggers: ["validation.reason"],
   tipReason: null,
   lastShownAt: or("shownAt", "validation.lastShownAt"),
-  bad: alias("validation.failed"),
+  bad: reads("validation.failed"),
   good: not("bad"),
 
   @discourseComputed("bad")
