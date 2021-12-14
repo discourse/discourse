@@ -24,7 +24,7 @@ jobs:
       PGHOST: postgres
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type=='backend' && matrix.target=='core' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
 
     strategy:
       fail-fast: false
