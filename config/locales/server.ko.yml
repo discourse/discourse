@@ -837,13 +837,6 @@ ko:
   draft_backup:
     pm_title: "진행중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함 된 주제"
-  user_activity:
-    no_bookmarks:
-      self: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
-      search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
-      others: "북마크가 없습니다"
-    no_drafts:
-      self: "임시 저장 글이 없습니다. 글에 대한 댓글 작성을 시작하면 새 초안으로 자동 저장됩니다."
   email_settings:
     pop3_authentication_error: "제공된 POP3 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
@@ -2264,11 +2257,6 @@ ko:
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
     cannot_delete_has_posts:
       other: "사용자 %{username}님은 %{count}개의 게시물이 있으므로 삭제할 수 없습니다."
-  reviewables_reminder:
-    submitted:
-      other: "항목이 %{count}시간 전에 제출되었습니다. [검토해주세요] (%{base_path}/review)."
-    subject_template:
-      other: "%{count}개 항목을 검토해야합니다."
   unsubscribe_mailer:
     title: "메일링 구독해지"
     subject_template: "더 이상 %{site_title}에서 이메일 업데이트를 수신하지 않기를 확인하십시오"

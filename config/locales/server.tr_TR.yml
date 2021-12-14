@@ -883,12 +883,6 @@ tr_TR:
     pm_title: "Açık konulardaki Taslakları yedekle"
     pm_body: "Yedek taslaklar içeren konu"
   user_activity:
-    no_bookmarks:
-      self: "Yer imlerine eklenmiş yayınınız yok; yer imleri, belirli gönderilere hızlı bir şekilde ulaşmanızı sağlar."
-      search: "Bu arama koşullarıyla bir yer işareti bulunamadı."
-      others: "Yer imi yok."
-    no_drafts:
-      self: "Taslak yok; herhangi bir konuyu yanıtlamaya başladığınızda otomatik olarak yeni bir taslak olarak kaydedilecek."
     no_log_search_queries: "Arama günlüğü sorguları şu anda devre dışı bırakılmıştır (bir yönetici bunları site ayarlarında etkinleştirebilir)."
   email_settings:
     pop3_authentication_error: "Sağlanan POP3 kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adını ve şifreyi kontrol edip tekrar deneyin."
@@ -2298,13 +2292,6 @@ tr_TR:
     cannot_delete_has_posts:
       one: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{count} adet gönderisi var, dolayısıyla silinemez."
       other: "%{username} kullanıcısının herkese açık gönderiler veya kişisel mesajlardan oluşan %{count} adet gönderisi var, dolayısıyla silinemez."
-  reviewables_reminder:
-    submitted:
-      one: "Öğeler bir saat önce gönderildi %{count} saat. [Lütfen onları inceleyin] (%{base_path} / review)."
-      other: "Öğeler %{count} saat önce gönderilmiş. [Lütfen onları inceleyin] (%{base_path} / review)."
-    subject_template:
-      one: "%{count} öğenin incelenmesi gerekiyor"
-      other: "%{count} öğeler incelenmelidir"
   unsubscribe_mailer:
     title: "Posta göndericisinden çık"
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"

@@ -649,12 +649,6 @@ zh_TW:
       title: "讚"
       description: "給此貼文按讚"
       short_description: "喜歡這篇貼文"
-  user_activity:
-    no_bookmarks:
-      self: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
-      others: "沒有書籤。"
-    no_drafts:
-      self: "您沒有任何草稿，開始撰寫任何話題的回應，即會被自動儲存為新的草稿。"
   topic_flag_types:
     spam:
       title: "垃圾內容"
@@ -1768,11 +1762,6 @@ zh_TW:
       fixed_primary_email: "為暫存使用者（staged user）修復主要電子郵件"
       same_ip_address: "與其他使用者使用相同的IP地址（%{ip_address}）"
       inactive_user: "不活躍使用者"
-  reviewables_reminder:
-    submitted:
-      other: "項目是在幾個小時前提交的。（查看更多資訊：%{base_path}/review）。"
-    subject_template:
-      other: "%{count}項目需要被審核"
   unsubscribe_mailer:
     title: "取消訂閱 Mailer"
     subject_template: "確認你不想要收到%{site_title}的電子郵件更新"

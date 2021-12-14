@@ -614,9 +614,12 @@ nl:
       member_added: "Toegevoegd"
       member_requested: "Aangevraagd:"
       add_members:
+        title: "Voeg gebruikers toe aan %{group_name}"
+        description: "Voer een lijst in met gebruikers die u voor de groep wilt uitnodigen of plak hier een door komma's gescheiden lijst:"
         usernames_placeholder: "gebruikersnamen"
         usernames_or_emails_placeholder: "gebruikersnamen of e-mailadressen"
         notify_users: "Gebruikers een melding sturen"
+        set_owner: "Stel gebruikers in als eigenaar van deze groep"
       requests:
         title: "Aanvragen"
         reason: "Reden"
@@ -642,6 +645,8 @@ nl:
         email:
           title: "E-mailadres"
           status: "%{old_emails} / %{total_emails} e-mails via IMAP gesynchroniseerd."
+          enable_smtp: "SMTP inschakelen"
+          enable_imap: "IMAP inschakelen"
           test_settings: "Test Instellingen"
           save_settings: "Instellingen opslaan"
           last_updated: "Laatst bijgewerkt:"
@@ -915,6 +920,7 @@ nl:
           all: "Alle"
           read: "Gelezen"
           unread: "Ongelezen"
+          unseen: "Ongelezen"
         ignore_duration_title: "Gebruiker negeren"
         ignore_duration_username: "Gebruikersnaam"
         ignore_duration_when: "Tijdsduur:"
@@ -1090,6 +1096,7 @@ nl:
         warnings_received: "waarschuwingen"
         rejected_posts: "geweigerde berichten"
       messages:
+        all: "alle inboxen"
         inbox: "Postvak IN"
         personal: "Persoonlijk"
         latest: "Nieuwste"
@@ -1443,6 +1450,7 @@ nl:
           copy_link: "koppeling kopiëren"
           show_advanced: "Geavanceerde opties tonen"
           hide_advanced: "Geavanceerde opties verbergen"
+          email_or_domain_placeholder: "naam@example.com of example.com"
           add_to_groups: "Toevoegen aan groepen"
           expires_at: "Verloopt na"
           custom_message: "Optioneel persoonlijk bericht"
@@ -1527,6 +1535,7 @@ nl:
       title:
         title: "Titel"
         none: "(geen)"
+        instructions: "komt achter je gebruikersnaam"
       flair:
         none: "(geen)"
       primary_group:
@@ -1604,13 +1613,15 @@ nl:
       intro: "Hallo! Zo te zien beleeft u plezier aan de discussie, maar hebt u zich nog niet voor een account geregistreerd."
       value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
-      enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
+      enabled_description: "U bekijkt een samenvatting van dit topic: de interessantste berichten volgens de gemeenschap."
       description:
         one: "Er is <b>%{count}</b> antwoord."
         other: "Er zijn <b>%{count}</b> antwoorden."
       description_time_MF: "Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>."
       enable: "Dit topic samenvatten"
       disable: "Alle berichten tonen"
+      short_label: "Samenvatten"
+      short_title: "Bekijk een samenvatting van dit topic: de interessantste berichten volgens de gemeenschap"
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
       disabled_description: "Verwijderde berichten in het topic worden getoond."
@@ -1982,6 +1993,8 @@ nl:
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
       reload: "Opnieuw laden"
       ignore: "Negeren"
+      image_alt_text:
+        aria_label: Alt-tekst voor afbeelding
     notifications:
       tooltip:
         regular:
@@ -2031,6 +2044,9 @@ nl:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
       dismiss_confirmation:
+        body:
+          one: "Weet u het zeker? U hebt %{count} belangrijke melding."
+          other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
         dismiss: "Negeren"
         cancel: "Annuleren"
       group_message_summary:
@@ -2209,6 +2225,7 @@ nl:
         close_topics: "Topics sluiten"
         archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Naar Postvak IN verplaatsen"
+        notification_level: "Meldingen..."
         change_notification_level: "Wijzig meldingsniveau"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
         selected:
@@ -2228,6 +2245,7 @@ nl:
           other: "Voortgang: <strong>%{count}</strong> topics"
       none:
         unread: "U hebt geen ongelezen topics."
+        unseen: "U hebt geen ongelezen topics."
         new: "U hebt geen nieuwe topics."
         read: "U hebt nog geen topics gelezen."
         posted: "U hebt nog niet in een topic gereageerd."
@@ -2244,6 +2262,7 @@ nl:
         read: "Er zijn geen gelezen topics meer."
         new: "Er zijn geen nieuwe topics meer."
         unread: "Er zijn geen ongelezen topics meer."
+        unseen: "Er zijn geen ongelezen topics meer."
         category: "Er zijn geen topics meer in %{category}."
         tag: "Er zijn geen topics meer in %{tag}."
         top: "Er zijn geen toptopics meer."
@@ -2681,7 +2700,7 @@ nl:
       last_edited_on: "bericht laatst bewerkt op %{dateTime}"
       reply_as_new_topic: "Antwoorden als gekoppeld topic"
       reply_as_new_private_message: "Antwoorden als nieuw bericht naar dezelfde ontvangers"
-      continue_discussion: "Voortzetting van de discussie %{postLink}:"
+      continue_discussion: "Doorgaan met de discussie van %{postLink}:"
       follow_quote: "naar het geciteerde bericht"
       show_full: "Volledige bericht tonen"
       show_hidden: "Genegeerde inhoud weergeven."
@@ -3168,6 +3187,9 @@ nl:
         lower_title_with_count:
           one: "%{count} ongelezen"
           other: "%{count} ongelezen"
+      unseen:
+        title: "Ongelezen"
+        lower_title: "ongelezen"
       new:
         lower_title_with_count:
           one: "%{count} nieuw"
@@ -3435,10 +3457,12 @@ nl:
         usable_only_by_groups: "Tags zijn voor iedereen zichtbaar, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
         cannot_save: "Kan tag-groep niet opslaan. Zorg ervoor dat er ten minste één tag aanwezig is, de tag-group naam niet leeg is en een groep geselecteerd is voor tags toestemming."
+        tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
       topics:
         none:
           unread: "U hebt geen ongelezen topics."
+          unseen: "U hebt geen ongelezen topics."
           new: "U hebt geen nieuwe topics."
           read: "U hebt nog geen topics gelezen."
           posted: "U hebt nog geen berichten in topics geplaatst."
@@ -3480,9 +3504,11 @@ nl:
         regular: "vaste gebruiker"
         leader: "leider"
     user_activity:
+      no_activity_body: "Welkom bij onze gemeenschap! U bent hier gloednieuw en hebt nog niet bijgedragen aan discussies. Als een eerste stap, bezoek <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> en begin maar met lezen! Selecteer %{heartIcon} op berichten die u leuk vindt of waarover u meer wilt weten. Indien u dat nog niet gedaan hebt, help anderen u beter te leren kennen door een foto en een bio toe te voegen in uw <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>."
       no_activity_others: "Geen activiteit."
       no_replies_others: "Geen antwoorden."
       no_likes_others: "Geen gelikete berichten."
+      no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -4978,3 +5004,4 @@ nl:
       previews:
         share_button: "Delen"
         reply_button: "Antwoorden"
+        topic_preview: "Topicvoorbeeld"

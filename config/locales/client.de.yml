@@ -1484,7 +1484,10 @@ de:
           expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
+          restrict: "Beschränken auf"
           restrict_email: "Auf E-Mail beschränken"
+          restrict_domain: "Auf Domain beschränken"
+          email_or_domain_placeholder: "name@beispiel.de oder beispiel.de"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
           invite_to_topic: "Ankommen beim Thema"
@@ -3795,6 +3798,7 @@ de:
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            automatic_membership_associated_groups: "Nutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels diesen Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Primäre Gruppe"
@@ -3892,6 +3896,14 @@ de:
               list: Benutzerliste anfordern
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
+            badges:
+              create: Erstelle ein neues Abzeichen.
+              show: Erhalte Informationen über ein Abzeichen.
+              update: Abzeichen aktualisieren.
+              delete: Abzeichen löschen.
+              list_user_badges: Abzeichen eines Nutzers auflisten.
+              assign_badge_to_user: Abzeichen einem Nutzer zuweisen.
+              revoke_badge_from_user: Abzeichen einem Nutzer entziehen.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."

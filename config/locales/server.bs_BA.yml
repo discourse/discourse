@@ -356,9 +356,6 @@ bs_BA:
       title: "Like"
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
-  user_activity:
-    no_bookmarks:
-      self: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
   topic_flag_types:
     spam:
       title: "Spam"

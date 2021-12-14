@@ -569,10 +569,6 @@ cs:
       title: "To se mi líbí"
       description: "Tento příspěvek se mi líbí"
       short_description: "Tento příspěvek se mi líbí"
-  user_activity:
-    no_bookmarks:
-      self: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      others: "Žádné záložky."
   topic_flag_types:
     spam:
       title: "Spam"

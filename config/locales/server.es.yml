@@ -887,13 +887,6 @@ es:
   draft_backup:
     pm_title: "Borradores de respaldo de temas en curso"
     pm_body: "Tema que contiene borradores de respaldo"
-  user_activity:
-    no_bookmarks:
-      self: "No tienes publicaciones guardadas en marcadores; guardar en marcadores permite que vuelvas a los temas rápidamente."
-      search: "No se han encontrado marcadores para la consulta de búsqueda proporcionada."
-      others: "No hay nada guardado en marcadores."
-    no_drafts:
-      self: "No tienes ningún borrador; empieza a escribir una respuesta en cualquier tema y se guardará automáticamente como nuevo borrador."
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
@@ -2351,13 +2344,6 @@ es:
     cannot_delete_has_posts:
       one: "El usuario %{username} tiene %{count} publicación en un tema público o en un mensaje personal, por lo que no se pueden eliminar."
       other: "El usuario %{username} tiene %{count} publicaciones en un tema público o en un mensaje personal, por lo que no se pueden eliminar."
-  reviewables_reminder:
-    submitted:
-      one: "Hay elementos enviados desde hace más de %{count} hora. [Revísalos](%{base_path}/review)"
-      other: "Hay elementos enviados desde hace más de %{count} horas. [Revísalos](%{base_path}/review)"
-    subject_template:
-      one: "%{count} elemento esperando revisión"
-      other: "%{count} elementos esperando revisión"
   unsubscribe_mailer:
     title: "Darse de baja de los correos"
     subject_template: "Confirma que no quieres recibir más correos electrónicos de %{site_title}"

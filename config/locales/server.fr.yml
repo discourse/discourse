@@ -880,13 +880,6 @@ fr:
   draft_backup:
     pm_title: "Brouillons relatifs à des sujets en cours de discussion."
     pm_body: "Sujet contenant des brouillons enregistrés"
-  user_activity:
-    no_bookmarks:
-      self: "Vous n'avez pas de sujet dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
-      search: "Aucun signet trouvé avec la requête de recherche fournie."
-      others: "Aucun signet."
-    no_drafts:
-      self: "Vous n'avez pas de brouillons. Lorsque vous commencerez à répondre à un sujet, cette réponse sera automatiquement enregistrée sous forme de nouveau brouillon."
   email_settings:
     pop3_authentication_error: "L'authentification auprès du serveur POP3 a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
     imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
@@ -2320,13 +2313,6 @@ fr:
     cannot_delete_has_posts:
       one: "L'utilisateur %{username} a %{count} message dans un sujet public ou message personnel, vous ne pouvez donc pas le supprimer."
       other: "L'utilisateur %{username} a %{count} messages dans des sujets publics ou messages personnels, vous ne pouvez donc pas le supprimer."
-  reviewables_reminder:
-    submitted:
-      one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Nous vous invitons à les examiner](%{base_path}/review)."
-      other: "Ces éléments ont été soumis il y a plus de %{count} heures. [Nous vous invitons à les examiner](%{base_path}/review)."
-    subject_template:
-      one: "%{count} élément à examiner"
-      other: "%{count} éléments à examiner"
   unsubscribe_mailer:
     title: "Désabonnement"
     subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"

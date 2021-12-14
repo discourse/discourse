@@ -480,9 +480,6 @@ sw:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-  user_activity:
-    no_bookmarks:
-      others: "Hakuna mialamisho."
   topic_flag_types:
     spam:
       title: "Barua Taka"

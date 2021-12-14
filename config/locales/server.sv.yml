@@ -242,6 +242,7 @@ sv:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
     requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
+    domain_not_allowed: "Din e-post kan inte användas för att lösa in denna inbjudan."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -872,12 +873,6 @@ sv:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
   user_activity:
-    no_bookmarks:
-      self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
-      search: "Det hittades inga bokmärken med den angivna sökfrågan."
-      others: "Inga bokmärken."
-    no_drafts:
-      self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
     no_log_search_queries: "Sökloggsfrågor är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
@@ -1601,6 +1596,7 @@ sv:
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     google_oauth2_prompt: "En valfri mellanrumsavgränsad lista över strängvärden som anger huruvida auktoriseringsservern ber användaren om omautentisering och samtycke. Se möjliga värden i <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "En valfri Google Apps Hosted-domän som inloggningen kommer att begränsas till. Se mer information på <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
+    google_oauth2_hd_groups: "(experimentell) Hämta användarnas Google-grupper på värddomänen vid autentisering. Hämtade Google-grupper kan användas för att bevilja automatiskt medlemskap i grupper inom Discourse (se gruppinställningar)."
     enable_twitter_logins: "Aktivera Twitter-autentisering, kräver twitter_consumer_key och twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurera Twitter-inloggning (och formaterade inbäddningar) för Discourse</a>."
     twitter_consumer_key: "Konsumentnyckel för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Konsumenthemlighet för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2127,6 +2123,7 @@ sv:
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
+      google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2349,13 +2346,6 @@ sv:
     cannot_delete_has_posts:
       one: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så den kan inte tas bort."
       other: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så de kan inte tas bort."
-  reviewables_reminder:
-    submitted:
-      one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
-      other: "Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_path}/review)."
-    subject_template:
-      one: "%{count} föremål behöver granskas"
-      other: "%{count} föremål behöver granskas"
   unsubscribe_mailer:
     title: "Avprenumeration per e-post"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
@@ -2509,6 +2499,11 @@ sv:
     one: "Detta ämne är tillfälligt stängt i minst %{count} timme på grund av ett stort antal forumflaggor."
     other: "Detta ämne är tillfälligt stängt i minst %{count} timmar på grund av ett stort antal flaggor."
   system_messages:
+    reviewables_reminder:
+      subject_template: "Det finns artiklar i granskningskön som behöver granskas"
+      text_body_template:
+        one: "%{mentions} Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
+        other: "%{mentions} Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_path}/review)."
     private_topic_title: "Ämne #%{id}"
     contents_hidden: "Gå till inlägget för att se dess innehåll."
     post_hidden:

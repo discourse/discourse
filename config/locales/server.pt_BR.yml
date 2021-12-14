@@ -881,13 +881,6 @@ pt_BR:
   draft_backup:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
-  user_activity:
-    no_bookmarks:
-      self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
-      search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
-      others: "Nenhum favorito."
-    no_drafts:
-      self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
   email_settings:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
     imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
@@ -2335,13 +2328,6 @@ pt_BR:
     cannot_delete_has_posts:
       one: "O(a) usuário(a) %{username} tem %{count} postagem em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
       other: "O(a) usuário(a) %{username} tem %{count} postagens em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
-  reviewables_reminder:
-    submitted:
-      one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os](%{base_path}/review)."
-      other: "Os itens foram enviados durante %{count} horas atrás. [Revise-os](%{base_path}/review)."
-    subject_template:
-      one: "%{count} item precisa ser revisado"
-      other: "%{count} itens precisam ser revisados"
   unsubscribe_mailer:
     title: "Cancelar inscrição do remetente"
     subject_template: "Confirme que você não deseja mais receber atualizações por e-mail de %{site_title}"

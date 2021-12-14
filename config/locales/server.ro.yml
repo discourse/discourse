@@ -502,10 +502,6 @@ ro:
       title: "Apreciere"
       description: "Apreciază această postare"
       short_description: "Apreciază această postare"
-  user_activity:
-    no_bookmarks:
-      self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
-      others: "Nu există semne de carte."
   topic_flag_types:
     spam:
       title: "Spam"

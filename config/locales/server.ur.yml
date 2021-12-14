@@ -707,12 +707,6 @@ ur:
       title: "لائیک"
       description: " اِس پوسٹ کو لائیک کریں"
       short_description: " اِس پوسٹ کو لائیک کریں"
-  user_activity:
-    no_bookmarks:
-      self: "آپ کے پاس کوئی بُک مارک کی ہوئی پوسٹس نہیں ہیں؛ بُک مارکس آپ کو مخصوص پوسٹس کے فوری حوالہ فراہم کرتے ہیں۔"
-      others: "کوئی بُک مارکس نہیں"
-    no_drafts:
-      self: "آپ کے پاس کوئی ڈرافٹس نہیں ہیں؛ کسی بھی ٹاپک میں جواب لکھنا شروع کریں اور یہ ایک نئے ڈرافٹ کے طور پر خود کار طریقے سے محفوظ کر لیا جائے گا۔"
   topic_flag_types:
     spam:
       title: "سپَیم"
@@ -1889,13 +1883,6 @@ ur:
       fixed_primary_email: "سٹَیجڈ صارف کیلئے بنیادی ای میل مقرر کر دیا گیا"
       same_ip_address: "دوسرے صارفین کی طرح ایک ہی IP ایڈریس (%{ip_address})"
       inactive_user: "غیر متحرک صارف"
-  reviewables_reminder:
-    submitted:
-      one: "اشیاء %{count} گھنٹہ پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/review)۔"
-      other: "اشیاء %{count} گھنٹوں پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/review)۔"
-    subject_template:
-      one: "%{count} شے کا جائزہ لینے کی ضرورت ہے"
-      other: "%{count} اشیاء کا جائزہ لینے کی ضرورت ہے"
   unsubscribe_mailer:
     title: "مَیلر غیر سَبسکرائب کریں"
     subject_template: "تصدیق کریں کہ اب آپ %{site_title} سے ای میل اَپ ڈیٹس حاصل نہیں کرنا چاہتے ہیں"

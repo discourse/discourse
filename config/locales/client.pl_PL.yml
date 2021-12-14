@@ -4088,6 +4088,7 @@ pl_PL:
               few: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
               many: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
               other: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
+            automatic_membership_associated_groups: "Użytkownicy, którzy są członkami grupy w wymienionej tutaj usłudze, zostaną automatycznie dodani do tej grupy po zalogowaniu się do usługi."
             primary_group: "Automatycznie ustawiaj jako główną grupę"
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"

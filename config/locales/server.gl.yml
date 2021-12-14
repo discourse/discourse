@@ -847,13 +847,6 @@ gl:
   draft_backup:
     pm_title: "Borradores de seguranza procedentes de temas en curso"
     pm_body: "O tema contén borradores de seguranza"
-  user_activity:
-    no_bookmarks:
-      self: "Non ten publicacións engadidas aos marcadores; os marcadores permítenlle volver rapidamente a publicacións específicas."
-      search: "Non se atoparon marcadores coa busca fornecida."
-      others: "Sen marcadores."
-    no_drafts:
-      self: "Non ten borradores; comece a responder en calquera tema e gardarase automaticamente como un novo borrador."
   webauthn:
     validation:
       invalid_type_error: "O provedor tipo webauthn facilitado non é válido. Os tipos válidos son webauthn.get e webauthn.create."
@@ -2250,13 +2243,6 @@ gl:
     email_in_spam_header: "O primeiro correo electrónico do usuario marcouse como correo lixo"
     already_silenced: "O usuario xa foi silenciado por %{staff} %{time_ago}."
     already_suspended: "O usuario xa foi suspendido por %{staff} %{time_ago}."
-  reviewables_reminder:
-    submitted:
-      one: "Hai elementos enviados desde hai máis de %{count} hora. [Revíseos](%{base_path}/review)."
-      other: "Hai elementos enviados desde hai máis de %{count} horas. [Revíseos](%{base_path}/review)."
-    subject_template:
-      one: "%{count} elemento precisa ser revisado"
-      other: "%{count} elementos precisan ser revisados"
   unsubscribe_mailer:
     title: "Anular a subscrición ao servizo de correo"
     subject_template: "Confirme que xa non quere recibir actualizacións por correo electrónico de %{site_title}"
