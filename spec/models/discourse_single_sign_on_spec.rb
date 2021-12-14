@@ -1075,4 +1075,38 @@ describe DiscourseSingleSignOn do
     end
   end
 
+  context "when user is staged" do
+    it "uses username of the staged user if username is not present in payload" do
+      staged_username = "staged_user"
+      email = "staged@user.com"
+      Fabricate(:user, staged: true, username: staged_username, email: email)
+
+      sso = new_discourse_sso
+      sso.email = email
+      sso.external_id = "B"
+
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+
+      expect(user.username).to eq(staged_username)
+    end
+
+    it "uses username of the staged user if username in payload is the same" do
+      # it's important to check this, because we had regressions
+      # where usernames were changed to the same username with "1" added at the end
+      staged_username = "staged_user"
+      email = "staged@user.com"
+      Fabricate(:user, staged: true, username: staged_username, email: email)
+
+      sso = new_discourse_sso
+      sso.username = staged_username
+      sso.email = email
+      sso.external_id = "B"
+
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+
+      expect(user.username).to eq(staged_username)
+    end
+  end
 end
