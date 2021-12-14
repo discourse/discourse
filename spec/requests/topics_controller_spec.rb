@@ -12,6 +12,12 @@ RSpec.describe TopicsController do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
+  fab!(:post_author1) { Fabricate(:user) }
+  fab!(:post_author2) { Fabricate(:user) }
+  fab!(:post_author3) { Fabricate(:user) }
+  fab!(:post_author4) { Fabricate(:user) }
+  fab!(:post_author5) { Fabricate(:user) }
+  fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:trust_level_0) { Fabricate(:trust_level_0) }
@@ -107,8 +113,8 @@ RSpec.describe TopicsController do
 
       it "raises an error when the OP is not a regular post" do
         sign_in(moderator)
-        p2 = Fabricate(:post, topic: topic, post_number: 2, post_type: Post.types[:whisper])
-        p3 = Fabricate(:post, topic: topic, post_number: 3)
+        p2 = Fabricate(:post, user: post_author1, topic: topic, post_number: 2, post_type: Post.types[:whisper])
+        p3 = Fabricate(:post, user: post_author2, topic: topic, post_number: 3)
 
         post "/t/#{topic.id}/move-posts.json", params: {
           title: 'blah', post_ids: [p2.id, p3.id]
@@ -537,8 +543,8 @@ RSpec.describe TopicsController do
     describe "merging into another topic as a group moderator" do
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
-      fab!(:p1) { Fabricate(:post, post_number: 1, topic: topic) }
-      fab!(:p2) { Fabricate(:post, post_number: 2, topic: topic) }
+      fab!(:p1) { Fabricate(:post, user: post_author1, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
       let!(:user) { group_user.user }
 
       before do
@@ -647,8 +653,8 @@ RSpec.describe TopicsController do
 
     describe 'changing ownership' do
       fab!(:user_a) { Fabricate(:user) }
-      fab!(:p1) { Fabricate(:post, topic: topic) }
-      fab!(:p2) { Fabricate(:post, topic: topic) }
+      fab!(:p1) { Fabricate(:post, user: post_author1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: post_author2, topic: topic) }
 
       describe 'moderator signed in' do
         let!(:editor) { sign_in(moderator) }
@@ -775,8 +781,8 @@ RSpec.describe TopicsController do
       let!(:old_timestamp) { Time.zone.now }
       let!(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
-      let!(:p1) { Fabricate(:post, topic: topic, created_at: old_timestamp) }
-      let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
+      let!(:p1) { Fabricate(:post, user: post_author1, topic: topic, created_at: old_timestamp) }
+      let!(:p2) { Fabricate(:post, user: post_author2, topic: topic, created_at: old_timestamp + 1.day) }
 
       it 'should update the timestamps of selected posts' do
         # try to see if we fail with invalid first
@@ -1166,7 +1172,7 @@ RSpec.describe TopicsController do
   end
 
   describe '#id_for_slug' do
-    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     it "returns JSON for the slug" do
       get "/t/id_for/#{topic.slug}.json"
@@ -1193,7 +1199,7 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user) }
 
       before_all do
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, user: post_author1, topic: topic)
       end
 
       before do
@@ -1704,7 +1710,7 @@ RSpec.describe TopicsController do
     describe "featured links" do
       def fabricate_topic(user, category = nil)
         topic = Fabricate(:topic, user: user, category: category)
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, user: post_author1, topic: topic)
         topic
       end
 
@@ -1760,7 +1766,7 @@ RSpec.describe TopicsController do
     use_redis_snapshotting
 
     fab!(:private_topic) { pm }
-    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     fab!(:p1) { Fabricate(:post, user: topic.user) }
     fab!(:p2) { Fabricate(:post, user: topic.user) }
@@ -1818,7 +1824,7 @@ RSpec.describe TopicsController do
       # if you need to properly hide a topic for users use a secure category
       # or a PM
       topic = invisible_topic
-      Fabricate(:post, topic: topic)
+      Fabricate(:post, user: post_author1, topic: topic)
 
       get "/t/#{topic.id}.json", params: { slug: topic.slug }
       expect(response.status).to eq(200)
@@ -1846,7 +1852,7 @@ RSpec.describe TopicsController do
     end
 
     it 'can find a topic when a slug has a number in front' do
-      another_topic = Fabricate(:post).topic
+      another_topic = Fabricate(:post, user: post_author1).topic
 
       topic.update_column(:slug, "#{another_topic.id}-reasons-discourse-is-awesome")
       get "/t/#{another_topic.id}-reasons-discourse-is-awesome"
@@ -2292,7 +2298,7 @@ RSpec.describe TopicsController do
         TopicView.stubs(:chunk_size).returns(2)
         @post_ids = topic.posts.pluck(:id)
         3.times do
-          @post_ids << Fabricate(:post, topic: topic).id
+          @post_ids << Fabricate(:post, user: post_author1, topic: topic).id
         end
       end
 
@@ -2339,14 +2345,14 @@ RSpec.describe TopicsController do
     end
 
     describe '#show filters' do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { post.topic }
-      fab!(:post2) { Fabricate(:post, topic: topic) }
+      fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic) }
 
       describe 'filter by replies to a post' do
-        fab!(:post3) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
-        fab!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
-        fab!(:post5) { Fabricate(:post, topic: topic) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post5) { Fabricate(:post, user: post_author5, topic: topic) }
         fab!(:quote_reply) { Fabricate(:basic_reply, user: user, topic: topic) }
         fab!(:post_reply) { PostReply.create(post_id: post2.id, reply_post_id: quote_reply.id) }
 
@@ -2368,10 +2374,10 @@ RSpec.describe TopicsController do
       end
 
       describe 'filter upwards by post id' do
-        fab!(:post3) { Fabricate(:post, topic: topic) }
-        fab!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post3.post_number) }
-        fab!(:post5) { Fabricate(:post, topic: topic, reply_to_post_number: post4.post_number) }
-        fab!(:post6) { Fabricate(:post, topic: topic) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
+        fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post3.post_number) }
+        fab!(:post5) { Fabricate(:post, user: post_author5, topic: topic, reply_to_post_number: post4.post_number) }
+        fab!(:post6) { Fabricate(:post, user: post_author6, topic: topic) }
 
         it 'should return the right posts' do
           get "/t/#{topic.id}.json", params: {
@@ -2580,7 +2586,7 @@ RSpec.describe TopicsController do
 
     describe "image only topic" do
       it "uses image alt tag for meta description" do
-        post = Fabricate(:post, raw: "![image_description|690x405](upload://sdtr5O5xaxf0iEOxICxL36YRj86.png)")
+        post = Fabricate(:post, user: post_author1, raw: "![image_description|690x405](upload://sdtr5O5xaxf0iEOxICxL36YRj86.png)")
 
         get post.topic.url
 
@@ -2590,7 +2596,7 @@ RSpec.describe TopicsController do
 
       it "uses image cdn url for schema markup" do
         set_cdn_url("http://cdn.localhost")
-        post = Fabricate(:post_with_uploaded_image)
+        post = Fabricate(:post_with_uploaded_image, user: post_author1)
         cpp = CookedPostProcessor.new(post).update_post_image
 
         get post.topic.url
@@ -2602,7 +2608,7 @@ RSpec.describe TopicsController do
   end
 
   describe '#post_ids' do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
 
     before do
@@ -2610,8 +2616,8 @@ RSpec.describe TopicsController do
     end
 
     it 'returns the right post ids' do
-      post2 = Fabricate(:post, topic: topic)
-      post3 = Fabricate(:post, topic: topic)
+      post2 = Fabricate(:post, user: post_author2, topic: topic)
+      post3 = Fabricate(:post, user: post_author3, topic: topic)
 
       get "/t/#{topic.id}/post_ids.json", params: {
         post_number: post.post_number
@@ -2628,7 +2634,7 @@ RSpec.describe TopicsController do
       describe 'username filters' do
         fab!(:post) { Fabricate(:post, user: user) }
         fab!(:post2) { Fabricate(:post, topic: topic, user: user) }
-        fab!(:post3) { Fabricate(:post, topic: topic) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
         it 'should return the right posts' do
           get "/t/#{topic.id}/post_ids.json", params: {
@@ -2645,8 +2651,8 @@ RSpec.describe TopicsController do
       end
 
       describe 'summary filter' do
-        fab!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
-        fab!(:post3) { Fabricate(:post, topic: topic) }
+        fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
         it 'should return the right posts' do
           get "/t/#{topic.id}/post_ids.json", params: {
@@ -2663,8 +2669,8 @@ RSpec.describe TopicsController do
       end
 
       describe 'custom filters' do
-        fab!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
-        fab!(:post3) { Fabricate(:post, topic: topic, percent_rank: 0.5) }
+        fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic, percent_rank: 0.5) }
         it 'should return the right posts' do
           TopicView.add_custom_filter("percent") do |posts, topic_view|
             posts.where(percent_rank: 0.5)
@@ -2688,7 +2694,7 @@ RSpec.describe TopicsController do
   end
 
   describe '#posts' do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
 
     after do
@@ -2717,8 +2723,8 @@ RSpec.describe TopicsController do
 
     describe 'filtering by post number with filters' do
       describe 'username filters' do
-        fab!(:post2) { Fabricate(:post, topic: topic, user: user) }
-        fab!(:post3) { Fabricate(:post, topic: topic) }
+        fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
         it 'should return the right posts' do
           TopicView.stubs(:chunk_size).returns(2)
@@ -2738,8 +2744,8 @@ RSpec.describe TopicsController do
       end
 
       describe 'summary filter' do
-        fab!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
-        fab!(:post3) { Fabricate(:post, topic: topic) }
+        fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
 
         it 'should return the right posts' do
           TopicView.stubs(:chunk_size).returns(2)
@@ -2761,7 +2767,7 @@ RSpec.describe TopicsController do
   end
 
   describe '#feed' do
-    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     it 'renders rss of the topic' do
       get "/t/foo/#{topic.id}.rss"
@@ -3514,7 +3520,7 @@ RSpec.describe TopicsController do
       second_post = create_post(raw: 'This is second post', topic: first_post.topic)
       third_post = first_post.topic.add_small_action(first_post.user, "autobumped")
 
-      random_post = Fabricate(:post)
+      random_post = Fabricate(:post, user: post_author1)
 
       get "/t/#{first_post.topic_id}/excerpts.json", params: {
         post_ids: [first_post.id, second_post.id, third_post.id, random_post.id]
@@ -3546,7 +3552,7 @@ RSpec.describe TopicsController do
 
     describe 'converting public topic to private message' do
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:post) { Fabricate(:post, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -3572,7 +3578,7 @@ RSpec.describe TopicsController do
 
     describe 'converting private message to public topic' do
       fab!(:topic) { Fabricate(:private_message_topic, user: user) }
-      fab!(:post) { Fabricate(:post, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -3599,7 +3605,7 @@ RSpec.describe TopicsController do
   end
 
   describe '#timings' do
-    fab!(:post_1) { Fabricate(:post, topic: topic) }
+    fab!(:post_1) { Fabricate(:post, user: post_author1, topic: topic) }
 
     it 'should record the timing' do
       sign_in(user)
@@ -4220,7 +4226,7 @@ RSpec.describe TopicsController do
 
     describe "#publish" do
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
-      fab!(:post) { Fabricate(:post, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       it "fails for anonymous users" do
         put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
@@ -4277,15 +4283,15 @@ RSpec.describe TopicsController do
         freeze_time page1_time
 
         topic = Fabricate(:topic)
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, user: post_author2, topic: topic)
+        Fabricate(:post, user: post_author3, topic: topic)
 
         freeze_time page2_time
-        Fabricate(:post, topic: topic)
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, user: post_author4, topic: topic)
+        Fabricate(:post, user: post_author5, topic: topic)
 
         freeze_time page3_time
-        Fabricate(:post, topic: topic)
+        Fabricate(:post, user: post_author6, topic: topic)
 
         # ugly, but no interface to set this and we don't want to create
         # 100 posts to test this thing
@@ -4374,7 +4380,7 @@ RSpec.describe TopicsController do
         sign_in(Fabricate(user))
         topic = Fabricate(:topic, bumped_at: 1.hour.ago)
         timestamp = 1.day.ago
-        Fabricate(:post, topic: topic, created_at: timestamp)
+        Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
 
         put "/t/#{topic.id}/reset-bump-date.json"
         expect(response.status).to eq(200)
