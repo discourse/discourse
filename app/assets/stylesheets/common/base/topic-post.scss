@@ -290,6 +290,16 @@ $quote-share-maxwidth: 150px;
   animation: heartBump 0.4s;
 }
 
+@keyframes slideout {
+  from {
+    max-height: 60px;
+  }
+
+  to {
+    max-height: 9999px;
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -317,6 +327,17 @@ aside.quote {
   // blockquote is docked within aside for content
   blockquote {
     margin-top: 0;
+    .expanded-quote {
+      overflow: hidden;
+      animation: slideout 1s ease-in-out;
+      &.icon-only {
+        text-align: center;
+        font-size: var(--font-up-4);
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        color: var(--primary-medium);
+      }
+    }
   }
 }
 
