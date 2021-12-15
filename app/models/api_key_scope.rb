@@ -36,7 +36,17 @@ class ApiKeyScope < ActiveRecord::Base
           edit: { actions: %w[posts#update], params: %i[id] }
         },
         uploads: {
-          create: { actions: %w[uploads#create] }
+          create: {
+            actions: %w[
+              uploads#create
+              uploads#generate_presigned_put
+              uploads#complete_external_upload
+              uploads#create_multipart
+              uploads#batch_presign_multipart_parts
+              uploads#abort_multipart
+              uploads#complete_multipart
+            ]
+          }
         },
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
