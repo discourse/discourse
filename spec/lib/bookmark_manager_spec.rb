@@ -190,10 +190,13 @@ RSpec.describe BookmarkManager do
     end
 
     it "saves the time and new name successfully" do
+      freeze_time
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
+      expect(bookmark.reminder_set_at).to eq_time(Time.zone.now)
+      expect(bookmark.last_reminder_at).to eq(nil)
     end
 
     context "when options are provided" do

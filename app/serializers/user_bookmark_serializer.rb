@@ -14,6 +14,7 @@ class UserBookmarkSerializer < ApplicationSerializer
              :post_id,
              :name,
              :reminder_at,
+             :last_reminder_at,
              :pinned,
              :title,
              :fancy_title,

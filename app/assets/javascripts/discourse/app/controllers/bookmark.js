@@ -27,6 +27,7 @@ export function openBookmarkModal(
         topicId: bookmark.topic_id,
         id: bookmark.id,
         reminderAt: bookmark.reminder_at,
+        lastReminderAt: bookmark.last_reminder_at,
         autoDeletePreference: bookmark.auto_delete_preference,
         name: bookmark.name,
         forTopic: bookmark.for_topic,

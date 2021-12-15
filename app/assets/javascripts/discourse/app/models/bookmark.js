@@ -129,6 +129,14 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
+  @discourseComputed("last_reminder_at", "currentUser")
+  formattedLastReminder(bookmarkLastReminderAt, currentUser) {
+    return formattedReminderTime(
+      bookmarkLastReminderAt,
+      currentUser.resolvedTimezone(currentUser)
+    ).capitalize();
+  },
+
   @discourseComputed()
   topicForList() {
     // for topic level bookmarks we want to jump to the last unread post URL,
