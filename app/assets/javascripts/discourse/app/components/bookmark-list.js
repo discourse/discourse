@@ -45,10 +45,7 @@ export default Component.extend(Scrolling, {
 
   scrolled() {
     this._super(...arguments);
-    this.session.set(
-      "bookmarkListScrollPosition",
-      document.documentElement.scrollTop
-    );
+    this.session.set("bookmarkListScrollPosition", window.scrollY);
   },
 
   @action
