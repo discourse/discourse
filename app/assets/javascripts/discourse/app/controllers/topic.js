@@ -1700,7 +1700,7 @@ export default Controller.extend(bufferedProperty("model"), {
             postNumberDifference > 0 &&
             postNumberDifference < 7
           ) {
-            this._scrollToPost(data.post_number);
+            this._scrollToDiscobotPost(data.post_number);
           }
         }
       },
@@ -1708,17 +1708,29 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost(postNumber) {
+  _scrollToDiscobotPost(postNumber) {
     discourseDebounce(
       this,
       function () {
-        const $post = $(`.topic-post article#post_${postNumber}`);
+        const post = document.querySelector(
+          `.topic-post article#post_${postNumber}`
+        );
 
-        if ($post.length === 0 || isElementInViewport($post[0])) {
+        if (!post || isElementInViewport(post)) {
           return;
         }
 
-        $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
+        const headerOffset =
+          parseInt(
+            getComputedStyle(document.body).getPropertyValue("--header-offset"),
+            10
+          ) || 0;
+        const viewportOffset = post.getBoundingClientRect();
+
+        window.scrollTo({
+          top: window.scrollY + viewportOffset.top - headerOffset,
+          behavior: "smooth",
+        });
       },
       postNumber,
       500
