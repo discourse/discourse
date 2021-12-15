@@ -234,9 +234,21 @@ export default Mixin.create({
               }
             }
 
+            const headerOffset = parseInt(
+              getComputedStyle(document.body).getPropertyValue(
+                "--header-offset"
+              ),
+              0
+            );
+            const headerHeight = document
+              .querySelector("header.d-header")
+              .getBoundingClientRect().height;
+
             position.top -= this._calculateTopOffset(
               $("#main-outlet").offset(),
-              headerOutletHeights()
+              headerOutletHeights(),
+              headerOffset,
+              headerHeight
             );
             if (isFixed) {
               position.top -= $("html").scrollTop();
@@ -289,9 +301,16 @@ export default Mixin.create({
   // some plugins/themes modify the page layout and may
   // need to override this calculation for the card to
   // position correctly
-  _calculateTopOffset(mainOutletOffset, outletHeights) {
-    return mainOutletOffset.top - outletHeights;
+  /* eslint-disable no-unused-vars */
+  _calculateTopOffset(
+    mainOutletOffset,
+    outletHeights,
+    headerOffset,
+    headerHeight
+  ) {
+    return 24;
   },
+  /* eslint-enable */
 
   @bind
   _hide() {
