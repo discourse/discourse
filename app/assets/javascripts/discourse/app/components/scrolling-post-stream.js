@@ -7,7 +7,7 @@ import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import domUtils from "discourse/lib/dom-utils";
+import domUtils from "discourse-common/utils/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 
@@ -344,12 +344,14 @@ export default MountWidget.extend({
 
     this.element.addEventListener(
       "mouseenter",
-      this._handleWidgetButtonHoverState
+      this._handleWidgetButtonHoverState,
+      true
     );
 
     this.element.addEventListener(
       "mouseleave",
-      this._removeWidgetButtonHoverState
+      this._removeWidgetButtonHoverState,
+      true
     );
 
     this.appEvents.on("post-stream:refresh", this, "_refresh");
@@ -387,11 +389,13 @@ export default MountWidget.extend({
   },
 
   _handleWidgetButtonHoverState(event) {
-    document
-      .querySelectorAll("button.widget-button")
-      .forEach((widgetButton) => {
-        widgetButton.classList.remove("d-hover");
-      });
-    event.target.classList.add("d-hover");
+    if (event.target.classList.contains("widget-button")) {
+      document
+        .querySelectorAll("button.widget-button")
+        .forEach((widgetButton) => {
+          widgetButton.classList.remove("d-hover");
+        });
+      event.target.classList.add("d-hover");
+    }
   },
 });
