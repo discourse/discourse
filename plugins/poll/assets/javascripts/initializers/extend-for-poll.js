@@ -23,7 +23,9 @@ function cleanUpPolls() {
 }
 
 function initializePolls(api) {
-  const register = getRegister(api);
+  const register = getRegister(api),
+    pollGroupableUserFields = api.container.lookup("site-settings:main")
+      .poll_groupable_user_fields;
   cleanUpPolls();
 
   api.modifyClass("controller:topic", {
@@ -108,10 +110,7 @@ function initializePolls(api) {
           vote,
           hasSavedVote: vote.length > 0,
           titleHTML: titleElement?.outerHTML,
-          groupableUserFields: (
-            api.container.lookup("site-settings:main")
-              .poll_groupable_user_fields || ""
-          )
+          groupableUserFields: (pollGroupableUserFields || "")
             .split("|")
             .filter(Boolean),
         };

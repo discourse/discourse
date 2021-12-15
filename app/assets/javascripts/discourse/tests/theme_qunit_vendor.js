@@ -27,7 +27,6 @@
 //= require lodash.js
 //= require itsatrap.js
 //= require rsvp.js
-//= require show-html.js
 //= require uppy.js
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10
