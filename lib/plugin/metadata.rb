@@ -9,7 +9,6 @@ class Plugin::Metadata
     # TODO: Remove this after everyone upgraded `discourse-canned-replies`
     # to the renamed version.
     "Canned Replies",
-    "customer-flair",
     "discourse-adplugin",
     "discourse-affiliate",
     "discourse-akismet",
