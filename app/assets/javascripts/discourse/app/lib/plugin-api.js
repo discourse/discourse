@@ -353,41 +353,91 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
+    this.addPosterIcons(cb);
+  }
+
+  /**
+   * addPosterIcons(callback)
+   *
+   * This function can be used to add one, or multiple icons, with a link that will
+   * be displayed beside a poster's name. The `callback` is called with the post's
+   * user custom fields and post attributes. One or multiple icons may be rendered
+   * when the callback returns an array of objects with the appropriate attributes.
+   *
+   * The returned object(s) each can have the following attributes:
+   *
+   *   icon        the font awesome icon to render
+   *   emoji       an emoji icon to render
+   *   className   (optional) a css class to apply to the icon
+   *   url         (optional) where to link the icon
+   *   title       (optional) the tooltip title for the icon on hover
+   *   text        (optional) text to display alongside the emoji or icon
+   *
+   * ```
+   * api.addPosterIcons((cfs, attrs) => {
+   *   if (cfs.customer) {
+   *     return { icon: 'user', className: 'customer', title: 'customer' };
+   *   }
+   * });
+   * ```
+   * or
+   * * ```
+   * api.addPosterIcons((cfs, attrs) => {
+   *   attrs.customers.forEach(({name}) => {
+   *     icon: 'user', className: 'customer', title: name
+   *   })
+   * });
+   * ```
+   **/
+  addPosterIcons(cb) {
     const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, (dec) => {
       const attrs = dec.attrs;
-      const result = cb(attrs.userCustomFields || {}, attrs);
+      let results = cb(attrs.userCustomFields || {}, attrs);
 
-      if (result) {
-        let iconBody;
-
-        if (result.icon) {
-          iconBody = iconNode(result.icon);
-        } else if (result.emoji) {
-          iconBody = result.emoji.split("|").map((name) => {
-            let widgetAttrs = { name };
-            if (result.emojiTitle) {
-              widgetAttrs.title = true;
-            }
-            return dec.attach("emoji", widgetAttrs);
-          });
+      if (results) {
+        if (!Array.isArray(results)) {
+          results = [results];
         }
 
-        if (result.text) {
-          iconBody = [iconBody, result.text];
-        }
+        return results.map((result) => {
+          let iconBody;
 
-        if (result.url) {
-          iconBody = dec.h("a", { attributes: { href: result.url } }, iconBody);
-        }
+          if (result.icon) {
+            iconBody = iconNode(result.icon);
+          } else if (result.emoji) {
+            iconBody = result.emoji.split("|").map((name) => {
+              let widgetAttrs = { name };
+              if (result.emojiTitle) {
+                widgetAttrs.title = true;
+              }
+              return dec.attach("emoji", widgetAttrs);
+            });
+          }
 
-        return dec.h(
-          "span.poster-icon",
-          { className: result.className, attributes: { title: result.title } },
-          iconBody
-        );
+          if (result.text) {
+            iconBody = [iconBody, result.text];
+          }
+
+          if (result.url) {
+            iconBody = dec.h(
+              "a",
+              { attributes: { href: result.url } },
+              iconBody
+            );
+          }
+
+          return dec.h(
+            "span.poster-icon",
+            {
+              className: result.className,
+              attributes: { title: result.title },
+            },
+            iconBody
+          );
+        });
       }
     });
   }
