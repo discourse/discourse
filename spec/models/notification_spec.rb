@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe Notification do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   before do
     NotificationEmailer.enable
   end
@@ -60,8 +62,6 @@ describe Notification do
       { user: topic.user, topic: topic }
     end
 
-    let(:coding_horror) { Fabricate(:coding_horror) }
-
     describe 'replies' do
       def process_alerts(post)
         PostAlerter.post_created(post)
@@ -89,7 +89,7 @@ describe Notification do
     describe 'watching' do
       it "does notify watching users of new posts" do
         post = PostAlerter.post_created(Fabricate(:post, post_args))
-        user2 = Fabricate(:coding_horror)
+        user2 = coding_horror
         post_args[:topic].notify_watch!(user2)
         expect {
           PostAlerter.post_created(Fabricate(:post, user: post.user, topic: post.topic))
@@ -101,7 +101,7 @@ describe Notification do
       it "does not notify users of new posts" do
         post = Fabricate(:post, post_args)
         user = post_args[:user]
-        user2 = Fabricate(:coding_horror)
+        user2 = coding_horror
 
         post_args[:topic].notify_muted!(user)
         expect {

@@ -6,7 +6,11 @@ require 'rails_helper'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:group) { Fabricate(:group) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
@@ -262,8 +266,8 @@ describe Topic do
   end
 
   context 'topic title uniqueness' do
-    let!(:category1) { Fabricate(:category) }
-    let!(:category2) { Fabricate(:category) }
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
 
     let!(:topic) { Fabricate(:topic, category: category1) }
     let(:new_topic) { Fabricate.build(:topic, title: topic.title, category: category1) }
@@ -849,8 +853,6 @@ describe Topic do
         end
 
         describe 'when topic belongs to a private category' do
-          fab!(:group) { Fabricate(:group) }
-
           fab!(:category) do
             Fabricate(:category_with_definition, groups: [group]).tap do |category|
               category.set_permissions(group => :full)
@@ -932,8 +934,6 @@ describe Topic do
   end
 
   context 'private message' do
-    let(:coding_horror) { Fabricate(:coding_horror) }
-    fab!(:evil_trout) { Fabricate(:evil_trout) }
     let(:topic) do
       PostCreator.new(
         Fabricate(:user),
@@ -957,8 +957,6 @@ describe Topic do
       context 'existing user' do
 
         context 'by group name' do
-          fab!(:group) { Fabricate(:group) }
-
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
             admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1123,21 +1121,21 @@ describe Topic do
 
       it "bumps the topic when a new version is made of the last post" do
         expect {
-          @last_post.revise(Fabricate(:moderator), raw: 'updated contents')
+          @last_post.revise(moderator, raw: 'updated contents')
           topic.reload
         }.to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         expect {
-          @earlier_post.revise(Fabricate(:moderator), raw: 'updated contents')
+          @earlier_post.revise(moderator, raw: 'updated contents')
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post have invalid topic title while edit" do
         expect {
-          @last_post.revise(Fabricate(:moderator), title: 'invalid title')
+          @last_post.revise(moderator, title: 'invalid title')
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
@@ -1145,7 +1143,6 @@ describe Topic do
   end
 
   context 'moderator posts' do
-    fab!(:moderator) { Fabricate(:moderator) }
     fab!(:topic) { Fabricate(:topic) }
 
     it 'creates a moderator post' do
@@ -1340,7 +1337,6 @@ describe Topic do
       it_behaves_like 'a status that closes a topic'
 
       it 'should archive group message' do
-        group = Fabricate(:group)
         group.add(@user)
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
 
@@ -1474,7 +1470,7 @@ describe Topic do
 
     context 'after a second post' do
       before do
-        @second_user = Fabricate(:coding_horror)
+        @second_user = coding_horror
         @new_post = create_post(topic: @topic, user: @second_user)
         @topic.reload
       end
@@ -2173,7 +2169,6 @@ describe Topic do
     it 'should return the right topics' do
       category = Fabricate(:category_with_definition, read_restricted: true)
       topic = Fabricate(:topic, category: category, created_at: 1.day.ago)
-      group = Fabricate(:group)
       user = Fabricate(:user)
       group.add(user)
       private_category = Fabricate(:private_category_with_definition, group: group)
@@ -2189,7 +2184,6 @@ describe Topic do
   end
 
   describe 'all_allowed_users' do
-    fab!(:group) { Fabricate(:group) }
     fab!(:topic) { Fabricate(:topic, allowed_groups: [group]) }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:allowed_group_user) { Fabricate(:user) }
@@ -2274,7 +2268,6 @@ describe Topic do
 
   describe 'trash!' do
     context "its category's topic count" do
-      fab!(:moderator) { Fabricate(:moderator) }
       fab!(:category) { Fabricate(:category_with_definition) }
 
       it "subtracts 1 if topic is being deleted" do
@@ -2482,7 +2475,6 @@ describe Topic do
 
     expect(topic.message_archived?(user)).to eq(false)
 
-    group = Fabricate(:group)
     group2 = Fabricate(:group)
 
     group.add(user)
