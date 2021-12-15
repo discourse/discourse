@@ -4,7 +4,6 @@ import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
-import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
@@ -234,22 +233,9 @@ export default Mixin.create({
               }
             }
 
-            const headerOffset = parseInt(
-              getComputedStyle(document.body).getPropertyValue(
-                "--header-offset"
-              ),
-              0
-            );
-            const headerHeight = document
-              .querySelector("header.d-header")
-              .getBoundingClientRect().height;
+            // It looks better to have the card aligned slightly higher
+            position.top -= 24;
 
-            position.top -= this._calculateTopOffset(
-              $("#main-outlet").offset(),
-              headerOutletHeights(),
-              headerOffset,
-              headerHeight
-            );
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
@@ -297,20 +283,6 @@ export default Mixin.create({
       }
     });
   },
-
-  // some plugins/themes modify the page layout and may
-  // need to override this calculation for the card to
-  // position correctly
-  /* eslint-disable no-unused-vars */
-  _calculateTopOffset(
-    mainOutletOffset,
-    outletHeights,
-    headerOffset,
-    headerHeight
-  ) {
-    return 24;
-  },
-  /* eslint-enable */
 
   @bind
   _hide() {
