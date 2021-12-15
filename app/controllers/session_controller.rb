@@ -42,11 +42,11 @@ class SessionController < ApplicationController
           params.require(:sso)
           payload = request.query_string
         end
-        sso = SingleSignOnProvider.parse(payload)
-      rescue SingleSignOnProvider::BlankSecret
+        sso = DiscourseConnectProvider.parse(payload)
+      rescue DiscourseConnectProvider::BlankSecret
         render plain: I18n.t("discourse_connect.missing_secret"), status: 400
         return
-      rescue SingleSignOnProvider::ParseError => e
+      rescue DiscourseConnectProvider::ParseError => e
         if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
         end

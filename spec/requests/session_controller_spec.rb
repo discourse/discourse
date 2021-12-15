@@ -1132,7 +1132,7 @@ describe SessionController do
           "somewhere.over.rainbow|secretForOverRainbow",
         ].join("\n")
 
-        @sso = SingleSignOnProvider.new
+        @sso = DiscourseConnectProvider.new
         @sso.nonce = "mynonce"
         @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
@@ -1164,7 +1164,7 @@ describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOnProvider.parse(payload)
+        sso2 = DiscourseConnectProvider.parse(payload)
 
         expect(sso2.email).to eq(@user.email)
         expect(sso2.name).to eq(@user.name)
@@ -1191,7 +1191,7 @@ describe SessionController do
 
       it "fails with a nice error message if secret is blank" do
         SiteSetting.discourse_connect_provider_secrets = ""
-        sso = SingleSignOnProvider.new
+        sso = DiscourseConnectProvider.new
         sso.nonce = "mynonce"
         sso.return_sso_url = "http://website.without.secret.com/sso"
         get "/session/sso_provider", params: Rack::Utils.parse_query(sso.payload("aasdasdasd"))
@@ -1201,7 +1201,7 @@ describe SessionController do
 
       it "returns a 422 if no return_sso_url" do
         SiteSetting.discourse_connect_provider_secrets = "abcdefghij"
-        sso = SingleSignOnProvider.new
+        sso = DiscourseConnectProvider.new
         get "/session/sso_provider?sso=asdf&sig=abcdefghij"
         expect(response.status).to eq(422)
       end
@@ -1215,7 +1215,7 @@ describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOnProvider.parse(payload)
+        sso2 = DiscourseConnectProvider.parse(payload)
 
         expect(sso2.email).to eq(@user.email)
         expect(sso2.name).to eq(@user.name)
@@ -1279,7 +1279,7 @@ describe SessionController do
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
         payload = location.split("?")[1]
-        sso2 = SingleSignOnProvider.parse(payload)
+        sso2 = DiscourseConnectProvider.parse(payload)
 
         expect(sso2.avatar_url.blank?).to_not eq(true)
         expect(sso2.profile_background_url.blank?).to_not eq(true)

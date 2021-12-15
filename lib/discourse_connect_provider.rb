@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SingleSignOnProvider < DiscourseConnectBase
+class DiscourseConnectProvider < DiscourseConnectBase
   class BlankSecret < RuntimeError; end
 
   def self.parse(payload, sso_secret = nil)
