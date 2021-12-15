@@ -7,7 +7,7 @@ import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
+import domUtils from "discourse/lib/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 
