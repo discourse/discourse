@@ -63,7 +63,7 @@ export default Mixin.create({
     }
 
     const closestArticle = target.closest("article");
-    const postId = closestArticle ? closestArticle.dataset.postId : null;
+    const postId = closestArticle?.dataset?.postId || null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
 
@@ -164,9 +164,9 @@ export default Mixin.create({
     return false;
   },
 
-  _topicHeaderTrigger(username, $target) {
+  _topicHeaderTrigger(username, target) {
     this.setProperties({ isFixed: true, isDocked: true });
-    return this._show(username, $target);
+    return this._show(username, target);
   },
 
   _bindMobileScroll() {

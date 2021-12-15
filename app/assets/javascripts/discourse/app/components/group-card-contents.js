@@ -44,7 +44,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 
-    this.store
+    return this.store
       .find("group", username)
       .then((group) => {
         this.setProperties({ group });
