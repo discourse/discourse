@@ -11,6 +11,7 @@ export default Component.extend({
     "hasSubcategories:with-subcategories",
   ],
   noCategoryStyle: equal("siteSettings.category_style", "none"),
+  lockIcon: "lock",
 
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
