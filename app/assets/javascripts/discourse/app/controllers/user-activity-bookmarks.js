@@ -102,7 +102,6 @@ export default Controller.extend({
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
       this.model.bookmarks.pushObjects(bookmarkModels);
-
       this.session.set("bookmarksModel", this.model);
     }
   },
