@@ -331,29 +331,7 @@ class PluginApi {
    * addPosterIcon(callback)
    *
    * This function is an alias of addPosterIcons, which the latter has the ability
-   * to add multiple icons at once.
-   *
-   * This function can be used to add an icon with a link that will be displayed
-   * beside a poster's name. The `callback` is called with the post's user custom
-   * fields and post attributes. An icon will be rendered if the callback returns
-   * an object with the appropriate attributes.
-   *
-   * The returned object can have the following attributes:
-   *
-   *   icon        the font awesome icon to render
-   *   emoji       an emoji icon to render
-   *   className   (optional) a css class to apply to the icon
-   *   url         (optional) where to link the icon
-   *   title       (optional) the tooltip title for the icon on hover
-   *   text        (optional) text to display alongside the emoji or icon
-   *
-   * ```
-   * api.addPosterIcon((cfs, attrs) => {
-   *   if (cfs.customer) {
-   *     return { icon: 'user', className: 'customer', title: 'customer' };
-   *   }
-   * });
-   * ```
+   * to add multiple icons at once. Please refer to `addPosterIcons` for usage examples.
    **/
   addPosterIcon(cb) {
     this.addPosterIcons(cb);
