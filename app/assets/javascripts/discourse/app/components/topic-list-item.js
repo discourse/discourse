@@ -245,16 +245,12 @@ export default Component.extend({
         return;
       }
 
-      this.element.classList.add("highlighted");
-      this.element.setAttribute(
-        "data-islastviewedtopic",
-        opts.isLastViewedTopic
-      );
-      this.element.querySelector(".main-link .title").focus();
+      const $topic = $(this.element);
+      $topic
+        .addClass("highlighted")
+        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
 
-      this.element.addEventListener("animationend", () => {
-        this.element.classList.remove("highlighted");
-      });
+      $topic.on("animationend", () => $topic.removeClass("highlighted"));
     });
   },
 
