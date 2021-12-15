@@ -1,5 +1,5 @@
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import { next, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -7,18 +7,20 @@ import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 
-function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
+function findTopView(posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) {
     return min;
   }
 
   while (max > min) {
     const mid = Math.floor((min + max) / 2);
-    const $post = $($posts[mid]);
-    const viewBottom = $post.offset().top - postsWrapperTop + $post.height();
+    const post = posts.item(mid);
+    const viewBottom =
+      domUtils.offset(post).top - postsWrapperTop + domUtils.height(post);
 
     if (viewBottom > viewportTop) {
       max = mid - 1;
@@ -57,20 +59,20 @@ export default MountWidget.extend({
   },
 
   beforePatch() {
-    const $body = $(document);
-    this.prevHeight = $body.height();
-    this.prevScrollTop = $body.scrollTop();
+    this.prevHeight = domUtils.height(document.body);
+    this.prevScrollTop = domUtils.scrollTop(document.body);
   },
 
   afterPatch() {
-    const $body = $(document);
-    const height = $body.height();
-    const scrollTop = $body.scrollTop();
+    const height = domUtils.height(document.body);
 
     // This hack is for when swapping out many cloaked views at once
     // when using keyboard navigation. It could suddenly move the scroll
-    if (this.prevHeight === height && scrollTop !== this.prevScrollTop) {
-      $body.scrollTop(this.prevScrollTop);
+    if (
+      this.prevHeight === height &&
+      domUtils.scrollTop(document.body) !== this.prevScrollTop
+    ) {
+      document.body.scrollTop(0, this.prevScrollTop);
     }
   },
 
@@ -97,31 +99,30 @@ export default MountWidget.extend({
       return;
     }
 
-    const $w = $(window);
-    const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
+    const windowHeight = domUtils.height(window);
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
     const nearby = [];
-
-    const windowTop = $w.scrollTop();
-
-    const postsWrapperTop = $(".posts-wrapper").offset().top;
-    const $posts = $(
-      this.element.querySelectorAll(".onscreen-post, .cloaked-post")
+    const windowTop = domUtils.scrollTop();
+    const postsWrapperTop = domUtils.offset(
+      document.querySelector(".posts-wrapper")
+    ).top;
+    const postsNodes = this.element.querySelectorAll(
+      ".onscreen-post, .cloaked-post"
     );
+
     const viewportTop = windowTop - slack;
     const topView = findTopView(
-      $posts,
+      postsNodes,
       viewportTop,
       postsWrapperTop,
       0,
-      $posts.length - 1
+      postsNodes.length - 1
     );
 
     let windowBottom = windowTop + windowHeight;
     let viewportBottom = windowBottom + slack;
-
-    const bodyHeight = $("body").height();
+    const bodyHeight = domUtils.height(document.body);
     if (windowBottom > bodyHeight) {
       windowBottom = bodyHeight;
     }
@@ -148,16 +149,15 @@ export default MountWidget.extend({
     let allAbove = true;
     let bottomView = topView;
     let lastBottom = 0;
-    while (bottomView < $posts.length) {
-      const post = $posts[bottomView];
-      const $post = $(post);
+    while (bottomView < postsNodes.length) {
+      const post = postsNodes.item(bottomView);
 
-      if (!$post) {
+      if (!post) {
         break;
       }
 
-      const viewTop = $post.offset().top;
-      const postHeight = $post.outerHeight(true);
+      const viewTop = domUtils.offset(post).top;
+      const postHeight = domUtils.height(post);
       const viewBottom = Math.ceil(viewTop + postHeight);
 
       allAbove = allAbove && viewTop < topCheck;
@@ -199,28 +199,30 @@ export default MountWidget.extend({
       const first = posts.objectAt(onscreen[0]);
       if (this._topVisible !== first) {
         this._topVisible = first;
-        const $body = $("body");
-        const elem = $posts[onscreen[0]];
+        const elem = postsNodes.item(onscreen[0]);
         const elemId = elem.id;
-        const $elem = $(elem);
-        const elemPos = $elem.position();
-        const distToElement = elemPos ? $body.scrollTop() - elemPos.top : 0;
+        const elemPos = domUtils.position(elem);
+        const distToElement = elemPos
+          ? domUtils.scrollTop(document.body) - elemPos.top
+          : 0;
 
         const topRefresh = () => {
           refresh(() => {
-            const $refreshedElem = $(`#${elemId}`);
+            const refreshedElem = document.getElementById(elemId);
 
             // Quickly going back might mean the element is destroyed
-            const position = $refreshedElem.position();
+            const position = domUtils.position(refreshedElem);
             if (position && position.top) {
               let whereY = position.top + distToElement;
-              $("html, body").scrollTop(whereY);
+              domUtils.scrollToTop(document.documentElement, whereY);
 
               // This seems weird, but somewhat infrequently a rerender
               // will cause the browser to scroll to the top of the document
               // in Chrome. This makes sure the scroll works correctly if that
               // happens.
-              next(() => $("html, body").scrollTop(whereY));
+              schedule("afterRender", () =>
+                domUtils.scrollToTop(document.documentElement, whereY)
+              );
             }
           });
         };
@@ -292,7 +294,7 @@ export default MountWidget.extend({
   _posted(staged) {
     this.queueRerender(() => {
       if (staged) {
-        const postNumber = staged.get("post_number");
+        const postNumber = staged.post_number;
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
       }
     });
@@ -340,18 +342,15 @@ export default MountWidget.extend({
 
     this.appEvents.on("post-stream:posted", this, "_posted");
 
-    $(this.element).on(
-      "mouseenter.post-stream",
-      "button.widget-button",
-      (e) => {
-        $("button.widget-button").removeClass("d-hover");
-        $(e.target).addClass("d-hover");
-      }
+    this.element.addEventListener(
+      "mouseenter",
+      this._handleWidgetButtonHoverState
     );
 
-    $(this.element).on("mouseleave.post-stream", "button.widget-button", () => {
-      $("button.widget-button").removeClass("d-hover");
-    });
+    this.element.addEventListener(
+      "mouseleave",
+      this._removeWidgetButtonHoverState
+    );
 
     this.appEvents.on("post-stream:refresh", this, "_refresh");
 
@@ -365,12 +364,34 @@ export default MountWidget.extend({
 
   willDestroyElement() {
     this._super(...arguments);
+
     document.removeEventListener("touchmove", this._debouncedScroll);
     window.removeEventListener("scroll", this._debouncedScroll);
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
-    $(this.element).off("mouseenter.post-stream");
-    $(this.element).off("mouseleave.post-stream");
+    this.element.removeEventListener(
+      "mouseenter",
+      this._handleWidgetButtonHoverState
+    );
+    this.element.removeEventListener(
+      "mouseleave",
+      this._removeWidgetButtonHoverState
+    );
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
+  },
+
+  _removeWidgetButtonHoverState() {
+    document.querySelectorAll("button.widget-button").forEach((button) => {
+      button.classList.remove("d-hover");
+    });
+  },
+
+  _handleWidgetButtonHoverState(event) {
+    document
+      .querySelectorAll("button.widget-button")
+      .forEach((widgetButton) => {
+        widgetButton.classList.remove("d-hover");
+      });
+    event.target.classList.add("d-hover");
   },
 });
