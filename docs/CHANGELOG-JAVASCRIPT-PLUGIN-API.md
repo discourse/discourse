@@ -7,6 +7,13 @@ in this file..
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2021-12-15
+### Added
+- Adds `addPosterIcons`, which allows users to add multiple icons to a poster. The
+addition of this function also makes the existing `addPosterIcon` now an alias to this
+function. Users may now just use `addPosterIcons` for both one or many icons. This
+function allows users to now return many icons depending on an `attrs`.
+
 ## [1.0.0] - 2021-11-25
 ### Removed
 - Removes the `addComposerUploadProcessor` function, which is no longer used in
