@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DiscourseSingleSignOn < DiscourseConnectBase
+class DiscourseConnect < DiscourseConnectBase
 
   class BlankExternalId < StandardError; end
   class BannedExternalId < StandardError; end

@@ -25,7 +25,7 @@ class SessionController < ApplicationController
     cookies.delete(:destination_url)
 
     if SiteSetting.enable_discourse_connect?
-      sso = DiscourseSingleSignOn.generate_sso(return_path, secure_session: secure_session)
+      sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
@@ -144,8 +144,8 @@ class SessionController < ApplicationController
     params.require(:sig)
 
     begin
-      sso = DiscourseSingleSignOn.parse(request.query_string, secure_session: secure_session)
-    rescue DiscourseSingleSignOn::ParseError => e
+      sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
+    rescue DiscourseConnect::ParseError => e
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
       end
@@ -267,7 +267,7 @@ class SessionController < ApplicationController
       end
 
       render_sso_error(text: text || I18n.t("discourse_connect.unknown_error"), status: 500)
-    rescue DiscourseSingleSignOn::BlankExternalId
+    rescue DiscourseConnect::BlankExternalId
       render_sso_error(text: I18n.t("discourse_connect.blank_id_error"), status: 500)
     rescue Invite::ValidationFailed => e
       render_sso_error(text: e.message, status: 400)

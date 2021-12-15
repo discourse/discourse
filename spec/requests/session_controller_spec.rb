@@ -535,7 +535,7 @@ describe SessionController do
 
     def get_sso(return_path)
       nonce = SecureRandom.hex
-      dso = DiscourseSingleSignOn.new(secure_session: read_secure_session)
+      dso = DiscourseConnect.new(secure_session: read_secure_session)
       dso.nonce = nonce
       dso.register_nonce(return_path)
 
@@ -684,7 +684,7 @@ describe SessionController do
       ScreenedIpAddress.all.destroy_all
       get "/"
       sso = sso_for_ip_specs
-      DiscourseSingleSignOn.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user(request.remote_ip)
+      DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
       _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
