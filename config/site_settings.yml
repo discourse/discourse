@@ -1023,10 +1023,6 @@ posting:
   watched_words_regular_expressions:
     client: true
     default: false
-  enable_advanced_editor_preview_sync:
-    hidden: true
-    default: false
-    client: true
   enable_diffhtml_preview:
     default: false
     client: true
