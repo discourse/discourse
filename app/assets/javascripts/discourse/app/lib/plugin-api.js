@@ -96,7 +96,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 // based on Semantic Versioning 2.0.0. Please up the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.0.0";
+const PLUGIN_API_VERSION = "1.1.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -329,6 +329,9 @@ class PluginApi {
 
   /**
    * addPosterIcon(callback)
+   *
+   * This function is an alias of addPosterIcons, which the latter has the ability
+   * to add multiple icons at once.
    *
    * This function can be used to add an icon with a link that will be displayed
    * beside a poster's name. The `callback` is called with the post's user custom
