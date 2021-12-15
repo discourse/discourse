@@ -383,7 +383,7 @@ class PluginApi {
    * or
    * * ```
    * api.addPosterIcons((cfs, attrs) => {
-   *   attrs.customers.forEach(({name}) => {
+   *   return attrs.customers.map(({name}) => {
    *     icon: 'user', className: 'customer', title: name
    *   })
    * });
