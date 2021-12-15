@@ -34,7 +34,7 @@ export default Component.extend(Scrolling, {
           this,
           function () {
             if (this.element && !this.isDestroying && !this.isDestroyed) {
-              $(window).scrollTop(scrollTo + 1);
+              window.scrollTo(0, scrollTo + 1);
             }
           },
           0
@@ -45,7 +45,10 @@ export default Component.extend(Scrolling, {
 
   scrolled() {
     this._super(...arguments);
-    this.session.set("bookmarkListScrollPosition", $(window).scrollTop());
+    this.session.set(
+      "bookmarkListScrollPosition",
+      document.documentElement.scrollTop
+    );
   },
 
   @action
