@@ -4210,7 +4210,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
             uploads:
-              create: Upload a new file.
+              create: Upload a new file or initiate single or multipart direct uploads to external storage.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
