@@ -9,6 +9,8 @@ setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
   let setupTests = require("discourse/tests/setup-tests").default;
+  const skippingCore =
+    new URLSearchParams(window.location.search).get("qunit_skip_core") === "1";
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
   document.body.insertAdjacentHTML(
@@ -26,5 +28,9 @@ document.addEventListener("discourse-booted", () => {
   setupTests(config.APP);
   let loader = loadEmberExam();
   loader.loadModules();
-  start({ setupTestContainer: false, loadTests: false });
+  start({
+    setupTestContainer: false,
+    loadTests: false,
+    setupEmberOnerrorValidation: !skippingCore,
+  });
 });
