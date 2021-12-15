@@ -10,6 +10,7 @@ export default Component.extend({
     "anyLogos:with-logos:no-logos",
   ],
   noCategoryStyle: equal("siteSettings.category_style", "none"),
+  lockIcon: "lock",
 
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
