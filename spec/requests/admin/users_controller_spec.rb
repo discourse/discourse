@@ -922,7 +922,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#sync_sso' do
-    let(:sso) { SingleSignOn.new }
+    let(:sso) { DiscourseConnectBase.new }
     let(:sso_secret) { "sso secret" }
 
     before do

@@ -15,7 +15,7 @@ describe DiscourseSingleSignOn do
   end
 
   def make_sso
-    sso = SingleSignOn.new
+    sso = DiscourseConnectBase.new
     sso.sso_url = "http://meta.discorse.org/topics/111"
     sso.sso_secret = "supersecret"
     sso.nonce = "testing"
@@ -63,13 +63,13 @@ describe DiscourseSingleSignOn do
   end
 
   it "can do round trip parsing correctly" do
-    sso = SingleSignOn.new
+    sso = DiscourseConnectBase.new
     sso.sso_secret = "test"
     sso.name = "sam saffron"
     sso.username = "sam"
     sso.email = "sam@sam.com"
 
-    sso = SingleSignOn.parse(sso.payload, "test")
+    sso = DiscourseConnectBase.parse(sso.payload, "test")
 
     expect(sso.name).to eq "sam saffron"
     expect(sso.username).to eq "sam"
@@ -543,7 +543,7 @@ describe DiscourseSingleSignOn do
 
     url, payload = sso.to_url.split("?")
     expect(url).to eq sso.sso_url
-    parsed = SingleSignOn.parse(payload, "supersecret")
+    parsed = DiscourseConnectBase.parse(payload, "supersecret")
 
     test_parsed(parsed, sso)
   end
@@ -556,7 +556,7 @@ describe DiscourseSingleSignOn do
 
     url, payload = sso.to_url.split("?")
     expect(url).to eq "http://tcdev7.wpengine.com/"
-    parsed = SingleSignOn.parse(payload, "supersecret")
+    parsed = DiscourseConnectBase.parse(payload, "supersecret")
 
     test_parsed(parsed, sso)
   end

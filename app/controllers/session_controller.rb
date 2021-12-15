@@ -248,7 +248,7 @@ class SessionController < ApplicationController
         #{e.record.errors.to_h}
 
         Attributes:
-        #{e.record.attributes.slice(*SingleSignOn::ACCESSORS.map(&:to_s))}
+        #{e.record.attributes.slice(*DiscourseConnectBase::ACCESSORS.map(&:to_s))}
 
         SSO Diagnostics:
         #{sso.diagnostics}

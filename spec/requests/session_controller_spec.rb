@@ -539,7 +539,7 @@ describe SessionController do
       dso.nonce = nonce
       dso.register_nonce(return_path)
 
-      sso = SingleSignOn.new
+      sso = DiscourseConnectBase.new
       sso.nonce = nonce
       sso.sso_secret = @sso_secret
       sso
