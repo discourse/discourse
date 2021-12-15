@@ -16,6 +16,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
@@ -170,66 +171,72 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     this.searchService.set("searchContext", null);
   },
 
-  actions: {
-    renameTag(tag) {
-      showModal("rename-tag", { model: tag });
-    },
+  @action
+  renameTag(tag) {
+    showModal("rename-tag", { model: tag });
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        const controller = this.controllerFor("tag.show");
-        const composerController = this.controllerFor("composer");
-        composerController
-          .open({
-            categoryId: controller.get("category.id"),
-            action: Composer.CREATE_TOPIC,
-            draftKey: Composer.NEW_TOPIC_KEY,
-          })
-          .then(() => {
-            // Pre-fill the tags input field
-            if (composerController.canEditTags && controller.get("model.id")) {
-              const composerModel = this.controllerFor("composer").get("model");
-              composerModel.set(
-                "tags",
-                [
-                  controller.get("model.id"),
-                  ...makeArray(controller.additionalTags),
-                ].filter(Boolean)
-              );
-            }
-          });
-      }
-    },
-
-    dismissReadTopics(dismissTopics) {
-      const operationType = dismissTopics ? "topics" : "posts";
-      this.send("dismissRead", operationType);
-    },
-
-    dismissRead(operationType) {
-      const controller = this.controllerFor("tags-show");
-      let options = {
-        tagName: controller.get("tag.id"),
-      };
-      const categoryId = controller.get("category.id");
-
-      if (categoryId) {
-        options = Object.assign({}, options, {
-          categoryId,
-          includeSubcategories: !controller.noSubcategories,
+  @action
+  createTopic() {
+    if (this.get("currentUser.has_topic_draft")) {
+      this.openTopicDraft();
+    } else {
+      const controller = this.controllerFor("tag.show");
+      const composerController = this.controllerFor("composer");
+      composerController
+        .open({
+          categoryId: controller.get("category.id"),
+          action: Composer.CREATE_TOPIC,
+          draftKey: Composer.NEW_TOPIC_KEY,
+        })
+        .then(() => {
+          // Pre-fill the tags input field
+          if (composerController.canEditTags && controller.get("model.id")) {
+            const composerModel = this.controllerFor("composer").get("model");
+            composerModel.set(
+              "tags",
+              [
+                controller.get("model.id"),
+                ...makeArray(controller.additionalTags),
+              ].filter(Boolean)
+            );
+          }
         });
-      }
+    }
+  },
 
-      controller.send("dismissRead", operationType, options);
-    },
+  @action
+  dismissReadTopics(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+    this.send("dismissRead", operationType);
+  },
 
-    resetParams,
+  @action
+  dismissRead(operationType) {
+    const controller = this.controllerFor("tags-show");
+    let options = {
+      tagName: controller.get("tag.id"),
+    };
+    const categoryId = controller.get("category.id");
 
-    didTransition() {
-      this.controllerFor("tag.show")._showFooter();
-      return true;
-    },
+    if (categoryId) {
+      options = Object.assign({}, options, {
+        categoryId,
+        includeSubcategories: !controller.noSubcategories,
+      });
+    }
+
+    controller.send("dismissRead", operationType, options);
+  },
+
+  @action
+  resetParams(skipParams = []) {
+    resetParams.call(this, skipParams);
+  },
+
+  @action
+  didTransition() {
+    this.controllerFor("tag.show")._showFooter();
+    return true;
   },
 });

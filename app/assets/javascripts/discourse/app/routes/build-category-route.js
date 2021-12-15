@@ -14,6 +14,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
+import { action } from "@ember/object";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -208,17 +209,24 @@ export default (filterArg, params) => {
       this.searchService.set("searchContext", null);
     },
 
-    actions: {
-      setNotification(notification_level) {
-        this.currentModel.setNotification(notification_level);
-      },
+    @action
+    setNotification(notification_level) {
+      this.currentModel.setNotification(notification_level);
+    },
 
-      triggerRefresh() {
-        this.refresh();
-      },
+    @action
+    triggerRefresh() {
+      this.refresh();
+    },
 
-      changeSort,
-      resetParams,
+    @action
+    changeSort(sortBy) {
+      changeSort.call(this, sortBy);
+    },
+
+    @action
+    resetParams(skipParams = []) {
+      resetParams.call(this, skipParams);
     },
   });
 };
