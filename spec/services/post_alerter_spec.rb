@@ -125,6 +125,69 @@ describe PostAlerter do
         expect(message_data.dig(:last_notification, :notification, :data, :inbox_count)).to eq(starting_count + 1)
         expect(message_data[:unread_notifications]).to eq(1)
       end
+
+      it 'sends a PM notification when replying to a member tracking the topic' do
+        group.add(user1)
+
+        post = Fabricate(:post, topic: pm, user: user1)
+        TopicUser.change(user1.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        expect {
+          create_post_with_alerts(
+            raw: 'this is a reply to your post...', topic: pm, user: user2,
+            reply_to_post_number: post.post_number
+          )
+        }.to change(
+          user1.notifications.where(notification_type: Notification.types[:private_message]),
+          :count
+        ).by(1)
+      end
+
+      it 'notifies a group member if someone replies to their post' do
+        group.add(user1)
+
+        post = Fabricate(:post, topic: pm, user: user1)
+        TopicUser.change(user1.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
+
+        expect {
+          create_post_with_alerts(
+            raw: 'this is a reply to your post...', topic: pm, user: user2,
+            reply_to_post_number: post.post_number
+          )
+        }.to change(user1.notifications, :count).by(1)
+      end
+
+      it 'nofies a group member if someone quotes their post' do
+        group.add(user1)
+
+        post = Fabricate(:post, topic: pm, user: user1)
+        TopicUser.change(user1.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
+        quote_raw = <<~STRING
+          [quote="#{user1.username}, post:1, topic:#{pm.id}"]#{post.raw}[/quote]
+        STRING
+
+        expect {
+          create_post_with_alerts(
+            raw: quote_raw, topic: pm, user: user2,
+          )
+        }.to change(user1.notifications, :count).by(1)
+      end
+
+      it "Doesn't notify non-admin users when their post is quoted inside a whisper" do
+        admin = Fabricate(:admin)
+        group.add(admin)
+
+        TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
+        quote_raw = <<~STRING
+          [quote="#{user2.username}, post:1, topic:#{pm.id}"]#{op.raw}[/quote]
+        STRING
+
+        expect {
+          create_post_with_alerts(
+            raw: quote_raw, topic: pm, user: admin, post_type: Post.types[:whisper]
+          )
+        }.to change(user2.notifications, :count).by(0)
+      end
     end
   end
 
