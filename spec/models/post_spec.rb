@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe Post do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   before { Oneboxer.stubs :onebox }
 
   let(:upload_path) { Discourse.store.upload_path }
@@ -195,7 +197,7 @@ describe Post do
 
   describe 'flagging helpers' do
     fab!(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:coding_horror) }
+    fab!(:user) { coding_horror }
     fab!(:admin) { Fabricate(:admin) }
 
     it 'is_flagged? is accurate' do
@@ -736,7 +738,7 @@ describe Post do
     end
 
     describe 'rate limiter' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
@@ -745,7 +747,7 @@ describe Post do
     end
 
     describe 'with a new body' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
       let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
       it 'acts correctly' do
@@ -836,7 +838,7 @@ describe Post do
     describe 'a new reply' do
 
       fab!(:topic) { Fabricate(:topic) }
-      let(:other_user) { Fabricate(:coding_horror) }
+      let(:other_user) { coding_horror }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
       let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
@@ -1232,7 +1234,6 @@ describe Post do
 
   describe "#set_owner" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)

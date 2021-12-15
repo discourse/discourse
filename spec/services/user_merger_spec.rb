@@ -6,6 +6,7 @@ describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
   fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
   fab!(:walter) { Fabricate(:walter_white) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   fab!(:p1) { Fabricate(:post) }
   fab!(:p2) { Fabricate(:post) }
@@ -271,7 +272,6 @@ describe UserMerger do
     muted1 = Fabricate(:user)
     muted2 = Fabricate(:user)
     muted3 = Fabricate(:user)
-    coding_horror = Fabricate(:coding_horror)
 
     MutedUser.create!(user_id: source_user.id, muted_user_id: muted1.id)
     MutedUser.create!(user_id: source_user.id, muted_user_id: muted2.id)
@@ -297,7 +297,6 @@ describe UserMerger do
     ignored1 = Fabricate(:user)
     ignored2 = Fabricate(:user)
     ignored3 = Fabricate(:user)
-    coding_horror = Fabricate(:coding_horror)
 
     Fabricate(:ignored_user, user: source_user, ignored_user: ignored1)
     Fabricate(:ignored_user, user: source_user, ignored_user: ignored2)
@@ -705,8 +704,6 @@ describe UserMerger do
     end
 
     it "merges when acting_user is neither source_user nor target_user" do
-      coding_horror = Fabricate(:coding_horror)
-
       pm_topic1 = Fabricate(:private_message_topic, topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: walter),
         Fabricate.build(:topic_allowed_user, user: source_user),

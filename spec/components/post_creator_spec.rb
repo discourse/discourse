@@ -7,6 +7,8 @@ require 'topic_subtype'
 describe PostCreator do
 
   fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:topic) { Fabricate(:topic, user: user) }
 
   context "new topic" do
@@ -810,7 +812,7 @@ describe PostCreator do
     context "topic stats" do
       before do
         PostCreator.new(
-          Fabricate(:coding_horror),
+          coding_horror,
           raw: 'first post in topic',
           topic_id: topic.id,
           created_at: Time.zone.now - 24.hours
@@ -916,7 +918,7 @@ describe PostCreator do
 
   # integration test ... minimise db work
   context 'private message' do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
@@ -1021,7 +1023,7 @@ describe PostCreator do
   end
 
   context "warnings" do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     let(:base_args) do
       { title: 'you need a warning buddy!',
@@ -1102,7 +1104,7 @@ describe PostCreator do
   end
 
   context 'private message to group' do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     let(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1482,7 +1484,7 @@ describe PostCreator do
   end
 
   context "private message to a muted user" do
-    fab!(:muted_me) { Fabricate(:evil_trout) }
+    fab!(:muted_me) { evil_trout }
     fab!(:another_user) { Fabricate(:user) }
 
     it 'should fail' do
@@ -1523,7 +1525,7 @@ describe PostCreator do
   end
 
   context "private message to an ignored user" do
-    fab!(:ignorer) { Fabricate(:evil_trout) }
+    fab!(:ignorer) { evil_trout }
     fab!(:another_user) { Fabricate(:user) }
 
     context "when post author is ignored" do
@@ -1565,7 +1567,7 @@ describe PostCreator do
   end
 
   context "private message to user in allow list" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
 
     context "when post author is allowed" do
@@ -1611,7 +1613,7 @@ describe PostCreator do
   end
 
   context "private message to user not in allow list" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:not_allowed_user) { Fabricate(:user) }
 
@@ -1672,7 +1674,7 @@ describe PostCreator do
   end
 
   context "private message to multiple users and one is not allowed" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:not_allowed_user) { Fabricate(:user) }
 
@@ -1700,8 +1702,8 @@ describe PostCreator do
   end
 
   context "private message recipients limit (max_allowed_message_recipients) reached" do
-    fab!(:target_user1) { Fabricate(:coding_horror) }
-    fab!(:target_user2) { Fabricate(:evil_trout) }
+    fab!(:target_user1) { coding_horror }
+    fab!(:target_user2) { evil_trout }
     fab!(:target_user3) { Fabricate(:walter_white) }
 
     before do
