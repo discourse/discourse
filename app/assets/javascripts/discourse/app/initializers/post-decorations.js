@@ -30,7 +30,7 @@ export default {
         },
         { id: "discourse-lightbox" }
       );
-      api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
+
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCookedElement(setTextDirections, {
           id: "discourse-text-direction",
