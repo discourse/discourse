@@ -3,37 +3,78 @@
 require 'rails_helper'
 
 describe AdminDashboardData do
-
-  describe "adding new checks" do
+  describe "#fetch_problems" do
     after do
       AdminDashboardData.reset_problem_checks
     end
 
-    it 'calls the passed block' do
-      called = false
-      AdminDashboardData.add_problem_check do
-        called = true
+    describe "adding problem messages" do
+      it "adds the message and returns it when the problems are fetched" do
+        AdminDashboardData.add_problem_message("dashboard.bad_favicon_url")
+        problems = AdminDashboardData.fetch_problems
+        expect(problems).to include("dashboard.bad_favicon_url")
       end
 
-      AdminDashboardData.fetch_problems
-      expect(called).to eq(true)
-
-      AdminDashboardData.fetch_problems(check_force_https: true)
-      expect(called).to eq(true)
+      it "does not allow adding of arbitrary problem messages, they must exist in @problem_messages" do
+        AdminDashboardData.add_problem_message("errors.messages.invalid")
+        problems = AdminDashboardData.fetch_problems
+        expect(problems).not_to include("errors.messages.invalid")
+      end
     end
 
-    it 'calls the passed method' do
-      $test_AdminDashboardData_global = false
-      class AdminDashboardData
-        def my_test_method
-          $test_AdminDashboardData_global = true
+    describe "adding new checks" do
+      it 'calls the passed block' do
+        called = false
+        AdminDashboardData.add_problem_check do
+          called = true
         end
-      end
-      AdminDashboardData.add_problem_check :my_test_method
 
-      AdminDashboardData.fetch_problems
-      expect($test_AdminDashboardData_global).to eq(true)
-      $test_AdminDashboardData_global = nil
+        AdminDashboardData.fetch_problems
+        expect(called).to eq(true)
+
+        AdminDashboardData.fetch_problems(check_force_https: true)
+        expect(called).to eq(true)
+      end
+
+      it 'calls the passed method' do
+        $test_AdminDashboardData_global = false
+        class AdminDashboardData
+          def my_test_method
+            $test_AdminDashboardData_global = true
+          end
+        end
+        AdminDashboardData.add_problem_check :my_test_method
+
+        AdminDashboardData.fetch_problems
+        expect($test_AdminDashboardData_global).to eq(true)
+        $test_AdminDashboardData_global = nil
+      end
+    end
+  end
+
+  describe 'stats cache' do
+    include_examples 'stats cacheable'
+  end
+
+  describe '#problem_message_check' do
+    let(:key) { AdminDashboardData.problem_messages.first }
+
+    before do
+      described_class.clear_problem_message(key)
+    end
+
+    it 'returns nil if message has not been added' do
+      expect(described_class.problem_message_check(key)).to be_nil
+    end
+
+    it 'returns a message if it was added' do
+      described_class.add_problem_message(key)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
+    end
+
+    it 'returns a message if it was added with an expiry' do
+      described_class.add_problem_message(key, 300)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
     end
   end
 
@@ -220,32 +261,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'stats cache' do
-    include_examples 'stats cacheable'
-  end
-
-  describe '#problem_message_check' do
-    let(:key) { AdminDashboardData.problem_messages.first }
-
-    before do
-      described_class.clear_problem_message(key)
-    end
-
-    it 'returns nil if message has not been added' do
-      expect(described_class.problem_message_check(key)).to be_nil
-    end
-
-    it 'returns a message if it was added' do
-      described_class.add_problem_message(key)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
-    end
-
-    it 'returns a message if it was added with an expiry' do
-      described_class.add_problem_message(key, 300)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
-    end
-  end
-
   describe '#out_of_date_themes' do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
     let!(:theme) { Fabricate(:theme, remote_theme: remote, name: "Test< Theme") }
@@ -274,6 +289,54 @@ describe AdminDashboardData do
 
       remote.update!(last_error_text: nil)
       expect(dashboard_data.out_of_date_themes).to eq(nil)
+    end
+  end
+
+  describe "#pop3_polling_configuration" do
+    subject { described_class.new.pop3_polling_configuration }
+
+    it "does nothing if pop3_polling_enabled is false" do
+      SiteSetting.pop3_polling_enabled = false
+      expect(subject).to eq(nil)
+    end
+
+    it "returns the error message from POP3PollingEnabledSettingValidator" do
+      setup_pop3
+      POP3PollingEnabledSettingValidator.expects(:new).returns(stub(error_message: "bad setting"))
+      expect(subject).to eq("bad setting")
+    end
+
+    it "caches the setting check to occur only once every 5 minutes to prevent hammering the pop3 server" do
+      setup_pop3
+      POP3PollingEnabledSettingValidator.expects(:new).twice.returns(stub(error_message: "bad setting"))
+      described_class.new.pop3_polling_configuration
+      described_class.new.pop3_polling_configuration
+      AdminDashboardData.reset_problem_checks
+      described_class.new.pop3_polling_configuration
+    end
+  end
+
+  describe "#group_inbox_email_configuration" do
+    subject { described_class.new.group_inbox_email_configuration }
+
+    it "does nothing if smtp_enabled is false" do
+      SiteSetting.smtp_enabled = false
+      expect(subject).to eq(nil)
+    end
+
+    it "returns the error message from POP3PollingEnabledSettingValidator" do
+      setup_pop3
+      POP3PollingEnabledSettingValidator.expects(:new).returns(stub(error_message: "bad setting"))
+      expect(subject).to eq("bad setting")
+    end
+
+    it "caches the setting check to occur only once every 5 minutes to prevent hammering the pop3 server" do
+      setup_pop3
+      POP3PollingEnabledSettingValidator.expects(:new).twice.returns(stub(error_message: "bad setting"))
+      described_class.new.pop3_polling_configuration
+      described_class.new.pop3_polling_configuration
+      AdminDashboardData.reset_problem_checks
+      described_class.new.pop3_polling_configuration
     end
   end
 end
