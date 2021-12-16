@@ -38,11 +38,11 @@ discourseModule(
       pretender.get("/tags/filter/search", (params) => {
         if (params.queryParams.q === "rég") {
           return response({
-            results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }],
+            results: [{ id: "régis", name: "régis", count: 2, pm_count: 0 }],
           });
         } else if (params.queryParams.q === "dav") {
           return response({
-            results: [{ id: "David", text: "David", count: 2, pm_count: 0 }],
+            results: [{ id: "David", name: "David", count: 2, pm_count: 0 }],
           });
         }
       });
