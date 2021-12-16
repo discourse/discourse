@@ -160,31 +160,44 @@ module JsLocaleHelper
     result
   end
 
-  def self.output_client_overrides(locale)
-    overrides = TranslationOverride
-      .where(locale: locale)
-      .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
-      .pluck(:translation_key, :value, :compiled_js)
+  def self.output_client_overrides(main_locale)
+    all_overrides = {}
+    has_overrides = false
 
-    return "" if overrides.blank?
+    I18n.fallbacks[main_locale].each do |locale|
+      overrides = all_overrides[locale] = TranslationOverride
+        .where(locale: locale)
+        .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
+        .pluck(:translation_key, :value, :compiled_js)
 
-    message_formats = []
-    translations = {}
-
-    overrides.each do |key, value, compiled_js|
-      if key.end_with?("_MF")
-        message_formats << "#{key.inspect}: #{compiled_js}"
-      else
-        translations[key] = value
-      end
+      has_overrides ||= overrides.present?
     end
 
-    message_formats = message_formats.join(", ")
+    return "" if !has_overrides
 
-    <<~JS
-      I18n._mfOverrides = {#{message_formats}};
-      I18n._overrides = #{translations.to_json};
-    JS
+    result = +"I18n._overrides = {};"
+    existing_keys = Set.new
+    message_formats = []
+
+    all_overrides.each do |locale, overrides|
+      translations = {}
+
+      overrides.each do |key, value, compiled_js|
+        next if existing_keys.include?(key)
+        existing_keys << key
+
+        if key.end_with?("_MF")
+          message_formats << "#{key.inspect}: #{compiled_js}"
+        else
+          translations[key] = value
+        end
+      end
+
+      result << "I18n._overrides['#{locale}'] = #{translations.to_json};" if translations.present?
+    end
+
+    result << "I18n._mfOverrides = {#{message_formats.join(", ")}};"
+    result
   end
 
   def self.output_extra_locales(bundle, locale)

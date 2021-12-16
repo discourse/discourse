@@ -183,7 +183,7 @@ class Admin::SiteTextsController < Admin::AdminController
   def find_translations(query, overridden, locale)
     translations = Hash.new { |hash, key| hash[key] = {} }
     search_results = I18n.with_locale(locale) do
-      I18n.search(query, overridden: overridden)
+      I18n.search(query, only_overridden: overridden)
     end
 
     search_results.each do |key, value|
