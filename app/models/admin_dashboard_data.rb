@@ -3,6 +3,29 @@
 class AdminDashboardData
   include StatsCacheable
 
+  class Problem
+    attr_reader :message, :priority, :identifier
+
+    def initialize(message, priority: "low", identifier: nil)
+      @message = message
+      @priority = if !["low", "high"].include?(priority)
+        "low"
+      else
+        priority
+      end
+      @identifier = identifier
+    end
+
+    def to_s
+      @message
+    end
+
+    def self.maybe_create(message, priority: "low", identifier: nil)
+      return if message.blank?
+      new(message, priority: priority, identifier: identifier)
+    end
+  end
+
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
 
@@ -23,13 +46,13 @@ class AdminDashboardData
   def problems
     problems = []
     AdminDashboardData.problem_syms.each do |sym|
-      problems << public_send(sym)
+      problems << Problem.maybe_create(public_send(sym))
     end
     AdminDashboardData.problem_blocks.each do |blk|
-      problems << instance_exec(&blk)
+      problems << Problem.maybe_create(instance_exec(&blk))
     end
     AdminDashboardData.problem_messages.each do |i18n_key|
-      problems << AdminDashboardData.problem_message_check(i18n_key)
+      problems << Problem.maybe_create(AdminDashboardData.problem_message_check(i18n_key))
     end
     problems.compact!
 
@@ -46,7 +69,52 @@ class AdminDashboardData
     @problem_syms.push(*syms) if syms
     @problem_blocks << blk if blk
   end
-  class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
+
+  def self.add_scheduled_problem_check(check_identifier, &blk)
+    @problem_scheduled_check_blocks[check_identifier] = blk
+  end
+
+  def self.add_found_scheduled_check_problem(problem)
+    if problem.identifier.present?
+      return if find_scheduled_check_problem(problem.identifier).present?
+    end
+
+    @scheduled_check_problems_found << problem
+  end
+
+  def self.clear_found_scheduled_check_problems
+    @scheduled_check_problems_found = []
+  end
+
+  def self.clear_found_problem(identifier)
+    @scheduled_check_problems_found.reject! { |p| p.identifier == identifier }
+  end
+
+  def self.find_scheduled_check_problem(identifier)
+    @scheduled_check_problems_found.find { |p| p.identifier == identifier }
+  end
+
+  def self.register_default_scheduled_problem_checks
+    add_scheduled_problem_check(:pop3_polling_configuration) do
+      if SiteSetting.pop3_polling_enabled
+        Problem.maybe_create(
+          POP3PollingEnabledSettingValidator.new.error_message,
+          priority: "high",
+          identifier: "pop3_polling_error"
+        )
+      end
+    end
+
+    # group smtp check here
+  end
+
+  class << self
+    attr_reader :problem_syms,
+                :problem_blocks,
+                :problem_messages,
+                :problem_scheduled_check_blocks,
+                :scheduled_check_problems_found
+  end
 
   ##
   # We call this method when first loading the class on boot,
@@ -58,6 +126,8 @@ class AdminDashboardData
   def self.reset_problem_checks(force: false)
     @problem_syms = []
     @problem_blocks = []
+    @problem_scheduled_check_blocks = {}
+    @scheduled_check_problems_found = []
 
     @problem_messages = [
       'dashboard.bad_favicon_url',
@@ -71,8 +141,10 @@ class AdminDashboardData
                       :github_config_check, :s3_config_check, :s3_cdn_check,
                       :image_magick_check, :failing_emails_check,
                       :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration, :email_polling_errored_recently,
+                      :email_polling_errored_recently,
                       :out_of_date_themes, :unreachable_themes, :watched_words_check
+
+    register_default_scheduled_problem_checks
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -218,11 +290,6 @@ class AdminDashboardData
 
   def subfolder_ends_in_slash_check
     I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_path =~ /\/$/
-  end
-
-  def pop3_polling_configuration
-    return if !SiteSetting.pop3_polling_enabled
-    POP3PollingEnabledSettingValidator.new.error_message
   end
 
   def email_polling_errored_recently

@@ -11,14 +11,26 @@ describe AdminDashboardData do
     describe "adding problem messages" do
       it "adds the message and returns it when the problems are fetched" do
         AdminDashboardData.add_problem_message("dashboard.bad_favicon_url")
-        problems = AdminDashboardData.fetch_problems
-        expect(problems).to include("dashboard.bad_favicon_url")
+        problems = AdminDashboardData.fetch_problems.map(&:to_s)
+        expect(problems).to include(I18n.t("dashboard.bad_favicon_url", { base_path: Discourse.base_path }))
       end
 
       it "does not allow adding of arbitrary problem messages, they must exist in @problem_messages" do
         AdminDashboardData.add_problem_message("errors.messages.invalid")
-        problems = AdminDashboardData.fetch_problems
-        expect(problems).not_to include("errors.messages.invalid")
+        problems = AdminDashboardData.fetch_problems.map(&:to_s)
+        expect(problems).not_to include(I18n.t("errors.messages.invalid"))
+      end
+    end
+
+    describe "adding scheduled checks" do
+      it "adds the passed block to the scheduled checks" do
+        called = false
+        AdminDashboardData.add_scheduled_problem_check do
+          called = true
+        end
+
+        AdminDashboardData.problem_scheduled_check_blocks.first.call
+        expect(called).to eq(true)
       end
     end
 
@@ -289,54 +301,6 @@ describe AdminDashboardData do
 
       remote.update!(last_error_text: nil)
       expect(dashboard_data.out_of_date_themes).to eq(nil)
-    end
-  end
-
-  describe "#pop3_polling_configuration" do
-    subject { described_class.new.pop3_polling_configuration }
-
-    it "does nothing if pop3_polling_enabled is false" do
-      SiteSetting.pop3_polling_enabled = false
-      expect(subject).to eq(nil)
-    end
-
-    it "returns the error message from POP3PollingEnabledSettingValidator" do
-      setup_pop3
-      POP3PollingEnabledSettingValidator.expects(:new).returns(stub(error_message: "bad setting"))
-      expect(subject).to eq("bad setting")
-    end
-
-    it "caches the setting check to occur only once every 5 minutes to prevent hammering the pop3 server" do
-      setup_pop3
-      POP3PollingEnabledSettingValidator.expects(:new).twice.returns(stub(error_message: "bad setting"))
-      described_class.new.pop3_polling_configuration
-      described_class.new.pop3_polling_configuration
-      AdminDashboardData.reset_problem_checks
-      described_class.new.pop3_polling_configuration
-    end
-  end
-
-  describe "#group_inbox_email_configuration" do
-    subject { described_class.new.group_inbox_email_configuration }
-
-    it "does nothing if smtp_enabled is false" do
-      SiteSetting.smtp_enabled = false
-      expect(subject).to eq(nil)
-    end
-
-    it "returns the error message from POP3PollingEnabledSettingValidator" do
-      setup_pop3
-      POP3PollingEnabledSettingValidator.expects(:new).returns(stub(error_message: "bad setting"))
-      expect(subject).to eq("bad setting")
-    end
-
-    it "caches the setting check to occur only once every 5 minutes to prevent hammering the pop3 server" do
-      setup_pop3
-      POP3PollingEnabledSettingValidator.expects(:new).twice.returns(stub(error_message: "bad setting"))
-      described_class.new.pop3_polling_configuration
-      described_class.new.pop3_polling_configuration
-      AdminDashboardData.reset_problem_checks
-      described_class.new.pop3_polling_configuration
     end
   end
 end

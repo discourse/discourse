@@ -199,4 +199,8 @@ module Helpers
     SiteSetting.pop3_polling_password = "password"
     SiteSetting.pop3_polling_enabled = true
   end
+
+  def execute_job_class_with_args(args = nil)
+    described_class.new.execute(args)
+  end
 end
