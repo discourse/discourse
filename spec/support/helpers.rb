@@ -192,4 +192,11 @@ module Helpers
     target.send(:remove_const, const)
     target.const_set(const, old)
   end
+
+  def setup_pop3
+    SiteSetting.pop3_polling_host = "pop3.test.com"
+    SiteSetting.pop3_polling_username = "mailman@test.com"
+    SiteSetting.pop3_polling_password = "password"
+    SiteSetting.pop3_polling_enabled = true
+  end
 end

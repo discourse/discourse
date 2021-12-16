@@ -10,10 +10,6 @@ class AdminDashboardData
     @opts = opts
   end
 
-  def self.fetch_stats
-    new.as_json
-  end
-
   def get_json
     {}
   end
@@ -21,20 +17,6 @@ class AdminDashboardData
   def as_json(_options = nil)
     @json ||= get_json
   end
-
-  def self.reports(source)
-    source.map { |type| Report.find(type).as_json }
-  end
-
-  def self.stats_cache_key
-    "dashboard-data-#{Report::SCHEMA_VERSION}"
-  end
-
-  def self.add_problem_check(*syms, &blk)
-    @problem_syms.push(*syms) if syms
-    @problem_blocks << blk if blk
-  end
-  class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
 
   def problems
     problems = []
@@ -58,26 +40,20 @@ class AdminDashboardData
     problems
   end
 
-  def self.problems_started_key
-    'dash-problems-started-at'
+  def self.add_problem_check(*syms, &blk)
+    @problem_syms.push(*syms) if syms
+    @problem_blocks << blk if blk
   end
+  class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
 
-  def self.set_problems_started
-    existing_time = Discourse.redis.get(problems_started_key)
-    Discourse.redis.setex(problems_started_key, 14.days.to_i, existing_time || Time.zone.now.to_s)
-  end
-
-  def self.clear_problems_started
-    Discourse.redis.del problems_started_key
-  end
-
-  def self.problems_started_at
-    s = Discourse.redis.get(problems_started_key)
-    s ? Time.zone.parse(s) : nil
-  end
-
-  # used for testing
-  def self.reset_problem_checks
+  ##
+  # We call this method when first loading the class on boot,
+  # so all of the problem checks in this class are recognized
+  # and run when the problems are loaded in the admin dashboard
+  # controller. This method will likely get called multiple
+  # times in development because classes are not cached there,
+  # but in production it will only be called once.
+  def self.reset_problem_checks(force: false)
     @problem_syms = []
     @problem_blocks = []
 
@@ -102,6 +78,36 @@ class AdminDashboardData
   end
   reset_problem_checks
 
+  def self.fetch_stats
+    new.as_json
+  end
+
+  def self.reports(source)
+    source.map { |type| Report.find(type).as_json }
+  end
+
+  def self.stats_cache_key
+    "dashboard-data-#{Report::SCHEMA_VERSION}"
+  end
+
+  def self.problems_started_key
+    'dash-problems-started-at'
+  end
+
+  def self.set_problems_started
+    existing_time = Discourse.redis.get(problems_started_key)
+    Discourse.redis.setex(problems_started_key, 14.days.to_i, existing_time || Time.zone.now.to_s)
+  end
+
+  def self.clear_problems_started
+    Discourse.redis.del problems_started_key
+  end
+
+  def self.problems_started_at
+    s = Discourse.redis.get(problems_started_key)
+    s ? Time.zone.parse(s) : nil
+  end
+
   def self.fetch_problems(opts = {})
     AdminDashboardData.new(opts).problems
   end
@@ -110,6 +116,11 @@ class AdminDashboardData
     Discourse.redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key, base_path: Discourse.base_path) : nil
   end
 
+  ##
+  # Arbitrary messages cannot be added here, they must already be defined
+  # in the @problem_messages array which is defined in reset_problem_checks.
+  # The array is iterated over and each key that exists in redis will be added
+  # to the final problems output in #problems.
   def self.add_problem_message(i18n_key, expire_seconds = nil)
     if expire_seconds.to_i > 0
       Discourse.redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
@@ -123,7 +134,7 @@ class AdminDashboardData
   end
 
   def self.problem_message_key(i18n_key)
-    "admin-problem:#{i18n_key}"
+    "#{PROBLEM_MESSAGE_PREFIX}#{i18n_key}"
   end
 
   def rails_env_check
