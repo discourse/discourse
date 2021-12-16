@@ -496,15 +496,29 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
-    cannot_see = []
+    cannot_see = {}
     here_count = nil
 
     topic_id = params[:topic_id]
     if topic_id.present? && topic = Topic.find_by(id: topic_id)
       usernames.each do |username|
-        if !Guardian.new(User.find_by_username(username)).can_see?(topic)
-          cannot_see.push(username)
+        user = User.find_by_username(username)
+        next if user.blank?
+
+        cannot_see_reason = nil
+        if !Guardian.new(user).can_see?(topic)
+          cannot_see_reason = topic.private_message? ? :private : :category
+        elsif TopicUser.exists?(topic: topic, user: user, notification_level: TopicUser.notification_levels[:muted])
+          cannot_see_reason = :muted_topic
+        elsif topic.private_message? && !TopicAllowedUser.exists?(topic: topic, user: user) && !TopicAllowedGroup.exists?(topic: topic, group: user.groups)
+          cannot_see_reason = :not_allowed
         end
+
+        if !guardian.is_staff? && cannot_see_reason.present? && cannot_see_reason != :private && cannot_see_reason != :category
+          cannot_see_reason = :unknown
+        end
+
+        cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
       end
 
       if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?

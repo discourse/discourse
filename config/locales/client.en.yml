@@ -2106,8 +2106,11 @@ en:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
         other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
       cannot_see_mention:
-        category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
-        private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+        category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
+        private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+        muted_topic: "You mentioned @%{username} but they won't be notified because they muted this topic."
+        not_allowed: "You mentioned @%{username} but they won't be notified because they were not invited to this topic."
+        unknown: "You mentioned @%{username} but they won't be notified."
       here_mention:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
