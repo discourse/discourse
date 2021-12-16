@@ -79,6 +79,8 @@ class AnonymousShadowCreator
 
   def resolve_username
     username = I18n.t("anonymous").downcase
+    username = "anonymous" until UserNameSuggester.sanitize_username(username).present?
+
     UserNameSuggester.suggest(username)
   end
 end
