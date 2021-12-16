@@ -109,10 +109,39 @@ describe ExtraLocalesController do
           ctx.eval("I18n = {};")
           ctx.eval(response.body)
 
-          expect(ctx.eval('typeof I18n._mfOverrides["js.client_MF"]')).to eq("function")
-          expect(ctx.eval('I18n._overrides["js.some_key"]')).to eq("client-side translation")
-          expect(ctx.eval('I18n._overrides["js.client_MF"] === undefined')).to eq(true)
-          expect(ctx.eval('I18n._overrides["admin_js.another_key"]')).to eq("admin client js")
+          expect(ctx.eval("typeof I18n._mfOverrides['js.client_MF']")).to eq("function")
+          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.some_key']")).to eq("client-side translation")
+          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.client_MF'] === undefined")).to eq(true)
+          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['admin_js.another_key']")).to eq("admin client js")
+        end
+
+        it "returns overrides from fallback locale" do
+          TranslationOverride.upsert!(:en, 'js.some_key', 'some key (en)')
+          TranslationOverride.upsert!(:fr, 'js.some_key', 'some key (fr)')
+          TranslationOverride.upsert!(:en, 'js.only_en', 'only English')
+          TranslationOverride.upsert!(:fr, 'js.only_fr', 'only French')
+          TranslationOverride.upsert!(:en, 'js.some_client_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
+          TranslationOverride.upsert!(:fr, 'js.some_client_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
+          TranslationOverride.upsert!(:en, 'js.only_en_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
+          TranslationOverride.upsert!(:fr, 'js.only_fr_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
+
+          SiteSetting.allow_user_locale = true
+          user = Fabricate(:user, locale: :fr)
+          sign_in(user)
+
+          get "/extra-locales/overrides"
+          expect(response.status).to eq(200)
+
+          ctx = MiniRacer::Context.new
+          ctx.eval("I18n = {};")
+          ctx.eval(response.body)
+
+          overrides = ctx.eval("I18n._overrides")
+          expect(overrides.keys).to contain_exactly("en", "fr")
+          expect(overrides["en"]).to eq({ 'js.only_en' => 'only English' })
+          expect(overrides["fr"]).to eq({ 'js.some_key' => 'some key (fr)', 'js.only_fr' => 'only French' })
+
+          expect(ctx.eval("Object.keys(I18n._mfOverrides)")).to contain_exactly("js.some_client_MF", "js.only_en_MF", "js.only_fr_MF")
         end
       end
     end

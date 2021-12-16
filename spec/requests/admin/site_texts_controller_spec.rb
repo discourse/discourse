@@ -153,6 +153,19 @@ RSpec.describe Admin::SiteTextsController do
         expect(value).to eq('education.new-topic override')
       end
 
+      it "returns only overridden translations" do
+        TranslationOverride.upsert!(:en, 'education.new-topic', 'education.new-topic override')
+
+        get "/admin/customize/site_texts.json", params: { locale: 'en', overridden: true }
+        expect(response.status).to eq(200)
+
+        site_texts = response.parsed_body['site_texts']
+        expect(site_texts.size).to eq(1)
+
+        value = site_texts.find { |text| text['id'] == 'education.new-topic' }['value']
+        expect(value).to eq('education.new-topic override')
+      end
+
       context 'plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
