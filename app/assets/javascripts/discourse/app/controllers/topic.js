@@ -19,10 +19,8 @@ import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
@@ -1679,61 +1677,8 @@ export default Controller.extend(bufferedProperty("model"), {
             }
           }
         }
-
-        // scroll to bottom is very specific to new posts from discobot
-        // hence the -2 check (discobot id). We can shift all this code
-        // to discobot plugin longer term
-        if (
-          topic.get("isPrivateMessage") &&
-          this.currentUser &&
-          this.currentUser.get("id") !== data.user_id &&
-          data.user_id === -2 &&
-          data.type === "created"
-        ) {
-          const postNumber = data.post_number;
-          const notInPostStream =
-            topic.get("highest_post_number") <= postNumber;
-          const postNumberDifference = postNumber - topic.get("currentPost");
-
-          if (
-            notInPostStream &&
-            postNumberDifference > 0 &&
-            postNumberDifference < 7
-          ) {
-            this._scrollToDiscobotPost(data.post_number);
-          }
-        }
       },
       this.get("model.message_bus_last_id")
-    );
-  },
-
-  _scrollToDiscobotPost(postNumber) {
-    discourseDebounce(
-      this,
-      function () {
-        const post = document.querySelector(
-          `.topic-post article#post_${postNumber}`
-        );
-
-        if (!post || isElementInViewport(post)) {
-          return;
-        }
-
-        const headerOffset =
-          parseInt(
-            getComputedStyle(document.body).getPropertyValue("--header-offset"),
-            10
-          ) || 0;
-        const viewportOffset = post.getBoundingClientRect();
-
-        window.scrollTo({
-          top: window.scrollY + viewportOffset.top - headerOffset,
-          behavior: "smooth",
-        });
-      },
-      postNumber,
-      500
     );
   },
 
