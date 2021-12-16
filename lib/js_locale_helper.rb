@@ -161,18 +161,25 @@ module JsLocaleHelper
   end
 
   def self.output_client_overrides(locale)
-    translations = (I18n.overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
-    return "" if translations.blank?
+    overrides = TranslationOverride
+      .where(locale: locale)
+      .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
+      .pluck(:translation_key, :value, :compiled_js)
 
-    message_formats = {}
+    return "" if overrides.blank?
 
-    translations.delete_if do |key, value|
-      if key.to_s.end_with?("_MF")
-        message_formats[key] = value
+    message_formats = []
+    translations = {}
+
+    overrides.each do |key, value, compiled_js|
+      if key.end_with?("_MF")
+        message_formats << "#{key.inspect}: #{compiled_js}"
+      else
+        translations[key] = value
       end
     end
 
-    message_formats = message_formats.map { |k, v| "#{k.inspect}: #{v}" }.join(", ")
+    message_formats = message_formats.join(", ")
 
     <<~JS
       I18n._mfOverrides = {#{message_formats}};
