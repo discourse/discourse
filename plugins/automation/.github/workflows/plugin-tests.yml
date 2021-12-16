@@ -3,7 +3,6 @@ name: Plugin Tests
 on:
   push:
     branches:
-      - master
       - main
   pull_request:
 
@@ -11,14 +10,13 @@ jobs:
   build:
     name: ${{ matrix.build_type }}
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:release
+    container: discourse/discourse_test:slim${{ matrix.build_type == 'frontend' && '-browsers' || '' }}
     timeout-minutes: 60
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
       RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
       RAILS_ENV: test
-      PGHOST: postgres
       PGUSER: discourse
       PGPASSWORD: discourse
 
@@ -26,24 +24,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: ['backend', 'frontend']
-        ruby: ['2.7']
-        postgres: ['13']
-
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres }}
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: discourse
-          POSTGRES_PASSWORD: discourse
-        options: >-
-          --mount type=tmpfs,destination=/var/lib/postgresql/data
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        build_type: ["backend", "frontend"]
 
     steps:
       - uses: actions/checkout@v2
@@ -65,14 +46,20 @@ jobs:
       - name: Start redis
         run: |
           redis-server /etc/redis/redis.conf &
+      
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
         uses: actions/cache@v2
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.ruby }}-gem-
+            ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -95,17 +82,46 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.os }}-yarn-
+            ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install
 
-      - name: Migrate database
+      - name: Fetch app state cache
+        uses: actions/cache@v2
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >- # postgres version, hash of migrations, "parallel?"
+            ${{ runner.os }}-
+            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ matrix.postgres }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ env.USES_PARALLEL_DATABASES }}
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: psql -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
+      - name: Create and migrate database
+        if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
           bin/rake db:migrate
+
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Check spec existence
         id: check_spec
