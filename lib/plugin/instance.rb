@@ -995,7 +995,8 @@ class Plugin::Instance
   end
 
   # Allows customizing existing topic-backed static pages, like:
-  # faq, tos, privacy (see: StaticController)
+  # faq, tos, privacy (see: StaticController) The block passed to this
+  # method has to return a SiteSetting name that contains a topic id.
   #
   #   add_topic_static_page("faq") do |controller|
   #     current_user&.locale == "pl" ? "polish_faq_topic_id" : "faq_topic_id"
