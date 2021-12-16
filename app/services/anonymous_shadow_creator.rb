@@ -42,7 +42,7 @@ class AnonymousShadowCreator
   private
 
   def create_shadow!
-    username = UserNameSuggester.suggest(I18n.t(:anonymous).downcase)
+    username = resolve_username
 
     User.transaction do
       shadow = User.create!(
@@ -75,5 +75,10 @@ class AnonymousShadowCreator
 
       shadow
     end
+  end
+
+  def resolve_username
+    username = I18n.t("anonymous").downcase
+    UserNameSuggester.suggest(username)
   end
 end
