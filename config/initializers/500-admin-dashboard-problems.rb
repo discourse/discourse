@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-Rails.application.config.after_initialize do
+Rails.application.reloader.to_prepare do
   AdminDashboardData.reset_problem_checks
 end
