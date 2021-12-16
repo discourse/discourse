@@ -49,6 +49,7 @@ module.exports = function (defaults) {
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
+  app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   let adminVendor = funnel(vendorJs, {
     files: ["resumable.js"],
