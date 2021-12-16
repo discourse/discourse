@@ -20,6 +20,15 @@ class AdminDashboardData
       @message
     end
 
+    def to_h
+      { message: message, priority: priority, identifier: identifier }
+    end
+
+    def self.from_h(h)
+      h = h.with_indifferent_access
+      Problem.maybe_create(h[:message], priority: h[:priority], identifier: h[:identifier])
+    end
+
     def self.maybe_create(message, priority: "low", identifier: nil)
       return if message.blank?
       new(message, priority: priority, identifier: identifier)
@@ -30,6 +39,7 @@ class AdminDashboardData
   GLOBAL_REPORTS ||= []
 
   PROBLEM_MESSAGE_PREFIX = "admin-problem:"
+  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems"
 
   def initialize(opts = {})
     @opts = opts
@@ -54,6 +64,7 @@ class AdminDashboardData
     AdminDashboardData.problem_messages.each do |i18n_key|
       problems << Problem.maybe_create(AdminDashboardData.problem_message_check(i18n_key))
     end
+    problems += AdminDashboardData.load_found_scheduled_check_problems
     problems.compact!
 
     if problems.empty?
@@ -75,23 +86,34 @@ class AdminDashboardData
   end
 
   def self.add_found_scheduled_check_problem(problem)
+    problems = load_found_scheduled_check_problems
     if problem.identifier.present?
-      return if find_scheduled_check_problem(problem.identifier).present?
+      return if problems.find { |p| p.identifier == problem.identifier }
     end
+    problems << problem
+    set_found_scheduled_check_problems(problems)
+  end
 
-    @scheduled_check_problems_found << problem
+  def self.set_found_scheduled_check_problems(problems)
+    Discourse.redis.setex(SCHEDULED_PROBLEM_STORAGE_KEY, 300, JSON.dump(problems.map(&:to_h)))
   end
 
   def self.clear_found_scheduled_check_problems
-    @scheduled_check_problems_found = []
+    Discourse.redis.del(SCHEDULED_PROBLEM_STORAGE_KEY)
   end
 
   def self.clear_found_problem(identifier)
-    @scheduled_check_problems_found.reject! { |p| p.identifier == identifier }
+    problems = load_found_scheduled_check_problems
+    problems.reject! { |p| p.identifier == identifier }
+    set_found_scheduled_check_problems(problems)
   end
 
-  def self.find_scheduled_check_problem(identifier)
-    @scheduled_check_problems_found.find { |p| p.identifier == identifier }
+  def self.load_found_scheduled_check_problems
+    found_problems_json = Discourse.redis.get(SCHEDULED_PROBLEM_STORAGE_KEY)
+    return [] if found_problems_json.blank?
+    JSON.parse(found_problems_json).map do |problem|
+      Problem.from_h(problem)
+    end
   end
 
   def self.register_default_scheduled_problem_checks
@@ -112,28 +134,27 @@ class AdminDashboardData
     attr_reader :problem_syms,
                 :problem_blocks,
                 :problem_messages,
-                :problem_scheduled_check_blocks,
-                :scheduled_check_problems_found
+                :problem_scheduled_check_blocks
   end
 
   ##
-  # We call this method when first loading the class on boot,
+  # We call this method in a config/initializer
   # so all of the problem checks in this class are recognized
   # and run when the problems are loaded in the admin dashboard
-  # controller. This method will likely get called multiple
-  # times in development because classes are not cached there,
-  # but in production it will only be called once.
-  def self.reset_problem_checks(force: false)
+  # controller. Also can be used in testing to reset checks between
+  # tests.
+  def self.reset_problem_checks
     @problem_syms = []
     @problem_blocks = []
     @problem_scheduled_check_blocks = {}
-    @scheduled_check_problems_found = []
 
     @problem_messages = [
       'dashboard.bad_favicon_url',
       'dashboard.poll_pop3_timeout',
       'dashboard.poll_pop3_auth_error',
     ]
+
+    clear_found_scheduled_check_problems
 
     add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
@@ -150,7 +171,6 @@ class AdminDashboardData
       sidekiq_check || queue_size_check
     end
   end
-  reset_problem_checks
 
   def self.fetch_stats
     new.as_json
