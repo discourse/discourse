@@ -379,9 +379,9 @@ acceptance("Tag info", function (needs) {
     server.get("/tags/filter/search", () =>
       helper.response({
         results: [
-          { id: "monkey", text: "monkey", count: 1 },
-          { id: "not-monkey", text: "not-monkey", count: 1 },
-          { id: "happy-monkey", text: "happy-monkey", count: 1 },
+          { id: "monkey", name: "monkey", count: 1 },
+          { id: "not-monkey", name: "not-monkey", count: 1 },
+          { id: "happy-monkey", name: "happy-monkey", count: 1 },
         ],
       })
     );
