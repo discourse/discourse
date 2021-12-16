@@ -15,14 +15,18 @@ export default function (elem, siteSettings) {
     return;
   }
 
+  const lightboxes = elem.querySelectorAll(
+    "*:not(.spoiler):not(.spoiled) a.lightbox"
+  );
+
+  if (!lightboxes.length) {
+    return;
+  }
+
   const caps = helperContext().capabilities;
   const imageClickNavigation = caps.touch;
 
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    const lightboxes = elem.querySelectorAll(
-      "*:not(.spoiler):not(.spoiled) a.lightbox"
-    );
-
     $(lightboxes).magnificPopup({
       type: "image",
       closeOnContentClick: false,
