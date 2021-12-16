@@ -6,6 +6,8 @@ class AdminDashboardData
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
 
+  PROBLEM_MESSAGE_PREFIX = "admin-problem:"
+
   def initialize(opts = {})
     @opts = opts
   end
@@ -219,7 +221,8 @@ class AdminDashboardData
   end
 
   def pop3_polling_configuration
-    POP3PollingEnabledSettingValidator.new.error_message if SiteSetting.pop3_polling_enabled
+    return if !SiteSetting.pop3_polling_enabled
+    POP3PollingEnabledSettingValidator.new.error_message
   end
 
   def email_polling_errored_recently
