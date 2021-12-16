@@ -104,8 +104,6 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery-color/dist/jquery.color.js'
-    }, {
       source: 'blueimp-file-upload/js/jquery.fileupload.js',
     }, {
       source: 'blueimp-file-upload/js/jquery.iframe-transport.js',

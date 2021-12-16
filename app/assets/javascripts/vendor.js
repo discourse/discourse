@@ -11,7 +11,6 @@
 //= require popper.js
 //= require bootstrap-modal.js
 //= require caret_position
-//= require jquery.color.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
 //= require jquery.fileupload-process.js
