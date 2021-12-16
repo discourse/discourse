@@ -122,16 +122,6 @@ class AdminDashboardData
   end
 
   def self.register_default_scheduled_problem_checks
-    add_scheduled_problem_check(:pop3_polling_configuration) do
-      if SiteSetting.pop3_polling_enabled
-        Problem.maybe_create(
-          POP3PollingEnabledSettingValidator.new.error_message,
-          priority: "high",
-          identifier: "pop3_polling_error"
-        )
-      end
-    end
-
     # TODO (martin) Add group SMTP check here
   end
 
