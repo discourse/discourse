@@ -111,8 +111,13 @@ class AdminDashboardData
   def self.load_found_scheduled_check_problems
     found_problems_json = Discourse.redis.get(SCHEDULED_PROBLEM_STORAGE_KEY)
     return [] if found_problems_json.blank?
-    JSON.parse(found_problems_json).map do |problem|
-      Problem.from_h(problem)
+    begin
+      JSON.parse(found_problems_json).map do |problem|
+        Problem.from_h(problem)
+      end
+    rescue JSON::ParserError => err
+      Discourse.warn_exception(err, message: "Error parsing found problem JSON in admin dashboard: #{found_problems_json}")
+      []
     end
   end
 
@@ -127,7 +132,32 @@ class AdminDashboardData
       end
     end
 
-    # group smtp check here
+    # TODO (martin) Add group SMTP check here
+  end
+
+  def self.execute_scheduled_checks
+    found_problems = []
+    problem_scheduled_check_blocks.each do |check_identifier, blk|
+      problems = nil
+
+      begin
+        problems = instance_exec(&blk)
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "A scheduled admin dashboard problem check (#{check_identifier}) errored.")
+        # we don't want to hold up other checks because this one errored
+        next
+      end
+
+      if !problems.is_a? Array
+        problems = [problems]
+      end
+      found_problems += problems
+    end
+
+    found_problems.compact.each do |problem|
+      next if !problem.is_a?(Problem)
+      add_found_scheduled_check_problem(problem)
+    end
   end
 
   class << self

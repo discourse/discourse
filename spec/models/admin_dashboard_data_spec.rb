@@ -3,11 +3,12 @@
 require 'rails_helper'
 
 describe AdminDashboardData do
-  describe "#fetch_problems" do
-    after do
-      AdminDashboardData.reset_problem_checks
-    end
+  after do
+    AdminDashboardData.reset_problem_checks
+    Discourse.redis.flushdb
+  end
 
+  describe "#fetch_problems" do
     describe "adding problem messages" do
       it "adds the message and returns it when the problems are fetched" do
         AdminDashboardData.add_problem_message("dashboard.bad_favicon_url")
@@ -19,18 +20,6 @@ describe AdminDashboardData do
         AdminDashboardData.add_problem_message("errors.messages.invalid")
         problems = AdminDashboardData.fetch_problems.map(&:to_s)
         expect(problems).not_to include(I18n.t("errors.messages.invalid"))
-      end
-    end
-
-    describe "adding scheduled checks" do
-      it "adds the passed block to the scheduled checks" do
-        called = false
-        AdminDashboardData.add_scheduled_problem_check do
-          called = true
-        end
-
-        AdminDashboardData.problem_scheduled_check_blocks.first.call
-        expect(called).to eq(true)
       end
     end
 
@@ -61,6 +50,49 @@ describe AdminDashboardData do
         expect($test_AdminDashboardData_global).to eq(true)
         $test_AdminDashboardData_global = nil
       end
+    end
+  end
+
+  describe "adding scheduled checks" do
+    it "adds the passed block to the scheduled checks" do
+      called = false
+      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+        called = true
+      end
+
+      AdminDashboardData.execute_scheduled_checks
+      expect(called).to eq(true)
+    end
+
+    it "adds a found problem from a scheduled check" do
+      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+        AdminDashboardData::Problem.maybe_create("test problem")
+      end
+
+      AdminDashboardData.execute_scheduled_checks
+      problems = AdminDashboardData.load_found_scheduled_check_problems
+      expect(problems.first).to be_a(AdminDashboardData::Problem)
+      expect(problems.first.message).to eq("test problem")
+    end
+
+    it "does not add duplicate problems with the same identifier" do
+      prob1 = AdminDashboardData::Problem.maybe_create("test problem", identifier: "test")
+      prob2 = AdminDashboardData::Problem.maybe_create("test problem 2", identifier: "test")
+      AdminDashboardData.add_found_scheduled_check_problem(prob1)
+      AdminDashboardData.add_found_scheduled_check_problem(prob2)
+      expect(AdminDashboardData.load_found_scheduled_check_problems.count).to eq(1)
+    end
+
+    it "does not error when loading malformed problems saved in redis" do
+      Discourse.redis.set(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
+      expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
+    end
+
+    it "clears a specific problem by identifier" do
+      prob1 = AdminDashboardData::Problem.maybe_create("test problem 1", identifier: "test")
+      AdminDashboardData.add_found_scheduled_check_problem(prob1)
+      AdminDashboardData.clear_found_problem("test")
+      expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
   end
 
