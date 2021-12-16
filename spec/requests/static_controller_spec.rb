@@ -291,9 +291,9 @@ describe StaticController do
         Discourse::Application.routes.send(:eval_block, routes)
 
         topic_id = Fabricate(:post, cooked: "contact info").topic_id
-        SiteSetting.setting(:contact_topic_id, topic_id)
+        SiteSetting.setting(:test_contact_topic_id, topic_id)
 
-        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "contact_topic_id")
+        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_contact_topic_id")
 
         get "/contact"
 
@@ -303,12 +303,12 @@ describe StaticController do
 
       it "replaces existing topic-backed pages" do
         topic_id = Fabricate(:post, cooked: "Regular FAQ").topic_id
-        SiteSetting.setting(:faq_topic_id, topic_id)
+        SiteSetting.setting(:test_faq_topic_id, topic_id)
         polish_topic_id = Fabricate(:post, cooked: "Polish FAQ").topic_id
-        SiteSetting.setting(:polish_faq_topic_id, polish_topic_id)
+        SiteSetting.setting(:test_polish_faq_topic_id, polish_topic_id)
 
         Plugin::Instance.new.add_topic_static_page("faq") do
-          current_user&.locale == "pl" ? "polish_faq_topic_id" : "faq_topic_id"
+          current_user&.locale == "pl" ? "test_polish_faq_topic_id" : "test_faq_topic_id"
         end
 
         get "/faq"
