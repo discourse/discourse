@@ -79,8 +79,23 @@ export default createWidget("post-small-action", {
   },
 
   buildClasses(attrs) {
+    const classes = [];
+
+    if (attrs.actionClickAction) {
+      classes.push("clickable");
+    }
+
     if (attrs.deleted) {
-      return "deleted";
+      classes.push("deleted");
+    }
+
+    return classes;
+  },
+
+  click(event) {
+    if (this.attrs.actionClickAction) {
+      this.attrs.actionClickAction();
+      event.preventDefault();
     }
   },
 
