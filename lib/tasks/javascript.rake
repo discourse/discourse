@@ -114,8 +114,6 @@ def dependencies
     }, {
       source: 'jquery/dist/jquery.js'
     }, {
-      source: 'jquery-tags-input/src/jquery.tagsinput.js'
-    }, {
       source: 'markdown-it/dist/markdown-it.js'
     }, {
       source: '@discourse/itsatrap/itsatrap.js'

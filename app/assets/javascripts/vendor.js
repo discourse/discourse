@@ -14,7 +14,6 @@
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
 //= require jquery.fileupload-process.js
-//= require jquery.tagsinput.js
 //= require jquery.sortable.js
 //= require lodash.js
 //= require itsatrap.js
