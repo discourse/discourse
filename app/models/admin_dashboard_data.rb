@@ -3,6 +3,11 @@
 class AdminDashboardData
   include StatsCacheable
 
+  cattr_reader :problem_syms,
+    :problem_blocks,
+    :problem_messages,
+    :problem_scheduled_check_blocks
+
   class Problem
     VALID_PRIORITIES = ["low", "high"].freeze
 
@@ -75,12 +80,12 @@ class AdminDashboardData
   end
 
   def self.add_problem_check(*syms, &blk)
-    @problem_syms.push(*syms) if syms
-    @problem_blocks << blk if blk
+    @@problem_syms.push(*syms) if syms
+    @@problem_blocks << blk if blk
   end
 
   def self.add_scheduled_problem_check(check_identifier, &blk)
-    @problem_scheduled_check_blocks[check_identifier] = blk
+    @@problem_scheduled_check_blocks[check_identifier] = blk
   end
 
   def self.add_found_scheduled_check_problem(problem)
@@ -145,13 +150,6 @@ class AdminDashboardData
     end
   end
 
-  class << self
-    attr_reader :problem_syms,
-                :problem_blocks,
-                :problem_messages,
-                :problem_scheduled_check_blocks
-  end
-
   ##
   # We call this method in a config/initializer
   # so all of the problem checks in this class are recognized
@@ -159,17 +157,15 @@ class AdminDashboardData
   # controller. Also can be used in testing to reset checks between
   # tests.
   def self.reset_problem_checks
-    @problem_syms = []
-    @problem_blocks = []
-    @problem_scheduled_check_blocks = {}
+    @@problem_syms = []
+    @@problem_blocks = []
+    @@problem_scheduled_check_blocks = {}
 
-    @problem_messages = [
+    @@problem_messages = [
       'dashboard.bad_favicon_url',
       'dashboard.poll_pop3_timeout',
       'dashboard.poll_pop3_auth_error',
     ]
-
-    clear_found_scheduled_check_problems
 
     add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
