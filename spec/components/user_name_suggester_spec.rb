@@ -4,13 +4,13 @@ require 'rails_helper'
 require 'user_name_suggester'
 
 describe UserNameSuggester do
-  describe '.suggest' do
-    before do
-      SiteSetting.min_username_length = 3
-      SiteSetting.max_username_length = 15
-      SiteSetting.reserved_usernames = ''
-    end
+  before do
+    SiteSetting.min_username_length = 3
+    SiteSetting.max_username_length = 15
+    SiteSetting.reserved_usernames = ''
+  end
 
+  describe '.suggest' do
     it "keeps adding numbers to the username" do
       Fabricate(:user, username: 'sam')
       Fabricate(:user, username: 'sAm1')
@@ -199,6 +199,26 @@ describe UserNameSuggester do
         SiteSetting.allowed_unicode_username_characters = "[য়া]"
         expect(UserNameSuggester.suggest('aয়াb鳥c')).to eq('aয়াb_c')
       end
+    end
+  end
+
+  describe '.suggest_username' do
+    it "skips input made entirely of disallowed characters" do
+      SiteSetting.unicode_usernames = false
+
+      input = %w[Πλάτων علي William]
+      suggestion = UserNameSuggester.suggest_username(input)
+
+      expect(suggestion).to eq "William"
+    end
+
+    it "uses the first item if it isn't made entirely of disallowed characters  " do
+      SiteSetting.unicode_usernames = false
+
+      input = %w[William علي Πλάτων]
+      suggestion = UserNameSuggester.suggest_username(input)
+
+      expect(suggestion).to eq "William"
     end
   end
 end
