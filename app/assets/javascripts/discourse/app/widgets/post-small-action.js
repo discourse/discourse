@@ -81,7 +81,7 @@ export default createWidget("post-small-action", {
   buildClasses(attrs) {
     const classes = [];
 
-    if (attrs.actionClickAction) {
+    if (attrs.actionClick) {
       classes.push("clickable");
     }
 
@@ -93,9 +93,9 @@ export default createWidget("post-small-action", {
   },
 
   click(event) {
-    if (this.attrs.actionClickAction) {
-      this.attrs.actionClickAction();
+    if (this.attrs.actionClick) {
       event.preventDefault();
+      this.attrs.actionClick();
     }
   },
 
