@@ -373,12 +373,9 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def resolve_username
-    username_suggester_input = username.presence || name.presence
-    if SiteSetting.use_email_for_username_and_name_suggestions
-      username_suggester_input = username_suggester_input || email
-    end
-
-    UserNameSuggester.suggest(username_suggester_input)
+    suggester_input = [username, name]
+    suggester_input << email if SiteSetting.use_email_for_username_and_name_suggestions
+    UserNameSuggester.suggest_username(suggester_input)
   end
 
   def resolve_name

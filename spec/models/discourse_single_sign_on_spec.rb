@@ -438,6 +438,20 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq "John_Smith"
   end
 
+  it "uses name for username suggestions if username consists entirely of disallowed characters" do
+    SiteSetting.unicode_usernames = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = "Πλάτων"
+    sso.name = "Plato"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq sso.name
+  end
+
   it "doesn't use email as a source for username suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -451,7 +465,7 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq I18n.t('fallback_username')
   end
 
-  it "use email as a source for username suggestions if enabled" do
+  it "uses email as a source for username suggestions if enabled" do
     SiteSetting.use_email_for_username_and_name_suggestions = true
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -478,7 +492,7 @@ describe DiscourseSingleSignOn do
     expect(user.name).to eq ""
   end
 
-  it "use email as a source for name suggestions if enabled" do
+  it "uses email as a source for name suggestions if enabled" do
     SiteSetting.use_email_for_username_and_name_suggestions = true
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -490,6 +504,21 @@ describe DiscourseSingleSignOn do
 
     user = sso.lookup_or_create_user(ip_address)
     expect(user.name).to eq "Mail"
+  end
+
+  it "uses email for username suggestions if username and name consist entirely of disallowed characters" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    SiteSetting.unicode_usernames = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = "Πλάτων"
+    sso.name = "Πλάτων"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq "mail"
   end
 
   it "can override username with a number at the end to a simpler username without a number" do
