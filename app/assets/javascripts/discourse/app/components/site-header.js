@@ -188,7 +188,7 @@ const SiteHeaderComponent = MountWidget.extend(
       let headerOffset = headerRect.top + headerRect.height;
 
       if (window.scrollY < 0) {
-        headerOffset -= window.scrollY;
+        headerOffset += window.scrollY;
       }
 
       const newValue = `${headerOffset}px`;
