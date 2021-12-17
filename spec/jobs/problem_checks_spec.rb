@@ -10,7 +10,7 @@ describe Jobs::ProblemChecks do
 
   it "runs the scheduled problem check that has been added and adds the messages to the load_found_scheduled_check_problems array" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
-      AdminDashboardData::Problem.maybe_create("big problem")
+      AdminDashboardData::Problem.new("big problem")
     end
 
     described_class.new.execute(nil)
@@ -23,8 +23,8 @@ describe Jobs::ProblemChecks do
   it "can handle the problem check returning multiple problems" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       [
-        AdminDashboardData::Problem.maybe_create("big problem"),
-        AdminDashboardData::Problem.maybe_create("yuge problem", priority: "high", identifier: "config_is_a_mess")
+        AdminDashboardData::Problem.new("big problem"),
+        AdminDashboardData::Problem.new("yuge problem", priority: "high", identifier: "config_is_a_mess")
       ]
     end
 
@@ -36,8 +36,8 @@ describe Jobs::ProblemChecks do
   it "does not add the same problem twice if the identifier already exists" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       [
-        AdminDashboardData::Problem.maybe_create("yuge problem", priority: "high", identifier: "config_is_a_mess"),
-        AdminDashboardData::Problem.maybe_create("nasty problem", priority: "high", identifier: "config_is_a_mess")
+        AdminDashboardData::Problem.new("yuge problem", priority: "high", identifier: "config_is_a_mess"),
+        AdminDashboardData::Problem.new("nasty problem", priority: "high", identifier: "config_is_a_mess")
       ]
     end
 
@@ -51,7 +51,7 @@ describe Jobs::ProblemChecks do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       if problem_should_fire
         problem_should_fire = false
-        AdminDashboardData::Problem.maybe_create("yuge problem", priority: "high")
+        AdminDashboardData::Problem.new("yuge problem", priority: "high")
       end
     end
 
@@ -64,10 +64,10 @@ describe Jobs::ProblemChecks do
   it "handles errors from a troublesome check and proceeds with the rest" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       raise StandardError.new("something went wrong")
-      AdminDashboardData::Problem.maybe_create("polling issue")
+      AdminDashboardData::Problem.new("polling issue")
     end
     AdminDashboardData.add_scheduled_problem_check(:test_identifier_2) do
-      AdminDashboardData::Problem.maybe_create("yuge problem", priority: "high")
+      AdminDashboardData::Problem.new("yuge problem", priority: "high")
     end
 
     described_class.new.execute(nil)

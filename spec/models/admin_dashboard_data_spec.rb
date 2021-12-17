@@ -25,30 +25,25 @@ describe AdminDashboardData do
 
     describe "adding new checks" do
       it 'calls the passed block' do
-        called = false
         AdminDashboardData.add_problem_check do
-          called = true
+          "a problem was found"
         end
 
-        AdminDashboardData.fetch_problems
-        expect(called).to eq(true)
-
-        AdminDashboardData.fetch_problems(check_force_https: true)
-        expect(called).to eq(true)
+        problems = AdminDashboardData.fetch_problems
+        expect(problems.map(&:to_s)).to include("a problem was found")
       end
 
       it 'calls the passed method' do
-        $test_AdminDashboardData_global = false
-        class AdminDashboardData
+        klass = Class.new(AdminDashboardData) do
           def my_test_method
-            $test_AdminDashboardData_global = true
+            "a problem was found"
           end
         end
-        AdminDashboardData.add_problem_check :my_test_method
 
-        AdminDashboardData.fetch_problems
-        expect($test_AdminDashboardData_global).to eq(true)
-        $test_AdminDashboardData_global = nil
+        klass.add_problem_check :my_test_method
+
+        problems = klass.fetch_problems
+        expect(problems.map(&:to_s)).to include("a problem was found")
       end
     end
   end
@@ -66,7 +61,7 @@ describe AdminDashboardData do
 
     it "adds a found problem from a scheduled check" do
       AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
-        AdminDashboardData::Problem.maybe_create("test problem")
+        AdminDashboardData::Problem.new("test problem")
       end
 
       AdminDashboardData.execute_scheduled_checks
@@ -76,8 +71,8 @@ describe AdminDashboardData do
     end
 
     it "does not add duplicate problems with the same identifier" do
-      prob1 = AdminDashboardData::Problem.maybe_create("test problem", identifier: "test")
-      prob2 = AdminDashboardData::Problem.maybe_create("test problem 2", identifier: "test")
+      prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
+      prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.add_found_scheduled_check_problem(prob2)
       expect(AdminDashboardData.load_found_scheduled_check_problems.map(&:to_s)).to eq(["test problem"])
@@ -89,15 +84,15 @@ describe AdminDashboardData do
     end
 
     it "clears a specific problem by identifier" do
-      prob1 = AdminDashboardData::Problem.maybe_create("test problem 1", identifier: "test")
+      prob1 = AdminDashboardData::Problem.new("test problem 1", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.clear_found_problem("test")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
 
     it "defaults to low priority, and uses low priority if an invalid priority is passed" do
-      prob1 = AdminDashboardData::Problem.maybe_create("test problem 1")
-      prob2 = AdminDashboardData::Problem.maybe_create("test problem 2", priority: "superbad")
+      prob1 = AdminDashboardData::Problem.new("test problem 1")
+      prob2 = AdminDashboardData::Problem.new("test problem 2", priority: "superbad")
       expect(prob1.priority).to eq("low")
       expect(prob2.priority).to eq("low")
     end

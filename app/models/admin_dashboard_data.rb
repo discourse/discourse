@@ -29,12 +29,8 @@ class AdminDashboardData
 
     def self.from_h(h)
       h = h.with_indifferent_access
-      Problem.maybe_create(h[:message], priority: h[:priority], identifier: h[:identifier])
-    end
-
-    def self.maybe_create(message, priority: "low", identifier: nil)
-      return if message.blank?
-      new(message, priority: priority, identifier: identifier)
+      return if h[:message].blank?
+      new(h[:message], priority: h[:priority], identifier: h[:identifier])
     end
   end
 
@@ -58,16 +54,19 @@ class AdminDashboardData
 
   def problems
     problems = []
-    AdminDashboardData.problem_syms.each do |sym|
-      problems << Problem.maybe_create(public_send(sym))
+    self.class.problem_syms.each do |sym|
+      message = public_send(sym)
+      problems << Problem.new(message) if message.present?
     end
-    AdminDashboardData.problem_blocks.each do |blk|
-      problems << Problem.maybe_create(instance_exec(&blk))
+    self.class.problem_blocks.each do |blk|
+      message = instance_exec(&blk)
+      problems << Problem.new(message) if message.present?
     end
-    AdminDashboardData.problem_messages.each do |i18n_key|
-      problems << Problem.maybe_create(AdminDashboardData.problem_message_check(i18n_key))
+    self.class.problem_messages.each do |i18n_key|
+      message = self.class.problem_message_check(i18n_key)
+      problems << Problem.new(message) if message.present?
     end
-    problems += AdminDashboardData.load_found_scheduled_check_problems
+    problems += self.class.load_found_scheduled_check_problems
     problems.compact!
 
     if problems.empty?
@@ -214,7 +213,7 @@ class AdminDashboardData
   end
 
   def self.fetch_problems(opts = {})
-    AdminDashboardData.new(opts).problems
+    new(opts).problems
   end
 
   def self.problem_message_check(i18n_key)
