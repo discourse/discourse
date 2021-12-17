@@ -2,7 +2,6 @@ import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { isTesting } from "discourse-common/config/environment";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import lightbox from "discourse/lib/lightbox";
@@ -76,7 +75,7 @@ export default Component.extend(UppyUploadMixin, {
 
   @on("willDestroyElement")
   _closeOnRemoval() {
-    if (isTesting() && $.magnificPopup?.instance) {
+    if ($.magnificPopup?.instance) {
       $.magnificPopup.instance.close();
     }
   },
