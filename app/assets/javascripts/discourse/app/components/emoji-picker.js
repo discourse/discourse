@@ -216,6 +216,14 @@ export default Component.extend({
   },
 
   @action
+  keydown(event) {
+    if (event.code === "Escape") {
+      this.onClose();
+      return false;
+    }
+  },
+
+  @action
   onFilter(event) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
