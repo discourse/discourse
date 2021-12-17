@@ -1,13 +1,3 @@
-function isWindow(obj) {
-  return obj != null && obj === window;
-}
-
-function scrollTop(element) {
-  return element
-    ? element.scrollTop
-    : window.pageYOffset || document.documentElement.scrollTop;
-}
-
 function offset(element) {
   // note that getBoundingClientRect forces a reflow.
   // When used in critical performance conditions
@@ -21,22 +11,6 @@ function offset(element) {
   };
 }
 
-function height(element) {
-  if (isWindow(element)) {
-    return element.innerHeight;
-  }
-
-  return element.clientHeight;
-}
-
-function width(element) {
-  if (isWindow(element)) {
-    return element.innerWidth;
-  }
-
-  return element.clientWidth;
-}
-
 function position(element) {
   return {
     top: element.offsetTop,
@@ -44,8 +18,4 @@ function position(element) {
   };
 }
 
-function scrollToTop(element = window, top = 0) {
-  element.scroll({ top, left: 0 });
-}
-
-export default { scrollToTop, scrollTop, offset, height, width, position };
+export default { offset, position };

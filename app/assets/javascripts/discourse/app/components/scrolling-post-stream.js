@@ -20,7 +20,7 @@ function findTopView(posts, viewportTop, postsWrapperTop, min, max) {
     const mid = Math.floor((min + max) / 2);
     const post = posts.item(mid);
     const viewBottom =
-      domUtils.offset(post).top - postsWrapperTop + domUtils.height(post);
+      domUtils.offset(post).top - postsWrapperTop + post.clientHeight;
 
     if (viewBottom > viewportTop) {
       max = mid - 1;
@@ -59,20 +59,20 @@ export default MountWidget.extend({
   },
 
   beforePatch() {
-    this.prevHeight = domUtils.height(document.body);
-    this.prevScrollTop = domUtils.scrollTop(document.body);
+    this.prevHeight = document.body.clientHeight;
+    this.prevScrollTop = document.body.scrollTop;
   },
 
   afterPatch() {
-    const height = domUtils.height(document.body);
+    const height = document.body.clientHeight;
 
     // This hack is for when swapping out many cloaked views at once
     // when using keyboard navigation. It could suddenly move the scroll
     if (
       this.prevHeight === height &&
-      domUtils.scrollTop(document.body) !== this.prevScrollTop
+      document.body.scrollTop !== this.prevScrollTop
     ) {
-      document.body.scrollTop(0, this.prevScrollTop);
+      document.body.scroll({ left: 0, top: this.prevScrollTop });
     }
   },
 
@@ -99,11 +99,11 @@ export default MountWidget.extend({
       return;
     }
 
-    const windowHeight = domUtils.height(window);
+    const windowHeight = window.innerHeight;
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
     const nearby = [];
-    const windowTop = domUtils.scrollTop();
+    const windowTop = document.documentElement.scrollTop;
     const postsWrapperTop = domUtils.offset(
       document.querySelector(".posts-wrapper")
     ).top;
@@ -122,7 +122,7 @@ export default MountWidget.extend({
 
     let windowBottom = windowTop + windowHeight;
     let viewportBottom = windowBottom + slack;
-    const bodyHeight = domUtils.height(document.body);
+    const bodyHeight = document.body.clientHeight;
     if (windowBottom > bodyHeight) {
       windowBottom = bodyHeight;
     }
@@ -157,7 +157,7 @@ export default MountWidget.extend({
       }
 
       const viewTop = domUtils.offset(post).top;
-      const postHeight = domUtils.height(post);
+      const postHeight = post.clientHeight;
       const viewBottom = Math.ceil(viewTop + postHeight);
 
       allAbove = allAbove && viewTop < topCheck;
@@ -203,7 +203,7 @@ export default MountWidget.extend({
         const elemId = elem.id;
         const elemPos = domUtils.position(elem);
         const distToElement = elemPos
-          ? domUtils.scrollTop(document.body) - elemPos.top
+          ? document.body.scrollTop - elemPos.top
           : 0;
 
         const topRefresh = () => {
@@ -214,15 +214,15 @@ export default MountWidget.extend({
             const position = domUtils.position(refreshedElem);
             if (position && position.top) {
               let whereY = position.top + distToElement;
-              domUtils.scrollToTop(document.documentElement, whereY);
+              document.documentElement.scroll({ top: whereY, left: 0 });
 
               // This seems weird, but somewhat infrequently a rerender
               // will cause the browser to scroll to the top of the document
               // in Chrome. This makes sure the scroll works correctly if that
               // happens.
-              schedule("afterRender", () =>
-                domUtils.scrollToTop(document.documentElement, whereY)
-              );
+              schedule("afterRender", () => {
+                document.documentElement.scroll({ top: whereY, left: 0 });
+              });
             }
           });
         };
@@ -382,12 +382,6 @@ export default MountWidget.extend({
     this.appEvents.off("post-stream:posted", this, "_posted");
   },
 
-  _removeWidgetButtonHoverState() {
-    document.querySelectorAll("button.widget-button").forEach((button) => {
-      button.classList.remove("d-hover");
-    });
-  },
-
   _handleWidgetButtonHoverState(event) {
     if (event.target.classList.contains("widget-button")) {
       document
@@ -397,5 +391,11 @@ export default MountWidget.extend({
         });
       event.target.classList.add("d-hover");
     }
+  },
+
+  _removeWidgetButtonHoverState() {
+    document.querySelectorAll("button.widget-button").forEach((button) => {
+      button.classList.remove("d-hover");
+    });
   },
 });
