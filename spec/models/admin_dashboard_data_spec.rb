@@ -94,6 +94,13 @@ describe AdminDashboardData do
       AdminDashboardData.clear_found_problem("test")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
+
+    it "defaults to low priority, and uses low priority if an invalid priority is passed" do
+      prob1 = AdminDashboardData::Problem.maybe_create("test problem 1")
+      prob2 = AdminDashboardData::Problem.maybe_create("test problem 2", priority: "superbad")
+      expect(prob1.priority).to eq("low")
+      expect(prob2.priority).to eq("low")
+    end
   end
 
   describe 'stats cache' do

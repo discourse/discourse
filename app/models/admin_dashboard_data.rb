@@ -4,15 +4,13 @@ class AdminDashboardData
   include StatsCacheable
 
   class Problem
+    VALID_PRIORITIES = ["low", "high"].freeze
+
     attr_reader :message, :priority, :identifier
 
     def initialize(message, priority: "low", identifier: nil)
       @message = message
-      @priority = if !["low", "high"].include?(priority)
-        "low"
-      else
-        priority
-      end
+      @priority = VALID_PRIORITIES.include?(priority) ? priority : "low"
       @identifier = identifier
     end
 
@@ -138,10 +136,7 @@ class AdminDashboardData
         next
       end
 
-      if !problems.is_a? Array
-        problems = [problems]
-      end
-      found_problems += problems
+      found_problems += Array.wrap(problems)
     end
 
     found_problems.compact.each do |problem|
