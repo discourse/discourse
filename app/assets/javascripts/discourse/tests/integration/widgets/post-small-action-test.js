@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 discourseModule(
   "Integration | Component | Widget | post-small-action",
@@ -31,6 +32,24 @@ discourseModule(
           exists(".small-action-desc > .small-action-edit"),
           "it adds the edit small action button"
         );
+      },
+    });
+
+    componentTest("is clickable if actionClick", {
+      template: hbs`{{mount-widget widget="post-small-action" args=args}}`,
+      beforeEach() {
+        this.set("args", {
+          id: 123,
+          actionClick: () => {
+            document.querySelector(".small-action").style.background = "red";
+          },
+        });
+      },
+      async test(assert) {
+        const clickable = document.querySelector(".small-action.clickable");
+        await click(clickable);
+
+        assert.equal(clickable.style.background, "red", "it calls the action");
       },
     });
 
