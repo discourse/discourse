@@ -184,6 +184,25 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
         expect(onebox.to_html).to include("People are fostering and adopting pets during the pandemic")
       end
     end
+
+    context 'uses basic meta description when necessary' do
+      before do
+        stub_request(:get, "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/")
+          .to_return(status: 200, body: onebox_response('reddit_image'))
+        stub_request(:get, "https://www.example.com/content")
+          .to_return(status: 200, body: onebox_response('basic_description'))
+      end
+
+      it 'uses opengraph tags when present' do
+        onebox = described_class.new("https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/")
+        expect(onebox.to_html).to include("4 votes and 1 comment so far on Reddit")
+      end
+
+      it 'fallback to basic meta description if other description tags are missing' do
+        onebox = described_class.new("https://www.example.com/content")
+        expect(onebox.to_html).to include("basic meta description")
+      end
+    end
   end
 
   describe 'article html hosts' do
