@@ -114,234 +114,302 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 // Needed for Safari 15.2 and below
 // from: https://github.com/iamdustan/smoothscroll
-!(function () {
+(function () {
   "use strict";
-  function o() {
-    var o = window,
-      t = document;
-    if (
-      !(
-        "scrollBehavior" in t.documentElement.style &&
-        !0 !== o.__forceSmoothScrollPolyfill__
-      )
-    ) {
-      var l,
-        e = o.HTMLElement || o.Element,
-        r = 468,
-        i = {
-          scroll: o.scroll || o.scrollTo,
-          scrollBy: o.scrollBy,
-          elementScroll: e.prototype.scroll || n,
-          scrollIntoView: e.prototype.scrollIntoView,
-        },
-        s =
-          o.performance && o.performance.now
-            ? o.performance.now.bind(o.performance)
-            : Date.now,
-        c =
-          ((l = o.navigator.userAgent),
-          new RegExp(["MSIE ", "Trident/", "Edge/"].join("|")).test(l) ? 1 : 0);
-      (o.scroll = o.scrollTo = function () {
-        void 0 !== arguments[0] &&
-          (!0 !== f(arguments[0])
-            ? h.call(
-                o,
-                t.body,
-                void 0 !== arguments[0].left
-                  ? ~~arguments[0].left
-                  : o.scrollX || o.pageXOffset,
-                void 0 !== arguments[0].top
-                  ? ~~arguments[0].top
-                  : o.scrollY || o.pageYOffset
-              )
-            : i.scroll.call(
-                o,
-                void 0 !== arguments[0].left
-                  ? arguments[0].left
-                  : "object" != typeof arguments[0]
-                  ? arguments[0]
-                  : o.scrollX || o.pageXOffset,
-                void 0 !== arguments[0].top
-                  ? arguments[0].top
-                  : void 0 !== arguments[1]
-                  ? arguments[1]
-                  : o.scrollY || o.pageYOffset
-              ));
-      }),
-        (o.scrollBy = function () {
-          void 0 !== arguments[0] &&
-            (f(arguments[0])
-              ? i.scrollBy.call(
-                  o,
-                  void 0 !== arguments[0].left
-                    ? arguments[0].left
-                    : "object" != typeof arguments[0]
-                    ? arguments[0]
-                    : 0,
-                  void 0 !== arguments[0].top
-                    ? arguments[0].top
-                    : void 0 !== arguments[1]
-                    ? arguments[1]
-                    : 0
-                )
-              : h.call(
-                  o,
-                  t.body,
-                  ~~arguments[0].left + (o.scrollX || o.pageXOffset),
-                  ~~arguments[0].top + (o.scrollY || o.pageYOffset)
-                ));
-        }),
-        (e.prototype.scroll = e.prototype.scrollTo = function () {
-          if (void 0 !== arguments[0])
-            if (!0 !== f(arguments[0])) {
-              var o = arguments[0].left,
-                t = arguments[0].top;
-              h.call(
-                this,
-                this,
-                void 0 === o ? this.scrollLeft : ~~o,
-                void 0 === t ? this.scrollTop : ~~t
-              );
-            } else {
-              if ("number" == typeof arguments[0] && void 0 === arguments[1])
-                throw new SyntaxError("Value could not be converted");
-              i.elementScroll.call(
-                this,
-                void 0 !== arguments[0].left
-                  ? ~~arguments[0].left
-                  : "object" != typeof arguments[0]
-                  ? ~~arguments[0]
-                  : this.scrollLeft,
-                void 0 !== arguments[0].top
-                  ? ~~arguments[0].top
-                  : void 0 !== arguments[1]
-                  ? ~~arguments[1]
-                  : this.scrollTop
-              );
-            }
-        }),
-        (e.prototype.scrollBy = function () {
-          void 0 !== arguments[0] &&
-            (!0 !== f(arguments[0])
-              ? this.scroll({
-                  left: ~~arguments[0].left + this.scrollLeft,
-                  top: ~~arguments[0].top + this.scrollTop,
-                  behavior: arguments[0].behavior,
-                })
-              : i.elementScroll.call(
-                  this,
-                  void 0 !== arguments[0].left
-                    ? ~~arguments[0].left + this.scrollLeft
-                    : ~~arguments[0] + this.scrollLeft,
-                  void 0 !== arguments[0].top
-                    ? ~~arguments[0].top + this.scrollTop
-                    : ~~arguments[1] + this.scrollTop
-                ));
-        }),
-        (e.prototype.scrollIntoView = function () {
-          if (!0 !== f(arguments[0])) {
-            var l = (function (o) {
-                for (
-                  ;
-                  o !== t.body &&
-                  !1 ===
-                    ((e = p((l = o), "Y") && a(l, "Y")),
-                    (r = p(l, "X") && a(l, "X")),
-                    e || r);
 
-                )
-                  o = o.parentNode || o.host;
-                var l, e, r;
-                return o;
-              })(this),
-              e = l.getBoundingClientRect(),
-              r = this.getBoundingClientRect();
-            l !== t.body
-              ? (h.call(
-                  this,
-                  l,
-                  l.scrollLeft + r.left - e.left,
-                  l.scrollTop + r.top - e.top
-                ),
-                "fixed" !== o.getComputedStyle(l).position &&
-                  o.scrollBy({ left: e.left, top: e.top, behavior: "smooth" }))
-              : o.scrollBy({ left: r.left, top: r.top, behavior: "smooth" });
-          } else
-            i.scrollIntoView.call(
-              this,
-              void 0 === arguments[0] || arguments[0]
-            );
-        });
+  function e() {
+    var e = window;
+    var t = document;
+    if (
+      "scrollBehavior" in t.documentElement.style &&
+      e.__forceSmoothScrollPolyfill__ !== true
+    ) {
+      return;
     }
-    function n(o, t) {
-      (this.scrollLeft = o), (this.scrollTop = t);
+    var o = e.HTMLElement || e.Element;
+    var r = 1.8;
+    var l = {
+      scroll: e.scroll || e.scrollTo,
+      scrollBy: e.scrollBy,
+      elementScroll: o.prototype.scroll || s,
+      scrollIntoView: o.prototype.scrollIntoView,
+    };
+    var n =
+      e.performance && e.performance.now
+        ? e.performance.now.bind(e.performance)
+        : Date.now;
+
+    function i(e) {
+      var t = ["MSIE ", "Trident/", "Edge/"];
+      return new RegExp(t.join("|")).test(e);
     }
-    function f(o) {
+    var f = i(e.navigator.userAgent) ? 1 : 0;
+
+    function s(e, t) {
+      this.scrollLeft = e;
+      this.scrollTop = t;
+    }
+
+    function c(e) {
+      return 0.5 * (1 - Math.cos(Math.PI * e));
+    }
+
+    function a(e) {
       if (
-        null === o ||
-        "object" != typeof o ||
-        void 0 === o.behavior ||
-        "auto" === o.behavior ||
-        "instant" === o.behavior
-      )
-        return !0;
-      if ("object" == typeof o && "smooth" === o.behavior) return !1;
+        e === null ||
+        typeof e !== "object" ||
+        e.behavior === undefined ||
+        e.behavior === "auto" ||
+        e.behavior === "instant"
+      ) {
+        return true;
+      }
+      if (typeof e === "object" && e.behavior === "smooth") {
+        return false;
+      }
       throw new TypeError(
         "behavior member of ScrollOptions " +
-          o.behavior +
+          e.behavior +
           " is not a valid value for enumeration ScrollBehavior."
       );
     }
-    function p(o, t) {
-      return "Y" === t
-        ? o.clientHeight + c < o.scrollHeight
-        : "X" === t
-        ? o.clientWidth + c < o.scrollWidth
-        : void 0;
+
+    function u(e, t) {
+      if (t === "Y") {
+        return e.clientHeight + f < e.scrollHeight;
+      }
+      if (t === "X") {
+        return e.clientWidth + f < e.scrollWidth;
+      }
     }
-    function a(t, l) {
-      var e = o.getComputedStyle(t, null)["overflow" + l];
-      return "auto" === e || "scroll" === e;
+
+    function d(t, o) {
+      var r = e.getComputedStyle(t, null)["overflow" + o];
+      return r === "auto" || r === "scroll";
     }
-    function d(t) {
-      var l,
+
+    function p(e) {
+      var t = u(e, "Y") && d(e, "Y");
+      var o = u(e, "X") && d(e, "X");
+      return t || o;
+    }
+
+    function h(e) {
+      while (e !== t.body && p(e) === false) {
+        e = e.parentNode || e.host;
+      }
+      return e;
+    }
+
+    function v(e, t) {
+      var o = r / t;
+      var l = Math.pow(1.16, Math.max(e / 80, 1));
+      return o * e * (1 / l);
+    }
+
+    function y(t) {
+      var o = n();
+      var r = e.devicePixelRatio;
+      var l;
+      var i;
+      var f;
+      var s;
+      var a = v(Math.abs(t.x - t.startX), r);
+      var u = v(Math.abs(t.y - t.startY), r);
+      var d = (o - t.startTime) / a;
+      var p = (o - t.startTime) / u;
+      d = d > 1 ? 1 : d;
+      p = p > 1 ? 1 : p;
+      l = c(d);
+      i = c(p);
+      f = t.startX + (t.x - t.startX) * l;
+      s = t.startY + (t.y - t.startY) * i;
+      t.method.call(t.scrollable, f, s);
+      if (f !== t.x || s !== t.y) {
+        e.requestAnimationFrame(y.bind(e, t));
+      }
+    }
+
+    function m(o, r, i) {
+      var f;
+      var c;
+      var a;
+      var u;
+      var d = n();
+      if (o === t.body) {
+        f = e;
+        c = e.scrollX || e.pageXOffset;
+        a = e.scrollY || e.pageYOffset;
+        u = l.scroll;
+      } else {
+        f = o;
+        c = o.scrollLeft;
+        a = o.scrollTop;
+        u = s;
+      }
+      y({
+        scrollable: f,
+        method: u,
+        startTime: d,
+        startX: c,
+        startY: a,
+        x: r,
+        y: i,
+      });
+    }
+    e.scroll = e.scrollTo = function () {
+      if (arguments[0] === undefined) {
+        return;
+      }
+      if (a(arguments[0]) === true) {
+        l.scroll.call(
+          e,
+          arguments[0].left !== undefined
+            ? arguments[0].left
+            : typeof arguments[0] !== "object"
+            ? arguments[0]
+            : e.scrollX || e.pageXOffset,
+          arguments[0].top !== undefined
+            ? arguments[0].top
+            : arguments[1] !== undefined
+            ? arguments[1]
+            : e.scrollY || e.pageYOffset
+        );
+        return;
+      }
+      m.call(
         e,
-        i,
-        c,
-        n = (s() - t.startTime) / r;
-      (c = n = n > 1 ? 1 : n),
-        (l = 0.5 * (1 - Math.cos(Math.PI * c))),
-        (e = t.startX + (t.x - t.startX) * l),
-        (i = t.startY + (t.y - t.startY) * l),
-        t.method.call(t.scrollable, e, i),
-        (e === t.x && i === t.y) || o.requestAnimationFrame(d.bind(o, t));
-    }
-    function h(l, e, r) {
-      var c,
-        f,
-        p,
-        a,
-        h = s();
-      l === t.body
-        ? ((c = o),
-          (f = o.scrollX || o.pageXOffset),
-          (p = o.scrollY || o.pageYOffset),
-          (a = i.scroll))
-        : ((c = l), (f = l.scrollLeft), (p = l.scrollTop), (a = n)),
-        d({
-          scrollable: c,
-          method: a,
-          startTime: h,
-          startX: f,
-          startY: p,
-          x: e,
-          y: r,
+        t.body,
+        arguments[0].left !== undefined
+          ? ~~arguments[0].left
+          : e.scrollX || e.pageXOffset,
+        arguments[0].top !== undefined
+          ? ~~arguments[0].top
+          : e.scrollY || e.pageYOffset
+      );
+    };
+    e.scrollBy = function () {
+      if (arguments[0] === undefined) {
+        return;
+      }
+      if (a(arguments[0])) {
+        l.scrollBy.call(
+          e,
+          arguments[0].left !== undefined
+            ? arguments[0].left
+            : typeof arguments[0] !== "object"
+            ? arguments[0]
+            : 0,
+          arguments[0].top !== undefined
+            ? arguments[0].top
+            : arguments[1] !== undefined
+            ? arguments[1]
+            : 0
+        );
+        return;
+      }
+      m.call(
+        e,
+        t.body,
+        ~~arguments[0].left + (e.scrollX || e.pageXOffset),
+        ~~arguments[0].top + (e.scrollY || e.pageYOffset)
+      );
+    };
+    o.prototype.scroll = o.prototype.scrollTo = function () {
+      if (arguments[0] === undefined) {
+        return;
+      }
+      if (a(arguments[0]) === true) {
+        if (typeof arguments[0] === "number" && arguments[1] === undefined) {
+          throw new SyntaxError("Value could not be converted");
+        }
+        l.elementScroll.call(
+          this,
+          arguments[0].left !== undefined
+            ? ~~arguments[0].left
+            : typeof arguments[0] !== "object"
+            ? ~~arguments[0]
+            : this.scrollLeft,
+          arguments[0].top !== undefined
+            ? ~~arguments[0].top
+            : arguments[1] !== undefined
+            ? ~~arguments[1]
+            : this.scrollTop
+        );
+        return;
+      }
+      var e = arguments[0].left;
+      var t = arguments[0].top;
+      m.call(
+        this,
+        this,
+        typeof e === "undefined" ? this.scrollLeft : ~~e,
+        typeof t === "undefined" ? this.scrollTop : ~~t
+      );
+    };
+    o.prototype.scrollBy = function () {
+      if (arguments[0] === undefined) {
+        return;
+      }
+      if (a(arguments[0]) === true) {
+        l.elementScroll.call(
+          this,
+          arguments[0].left !== undefined
+            ? ~~arguments[0].left + this.scrollLeft
+            : ~~arguments[0] + this.scrollLeft,
+          arguments[0].top !== undefined
+            ? ~~arguments[0].top + this.scrollTop
+            : ~~arguments[1] + this.scrollTop
+        );
+        return;
+      }
+      this.scroll({
+        left: ~~arguments[0].left + this.scrollLeft,
+        top: ~~arguments[0].top + this.scrollTop,
+        behavior: arguments[0].behavior,
+      });
+    };
+    o.prototype.scrollIntoView = function () {
+      if (a(arguments[0]) === true) {
+        l.scrollIntoView.call(
+          this,
+          arguments[0] === undefined ? true : arguments[0]
+        );
+        return;
+      }
+      var o = h(this);
+      var r = o.getBoundingClientRect();
+      var n = this.getBoundingClientRect();
+      if (o !== t.body) {
+        m.call(
+          this,
+          o,
+          o.scrollLeft + n.left - r.left,
+          o.scrollTop + n.top - r.top
+        );
+        if (e.getComputedStyle(o).position !== "fixed") {
+          e.scrollBy({
+            left: r.left,
+            top: r.top,
+            behavior: "smooth",
+          });
+        }
+      } else {
+        e.scrollBy({
+          left: n.left,
+          top: n.top,
+          behavior: "smooth",
         });
-    }
+      }
+    };
   }
-  "object" == typeof exports && "undefined" != typeof module
-    ? (module.exports = { polyfill: o })
-    : o();
+  if (typeof exports === "object" && typeof module !== "undefined") {
+    module.exports = {
+      polyfill: e,
+    };
+  } else {
+    e();
+  }
 })();
 
 /* eslint-enable */
