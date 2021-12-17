@@ -3099,7 +3099,7 @@ describe UsersController do
       get "/u/is_local_username.json", params: { usernames: [user1.username, "system"] }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["valid"]).to contain_exactly(user.username, "system")
+      expect(response.parsed_body["valid"]).to contain_exactly(user1.username, "system")
     end
 
     it "never includes staged accounts" do
@@ -3119,7 +3119,7 @@ describe UsersController do
       }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user.username]).to eq("category")
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("category")
     end
 
     it "never returns a user who can see the topic" do
@@ -3137,7 +3137,7 @@ describe UsersController do
       }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user.username]).to eq("private")
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("private")
     end
 
     it "never returns a user who can see the topic" do
@@ -3150,15 +3150,15 @@ describe UsersController do
     end
 
     it "returns the appropriate reason why user cannot see the topic" do
-      TopicUser.create!(user_id: user.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:muted])
+      TopicUser.create!(user_id: user1.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:muted])
 
       sign_in(admin)
       get "/u/is_local_username.json", params: {
-        usernames: [user.username], topic_id: topic.id
+        usernames: [user1.username], topic_id: topic.id
       }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user.username]).to eq("muted_topic")
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("muted_topic")
     end
   end
 
