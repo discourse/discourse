@@ -9,6 +9,7 @@ import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { helperContext } from "discourse-common/lib/helpers";
+import { isTesting } from "discourse-common/config/environment";
 
 export default function (elem, siteSettings) {
   if (!elem) {
@@ -30,7 +31,7 @@ export default function (elem, siteSettings) {
     $(lightboxes).magnificPopup({
       type: "image",
       closeOnContentClick: false,
-      removalDelay: 300,
+      removalDelay: isTesting() ? 0 : 300,
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,
