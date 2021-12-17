@@ -34,6 +34,24 @@ discourseModule(
       },
     });
 
+    componentTest("is clickable if actionClick", {
+      template: hbs`{{mount-widget widget="post-small-action" args=args}}`,
+      beforeEach() {
+        this.set("args", {
+          id: 123,
+          actionClick: () => {
+            document.querySelector(".small-action").style.background = "red";
+          },
+        });
+      },
+      async test(assert) {
+        const clickable = document.querySelector(".small-action.clickable");
+        await click(clickable);
+
+        assert.equal(clickable.style.background, "red", "it calls the action");
+      },
+    });
+
     componentTest("does not show edit button if canRecover even if canEdit", {
       template: hbs`{{mount-widget widget="post-small-action" args=args}}`,
       beforeEach() {
