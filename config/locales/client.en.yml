@@ -2110,7 +2110,6 @@ en:
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
         muted_topic: "You mentioned @%{username} but they won't be notified because they muted this topic."
         not_allowed: "You mentioned @%{username} but they won't be notified because they were not invited to this topic."
-        unknown: "You mentioned @%{username} but they won't be notified."
       here_mention:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"

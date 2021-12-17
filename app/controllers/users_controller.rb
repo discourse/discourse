@@ -540,7 +540,7 @@ class UsersController < ApplicationController
         end
 
         if !guardian.is_staff? && cannot_see_reason.present? && cannot_see_reason != :private && cannot_see_reason != :category
-          cannot_see_reason = :unknown
+          cannot_see_reason = nil # do not leak private information
         end
 
         cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
