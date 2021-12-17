@@ -79,7 +79,7 @@ describe AnonymousShadowCreator do
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end
 
-    it "falls back to username 'anonymous' if the translation for 'anonymous' contains disallowed characters" do
+    it "falls back to username 'anonymous' if the translation for 'anonymous' consists entirely of disallowed characters" do
       # use russian locale but do not allow russian characters:
       I18n.locale = :ru
       SiteSetting.unicode_usernames = true
