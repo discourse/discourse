@@ -181,6 +181,7 @@ class AdminDashboardData
       sidekiq_check || queue_size_check
     end
   end
+  reset_problem_checks
 
   def self.fetch_stats
     new.as_json
