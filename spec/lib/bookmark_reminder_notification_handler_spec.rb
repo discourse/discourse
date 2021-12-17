@@ -29,10 +29,9 @@ RSpec.describe BookmarkReminderNotificationHandler do
     end
 
     it "clears the reminder" do
-      last_reminder_at = bookmark.reminder_at
       subject.send_notification(bookmark)
       expect(bookmark.reload.no_reminder?).to eq(true)
-      expect(bookmark.last_reminder_at).to eq_time(last_reminder_at)
+      expect(bookmark.reminded).to eq(true)
     end
 
     context "when the topic is deleted" do

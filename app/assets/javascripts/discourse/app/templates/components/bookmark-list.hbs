@@ -17,12 +17,8 @@
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.reminder_at}}
-                    <span class="bookmark-metadata-item">
+                    <span class="bookmark-metadata-item {{if bookmark.reminderAtExpired "bookmark-expired-reminder"}}">
                       {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
-                    </span>
-                  {{else if bookmark.last_reminder_at}}
-                    <span class="bookmark-metadata-item bookmark-expired-reminder">
-                      {{d-icon "far-clock"}}{{bookmark.formattedLastReminder}}
                     </span>
                   {{/if}}
                   {{#if bookmark.name}}

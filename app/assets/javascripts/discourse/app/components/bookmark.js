@@ -305,25 +305,20 @@ export default Component.extend({
     return customOptions;
   },
 
-  @discourseComputed("existingBookmarkHasReminder", "model.lastReminderAt")
-  customTimeShortcutLabels(existingBookmarkHasReminder, lastReminderAt) {
+  @discourseComputed("existingBookmarkHasReminder")
+  customTimeShortcutLabels(existingBookmarkHasReminder) {
     const labels = {};
-    if (existingBookmarkHasReminder || lastReminderAt) {
+    if (existingBookmarkHasReminder) {
       labels[TIME_SHORTCUT_TYPES.NONE] =
         "bookmarks.remove_reminder_keep_bookmark";
     }
     return labels;
   },
 
-  @discourseComputed(
-    "editingExistingBookmark",
-    "existingBookmarkHasReminder",
-    "model.lastReminderAt"
-  )
+  @discourseComputed("editingExistingBookmark", "existingBookmarkHasReminder")
   hiddenTimeShortcutOptions(
     editingExistingBookmark,
-    existingBookmarkHasReminder,
-    lastReminderAt
+    existingBookmarkHasReminder
   ) {
     if (editingExistingBookmark && !existingBookmarkHasReminder) {
       return [TIME_SHORTCUT_TYPES.NONE];

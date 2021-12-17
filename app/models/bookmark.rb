@@ -33,7 +33,7 @@ class Bookmark < ActiveRecord::Base
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
-  validate :ensure_sane_reminder_at_time
+  validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
@@ -101,10 +101,9 @@ class Bookmark < ActiveRecord::Base
 
   def clear_reminder!
     update!(
-      reminder_at: nil,
-      last_reminder_at: reminder_at,
       reminder_last_sent_at: Time.zone.now,
-      reminder_set_at: nil
+      reminder_set_at: nil,
+      reminded: true,
     )
   end
 
@@ -182,7 +181,7 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
-#  last_reminder_at       :datetime
+#  reminded               :boolean          default(FALSE), not null
 #
 # Indexes
 #

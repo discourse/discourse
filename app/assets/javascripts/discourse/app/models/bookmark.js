@@ -129,12 +129,9 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
-  @discourseComputed("last_reminder_at", "currentUser")
-  formattedLastReminder(bookmarkLastReminderAt, currentUser) {
-    return formattedReminderTime(
-      bookmarkLastReminderAt,
-      currentUser.resolvedTimezone(currentUser)
-    ).capitalize();
+  @discourseComputed("reminder_at")
+  reminderAtExpired(bookmarkReminderAt) {
+    return moment(bookmarkReminderAt) < moment();
   },
 
   @discourseComputed()
