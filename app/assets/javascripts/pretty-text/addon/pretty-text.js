@@ -84,8 +84,6 @@ export function buildOptions(state) {
       ? siteSettings.allowed_iframes.split("|")
       : [],
     markdownIt: true,
-    injectLineNumbersToPreview:
-      siteSettings.enable_advanced_editor_preview_sync,
     previewing,
     disableEmojis,
     watchedWordsReplace,

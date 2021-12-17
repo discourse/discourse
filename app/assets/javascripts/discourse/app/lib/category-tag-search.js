@@ -42,15 +42,10 @@ function searchTags(term, categories, limit) {
               const categoryNames = cats.map((c) => c.model.get("name"));
 
               const tags = r.results.map((tag) => {
-                const tagName = tag.text;
-
-                return {
-                  name: tagName,
-                  text: categoryNames.includes(tagName)
-                    ? `${tagName}${TAG_HASHTAG_POSTFIX}`
-                    : tagName,
-                  count: tag.count,
-                };
+                tag.text = categoryNames.includes(tag.text)
+                  ? `${tag.text}${TAG_HASHTAG_POSTFIX}`
+                  : tag.text;
+                return tag;
               });
 
               returnVal = cats.concat(tags);
