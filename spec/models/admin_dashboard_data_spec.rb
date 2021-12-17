@@ -16,7 +16,7 @@ describe AdminDashboardData do
         expect(problems).to include(I18n.t("dashboard.bad_favicon_url", { base_path: Discourse.base_path }))
       end
 
-      it "does not allow adding of arbitrary problem messages, they must exist in @problem_messages" do
+      it "does not allow adding of arbitrary problem messages, they must exist in AdminDashboardData.problem_messages" do
         AdminDashboardData.add_problem_message("errors.messages.invalid")
         problems = AdminDashboardData.fetch_problems.map(&:to_s)
         expect(problems).not_to include(I18n.t("errors.messages.invalid"))
@@ -80,7 +80,7 @@ describe AdminDashboardData do
       prob2 = AdminDashboardData::Problem.maybe_create("test problem 2", identifier: "test")
       AdminDashboardData.add_found_scheduled_check_problem(prob1)
       AdminDashboardData.add_found_scheduled_check_problem(prob2)
-      expect(AdminDashboardData.load_found_scheduled_check_problems.count).to eq(1)
+      expect(AdminDashboardData.load_found_scheduled_check_problems.map(&:to_s)).to eq(["test problem"])
     end
 
     it "does not error when loading malformed problems saved in redis" do
@@ -110,7 +110,7 @@ describe AdminDashboardData do
   describe '#problem_message_check' do
     let(:key) { AdminDashboardData.problem_messages.first }
 
-    before do
+    after do
       described_class.clear_problem_message(key)
     end
 
