@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { click } from "@ember/test-helpers";
 
 discourseModule(
   "Integration | Component | Widget | post-small-action",
