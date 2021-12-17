@@ -120,7 +120,6 @@ MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_bac
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
 MessageBus.cache_assets = !Rails.env.development?
-MessageBus.enable_diagnostics
 
 if Rails.env == "test" || $0 =~ /rake$/
   # disable keepalive in testing
