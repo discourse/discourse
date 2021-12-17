@@ -2,17 +2,8 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
 import optionalService from "discourse/lib/optional-service";
-import outletHeights from "discourse/lib/header-outlet-height";
-
-const headerPadding = () => {
-  let topPadding = parseInt($("#main-outlet").css("padding-top"), 10) + 3;
-  const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
-  if (iPadNavHeight) {
-    topPadding += iPadNavHeight;
-  }
-  return topPadding;
-};
 
 export default MountWidget.extend(Docking, {
   adminTools: optionalService(),
@@ -40,7 +31,7 @@ export default MountWidget.extend(Docking, {
       attrs.fullScreen = true;
       attrs.addShowClass = this.addShowClass;
     } else {
-      attrs.top = this.dockAt || headerPadding();
+      attrs.top = this.dockAt || this.headerOffset();
     }
 
     return attrs;
@@ -56,43 +47,45 @@ export default MountWidget.extend(Docking, {
     this.queueRerender();
   },
 
-  dockCheck(info) {
-    const mainOffset = $("#main").offset();
-    const offsetTop = mainOffset ? mainOffset.top : 0;
-    const topicTop = $(".container.posts").offset().top - offsetTop;
-    const topicBottom =
-      $("#topic-bottom").offset().top - $("#main-outlet").offset().top;
+  dockCheck() {
+    const topicTop = domUtils.offset(document.querySelector(".container.posts"))
+      .top;
+    const topicBottom = domUtils.offset(document.querySelector("#topic-bottom"))
+      .top;
+
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
-    const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
 
     const prev = this.dockAt;
-    const posTop = headerPadding() + info.offset();
-    const pos = posTop + timelineHeight - outletHeights();
+    const posTop = this.headerOffset() + window.pageYOffset;
+    const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
     if (posTop < topicTop) {
       this.dockAt = parseInt(topicTop, 10);
-    } else if (pos > topicBottom + footerHeight) {
-      this.dockAt = parseInt(
-        topicBottom - timelineHeight + footerHeight + outletHeights(),
-        10
-      );
+    } else if (pos > topicBottom) {
+      this.dockAt = parseInt(topicBottom - timelineHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) {
         this.dockAt = 0;
       }
     } else {
       this.dockAt = null;
-      this.fastDockAt = parseInt(
-        topicBottom - timelineHeight + footerHeight - offsetTop,
-        10
-      );
+      this.fastDockAt = parseInt(topicBottom - timelineHeight, 10);
     }
 
     if (this.dockAt !== prev) {
       this.queueRerender();
     }
+  },
+
+  headerOffset() {
+    return (
+      parseInt(
+        getComputedStyle(document.body).getPropertyValue("--header-offset"),
+        10
+      ) || 0
+    );
   },
 
   didInsertElement() {
