@@ -150,11 +150,14 @@ class AdminDashboardData
   end
 
   ##
-  # We call this method in a config/initializer
-  # so all of the problem checks in this class are recognized
-  # and run when the problems are loaded in the admin dashboard
-  # controller. Also can be used in testing to reset checks between
-  # tests.
+  # We call this method in the class definition below
+  # so all of the problem checks in this class are registered on
+  # boot. These problem checks are run when the problems are loaded in
+  # the admin dashboard controller.
+  #
+  # This method also can be used in testing to reset checks between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
   def self.reset_problem_checks
     @@problem_syms = []
     @@problem_blocks = []
