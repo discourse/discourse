@@ -2601,20 +2601,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-jquery-color@3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/jquery-color/-/jquery-color-3.0.0-alpha.1.tgz#0c00ed91251bac45fc4ff3143939f434ef46d188"
-  integrity sha512-UjsdBsWuehWLfnXfL4JZtxGbRB2eUz6Rhn3qxBKaVR3Qwm7fQlY1y/Va0o7GzDwGJnOvYKc3H+i2k7bC1yGcJg==
-
-jquery-tags-input@1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/jquery-tags-input/-/jquery-tags-input-1.3.5.tgz#1c89cb95c61983ad14386d30a006920476b93ed7"
-  integrity sha1-HInLlcYZg60UOG0woAaSBHa5Ptc=
-
-"jquery.autoellipsis@https://github.com/pvdspek/jquery.autoellipsis":
-  version "0.0.0"
-  resolved "https://github.com/pvdspek/jquery.autoellipsis#756391145c09ec11ae2b88a0ca0c3b5fdf8d21a1"
-
 jquery@3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"

@@ -72,19 +72,31 @@ module I18n
       execute_reload if @requires_reload
 
       locale = (opts[:locale] || config.locale).to_sym
-
       load_locale(locale) unless @loaded_locales.include?(locale)
-      opts ||= {}
 
-      target = opts[:backend] || backend
-      results = opts[:overridden] ? {} : target.search(locale, query)
-
+      results = {}
       regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
-      (overrides_by_locale(locale) || {}).each do |k, v|
-        results.delete(k)
-        results[k] = v if (k =~ regexp || v =~ regexp)
+
+      if opts[:only_overridden]
+        add_if_matches(overrides_by_locale(locale), results, regexp)
+      else
+        target = opts[:backend] || backend
+
+        I18n.fallbacks[locale].reverse_each do |fallback|
+          add_if_matches(target.search(fallback, query), results, regexp)
+          add_if_matches(overrides_by_locale(fallback), results, regexp)
+        end
       end
+
       results
+    end
+
+    def add_if_matches(translations, results, regexp)
+      translations.each do |key, value|
+        if key =~ regexp || value =~ regexp
+          results[key] = value
+        end
+      end
     end
 
     def ensure_loaded!(locale)
@@ -144,7 +156,7 @@ module I18n
     end
 
     def overrides_by_locale(locale)
-      return unless @overrides_enabled
+      return {} unless @overrides_enabled
       return {} if GlobalSetting.skip_db?
       locale = locale.to_sym
 
@@ -157,14 +169,14 @@ module I18n
 
       if !by_site.has_key?(locale)
         # Load overrides
-        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value, :compiled_js)
+        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
 
         if translations_overrides.empty?
           by_site[locale] = {}
         else
           translations_overrides.each do |tuple|
             by_locale = by_site[locale] ||= {}
-            by_locale[tuple[0]] = tuple[2] || tuple[1]
+            by_locale[tuple[0]] = tuple[1]
           end
         end
 
@@ -191,30 +203,26 @@ module I18n
 
       if @overrides_enabled
         overrides = {}
-
-        # for now lets do all the expensive work for keys with count
-        # no choice really
-        has_override = !!options[:count]
+        has_count = options.has_key?(:count)
 
         I18n.fallbacks[locale].each do |l|
-          override = overrides[l] = overrides_by_locale(l)
-          has_override ||= override.key?(key)
+          overrides_for_locale = overrides_by_locale(l)
+          overrides[l] = overrides_for_locale if has_count || overrides_for_locale.key?(key)
         end
 
-        if has_override && overrides.present?
-          if options.present?
-            options[:overrides] = overrides
+        if overrides.present?
+          no_options = options.empty? || (options.size == 1 && options.has_key?(:locale))
 
-            # I18n likes to use throw...
-            catch(:exception) do
-              return backend.translate(locale, key, options)
-            end
-          else
-            overrides.each do |_k, v|
-              if result = v[key]
-                return result
-              end
-            end
+          # Shortcut if the current locale has an override and there are no options.
+          if no_options && (override = overrides.dig(locale, key))
+            return override
+          end
+
+          options[:overrides] = overrides
+
+          # I18n likes to use throw...
+          catch(:exception) do
+            return backend.translate(locale, key, options)
           end
         end
       end

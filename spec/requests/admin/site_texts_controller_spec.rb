@@ -138,6 +138,34 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.parsed_body['site_texts']).to be_empty
       end
 
+      it "returns site text from fallback locale if current locale doesn't have a translation" do
+        TranslationOverride.upsert!(:en, 'js.summary.description_time_MF', 'description_time_MF override')
+        TranslationOverride.upsert!(:en, 'education.new-topic', 'education.new-topic override')
+
+        get "/admin/customize/site_texts.json", params: { q: 'js.summary.description_time_MF', locale: 'en_GB' }
+        expect(response.status).to eq(200)
+        value = response.parsed_body['site_texts'].find { |text| text['id'] == 'js.summary.description_time_MF' }['value']
+        expect(value).to eq('description_time_MF override')
+
+        get "/admin/customize/site_texts.json", params: { q: 'education.new-topic', locale: 'en_GB' }
+        expect(response.status).to eq(200)
+        value = response.parsed_body['site_texts'].find { |text| text['id'] == 'education.new-topic' }['value']
+        expect(value).to eq('education.new-topic override')
+      end
+
+      it "returns only overridden translations" do
+        TranslationOverride.upsert!(:en, 'education.new-topic', 'education.new-topic override')
+
+        get "/admin/customize/site_texts.json", params: { locale: 'en', overridden: true }
+        expect(response.status).to eq(200)
+
+        site_texts = response.parsed_body['site_texts']
+        expect(site_texts.size).to eq(1)
+
+        value = site_texts.find { |text| text['id'] == 'education.new-topic' }['value']
+        expect(value).to eq('education.new-topic override')
+      end
+
       context 'plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
@@ -270,6 +298,29 @@ RSpec.describe Admin::SiteTextsController do
       it 'fails if locale is not given' do
         get "/admin/customize/site_texts/js.topic.list.json"
         expect(response.status).to eq(400)
+      end
+
+      it "returns site text from fallback locale if current locale doesn't have a translation" do
+        TranslationOverride.upsert!(:en, 'js.summary.description_time_MF', 'description_time_MF override')
+        TranslationOverride.upsert!(:en, 'education.new-topic', 'education.new-topic override')
+
+        get "/admin/customize/site_texts/js.summary.description_time_MF.json", params: { locale: 'en_GB' }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        site_text = json['site_text']
+
+        expect(site_text['id']).to eq('js.summary.description_time_MF')
+        expect(site_text['value']).to eq('description_time_MF override')
+
+        get "/admin/customize/site_texts/education.new-topic.json", params: { locale: 'en_GB' }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        site_text = json['site_text']
+
+        expect(site_text['id']).to eq('education.new-topic')
+        expect(site_text['value']).to eq('education.new-topic override')
       end
 
       context 'plural keys' do

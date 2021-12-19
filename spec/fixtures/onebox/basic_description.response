@@ -1,0 +1,17 @@
+<html lang="en" data-ember-extension="1">
+<head>
+    <title>My Page Title</title>
+    <meta name="description" content="basic meta description">
+    <link rel="canonical" href="https://www.example.com/content">
+    <meta property="og:site_name" content="My Site">
+    <meta property="twitter:site" content="@example">
+    <meta property="og:title" content="My Page Title">
+    <meta property="og:url" content="https://www.example.com/content">
+    <meta property="og:image" content="https://www.example.com/content/image.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="256">
+<body>
+  <h1>Welcome</h1>
+  <p>Body content goes here</p>
+</body>
+</html>
