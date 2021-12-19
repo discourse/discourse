@@ -1,5 +1,5 @@
 export default {
   "/admin/dashboard/problems.json": {
-    problems: ["Houston..."]
+    problems: [{ message: "Houston...", priority: "low" }]
   }
 };
