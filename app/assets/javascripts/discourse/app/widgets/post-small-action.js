@@ -128,20 +128,24 @@ export default createWidget("post-small-action", {
       })
     );
 
-    const description = actionDescriptionHtml(
-      attrs.actionCode,
-      new Date(attrs.created_at),
-      attrs.actionCodeWho,
-      attrs.actionCodePath
-    );
-    contents.push(new RawHtml({ html: `<p>${description}</p>` }));
-
-    if (attrs.cooked) {
-      contents.push(
-        new RawHtml({
-          html: `<div class='custom-message'>${attrs.cooked}</div>`,
-        })
+    if (attrs.actionDecriptionWidget) {
+      contents.push(this.attach(attrs.actionDecriptionWidget, attrs));
+    } else {
+      const description = actionDescriptionHtml(
+        attrs.actionCode,
+        new Date(attrs.created_at),
+        attrs.actionCodeWho,
+        attrs.actionCodePath
       );
+      contents.push(new RawHtml({ html: `<p>${description}</p>` }));
+
+      if (attrs.cooked) {
+        contents.push(
+          new RawHtml({
+            html: `<div class='custom-message'>${attrs.cooked}</div>`,
+          })
+        );
+      }
     }
 
     return [
