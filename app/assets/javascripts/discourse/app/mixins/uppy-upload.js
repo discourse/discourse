@@ -224,7 +224,14 @@ export default Mixin.create(UppyS3Multipart, {
         this._useXHRUploads();
       }
     }
+
+    this._uppyReady();
   },
+
+  // This should be overridden in a child component if you need to
+  // hook into uppy events and be sure that everything is already
+  // set up for _uppyInstance.
+  _uppyReady() {},
 
   _startUpload() {
     if (!this.filesAwaitingUpload) {
@@ -233,6 +240,7 @@ export default Mixin.create(UppyS3Multipart, {
     if (!this._uppyInstance?.getFiles().length) {
       return;
     }
+    this.set("uploading", true);
     return this._uppyInstance?.upload();
   },
 
