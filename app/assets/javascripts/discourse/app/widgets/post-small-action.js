@@ -128,8 +128,8 @@ export default createWidget("post-small-action", {
       })
     );
 
-    if (attrs.actionDecriptionWidget) {
-      contents.push(this.attach(attrs.actionDecriptionWidget, attrs));
+    if (attrs.actionDescriptionWidget) {
+      contents.push(this.attach(attrs.actionDescriptionWidget, attrs));
     } else {
       const description = actionDescriptionHtml(
         attrs.actionCode,
