@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "unique_identifier": {
+      "type": "string"
+    }
+  }
+}
+

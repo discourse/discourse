@@ -22,10 +22,10 @@ describe 'uploads' do
       parameter name: :params, in: :body, schema: expected_request_schema
 
       let(:params) { {
-        type: 'avatar',
-        user_id: admin.id,
-        synchronous: true,
-        file: logo
+        'type' => 'avatar',
+        'user_id' => admin.id,
+        'synchronous' => true,
+        'file' => logo
       } }
 
       produces 'application/json'
@@ -38,6 +38,47 @@ describe 'uploads' do
         xit
       end
 
+    end
+  end
+  # uploads#generate_presigned_put
+  # uploads#complete_external_upload
+  # uploads#create_multipart
+  # uploads#batch_presign_multipart_parts
+  # uploads#abort_multipart
+  # uploads#complete_multipart
+  describe "external and multipart uploads" do
+    before do
+      setup_s3
+      SiteSetting.enable_direct_s3_uploads = true
+    end
+
+    path '/uploads/generate-presigned-put.json' do
+      post 'Initiates a direct external upload' do
+        tags 'Uploads'
+        operationId 'generatePresignedPut'
+        consumes 'application/json'
+        description 'cotton-eye joe'
+
+        expected_request_schema = load_spec_schema('upload_generate_presigned_put_request')
+        parameter name: :params, in: :body, schema: expected_request_schema
+
+        produces 'application/json'
+        response '200', 'external upload initialized' do
+          expected_response_schema = load_spec_schema('upload_generate_presigned_put_response')
+          schema(expected_response_schema)
+
+          let(:params) { {
+            'file_name' => "test.png",
+            'type' => "composer",
+            'file_size' => 4096
+          } }
+
+          it_behaves_like "a JSON endpoint", 200 do
+            let(:expected_response_schema) { expected_response_schema }
+            let(:expected_request_schema) { expected_request_schema }
+          end
+        end
+      end
     end
   end
 end
