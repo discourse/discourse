@@ -273,10 +273,6 @@ basic:
     client: true
     default: false
     hidden: true
-  enable_experimental_backup_uploader:
-    client: true
-    default: false
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
