@@ -337,7 +337,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this._setupUIPlugins();
 
     this.uploadTargetBound = true;
+    this._uppyReady();
   },
+
+  // This should be overridden in a child component if you need to
+  // hook into uppy events and be sure that everything is already
+  // set up for _uppyInstance.
+  _uppyReady() {},
 
   @bind
   _handleUploadError(file, error, response) {
