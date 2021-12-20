@@ -4249,7 +4249,6 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
-              wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
             categories:
@@ -4277,6 +4276,11 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            wordpress:
+              publishing: Necessary for the WP Discourse plugin publishing features (required).
+              commenting: Necessary for the WP Discourse plugin commenting features.
+              discourse_connect: Necessary for the WP Discourse plugin DiscourseConnect features.
+              utilities: Necessary if you use WP Discourse plugin Utilities.
 
       web_hooks:
         title: "Webhooks"

@@ -2614,4 +2614,33 @@ describe SessionController do
       expect(response.status).to eq(401)
     end
   end
+
+  describe '#scopes' do
+    context "when not a valid api request" do
+      it "returns 404" do
+        get "/session/scopes.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when a valid api request" do
+      let(:admin) { Fabricate(:admin) }
+      let(:scope) { ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' }) }
+      let(:api_key) { Fabricate(:api_key, user: admin, api_key_scopes: [scope]) }
+
+      it "returns the scopes of the api key" do
+        get "/session/scopes.json", headers: {
+          "Api-Key": api_key.key,
+          "Api-Username": admin.username
+        }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json['scopes'].size).to eq(1)
+        expect(json['scopes'].first["resource"]).to eq("topics")
+        expect(json['scopes'].first["action"]).to eq("read")
+        expect(json['scopes'].first["allowed_parameters"]).to eq({ "topic_id": "3" }.as_json)
+      end
+    end
+  end
 end

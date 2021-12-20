@@ -383,6 +383,7 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
 
     resources :static

@@ -64,6 +64,7 @@ class ApiKey < ActiveRecord::Base
 
   def request_allowed?(env)
     return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(Rack::Request.new(env).ip) }
+    return true if RouteMatcher.new(methods: :get, actions: "session#scopes").match?(env: env)
 
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
