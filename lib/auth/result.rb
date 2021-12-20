@@ -203,6 +203,6 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest_username(username_suggester_attributes)
+    UserNameSuggester.suggest(*username_suggester_attributes)
   end
 end
