@@ -183,13 +183,9 @@ button.dismiss-read {
 
 .category-breadcrumb {
   // only target the top-level li, not dropdowns
-  > li {
-    height: 100%;
-  }
   .select-kit {
     align-self: stretch;
     height: 100%;
-    margin-bottom: var(--nav-space);
   }
 }
 

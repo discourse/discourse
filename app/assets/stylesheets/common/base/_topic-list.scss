@@ -1,16 +1,6 @@
 // Topic list navigation & controls
 
 .list-controls {
-  .btn {
-    &:not(:first-child) {
-      margin-left: 0.5em;
-    }
-  }
-
-  .notifications-button {
-    margin-left: 0.5em;
-  }
-
   a.badge-category {
     padding: 3px 12px;
     font-size: $font-up-1;
@@ -22,6 +12,7 @@
     border: 1px solid var(--primary-medium);
     font-size: $font-0;
     transition: none;
+    height: 100%;
     &:focus {
       border-color: var(--tertiary);
     }
@@ -41,14 +32,15 @@
 }
 
 .category-breadcrumb {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 var(--nav-space) 0;
   > li {
     // only target the top-level li, not dropdowns
     display: flex;
-    float: left;
     margin-right: 0.5em;
     margin-bottom: 0;
   }
@@ -64,10 +56,18 @@
 
 .navigation-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   margin-bottom: var(--nav-space);
+  gap: var(--nav-space) 0; // used if the buttons wrap
   > * {
     white-space: nowrap;
+    &:not(:last-child) {
+      margin-right: 0.5em;
+    }
+  }
+  .select-kit-header {
+    height: 100%;
   }
   @include breakpoint(mobile-large) {
     .edit-category {
