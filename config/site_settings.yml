@@ -521,7 +521,9 @@ login:
     default: ""
     type: list
     list_type: simple
-  hide_email_address_taken: false
+  hide_email_address_taken:
+    client: true
+    default: false
   log_out_strict: false
   pending_users_reminder_delay_minutes:
     min: -1
