@@ -2824,8 +2824,8 @@ en:
     reviewables_reminder:
       subject_template: "There're items in the review queue that need reviewing"
       text_body_template:
-        one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
-        other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
+        one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_url}/review)."
+        other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_url}/review)."
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
