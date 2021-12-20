@@ -50,10 +50,6 @@ module.exports = function (defaults) {
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
-  let adminVendor = funnel(vendorJs, {
-    files: ["resumable.js"],
-  });
-
   return mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
     createI18nTree(discourseRoot, vendorJs),
@@ -64,7 +60,7 @@ module.exports = function (defaults) {
       destDir: "assets/highlightjs",
     }),
     digest(
-      concat(mergeTrees([app.options.adminTree, adminVendor]), {
+      concat(mergeTrees([app.options.adminTree]), {
         outputFile: `assets/admin.js`,
       })
     ),

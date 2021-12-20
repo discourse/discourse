@@ -132,8 +132,6 @@ def dependencies
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
     }, {
-      source: 'resumablejs/resumable.js'
-    }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',
       public: true,
