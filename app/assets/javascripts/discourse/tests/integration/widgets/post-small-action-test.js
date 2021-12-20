@@ -34,10 +34,10 @@ discourseModule(
       },
     });
 
-    componentTest("uses custom widget if actionDecriptionWidget", {
+    componentTest("uses custom widget if actionDescriptionWidget", {
       template: hbs`{{mount-widget widget="post-small-action" args=args}}`,
       beforeEach() {
-        this.set("args", { id: 123, actionDecriptionWidget: "button" });
+        this.set("args", { id: 123, actionDescriptionWidget: "button" });
       },
       async test(assert) {
         assert.ok(
