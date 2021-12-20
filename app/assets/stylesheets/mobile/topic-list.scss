@@ -88,19 +88,18 @@
   margin-left: 0;
 }
 
-ol.category-breadcrumb {
-  margin: 0 -3px 5px -3px;
-  display: flex;
-  flex-wrap: wrap;
-  flex: 1 1 100%;
-  li.select-kit {
+.category-breadcrumb {
+  width: 100%;
+  gap: 0.5em;
+  li {
     flex: 1 1 33%;
-    margin: 0 3px 5px 3px;
-    .select-kit-header .selected-name {
-      max-width: 80vw;
-      .badge-wrapper {
-        max-width: 100%;
-      }
+    margin: 0;
+    details {
+      width: 100%;
+    }
+    .name,
+    .category-name {
+      @include ellipsis;
     }
   }
 }
