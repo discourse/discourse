@@ -8,6 +8,8 @@ describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
+  fab!(:member) { Fabricate(:user) }
+  fab!(:owner) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
@@ -735,8 +737,6 @@ describe Guardian do
       end
 
       it 'allows members of an authorized group' do
-        user = Fabricate(:user)
-
         secure_category = plain_category
         secure_category.set_permissions(group => :readonly)
         secure_category.save
@@ -940,7 +940,7 @@ describe Guardian do
         end
 
         it 'is true when logged in' do
-          expect(Guardian.new(Fabricate(:user)).can_see?(post_revision)).to be_truthy
+          expect(Guardian.new(user).can_see?(post_revision)).to be_truthy
         end
       end
 
@@ -1418,7 +1418,6 @@ describe Guardian do
         post = Fabricate(:post, topic: topic)
         post.wiki = true
 
-        user = Fabricate(:user)
         expect(Guardian.new(user).can_edit?(post)).to eq(false)
       end
 
@@ -3403,11 +3402,9 @@ describe Guardian do
     it 'Correctly handles owner visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3422,11 +3419,9 @@ describe Guardian do
     it 'Correctly handles staff visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3441,11 +3436,9 @@ describe Guardian do
     it 'Correctly handles member visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3459,11 +3452,9 @@ describe Guardian do
 
     it 'Correctly handles logged-on-user visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3487,11 +3478,9 @@ describe Guardian do
     it 'Correctly handles group members visibility for owner' do
       group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:owners])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3506,11 +3495,9 @@ describe Guardian do
     it 'Correctly handles group members visibility for staff' do
       group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:staff])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3525,11 +3512,9 @@ describe Guardian do
     it 'Correctly handles group members visibility for member' do
       group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:members])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3543,11 +3528,9 @@ describe Guardian do
 
     it 'Correctly handles group members visibility for logged-on-user' do
       group = Group.new(name: 'group', members_visibility_level: Group.visibility_levels[:logged_on_users])
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3571,11 +3554,9 @@ describe Guardian do
     it 'correctly handles owner visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:owners])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3592,11 +3573,9 @@ describe Guardian do
       group2 = Group.new(name: 'group2', visibility_level: Group.visibility_levels[:owners])
       group2.save!
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3611,11 +3590,9 @@ describe Guardian do
     it 'correctly handles staff visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:staff])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3630,11 +3607,9 @@ describe Guardian do
     it 'correctly handles member visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:members])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3649,11 +3624,9 @@ describe Guardian do
     it 'correctly handles logged-on-user visible groups' do
       group = Group.new(name: 'group', visibility_level: Group.visibility_levels[:logged_on_users])
 
-      member = Fabricate(:user)
       group.add(member)
       group.save!
 
-      owner = Fabricate(:user)
       group.add_owner(owner)
       group.reload
 
@@ -3670,11 +3643,9 @@ describe Guardian do
       group2 = Group.new(name: 'group2', visibility_level: Group.visibility_levels[:members])
       group2.save!
 
-      member = Fabricate(:user)
       group1.add(member)
       group1.save!
 
-      owner = Fabricate(:user)
       group1.add_owner(owner)
       group1.reload
 
