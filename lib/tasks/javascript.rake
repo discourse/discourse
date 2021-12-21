@@ -104,14 +104,6 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'blueimp-file-upload/js/jquery.fileupload.js',
-    }, {
-      source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
-    }, {
-      source: 'blueimp-file-upload/js/jquery.fileupload-process.js',
-    }, {
-      source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-    }, {
       source: 'jquery/dist/jquery.js'
     }, {
       source: 'markdown-it/dist/markdown-it.js'
