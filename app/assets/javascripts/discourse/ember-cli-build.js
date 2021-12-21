@@ -44,16 +44,11 @@ module.exports = function (defaults) {
   app.import(vendorJs + "jquery.ui.widget.js");
   app.import(vendorJs + "jquery.fileupload.js");
   app.import(vendorJs + "jquery.fileupload-process.js");
-  app.import(vendorJs + "jquery.autoellipsis-1.0.10.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
-
-  let adminVendor = funnel(vendorJs, {
-    files: ["resumable.js"],
-  });
 
   return mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
@@ -65,7 +60,7 @@ module.exports = function (defaults) {
       destDir: "assets/highlightjs",
     }),
     digest(
-      concat(mergeTrees([app.options.adminTree, adminVendor]), {
+      concat(mergeTrees([app.options.adminTree]), {
         outputFile: `assets/admin.js`,
       })
     ),

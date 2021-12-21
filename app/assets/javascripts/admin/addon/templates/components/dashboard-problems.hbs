@@ -12,7 +12,7 @@
         <div class="problem-messages">
           <ul>
             {{#each problems as |problem|}}
-              <li>{{html-safe problem}}</li>
+              <li class={{concat "dashboard-problem " "priority-" problem.priority}}>{{html-safe problem.message}}</li>
             {{/each}}
           </ul>
         </div>

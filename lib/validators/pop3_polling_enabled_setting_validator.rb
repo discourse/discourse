@@ -33,7 +33,6 @@ class POP3PollingEnabledSettingValidator
   private
 
   def authentication_works?
-
     # TODO (martin, post-2.7 release) Change to use EmailSettingsValidator
     # EmailSettingsValidator.validate_pop3(
     #   host: SiteSetting.pop3_polling_host,
