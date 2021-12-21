@@ -1887,7 +1887,7 @@ end
 #  excerpt                   :string
 #  pinned_globally           :boolean          default(FALSE), not null
 #  pinned_until              :datetime
-#  fancy_title               :string(400)
+#  fancy_title               :string
 #  highest_staff_post_number :integer          default(0), not null
 #  featured_link             :string
 #  reviewable_score          :float            default(0.0), not null
