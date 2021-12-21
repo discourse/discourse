@@ -323,6 +323,16 @@ describe StaticController do
         expect(response.body).to include("Polish FAQ")
       end
     end
+
+    it "does not pollute SiteSetting.title (regression)" do
+      SiteSetting.title = "test"
+      SiteSetting.short_site_description = "something"
+
+      expect do
+        get "/login"
+        get "/login"
+      end.to_not change { SiteSetting.title }
+    end
   end
 
   describe '#enter' do
