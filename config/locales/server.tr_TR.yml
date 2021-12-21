@@ -1553,7 +1553,6 @@ tr_TR:
     allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
     normalize_emails: "Normalleştirilmiş e-postanın benzersiz olup olmadığını kontrol edin. Normalleştirilmiş e-posta, kullanıcı adındaki tüm noktaları ve + ve @ sembolleri arasındaki her şeyi kaldırır."
     auto_approve_email_domains: "E-posta adresleri bu listedeki alan adlarından olan kullanıcılar otomatik olarak onaylanacaktır."
-    hide_email_address_taken: "Kullanıcıları, kayıt sırasında ve parolamı unuttum formunda o e-posta adresiyle bir hesap bulunduğunu bildirmeyin."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> kontrol panelinde yeni sürüm mesajlarını gösterin"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."

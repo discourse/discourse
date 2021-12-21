@@ -3689,6 +3689,7 @@ zh_CN:
             您还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
           read_only: 只读
+          global: 全局范围
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
@@ -3703,8 +3704,6 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
-            uploads:
-              create: 上传一个新文件。
             users:
               bookmarks: 列出用户书签。使用 ICS 格式时返回书签提醒。
               sync_sso: 使用 DiscourseConnect 同步用户。
