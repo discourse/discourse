@@ -81,12 +81,6 @@
   }
 }
 
-.composer-popup-container {
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
@@ -96,7 +90,7 @@
   right: 8px;
   overflow-y: auto;
   z-index: z("composer", "popover");
-  padding: 8px 8px 32px 8px;
+  padding: 1.5em;
   box-shadow: shadow("dropdown");
   background: var(--highlight-medium);
 
@@ -126,10 +120,6 @@
   }
 
   h3 {
-    margin-bottom: 10px;
-  }
-
-  p {
     margin-bottom: 10px;
   }
 
