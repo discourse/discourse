@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -187,7 +188,7 @@ acceptance("Composer Actions", function (needs) {
     assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
-  test("hide component if no content", async function (assert) {
+  test("allow switching back to New Topic", async function (assert) {
     await visit("/");
     await click("button#create-topic");
 
@@ -195,12 +196,18 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.ok(composerActions.el().hasClass("is-hidden"));
-    assert.strictEqual(composerActions.el().children().length, 0);
+    assert.strictEqual(
+      query(".action-title").innerText,
+      I18n.t("topic.private_message")
+    );
 
-    await click("button#create-topic");
     await composerActions.expand();
-    assert.strictEqual(composerActions.rows().length, 2);
+    await composerActions.selectRowByValue("create_topic");
+
+    assert.strictEqual(
+      query(".action-title").innerText,
+      I18n.t("topic.create_long")
+    );
   });
 
   test("interactions", async function (assert) {

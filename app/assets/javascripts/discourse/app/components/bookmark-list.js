@@ -1,16 +1,52 @@
+import Component from "@ember/component";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import bootbox from "bootbox";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import Component from "@ember/component";
+import Scrolling from "discourse/mixins/scrolling";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import { action } from "@ember/object";
-import bootbox from "bootbox";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 
-export default Component.extend({
+export default Component.extend(Scrolling, {
   classNames: ["bookmark-list-wrapper"],
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.bindScrolling();
+    this.scrollToLastPosition();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.unbindScrolling();
+  },
+
+  scrollToLastPosition() {
+    let scrollTo = this.session.bookmarkListScrollPosition;
+    if (scrollTo && scrollTo >= 0) {
+      schedule("afterRender", () => {
+        discourseDebounce(
+          this,
+          function () {
+            if (this.element && !this.isDestroying && !this.isDestroyed) {
+              window.scrollTo(0, scrollTo + 1);
+            }
+          },
+          0
+        );
+      });
+    }
+  },
+
+  scrolled() {
+    this._super(...arguments);
+    this.session.set("bookmarkListScrollPosition", window.scrollY);
+  },
 
   @action
   removeBookmark(bookmark) {

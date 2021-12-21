@@ -569,10 +569,6 @@ cs:
       title: "To se mi líbí"
       description: "Tento příspěvek se mi líbí"
       short_description: "Tento příspěvek se mi líbí"
-  user_activity:
-    no_bookmarks:
-      self: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      others: "Žádné záložky."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -813,6 +809,18 @@ cs:
     top_uploads:
       labels:
         filename: Název souboru
+    top_users_by_likes_received:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."

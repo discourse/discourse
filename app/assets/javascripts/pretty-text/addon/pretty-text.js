@@ -3,12 +3,16 @@ import {
   setup as setupIt,
 } from "pretty-text/engines/discourse-markdown-it";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function registerOption() {
-  // TODO next major version deprecate this
-  // if (window.console) {
-  //   window.console.log("registerOption is deprecated");
-  // }
+  deprecated(
+    "`registerOption() from `pretty-text` is deprecated. Use `helper.registerOptions()` instead.",
+    {
+      since: "2.8.0.beta9",
+      dropFrom: "2.9.0.beta1",
+    }
+  );
 }
 
 export function buildOptions(state) {
@@ -80,8 +84,6 @@ export function buildOptions(state) {
       ? siteSettings.allowed_iframes.split("|")
       : [],
     markdownIt: true,
-    injectLineNumbersToPreview:
-      siteSettings.enable_advanced_editor_preview_sync,
     previewing,
     disableEmojis,
     watchedWordsReplace,

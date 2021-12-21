@@ -638,12 +638,6 @@ hy:
       title: "Հավանել"
       description: "Հավանել այս գրառումը"
       short_description: "Հավանել այս գրառումը"
-  user_activity:
-    no_bookmarks:
-      self: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
-      others: "Էջանշումներ չկան:"
-    no_drafts:
-      self: "Դուք սևագրեր չունեք; սկսեք կզամել պատասխան ցանկացած թեմայում, և այն ավտոմատ կերպով կպահպանվի որպես նոր սևագիր:"
   topic_flag_types:
     spam:
       title: "Սպամ"
@@ -1026,6 +1020,18 @@ hy:
         ignored_user: Անտեսված Օգտատեր
         ignores_count: Անտեսումների քանակ
         mutes_count: Խլացվածների քանակը
+    top_users_by_likes_received:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
   dashboard:
     rails_env_warning: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"
     host_names_warning: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"

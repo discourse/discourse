@@ -24,35 +24,28 @@ export default {
     }
 
     // Merge any overrides into our object
-    const overrides = I18n._overrides || {};
-    Object.keys(overrides).forEach((k) => {
-      const v = overrides[k];
-      k = k.replace("admin_js", "js");
+    for (const [locale, overrides] of Object.entries(I18n._overrides || {})) {
+      for (const [key, value] of Object.entries(overrides)) {
+        const segs = key.replace(/^admin_js\./, "js.admin.").split(".");
+        let node = I18n.translations[locale] || {};
 
-      const segs = k.split(".");
-
-      let node = I18n.translations[I18n.locale] || {};
-      let i = 0;
-
-      for (; i < segs.length - 1; i++) {
-        if (!(segs[i] in node)) {
-          node[segs[i]] = {};
+        for (let i = 0; i < segs.length - 1; i++) {
+          if (!(segs[i] in node)) {
+            node[segs[i]] = {};
+          }
+          node = node[segs[i]];
         }
-        node = node[segs[i]];
+
+        if (typeof node === "object") {
+          node[segs[segs.length - 1]] = value;
+        }
       }
+    }
 
-      if (typeof node === "object") {
-        node[segs[segs.length - 1]] = v;
-      }
-    });
-
-    const mfOverrides = I18n._mfOverrides || {};
-    Object.keys(mfOverrides).forEach((k) => {
-      const v = mfOverrides[k];
-
-      k = k.replace(/^[a-z_]*js\./, "");
-      I18n._compiledMFs[k] = v;
-    });
+    for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
+      key = key.replace(/^[a-z_]*js\./, "");
+      I18n._compiledMFs[key] = value;
+    }
 
     bootbox.addLocale(I18n.currentLocale(), {
       OK: I18n.t("composer.modal_ok"),

@@ -259,6 +259,7 @@ en:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite saved. To give access to the specified topic, add one of the following groups: %{groups}."
+    domain_not_allowed: "Your email cannot be used to redeem this invite."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -964,12 +965,6 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_bookmarks:
-      self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
-      search: "No bookmarks found with the provided search query."
-      others: "No bookmarks."
-    no_drafts:
-      self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
     no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:
@@ -1420,6 +1415,25 @@ en:
         ignores_count: Ignores count
         mutes_count: Mutes count
       description: "Users who have been muted and/or ignored by many other users."
+    top_users_by_likes_received:
+      title: "Top Users by likes received"
+      labels:
+        user: User
+        qtt_like: Likes Received
+      description: "Top 10 users who have been received more likes."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Top Users by likes received from a user with a lower trust level"
+      labels:
+        user: User
+        trust_level: Trust level
+        qtt_like: Likes Received
+      description: "Top 10 users in a higher trust level being liked by people in a lower trust level."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Top Users by likes received from a variety of people"
+      labels:
+        user: User
+        qtt_like: Likes Received
+      description: "Top 10 users who have had the likes from a wide range of people."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1655,7 +1669,7 @@ en:
     allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
-    hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
+    hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
@@ -1710,6 +1724,7 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
+    google_oauth2_hd_groups: "(experimental) Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings)."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret. See <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2376,6 +2391,7 @@ en:
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
       list_value_count: "The list must contain exactly %{count} values."
+      google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2614,14 +2630,6 @@ en:
       one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
       other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
 
-  reviewables_reminder:
-    submitted:
-      one: "Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
-      other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
-    subject_template:
-      one: "%{count} item needs to be reviewed"
-      other: "%{count} items need to be reviewed"
-
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
@@ -2813,6 +2821,12 @@ en:
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   system_messages:
+    reviewables_reminder:
+      subject_template: "There're items in the review queue that need reviewing"
+      text_body_template:
+        one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_url}/review)."
+        other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_url}/review)."
+
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
 

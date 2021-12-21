@@ -756,6 +756,18 @@ sk:
     top_uploads:
       labels:
         filename: Názov súboru
+    top_users_by_likes_received:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
   dashboard:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."

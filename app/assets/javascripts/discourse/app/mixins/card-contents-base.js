@@ -4,7 +4,6 @@ import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
-import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
@@ -63,7 +62,7 @@ export default Mixin.create({
     }
 
     const closestArticle = target.closest("article");
-    const postId = closestArticle ? closestArticle.dataset.postId : null;
+    const postId = closestArticle?.dataset?.postId || null;
     const wasVisible = this.visible;
     const previousTarget = this.cardTarget;
 
@@ -86,7 +85,9 @@ export default Mixin.create({
     });
 
     this.appEvents.trigger("user-card:show", { username });
-    this._showCallback(username, $(target));
+    this._showCallback(username, $(target)).then((user) => {
+      this.appEvents.trigger("user-card:after-show", { user });
+    });
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
     if (this.site.mobileView) {
@@ -162,9 +163,9 @@ export default Mixin.create({
     return false;
   },
 
-  _topicHeaderTrigger(username, $target) {
+  _topicHeaderTrigger(username, target) {
     this.setProperties({ isFixed: true, isDocked: true });
-    return this._show(username, $target);
+    return this._show(username, target);
   },
 
   _bindMobileScroll() {
@@ -232,10 +233,9 @@ export default Mixin.create({
               }
             }
 
-            position.top -= this._calculateTopOffset(
-              $("#main-outlet").offset(),
-              headerOutletHeights()
-            );
+            // It looks better to have the card aligned slightly higher
+            position.top -= 24;
+
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
@@ -282,13 +282,6 @@ export default Mixin.create({
         });
       }
     });
-  },
-
-  // some plugins/themes modify the page layout and may
-  // need to override this calculation for the card to
-  // position correctly
-  _calculateTopOffset(mainOutletOffset, outletHeights) {
-    return mainOutletOffset.top - outletHeights;
   },
 
   @bind

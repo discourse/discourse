@@ -1484,7 +1484,10 @@ de:
           expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
+          restrict: "Beschränken auf"
           restrict_email: "Auf E-Mail beschränken"
+          restrict_domain: "Auf Domain beschränken"
+          email_or_domain_placeholder: "name@beispiel.de oder beispiel.de"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
           invite_to_topic: "Ankommen beim Thema"
@@ -2178,6 +2181,8 @@ de:
       in_posts_by: "in Beiträgen von %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "nochmal um die native Browsersuche zu verwenden"
+      recent: "Letzte Suchanfragen"
+      clear_recent: "Letzte Suchanfragen löschen"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
@@ -3488,17 +3493,19 @@ de:
         one: "mindestens %{count} Schlagwort auswählen..."
         other: "mindestens %{count} Schlagwörter auswählen..."
       info: "Info"
-      default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
+      default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
+      staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort in eine <a href=%{basePath}/tag_groups>Tag-Gruppe</a>ein."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
+      save: "Name und Beschreibung des Schlagwortes speichern"
       tag_groups_info:
         one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
         other: "Es kann nur in folgenden Kategorien verwendet werden:"
-      edit_synonyms: "Synonyme Verwalten"
+      edit_synonyms: "Synonyme bearbeiten"
       add_synonyms_label: "Synonyme hinzufügen:"
       add_synonyms: "Hinzufügen"
       add_synonyms_explanation:
@@ -3515,8 +3522,8 @@ de:
       delete_confirm_synonyms:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
-      rename_tag: "Schlagwort umbenennen"
-      rename_instructions: "Neuen Namen für das Schlagwort wählen:"
+      edit_tag: "Schlagwortname und Beschreibung bearbeiten"
+      description: "Beschreibung"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"
@@ -3791,6 +3798,7 @@ de:
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            automatic_membership_associated_groups: "Nutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels diesen Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Primäre Gruppe"
@@ -3888,6 +3896,14 @@ de:
               list: Benutzerliste anfordern
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
+            badges:
+              create: Erstelle ein neues Abzeichen.
+              show: Erhalte Informationen über ein Abzeichen.
+              update: Abzeichen aktualisieren.
+              delete: Abzeichen löschen.
+              list_user_badges: Abzeichen eines Nutzers auflisten.
+              assign_badge_to_user: Abzeichen einem Nutzer zuweisen.
+              revoke_badge_from_user: Abzeichen einem Nutzer entziehen.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."

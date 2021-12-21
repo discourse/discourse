@@ -8,8 +8,8 @@ fa_IR:
   js:
     poll:
       voters:
-        one: "رأی دهندگان"
-        other: "رأی دهندگان"
+        one: "رای دهندگان"
+        other: "رای دهندگان"
       total_votes:
         one: "مجموع آرا"
         other: "مجموع آرا"

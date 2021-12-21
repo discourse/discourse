@@ -366,6 +366,92 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq "testuser"
   end
 
+  it 'should preserve username when several users login with the same username' do
+    SiteSetting.auth_overrides_username = true
+
+    # if several users have username "bill" on the external site,
+    # they will have usernames bill, bill1, bill2 etc in Discourse:
+    Fabricate(:user, username: "bill")
+    Fabricate(:user, username: "bill1")
+    Fabricate(:user, username: "bill2")
+    Fabricate(:user, username: "bill4")
+
+    # the number should be preserved during subsequent logins
+    # bill3 should remain bill3
+    sso = new_discourse_sso
+    sso.username = "bill3"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+    sso.lookup_or_create_user(ip_address)
+
+    sso.username = "bill"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq "bill3"
+  end
+
+  it "uses name if it's present in payload" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    name = "John"
+    sso.name = name
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.name).to eq name
+  end
+
+  it "uses username for name suggestions if name isn't present in payload" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.name = ""
+    sso.username = "user_john"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.name).to eq "User John"
+  end
+
+  it "uses username for username suggestions if it's present in payload" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    username = "user_john"
+    sso.username = username
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq username
+  end
+
+  it "uses name for username suggestions if username isn't present in payload" do
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = ""
+    sso.name = "John Smith"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq "John_Smith"
+  end
+
+  it "uses name for username suggestions if username consists entirely of disallowed characters" do
+    SiteSetting.unicode_usernames = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = "Πλάτων"
+    sso.name = "Plato"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq sso.name
+  end
+
   it "doesn't use email as a source for username suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -379,7 +465,7 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq I18n.t('fallback_username')
   end
 
-  it "use email as a source for username suggestions if enabled" do
+  it "uses email as a source for username suggestions if enabled" do
     SiteSetting.use_email_for_username_and_name_suggestions = true
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -406,7 +492,7 @@ describe DiscourseSingleSignOn do
     expect(user.name).to eq ""
   end
 
-  it "use email as a source for name suggestions if enabled" do
+  it "uses email as a source for name suggestions if enabled" do
     SiteSetting.use_email_for_username_and_name_suggestions = true
     sso = new_discourse_sso
     sso.external_id = "100"
@@ -418,6 +504,21 @@ describe DiscourseSingleSignOn do
 
     user = sso.lookup_or_create_user(ip_address)
     expect(user.name).to eq "Mail"
+  end
+
+  it "uses email for username suggestions if username and name consist entirely of disallowed characters" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+    SiteSetting.unicode_usernames = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = "Πλάτων"
+    sso.name = "Πλάτων"
+    sso.email = "mail@mail.com"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.username).to eq "mail"
   end
 
   it "can override username with a number at the end to a simpler username without a number" do
@@ -1003,4 +1104,38 @@ describe DiscourseSingleSignOn do
     end
   end
 
+  context "when user is staged" do
+    it "uses username of the staged user if username is not present in payload" do
+      staged_username = "staged_user"
+      email = "staged@user.com"
+      Fabricate(:user, staged: true, username: staged_username, email: email)
+
+      sso = new_discourse_sso
+      sso.email = email
+      sso.external_id = "B"
+
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+
+      expect(user.username).to eq(staged_username)
+    end
+
+    it "uses username of the staged user if username in payload is the same" do
+      # it's important to check this, because we had regressions
+      # where usernames were changed to the same username with "1" added at the end
+      staged_username = "staged_user"
+      email = "staged@user.com"
+      Fabricate(:user, staged: true, username: staged_username, email: email)
+
+      sso = new_discourse_sso
+      sso.username = staged_username
+      sso.email = email
+      sso.external_id = "B"
+
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+
+      expect(user.username).to eq(staged_username)
+    end
+  end
 end

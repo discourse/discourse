@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe UserAction do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before do
     UserActionManager.enable
@@ -91,7 +92,7 @@ describe UserAction do
         expect(stream).to eq([])
 
         group = Fabricate(:group)
-        u = Fabricate(:coding_horror)
+        u = coding_horror
         group.add(u)
 
         category.set_permissions(group => :full)
@@ -167,7 +168,7 @@ describe UserAction do
 
     fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
-    fab!(:liker) { Fabricate(:coding_horror) }
+    fab!(:liker) { coding_horror }
 
     def likee_stream
       UserAction.stream(user_id: likee.id, guardian: Guardian.new)
@@ -257,7 +258,7 @@ describe UserAction do
 
     describe 'when another user posts on the topic' do
       before do
-        @other_user = Fabricate(:coding_horror)
+        @other_user = coding_horror
         @mentioned = Fabricate(:admin)
 
         @response = PostCreator.new(@other_user, reply_to_post_number: 1, topic_id: @post.topic_id, raw: "perhaps @#{@mentioned.username} knows how this works?").create

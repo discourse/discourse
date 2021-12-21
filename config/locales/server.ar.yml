@@ -1085,13 +1085,6 @@ ar:
   draft_backup:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
-  user_activity:
-    no_bookmarks:
-      self: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
-      search: "لم يتم العثور على إشارات مرجعية تطابق استعلام البحث المقدَّم."
-      others: "لا توجد إشارات مرجعية."
-    no_drafts:
-      self: "ليس لديك أي مسودات. ابدأ في كتابة رد في أي موضوع وسيتم حفظه تلقائيًا كمسودة جديدة."
   email_settings:
     pop3_authentication_error: "حدثت مشكلة في بيانات اعتماد POP3 المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_authentication_error: "حدثت مشكلة في بيانات اعتماد IMAP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
@@ -1530,6 +1523,18 @@ ar:
         ignores_count: عدد التجاهلات
         mutes_count: عدد مرات الكتم
       description: "المستخدمون الذين تم كتمهم أو تجاهلهم بواسطة العديد من المستخدمين الآخرين"
+    top_users_by_likes_received:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
   dashboard:
     rails_env_warning: "الخادم يعمل في وضع %{env}."
     host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
@@ -2615,21 +2620,6 @@ ar:
       few: "لدى المستخدم %{username} %{count} منشورات في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
       many: "لدى المستخدم %{username} %{count} منشورًا في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
       other: "لدى المستخدم %{username} %{count} منشور في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
-  reviewables_reminder:
-    submitted:
-      zero: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-      one: "تم إرسال العناصر قبل ساعة واحدة (%{count}). [يُرجى مراجعتها](%{base_path}/review)."
-      two: "تم إرسال العناصر قبل ساعتَين (%{count}). [يُرجى مراجعتها](%{base_path}/review)."
-      few: "تم إرسال العناصر قبل %{count} ساعات. [يُرجى مراجعتها](%{base_path}/review)."
-      many: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-      other: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-    subject_template:
-      zero: "يجب مراجعة %{count} عنصر"
-      one: "يجب مراجعة عنصر واحد (%{count})"
-      two: "يجب مراجعة عنصرَين (%{count})"
-      few: "يجب مراجعة %{count} عناصر"
-      many: "يجب مراجعة %{count} عنصرًا"
-      other: "يجب مراجعة %{count} عنصر"
   unsubscribe_mailer:
     title: "رسالة إلغاء الاشتراك"
     subject_template: "التأكيد أنك لم تعُد تريد تلقي تحديثات البريد الإلكتروني من %{site_title}"

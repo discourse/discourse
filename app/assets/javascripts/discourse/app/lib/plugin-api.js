@@ -81,6 +81,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
@@ -96,7 +97,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 // based on Semantic Versioning 2.0.0. Please up the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.0.0";
+const PLUGIN_API_VERSION = "1.1.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -330,12 +331,22 @@ class PluginApi {
   /**
    * addPosterIcon(callback)
    *
-   * This function can be used to add an icon with a link that will be displayed
-   * beside a poster's name. The `callback` is called with the post's user custom
-   * fields and post attributes. An icon will be rendered if the callback returns
-   * an object with the appropriate attributes.
+   * This function is an alias of addPosterIcons, which the latter has the ability
+   * to add multiple icons at once. Please refer to `addPosterIcons` for usage examples.
+   **/
+  addPosterIcon(cb) {
+    this.addPosterIcons(cb);
+  }
+
+  /**
+   * addPosterIcons(callback)
    *
-   * The returned object can have the following attributes:
+   * This function can be used to add one, or multiple icons, with a link that will
+   * be displayed beside a poster's name. The `callback` is called with the post's
+   * user custom fields and post attributes. One or multiple icons may be rendered
+   * when the callback returns an array of objects with the appropriate attributes.
+   *
+   * The returned object(s) each can have the following attributes:
    *
    *   icon        the font awesome icon to render
    *   emoji       an emoji icon to render
@@ -345,49 +356,70 @@ class PluginApi {
    *   text        (optional) text to display alongside the emoji or icon
    *
    * ```
-   * api.addPosterIcon((cfs, attrs) => {
+   * api.addPosterIcons((cfs, attrs) => {
    *   if (cfs.customer) {
    *     return { icon: 'user', className: 'customer', title: 'customer' };
    *   }
    * });
    * ```
+   * or
+   * * ```
+   * api.addPosterIcons((cfs, attrs) => {
+   *   return attrs.customers.map(({name}) => {
+   *     icon: 'user', className: 'customer', title: name
+   *   })
+   * });
+   * ```
    **/
-  addPosterIcon(cb) {
+  addPosterIcons(cb) {
     const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, (dec) => {
       const attrs = dec.attrs;
-      const result = cb(attrs.userCustomFields || {}, attrs);
+      let results = cb(attrs.userCustomFields || {}, attrs);
 
-      if (result) {
-        let iconBody;
-
-        if (result.icon) {
-          iconBody = iconNode(result.icon);
-        } else if (result.emoji) {
-          iconBody = result.emoji.split("|").map((name) => {
-            let widgetAttrs = { name };
-            if (result.emojiTitle) {
-              widgetAttrs.title = true;
-            }
-            return dec.attach("emoji", widgetAttrs);
-          });
+      if (results) {
+        if (!Array.isArray(results)) {
+          results = [results];
         }
 
-        if (result.text) {
-          iconBody = [iconBody, result.text];
-        }
+        return results.map((result) => {
+          let iconBody;
 
-        if (result.url) {
-          iconBody = dec.h("a", { attributes: { href: result.url } }, iconBody);
-        }
+          if (result.icon) {
+            iconBody = iconNode(result.icon);
+          } else if (result.emoji) {
+            iconBody = result.emoji.split("|").map((name) => {
+              let widgetAttrs = { name };
+              if (result.emojiTitle) {
+                widgetAttrs.title = true;
+              }
+              return dec.attach("emoji", widgetAttrs);
+            });
+          }
 
-        return dec.h(
-          "span.poster-icon",
-          { className: result.className, attributes: { title: result.title } },
-          iconBody
-        );
+          if (result.text) {
+            iconBody = [iconBody, result.text];
+          }
+
+          if (result.url) {
+            iconBody = dec.h(
+              "a",
+              { attributes: { href: result.url } },
+              iconBody
+            );
+          }
+
+          return dec.h(
+            "span.poster-icon",
+            {
+              className: result.className,
+              attributes: { title: result.title },
+            },
+            iconBody
+          );
+        });
       }
     });
   }
@@ -773,6 +805,19 @@ class PluginApi {
    **/
   registerTopicFooterDropdown(dropdownOptions) {
     registerTopicFooterDropdown(dropdownOptions);
+  }
+
+  /**
+   * Register a desktop notificaiton handler
+   *
+   * ```javascript
+   * api.registerDesktopNotificationHandler((data, siteSettings, user) => {
+   *   // Do something!
+   * });
+   * ```
+   **/
+  registerDesktopNotificationHandler(handler) {
+    registerDesktopNotificationHandler(handler);
   }
 
   /**

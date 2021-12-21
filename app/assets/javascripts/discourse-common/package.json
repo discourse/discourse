@@ -19,7 +19,13 @@
     "ember-cli-htmlbars": "^4.2.0",
     "ember-auto-import": "^1.5.3",
     "handlebars": "^4.7.0",
-    "truth-helpers": "^1.0.0"
+    "truth-helpers": "^1.0.0",
+    "@uppy/aws-s3": "^2.0.4",
+    "@uppy/aws-s3-multipart": "^2.1.0",
+    "@uppy/core": "^2.1.0",
+    "@uppy/drop-target": "^1.1.0",
+    "@uppy/utils": "^4.0.3",
+    "@uppy/xhr-upload": "^2.0.4"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",

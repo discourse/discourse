@@ -733,12 +733,6 @@ ca:
   draft_backup:
     pm_title: "Esborranys de còpia de seguretat de temes en curs"
     pm_body: "Tema que conté esborranys de còpia de seguretat"
-  user_activity:
-    no_bookmarks:
-      self: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
-      others: "Sense preferits."
-    no_drafts:
-      self: "No teniu cap esborrany. Comenceu a redactar una resposta en qualsevol tema i es desarà com a esborrany nou."
   webauthn:
     validation:
       invalid_type_error: "El tipus de webauthn proporcionat no era vàlid. Els tipus vàlids són webauthn.get i webauthn.create."
@@ -1151,6 +1145,18 @@ ca:
         ignores_count: Recompte d'ignorats
         mutes_count: Recompte de silenciats
       description: "Usuaris que han estat silenciats i/o ignorats per molts altres usuaris."
+    top_users_by_likes_received:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
   dashboard:
     rails_env_warning: "El vostre servidor s'executa en mode %{env}."
     host_names_warning: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
@@ -1936,13 +1942,6 @@ ca:
       fixed_primary_email: "S'ha corregit el correu electrònic primari per a l'usuari fictici"
       same_ip_address: "La mateixa adreça IP (%{ip_address}) que altres usuaris"
       inactive_user: "Usuari inactiu"
-  reviewables_reminder:
-    submitted:
-      one: "S'han enviat elements al llarg de %{count} hores. [Reviseu-los](%{base_path}/review)."
-      other: "S'han enviat elements al llarg de %{count} hores. [Reviseu-los](%{base_path}/review)."
-    subject_template:
-      one: "Cal revisar %{count} element"
-      other: "Cal revisar %{count} elements"
   unsubscribe_mailer:
     title: "Cancel·lació de subscripció"
     subject_template: "Confirmeu que no voleu rebre més actualitzacions per correu de %{site_title}"

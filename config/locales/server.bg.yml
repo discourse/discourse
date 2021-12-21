@@ -638,6 +638,18 @@ bg:
     top_uploads:
       labels:
         filename: Име на файла
+    top_users_by_likes_received:
+      labels:
+        user: Потребител
+        qtt_like: Получени харесвания
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Потребител
+        qtt_like: Получени харесвания
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Потребител
+        qtt_like: Получени харесвания
   dashboard:
     rails_env_warning: "Вашият сървър е в % {env} режим."
     host_names_warning: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "

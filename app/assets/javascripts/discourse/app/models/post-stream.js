@@ -266,11 +266,13 @@ export default RestModel.extend({
   filterReplies(postNumber, postId) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
+
     this.appEvents.trigger("post-stream:filter-replies", {
       topic_id: this.get("topic.id"),
       post_number: postNumber,
       post_id: postId,
     });
+
     return this.refresh({ refreshInPlace: true }).then(() => {
       const element = document.querySelector(`#post_${postNumber}`);
 
@@ -280,16 +282,13 @@ export default RestModel.extend({
         : null;
 
       this.appEvents.trigger("post-stream:refresh");
+
       DiscourseURL.jumpToPost(postNumber, {
         originalTopOffset,
       });
 
-      const replyPostNumbers = this.posts.mapBy("post_number");
-      replyPostNumbers.splice(0, 2);
       schedule("afterRender", () => {
-        replyPostNumbers.forEach((postNum) => {
-          highlightPost(postNum);
-        });
+        highlightPost(postNumber);
       });
     });
   },

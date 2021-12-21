@@ -1988,6 +1988,8 @@ ko:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
       dismiss_confirmation:
+        body:
+          other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
         dismiss: "읽음"
         cancel: "취소"
       group_message_summary:
@@ -2070,6 +2072,8 @@ ko:
       in_topics_posts: "모든 글과 댓글에서"
       enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
+      recent: "최근 검색"
+      clear_recent: "최근 검색 지우기"
       type:
         default: "글/댓글"
         users: "사용자"
@@ -3301,15 +3305,15 @@ ko:
       choose_for_topic_required:
         other: "최소한 %{count}개의 태그를 선택해야합니다..."
       info: "정보"
-      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다. 제한을 추가하려면 이 태그를 <a href=%{basePath}/tag_groups>태그 그룹</a>에 넣으십시오."
+      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
       synonyms: "동의어"
       synonyms_description: "다음 태그를 사용하면 <b>%{base_tag_name}</b> 으로 대체됩니다."
+      save: "태그 이름 및 설명 저장"
       tag_groups_info:
         other: "이 태그는 다음 그룹에 속합니다: %{tag_groups}."
       category_restrictions:
         other: "다음 카테고리에서만 사용할 수 있습니다:"
-      edit_synonyms: "동의어 관리"
       add_synonyms_label: "동의어 추가 :"
       add_synonyms: "추가"
       add_synonyms_explanation:
@@ -3323,8 +3327,8 @@ ko:
       delete_confirm_no_topics: "정말로 이 태그를 삭제할까요?"
       delete_confirm_synonyms:
         other: "%{count}개의 동의어도 삭제됩니다."
-      rename_tag: "태그명 변경"
-      rename_instructions: "새로운 태그명을 입력하세요:"
+      edit_tag: "태그 이름 및 설명 수정"
+      description: "설명"
       sort_by: "정렬 기준:"
       sort_by_count: "개수"
       sort_by_name: "이름"
@@ -3668,6 +3672,8 @@ ko:
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             posts:
               edit: 게시물 또는 특정 게시물을 편집합니다.
+            uploads:
+              create: 새 파일을 업로드합니다.
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.

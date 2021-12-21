@@ -50,6 +50,9 @@ export default Controller.extend({
 
   @action
   toggleMenu() {
-    $(".admin-detail").toggleClass("mobile-closed mobile-open");
+    const adminDetail = document.querySelector(".admin-detail");
+    ["mobile-closed", "mobile-open"].forEach((state) => {
+      adminDetail.classList.toggle(state);
+    });
   },
 });

@@ -109,7 +109,7 @@ module Email
       ).pluck_first(:id)
 
       # always set a default Message ID from the host
-      @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
+      @message.header['Message-ID'] = Email::MessageIdService.generate_default
 
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
@@ -121,15 +121,21 @@ module Email
         return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
 
         add_attachments(post)
-        first_post = topic.ordered_posts.first
 
-        topic_message_id = first_post.incoming_email&.message_id.present? ?
-          "<#{first_post.incoming_email.message_id}>" :
-          "<topic/#{topic_id}@#{host}>"
-
-        post_message_id = post.incoming_email&.message_id.present? ?
-          "<#{post.incoming_email.message_id}>" :
-          "<topic/#{topic_id}/#{post_id}@#{host}>"
+        # If the topic was created from an incoming email, then the Message-ID from
+        # that email will be the canonical reference, otherwise the canonical reference
+        # will be <topic/TOPIC_ID@host>. The canonical reference is used in the
+        # References header.
+        #
+        # This is so the sender of the original email still gets their nice threading
+        # maintained (because their mail client will initiate threading based on
+        # the Message-ID it generated) in the case where there is an incoming email.
+        #
+        # In the latter case, everyone will start their thread with the canonical reference,
+        # because we send it in the References header for all emails.
+        topic_canonical_reference_id = Email::MessageIdService.generate_for_topic(
+          topic, canonical: true, use_incoming_email_if_present: true
+        )
 
         referenced_posts = Post.includes(:incoming_email)
           .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
@@ -141,23 +147,29 @@ module Email
             "<#{referenced_post.incoming_email.message_id}>"
           else
             if referenced_post.post_number == 1
-              "<topic/#{topic_id}@#{host}>"
+              topic_canonical_reference_id
             else
-              "<topic/#{topic_id}/#{referenced_post.id}@#{host}>"
+              Email::MessageIdService.generate_for_post(referenced_post)
             end
           end
         end
 
-        # https://www.ietf.org/rfc/rfc2822.txt
+        # See https://www.ietf.org/rfc/rfc2822.txt for the message format
+        # specification, more useful information can be found in Email::MessageIdService
+        #
+        # The References header is how mail clients handle threading. The Message-ID
+        # must always be unique.
         if post.post_number == 1
-          @message.header['Message-ID']  = topic_message_id
+          @message.header['Message-ID']  = Email::MessageIdService.generate_for_topic(topic)
+          @message.header['References']  = [topic_canonical_reference_id]
         else
-          @message.header['Message-ID']  = post_message_id
-          @message.header['In-Reply-To'] = referenced_post_message_ids[0] || topic_message_id
-          @message.header['References']  = [topic_message_id, referenced_post_message_ids].flatten.compact.uniq
+          @message.header['Message-ID']  = Email::MessageIdService.generate_for_post(post)
+          @message.header['In-Reply-To'] = referenced_post_message_ids[0] || topic_canonical_reference_id
+          @message.header['References']  = [topic_canonical_reference_id, referenced_post_message_ids].flatten.compact.uniq
         end
 
-        # https://www.ietf.org/rfc/rfc2919.txt
+        # See https://www.ietf.org/rfc/rfc2919.txt for the List-ID
+        # specification.
         if topic&.category && !topic.category.uncategorized?
           list_id = "#{SiteSetting.title} | #{topic.category.name} <#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 

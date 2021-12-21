@@ -67,6 +67,7 @@ he:
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
+      git_ref_not_found: "לא ניתן למשוך (checkout) הפניית git:‏ %{ref}"
       unpack_failed: "חילוץ הקובץ נכשל"
       file_too_big: "הקובץ גדול מדי ללא דחיסה."
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
@@ -219,6 +220,8 @@ he:
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
       cors_origins_should_not_have_trailing_slash: "אין להוסיף לוכסן (/) לסוף מקורות ה־CORS."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלת שגויה של כמות פניות ממשתמשים אנושיים."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -257,6 +260,7 @@ he:
       discourse_connect_enabled: "הזמנות מושבתות כיוון ש־DiscourseConnect מופעל."
       invalid_access: "אין לך הרשאות לצפות במשאב המבוקש."
     requires_groups: "ההזמנה נשמרה. כדי להעניק גישה לנושא שצוין, יש להוסיף את אחת מהקבוצות הבאות: %{groups}."
+    domain_not_allowed: "אי אפשר להשתמש בכתובת הדוא״ל שלך למימוש הזמנה זו."
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
@@ -696,6 +700,9 @@ he:
       two: "%{count} לייקים"
       many: "%{count} לייקים"
       other: "%{count} לייקים"
+    cannot_permanently_delete:
+      many_posts: "אין אפשרות למחוק נושא זה לצמיתות כיוון שיש פוסטים אחרים."
+      wait_or_different_admin: "עליך להמתין %{time_left} בטרם מחיקת הפוסט הזה לצמיתות או שעל מנהל או מנהלת אחרים לעשות זאת."
   rate_limiter:
     slow_down: "ביצעת את הפעולה הזאת יותר מדי פעמים, נא לנסות שוב מאוחר יותר."
     too_many_requests: "ביצעת את הפעולה הזאת יותר מדי פעמים. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
@@ -968,12 +975,6 @@ he:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
-    no_bookmarks:
-      self: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
-      search: "לא נמצאו סימניות עם שאילתת החיפוש שסופקה."
-      others: "אין סימניות."
-    no_drafts:
-      self: "אין לך טיוטות, ניתן להתחיל לכתוב תגובה בכל נושא שהוא והוא יישמר אוטומטית כטיוטה חדשה."
     no_log_search_queries: "שאילתות מול יומן החיפושים מושבתות (הנהלת המערכת יכולה להפעיל אותן בהגדרות האתר)."
   email_settings:
     pop3_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור POP3, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
@@ -1414,6 +1415,25 @@ he:
         ignores_count: מניין בהתעלמות
         mutes_count: מניין השתקות
       description: "משתמשים שהושתקו או הועברו להתעלמות על ידי מגוון משתמשים אחרים."
+    top_users_by_likes_received:
+      title: "משתמשים מובילים לפי לייקים שהתקבלו"
+      labels:
+        user: משתמש
+        qtt_like: לייקים שהתקבלו
+      description: "10 המשתמשים המובילים שקיבלו יותר לייקים."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "משתמשים מובילים לפי לייקים שהתקבלו ממשתמש בדרגת אמון נמוכה יותר"
+      labels:
+        user: משתמש
+        trust_level: דרגת אמון
+        qtt_like: לייקים שהתקבלו
+      description: "10 המשתמשים המובילים בדרגת אמון גבוהה יותר שקיבלו לייקים מאנשים בדרגת אמון נמוכה יותר."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "משתמשים מובילים לפי לייקים שהתקבלו ממגוון אנשים"
+      labels:
+        user: משתמש
+        qtt_like: לייקים שהתקבלו
+      description: "10 המשתמשים המובילים שקיבלו לייקים ממגוון רחב של אנשים."
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
@@ -1494,6 +1514,7 @@ he:
     tl2_post_edit_time_limit: "מחברים בדרגת אמון 2 ומעלה יכולים לערוך את הפוסטים שלהם (n) דקות לאחר פרסומם. 0 ישבית את ההגבלה הזאת."
     edit_history_visible_to_public: "לאפשר לכולם לראות גרסאות קודמות של פוסט ערוך. כאשר אפשרות זו מושבתת, רק חברי סגל יכולים לצפות בהן."
     delete_removed_posts_after: "פוסטים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, פוסטים ימחקו מיידית."
+    notify_users_after_responses_deleted_on_flagged_post: "כאשר פוסט מסומן ואז מסירים אותו, כל המשתמשים שהגיבו לפוסט והתגובות שלהם הוסרו יקבלו התראה."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפוסט"
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפוסט"
     responsive_post_image_sizes: "שינוי גודל תצוגה מקדימה של תמונות בתיבה קלה כדי לאפשר הצגה במסכים ברמת אבחנה גבוהה עם יחסי הפיקסלים הבאים. להסיר את כל הערכים כדי לבטל תמונות גמישות."
@@ -1593,6 +1614,7 @@ he:
     allowed_iframes: "רשימה של קידומות שמות מתחם בתור מקור של iframe שאפשר לאפשר בבטחה בפוסטים ב־Discourse"
     allowed_crawler_user_agents: "סוכני משתמשים של סורקי רשת שמורשים לגשת לאתר. אזהרה! שינוי הגדרה זו תחסום את כל הסורקים שאינם מופיעים כאן!"
     blocked_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
+    slow_down_crawler_user_agents: "סוכני משתמשים של סורקי רשת שכמות הגישה שלהם תוגבל בהתאם להגדרה „האטת קצב סורקי רשת”. כל ערך חייב להיות באורך של 3 תווים לפחות."
     slow_down_crawler_rate: "אם הוגדר slow_down_crawler_user_agents (האטת סורקי אינטרנט) קצב זה יחול על כל סורקי האינטרנט (כמות ההמתנה בשניות בין בקשות)"
     content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
@@ -1676,6 +1698,7 @@ he:
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
+    google_oauth2_hd_groups: "(ניסיוני) למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצת של Discourse (ניתן להציץ בהגדרות הקבוצה)."
     enable_twitter_logins: "הפעלת אימות עם טוויטר, דורש twitter_consumer_key ו־twitter_consumer_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13395' target='_blank'>הגדרת כניסה עם טוויטר (לרבות הטמעות עשירות) ל־Discourse</a>."
     twitter_consumer_key: "מפתח צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "סוד צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2200,6 +2223,7 @@ he:
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+      google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2458,17 +2482,11 @@ he:
     email_in_spam_header: "כתובת הדוא״ל הראשונה של המשתמש סומנה כזבל"
     already_silenced: "המשתמש כבר הושתק על ידי %{staff} %{time_ago}."
     already_suspended: "המשתמש כבר הושעה על ידי %{staff} %{time_ago}."
-  reviewables_reminder:
-    submitted:
-      one: "הוגשו פריטים לפני למעלה משעה (%{count}). [נא לסקור אותם](%{base_path}/review)."
-      two: "הוגשו פריטים לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_path}/review)."
-      many: "הוגשו פריטים לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
-      other: "הוגשו פריטים לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
-    subject_template:
-      one: "פריט %{count} ממתין לסקירה"
-      two: "%{count} פריטים ממתינים לסקירה"
-      many: "%{count} פריטים ממתינים לסקירה"
-      other: "%{count} פריטים ממתינים לסקירה"
+    cannot_delete_has_posts:
+      one: "למשתמש %{username} יש פוסט %{count} בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
+      two: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
+      many: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
+      other: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "נא לאשר שלא מעניין אותך לקבל עוד עדכוני דוא״ל מאת %{site_title}"
@@ -2578,6 +2596,21 @@ he:
   test_mailer:
     title: "שולח-מיילים לבדיקה"
     subject_template: "[%{email_prefix}] הודעה לבדיקת יכולות שליחה"
+    text_body_template: |
+      זאת הודעת בדיקת דוא״ל מאת
+
+      [**%{base_url}**][0]
+
+      אנו מקווים שבדיקת עבירות הדוא״ל הזאת צלחה!
+
+      להלן [רשימת גורמים לאימות הגדרות עבירות דוא״ל][1].
+
+      בהצלחה,
+
+      חבריך ב־[Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
@@ -2615,6 +2648,11 @@ he:
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
     spam: "הפוסט שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
     notify_moderators: "הפוסט שלך סומן בדגל **לתשומת לב מפקח**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של צוות האתר. "
+    responder:
+      off_topic: "הפוסט סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
+      inappropriate: "התגובה סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או מפרה את [הנחיות הקהילה](%{base_path}/guidelines)"
+      spam: "הפוסט סומן כ**ספאם**: הקהילה מרגישה שזו פרסומת, איזשהו קידום מכירות במקום להיות שימושי או תואם לנושא."
+      notify_moderators: "הפוסט סומן ב**לתשומת לב מפקח**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של סגל האתר."
   flags_dispositions:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפוסט."
@@ -2627,6 +2665,13 @@ he:
     many: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
     other: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
   system_messages:
+    reviewables_reminder:
+      subject_template: "יש פריטים בתור הביקורת שדורשים סקירה"
+      text_body_template:
+        one: "%{mentions} פריטים הוגשו לפני למעלה משעה %{count}. [נא לסקור אותם](%{base_path}/review)."
+        two: "%{mentions} פריטים הוגשו לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_path}/review)."
+        many: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
+        other: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_path}/review)."
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
     post_hidden:
@@ -2702,6 +2747,23 @@ he:
         ```
 
         נא לקרוא בעיון את [הנחיות הקהילה](%{base_url}/guidelines) שלנו לפרטים נוספים.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "התגובה הוסרה מהפוסט שסומן על ידי הסגל"
+      subject_template: "התגובה הוסרה מהפוסט שסומן על ידי הסגל"
+      text_body_template: |
+        שלום רב,
+
+        זאת הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך ש[פוסט](%{base_url}%{url}) שהגבת אליו הוסר.
+
+        %{flag_reason}
+
+        הפוסט הזה סומן על ידי הקהילה ואחד או אחת מחברי הסגל בחרו להסיר אותו.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        למידע נוסף על סיבת ההסרה, כדאי לעיין ב[הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     usage_tips:
       text_body_template: |
         לעצות זריזות איך כדאי להתחיל להשתמש במערכת, ניתן [לקרוא את הפוסט הזה בבלוג](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

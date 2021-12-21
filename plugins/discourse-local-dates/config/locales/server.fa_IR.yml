@@ -7,3 +7,6 @@
 fa_IR:
   site_settings:
     discourse_local_dates_enabled: "به کار گیری ویژگی discource-local-dates. این کار پشتیباتی از تاریخهای متغیر با منطقه زمانی را با استفاده از عنصر [date] به پستها می افزاید."
+    discourse_local_dates_default_formats: "فرمت‌های متداول زمان تاریخ، نگاه کنید به: قالب رشته <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'></a>"
+    discourse_local_dates_default_timezones: "فهرست پیش‌فرض مناطق زمانی، باید <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "قالبی که برای نمایش تاریخ در ایمیل‌ها استفاده می‌شود."

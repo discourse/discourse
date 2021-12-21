@@ -53,6 +53,7 @@ import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import {
   clearPresenceCallbacks,
   setTestPresence,
@@ -297,6 +298,7 @@ export function acceptance(name, optionsOrCallback) {
       cleanUpComposerUploadPreProcessor();
       clearTopicFooterDropdowns();
       clearTopicFooterButtons();
+      clearDesktopNotificationHandlers();
       resetLastEditNotificationClick();
       clearAuthMethods();
       setTestPresence(true);

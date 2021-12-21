@@ -12,7 +12,7 @@ module Notifications
     private
 
     def plan_for(notification)
-      consolidation_plans = [liked, dashboard_problems_pm, group_message_summary, group_membership]
+      consolidation_plans = [liked, group_message_summary, group_membership]
       consolidation_plans.concat(DiscoursePluginRegistry.notification_consolidation_plans)
 
       consolidation_plans.detect { |plan| plan.can_consolidate_data?(notification) }
@@ -67,28 +67,11 @@ module Notifications
     end
 
     def group_message_summary
-      ConsolidateNotifications.new(
-        from: Notification.types[:group_message_summary],
-        to: Notification.types[:group_message_summary],
-        unconsolidated_query_blk: filtered_by_data_attribute('group_id'),
-        consolidated_query_blk: filtered_by_data_attribute('group_id'),
-        threshold: 1 # We should always apply this plan to refresh the summary stats
+      DeletePreviousNotifications.new(
+        type: Notification.types[:group_message_summary],
+        previous_query_blk: filtered_by_data_attribute('group_id')
       ).set_precondition(
         precondition_blk: ->(data) { data[:group_id].present? }
-      )
-    end
-
-    def dashboard_problems_pm
-      ConsolidateNotifications.new(
-        from: Notification.types[:private_message],
-        to: Notification.types[:private_message],
-        threshold: 1,
-        unconsolidated_query_blk: filtered_by_data_attribute('topic_title'),
-        consolidated_query_blk: filtered_by_data_attribute('topic_title')
-      ).set_precondition(
-        precondition_blk: ->(data) do
-          data[:topic_title] == I18n.t("system_messages.dashboard_problems.subject_template")
-        end
       )
     end
 

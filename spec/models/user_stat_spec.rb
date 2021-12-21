@@ -90,6 +90,8 @@ describe UserStat do
     end
 
     it 'updates first unread pm timestamp correctly' do
+      freeze_time
+
       user = Fabricate(:user, last_seen_at: Time.zone.now)
       user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
       pm_topic = Fabricate(:private_message_topic, user: user, recipient: user_2)

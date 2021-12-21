@@ -171,8 +171,13 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
 
 function extractPreloadJson(html) {
   const dom = new JSDOM(html);
-  return dom.window.document.querySelector("#data-preloaded")?.dataset
-    ?.preloaded;
+  const dataElement = dom.window.document.querySelector("#data-preloaded");
+
+  if (!dataElement || !dataElement.dataset) {
+    return;
+  }
+
+  return dataElement.dataset.preloaded;
 }
 
 async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
@@ -235,6 +240,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     method: req.method,
     body: /GET|HEAD/.test(req.method) ? null : req.body,
     headers: req.headers,
+    redirect: "manual",
   });
 
   response.headers.forEach((value, header) => {
@@ -264,17 +270,18 @@ async function handleRequest(proxy, baseURL, req, res) {
     res.set("content-security-policy", newCSP);
   }
 
-  const isHTML = response.headers.get("content-type")?.startsWith("text/html");
+  const contentType = response.headers.get("content-type");
+  const isHTML = contentType && contentType.startsWith("text/html");
   const responseText = await response.text();
-  const preload = isHTML ? extractPreloadJson(responseText) : null;
+  const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
 
-  if (preload) {
+  if (preloadJson) {
     const html = await buildFromBootstrap(
       proxy,
       baseURL,
       req,
       response,
-      preload
+      extractPreloadJson(responseText)
     );
     res.set("content-type", "text/html");
     res.send(html);
@@ -317,8 +324,8 @@ to serve API requests. For example:
       } catch (error) {
         res.send(`
           <html>
-            <h1>Discourse Build Error</h1>
-            <pre><code>${error}</code></pre>
+            <h1>Discourse Ember CLI Proxy Error</h1>
+            <pre><code>${error.stack}</code></pre>
           </html>
         `);
       } finally {

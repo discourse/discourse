@@ -10,6 +10,7 @@ describe PostDestroyer do
 
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
@@ -92,7 +93,7 @@ describe PostDestroyer do
 
       # flag the post, it should not nuke the stub anymore
       topic.recover!
-      reviewable = PostActionCreator.spam(Fabricate(:coding_horror), reply1).reviewable
+      reviewable = PostActionCreator.spam(coding_horror, reply1).reviewable
 
       PostDestroyer.destroy_stubs
 
@@ -321,7 +322,7 @@ describe PostDestroyer do
   end
 
   describe "recovery and post actions" do
-    fab!(:codinghorror) { Fabricate(:coding_horror) }
+    fab!(:codinghorror) { coding_horror }
     let!(:like) { PostActionCreator.like(codinghorror, post).post_action }
     let!(:another_like) { PostActionCreator.like(moderator, post).post_action }
 
@@ -644,7 +645,7 @@ describe PostDestroyer do
     fab!(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
-    fab!(:second_user) { Fabricate(:coding_horror) }
+    fab!(:second_user) { coding_horror }
     let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
@@ -777,7 +778,7 @@ describe PostDestroyer do
 
   describe 'after delete' do
 
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:coding_horror) { coding_horror }
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
@@ -930,7 +931,7 @@ describe PostDestroyer do
   end
 
   describe "user actions" do
-    let(:codinghorror) { Fabricate(:coding_horror) }
+    let(:codinghorror) { coding_horror }
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
 
     def create_user_action(action_type)

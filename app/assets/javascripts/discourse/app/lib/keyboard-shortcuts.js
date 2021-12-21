@@ -682,6 +682,10 @@ export default {
     if ($article.length > 0) {
       $articles.removeClass("selected");
       $article.addClass("selected");
+      this.appEvents.trigger("keyboard:move-selection", {
+        articles: $articles.get(),
+        selectedArticle: $article.get(0),
+      });
 
       const articleRect = $article[0].getBoundingClientRect();
       if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
@@ -704,10 +708,11 @@ export default {
     }
   },
 
-  _scrollTo(scrollTop, complete) {
-    $("html, body")
-      .stop(true, true)
-      .animate({ scrollTop }, { duration: animationDuration, complete });
+  _scrollTo(scrollTop) {
+    window.scrollTo({
+      top: scrollTop,
+      behavior: "smooth",
+    });
   },
 
   _scrollList($article) {
@@ -734,13 +739,7 @@ export default {
       scrollPos = 0;
     }
 
-    if (this._scrollAnimation) {
-      this._scrollAnimation.stop();
-    }
-    this._scrollAnimation = $("html, body").animate(
-      { scrollTop: scrollPos + "px" },
-      animationDuration
-    );
+    this._scrollTo(scrollPos);
   },
 
   categoriesTopicsList() {

@@ -1482,6 +1482,9 @@ it:
           expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
+          restrict: "Limita a"
+          restrict_domain: "Limita al dominio"
+          email_or_domain_placeholder: "nome@esempio.com o esempio.com"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           expires_at: "Scadenza:"
@@ -3437,17 +3440,19 @@ it:
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       info: "Info"
-      default_info: "Questa etichetta non è limitata ad alcuna categoria e non ha sinonimi. Per aggiungere restrizioni, inseriscila in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>."
+      default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
+      staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
       synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
+      save: "Salva il nome e la descrizione dell’etichetta"
       tag_groups_info:
         one: 'Questa etichetta appartiene al gruppo "%{tag_groups}".'
         other: "Questa etichetta appartiene a questi gruppi: %{tag_groups}."
       category_restrictions:
         one: "Può essere utilizzato solo in questa categoria:"
         other: "Può essere utilizzato solo in queste categorie:"
-      edit_synonyms: "Gestisci sinonimi"
+      edit_synonyms: "Modifica Sinonimi"
       add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"
       add_synonyms_explanation:
@@ -3464,8 +3469,8 @@ it:
       delete_confirm_synonyms:
         one: "Anche il suo sinonimo verrà eliminato."
         other: "I suoi %{count} sinonimi verranno a loro volta eliminati."
-      rename_tag: "Rinomina Etichetta"
-      rename_instructions: "Scegli un altro nome per l'etichetta:"
+      edit_tag: "Modifica il nome e la descrizione dell’etichetta"
+      description: "Descrizione"
       sort_by: "Ordina per:"
       sort_by_count: "conteggio"
       sort_by_name: "nome"
@@ -3826,6 +3831,14 @@ it:
               list: Ottieni un elenco di utenti.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
+            badges:
+              create: Crea un nuovo distintivo.
+              show: Informazioni su un distintivo.
+              update: Aggiorna un distintivo.
+              delete: Cancella un distintivo.
+              list_user_badges: Elenca i distintivi dell'utente.
+              assign_badge_to_user: Assegna un distintivo ad un utente.
+              revoke_badge_from_user: Revoca un distintivo ad un utente.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."

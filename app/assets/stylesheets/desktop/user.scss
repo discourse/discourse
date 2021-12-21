@@ -29,7 +29,10 @@
 
     li {
       border-bottom: none;
-
+      &:hover,
+      &.active {
+        background: var(--primary-very-low);
+      }
       &.archive {
         padding-left: 1.4em;
       }
@@ -271,11 +274,6 @@ table.user-invite-list {
 
   .show-mores {
     position: absolute;
-  }
-
-  #reply-control .mini-tag-chooser {
-    width: 100%;
-    margin: 0;
   }
 }
 

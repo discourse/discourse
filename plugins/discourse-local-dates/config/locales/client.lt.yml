@@ -23,7 +23,7 @@ lt:
           timezones_title: Rodyti laiko zonas
           timezones_description: Laiko juostos bus naudojamos datoms rodyti peržiūroje ir atsarginiame lange.
           recurring_title: Pasikartojimas
-          recurring_description: "Apibrėžkite įvykio pasikartojimą. Taip pat galite rankiniu būdu redaguoti pasikartojančią parinktį, sukurtą pagal formą, ir naudoti vieną iš šių raktų: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_description: "Apibrėžkite įvykio pasikartojimą. Taip pat galite rankiniu būdu redaguoti formos sugeneruotą pasikartojančią parinktį ir naudoti vieną iš šių klavišų: metai, ketvirčiai, mėnesiai, savaitės, dienos, valandos, minutės, sekundės, milisekundės."
           recurring_none: Nėra pasikartojimo
           invalid_date: Netinkama data, įsitikinkite, kad data ir laikas yra teisingi
           date_title: Data

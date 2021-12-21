@@ -1415,4 +1415,8 @@ export default Controller.extend({
   visible(state) {
     return state && state !== "closed";
   },
+
+  clearLastValidatedAt() {
+    this.set("lastValidatedAt", null);
+  },
 });

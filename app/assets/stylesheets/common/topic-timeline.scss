@@ -72,7 +72,6 @@
       touch-action: none;
 
       .timeline-date-wrapper {
-        float: right;
         text-align: right;
       }
       .post-excerpt {
@@ -142,7 +141,6 @@
         border-right-style: solid;
         border-right-width: 1px;
         max-width: 120px;
-        margin-top: 2em;
 
         .timeline-scroller {
           position: relative;
@@ -150,6 +148,9 @@
           padding-right: 1.5em;
           justify-content: flex-end;
           .timeline-scroller-content {
+            box-sizing: border-box;
+            max-width: 100%;
+            overflow: hidden;
             text-align: right;
             padding-left: 0;
             padding-right: 1em;
@@ -235,6 +236,9 @@
     }
 
     .timeline-scroller-content {
+      box-sizing: border-box;
+      max-width: 100%;
+      overflow: hidden;
       padding-left: 1em;
       position: absolute; // prevents text length from impacting width
     }
@@ -259,6 +263,8 @@
     }
 
     .timeline-replies {
+      overflow: hidden;
+      overflow-wrap: break-word;
       font-weight: bold;
     }
 

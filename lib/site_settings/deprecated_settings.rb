@@ -43,10 +43,9 @@ module SiteSettings::DeprecatedSettings
 
       define_singleton_method old_setting do |warn: true|
         if warn
-          logger.warn(
-            "`SiteSetting.#{old_setting}` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}` instead"
+          Discourse.deprecate(
+            "`SiteSetting.#{old_setting}` has been deprecated. Please use `SiteSetting.#{new_setting}` instead.",
+            drop_from: version
           )
         end
 
@@ -61,10 +60,9 @@ module SiteSettings::DeprecatedSettings
 
       define_singleton_method "#{old_setting}?" do |warn: true|
         if warn
-          logger.warn(
-            "`SiteSetting.#{old_setting}?` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}?` instead"
+          Discourse.deprecate(
+            "`SiteSetting.#{old_setting}?` has been deprecated. Please use `SiteSetting.#{new_setting}?` instead.",
+            drop_from: version
           )
         end
 
@@ -79,10 +77,9 @@ module SiteSettings::DeprecatedSettings
 
       define_singleton_method "#{old_setting}=" do |val, warn: true|
         if warn
-          logger.warn(
-            "`SiteSetting.#{old_setting}=` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}=` instead"
+          Discourse.deprecate(
+            "`SiteSetting.#{old_setting}=` has been deprecated. Please use `SiteSetting.#{new_setting}=` instead.",
+            drop_from: version
           )
         end
 

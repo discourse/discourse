@@ -242,6 +242,7 @@ it:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
     requires_groups: "Invito salvato. Per dare accesso all'argomento specificato, aggiungi uno dei seguenti gruppi: %{groups}."
+    domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
@@ -888,13 +889,6 @@ it:
   draft_backup:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
-  user_activity:
-    no_bookmarks:
-      self: "Non hai aggiunto messaggi nei segnalibri. I segnalibri ti consentono di accedere velocemente a specifici messaggi."
-      search: "Nessun segnalibro trovato con la query di ricerca fornita."
-      others: "Nessun segnalibro."
-    no_drafts:
-      self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
   email_settings:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
     imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
@@ -1334,6 +1328,25 @@ it:
         ignores_count: Conteggio ignorati
         mutes_count: Conteggio silenziati
       description: "Utenti che sono stati silenziati e/o ignorati da molti altri utenti."
+    top_users_by_likes_received:
+      title: "Migliori utenti per Mi piace ricevuti"
+      labels:
+        user: Utente
+        qtt_like: Mi piace - Ricevuti
+      description: "I 10 migliori utenti che hanno ricevuto più Mi piace."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Migliori utenti per Mi piace ricevuti da un utente con un basso livello di attendibilità"
+      labels:
+        user: Utente
+        trust_level: Livello di attendibilità
+        qtt_like: Mi piace - Ricevuti
+      description: "I migliori 10 utenti con un livello di attendibilità superiore che hanno ricevuto Mi piace da persone con un livello di attendibilità inferiore."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "I migliori utenti per Mi piace ricevuti da varie persone"
+      labels:
+        user: Utente
+        qtt_like: Mi piace - Ricevuti
+      description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
@@ -2337,13 +2350,6 @@ it:
     cannot_delete_has_posts:
       one: "L'utente %{username} ha %{count} messaggio tra contenuti personali e argomenti pubblici, perciò non può essere cancellato."
       other: "L'utente %{username} ha %{count} messaggi tra contenuti personali e argomenti pubblici, perciò non può essere cancellato."
-  reviewables_reminder:
-    submitted:
-      one: "Gli elementi sono stati inviati oltre %{count} ora fa. [Si prega di rivederli](%{base_path}/review)."
-      other: "Gli elementi sono stati inviati oltre %{count} ore fa. [Si prega di revisionarli](%{base_path}/review)."
-    subject_template:
-      one: "%{count} elemento da revisionare"
-      other: "%{count} elementi da revisionare"
   unsubscribe_mailer:
     title: "Annullare Iscrizione Mailer"
     subject_template: "Conferma che non desideri più ricevere aggiornamenti via email da %{site_title}"
@@ -2480,6 +2486,8 @@ it:
     one: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ora a causa di un numero elevato di segnalazioni dalla comunità."
     other: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ore a causa di un numero elevato di segnalazioni dalla comunità."
   system_messages:
+    reviewables_reminder:
+      subject_template: "Ci sono elementi nella coda di revisione che devono essere revisionati"
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
     post_hidden:

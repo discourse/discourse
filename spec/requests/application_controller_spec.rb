@@ -120,6 +120,14 @@ RSpec.describe ApplicationController do
       expect(response.body).not_to include("data-authentication-data=")
       expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
     end
+
+    it "returns a 403 for json requests" do
+      get '/latest'
+      expect(response.status).to eq(302)
+
+      get '/latest.json'
+      expect(response.status).to eq(403)
+    end
   end
 
   describe '#redirect_to_second_factor_if_required' do

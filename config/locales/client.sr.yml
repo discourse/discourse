@@ -1762,6 +1762,7 @@ sr:
       download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
+      description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       cancel_delete_unused: "Odustani"

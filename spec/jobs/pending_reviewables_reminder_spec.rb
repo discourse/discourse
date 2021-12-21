@@ -74,5 +74,17 @@ describe Jobs::PendingReviewablesReminder do
         expect(execute.sent_reminder).to eq(true)
       end
     end
+
+    it 'deletes previous messages' do
+      GroupMessage.create(
+        Group[:moderators].name, 'reviewables_reminder',
+        { limit_once_per: false, message_params: { mentions: '', count: 1 } }
+      )
+
+      create_flag(49.hours.ago)
+      execute
+
+      expect(Topic.where(title: I18n.t("system_messages.reviewables_reminder.subject_template")).count).to eq(1)
+    end
   end
 end
