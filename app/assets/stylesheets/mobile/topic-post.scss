@@ -37,7 +37,11 @@ span.badge-posts {
     }
     .actions {
       display: flex;
-      justify-content: flex-end;
+      // using an auto margin on first-child instead of justify-content on the parent
+      // because justify-content breaks overflow scrolling
+      :first-child {
+        margin-left: auto;
+      }
 
       // Handles the like and flag buttons in the post menu.
       .double-button {

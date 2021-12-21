@@ -19,6 +19,13 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
       available_username = UserNameSuggester.suggest(email)
     end
 
+    if email.present? && invite.domain.present?
+      username, domain = email.split('@')
+      if domain.present? && invite.domain != domain
+        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
+      end
+    end
+
     user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
     user ||= User.new

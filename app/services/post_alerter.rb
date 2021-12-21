@@ -157,7 +157,7 @@ class PostAlerter
     # private messages
     if new_record
       if post.topic.private_message?
-        notify_pm_users(post, reply_to_user, notified)
+        notify_pm_users(post, reply_to_user, quoted_users, notified)
       elsif notify_about_reply?(post)
         notify_post_users(post, notified, new_record: new_record)
       end
@@ -582,9 +582,9 @@ class PostAlerter
   # TODO: Move to post-analyzer?
   # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
-    post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
-      User.find_by("username_lower = :username AND id != :id", username: m.first.strip.downcase, id: post.user_id)
-    end.compact
+    usernames = post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map { |q| q.first.strip.downcase }
+
+    User.where.not(id: post.user_id).where(username_lower: usernames)
   end
 
   def extract_linked_users(post)
@@ -622,7 +622,7 @@ class PostAlerter
     users
   end
 
-  def notify_pm_users(post, reply_to_user, notified)
+  def notify_pm_users(post, reply_to_user, quoted_users, notified)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -653,10 +653,17 @@ class PostAlerter
     users.each do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
-        # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
+        create_pm_notification(user, post, emails_to_skip_send)
       when TopicUser.notification_levels[:tracking]
-        notify_group_summary(user, post)
+        if is_replying?(user, reply_to_user, quoted_users)
+          create_pm_notification(user, post, emails_to_skip_send)
+        else
+          notify_group_summary(user, post)
+        end
+      when TopicUser.notification_levels[:regular]
+        if is_replying?(user, reply_to_user, quoted_users)
+          create_pm_notification(user, post, emails_to_skip_send)
+        end
       end
     end
   end
@@ -841,5 +848,13 @@ class PostAlerter
     users.pluck(:id).each_slice(USER_BATCH_SIZE) do |user_ids_batch|
       User.where(id: user_ids_batch).includes(:do_not_disturb_timings).each { |user| yield(user) }
     end
+  end
+
+  def create_pm_notification(user, post, emails_to_skip_send)
+    create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
+  end
+
+  def is_replying?(user, reply_to_user, quoted_users)
+    reply_to_user == user || quoted_users.include?(user)
   end
 end

@@ -8,7 +8,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Tags", function (needs) {
@@ -350,6 +350,10 @@ acceptance("Tag info", function (needs) {
         ],
       });
     });
+    server.put("/tag/happy-monkey", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+      return helper.response({ tag: { id: data.tag.id } });
+    });
 
     server.get("/tag/happy-monkey/info", () => {
       return helper.response({
@@ -375,9 +379,9 @@ acceptance("Tag info", function (needs) {
     server.get("/tags/filter/search", () =>
       helper.response({
         results: [
-          { id: "monkey", text: "monkey", count: 1 },
-          { id: "not-monkey", text: "not-monkey", count: 1 },
-          { id: "happy-monkey", text: "happy-monkey", count: 1 },
+          { id: "monkey", name: "monkey", count: 1 },
+          { id: "not-monkey", name: "not-monkey", count: 1 },
+          { id: "happy-monkey", name: "happy-monkey", count: 1 },
         ],
       })
     );
@@ -451,6 +455,23 @@ acceptance("Tag info", function (needs) {
       query("#edit-description").value,
       "happy monkey description",
       "it displays original tag description"
+    );
+
+    await fillIn("#edit-description", "new description");
+    await click(".submit-edit");
+    assert.strictEqual(
+      currentURL(),
+      "/tag/happy-monkey",
+      "it doesn't change URL"
+    );
+
+    await click(".edit-tag");
+    await fillIn("#edit-name", "happy-monkey2");
+    await click(".submit-edit");
+    assert.strictEqual(
+      currentURL(),
+      "/tag/happy-monkey2",
+      "it changes URL to new tag path"
     );
   });
 

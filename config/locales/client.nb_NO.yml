@@ -3316,7 +3316,6 @@ nb_NO:
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
       info: "Informasjon"
-      default_info: "Denne taggen er ikke begrenset til noen kategorier, og har ingen synonymer. For å legge til restriksjoner, legg til denne taggen i en <a href=%{basePath}/tag_groups>tagg gruppe</a>."
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."
@@ -3326,7 +3325,6 @@ nb_NO:
       category_restrictions:
         one: "Den kan bare brukes i denne kategorien:"
         other: "Den kan kun brukes i disse kategoriene:"
-      edit_synonyms: "Administrer synonymer"
       add_synonyms_label: "Legg til synonymer:"
       add_synonyms: "Legg til"
       add_synonyms_explanation:
@@ -3343,8 +3341,7 @@ nb_NO:
       delete_confirm_synonyms:
         one: "Synonymen vil også bli slettet."
         other: "Dets %{count} synonymer vil også bli slettet."
-      rename_tag: "Gi stikkord nytt navn"
-      rename_instructions: "Velg et nytt navn for dette stikkordet:"
+      description: "Beskrivelse"
       sort_by: "Sorter etter:"
       sort_by_count: "antall"
       sort_by_name: "navn"

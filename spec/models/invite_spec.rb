@@ -38,6 +38,14 @@ describe Invite do
       expect(invite.valid?).to eq(false)
       expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
     end
+
+    it 'allows only valid domains' do
+      invite = Fabricate.build(:invite, domain: 'example', invited_by: user)
+      expect(invite).not_to be_valid
+
+      invite = Fabricate.build(:invite, domain: 'example.com', invited_by: user)
+      expect(invite).to be_valid
+    end
   end
 
   context 'before_save' do

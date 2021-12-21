@@ -239,20 +239,10 @@ class DiscourseSingleSignOn < SingleSignOn
     DistributedMutex.synchronize("discourse_single_sign_on_#{email}") do
       user = User.find_by_email(email) if !require_activation
       if !user
-        try_name = name.presence
-        try_username = username.presence
-
-        name_suggester_input = try_username
-        username_suggester_input = try_username || try_name
-        if SiteSetting.use_email_for_username_and_name_suggestions
-          name_suggester_input = name_suggester_input || email
-          username_suggester_input = username_suggester_input || email
-        end
-
         user_params = {
           primary_email: UserEmail.new(email: email, primary: true),
-          name: try_name || User.suggest_name(name_suggester_input),
-          username: UserNameSuggester.suggest(username_suggester_input),
+          name: resolve_name,
+          username: resolve_username,
           ip_address: ip_address
         }
 
@@ -380,5 +370,23 @@ class DiscourseSingleSignOn < SingleSignOn
     sso_record.external_avatar_url = avatar_url
     sso_record.external_profile_background_url = profile_background_url
     sso_record.external_card_background_url = card_background_url
+  end
+
+  def resolve_username
+    username_suggester_input = username.presence || name.presence
+    if SiteSetting.use_email_for_username_and_name_suggestions
+      username_suggester_input = username_suggester_input || email
+    end
+
+    UserNameSuggester.suggest(username_suggester_input)
+  end
+
+  def resolve_name
+    name_suggester_input = username.presence
+    if SiteSetting.use_email_for_username_and_name_suggestions
+      name_suggester_input = name_suggester_input || email
+    end
+
+    name.presence || User.suggest_name(name_suggester_input)
   end
 end

@@ -36,4 +36,8 @@ module GroupGuardian
 
     SiteSetting.enable_personal_messages? && group.users.include?(user)
   end
+
+  def can_associate_groups?
+    is_admin? && AssociatedGroup.has_provider?
+  end
 end

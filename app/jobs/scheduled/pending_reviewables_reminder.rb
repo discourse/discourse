@@ -22,14 +22,19 @@ module Jobs
           usernames = active_moderator_usernames
           mentions = usernames.size > 0 ? "@#{usernames.join(', @')} " : ""
 
-          @sent_reminder = PostCreator.create(
-            Discourse.system_user,
-            target_group_names: Group[:moderators].name,
-            archetype: Archetype.private_message,
-            subtype: TopicSubtype.system_message,
-            title: I18n.t('reviewables_reminder.subject_template', count: reviewable_ids.size),
-            raw: mentions + I18n.t('reviewables_reminder.submitted', count: SiteSetting.notify_about_flags_after, base_path: Discourse.base_path)
-          ).present?
+          message = GroupMessage.new(
+            Group[:moderators].name,
+            'reviewables_reminder',
+            {
+              limit_once_per: false,
+              message_params: { mentions: mentions, count: SiteSetting.notify_about_flags_after }
+            }
+          )
+
+          Topic.transaction do
+            message.delete_previous!(match_raw: false)
+            @sent_reminder = message.create.present?
+          end
 
           self.class.last_notified_id = reviewable_ids[0]
         end

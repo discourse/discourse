@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
   has_many :user_custom_fields, dependent: :destroy
+  has_many :user_associated_groups, dependent: :destroy
   has_many :pending_posts, -> { merge(Reviewable.pending) }, class_name: 'ReviewableQueuedPost', foreign_key: :created_by_id
 
   has_one :user_option, dependent: :destroy
@@ -83,6 +84,7 @@ class User < ActiveRecord::Base
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
+  has_many :associated_groups, through: :user_associated_groups, dependent: :destroy
 
   # deleted in user_second_factors relationship
   has_many :totps, -> {

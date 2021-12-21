@@ -3,37 +3,124 @@
 require 'rails_helper'
 
 describe AdminDashboardData do
+  after do
+    AdminDashboardData.reset_problem_checks
+    Discourse.redis.flushdb
+  end
 
-  describe "adding new checks" do
-    after do
-      AdminDashboardData.reset_problem_checks
+  describe "#fetch_problems" do
+    describe "adding problem messages" do
+      it "adds the message and returns it when the problems are fetched" do
+        AdminDashboardData.add_problem_message("dashboard.bad_favicon_url")
+        problems = AdminDashboardData.fetch_problems.map(&:to_s)
+        expect(problems).to include(I18n.t("dashboard.bad_favicon_url", { base_path: Discourse.base_path }))
+      end
+
+      it "does not allow adding of arbitrary problem messages, they must exist in AdminDashboardData.problem_messages" do
+        AdminDashboardData.add_problem_message("errors.messages.invalid")
+        problems = AdminDashboardData.fetch_problems.map(&:to_s)
+        expect(problems).not_to include(I18n.t("errors.messages.invalid"))
+      end
     end
 
-    it 'calls the passed block' do
+    describe "adding new checks" do
+      it 'calls the passed block' do
+        AdminDashboardData.add_problem_check do
+          "a problem was found"
+        end
+
+        problems = AdminDashboardData.fetch_problems
+        expect(problems.map(&:to_s)).to include("a problem was found")
+      end
+
+      it 'calls the passed method' do
+        klass = Class.new(AdminDashboardData) do
+          def my_test_method
+            "a problem was found"
+          end
+        end
+
+        klass.add_problem_check :my_test_method
+
+        problems = klass.fetch_problems
+        expect(problems.map(&:to_s)).to include("a problem was found")
+      end
+    end
+  end
+
+  describe "adding scheduled checks" do
+    it "adds the passed block to the scheduled checks" do
       called = false
-      AdminDashboardData.add_problem_check do
+      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
         called = true
       end
 
-      AdminDashboardData.fetch_problems
-      expect(called).to eq(true)
-
-      AdminDashboardData.fetch_problems(check_force_https: true)
+      AdminDashboardData.execute_scheduled_checks
       expect(called).to eq(true)
     end
 
-    it 'calls the passed method' do
-      $test_AdminDashboardData_global = false
-      class AdminDashboardData
-        def my_test_method
-          $test_AdminDashboardData_global = true
-        end
+    it "adds a found problem from a scheduled check" do
+      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+        AdminDashboardData::Problem.new("test problem")
       end
-      AdminDashboardData.add_problem_check :my_test_method
 
-      AdminDashboardData.fetch_problems
-      expect($test_AdminDashboardData_global).to eq(true)
-      $test_AdminDashboardData_global = nil
+      AdminDashboardData.execute_scheduled_checks
+      problems = AdminDashboardData.load_found_scheduled_check_problems
+      expect(problems.first).to be_a(AdminDashboardData::Problem)
+      expect(problems.first.message).to eq("test problem")
+    end
+
+    it "does not add duplicate problems with the same identifier" do
+      prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
+      prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
+      AdminDashboardData.add_found_scheduled_check_problem(prob1)
+      AdminDashboardData.add_found_scheduled_check_problem(prob2)
+      expect(AdminDashboardData.load_found_scheduled_check_problems.map(&:to_s)).to eq(["test problem"])
+    end
+
+    it "does not error when loading malformed problems saved in redis" do
+      Discourse.redis.set(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
+      expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
+    end
+
+    it "clears a specific problem by identifier" do
+      prob1 = AdminDashboardData::Problem.new("test problem 1", identifier: "test")
+      AdminDashboardData.add_found_scheduled_check_problem(prob1)
+      AdminDashboardData.clear_found_problem("test")
+      expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
+    end
+
+    it "defaults to low priority, and uses low priority if an invalid priority is passed" do
+      prob1 = AdminDashboardData::Problem.new("test problem 1")
+      prob2 = AdminDashboardData::Problem.new("test problem 2", priority: "superbad")
+      expect(prob1.priority).to eq("low")
+      expect(prob2.priority).to eq("low")
+    end
+  end
+
+  describe 'stats cache' do
+    include_examples 'stats cacheable'
+  end
+
+  describe '#problem_message_check' do
+    let(:key) { AdminDashboardData.problem_messages.first }
+
+    after do
+      described_class.clear_problem_message(key)
+    end
+
+    it 'returns nil if message has not been added' do
+      expect(described_class.problem_message_check(key)).to be_nil
+    end
+
+    it 'returns a message if it was added' do
+      described_class.add_problem_message(key)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
+    end
+
+    it 'returns a message if it was added with an expiry' do
+      described_class.add_problem_message(key, 300)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
     end
   end
 
@@ -217,32 +304,6 @@ describe AdminDashboardData do
 
       SiteSetting.force_https = false
       expect(subject).to be_nil
-    end
-  end
-
-  describe 'stats cache' do
-    include_examples 'stats cacheable'
-  end
-
-  describe '#problem_message_check' do
-    let(:key) { AdminDashboardData.problem_messages.first }
-
-    before do
-      described_class.clear_problem_message(key)
-    end
-
-    it 'returns nil if message has not been added' do
-      expect(described_class.problem_message_check(key)).to be_nil
-    end
-
-    it 'returns a message if it was added' do
-      described_class.add_problem_message(key)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
-    end
-
-    it 'returns a message if it was added with an expiry' do
-      described_class.add_problem_message(key, 300)
-      expect(described_class.problem_message_check(key)).to eq(I18n.t(key, base_path: Discourse.base_path))
     end
   end
 

@@ -183,9 +183,13 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const offset = info.offset();
-      const headerRect = header.getBoundingClientRect(),
-        headerOffset = headerRect.top + headerRect.height,
-        doc = document.documentElement;
+      const headerRect = header.getBoundingClientRect();
+      const doc = document.documentElement;
+      let headerOffset = headerRect.top + headerRect.height;
+
+      if (window.scrollY < 0) {
+        headerOffset += window.scrollY;
+      }
 
       const newValue = `${headerOffset}px`;
       if (newValue !== this.currentHeaderOffsetValue) {
@@ -334,11 +338,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const windowWidth = document.body.offsetWidth;
-      const headerWidth =
-        document.querySelector("#main-outlet .container").offsetWidth || 1100;
-      const remaining = (windowWidth - headerWidth) / 2;
-      const viewMode =
-        this.site.mobileView || remaining < 50 ? "slide-in" : "drop-down";
+      const viewMode = this.site.mobileView ? "slide-in" : "drop-down";
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");

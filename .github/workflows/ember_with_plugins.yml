@@ -8,7 +8,7 @@ jobs:
   build:
     name: run
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:release
+    container: discourse/discourse_test:slim-browsers
     timeout-minutes: 60
 
     steps:

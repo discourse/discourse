@@ -205,8 +205,6 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this._useXHRUploads();
     }
 
-    // TODO (martin) develop upload handler guidance and an API to use; will
-    // likely be using uppy plugins for this
     this._uppyInstance.on("file-added", (file) => {
       if (isPrivateMessage) {
         file.meta.for_private_message = true;
@@ -339,7 +337,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this._setupUIPlugins();
 
     this.uploadTargetBound = true;
+    this._uppyReady();
   },
+
+  // This should be overridden in a child component if you need to
+  // hook into uppy events and be sure that everything is already
+  // set up for _uppyInstance.
+  _uppyReady() {},
 
   @bind
   _handleUploadError(file, error, response) {
@@ -431,7 +435,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _setupUIPlugins() {
-    this._uppyInstance.use(DropTarget, { target: this.element });
+    this._uppyInstance.use(DropTarget, this._uploadDropTargetOptions());
   },
 
   _uploadFilenamePlaceholder(file) {
@@ -585,5 +589,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   _resetUploadFilenamePlaceholder() {
     this.set("uploadFilenamePlaceholder", null);
+  },
+
+  // target must be provided as a DOM element, however the
+  // onDragOver and onDragLeave callbacks can also be provided.
+  // it is advisable to debounce/add a setTimeout timer when
+  // doing anything in these callbacks to avoid jumping. uppy
+  // also adds a .uppy-is-drag-over class to the target element by
+  // default onDragOver and removes it onDragLeave
+  _uploadDropTargetOptions() {
+    return { target: this.element };
   },
 });

@@ -6,8 +6,13 @@ require 'rails_helper'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user1) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:admin) { Fabricate(:admin) }
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
   context 'validations' do
@@ -262,10 +267,10 @@ describe Topic do
   end
 
   context 'topic title uniqueness' do
-    let!(:category1) { Fabricate(:category) }
-    let!(:category2) { Fabricate(:category) }
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
 
-    let!(:topic) { Fabricate(:topic, category: category1) }
+    fab!(:topic) { Fabricate(:topic, category: category1) }
     let(:new_topic) { Fabricate.build(:topic, title: topic.title, category: category1) }
     let(:new_topic_different_cat) { Fabricate.build(:topic, title: topic.title, category: category2) }
 
@@ -645,7 +650,7 @@ describe Topic do
         topic.invite(topic.user, user.username)
 
         expect {
-          topic.invite(topic.user, another_user.username)
+          topic.invite(topic.user, user1.username)
         }.to raise_error(RateLimiter::LimitExceeded)
       end
 
@@ -658,7 +663,7 @@ describe Topic do
         topic.invite(topic.user, user.username)
 
         expect {
-          topic.invite(topic.user, another_user.username)
+          topic.invite(topic.user, user1.username)
         }.to raise_error(RateLimiter::LimitExceeded)
       end
     end
@@ -673,9 +678,9 @@ describe Topic do
 
     describe 'when user is already allowed' do
       it 'should raise the right error' do
-        topic.allowed_users << another_user
+        topic.allowed_users << user1
 
-        expect { topic.invite(user, another_user.username) }
+        expect { topic.invite(user, user1.username) }
           .to raise_error(Topic::UserExists)
       end
     end
@@ -686,8 +691,8 @@ describe Topic do
 
       describe 'by username' do
         it 'should be able to invite a user' do
-          expect(topic.invite(user, another_user.username)).to eq(true)
-          expect(topic.allowed_users).to include(another_user)
+          expect(topic.invite(user, user1.username)).to eq(true)
+          expect(topic.allowed_users).to include(user1)
           expect(Post.last.action_code).to eq("invited_user")
 
           notification = Notification.last
@@ -695,39 +700,39 @@ describe Topic do
           expect(notification.notification_type)
             .to eq(Notification.types[:invited_to_private_message])
 
-          expect(topic.remove_allowed_user(user, another_user.username)).to eq(true)
-          expect(topic.reload.allowed_users).to_not include(another_user)
+          expect(topic.remove_allowed_user(user, user1.username)).to eq(true)
+          expect(topic.reload.allowed_users).to_not include(user1)
           expect(Post.last.action_code).to eq("removed_user")
         end
 
         it 'should not create a small action if user is already invited through a group' do
-          group = Fabricate(:group, users: [user, another_user])
+          group = Fabricate(:group, users: [user, user1])
           expect(topic.invite_group(user, group)).to eq(true)
 
-          expect { topic.invite(user, another_user.username) }
+          expect { topic.invite(user, user1.username) }
             .to change { Notification.count }.by(1)
             .and change { Post.where(post_type: Post.types[:small_action]).count }.by(0)
         end
 
         context "from a muted user" do
-          before { Fabricate(:muted_user, user: another_user, muted_user: user) }
+          before { Fabricate(:muted_user, user: user1, muted_user: user) }
 
           it 'fails with an error' do
-            expect { topic.invite(user, another_user.username) }
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(another_user)
+            expect(topic.allowed_users).to_not include(user1)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
           end
         end
 
         context "from a ignored user" do
-          before { Fabricate(:ignored_user, user: another_user, ignored_user: user) }
+          before { Fabricate(:ignored_user, user: user1, ignored_user: user) }
 
           it 'fails with an error' do
-            expect { topic.invite(user, another_user.username) }
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(another_user)
+            expect(topic.allowed_users).to_not include(user1)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
           end
@@ -739,58 +744,57 @@ describe Topic do
           end
 
           it 'should raise error' do
-            expect { topic.invite(user, another_user.username) }
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::UserExists)
           end
         end
 
         context "when invited_user has enabled allow_list" do
-          fab!(:user2) { Fabricate(:user) }
           fab!(:pm) { Fabricate(:private_message_topic, user: user, topic_allowed_users: [
             Fabricate.build(:topic_allowed_user, user: user),
             Fabricate.build(:topic_allowed_user, user: user2)
           ]) }
 
           before do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
+            user1.user_option.update!(enable_allowed_pm_users: true)
           end
 
           it 'succeeds when inviter is in allowed list' do
-            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
-            expect(topic.invite(user, another_user.username)).to eq(true)
+            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+            expect(topic.invite(user, user1.username)).to eq(true)
           end
 
           it 'should raise error when inviter not in allowed list' do
-            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
-            expect { topic.invite(user, another_user.username) }
+            AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::NotAllowed)
               .with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
           end
 
           it 'should succeed for staff even when not allowed' do
-            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
-            expect(topic.invite(another_user, admin.username)).to eq(true)
+            AllowedPmUser.create!(user: user1, allowed_pm_user: user2)
+            expect(topic.invite(user1, admin.username)).to eq(true)
           end
 
           it 'should raise error when target_user is not in inviters allowed list' do
             user.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
-            expect { topic.invite(user, another_user.username) }
+            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::NotAllowed)
               .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
           it 'succeeds when inviter is in allowed list even though other participants are not in allowed list' do
-            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
-            expect(pm.invite(user, another_user.username)).to eq(true)
+            AllowedPmUser.create!(user: user1, allowed_pm_user: user)
+            expect(pm.invite(user, user1.username)).to eq(true)
           end
         end
       end
 
       describe 'by email' do
         it 'should be able to invite a user' do
-          expect(topic.invite(user, another_user.email)).to eq(true)
-          expect(topic.allowed_users).to include(another_user)
+          expect(topic.invite(user, user1.email)).to eq(true)
+          expect(topic.allowed_users).to include(user1)
 
           expect(Notification.last.notification_type)
             .to eq(Notification.types[:invited_to_private_message])
@@ -837,20 +841,18 @@ describe Topic do
 
       describe 'by username' do
         it 'should invite user into a topic' do
-          topic.invite(user, another_user.username)
-          expect_the_right_notification_to_be_created(user, another_user)
+          topic.invite(user, user1.username)
+          expect_the_right_notification_to_be_created(user, user1)
         end
       end
 
       describe 'by email' do
         it 'should be able to invite a user' do
-          expect(topic.invite(user, another_user.email)).to eq(true)
-          expect_the_right_notification_to_be_created(user, another_user)
+          expect(topic.invite(user, user1.email)).to eq(true)
+          expect_the_right_notification_to_be_created(user, user1)
         end
 
         describe 'when topic belongs to a private category' do
-          fab!(:group) { Fabricate(:group) }
-
           fab!(:category) do
             Fabricate(:category_with_definition, groups: [group]).tap do |category|
               category.set_permissions(group => :full)
@@ -859,7 +861,7 @@ describe Topic do
           end
 
           fab!(:topic) { Fabricate(:topic, category: category) }
-          let(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+          fab!(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
           fab!(:invitee) { Fabricate(:user) }
 
           describe 'as a group owner' do
@@ -902,12 +904,12 @@ describe Topic do
         end
 
         context "for a muted topic" do
-          before { TopicUser.change(another_user.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
+          before { TopicUser.change(user1.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
 
           it 'fails with an error message' do
-            expect { topic.invite(user, another_user.username) }
+            expect { topic.invite(user, user1.username) }
               .to raise_error(Topic::NotAllowed)
-            expect(topic.allowed_users).to_not include(another_user)
+            expect(topic.allowed_users).to_not include(user1)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
           end
@@ -932,9 +934,7 @@ describe Topic do
   end
 
   context 'private message' do
-    let(:coding_horror) { Fabricate(:coding_horror) }
-    fab!(:evil_trout) { Fabricate(:evil_trout) }
-    let(:topic) do
+    fab!(:topic) do
       PostCreator.new(
         Fabricate(:user),
         title: "This is a private message",
@@ -957,8 +957,6 @@ describe Topic do
       context 'existing user' do
 
         context 'by group name' do
-          fab!(:group) { Fabricate(:group) }
-
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
             admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1038,8 +1036,6 @@ describe Topic do
             # clear up the state so we can be more explicit with the test
             TopicAllowedUser.where(topic: topic).delete_all
             user0 = topic.user
-            user1 = Fabricate(:user)
-            user2 = Fabricate(:user)
             user3 = Fabricate(:user)
             Fabricate(:topic_allowed_user, topic: topic, user: user0)
             Fabricate(:topic_allowed_user, topic: topic, user: user1)
@@ -1065,7 +1061,6 @@ describe Topic do
             # clear up the state so we can be more explicit with the test
             TopicAllowedUser.where(topic: topic).delete_all
             user0 = topic.user
-            user1 = Fabricate(:user)
             Fabricate(:topic_allowed_user, topic: topic, user: user0)
             Fabricate(:topic_allowed_user, topic: topic, user: user1)
 
@@ -1123,21 +1118,21 @@ describe Topic do
 
       it "bumps the topic when a new version is made of the last post" do
         expect {
-          @last_post.revise(Fabricate(:moderator), raw: 'updated contents')
+          @last_post.revise(moderator, raw: 'updated contents')
           topic.reload
         }.to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         expect {
-          @earlier_post.revise(Fabricate(:moderator), raw: 'updated contents')
+          @earlier_post.revise(moderator, raw: 'updated contents')
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post have invalid topic title while edit" do
         expect {
-          @last_post.revise(Fabricate(:moderator), title: 'invalid title')
+          @last_post.revise(moderator, title: 'invalid title')
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
@@ -1145,7 +1140,6 @@ describe Topic do
   end
 
   context 'moderator posts' do
-    fab!(:moderator) { Fabricate(:moderator) }
     fab!(:topic) { Fabricate(:topic) }
 
     it 'creates a moderator post' do
@@ -1340,7 +1334,6 @@ describe Topic do
       it_behaves_like 'a status that closes a topic'
 
       it 'should archive group message' do
-        group = Fabricate(:group)
         group.add(@user)
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
 
@@ -1474,7 +1467,7 @@ describe Topic do
 
     context 'after a second post' do
       before do
-        @second_user = Fabricate(:coding_horror)
+        @second_user = coding_horror
         @new_post = create_post(topic: @topic, user: @second_user)
         @topic.reload
       end
@@ -1536,7 +1529,7 @@ describe Topic do
       end
 
       context 'new key' do
-        before do
+        before_all do
           topic.update_meta_data('other' => 'key')
           topic.save!
         end
@@ -1608,7 +1601,7 @@ describe Topic do
     end
 
     describe 'with a previous category' do
-      before do
+      before_all do
         topic.change_category_to_id(category.id)
         topic.reload
         category.reload
@@ -1649,7 +1642,7 @@ describe Topic do
             )
 
             CategoryUser.set_notification_level_for_category(
-              another_user,
+              user1,
               CategoryUser::notification_levels[:watching_first_post],
               new_category.id
             )
@@ -1668,7 +1661,7 @@ describe Topic do
             ).exists?).to eq(true)
 
             expect(Notification.where(
-              user_id: another_user.id,
+              user_id: user1.id,
               topic_id: topic.id,
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
@@ -1704,7 +1697,7 @@ describe Topic do
             ).exists?).to eq(true)
 
             expect(Notification.where(
-              user_id: another_user.id,
+              user_id: user1.id,
               topic_id: topic.id,
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
@@ -2010,8 +2003,6 @@ describe Topic do
   end
 
   describe '.for_digest' do
-    let(:user) { Fabricate.build(:user) }
-
     context "no edit grace period" do
       before do
         SiteSetting.editing_grace_period = 0
@@ -2032,7 +2023,6 @@ describe Topic do
       end
 
       it "doesn't return topics from muted categories" do
-        user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
         Fabricate(:topic, category: category, created_at: 1.minute.ago)
 
@@ -2043,7 +2033,6 @@ describe Topic do
 
       it "doesn't return topics that a user has muted" do
         topic = Fabricate(:topic, created_at: 1.minute.ago)
-        user = Fabricate(:user)
 
         Fabricate(:topic_user,
           user: user,
@@ -2055,7 +2044,6 @@ describe Topic do
       end
 
       it "does return watched topics from muted categories" do
-        user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
         topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
 
@@ -2066,7 +2054,6 @@ describe Topic do
       end
 
       it "doesn't return topics from suppressed categories" do
-        user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
         topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
 
@@ -2103,7 +2090,6 @@ describe Topic do
       end
 
       it "doesn't return topics with only muted tags" do
-        user = Fabricate(:user)
         tag = Fabricate(:tag)
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
         Fabricate(:topic, tags: [tag], created_at: 1.minute.ago)
@@ -2112,7 +2098,6 @@ describe Topic do
       end
 
       it "returns topics with both muted and not muted tags" do
-        user = Fabricate(:user)
         muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
         TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
         topic = Fabricate(:topic, tags: [muted_tag, other_tag], created_at: 1.minute.ago)
@@ -2121,7 +2106,6 @@ describe Topic do
       end
 
       it "returns topics with no tags too" do
-        user = Fabricate(:user)
         muted_tag = Fabricate(:tag)
         TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
         _topic1 = Fabricate(:topic, tags: [muted_tag], created_at: 1.minute.ago)
@@ -2147,7 +2131,6 @@ describe Topic do
       it "sorts by topic notification levels" do
         topics = []
         3.times { |i| topics << Fabricate(:topic, created_at: 1.minute.ago) }
-        user = Fabricate(:user)
         TopicUser.create(user_id: user.id, topic_id: topics[0].id, notification_level: TopicUser.notification_levels[:tracking])
         TopicUser.create(user_id: user.id, topic_id: topics[2].id, notification_level: TopicUser.notification_levels[:watching])
         for_digest = Topic.for_digest(user, 1.year.ago, top_order: true).pluck(:id)
@@ -2173,8 +2156,6 @@ describe Topic do
     it 'should return the right topics' do
       category = Fabricate(:category_with_definition, read_restricted: true)
       topic = Fabricate(:topic, category: category, created_at: 1.day.ago)
-      group = Fabricate(:group)
-      user = Fabricate(:user)
       group.add(user)
       private_category = Fabricate(:private_category_with_definition, group: group)
 
@@ -2189,7 +2170,6 @@ describe Topic do
   end
 
   describe 'all_allowed_users' do
-    fab!(:group) { Fabricate(:group) }
     fab!(:topic) { Fabricate(:topic, allowed_groups: [group]) }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:allowed_group_user) { Fabricate(:user) }
@@ -2274,7 +2254,6 @@ describe Topic do
 
   describe 'trash!' do
     context "its category's topic count" do
-      fab!(:moderator) { Fabricate(:moderator) }
       fab!(:category) { Fabricate(:category_with_definition) }
 
       it "subtracts 1 if topic is being deleted" do
@@ -2395,8 +2374,6 @@ describe Topic do
     end
 
     it "limits according to max_personal_messages_per_day" do
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
       create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
       expect {
         create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
@@ -2482,7 +2459,6 @@ describe Topic do
 
     expect(topic.message_archived?(user)).to eq(false)
 
-    group = Fabricate(:group)
     group2 = Fabricate(:group)
 
     group.add(user)
@@ -2554,7 +2530,6 @@ describe Topic do
 
     context 'when category restricts present' do
       let!(:link_category) { Fabricate(:link_category) }
-      fab!(:topic) { Fabricate(:topic) }
       let(:link_topic) { Fabricate(:topic, category: link_category) }
 
       it 'can save the featured link if it belongs to that category' do
@@ -2686,9 +2661,9 @@ describe Topic do
   end
 
   describe '#pm_with_non_human_user?' do
-    let(:robot) { Fabricate(:user, id: -3) }
+    fab!(:robot) { Fabricate(:user, id: -3) }
 
-    let(:topic) do
+    fab!(:topic) do
       topic = Fabricate(:private_message_topic,
         topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: robot),
@@ -2744,10 +2719,10 @@ describe Topic do
 
     describe 'removing oneself' do
       it 'should remove onself' do
-        topic.allowed_users << another_user
+        topic.allowed_users << user1
 
-        expect(topic.remove_allowed_user(another_user, another_user)).to eq(true)
-        expect(topic.allowed_users.include?(another_user)).to eq(false)
+        expect(topic.remove_allowed_user(user1, user1)).to eq(true)
+        expect(topic.allowed_users.include?(user1)).to eq(false)
 
         post = Post.last
 

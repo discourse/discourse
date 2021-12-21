@@ -736,6 +736,10 @@ class GroupsController < ApplicationController
       end
     end
 
+    if guardian.can_associate_groups?
+      permitted_params << { associated_group_ids: [] }
+    end
+
     permitted_params = permitted_params | DiscoursePluginRegistry.group_params
 
     params.require(:group).permit(*permitted_params)

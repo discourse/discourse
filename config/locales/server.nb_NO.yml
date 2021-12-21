@@ -599,12 +599,6 @@ nb_NO:
       title: "Lik"
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
-  user_activity:
-    no_bookmarks:
-      self: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
-      others: "Ingen bokmerker."
-    no_drafts:
-      self: "Du har ingen utkast; når du begynner å forfatte et svar på et emne vil det automatisk lagres som et nytt utkast."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -909,6 +903,18 @@ nb_NO:
       labels:
         filename: Filnavn
         author: Forfatter
+    top_users_by_likes_received:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."

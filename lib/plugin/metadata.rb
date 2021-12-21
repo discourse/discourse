@@ -9,11 +9,11 @@ class Plugin::Metadata
     # TODO: Remove this after everyone upgraded `discourse-canned-replies`
     # to the renamed version.
     "Canned Replies",
-    "customer-flair",
     "discourse-adplugin",
     "discourse-affiliate",
     "discourse-akismet",
     "discourse-algolia",
+    "discourse-apple-auth",
     "discourse-assign",
     "discourse-auto-deactivate",
     "discourse-bbcode",
@@ -62,6 +62,7 @@ class Plugin::Metadata
     "discourse-reactions",
     "discourse-restricted-replies",
     "discourse-rss-polling",
+    "discourse-saml",
     "discourse-saved-searches",
     "discourse-shared-edits",
     "discourse-signatures",
@@ -76,6 +77,7 @@ class Plugin::Metadata
     "discourse-translator",
     "discourse-user-card-badges",
     "discourse-user-notes",
+    "discourse-vk-auth",
     "discourse-voting",
     "discourse-yearly-review",
     "discourse-zendesk-plugin",

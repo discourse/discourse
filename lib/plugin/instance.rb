@@ -986,11 +986,28 @@ class Plugin::Instance
   #
   # The rule object is quite complex. We strongly recommend you write tests to ensure your plugin consolidates notifications correctly.
   #
-  # - Plan's documentation: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidate_notifications.rb
+  # - Threshold and time window consolidation plan: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidate_notifications.rb
+  # - Create a new notification and delete previous versions plan: https://github.com/discourse/discourse/blob/main/app/services/notifications/delete_previous_notifications.rb
   # - Base plans: https://github.com/discourse/discourse/blob/main/app/services/notifications/consolidation_planner.rb
   def register_notification_consolidation_plan(plan)
-    raise ArgumentError.new("Not a consolidation plan") if plan.class != Notifications::ConsolidateNotifications
+    raise ArgumentError.new("Not a consolidation plan") if !plan.class.ancestors.include?(Notifications::ConsolidationPlan)
     DiscoursePluginRegistry.register_notification_consolidation_plan(plan, self)
+  end
+
+  # Allows customizing existing topic-backed static pages, like:
+  # faq, tos, privacy (see: StaticController) The block passed to this
+  # method has to return a SiteSetting name that contains a topic id.
+  #
+  #   add_topic_static_page("faq") do |controller|
+  #     current_user&.locale == "pl" ? "polish_faq_topic_id" : "faq_topic_id"
+  #   end
+  #
+  # You can also add new pages in a plugin, but remember to add a route,
+  # for example:
+  #
+  #   get "contact" => "static#show", id: "contact"
+  def add_topic_static_page(page, options = {}, &blk)
+    StaticController::CUSTOM_PAGES[page] = blk ? { topic_id: blk } : options
   end
 
   protected

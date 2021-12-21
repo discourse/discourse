@@ -273,10 +273,6 @@ basic:
     client: true
     default: false
     hidden: true
-  enable_experimental_backup_uploader:
-    client: true
-    default: false
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -411,6 +407,9 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -518,7 +517,9 @@ login:
     default: ""
     type: list
     list_type: simple
-  hide_email_address_taken: false
+  hide_email_address_taken:
+    client: true
+    default: false
   log_out_strict: false
   pending_users_reminder_delay_minutes:
     min: -1
@@ -1020,10 +1021,6 @@ posting:
   watched_words_regular_expressions:
     client: true
     default: false
-  enable_advanced_editor_preview_sync:
-    hidden: true
-    default: false
-    client: true
   enable_diffhtml_preview:
     default: false
     client: true

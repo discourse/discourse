@@ -3364,7 +3364,7 @@ fi:
       tags: "Tunnisteet"
       choose_for_topic: "valinnaiset tunnisteet"
       info: "Tietoa"
-      default_info: "Tätä tunnistetta ei ole rajoitettu mihinkään alueeseen, eikä sillä ole synonyymejä. Lisää rajoituksia laittamalla tämä tunniste <a href=%{basePath}/tag_groups>tunnisteryhmään</a>."
+      default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
       synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella <b>%{base_tag_name}</b>."
@@ -3374,7 +3374,6 @@ fi:
       category_restrictions:
         one: "Sitä voi käyttää vain tällä alueella:"
         other: "Sitä voi käyttää vain näillä alueilla:"
-      edit_synonyms: "Hallitse synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
       add_synonyms_explanation:
@@ -3391,8 +3390,7 @@ fi:
       delete_confirm_synonyms:
         one: "Sen synonyymi poistetaan myös."
         other: "Sen %{count} synonyymiä poistetaan myös."
-      rename_tag: "Nimeä tunniste uudelleen"
-      rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
+      description: "Kuvaus"
       sort_by: "Järjestys:"
       sort_by_count: "lukumäärä"
       sort_by_name: "nimi"

@@ -50,6 +50,8 @@
             </div>
           {{/unless}}
 
+          {{plugin-outlet name="before-composer-controls" args=(hash model=model) tagName="" connectorTagName=""}}
+
           {{composer-toggles
             composeState=model.composeState
             showToolbar=showToolbar

@@ -52,7 +52,6 @@ import userSearch from "discourse/lib/user-search";
 // All matches are whitespace tolerant as long it's still valid markdown.
 // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
 const IMAGE_MARKDOWN_REGEX = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
-const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -240,15 +239,9 @@ export default Component.extend(ComposerUploadUppy, {
       });
     }
 
-    if (this._enableAdvancedEditorPreviewSync()) {
-      const input = this.element.querySelector(".d-editor-input");
-      const preview = this.element.querySelector(".d-editor-preview-wrapper");
-      this._initInputPreviewSync(input, preview);
-    } else {
-      this.element
-        .querySelector(".d-editor-input")
-        ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
-    }
+    this.element
+      .querySelector(".d-editor-input")
+      ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
     // Focus on the body unless we have a title
     if (!this.get("composer.canEditTitle")) {
@@ -310,10 +303,6 @@ export default Component.extend(ComposerUploadUppy, {
     }
   },
 
-  _enableAdvancedEditorPreviewSync() {
-    return this.siteSettings.enable_advanced_editor_preview_sync;
-  },
-
   _resetShouldBuildScrollMap() {
     this.set("shouldBuildScrollMap", true);
   },
@@ -348,24 +337,6 @@ export default Component.extend(ComposerUploadUppy, {
     event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
   },
 
-  _initInputPreviewSync(input, preview) {
-    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
-      this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
-    });
-
-    schedule("afterRender", () => {
-      input?.addEventListener("touchstart", this._handleInputInteraction, {
-        passive: true,
-      });
-      input?.addEventListener("mouseenter", this._handleInputInteraction);
-
-      preview?.addEventListener("touchstart", this._handlePreviewInteraction, {
-        passive: true,
-      });
-      preview?.addEventListener("mouseenter", this._handlePreviewInteraction);
-    });
-  },
-
   _syncScroll($callback, $input, $preview) {
     if (!this.scrollMap || this.shouldBuildScrollMap) {
       this.set("scrollMap", this._buildScrollMap($input, $preview));
@@ -373,22 +344,6 @@ export default Component.extend(ComposerUploadUppy, {
     }
 
     throttle(this, $callback, $input, $preview, this.scrollMap, 20);
-  },
-
-  _teardownInputPreviewSync() {
-    const input = this.element.querySelector(".d-editor-input");
-    input?.removeEventListener("mouseEnter", this._handleInputInteraction);
-    input?.removeEventListener("touchstart", this._handleInputInteraction);
-    input?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-    preview?.removeEventListener("mouseEnter", this._handlePreviewInteraction);
-    preview?.removeEventListener("touchstart", this._handlePreviewInteraction);
-    preview?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
-      this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
-    });
   },
 
   // Adapted from https://github.com/markdown-it/markdown-it.github.io
@@ -491,69 +446,29 @@ export default Component.extend(ComposerUploadUppy, {
     );
   },
 
-  _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    if (this._enableAdvancedEditorPreviewSync()) {
-      let scrollTop;
-      const inputHeight = $input.height();
-      const inputScrollHeight = $input[0].scrollHeight;
-      const inputClientHeight = $input[0].clientHeight;
-      const scrollable = inputScrollHeight > inputClientHeight;
-
-      if (
-        scrollable &&
-        inputHeight + $input.scrollTop() + 100 > inputScrollHeight
-      ) {
-        scrollTop = $preview[0].scrollHeight;
-      } else {
-        const lineHeight = parseFloat($input.css("line-height"));
-        const lineNumber = Math.floor($input.scrollTop() / lineHeight);
-        scrollTop = scrollMap[lineNumber];
-      }
-
-      $preview.stop(true).animate({ scrollTop }, 100, "linear");
-    } else {
-      if (!$input) {
-        return;
-      }
-
-      if ($input.scrollTop() === 0) {
-        $preview.scrollTop(0);
-        return;
-      }
-
-      const inputHeight = $input[0].scrollHeight;
-      const previewHeight = $preview[0].scrollHeight;
-
-      if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
-        // cheat, special case for bottom
-        $preview.scrollTop(previewHeight);
-        return;
-      }
-
-      const scrollPosition = $input.scrollTop();
-      const factor = previewHeight / inputHeight;
-      const desired = scrollPosition * factor;
-      $preview.scrollTop(desired + 50);
-    }
-  },
-
-  _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
-    if (scrollMap.length < 1) {
+  _syncEditorAndPreviewScroll($input, $preview) {
+    if (!$input) {
       return;
     }
 
-    let scrollTop;
-    const previewScrollTop = $preview.scrollTop();
-
-    if ($preview.height() + previewScrollTop + 100 > $preview[0].scrollHeight) {
-      scrollTop = $input[0].scrollHeight;
-    } else {
-      const lineHeight = parseFloat($input.css("line-height"));
-      scrollTop =
-        lineHeight * scrollMap.findIndex((offset) => offset > previewScrollTop);
+    if ($input.scrollTop() === 0) {
+      $preview.scrollTop(0);
+      return;
     }
 
-    $input.stop(true).animate({ scrollTop }, 100, "linear");
+    const inputHeight = $input[0].scrollHeight;
+    const previewHeight = $preview[0].scrollHeight;
+
+    if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
+      // cheat, special case for bottom
+      $preview.scrollTop(previewHeight);
+      return;
+    }
+
+    const scrollPosition = $input.scrollTop();
+    const factor = previewHeight / inputHeight;
+    const desired = scrollPosition * factor;
+    $preview.scrollTop(desired + 50);
   },
 
   _renderUnseenMentions(preview, unseen) {
@@ -805,18 +720,12 @@ export default Component.extend(ComposerUploadUppy, {
       );
     });
 
-    if (this._enableAdvancedEditorPreviewSync()) {
-      this._teardownInputPreviewSync();
-    }
-
-    if (!this._enableAdvancedEditorPreviewSync()) {
-      this.element
-        .querySelector(".d-editor-input")
-        ?.removeEventListener(
-          "scroll",
-          this._throttledSyncEditorAndPreviewScroll
-        );
-    }
+    this.element
+      .querySelector(".d-editor-input")
+      ?.removeEventListener(
+        "scroll",
+        this._throttledSyncEditorAndPreviewScroll
+      );
 
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     preview?.removeEventListener("click", this._handleImageScaleButtonClick);
@@ -977,14 +886,6 @@ export default Component.extend(ComposerUploadUppy, {
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, preview);
-
-      if (this._enableAdvancedEditorPreviewSync()) {
-        this._syncScroll(
-          this._syncEditorAndPreviewScroll,
-          $(this.element.querySelector(".d-editor-input")),
-          $preview
-        );
-      }
 
       preview.addEventListener("click", this._handleImageScaleButtonClick);
       this._registerImageAltTextButtonClick(preview);

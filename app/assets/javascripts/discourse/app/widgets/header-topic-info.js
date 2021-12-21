@@ -46,11 +46,10 @@ createWidget("topic-header-participant", {
   },
 
   click(e) {
-    const $target = $(e.target);
     this.appEvents.trigger(
       `topic-header:trigger-${this.attrs.type}-card`,
       this.attrs.username,
-      $target
+      e.target
     );
     e.preventDefault();
   },

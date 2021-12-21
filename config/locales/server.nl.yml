@@ -806,13 +806,6 @@ nl:
   draft_backup:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
-  user_activity:
-    no_bookmarks:
-      self: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
-      search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
-      others: "Geen bladwijzers."
-    no_drafts:
-      self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
   webauthn:
     validation:
       invalid_type_error: "Het opgegeven type webauthn was ongeldig. Geldige typen zijn webauthn.get en webauthn.create."
@@ -1236,6 +1229,18 @@ nl:
         ignores_count: Aantal genegeerd
         mutes_count: Aantal gedempt
       description: "Gebruikers die door veel andere gebruikers zijn gedempt en/of genegeerd."
+    top_users_by_likes_received:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
@@ -2117,10 +2122,6 @@ nl:
     email_in_spam_header: "Eerste e-mail van gebruiker is als spam gemarkeerd"
     already_silenced: "Gebruiker is %{time_ago} al gedempt door %{staff}."
     already_suspended: "Gebruiker is %{time_ago} al geschorst door %{staff}."
-  reviewables_reminder:
-    subject_template:
-      one: "%{count} item moet worden beoordeeld"
-      other: "%{count} items moeten worden beoordeeld"
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
     subject_template: "Bevestig dat u geen e-mailupdates van %{site_title} meer wilt ontvangen"

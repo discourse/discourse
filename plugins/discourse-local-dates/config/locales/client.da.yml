@@ -40,3 +40,4 @@ da:
             every_three_months: "Hver tredje måned"
             every_six_months: "Hvert halvår"
             every_year: "Hvert år"
+      default_title: "%{site_name} Begivenhed"

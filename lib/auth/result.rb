@@ -21,7 +21,8 @@ class Auth::Result
     :omniauth_disallow_totp,
     :failed,
     :failed_reason,
-    :failed_code
+    :failed_code,
+    :associated_groups
   ]
 
   attr_accessor *ATTRIBUTES
@@ -36,7 +37,8 @@ class Auth::Result
     :name,
     :authenticator_name,
     :extra_data,
-    :skip_email_validation
+    :skip_email_validation,
+    :associated_groups
   ]
 
   def [](key)
@@ -92,6 +94,29 @@ class Auth::Result
     end
 
     change_made
+  end
+
+  def apply_associated_attributes!
+    if authenticator&.provides_groups? && !associated_groups.nil?
+      associated_group_ids = []
+
+      associated_groups.uniq.each do |associated_group|
+        begin
+          associated_group = AssociatedGroup.find_or_create_by(
+            name: associated_group[:name],
+            provider_id: associated_group[:id],
+            provider_name: extra_data[:provider]
+          )
+        rescue ActiveRecord::RecordNotUnique
+          retry
+        end
+
+        associated_group_ids.push(associated_group.id)
+      end
+
+      user.update(associated_group_ids: associated_group_ids)
+      AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
+    end
   end
 
   def can_edit_name
@@ -165,6 +190,10 @@ class Auth::Result
 
   def username_suggester_attributes
     username || name || email
+  end
+
+  def authenticator
+    @authenticator ||= Discourse.enabled_authenticators.find { |a| a.name == authenticator_name }
   end
 
   def resolve_username

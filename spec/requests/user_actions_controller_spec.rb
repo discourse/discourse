@@ -49,36 +49,6 @@ describe UserActionsController do
         .to eq(user.username)
     end
 
-    it 'renders help text if provided for self' do
-      logged_in = sign_in(Fabricate(:user))
-
-      get "/user_actions.json", params: {
-        filter: UserAction::LIKE,
-        username: logged_in.username,
-        no_results_help_key: "user_activity.no_bookmarks"
-      }
-
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-
-      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.self"))
-    end
-
-    it 'renders help text for others' do
-      user = Fabricate(:user)
-
-      get "/user_actions.json", params: {
-        filter: UserAction::LIKE,
-        username: user.username,
-        no_results_help_key: "user_activity.no_bookmarks"
-      }
-
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-
-      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
-    end
-
     context 'hidden profiles' do
       fab!(:post) { Fabricate(:post) }
 

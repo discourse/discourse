@@ -97,6 +97,9 @@
         },
         "chat_message": {
           "type": "integer"
+        },
+        "chat_invitation": {
+          "type": "integer"
         }
       },
       "required": [
@@ -356,6 +359,9 @@
       ]
     },
     "wizard_required": {
+      "type": "boolean"
+    },
+    "can_associate_groups": {
       "type": "boolean"
     },
     "topic_featured_link_allowed_category_ids": {

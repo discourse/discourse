@@ -8,6 +8,7 @@ describe PostRevisor do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   let(:post_args) { { user: newuser, topic: topic } }
@@ -523,7 +524,7 @@ describe PostRevisor do
     end
 
     describe 'rate limiter' do
-      fab!(:changed_by) { Fabricate(:coding_horror) }
+      fab!(:changed_by) { coding_horror }
 
       before do
         RateLimiter.enable
@@ -618,7 +619,7 @@ describe PostRevisor do
         SiteSetting.editing_grace_period_max_diff = 1000
       end
 
-      fab!(:changed_by) { Fabricate(:coding_horror) }
+      fab!(:changed_by) { coding_horror }
       let!(:result) { subject.revise!(changed_by, raw: "lets update the body. Здравствуйте") }
 
       it 'correctly updates raw' do

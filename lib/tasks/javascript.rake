@@ -104,11 +104,6 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
-      destination: 'jquery.autoellipsis-1.0.10.js'
-    }, {
-      source: 'jquery-color/dist/jquery.color.js'
-    }, {
       source: 'blueimp-file-upload/js/jquery.fileupload.js',
     }, {
       source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
@@ -118,8 +113,6 @@ def dependencies
       source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
     }, {
       source: 'jquery/dist/jquery.js'
-    }, {
-      source: 'jquery-tags-input/src/jquery.tagsinput.js'
     }, {
       source: 'markdown-it/dist/markdown-it.js'
     }, {
@@ -138,8 +131,6 @@ def dependencies
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
-    }, {
-      source: 'resumablejs/resumable.js'
     }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',

@@ -7,6 +7,7 @@ require 'rotp'
 RSpec.describe Admin::UsersController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   it 'is a subclass of AdminController' do
     expect(Admin::UsersController < Admin::AdminController).to eq(true)
@@ -339,7 +340,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#grant_admin' do
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
 
     after do
       Discourse.redis.flushdb
@@ -462,7 +463,10 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#trust_level' do
-    fab!(:another_user) { Fabricate(:coding_horror, created_at: 1.month.ago) }
+    fab!(:another_user) {
+      coding_horror.update!(created_at: 1.month.ago)
+      coding_horror
+    }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -509,7 +513,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#grant_moderation' do
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -570,7 +574,7 @@ RSpec.describe Admin::UsersController do
 
   describe '#primary_group' do
     fab!(:group) { Fabricate(:group) }
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
     fab!(:another_group) { Fabricate(:group, title: 'New') }
 
     it "raises an error when the user doesn't have permission" do

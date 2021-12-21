@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe Auth::GoogleOAuth2Authenticator do
-
   it 'does not look up user unless email is verified' do
     # note, emails that come back from google via omniauth are always valid
     # this protects against future regressions
@@ -112,6 +111,61 @@ describe Auth::GoogleOAuth2Authenticator do
 
       expect(result.user).to eq(nil)
       expect(result.name).to eq("Jane Doe")
+    end
+
+    context "provides groups" do
+      before do
+        SiteSetting.google_oauth2_hd = "domain.com"
+        group1 = OmniAuth::AuthHash.new(id: "12345", name: "group1")
+        group2 = OmniAuth::AuthHash.new(id: "67890", name: "group2")
+        @groups = [group1, group2]
+        @groups_hash = OmniAuth::AuthHash.new(
+          provider: "google_oauth2",
+          uid: "123456789",
+          info: {
+            first_name: "Jane",
+            last_name: "Doe",
+            name: "Jane Doe",
+            email: "jane.doe@the.google.com"
+          },
+          extra: {
+            raw_info: {
+              email: "jane.doe@the.google.com",
+              email_verified: true,
+              name: "Jane Doe"
+            },
+            raw_groups: @groups
+          }
+        )
+      end
+
+      context "enabled" do
+        before do
+          SiteSetting.google_oauth2_hd_groups = true
+        end
+
+        it "adds associated groups" do
+          result = described_class.new.after_authenticate(@groups_hash)
+          expect(result.associated_groups).to eq(@groups)
+        end
+
+        it "handles a blank groups array" do
+          @groups_hash[:extra][:raw_groups] = []
+          result = described_class.new.after_authenticate(@groups_hash)
+          expect(result.associated_groups).to eq([])
+        end
+      end
+
+      context "disabled" do
+        before do
+          SiteSetting.google_oauth2_hd_groups = false
+        end
+
+        it "doesnt add associated groups" do
+          result = described_class.new.after_authenticate(@groups_hash)
+          expect(result.associated_groups).to eq(nil)
+        end
+      end
     end
   end
 

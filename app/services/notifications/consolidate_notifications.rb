@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Represents a rule to consolidate a specific notification.
+# Consolidate notifications based on a threshold and a time window.
 #
 # If a consolidated notification already exists, we'll update it instead.
 # If it doesn't and creating a new one would match the threshold, we delete existing ones and create a consolidated one.
@@ -14,7 +14,6 @@
 # - consolidation_window: Only consolidate notifications created since this value (Pass a ActiveSupport::Duration instance, and we'll call #ago on it).
 # - unconsolidated_query_blk: A block with additional queries to apply when fetching for unconsolidated notifications.
 # - consolidated_query_blk: A block with additional queries to apply when fetching for a consolidated notification.
-# - bump_notification: Bump the consolidated notification to the top after updating it.
 #
 # Need to call #set_precondition to configure this:
 #
@@ -25,8 +24,8 @@
 # - set_data_blk: A block that receives the notification data hash and mutates it, adding additional data needed for consolidation.
 
 module Notifications
-  class ConsolidateNotifications
-    def initialize(from:, to:, consolidation_window: nil, unconsolidated_query_blk: nil, consolidated_query_blk: nil, threshold:, bump_notification: true)
+  class ConsolidateNotifications < ConsolidationPlan
+    def initialize(from:, to:, consolidation_window: nil, unconsolidated_query_blk: nil, consolidated_query_blk: nil, threshold:)
       @from = from
       @to = to
       @threshold = threshold
@@ -36,18 +35,6 @@ module Notifications
       @precondition_blk = nil
       @set_data_blk = nil
       @bump_notification = bump_notification
-    end
-
-    def set_precondition(precondition_blk: nil)
-      @precondition_blk = precondition_blk
-
-      self
-    end
-
-    def set_mutations(set_data_blk: nil)
-      @set_data_blk = set_data_blk
-
-      self
     end
 
     def can_consolidate_data?(notification)
@@ -76,11 +63,6 @@ module Notifications
       :unconsolidated_query_blk, :consolidation_window, :bump_notification
     )
 
-    def consolidated_data(notification)
-      return notification.data_hash if @set_data_blk.nil?
-      @set_data_blk.call(notification)
-    end
-
     def update_consolidated_notification!(notification)
       notifications = user_notifications(notification, to)
 
@@ -96,17 +78,11 @@ module Notifications
       # Hack: We don't want to cache the old data if we're about to update it.
       consolidated.instance_variable_set(:@data_hash, nil)
 
-      attrs = {
+      consolidated.update!(
         data: data_hash.to_json,
         read: false,
         updated_at: timestamp,
-      }
-
-      # Updating created_at may seem wrong, but it's the only way of bumping the notification.
-      # We cannot order by updated_at because marking them as read will move them to the top.
-      attrs[:created_at] = timestamp if bump_notification
-
-      consolidated.update!(attrs)
+      )
 
       consolidated
     end
@@ -146,8 +122,7 @@ module Notifications
     end
 
     def user_notifications(notification, type)
-      notifications = notification.user.notifications
-        .where(notification_type: type)
+      notifications = super(notification, type)
 
       if consolidation_window.present?
         notifications = notifications.where('created_at > ?', consolidation_window.ago)

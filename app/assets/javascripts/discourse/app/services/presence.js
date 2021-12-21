@@ -19,6 +19,7 @@ import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import { bind } from "discourse-common/utils/decorators";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -26,7 +27,7 @@ const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
 
-const USER_PRESENCE_ARGS = {
+const DEFAULT_ACTIVE_OPTIONS = {
   userUnseenTime: 60000,
   browserHiddenTime: 10000,
 };
@@ -63,8 +64,19 @@ class PresenceChannel extends EmberObject {
   // By default, the user will temporarily 'leave' the channel when
   // the current tab is in the background, or has no interaction for more than 60 seconds.
   // To override this behaviour, set onlyWhileActive: false
-  async enter({ onlyWhileActive = true } = {}) {
-    this.setProperties({ onlyWhileActive });
+  // To specify custom thresholds, set `activeOptions`. See `lib/user-presence.js` for options.
+  async enter({ onlyWhileActive = true, activeOptions = null } = {}) {
+    if (onlyWhileActive && activeOptions) {
+      for (const key in DEFAULT_ACTIVE_OPTIONS) {
+        if (activeOptions[key] < DEFAULT_ACTIVE_OPTIONS[key]) {
+          throw `${key} cannot be less than ${DEFAULT_ACTIVE_OPTIONS[key]} (given ${activeOptions[key]})`;
+        }
+      }
+    } else if (onlyWhileActive && !activeOptions) {
+      activeOptions = DEFAULT_ACTIVE_OPTIONS;
+    }
+
+    this.setProperties({ activeOptions });
     await this.presenceService._enter(this);
     this.set("present", true);
   }
@@ -241,13 +253,10 @@ export default class PresenceService extends Service {
     this._initialDataRequests = new Map();
 
     if (this.currentUser) {
-      this._beforeUnloadCallback = () => this._beaconLeaveAll();
-      window.addEventListener("beforeunload", this._beforeUnloadCallback);
-
-      this._presenceChangeCallback = () => this._throttledUpdateServer();
+      window.addEventListener("beforeunload", this._beaconLeaveAll);
       onPresenceChange({
-        ...USER_PRESENCE_ARGS,
-        callback: this._presenceChangeCallback,
+        ...DEFAULT_ACTIVE_OPTIONS,
+        callback: this._throttledUpdateServer,
       });
     }
   }
@@ -258,8 +267,8 @@ export default class PresenceService extends Service {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    window.removeEventListener("beforeunload", this._beforeUnloadCallback);
-    removeOnPresenceChange(this._presenceChangeCallback);
+    window.removeEventListener("beforeunload", this._beaconLeaveAll);
+    removeOnPresenceChange(this._throttledUpdateServer);
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -440,6 +449,7 @@ export default class PresenceService extends Service {
     }
   }
 
+  @bind
   _beaconLeaveAll() {
     if (isTesting()) {
       return;
@@ -490,15 +500,15 @@ export default class PresenceService extends Service {
         .filter((e) => e.type === "leave")
         .map((e) => e.channel);
 
-      const userIsPresent = userPresent(USER_PRESENCE_ARGS);
       for (const [channelName, proxies] of this._presentProxies) {
         if (
-          !userIsPresent &&
-          Array.from(proxies).every((p) => p.onlyWhileActive)
+          Array.from(proxies).some((p) => {
+            return !p.activeOptions || userPresent(p.activeOptions);
+          })
         ) {
-          channelsToLeave.push(channelName);
-        } else {
           presentChannels.push(channelName);
+        } else {
+          channelsToLeave.push(channelName);
         }
       }
 
@@ -551,6 +561,7 @@ export default class PresenceService extends Service {
   // in a sequence of calls. We want both. We want the first event, to make
   // things very responsive. Then if things are happening too frequently, we
   // drop back to the last event via the regular throttle function.
+  @bind
   _throttledUpdateServer() {
     if (
       !this._lastUpdate ||

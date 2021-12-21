@@ -4,6 +4,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
+  disableActions: false,
+
   classNames: ["topic-statuses"],
 
   click(e) {

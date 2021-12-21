@@ -102,16 +102,8 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
-      @postgres_bin = "/usr/lib/postgresql/#{ENV['PG_MAJOR']}/bin/"
-      `#{@postgres_bin}initdb -D tmp/test_data/pg`
-
-      # speed up db, never do this in production mmmmk
-      `echo fsync = off >> tmp/test_data/pg/postgresql.conf`
-      `echo full_page_writes = off >> tmp/test_data/pg/postgresql.conf`
-      `echo shared_buffers = 500MB >> tmp/test_data/pg/postgresql.conf`
-
       puts "Starting postgres"
-      @pg_pid = Process.spawn("#{@postgres_bin}postmaster -D tmp/test_data/pg")
+      @pg_pid = Process.spawn("script/start_test_db.rb --exec")
 
       ENV["RAILS_ENV"] = "test"
       # this shaves all the creation of the multisite db off

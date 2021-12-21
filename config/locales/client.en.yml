@@ -1621,7 +1621,10 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
+          restrict: "Restrict to"
           restrict_email: "Restrict to email"
+          restrict_domain: "Restrict to domain"
+          email_or_domain_placeholder: "name@example.com or example.com"
 
           max_redemptions_allowed: "Max uses"
 
@@ -1867,6 +1870,7 @@ en:
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
+      invite_no_username: "Enter your email address, and we'll send you a password reset email."
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
@@ -4121,6 +4125,7 @@ en:
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
@@ -4206,7 +4211,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
             uploads:
-              create: Upload a new file.
+              create: Upload a new file or initiate single or multipart direct uploads to external storage.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
@@ -4219,6 +4224,14 @@ en:
               list: Get a list of users.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            badges:
+              create: Create a new badge.
+              show: Obtain information about a badge.
+              update: Update a badge.
+              delete: Delete a badge.
+              list_user_badges: List user badges.
+              assign_badge_to_user: Assign a badge to a user.
+              revoke_badge_from_user: Revoke a badge from a user.
 
       web_hooks:
         title: "Webhooks"

@@ -285,6 +285,9 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
+    this._itsatrap.bind("tab", () => this._indentSelection("right"));
+    this._itsatrap.bind("shift+tab", () => this._indentSelection("left"));
+
     // disable clicking on links in the preview
     this.element
       .querySelector(".d-editor-preview")
@@ -294,6 +297,11 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.on("composer:insert-block", this, "_insertBlock");
       this.appEvents.on("composer:insert-text", this, "_insertText");
       this.appEvents.on("composer:replace-text", this, "_replaceText");
+      this.appEvents.on(
+        "composer:indent-selected-text",
+        this,
+        "_indentSelection"
+      );
     }
 
     if (isTesting()) {
@@ -333,6 +341,11 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.off("composer:insert-block", this, "_insertBlock");
       this.appEvents.off("composer:insert-text", this, "_insertText");
       this.appEvents.off("composer:replace-text", this, "_replaceText");
+      this.appEvents.off(
+        "composer:indent-selected-text",
+        this,
+        "_indentSelection"
+      );
     }
 
     this._itsatrap?.destroy();

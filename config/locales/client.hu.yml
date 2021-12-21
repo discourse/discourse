@@ -386,7 +386,7 @@ hu:
         score_to_hide: "Pontszám a bejegyzés elrejtéséhez"
         take_action_bonus:
           name: "intézkedett"
-          title: "Ha egy stábtag úgy dönt, hogy intézkedik, akkor a a jelzés bónuszt kap."
+          title: "Ha egy stábtag úgy dönt, hogy intézkedik, akkor a jelzés bónuszt kap."
         user_accuracy_bonus:
           name: "felhasználói pontosság"
           title: "Azok a felhasználók, akik előzőleg egyetértettek a jelzéssel, bónuszt kapnak."
@@ -1142,7 +1142,7 @@ hu:
         tags: "Címkék"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{és} false{} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen } other { {BOTH, select, true{és} false{Böngésszen} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a> üzenet van hátra, vagy böngésszen} } más üzeneteket ebben a csoportban: {groupLink}"
+        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } } {BOTH, select, true{és} false {} other{}} { NEW, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a>} } üzenet van hátra, vagy böngésszen más üzeneteket ebben a csoportban: {groupLink}"
       preferences_nav:
         account: "Fiók"
         security: "Biztonság"
@@ -1477,6 +1477,9 @@ hu:
           expired_at_time: "Lejárt: %{time}"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
+          restrict_email: "E-mail-címre korlátozás"
+          restrict_domain: "Domainre korlátozás"
+          email_or_domain_placeholder: "név@example.com vagy example.com"
           max_redemptions_allowed: "Max. használat"
           add_to_groups: "Hozzáadás csoportokhoz"
           expires_at: "Ennyi idő múlva lejár:"
@@ -1639,14 +1642,14 @@ hu:
       hide_session: "Emlékeztessen holnap"
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
-      intro: "Szia! Úgy tűnik, tetszik neked a fórumunk, de még nem regisztráltál fiókot."
+      intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
       value_prop: "Onnantól, hogy létrehozol egy fiókot, a rendszer emlékezni fog arra, hogy mit olvastál, így mindig oda térhetsz vissza, ahol korábban abbahagytad. Értesítéseket is kapsz, itt is és e-mailben is, valahányszor valaki válaszol neked. A bejegyzéseket pedig kedvelheted is. :heartpulse:"
     summary:
-      enabled_description: "A téma összefoglalását látod: a legérdekesebb bejegyzéseket a közösség határozta meg."
+      enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
-      description_time_MF: "{replyCount, plural, one {is <b>#</b> válasz} other {are <b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
+      description_time_MF: "{replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
       enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Összefoglalás"
@@ -1659,7 +1662,7 @@ hu:
     private_message_info:
       title: "Üzenet"
       invite: "Mások meghívása…"
-      edit: "Hozzáadás és eltávolítás"
+      edit: "Hozzáadás vagy eltávolítás…"
       remove: "Eltávolítás…"
       add: "Hozzáadás…"
       leave_message: "Biztos, hogy elhagyja a beszélgetést?"
@@ -1677,16 +1680,16 @@ hu:
       subheader_title: "Hozzuk létre a fiókját"
       disclaimer: "Csak akkor regisztráljon, ha elfogadja az <a href='%{privacy_link}' target='blank'>adatvédelmi szabályzatot</a> és a <a href='%{tos_link}' target='blank'>szolgáltatási feltételeket</a>."
       title: "Regisztráció"
-      failed: "Valami hiba történt, talán ez az e-mail cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
+      failed: "Valami hiba történt, talán ez az e-mail-cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
       associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
-      invite: "Adja meg a felhasználónevét vagy az e-mail címét és küldünk egy jelszó-visszaállító e-mailt."
+      invite: "Adja meg a felhasználónevét vagy az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
       reset: "Jelszó visszaállítása"
-      complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amiben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
-      complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amiben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
-      complete_username_found: "Találtunk egy fiókot, amelynek a felhasználóneve megegyezik ezzel: <b>%{username}</b>. Perceken belül egy e-mailt kell kapnod arról, hogy hogyan állíthatod vissza a jelszavadat."
+      complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
+      complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
+      complete_username_found: "Találtunk egy fiókot, amelynek a felhasználóneve megegyezik ezzel: <b>%{username}</b>. Perceken belül egy levelet kell kapnia arról, hogyan állíthatja vissza a jelszavát."
       complete_email_found: "Találtunk egy fiókot, amelynek a beállított e-mail címe megegyezik ezzel: <b>%{email}</b>. Perceken belül egy e-mailt kell kapnod arról, hogy hogyan állíthatod vissza a jelszavadat."
       complete_username_not_found: "Nincs fiók regisztrálva a következő felhasználónévvel: <b>%{username}</b>"
       complete_email_not_found: "Nincs fiók regisztrálva a következő e-mail-címmel: <b>%{email}</b>"
@@ -1756,6 +1759,7 @@ hu:
       google_oauth2:
         name: "Google"
         title: "Google-lel"
+        sr_title: "Bejelentkezés a Google-lel"
       twitter:
         name: "Twitter"
         title: "Twitterrel"
@@ -1806,6 +1810,7 @@ hu:
       categories_and_latest_topics: "Kategóriák és legutóbbi témák"
       categories_and_top_topics: "Kategóriák és legfelső témák"
       categories_boxes: "Dobozok alkategóriákkal"
+      categories_boxes_with_topics: "Dobozok kiemelt témákkal"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1826,7 +1831,7 @@ hu:
     select_kit:
       delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
-      select_to_filter: "Válaszd ki a szűrni kívánt értéket"
+      select_to_filter: "Válassza ki a szűrni kívánt értéket"
       default_header_text: Kiválasztás…
       no_content: Nem található egyezés
       results_count:
@@ -1844,6 +1849,9 @@ hu:
       invalid_selection_length:
         one: "A címnek legalább %{count} karakteresnek kell lennie"
         other: "A címnek legalább %{count} karakteresnek kell lennie"
+      components:
+        categories_admin_dropdown:
+          title: "Kategóriák kezelése"
     date_time_picker:
       from: Feladó
       to: Címzett
@@ -1882,9 +1890,9 @@ hu:
       add_warning: "Ez egy hivatalos figyelmeztetés."
       toggle_whisper: "Suttogás be/ki"
       toggle_unlisted: "Nem listázott állapot be/ki"
-      posting_not_on_topic: "Melyik témakörre szeretnél válaszolni?"
+      posting_not_on_topic: "Melyik témára szeretne válaszolni?"
       saved_local_draft_tip: "helyben mentett"
-      similar_topics: "A témaköröd hasonlít a..."
+      similar_topics: "A témája erre hasonlít…"
       drafts_offline: "vázlatok offline"
       edit_conflict: "szerkesztési ütközés"
       group_mentioned_limit:
@@ -1895,7 +1903,7 @@ hu:
         other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
       cannot_see_mention:
         category: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a témához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
-        private: "Említetted %{username} de nem lesznek értesítve mivel képtelenek megnézni ezt a személyes üzenetet. Megkell hívnod őket ehez a személyes üzenethez"
+        private: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
       here_mention:
         one: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
         other: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
@@ -1938,13 +1946,13 @@ hu:
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot vagy HTML-t. Idehúzhat vagy beilleszthet képeket."
-      reply_placeholder_no_images: "Ide írj. Használhatsz Markdown-t, BBCode-ot, vagy HTML-t a formázáshoz."
-      reply_placeholder_choose_category: "Válassz egy kategóriát, mielőtt elkezdesz írni!"
-      view_new_post: "Nézd meg az új bejegyzésedet."
-      saving: "Mentés"
-      saved: "Elmentve!"
+      reply_placeholder_no_images: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot, vagy HTML-t."
+      reply_placeholder_choose_category: "Válasszon egy kategóriát, mielőtt elkezd ide írni."
+      view_new_post: "Tekintse meg az új bejegyzését."
+      saving: "Mentés…"
+      saved: "Mentve!"
       saved_draft: "Vázlat közzététele folyamatban. Koppintson a folytatáshoz."
-      uploading: "Feltöltés..."
+      uploading: "Feltöltés…"
       show_preview: "előnézet megjelenítése"
       hide_preview: "előnézet elrejtése"
       quote_post_title: "Teljes bejegyzés idézése"
@@ -1955,9 +1963,9 @@ hu:
       italic_title: "Dőlt"
       italic_text: "dőlt szöveg"
       link_title: "Hiperhivatkozás"
-      link_description: "itt add meg a link leírását"
+      link_description: "itt adja meg a hivatkozás leírását"
       link_dialog_title: "Hiperhivatkozás beszúrása"
-      link_optional_text: "alternatív cím"
+      link_optional_text: "megadható cím"
       link_url_placeholder: "Illesszen be egy URL-t, vagy gépeljen a témák kereséséhez"
       blockquote_title: "Idézetblokk"
       blockquote_text: "Idézetblokk"
@@ -2384,8 +2392,12 @@ hu:
         title: "Lassú mód"
         select: "A felhasználók ennyi időnként csak egyszer tehetnek közzé bejegyzést:"
         enable: "Engedélyezés"
+        update: "Frissítés"
+        enabled_until: "Engedélyezve eddig:"
         remove: "Letiltás"
         hours: "Óráig:"
+        minutes: "Percek:"
+        seconds: "Másodpercek:"
         durations:
           10_minutes: "10 Percig"
           15_minutes: "15 Percig"
@@ -2397,14 +2409,20 @@ hu:
           8_hours: "8 Óráig"
           12_hours: "12 Óráig"
           24_hours: "24 Óráig"
+          custom: "Egyéni időtartam"
+      slow_mode_notice:
+        duration: "Várjon ennyit a bejegyzések között ennél a témánál: %{duration}"
       topic_status_update:
         title: "Téma időzítése"
         save: "Időzítő beállítása"
         num_of_hours: "Órák száma:"
+        num_of_days: "Napok száma:"
         remove: "Időzítő eltávolítása"
         publish_to: "Közzététel itt:"
         when: "Mikor:"
         time_frame_required: "Kérjük, válassz ki egy időkeretet"
+        min_duration: "Az időtartamnak 0-nál nagyobbnak kell lennie"
+        max_duration: "Az időtartamnak 20 évnél rövidebbnek kell lennie"
         duration: "Időtartam"
       auto_update_input:
         none: "Válassz időkeretet"
@@ -2414,11 +2432,27 @@ hu:
         later_this_week: "A hét folyamán"
         this_weekend: "Hétvégén"
         next_week: "Jövő hét"
+        two_weeks: "Két hét"
         next_month: "Jövő hónap"
+        two_months: "Két hónap"
+        three_months: "Három hónap"
+        four_months: "Négy hónap"
+        six_months: "Hat hónap"
+        one_year: "Egy év"
         forever: "Örökre"
         pick_date_and_time: "Dátum és idő kiválasztása"
+        set_based_on_last_post: "Lezárás az utolsó bejegyzés alapján"
+      publish_to_category:
+        title: "Közzététel ütemezése"
+      temp_open:
+        title: "Megnyitás ideiglenesen"
+      auto_reopen:
+        title: "Téma automatikus megynitása"
+      temp_close:
+        title: "Lezárás ideiglenesen"
       auto_close:
         title: "Téma automatikus lezárása"
+        label: "Téma automatikus lezárása ennyi idő után:"
         error: "Érvényes dátumot kérek!"
         based_on_last_post: "Nem zárul le a poszt addig, amíg a legújabb üzenet nem ennyi ideje lett elküldve."
       auto_close_after_last_post:
@@ -2427,7 +2461,10 @@ hu:
         title: "Téma automatikus törlése"
       reminder:
         title: "Emlékeztető"
+      auto_delete_replies:
+        title: "Válaszok automatikus törlése"
       status_update_notice:
+        auto_open: "Ez a téma %{timeLeft} automatikusan megnyílik."
         auto_close: "Ez a téma %{timeLeft} automatikusan lezárul."
         auto_close_after_last_post: "Ez a téma az utolsó válasz után %{duration} idővel zár le."
       auto_close_title: "Automatikus lezárási beállítások"
@@ -3118,11 +3155,15 @@ hu:
       selector_no_tags: "címke nélküli"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
+      default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
+      staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
+      save: "Címke nevének és leírásának mentése"
+      edit_synonyms: "Szinonimák szerkesztése"
       add_synonyms: "Hozzáadás"
       delete_tag: "Címke törlése"
       delete_confirm_no_topics: "Biztos vagy benne hogy elakarod távolítani ezt a címkét?"
-      rename_tag: "Címke átnevezése"
-      rename_instructions: "Válassz egy úgy nevet a címkének:"
+      edit_tag: "Címke nevének és leírásának szerkesztése"
+      description: "Leírás"
       sort_by: "Rendezés"
       sort_by_count: "besorol"
       sort_by_name: "név"
@@ -3299,6 +3340,7 @@ hu:
             automatic: Autómatikus
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "
             trust_levels_none: "Egyik sem"
+            automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
         name_placeholder: "Csoport neve szóközök nélkül, a felhasználónév szabályaival"
         primary: "Elsődleges csoport"
         no_primary: "(nincs elsődleges csoport)"
@@ -3341,6 +3383,14 @@ hu:
               create: Töltsön fel egy új fájlt.
             users:
               update: Felhasználói profil adatainak frissítése.
+            badges:
+              create: Új jelvény létrehozása.
+              show: Információ szerzése egy jelvényről.
+              update: Jelvény frissítése.
+              delete: Jelvény törlése.
+              list_user_badges: A felhasználó jelvényeinek felsorolása.
+              assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
+              revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"

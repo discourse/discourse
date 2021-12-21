@@ -4,6 +4,8 @@ require 'rails_helper'
 require 'pretty_text'
 
 describe PrettyText do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post) }
 
   before do
     SiteSetting.enable_markdown_typographer = false
@@ -23,7 +25,6 @@ describe PrettyText do
 
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
-      fab!(:user) { Fabricate(:user) }
 
       before do
         User.stubs(:default_template).returns(default_avatar)
@@ -349,8 +350,6 @@ describe PrettyText do
     end
 
     describe "with letter avatar" do
-      fab!(:user) { Fabricate(:user) }
-
       context "subfolder" do
         it "should have correct avatar url" do
           set_subfolder "/forum"
@@ -455,8 +454,6 @@ describe PrettyText do
       end
 
       it 'should not convert mentions to links' do
-        _user = Fabricate(:user)
-
         expect(PrettyText.cook('hi @user')).to eq('<p>hi @user</p>')
       end
     end
@@ -1027,7 +1024,6 @@ describe PrettyText do
 
   describe 'format_for_email' do
     let(:base_url) { "http://baseurl.net" }
-    fab!(:post) { Fabricate(:post) }
 
     before do
       Discourse.stubs(:base_url).returns(base_url)
@@ -1648,7 +1644,7 @@ HTML
   end
 
   it "can onebox local topics" do
-    op = Fabricate(:post)
+    op = post
     reply = Fabricate(:post, topic_id: op.topic_id)
 
     url = Discourse.base_url + reply.url
