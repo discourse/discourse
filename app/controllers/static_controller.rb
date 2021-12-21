@@ -59,7 +59,7 @@ class StaticController < ApplicationController
       return
     end
 
-    @title = SiteSetting.title
+    @title = SiteSetting.title.dup
 
     if SiteSetting.short_site_description.present?
       @title << " - #{SiteSetting.short_site_description}"
