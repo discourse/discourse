@@ -97,6 +97,7 @@ export default Component.extend({
 
     if (isEmpty(title) && isEmpty(this.additionalFilters)) {
       this.setProperties({ topics: null, loading: false });
+      this.onSearchEmptied?.();
       return;
     }
 
