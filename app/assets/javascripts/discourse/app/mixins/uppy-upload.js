@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -41,6 +42,8 @@ export default Mixin.create(UppyS3Multipart, {
   validateUploadedFilesOptions() {
     return {};
   },
+
+  uploadingOrProcessing: or("uploading", "processing"),
 
   @on("willDestroyElement")
   _destroy() {
