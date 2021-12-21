@@ -174,7 +174,7 @@ describe User do
 
   context 'enqueue_staff_welcome_message' do
     fab!(:first_admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'enqueues message for admin' do
       expect {
@@ -558,14 +558,14 @@ describe User do
   end
 
   describe 'username format' do
+    fab!(:user) { Fabricate(:user) }
+
     def assert_bad(username)
-      user = Fabricate(:user)
       user.username = username
       expect(user.valid?).to eq(false)
     end
 
     def assert_good(username)
-      user = Fabricate(:user)
       user.username = username
       expect(user.valid?).to eq(true)
     end
@@ -895,7 +895,7 @@ describe User do
   end
 
   describe "previous_visit_at" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
     let!(:third_visit_date) { 5.hours.from_now }
@@ -2189,7 +2189,7 @@ describe User do
   end
 
   describe '#title=' do
-    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
+    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
 
     it 'sets badge_granted_title correctly' do
       BadgeGranter.grant(badge, user)
@@ -2234,10 +2234,10 @@ describe User do
   end
 
   describe '#next_best_title' do
-    let(:group_a) { Fabricate(:group, title: 'Group A') }
-    let(:group_b) { Fabricate(:group, title: 'Group B') }
-    let(:group_c) { Fabricate(:group, title: 'Group C') }
-    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
+    fab!(:group_a) { Fabricate(:group, title: 'Group A') }
+    fab!(:group_b) { Fabricate(:group, title: 'Group B') }
+    fab!(:group_c) { Fabricate(:group, title: 'Group C') }
+    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
 
     it 'only includes groups with title' do
       group_a.add(user)

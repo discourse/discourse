@@ -17,29 +17,31 @@
   {{#if noResults}}
     <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
-    {{#each topics as |t|}}
-      <div class="controls existing-topic">
-        <label class="radio">
-          {{input
-            id=(concat "choose-topic-" t.id)
-            checked=(eq t.id selectedTopicId)
-            click=(action "chooseTopic" t)
-            type="radio"
-            name="choose_topic_id"
-          }}
-          {{topic-status topic=t disableActions=true}}
-          <span class="topic-title">
-            {{replace-emoji t.fancy_title}}
-          </span>
-          <span class="topic-categories">
-            {{bound-category-link t.category
-              recursive=true
-              hideParent=true
-              link=false
+    <div class="choose-topic-list">
+      {{#each topics as |t|}}
+        <div class="controls existing-topic">
+          <label class="radio">
+            {{input
+              id=(concat "choose-topic-" t.id)
+              checked=(eq t.id selectedTopicId)
+              click=(action "chooseTopic" t)
+              type="radio"
+              name="choose_topic_id"
             }}
-          </span>
-        </label>
-      </div>
-    {{/each}}
+            {{topic-status topic=t disableActions=true}}
+            <span class="topic-title">
+              {{replace-emoji t.fancy_title}}
+            </span>
+            <span class="topic-categories">
+              {{bound-category-link t.category
+                recursive=true
+                hideParent=true
+                link=false
+              }}
+            </span>
+          </label>
+        </div>
+      {{/each}}
+    </div>
   {{/if}}
 {{/if}}

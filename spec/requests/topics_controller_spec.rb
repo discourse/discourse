@@ -1365,52 +1365,61 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
-        context 'when using SiteSetting.disable_category_edit_notifications or SiteSetting.disable_tags_edit_notifications' do
-          shared_examples 'a topic bump suppressor' do
-            it "doesn't bump the topic if the setting is enabled" do
-              enable_setting
-              last_bumped_at = topic.bumped_at
-              expect(last_bumped_at).not_to be_nil
+        context "when using SiteSetting.disable_category_edit_notifications" do
+          it "doesn't bump the topic if the setting is enabled" do
+            SiteSetting.disable_category_edit_notifications = true
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
 
-              expect do
-                put "/t/#{topic.slug}/#{topic.id}.json", params: params
-              end.to change { topic.reload.send(attribute_to_change) }.to(expected_new_value)
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
+            end.to change { topic.reload.category_id }.to(category.id)
 
-              expect(response.status).to eq(200)
-              expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
-            end
-
-            it "bumps the topic if the setting is disabled" do
-              disable_setting
-              last_bumped_at = topic.bumped_at
-              expect(last_bumped_at).not_to be_nil
-
-              expect do
-                put "/t/#{topic.slug}/#{topic.id}.json", params: params
-              end.to change { topic.reload.send(attribute_to_change) }.to(expected_new_value)
-
-              expect(response.status).to eq(200)
-              expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
-            end
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
           end
 
-          it_behaves_like 'a topic bump suppressor' do
-            let(:attribute_to_change) { :category_id }
-            let(:expected_new_value) { category.id }
-            let(:params) { { category_id: category.id } }
-            let(:enable_setting) { SiteSetting.disable_category_edit_notifications = true }
-            let(:disable_setting) { SiteSetting.disable_category_edit_notifications = false }
+          it "bumps the topic if the setting is disabled" do
+            SiteSetting.disable_category_edit_notifications = false
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
+            end.to change { topic.reload.category_id }.to(category.id)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
+          end
+        end
+
+        context "when using SiteSetting.disable_tags_edit_notifications" do
+          fab!(:t1) { Fabricate(:tag) }
+          fab!(:t2) { Fabricate(:tag) }
+          let(:tags) { [t1, t2] }
+
+          it "doesn't bump the topic if the setting is enabled" do
+            SiteSetting.disable_tags_edit_notifications = true
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: tags.map(&:name) }
+
+            expect(topic.reload.tags).to match_array(tags)
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
           end
 
-          it_behaves_like 'a topic bump suppressor' do
-            fab!(:t1) { Fabricate(:tag) }
-            fab!(:t2) { Fabricate(:tag) }
-            let(:tags) { [t1, t2] }
-            let(:attribute_to_change) { :tags }
-            let(:expected_new_value) { tags }
-            let(:params) { { tags: tags.map(&:name) } }
-            let(:enable_setting) { SiteSetting.disable_tags_edit_notifications = true }
-            let(:disable_setting) { SiteSetting.disable_tags_edit_notifications = false }
+          it "bumps the topic if the setting is disabled" do
+            SiteSetting.disable_tags_edit_notifications = false
+            last_bumped_at = topic.bumped_at
+            expect(last_bumped_at).not_to be_nil
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: tags.map(&:name) }
+
+            expect(topic.reload.tags).to match_array(tags)
+            expect(response.status).to eq(200)
+            expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
           end
         end
 

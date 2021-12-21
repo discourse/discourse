@@ -148,8 +148,12 @@ onmessage = async function (e) {
       }
       break;
     case "install":
-      await loadLibs(e.data.settings);
-      postMessage({ type: "installed" });
+      try {
+        await loadLibs(e.data.settings);
+        postMessage({ type: "installed" });
+      } catch (error) {
+        postMessage({ type: "installFailed", errorMessage: error.message });
+      }
       break;
     default:
       logIfDebug(`Sorry, we are out of ${e}.`);
