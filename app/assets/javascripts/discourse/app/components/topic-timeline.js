@@ -2,7 +2,6 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
 import optionalService from "discourse/lib/optional-service";
 
 export default MountWidget.extend(Docking, {
@@ -10,6 +9,7 @@ export default MountWidget.extend(Docking, {
   widget: "topic-timeline-container",
   dockBottom: null,
   dockAt: null,
+  intersectionObserver: null,
 
   buildArgs() {
     let attrs = {
@@ -30,8 +30,6 @@ export default MountWidget.extend(Docking, {
     if (this.fullscreen) {
       attrs.fullScreen = true;
       attrs.addShowClass = this.addShowClass;
-    } else {
-      attrs.top = this.dockAt || this.headerOffset();
     }
 
     return attrs;
@@ -48,11 +46,6 @@ export default MountWidget.extend(Docking, {
   },
 
   dockCheck() {
-    const topicTop = domUtils.offset(document.querySelector(".container.posts"))
-      .top;
-    const topicBottom = domUtils.offset(document.querySelector("#topic-bottom"))
-      .top;
-
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
 
@@ -61,17 +54,17 @@ export default MountWidget.extend(Docking, {
     const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
-    if (posTop < topicTop) {
-      this.dockAt = parseInt(topicTop, 10);
-    } else if (pos > topicBottom) {
-      this.dockAt = parseInt(topicBottom - timelineHeight, 10);
+    if (posTop < this.topicTop) {
+      this.dockAt = parseInt(this.topicTop, 10);
+    } else if (pos > this.topicBottom) {
+      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) {
         this.dockAt = 0;
       }
     } else {
       this.dockAt = null;
-      this.fastDockAt = parseInt(topicBottom - timelineHeight, 10);
+      this.fastDockAt = parseInt(this.topicBottom - timelineHeight, 10);
     }
 
     if (this.dockAt !== prev) {
@@ -81,10 +74,7 @@ export default MountWidget.extend(Docking, {
 
   headerOffset() {
     return (
-      parseInt(
-        document.body.style.getPropertyValue("--header-offset"),
-        10
-      ) || 0
+      parseInt(document.body.style.getPropertyValue("--header-offset"), 10) || 0
     );
   },
 
@@ -107,6 +97,28 @@ export default MountWidget.extend(Docking, {
       this.appEvents.on("composer:opened", this, this.queueRerender);
       this.appEvents.on("composer:resized", this, this.queueRerender);
       this.appEvents.on("composer:closed", this, this.queueRerender);
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            const bounds = entry.boundingClientRect;
+
+            if (entry.target.id === "topic-bottom") {
+              this.set("topicBottom", bounds.y + window.scrollY);
+            } else {
+              this.set("topicTop", bounds.y + window.scrollY);
+            }
+          }
+        });
+
+        const elements = [
+          document.querySelector(".container.posts"),
+          document.querySelector("#topic-bottom"),
+        ];
+
+        for (let i = 0; i < elements.length; i++) {
+          this.intersectionObserver.observe(elements[i]);
+        }
+      }
     }
   },
 
@@ -117,6 +129,10 @@ export default MountWidget.extend(Docking, {
       this.appEvents.off("composer:opened", this, this.queueRerender);
       this.appEvents.off("composer:resized", this, this.queueRerender);
       this.appEvents.off("composer:closed", this, this.queueRerender);
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver?.disconnect();
+        this.intersectionObserver = null;
+      }
     }
   },
 });
