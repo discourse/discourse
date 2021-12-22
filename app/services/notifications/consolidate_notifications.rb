@@ -44,7 +44,7 @@ module Notifications
       @data = consolidated_data(notification)
 
       return true if @precondition_blk.nil?
-      @precondition_blk.call(data)
+      @precondition_blk.call(data, notification)
     end
 
     def consolidate_or_save!(notification)

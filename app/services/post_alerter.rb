@@ -434,23 +434,6 @@ class PostAlerter
       return if existing_notifications.find { |n| n.notification_type == Notification.types[:replied] }
     end
 
-    notification_data = {}
-
-    if is_liked &&
-      existing_notification_of_same_type &&
-      existing_notification_of_same_type.created_at > 1.day.ago &&
-      (
-        user.user_option.like_notification_frequency ==
-        UserOption.like_notification_frequency_type[:always]
-      )
-
-      data = existing_notification_of_same_type.data_hash
-      notification_data["username2"] = data["display_username"]
-      notification_data["count"] = (data["count"] || 1).to_i + 1
-      # don't use destroy so we don't trigger a notification count refresh
-      Notification.where(id: existing_notification_of_same_type.id).destroy_all
-    end
-
     collapsed = false
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
@@ -481,12 +464,14 @@ class PostAlerter
       end
     end
 
-    notification_data.merge!(topic_title: topic_title,
-                             original_post_id: original_post.id,
-                             original_post_type: original_post.post_type,
-                             original_username: original_username,
-                             revision_number: opts[:revision_number],
-                             display_username: opts[:display_username] || post.user.username)
+    notification_data = {
+      topic_title: topic_title,
+      original_post_id: original_post.id,
+      original_post_type: original_post.post_type,
+      original_username: original_username,
+      revision_number: opts[:revision_number],
+      display_username: opts[:display_username] || post.user.username,
+    }
 
     if group = opts[:group]
       notification_data[:group_id] = group.id
