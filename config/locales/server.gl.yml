@@ -1487,7 +1487,6 @@ gl:
     blocked_email_domains: "Unha listaxe dominios de correo electrónico separados por barras verticais cos cales os usuarios non poden rexistrar contas. Exemplo: mailinator.com | trashmail.net"
     allowed_email_domains: "Unha listaxe de dominios de correo electrónico separados por barras verticais cos que os usuarios DEBEN rexistrar contas. AVISO: Non se permitirán usuarios con dominios de correo electrónico distintos aos da listaxe!"
     auto_approve_email_domains: "Os usuarios con enderezos electrónicos desta listaxe de dominios serán aprobados automaticamente."
-    hide_email_address_taken: "Non informar aos usuarios da existencia dunha conta cun correo electrónico determinado durante o rexistro e desde o formulario de contrasinal esquecido."
     log_out_strict: "Ao pechar a sesión, pechar TODAS as sesións en todos os dispositivos do usuario"
     version_checks: "Faga ping ao Discourse Hub para obter actualizacións de versións e amose mensaxes de nova versión no panel de control do<a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar un correo electrónico a contact_email address cando haxa dispoñible unha nova versión de Discourse."

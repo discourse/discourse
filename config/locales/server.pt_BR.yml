@@ -1545,7 +1545,6 @@ pt_BR:
     blocked_email_domains: "Lista delimitada por barras de domínios de e-mail que não são permitidos para registrar contas. Por exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista delimitada por barras de domínios de e-mail que os(as) usuários(as) DEVEM usar para registrar contas. AVISO: usuários(as) com domínios de e-mail que não estão na lista não terão permissão!"
     auto_approve_email_domains: "Os(as) usuários(as) com endereços de e-mail da lista de domínios serão aprovados automaticamente."
-    hide_email_address_taken: "Não informe os(as) usuários(as) de que existe uma conta com um determinado endereço de e-mail durante o cadastro e o formulário de recuperação de senha."
     log_out_strict: "Ao sair com a conta, sair de TODAS as sessões do(a) usuário(a) em todos os dispositivos"
     version_checks: "Procurar na central do Discourse por atualizações de versão e exibir mensagens de nova versão no painel de controle <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."

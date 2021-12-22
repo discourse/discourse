@@ -1421,6 +1421,7 @@ lt:
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
     category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
+    max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
     topic_views_heat_medium: "Po tiek peržiūrų rodinių laukas vidutiniškai paryškinamas."
     topic_views_heat_high: "Po šio daugybės peržiūrų, peržiūros laukas yra stipriai paryškintas."
@@ -1432,6 +1433,7 @@ lt:
     delete_email_logs_after_days: "Ištrinkite el. pašto žurnalus po (N) dienų. 0 laikyti neribotą laiką"
     disallow_reply_by_email_after_days: "Neleisti atsakyti el. paštu po (N) dienų. 0 laikyti neribotą laiką"
     max_emails_per_day_per_user: "Maksimalus el. laiškų, kuriuos reikia išsiųsti vartotojams per dieną, skaičius. 0, kad išjungtumėte ribą"
+    ignore_by_title: "Ignoruokite gaunamus el. laiškus pagal jų pavadinimą."
     bounce_score_threshold: "Maksimalus atmetimo balas, kol nustosime siųsti el. laiškus vartotojui."
     reset_bounce_score_after_days: "Automatiškai iš naujo nustatyti atmetimo balą po X dienų."
     blocked_attachment_content_types: "Raktinių žodžių, naudojamų įtraukiant priedus pagal turinio tipą, sąrašas."
@@ -1948,6 +1950,12 @@ lt:
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
     dashboard_problems:
       subject_template: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
+      text_body_template: |
+        Atsižvelgdami į dabartinius svetainės nustatymus, turime jums keletą naujų patarimų ir rekomendacijų.
+
+        [Apsilankykite savo svetainės informacijos suvestinėje](%{base_url}/admin), kad ją pamatytumėte.
+
+        Jei suvestinėje nieko nematote, kitas darbuotojas jau galėjo pasinaudoti šiuo patarimu. Personalo veiksmų sąrašą galite rasti [Personalo veiksmų%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
       subject_template: "Jūs esate naujas mėnesio vartotojas!"

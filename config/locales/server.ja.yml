@@ -1491,7 +1491,6 @@ ja:
     blocked_email_domains: "ユーザーがアカウント登録をすることができないメールドメインの、パイプ区切りのリスト。例: mailinator.com|trashmail.net"
     allowed_email_domains: "ユーザー登録に必要なメールドメインのパイプ区切りのリスト。警告: 指定したメールドメイン以外のユーザーの登録は許可されません！"
     auto_approve_email_domains: "このドメインリストのメールアドレスを持つユーザーは自動的に承認されます。"
-    hide_email_address_taken: "登録中およびパスワード忘れのフォームを使用中に、指定されたメールアドレスのアカウントが既に存在することをユーザーに通知しない。"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトする"
     version_checks: "Discourse に Ping してバージョン更新を確認し、<a href='%{base_path}/admin' target='_blank'>/admin</a> ダッシュボードに新しいバージョンに関するメッセージを表示する"
     new_version_emails: "Discourse の新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
