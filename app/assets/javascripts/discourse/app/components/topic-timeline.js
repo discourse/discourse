@@ -82,7 +82,7 @@ export default MountWidget.extend(Docking, {
   headerOffset() {
     return (
       parseInt(
-        getComputedStyle(document.body).getPropertyValue("--header-offset"),
+        document.body.style.getPropertyValue("--header-offset"),
         10
       ) || 0
     );
