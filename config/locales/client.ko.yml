@@ -2473,6 +2473,8 @@ ko:
         help: "이 글의 링크 공유"
         instructions: "이 글의 링크 공유:"
         copied: "글 링크가 복사되었습니다."
+        restricted_groups:
+          other: "그룹 구성원만 볼 수 있음: %{groupNames}"
         notify_users:
           title: "알림"
           instructions: "다음 사용자에게 이 항목에 대해 알립니다."
@@ -3251,6 +3253,7 @@ ko:
         title: "검색 메뉴"
         prev_next: "%{shortcut} 선택을 위아래로 이동"
         insert_url: "%{shortcut} 열린 글 작성기에 선택 영역 삽입"
+        full_page_search: "%{shortcut} 전체 페이지 검색"
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 받았습니다"
@@ -3314,6 +3317,7 @@ ko:
         other: "이 태그는 다음 그룹에 속합니다: %{tag_groups}."
       category_restrictions:
         other: "다음 카테고리에서만 사용할 수 있습니다:"
+      edit_synonyms: "동의어 편집"
       add_synonyms_label: "동의어 추가 :"
       add_synonyms: "추가"
       add_synonyms_explanation:
@@ -3656,8 +3660,10 @@ ko:
             범위를 사용할 때 API키를 특정 엔드 포인트 세트로 제한 할 수 있습니다.
             허용 할 매개 변수를 정의 할 수도 있습니다. 여러 값을 구분하려면 쉼표를 사용하십시오.
           title: 범위
+          granular: 세분화
           read_only: 읽기 전용
           global: 글로벌
+          global_description: API 키에는 제한이 없으며 모든 엔드포인트에 액세스할 수 있습니다.
           resource: 자원
           action: 동작
           allowed_parameters: 허용된 매개 변수
@@ -3672,8 +3678,6 @@ ko:
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             posts:
               edit: 게시물 또는 특정 게시물을 편집합니다.
-            uploads:
-              create: 새 파일을 업로드합니다.
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
@@ -3686,6 +3690,13 @@ ko:
               list: 사용자 목록을 가져옵니다.
             email:
               receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
+            badges:
+              create: 새 배지를 만들기
+              update: 배지 업데이트
+              delete: 배지 삭제
+              list_user_badges: 사용자 배지 리스트
+              assign_badge_to_user: 사용자에게 배지를 할당합니다.
+              revoke_badge_from_user: 사용자 배지 취소
       web_hooks:
         title: "Webhook"
         none: "현재 webhook이 없습니다."

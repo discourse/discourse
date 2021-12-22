@@ -39,6 +39,8 @@ ko:
     topic_must_be_open_to_vote: "토픽이 열려야 투표를 할 수 있습니다."
     poll_must_be_open_to_vote: "투표가 열려있어야 표결할 수 있습니다."
     one_vote_per_user: "이 투표에는 1표만 허용됩니다."
+    max_vote_per_user:
+      other: 이 투표에는 최대 %{count}표가 허용됩니다.
     topic_must_be_open_to_toggle_status: "토픽이 열려야 상태 변경을 할 수 있습니다."
     only_staff_or_op_can_toggle_status: "운영진이나 작성자만이 투표 상태를 변경할 수 있습니다."
     insufficient_rights_to_create: "설문 조사를 만들 수 없습니다."

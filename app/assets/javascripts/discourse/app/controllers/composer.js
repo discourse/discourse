@@ -894,7 +894,11 @@ export default Controller.extend({
 
         if (result.responseJson.action === "create_post") {
           this.appEvents.trigger("composer:created-post");
-          this.appEvents.trigger("post:highlight", result.payload.post_number);
+          this.appEvents.trigger(
+            "post:highlight",
+            result.payload.post_number,
+            options
+          );
         }
 
         if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {

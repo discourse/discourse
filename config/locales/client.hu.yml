@@ -3379,8 +3379,6 @@ hu:
           resource: Forrás
           action: Művelet
           descriptions:
-            uploads:
-              create: Töltsön fel egy új fájlt.
             users:
               update: Felhasználói profil adatainak frissítése.
             badges:

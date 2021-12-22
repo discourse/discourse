@@ -229,6 +229,7 @@ ko:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
     requires_groups: "초대가 저장되었습니다. 지정된 글에 대한 접근 권한을 부여하려면 다음 그룹 중 하나를 추가하십시오: %{groups}."
+    domain_not_allowed: "사용자님의 이메일은 이 초대를 사용하는데 사용할 수 없습니다."
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     max_rows: "첫 번째 %{max_bulk_invites} 초대가 전송되었습니다. 파일을 작은 부분으로 분할하십시오."
@@ -1283,6 +1284,7 @@ ko:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 사용자
+        trust_level: 회원 레벨
         qtt_like: '''좋아요'' 받은 횟수'
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -1501,7 +1503,6 @@ ko:
     blocked_email_domains: "사용자가 계정을 등록 할 수없는 파이프- 로 구분 된 이메일 도메인 목록입니다. 예: mailinator.com | trashmail.net"
     allowed_email_domains: "사용자가 계정 등록에 사용해야하는 파이프로 구분 된 이메일 도메인 목록입니다. 경고: 나열된 것 이외의 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
     auto_approve_email_domains: "이 도메인 목록의 이메일 주소를 가진 사용자는 자동으로 승인됩니다."
-    hide_email_address_taken: "가입하는 동안 및 비밀번호를 잊어 버린 양식에서 지정된 이메일 주소로 계정이 존재한다고 사용자에게 알리지 마십시오."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "버전 관리를 위해 Discourse Hub를 핑 (Ping)하여 <a href='%{base_path}/admin' target='_blank'>/ admin</a> 대시 보드에 새 버전 메시지를 표시합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -2056,6 +2057,7 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
+      google_oauth2_hd_groups: "이 설정을 활성화하기 전에 먼저 'google oauth2 hd'를 설정해야 합니다."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2413,6 +2415,8 @@ ko:
   temporarily_closed_due_to_flags:
     other: "이 글은 많은 신고로 인해 최소 %{count}시간 동안 일시적으로 닫힙니다."
   system_messages:
+    reviewables_reminder:
+      subject_template: "검토가 필요한 항목이 검토 대기열에 있습니다."
     private_topic_title: "주제 # %{id}"
     contents_hidden: "내용을 보려면 게시물을 방문하십시오."
     post_hidden:

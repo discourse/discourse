@@ -1428,7 +1428,6 @@ nl:
     blocked_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarbij gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
     allowed_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     auto_approve_email_domains: "Gebruikers met e-mailadressen van deze lijst met domeinen worden automatisch goedgekeurd."
-    hide_email_address_taken: "Gebruikers niet informeren dat een account met een bepaald e-mailadres bestaat tijdens registratie en vanaf het formulier voor vergeten wachtwoorden."
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
     version_checks: "De Discourse Hub pingen voor versie-updates en berichten over nieuwe versies tonen op het <a href='%{base_path}/admin' target='_blank'>/admin</a>-dashboard"
     new_version_emails: "Een e-mail naar het contact_email-adres sturen wanneer een nieuwe versie van Discourse beschikbaar is."

@@ -1696,6 +1696,7 @@ sv:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
       invite: "Skriv in ditt användarnamn eller din e-postadress, så skickar vi dig ett e-postmeddelande om lösenordsåterställning."
+      invite_no_username: "Ange din e-postadress så skickar vi ett e-postmeddelande för återställning av lösenordet."
       reset: "Återställ lösenord"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
       complete_email: "Om ett konto matchar <b>%{email}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
@@ -3883,7 +3884,7 @@ sv:
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             uploads:
-              create: Ladda upp en ny fil.
+              create: Ladda upp en ny fil eller påbörja enstaka eller flerdelade direktuppladdningar till extern lagring.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
               sync_sso: Synkronisera en användare med DiscourseConnect.

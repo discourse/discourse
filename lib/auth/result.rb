@@ -189,7 +189,7 @@ class Auth::Result
   end
 
   def username_suggester_attributes
-    username || name || email
+    [username, name, email]
   end
 
   def authenticator
@@ -203,6 +203,6 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(username_suggester_attributes)
+    UserNameSuggester.suggest(*username_suggester_attributes)
   end
 end

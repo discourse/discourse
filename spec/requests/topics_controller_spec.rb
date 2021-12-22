@@ -39,21 +39,23 @@ RSpec.describe TopicsController do
   fab!(:tag) { Fabricate(:tag) }
 
   describe '#wordpress' do
-    let!(:user) { sign_in(moderator) }
+    before do
+      sign_in(moderator)
+    end
+
     fab!(:p1) { Fabricate(:post, user: moderator) }
-    fab!(:topic) { p1.topic }
-    fab!(:p2) { Fabricate(:post, topic: topic, user: moderator) }
+    fab!(:p2) { Fabricate(:post, topic: p1.topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
       SiteSetting.external_system_avatars_enabled = false
 
-      get "/t/#{topic.id}/wordpress.json", params: { best: 3 }
+      get "/t/#{p1.topic.id}/wordpress.json", params: { best: 3 }
 
       expect(response.status).to eq(200)
       json = response.parsed_body
 
       # The JSON has the data the wordpress plugin needs
-      expect(json['id']).to eq(topic.id)
+      expect(json['id']).to eq(p1.topic.id)
       expect(json['posts_count']).to eq(2)
       expect(json['filtered_posts_count']).to eq(2)
 
@@ -61,18 +63,18 @@ RSpec.describe TopicsController do
       expect(json['posts'].size).to eq(1)
       post = json['posts'][0]
       expect(post['id']).to eq(p2.id)
-      expect(post['username']).to eq(user.username)
-      expect(post['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{user.avatar_template}")
-      expect(post['name']).to eq(user.name)
+      expect(post['username']).to eq(moderator.username)
+      expect(post['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{moderator.avatar_template}")
+      expect(post['name']).to eq(moderator.name)
       expect(post['created_at']).to be_present
       expect(post['cooked']).to eq(p2.cooked)
 
       # Participants
       expect(json['participants'].size).to eq(1)
       participant = json['participants'][0]
-      expect(participant['id']).to eq(user.id)
-      expect(participant['username']).to eq(user.username)
-      expect(participant['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{user.avatar_template}")
+      expect(participant['id']).to eq(moderator.id)
+      expect(participant['username']).to eq(moderator.username)
+      expect(participant['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{moderator.avatar_template}")
     end
   end
 
@@ -192,9 +194,9 @@ RSpec.describe TopicsController do
       describe "moving replied posts" do
         context 'success' do
           it "moves the child posts too" do
-            user = sign_in(moderator)
-            p1 = Fabricate(:post, topic: topic, user: user)
-            p2 = Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number)
+            sign_in(moderator)
+            p1 = Fabricate(:post, topic: topic, user: moderator)
+            p2 = Fabricate(:post, topic: topic, user: moderator, reply_to_post_number: p1.post_number)
             PostReply.create(post_id: p1.id, reply_post_id: p2.id)
 
             post "/t/#{topic.id}/move-posts.json", params: {
@@ -266,7 +268,10 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to an existing topic' do
-      let!(:user) { sign_in(moderator) }
+      before do
+        sign_in(moderator)
+      end
+
       fab!(:p1) { Fabricate(:post, user: moderator) }
       fab!(:topic) { p1.topic }
       fab!(:p2) { Fabricate(:post, user: moderator, topic: topic) }
@@ -459,7 +464,10 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to an existing message' do
-      let!(:user) { sign_in(admin) }
+      before do
+        sign_in(admin)
+      end
+
       fab!(:evil_trout) { Fabricate(:evil_trout) }
       fab!(:message) { pm }
       fab!(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
@@ -545,10 +553,9 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: post_author1, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
-      let!(:user) { group_user.user }
 
       before do
-        sign_in(user)
+        sign_in(group_user.user)
         SiteSetting.enable_category_group_moderation = true
       end
 
@@ -879,16 +886,16 @@ RSpec.describe TopicsController do
       end
 
       it 'should update the status of the topic correctly' do
-        topic = Fabricate(:topic, user: user, closed: true)
-        Fabricate(:topic_timer, topic: topic, status_type: TopicTimer.types[:open])
+        closed_user_topic = Fabricate(:topic, user: user, closed: true)
+        Fabricate(:topic_timer, topic: closed_user_topic, status_type: TopicTimer.types[:open])
 
-        put "/t/#{topic.id}/status.json", params: {
+        put "/t/#{closed_user_topic.id}/status.json", params: {
           status: 'closed', enabled: 'false'
         }
 
         expect(response.status).to eq(200)
-        expect(topic.reload.closed).to eq(false)
-        expect(topic.topic_timers).to eq([])
+        expect(closed_user_topic.reload.closed).to eq(false)
+        expect(closed_user_topic.topic_timers).to eq([])
 
         body = response.parsed_body
 
@@ -899,10 +906,9 @@ RSpec.describe TopicsController do
     describe 'when logged in as a group member with reviewable status' do
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
-      let!(:user) { group_user.user }
 
       before do
-        sign_in(user)
+        sign_in(group_user.user)
         SiteSetting.enable_category_group_moderation = true
       end
 
@@ -1075,18 +1081,19 @@ RSpec.describe TopicsController do
     end
 
     context 'when logged in' do
+      fab!(:user_topic) { Fabricate(:topic, user: user) }
+      fab!(:user_post) { Fabricate(:post, user: user, topic: user_topic, post_number: 2) }
+
       before do
         sign_in(user)
-        @topic = Fabricate(:topic, user: user)
-        Fabricate(:post, user: user, topic: @topic, post_number: 2)
-        TopicUser.create!(topic: @topic, user: user)
-        PostTiming.create!(topic: @topic, user: user, post_number: 2, msecs: 1000)
+        TopicUser.create!(topic: user_topic, user: user)
+        PostTiming.create!(topic: user_topic, user: user, post_number: 2, msecs: 1000)
       end
 
       it 'deletes the forum topic user and post timings records' do
         expect do
-          delete "/t/#{@topic.id}/timings.json"
-        end.to change { topic_user_post_timings_count(user, @topic) }.from([1, 1]).to([0, 0])
+          delete "/t/#{user_topic.id}/timings.json"
+        end.to change { topic_user_post_timings_count(user, user_topic) }.from([1, 1]).to([0, 0])
       end
     end
   end
@@ -1491,8 +1498,7 @@ RSpec.describe TopicsController do
           it "can add a tag to wiki topic" do
             SiteSetting.min_trust_to_edit_wiki_post = 2
             topic.first_post.update!(wiki: true)
-            user = Fabricate(:user)
-            sign_in(user)
+            sign_in(user_2)
 
             expect do
               put "/t/#{topic.id}/tags.json", params: {
@@ -1501,7 +1507,7 @@ RSpec.describe TopicsController do
             end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(403)
-            user.update!(trust_level: 2)
+            user_2.update!(trust_level: 2)
 
             expect do
               put "/t/#{topic.id}/tags.json", params: {
@@ -1726,8 +1732,8 @@ RSpec.describe TopicsController do
       it "allows to update topic featured link" do
         sign_in(trust_level_1)
 
-        topic = fabricate_topic(trust_level_1)
-        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+        tl1_topic = fabricate_topic(trust_level_1)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json", params: {
           featured_link: "https://discourse.org"
         }
 
@@ -1737,8 +1743,8 @@ RSpec.describe TopicsController do
       it "doesn't allow TL0 users to update topic featured link" do
         sign_in(trust_level_0)
 
-        topic = fabricate_topic(trust_level_0)
-        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+        tl0_topic = fabricate_topic(trust_level_0)
+        put "/t/#{tl0_topic.slug}/#{tl0_topic.id}.json", params: {
           featured_link: "https://discourse.org"
         }
 
@@ -1749,8 +1755,8 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         SiteSetting.topic_featured_link_enabled = false
-        topic = fabricate_topic(trust_level_1)
-        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+        tl1_topic = fabricate_topic(trust_level_1)
+        put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json", params: {
           featured_link: "https://discourse.org"
         }
 
@@ -1761,8 +1767,8 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         category = Fabricate(:category, topic_featured_link_allowed: false)
-        topic = fabricate_topic(trust_level_1, category)
-        put "/t/#{topic.slug}/#{topic.id}.json", params: {
+        tl1_topic_in_category = fabricate_topic(trust_level_1, category)
+        put "/t/#{tl1_topic_in_category.slug}/#{tl1_topic_in_category.id}.json", params: {
           featured_link: "https://discourse.org"
         }
 
@@ -1832,10 +1838,9 @@ RSpec.describe TopicsController do
       # we no longer require a topic be visible to perform url correction
       # if you need to properly hide a topic for users use a secure category
       # or a PM
-      topic = invisible_topic
-      Fabricate(:post, user: post_author1, topic: topic)
+      Fabricate(:post, user: post_author1, topic: invisible_topic)
 
-      get "/t/#{topic.id}.json", params: { slug: topic.slug }
+      get "/t/#{invisible_topic.id}.json", params: { slug: invisible_topic.slug }
       expect(response.status).to eq(200)
 
       get "/t/#{topic.id}.json", params: { slug: "just-guessing" }
@@ -2470,8 +2475,7 @@ RSpec.describe TopicsController do
     end
 
     it "is included for unlisted topics" do
-      topic = invisible_topic
-      get "/t/#{topic.slug}/#{topic.id}.json"
+      get "/t/#{invisible_topic.slug}/#{invisible_topic.id}.json"
 
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
@@ -2859,50 +2863,49 @@ RSpec.describe TopicsController do
     end
 
     it "allows inviting a group to a PM" do
-      topic = pm
-      post "/t/#{topic.id}/invite-group.json", params: {
+      post "/t/#{pm.id}/invite-group.json", params: {
         group: 'admins'
       }
 
       expect(response.status).to eq(200)
-      expect(topic.allowed_groups.first.id).to eq(admins.id)
+      expect(pm.allowed_groups.first.id).to eq(admins.id)
     end
   end
 
   describe '#make_banner' do
     it 'needs you to be a staff member' do
-      topic = Fabricate(:topic, user: sign_in(trust_level_4))
-      put "/t/#{topic.id}/make-banner.json"
+      tl4_topic = Fabricate(:topic, user: sign_in(trust_level_4))
+      put "/t/#{tl4_topic.id}/make-banner.json"
       expect(response).to be_forbidden
     end
 
     describe 'when logged in' do
       it "changes the topic archetype to 'banner'" do
-        topic = Fabricate(:topic, user: sign_in(admin))
+        admin_topic = Fabricate(:topic, user: sign_in(admin))
 
-        put "/t/#{topic.id}/make-banner.json"
+        put "/t/#{admin_topic.id}/make-banner.json"
         expect(response.status).to eq(200)
-        topic.reload
-        expect(topic.archetype).to eq(Archetype.banner)
+        admin_topic.reload
+        expect(admin_topic.archetype).to eq(Archetype.banner)
       end
     end
   end
 
   describe '#remove_banner' do
     it 'needs you to be a staff member' do
-      topic = Fabricate(:topic, user: sign_in(trust_level_4), archetype: Archetype.banner)
-      put "/t/#{topic.id}/remove-banner.json"
+      tl4_topic = Fabricate(:topic, user: sign_in(trust_level_4), archetype: Archetype.banner)
+      put "/t/#{tl4_topic.id}/remove-banner.json"
       expect(response).to be_forbidden
     end
 
     describe 'when logged in' do
       it "resets the topic archetype" do
-        topic = Fabricate(:topic, user: sign_in(admin), archetype: Archetype.banner)
+        admin_topic = Fabricate(:topic, user: sign_in(admin), archetype: Archetype.banner)
 
-        put "/t/#{topic.id}/remove-banner.json"
+        put "/t/#{admin_topic.id}/remove-banner.json"
         expect(response.status).to eq(200)
-        topic.reload
-        expect(topic.archetype).to eq(Archetype.default)
+        admin_topic.reload
+        expect(admin_topic.archetype).to eq(Archetype.default)
       end
     end
   end
@@ -3952,13 +3955,13 @@ RSpec.describe TopicsController do
       end
 
       describe 'as a valid user' do
-        fab!(:topic) { Fabricate(:topic, user: user) }
+        fab!(:user_topic) { Fabricate(:topic, user: user) }
 
         it 'should return the right response' do
           user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
 
           expect do
-            post "/t/#{topic.id}/invite.json", params: {
+            post "/t/#{user_topic.id}/invite.json", params: {
               email: 'someguy@email.com'
             }
           end.to change { Invite.where(invited_by_id: user.id).count }.by(1)
@@ -4070,7 +4073,7 @@ RSpec.describe TopicsController do
       end
 
       describe 'when user does not have permission to invite to the topic' do
-        fab!(:topic) { Fabricate(:private_message_topic) }
+        fab!(:topic) { pm }
 
         it "should return the right response" do
           post "/t/#{topic.id}/invite.json", params: {
@@ -4150,7 +4153,6 @@ RSpec.describe TopicsController do
       end
 
       it "disallows inviting a group to a topic" do
-        topic = Fabricate(:topic)
         invite_group(topic, 422)
       end
 
@@ -4291,7 +4293,6 @@ RSpec.describe TopicsController do
 
         freeze_time page1_time
 
-        topic = Fabricate(:topic)
         Fabricate(:post, user: post_author2, topic: topic)
         Fabricate(:post, user: post_author3, topic: topic)
 
@@ -4386,8 +4387,8 @@ RSpec.describe TopicsController do
 
     [:admin, :moderator, :trust_level_4].each do |user|
       it "should reset bumped_at as #{user}" do
-        sign_in(Fabricate(user))
-        topic = Fabricate(:topic, bumped_at: 1.hour.ago)
+        sign_in(public_send(user))
+        topic.update!(bumped_at: 1.hour.ago)
         timestamp = 1.day.ago
         Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
 

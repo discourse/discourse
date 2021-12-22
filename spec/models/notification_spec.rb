@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe Notification do
+  fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before do
@@ -269,8 +270,6 @@ describe Notification do
 
   describe 'saw_regular_notification_id' do
     it 'correctly updates the read state' do
-      user = Fabricate(:user)
-
       t = Fabricate(:topic)
 
       Notification.create!(read: false,
@@ -308,8 +307,6 @@ describe Notification do
 
   describe 'mark_posts_read' do
     it "marks multiple posts as read if needed" do
-      user = Fabricate(:user)
-
       (1..3).map do |i|
         Notification.create!(read: false, user_id: user.id, topic_id: 2, post_number: i, data: '{}', notification_type: 1)
       end
@@ -345,7 +342,6 @@ describe Notification do
     end
 
     it 'does not delete chat_message notifications' do
-      user = Fabricate(:user)
       Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
                            notification_type: Notification.types[:chat_mention])
 
@@ -357,7 +353,6 @@ describe Notification do
 
   describe "do not disturb" do
     it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
-      user = Fabricate(:user)
       notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
       NotificationEmailer.expects(:process_notification).with(notification)
       notification.save!
@@ -365,7 +360,6 @@ describe Notification do
 
     it "doesn't call NotificationEmailer.process_notification when user is in 'do not disturb'" do
       freeze_time
-      user = Fabricate(:user)
       Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)

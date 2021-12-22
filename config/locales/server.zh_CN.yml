@@ -1283,6 +1283,7 @@ zh_CN:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 用户
+        trust_level: 信任级别
         qtt_like: 获赞
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -1503,7 +1504,6 @@ zh_CN:
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
     auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
-    hide_email_address_taken: "在注册期间和在“忘记密码”表单中不通知用户存在使用给定电子邮件地址的帐户。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"

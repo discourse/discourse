@@ -1696,6 +1696,7 @@ de:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
+      invite_no_username: "Gib deine E-Mail-Adresse ein. Dann senden wir dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail-Adresse <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
@@ -3883,7 +3884,7 @@ de:
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
             uploads:
-              create: Lade eine neue Datei hoch.
+              create: Lade eine neue Datei hoch oder starte einzelne oder mehrteilige direkte Uploads auf einen externen Speicher.
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.

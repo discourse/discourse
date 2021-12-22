@@ -3,15 +3,15 @@
 require 'rails_helper'
 
 describe UserUpdater do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:u1) { Fabricate(:user) }
+  fab!(:u2) { Fabricate(:user) }
+  fab!(:u3) { Fabricate(:user) }
 
   let(:acting_user) { Fabricate.build(:user) }
 
   describe '#update_muted_users' do
     it 'has no cross talk' do
-      u1 = Fabricate(:user)
-      u2 = Fabricate(:user)
-      u3 = Fabricate(:user)
-
       updater = UserUpdater.new(u1, u1)
       updater.update_muted_users("#{u2.username},#{u3.username}")
 
@@ -27,8 +27,6 @@ describe UserUpdater do
     end
 
     it 'excludes acting user' do
-      u1 = Fabricate(:user)
-      u2 = Fabricate(:user)
       updater = UserUpdater.new(u1, u1)
       updater.update_muted_users("#{u1.username},#{u2.username}")
 
@@ -51,7 +49,6 @@ describe UserUpdater do
     end
 
     it 'can update categories and tags' do
-      user = Fabricate(:user)
       updater = UserUpdater.new(user, user)
       updater.update(watched_tags: "#{tag.name},#{tag2.name}", muted_category_ids: [category.id])
 
@@ -110,7 +107,6 @@ describe UserUpdater do
     end
 
     it "doesn't remove notification prefs when updating something else" do
-      user = Fabricate(:user)
       TagUser.create!(user: user, tag: tag, notification_level: TagUser.notification_levels[:watching])
       CategoryUser.create!(user: user, category: category, notification_level: CategoryUser.notification_levels[:muted])
 
@@ -122,7 +118,6 @@ describe UserUpdater do
     end
 
     it 'updates various fields' do
-      user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
       SiteSetting.disable_mailing_list_mode = false
@@ -194,7 +189,6 @@ describe UserUpdater do
     end
 
     it "disables email_digests when enabling mailing_list_mode" do
-      user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
       SiteSetting.disable_mailing_list_mode = false
 
@@ -208,7 +202,6 @@ describe UserUpdater do
     end
 
     it "filters theme_ids blank values before updating preferences" do
-      user = Fabricate(:user)
       user.user_option.update!(theme_ids: [1])
       updater = UserUpdater.new(acting_user, user)
 
@@ -251,8 +244,6 @@ describe UserUpdater do
     }
 
     context 'with user_notification_schedule' do
-      fab!(:user) { Fabricate(:user) }
-
       it "allows users to create their notification schedule when it doesn't exist previously" do
         expect(user.user_notification_schedule).to be_nil
         updater = UserUpdater.new(acting_user, user)
@@ -307,7 +298,6 @@ describe UserUpdater do
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_bio = true
 
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update(bio_raw: "new bio")).to be_truthy
@@ -323,7 +313,6 @@ describe UserUpdater do
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_location = true
 
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update(location: "new location")).to be_truthy
@@ -339,7 +328,6 @@ describe UserUpdater do
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_website = true
 
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update(website: "https://google.com")).to be_truthy
@@ -351,7 +339,6 @@ describe UserUpdater do
 
     context 'when updating primary group' do
       let(:new_group) { Group.create(name: 'new_group') }
-      let(:user) { Fabricate(:user) }
 
       it 'updates when setting is enabled' do
         SiteSetting.user_selected_primary_groups = true
@@ -406,7 +393,6 @@ describe UserUpdater do
 
     context 'when updating flair group' do
       let(:group) { Fabricate(:group, name: "Group", flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon") }
-      let(:user) { Fabricate(:user) }
 
       it 'updates when setting is enabled' do
         group.add(user)
@@ -421,7 +407,6 @@ describe UserUpdater do
 
     context 'when update fails' do
       it 'returns false' do
-        user = Fabricate(:user)
         user.stubs(save: false)
         updater = UserUpdater.new(acting_user, user)
 
@@ -505,7 +490,6 @@ describe UserUpdater do
 
     context 'when website includes http' do
       it 'does not add http before updating' do
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'http://example.com')
@@ -516,7 +500,6 @@ describe UserUpdater do
 
     context 'when website does not include http' do
       it 'adds http before updating' do
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'example.com')
@@ -527,7 +510,6 @@ describe UserUpdater do
 
     context 'when website is invalid' do
       it 'returns an error' do
-        user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update(website: 'ʔ<')).to eq nil
@@ -536,7 +518,6 @@ describe UserUpdater do
 
     context 'when custom_fields is empty string' do
       it "update is successful" do
-        user = Fabricate(:user)
         user.custom_fields = { 'import_username' => 'my_old_username' }
         user.save
         updater = UserUpdater.new(acting_user, user)

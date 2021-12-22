@@ -1223,16 +1223,19 @@ const Composer = RestModel.extend({
       data.originalText = this.originalText;
     }
 
+    const draftSequence = this.draftSequence;
+    this.set("draftSequence", this.draftSequence + 1);
+
     return Draft.save(
       this.draftKey,
-      this.draftSequence,
+      draftSequence,
       data,
       this.messageBus.clientId,
       { forceSave: this.draftForceSave }
     )
       .then((result) => {
         if (result.draft_sequence) {
-          this.draftSequence = result.draft_sequence;
+          this.set("draftSequence", result.draft_sequence);
         }
         if (result.conflict_user) {
           this.setProperties({

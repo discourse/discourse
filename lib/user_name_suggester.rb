@@ -4,8 +4,12 @@ module UserNameSuggester
   GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
   LAST_RESORT_USERNAME = "user"
 
-  def self.suggest(name_or_email,  current_username = nil)
-    name = parse_name_from_email(name_or_email)
+  def self.suggest(*input,  current_username: nil)
+    name = input.find do |item|
+      parsed_name = parse_name_from_email(item)
+      break parsed_name if sanitize_username(parsed_name).present?
+    end
+
     name = fix_username(name)
     find_available_username_based_on(name, current_username)
   end

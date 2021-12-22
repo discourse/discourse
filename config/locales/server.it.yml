@@ -1564,7 +1564,6 @@ it:
     allowed_email_domains: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
     normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
     auto_approve_email_domains: "Gli utenti con indirizzi email appartenenti a questo elenco di domini verranno approvati automaticamente."
-    hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Controlla in Discourse Hub la presenza di aggiornamenti della versione e mostra i messaggi della nuova versione nel pannello <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
