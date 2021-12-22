@@ -1,3 +1,4 @@
+import Evented from "@ember/object/evented";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Service from "@ember/service";
 
@@ -6,7 +7,7 @@ const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const TRACKED_EMOJIS = 15;
 const STORE_NAMESPACE = "discourse_emojis_";
 
-export default Service.extend({
+export default Service.extend(Evented, {
   init() {
     this._super(...arguments);
 
@@ -31,6 +32,7 @@ export default Service.extend({
 
   set favorites(value) {
     this.store.setObject({ key: EMOJI_USAGE, value: value || [] });
+    this.trigger("favorites-changed", this.favorites);
   },
 
   track(code) {

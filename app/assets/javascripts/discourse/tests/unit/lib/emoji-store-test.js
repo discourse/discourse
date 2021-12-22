@@ -33,4 +33,14 @@ discourseModule("Unit | Utility | emoji-emojiStore", function (hooks) {
     this.emojiStore.track(":otter:");
     assert.deepEqual(this.emojiStore.favorites, ["otter", "woman:t4"]);
   });
+
+  test("evented", function (assert) {
+    let newFavorites;
+    this.emojiStore.on("favorites-changed", (favorites) => {
+      newFavorites = favorites;
+    });
+    this.emojiStore.track("otter");
+
+    assert.deepEqual(newFavorites, ["otter"]);
+  });
 });
