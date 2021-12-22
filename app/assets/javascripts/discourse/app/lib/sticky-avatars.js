@@ -79,10 +79,8 @@ export default class StickyAvatars {
   _initIntersectionObserver() {
     schedule("afterRender", () => {
       const headerOffset =
-        parseInt(
-          getComputedStyle(document.body).getPropertyValue("--header-offset"),
-          10
-        ) || 0;
+        parseInt(document.body.style.getPropertyValue("--header-offset"), 10) ||
+        0;
       const headerHeight = Math.max(headerOffset, 0);
 
       this.intersectionObserver = new IntersectionObserver(
