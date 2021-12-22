@@ -23,7 +23,6 @@ export default Service.extend({
 
   set diversity(value) {
     this.store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: value || 1 });
-    this.notifyPropertyChange("favorites");
   },
 
   get favorites() {
