@@ -1234,7 +1234,7 @@ const Composer = RestModel.extend({
       { forceSave: this.draftForceSave }
     )
       .then((result) => {
-        if (result.draft_sequence) {
+        if ("draft_sequence" in result) {
           this.set("draftSequence", result.draft_sequence);
         }
         if (result.conflict_user) {
