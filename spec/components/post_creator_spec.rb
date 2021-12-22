@@ -7,6 +7,7 @@ require 'topic_subtype'
 describe PostCreator do
 
   fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:topic) { Fabricate(:topic, user: user) }
@@ -119,7 +120,6 @@ describe PostCreator do
       end
 
       it "does not notify on system messages" do
-        admin = Fabricate(:admin)
         messages = MessageBus.track_publish do
           p = PostCreator.create(admin, basic_topic_params.merge(post_type: Post.types[:moderator_action]))
           PostCreator.create(admin, basic_topic_params.merge(topic_id: p.topic_id, post_type: Post.types[:moderator_action]))
@@ -866,7 +866,6 @@ describe PostCreator do
       end
 
       it 'creates the topic if the user is a staff member' do
-        admin = Fabricate(:admin)
         post_creator = PostCreator.new(admin, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4)
         TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
 
@@ -961,7 +960,6 @@ describe PostCreator do
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
 
       # if an admin replies they should be added to the allowed user list
-      admin = Fabricate(:admin)
       PostCreator.create!(admin,
         raw: 'hi there welcome topic, I am a mod',
         topic_id: post.topic_id
@@ -1063,8 +1061,6 @@ describe PostCreator do
   context 'auto closing' do
     it 'closes private messages that have more than N posts' do
       SiteSetting.auto_close_messages_post_count = 2
-
-      admin = Fabricate(:admin)
 
       post1 = create_post(archetype: Archetype.private_message,
                           target_usernames: [admin.username])
@@ -1325,7 +1321,6 @@ describe PostCreator do
     it "automatically watches topic based on preference" do
       user.user_option.notification_level_when_replying = 3
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for watching notification",
                                  raw: "this is the content of a topic created by an admin for keeping a watching notification state on a topic ;)"
@@ -1342,7 +1337,6 @@ describe PostCreator do
     it "topic notification level remains tracking based on preference" do
       user.user_option.notification_level_when_replying = 2
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for tracking notification",
                                  raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
@@ -1359,7 +1353,6 @@ describe PostCreator do
     it "topic notification level is normal based on preference" do
       user.user_option.notification_level_when_replying = 1
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for tracking notification",
                                  raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
@@ -1376,7 +1369,6 @@ describe PostCreator do
     it "user preferences for notification level when replying doesn't affect PMs" do
       user.user_option.update!(notification_level_when_replying: 1)
 
-      admin = Fabricate(:admin)
       pm = Fabricate(:private_message_topic, user: admin)
 
       pm.invite(admin, user.username)

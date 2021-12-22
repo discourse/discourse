@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'discourse_ip_info'
 
 describe UserAuthToken do
+  fab!(:user) { Fabricate(:user) }
 
   it "can remove old expired tokens" do
 
@@ -12,7 +13,6 @@ describe UserAuthToken do
     freeze_time Time.zone.now
     SiteSetting.maximum_session_age = 1
 
-    user = Fabricate(:user)
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent 2",
                                     client_ip: "1.1.2.3")
@@ -35,8 +35,6 @@ describe UserAuthToken do
   end
 
   it "can lookup hashed" do
-    user = Fabricate(:user)
-
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent 2",
                                     client_ip: "1.1.2.3")
@@ -51,9 +49,6 @@ describe UserAuthToken do
   end
 
   it "can validate token was seen at lookup time" do
-
-    user = Fabricate(:user)
-
     user_token = UserAuthToken.generate!(user_id: user.id,
                                          user_agent: "some user agent 2",
                                          client_ip: "1.1.2.3")
@@ -68,9 +63,6 @@ describe UserAuthToken do
   end
 
   it "can rotate with no params maintaining data" do
-
-    user = Fabricate(:user)
-
     user_token = UserAuthToken.generate!(user_id: user.id,
                                          user_agent: "some user agent 2",
                                          client_ip: "1.1.2.3")
@@ -84,7 +76,6 @@ describe UserAuthToken do
 
   it "expires correctly" do
     freeze_time Time.zone.now
-    user = Fabricate(:user)
     user_token = UserAuthToken.generate!(user_id: user.id,
                                          user_agent: "some user agent 2",
                                          client_ip: "1.1.2.3")
@@ -110,7 +101,6 @@ describe UserAuthToken do
 
   it "can properly rotate tokens" do
     freeze_time 3.days.ago
-    user = Fabricate(:user)
 
     user_token = UserAuthToken.generate!(user_id: user.id,
                                          user_agent: "some user agent 2",
@@ -164,9 +154,6 @@ describe UserAuthToken do
   end
 
   it "keeps prev token valid for 1 minute after it is confirmed" do
-
-    user = Fabricate(:user)
-
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent",
                                     client_ip: "1.1.2.3")
@@ -188,8 +175,6 @@ describe UserAuthToken do
 
   it "can correctly log auth tokens" do
     SiteSetting.verbose_auth_token_logging = true
-
-    user = Fabricate(:user)
 
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent",
@@ -256,8 +241,6 @@ describe UserAuthToken do
   it "calls before_destroy" do
     SiteSetting.verbose_auth_token_logging = true
 
-    user = Fabricate(:user)
-
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent",
                                     client_ip: "1.1.2.3")
@@ -273,8 +256,6 @@ describe UserAuthToken do
   end
 
   it "will not mark token unseen when prev and current are the same" do
-    user = Fabricate(:user)
-
     token = UserAuthToken.generate!(user_id: user.id,
                                     user_agent: "some user agent",
                                     client_ip: "1.1.2.3")
@@ -286,8 +267,6 @@ describe UserAuthToken do
   end
 
   context "suspicious login" do
-
-    fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
 
     it "is not checked when generated for non-staff" do

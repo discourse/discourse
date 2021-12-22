@@ -5,6 +5,7 @@ require 'rails_helper'
 
 describe Search do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
 
   before do
     SearchIndexer.enable
@@ -671,7 +672,6 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
-        topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
         new_post('this is the other post I am posting', topic2, created_at: 6.minutes.ago)
@@ -1086,7 +1086,6 @@ describe Search do
     it 'can use tag as a search context' do
       tag = Fabricate(:tag, name: 'important-stuff')
 
-      topic = Fabricate(:topic)
       topic_no_tag = Fabricate(:topic)
       Fabricate(:topic_tag, tag: tag, topic: topic)
 
@@ -1151,7 +1150,6 @@ describe Search do
   describe 'Advanced search' do
 
     it 'supports pinned' do
-      topic = Fabricate(:topic)
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
@@ -1162,7 +1160,6 @@ describe Search do
     end
 
     it 'supports wiki' do
-      topic = Fabricate(:topic)
       topic_2 = Fabricate(:topic)
       post = Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
       Fabricate(:post, raw: 'this is a test 248', wiki: false, topic: topic_2)
@@ -1173,7 +1170,6 @@ describe Search do
     end
 
     it 'supports searching for posts that the user has seen/unseen' do
-      topic = Fabricate(:topic)
       topic_2 = Fabricate(:topic)
       post = Fabricate(:post, raw: 'logan is longan', topic: topic)
       post_2 = Fabricate(:post, raw: 'longan is logan', topic: topic_2)
@@ -1231,7 +1227,6 @@ describe Search do
     end
 
     it 'supports in:first, user:, @username' do
-      topic = Fabricate(:topic)
       post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
@@ -1569,7 +1564,6 @@ describe Search do
       end
 
       it 'can find posts with non-latin tag' do
-        topic = Fabricate(:topic)
         topic.tags = [Fabricate(:tag, name: 'さようなら')]
         post = Fabricate(:post, raw: 'Testing post', topic: topic)
 
@@ -1577,7 +1571,6 @@ describe Search do
       end
 
       it 'can find posts with thai tag' do
-        topic = Fabricate(:topic)
         topic.tags = [Fabricate(:tag, name: 'เรซิ่น')]
         post = Fabricate(:post, raw: 'Testing post', topic: topic)
 

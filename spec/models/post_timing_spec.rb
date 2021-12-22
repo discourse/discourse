@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe PostTiming do
+  fab!(:post) { Fabricate(:post) }
 
   it { is_expected.to validate_presence_of :post_number }
   it { is_expected.to validate_presence_of :msecs }
@@ -61,7 +62,6 @@ describe PostTiming do
   describe 'safeguard' do
     it "doesn't store timings that are larger than the account lifetime" do
       user = Fabricate(:user, created_at: 3.minutes.ago)
-      post = Fabricate(:post)
 
       PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 123]])
       msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
@@ -81,7 +81,6 @@ describe PostTiming do
     it 'processes timings correctly' do
       PostActionNotifier.enable
 
-      post = Fabricate(:post)
       (2..5).each do |i|
         Fabricate(:post, topic: post.topic, post_number: i)
       end
@@ -131,17 +130,16 @@ describe PostTiming do
 
   describe 'recording' do
     before do
-      @post = Fabricate(:post)
-      @topic = @post.topic
+      @topic = post.topic
       @coding_horror = Fabricate(:coding_horror)
-      @timing_attrs = { msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number }
+      @timing_attrs = { msecs: 1234, topic_id: post.topic_id, user_id: @coding_horror.id, post_number: post.post_number }
     end
 
     it 'adds a view to the post' do
       expect {
         PostTiming.record_timing(@timing_attrs)
-        @post.reload
-      }.to change(@post, :reads).by(1)
+        post.reload
+      }.to change(post, :reads).by(1)
     end
 
     it "doesn't update the posts read count if the topic is a PM" do
@@ -157,7 +155,7 @@ describe PostTiming do
       it 'correctly works' do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
+        timing = PostTiming.find_by(topic_id: post.topic_id, user_id: @coding_horror.id, post_number: post.post_number)
 
         expect(timing).to be_present
         expect(timing.msecs).to eq(2468)
@@ -192,7 +190,6 @@ describe PostTiming do
 
   describe '.destroy_last_for' do
     it 'updates first unread for a user correctly when topic is public' do
-      post = Fabricate(:post)
       post.topic.update!(updated_at: 10.minutes.ago)
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 

@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'rotp'
 
 describe UsersController do
+  fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:invitee) { Fabricate(:user) }
@@ -1930,7 +1931,6 @@ describe UsersController do
 
         it "allows staff to edit the field" do
           sign_in(admin)
-          user = Fabricate(:user)
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
             title: "foobar",
@@ -2346,7 +2346,6 @@ describe UsersController do
 
       describe 'when user does not have a valid session' do
         it 'should not be valid' do
-          user = Fabricate(:user)
           post "/u/action/send_activation_email.json", params: {
             username: user.username
           }
@@ -2867,7 +2866,6 @@ describe UsersController do
       end
 
       it "returns emails and associated_accounts for self" do
-        user = Fabricate(:user)
         Fabricate(:email_change_request, user: user1)
         sign_in(user)
 
@@ -2882,7 +2880,6 @@ describe UsersController do
       end
 
       it "returns emails and associated_accounts when you're allowed to see them" do
-        user = Fabricate(:user)
         Fabricate(:email_change_request, user: user1)
         sign_in_admin
 
@@ -3189,7 +3186,6 @@ describe UsersController do
 
   describe '#summary' do
     it "generates summary info" do
-      user = Fabricate(:user)
       create_post(user: user)
 
       get "/u/#{user.username_lower}/summary.json"
@@ -3467,8 +3463,6 @@ describe UsersController do
       end
 
       it "raises an error when the new email is taken" do
-        user = Fabricate(:user)
-
         put "/u/update-activation-email.json", params: {
           username: inactive_user.username,
           password: 'qwerqwer123',

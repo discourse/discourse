@@ -1884,7 +1884,6 @@ describe Guardian do
 
     it 'returns true for a group member with reviewable status' do
       SiteSetting.enable_category_group_moderation = true
-      group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
@@ -1906,7 +1905,6 @@ describe Guardian do
 
     it 'returns true for a group member with reviewable status' do
       SiteSetting.enable_category_group_moderation = true
-      group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_close_topic?(topic)).to eq(true)
@@ -1928,7 +1926,6 @@ describe Guardian do
 
     it 'returns true for a group member with reviewable status' do
       SiteSetting.enable_category_group_moderation = true
-      group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_archive_topic?(topic)).to eq(true)
@@ -1950,7 +1947,6 @@ describe Guardian do
 
     it 'returns true for a group member with reviewable status' do
       SiteSetting.enable_category_group_moderation = true
-      group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(true)
@@ -2156,7 +2152,6 @@ describe Guardian do
 
       it "returns true for category moderators" do
         SiteSetting.enable_category_group_moderation = true
-        group = Fabricate(:group)
         GroupUser.create(group: group, user: user)
         category = Fabricate(:category, reviewable_by_group_id: group.id)
         post.topic.update!(category: category)

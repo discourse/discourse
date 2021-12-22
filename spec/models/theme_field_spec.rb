@@ -4,13 +4,10 @@
 require 'rails_helper'
 
 describe ThemeField do
-  after do
-    ThemeField.destroy_all
-  end
+  fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
-      theme = Fabricate(:theme)
       theme2 = Fabricate(:theme)
       theme3 = Fabricate(:theme)
 
@@ -159,7 +156,6 @@ HTML
   end
 
   it "allows importing scss files" do
-    theme = Fabricate(:theme)
     main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';\n@import 'rootfile3';")
     theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
     theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
@@ -179,7 +175,6 @@ HTML
   end
 
   it "correctly handles extra JS fields" do
-    theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
     js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
@@ -235,7 +230,6 @@ HTML
   let(:key) { "themes.settings_errors" }
 
   it "forces re-transpilation of theme JS when settings YAML changes" do
-    theme = Fabricate(:theme)
     settings_field = ThemeField.create!(theme: theme, target_id: Theme.targets[:settings], name: "yaml", value: "setting: 5")
 
     html = <<~HTML
