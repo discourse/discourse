@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class SecondFactorVerificationManager
-  SecondFactorAuthConfig = Struct.new(:callback_params, :redirect_path)
-
+class SecondFactor::AuthManager
   class SecondFactorRequired < StandardError
     attr_reader :nonce
 
@@ -13,8 +11,10 @@ class SecondFactorVerificationManager
 
   attr_reader :allowed_methods
 
-  def initialize(current_user)
+  def initialize(current_user, guardian, action_class)
     @current_user = current_user
+    @guardian = guardian
+    @action_class = action_class
     @allowed_methods = Set.new([
       UserSecondFactor.methods[:totp],
       UserSecondFactor.methods[:security_key],
@@ -25,37 +25,29 @@ class SecondFactorVerificationManager
     add_method(UserSecondFactor.methods[:backup_codes])
   end
 
-  def on_second_factor_auth_successful(&block)
-    @on_second_factor_auth_successful = block
-  end
-
-  def on_second_factor_auth_required(&block)
-    @on_second_factor_auth_required = block
-  end
-
-  def on_no_second_factors_enabled(&block)
-    @on_no_second_factors_enabled = block
-  end
-
   def run!(request, params, secure_session)
     if !allowed_methods.any? { |m| @current_user.valid_second_factor_method_for_user?(m) }
-      @on_no_second_factors_enabled.call
+      action = @action_class.new(params, @current_user, @guardian)
+      action.no_second_factors_enabled!
+      create_result(:no_second_factor)
     elsif nonce = params[:second_factor_nonce].presence
       second_factor_auth_successful(nonce, secure_session)
+      create_result(:second_factor_auth_successful)
     else
-      initiate_second_factor_auth(secure_session, request)
+      nonce = initiate_second_factor_auth(params, secure_session, request)
+      raise SecondFactorRequired.new(nonce: nonce)
     end
   end
 
   private
 
-  def initiate_second_factor_auth(secure_session, request)
-    config = SecondFactorAuthConfig.new
-    @on_second_factor_auth_required.call(config)
+  def initiate_second_factor_auth(params, secure_session, request)
+    action = @action_class.new(params, @current_user, @guardian)
+    config = action.second_factor_auth_required!
     nonce = SecureRandom.alphanumeric(32)
-    callback_params = config.callback_params || {}
+    callback_params = config[:callback_params] || {}
     # TODO: subfolder support??
-    redirect_path = config.redirect_path || "/"
+    redirect_path = config[:redirect_path] || "/"
     challenge = {
       nonce: nonce,
       callback_method: request.method,
@@ -69,7 +61,7 @@ class SecondFactorVerificationManager
       challenge.to_json,
       expires: 5.minutes
     )
-    raise SecondFactorRequired.new(nonce: nonce)
+    nonce
   end
 
   def second_factor_auth_successful(nonce, secure_session)
@@ -85,7 +77,8 @@ class SecondFactorVerificationManager
     end
     secure_session["current_second_factor_auth_challenge"] = nil
     callback_params = challenge[:callback_params]
-    @on_second_factor_auth_successful.call(callback_params)
+    action = @action_class.new(callback_params, @current_user, @guardian)
+    action.second_factor_auth_successful!
   end
 
   def add_method(id)
@@ -94,5 +87,9 @@ class SecondFactorVerificationManager
       @allowed_methods.add(id)
       @allowed_methods.freeze
     end
+  end
+
+  def create_result(status)
+    SecondFactor::AuthManagerResult.new.tap { |res| res.set_status(status) }
   end
 end

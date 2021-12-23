@@ -247,7 +247,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from SecondFactorVerificationManager::SecondFactorRequired do |e|
+  rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     render json: {
       second_factor_challenge_nonce: e.nonce
     }, status: 403
@@ -969,5 +969,10 @@ class ApplicationController < ActionController::Base
         break
       end
     end
+  end
+
+  def run_second_factor!(action_class)
+    manager = SecondFactor::AuthManager.new(current_user, guardian, action_class)
+    manager.run!(request, params, secure_session)
   end
 end

@@ -190,31 +190,12 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def grant_admin
-    manager = SecondFactorVerificationManager.new(current_user)
-    manager.on_no_second_factors_enabled do
-      user = User.find_by(id: params[:user_id])
-      guardian.ensure_can_grant_admin!(user)
-      AdminConfirmation.new(user, current_user).create_confirmation
+    result = run_second_factor!(SecondFactor::Actions::GrantAdmin)
+    if result.no_second_factors_enabled?
       render json: success_json.merge(email_confirmation_required: true)
-    end
-
-    manager.on_second_factor_auth_required do |config|
-      user = User.find_by(id: params[:user_id])
-      guardian.ensure_can_grant_admin!(user)
-      config.callback_params = { user_id: user.id }
-      config.redirect_path = admin_user_show_path(id: user.id, username: user.username)
-    end
-
-    manager.on_second_factor_auth_successful do |callback_params|
-      user_id = callback_params[:user_id]
-      user = User.find_by(id: user_id)
-      guardian.ensure_can_grant_admin!(user)
-      user.grant_admin!
-      StaffActionLogger.new(current_user).log_grant_admin(user)
+    elsif result.second_factor_auth_successful?
       render json: success_json
     end
-
-    manager.run!(request, params, secure_session)
   end
 
   def revoke_moderation
