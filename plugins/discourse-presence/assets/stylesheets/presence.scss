@@ -9,10 +9,10 @@
   display: flex;
 
   span.presence-text {
-    margin-left: 5px;
-    margin-right: 2px;
+    align-items: center;
+    display: flex;
     flex: 0 0 auto;
-    padding-top: 3px;
+    margin-left: 8px;
   }
 
   .presence-avatars {
@@ -66,8 +66,7 @@
 // TMP: RTL overrides
 .rtl {
   span.presence-text {
-    margin-left: 2px;
-    margin-right: 5px;
+    margin-right: 8px;
   }
 
   .composer-fields .presence-users {
