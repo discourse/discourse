@@ -80,6 +80,16 @@ describe PostActionCreator do
       expect(notification_data['display_username']).to eq(user.username)
       expect(notification_data['username2']).to eq(nil)
     end
+
+    it 'does not create a notification if silent mode is enabled' do
+      PostActionNotifier.enable
+
+      expect(
+        PostActionCreator.new(user, post, like_type_id, silent: true).perform.success
+      ).to eq(true)
+
+      expect(Notification.where(notification_type: Notification.types[:liked]).exists?).to eq(false)
+    end
   end
 
   context "flags" do
