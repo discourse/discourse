@@ -27,7 +27,7 @@ module Notifications
 
       @data = consolidated_data(notification)
 
-      precondition_blk.nil? || precondition_blk.call(notification.data_hash)
+      precondition_blk.nil? || precondition_blk.call(@data, notification)
     end
 
     def consolidate_or_save!(notification)
@@ -38,6 +38,8 @@ module Notifications
       if previous_query_blk.present?
         notifications = previous_query_blk.call(notifications, data)
       end
+
+      notification.data = data.to_json
 
       Notification.transaction do
         notifications.destroy_all
