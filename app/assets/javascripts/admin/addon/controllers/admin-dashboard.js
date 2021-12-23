@@ -13,8 +13,13 @@ export default Controller.extend({
   exceptionController: controller("exception"),
   showVersionChecks: setting("version_checks"),
 
-  @discourseComputed("problems.length")
-  foundProblems(problemsLength) {
+  @discourseComputed(
+    "lowPriorityProblems.length",
+    "highPriorityProblems.length"
+  )
+  foundProblems(lowPriorityProblemsLength, highPriorityProblemsLength) {
+    const problemsLength =
+      lowPriorityProblemsLength + highPriorityProblemsLength;
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
 
@@ -92,7 +97,16 @@ export default Controller.extend({
     });
 
     AdminDashboard.fetchProblems()
-      .then((model) => this.set("problems", model.problems))
+      .then((model) => {
+        this.set(
+          "highPriorityProblems",
+          model.problems.filter((p) => p.priority === "high")
+        );
+        this.set(
+          "lowPriorityProblems",
+          model.problems.filter((p) => p.priority === "low")
+        );
+      })
       .finally(() => this.set("loadingProblems", false));
   },
 

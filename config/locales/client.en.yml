@@ -4005,6 +4005,7 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        critical_problems_found: "You have some high priority problems that must be addressed"
         new_features:
           title: "🎁 New Features"
           dismiss: "Dismiss"
