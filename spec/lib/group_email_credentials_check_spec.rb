@@ -36,7 +36,12 @@ describe GroupEmailCredentialsCheck do
         EmailSettingsValidator.stubs(:validate_imap).returns(true)
 
         expect(described_class.run).to eq([
-          { group_id: group2.id, message: I18n.t("email_settings.smtp_authentication_error") }
+          {
+            group_full_name: group2.full_name,
+            group_name: group2.name,
+            group_id: group2.id,
+            message: I18n.t("email_settings.smtp_authentication_error")
+          }
         ])
       end
 
@@ -47,7 +52,12 @@ describe GroupEmailCredentialsCheck do
         ).once
 
         expect(described_class.run).to eq([
-          { group_id: group3.id, message: I18n.t("email_settings.imap_authentication_error") }
+          {
+            group_full_name: group3.full_name,
+            group_name: group3.name,
+            group_id: group3.id,
+            message: I18n.t("email_settings.imap_authentication_error")
+          }
         ])
       end
 
