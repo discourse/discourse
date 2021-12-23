@@ -3254,104 +3254,95 @@ RSpec.describe TopicsController do
   end
 
   describe '#reset_new' do
-    it 'needs you to be logged in' do
-      put "/topics/reset-new.json"
-      expect(response.status).to eq(403)
+    context "when a user is not signed in" do
+      it 'fails' do
+        put "/topics/reset-new.json"
+        expect(response.status).to eq(403)
+      end
     end
 
-    it "updates the `new_since` date" do
-      sign_in(user)
+    context "when a user is signed in" do
+      before_all do
+        @old_date = 2.years.ago
+        user.user_stat.update_column(:new_since, @old_date)
 
-      old_date = 2.years.ago
-      user.user_stat.update_column(:new_since, old_date)
-      user.update_column(:created_at, old_date)
-
-      TopicTrackingState.expects(:publish_dismiss_new)
-
-      put "/topics/reset-new.json"
-      expect(response.status).to eq(200)
-      user.reload
-      expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
-    end
-
-    describe "when tracked param is true" do
-      it "does not update user_stat.new_since" do
-        sign_in(user)
-
-        old_date = 2.years.ago
-        user.user_stat.update_column(:new_since, old_date)
-
-        put "/topics/reset-new.json?tracked=true"
-        expect(response.status).to eq(200)
-        user.reload
-        expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
+        CategoryUser.set_notification_level_for_category(
+          user,
+          NotificationLevels.all[:tracking],
+          tracked_category.id,
+        )
       end
 
-      it "creates dismissed topic user records for each new topic" do
+      let!(:old_date) { @old_date }
+
+      before do
         sign_in(user)
-        user.user_stat.update_column(:new_since, 2.years.ago)
+      end
 
-        CategoryUser.set_notification_level_for_category(user,
-                                                     NotificationLevels.all[:tracking],
-                                                     tracked_category.id)
-        tracked_topic = create_post(category: tracked_category).topic
+      context "when tracked is unset" do
+        it "updates the `new_since` date" do
+          TopicTrackingState.expects(:publish_dismiss_new)
 
-        create_post # This is a new post, but is not tracked so a record will not be created for it
-        expect do
+          put "/topics/reset-new.json"
+          expect(response.status).to eq(200)
+          user.reload
+          expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+        end
+      end
+
+      describe "when tracked param is true" do
+        it "does not update user_stat.new_since" do
           put "/topics/reset-new.json?tracked=true"
-        end.to change {
-          DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
-        }.by(1)
-      end
-
-      it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
-        sign_in(user)
-        CategoryUser.set_notification_level_for_category(user,
-                                                     NotificationLevels.all[:tracking],
-                                                     tracked_category.id)
-
-        topic_ids = []
-        5.times do
-          topic_ids << create_post(category: tracked_category).topic.id
+          expect(response.status).to eq(200)
+          user.reload
+          expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
         end
 
-        expect do
-          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+        it "creates dismissed topic user records for each new topic" do
+          tracked_topic = create_post(category: tracked_category).topic
+
+          create_post # This is a new post, but is not tracked so a record will not be created for it
+          expect do
             put "/topics/reset-new.json?tracked=true"
-          end
-        end.to change {
-          DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-        }.by(5)
-      end
-
-      it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
-        sign_in(user)
-        CategoryUser.set_notification_level_for_category(user,
-                                                     NotificationLevels.all[:tracking],
-                                                     tracked_category.id)
-
-        topic_ids = []
-        5.times do
-          topic_ids << create_post(category: tracked_category).topic.id
+          end.to change {
+            DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
+          }.by(1)
         end
-        dismissing_topic_ids = topic_ids.sample(4)
 
-        expect do
-          stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-            put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
+        it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
           end
-        end.to change {
-          DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-        }.by(4)
+
+          expect do
+            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+              put "/topics/reset-new.json?tracked=true"
+            end
+          end.to change {
+            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
+          }.by(5)
+        end
+
+        it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
+          topic_ids = []
+          5.times do
+            topic_ids << create_post(category: tracked_category).topic.id
+          end
+          dismissing_topic_ids = topic_ids.sample(4)
+
+          expect do
+            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+              put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
+            end
+          end.to change {
+            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
+          }.by(4)
+        end
       end
 
       context "when tracked=false" do
         it "updates the user_stat new_since column and dismisses all the new topics" do
-          sign_in(user)
-          CategoryUser.set_notification_level_for_category(user,
-                                                           NotificationLevels.all[:tracking],
-                                                           tracked_category.id)
-
           topic_ids = []
           5.times do
             topic_ids << create_post(category: tracked_category).topic.id
@@ -3366,10 +3357,6 @@ RSpec.describe TopicsController do
         end
 
         it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
-          sign_in(user)
-          CategoryUser.set_notification_level_for_category(user,
-                                                           NotificationLevels.all[:tracking],
-                                                           tracked_category.id)
 
           topic_ids = []
           5.times do
@@ -3389,118 +3376,94 @@ RSpec.describe TopicsController do
           }.by(5)
         end
       end
-    end
 
-    context 'category' do
-      fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
-      fab!(:category_topic) { Fabricate(:topic, category: category) }
-      fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory) }
+      context 'category' do
+        fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+        fab!(:category_topic) { Fabricate(:topic, category: category) }
+        fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory) }
 
-      it 'dismisses topics for main category' do
-        sign_in(user)
+        it 'dismisses topics for main category' do
+          TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [category_topic.id])
 
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [category_topic.id])
+          put "/topics/reset-new.json?category_id=#{category.id}"
 
-        put "/topics/reset-new.json?category_id=#{category.id}"
-
-        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([category_topic.id])
-      end
-
-      it 'dismisses topics for main category and subcategories' do
-        sign_in(user)
-
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [category_topic.id, subcategory_topic.id])
-
-        put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
-
-        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq([category_topic.id, subcategory_topic.id].sort)
-      end
-    end
-
-    context 'tag' do
-      fab!(:tag_topic) { Fabricate(:topic) }
-      fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
-
-      it 'dismisses topics for tag' do
-        sign_in(user)
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
-        put "/topics/reset-new.json?tag_id=#{tag.name}"
-        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
-      end
-    end
-
-    context 'tag and category' do
-      fab!(:tag_topic) { Fabricate(:topic) }
-      fab!(:tag_and_category_topic) { Fabricate(:topic, category: category) }
-      fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
-      fab!(:topic_tag2) { Fabricate(:topic_tag, topic: tag_and_category_topic, tag: tag) }
-
-      it 'dismisses topics for tag' do
-        sign_in(user)
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_and_category_topic.id])
-        put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
-        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_and_category_topic.id])
-      end
-    end
-
-    context "specific topics" do
-      fab!(:topic2) { Fabricate(:topic) }
-      fab!(:topic3) { Fabricate(:topic) }
-
-      it "updates the `new_since` date" do
-        sign_in(user)
-
-        old_date = 2.years.ago
-        user.user_stat.update_column(:new_since, old_date)
-        user.update_column(:created_at, old_date)
-
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [topic2.id, topic3.id]).at_least_once
-
-        put "/topics/reset-new.json", **{ params: { topic_ids: [topic2.id, topic3.id] } }
-        expect(response.status).to eq(200)
-        user.reload
-        expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
-        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([topic2.id, topic3.id])
-      end
-
-      it "raises an error if topic_ids is provided and it is not an array" do
-        sign_in(user)
-        put "/topics/reset-new.json", params: { topic_ids: topic2.id }
-        expect(response.parsed_body["errors"].first).to match(/Expecting topic_ids to contain a list/)
-        put "/topics/reset-new.json", params: { topic_ids: [topic2.id] }
-        expect(response.parsed_body["errors"]).to eq(nil)
-      end
-
-      describe "when tracked param is true" do
-        it "does not update user_stat.new_since and does not dismiss untracked topics" do
-          sign_in(user)
-
-          old_date = 2.years.ago
-          user.user_stat.update_column(:new_since, old_date)
-
-          put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [topic2.id, topic3.id] } }
-          expect(response.status).to eq(200)
-          user.reload
-          expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
-          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to be_empty
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([category_topic.id])
         end
 
-        it "creates topic user records for each unread topic" do
-          sign_in(user)
-          user.user_stat.update_column(:new_since, 2.years.ago)
+        it 'dismisses topics for main category and subcategories' do
+          TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [category_topic.id, subcategory_topic.id])
 
-          CategoryUser.set_notification_level_for_category(user,
-                                                           NotificationLevels.all[:tracking],
-                                                           tracked_category.id)
-          tracked_topic = create_post.topic
-          tracked_topic.update!(category_id: tracked_category.id)
-          topic2.update!(category_id: tracked_category.id)
+          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
-          create_post # This is a new post, but is not tracked so a record will not be created for it
-          expect do
-            put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
-          end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(2)
-          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([tracked_topic.id, topic2.id])
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq([category_topic.id, subcategory_topic.id].sort)
+        end
+      end
+
+      context 'tag' do
+        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
+
+        it 'dismisses topics for tag' do
+          TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
+          put "/topics/reset-new.json?tag_id=#{tag.name}"
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
+        end
+      end
+
+      context 'tag and category' do
+        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
+        fab!(:tag_and_category_topic) { Fabricate(:topic, category: category) }
+        fab!(:topic_tag2) { Fabricate(:topic_tag, topic: tag_and_category_topic, tag: tag) }
+
+        it 'dismisses topics for tag' do
+          TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_and_category_topic.id])
+          put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_and_category_topic.id])
+        end
+      end
+
+      context "specific topics" do
+        fab!(:topic2) { Fabricate(:topic) }
+        fab!(:topic3) { Fabricate(:topic) }
+
+        it "updates the `new_since` date" do
+          TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [topic2.id, topic3.id]).at_least_once
+
+          put "/topics/reset-new.json", **{ params: { topic_ids: [topic2.id, topic3.id] } }
+          expect(response.status).to eq(200)
+          user.reload
+          expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([topic2.id, topic3.id])
+        end
+
+        it "raises an error if topic_ids is provided and it is not an array" do
+          put "/topics/reset-new.json", params: { topic_ids: topic2.id }
+          expect(response.parsed_body["errors"].first).to match(/Expecting topic_ids to contain a list/)
+          put "/topics/reset-new.json", params: { topic_ids: [topic2.id] }
+          expect(response.parsed_body["errors"]).to eq(nil)
+        end
+
+        describe "when tracked param is true" do
+          it "does not update user_stat.new_since and does not dismiss untracked topics" do
+            put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [topic2.id, topic3.id] } }
+            expect(response.status).to eq(200)
+            user.reload
+            expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to be_empty
+          end
+
+          it "creates topic user records for each unread topic" do
+            tracked_topic = create_post.topic
+            tracked_topic.update!(category_id: tracked_category.id)
+            topic2.update!(category_id: tracked_category.id)
+
+            create_post # This is a new post, but is not tracked so a record will not be created for it
+            expect do
+              put "/topics/reset-new.json?tracked=true", **{ params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
+            end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(2)
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([tracked_topic.id, topic2.id])
+          end
         end
       end
     end
