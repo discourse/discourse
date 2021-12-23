@@ -77,17 +77,6 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
 
-    # Update the user's email address from the auth payload
-    if association.user &&
-        (always_update_user_email? || association.user.email.end_with?(".invalid")) &&
-        primary_email_verified?(auth_token) &&
-        (email = auth_token.dig(:info, :email)) &&
-        (email != association.user.email) &&
-        !User.find_by_email(email)
-
-      association.user.update!(email: email)
-    end
-
     # Update avatar/profile
     retrieve_avatar(association.user, association.info["image"])
     retrieve_profile(association.user, association.info)
@@ -104,6 +93,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     end
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email.present?
+    result.overrides_email = always_update_user_email?
     result.extra_data = {
       provider: auth_token[:provider],
       uid: auth_token[:uid]

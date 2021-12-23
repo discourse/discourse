@@ -22,3 +22,8 @@ Fabricator(:attachment_external_upload_stub, from: :external_upload_stub) do
   filesize 1024
   key { |attrs| FileStore::BaseStore.temporary_upload_path("file.pdf", folder_prefix: attrs[:folder_prefix] || "") }
 end
+
+Fabricator(:multipart_external_upload_stub, from: :external_upload_stub) do
+  multipart true
+  external_upload_identifier { "#{SecureRandom.hex(6)}._#{SecureRandom.hex(6)}_#{SecureRandom.hex(6)}.d.ghQ" }
+end
