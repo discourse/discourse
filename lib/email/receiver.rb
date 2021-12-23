@@ -245,6 +245,8 @@ module Email
         topic = email_log.topic
       end
 
+      DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
+
       if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
