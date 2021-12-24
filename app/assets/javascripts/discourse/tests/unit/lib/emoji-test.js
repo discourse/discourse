@@ -6,14 +6,20 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 discourseModule("Unit | Utility | emoji", function () {
   test("emojiUnescape", function (assert) {
-    const testUnescape = (input, expected, description, settings = {}) => {
+    const testUnescape = (
+      input,
+      expected,
+      description,
+      settings = {},
+      options = {}
+    ) => {
       const originalSettings = {};
       for (const [key, value] of Object.entries(settings)) {
         originalSettings[key] = this.siteSettings[key];
         this.siteSettings[key] = value;
       }
 
-      assert.strictEqual(emojiUnescape(input), expected, description);
+      assert.strictEqual(emojiUnescape(input, options), expected, description);
 
       for (const [key, value] of Object.entries(originalSettings)) {
         this.siteSettings[key] = value;
@@ -39,6 +45,13 @@ discourseModule("Unit | Utility | emoji", function () {
       "With emoji :O: :frog: :smile:",
       `With emoji <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/o.png?v=${v}' title='O' alt='O' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/frog.png?v=${v}' title='frog' alt='frog' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "title with emoji"
+    );
+    testUnescape(
+      "With emoji :smile:",
+      `With emoji <img width=\"15\" height=\"15\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+      "allows custom height/width",
+      {},
+      { width: 15, height: 15 }
     );
     testUnescape(
       "a:smile:a",
