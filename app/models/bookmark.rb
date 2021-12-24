@@ -182,7 +182,6 @@ end
 #  index_bookmarks_on_post_id                            (post_id)
 #  index_bookmarks_on_reminder_at                        (reminder_at)
 #  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
-#  index_bookmarks_on_topic_id                           (topic_id)
 #  index_bookmarks_on_user_id                            (user_id)
 #  index_bookmarks_on_user_id_and_post_id_and_for_topic  (user_id,post_id,for_topic) UNIQUE
 #
