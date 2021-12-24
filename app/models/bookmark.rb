@@ -20,20 +20,6 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
-  # TODO (martin) (2021-12-01) Remove this once plugins are not using it.
-  def self.reminder_types
-    @reminder_types ||= Enum.new(
-      later_today: 1,
-      next_business_day: 2,
-      tomorrow: 3,
-      next_week: 4,
-      next_month: 5,
-      custom: 6,
-      start_of_next_business_week: 7,
-      later_this_week: 8
-    )
-  end
-
   validate :unique_per_post_for_user,
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_user_id? }
