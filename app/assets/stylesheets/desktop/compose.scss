@@ -8,7 +8,6 @@
 
     .submit-panel {
       flex-wrap: wrap;
-      align-items: center;
     }
   }
 
@@ -23,7 +22,7 @@
         .mini-tag-chooser {
           margin-bottom: 8px; // match title input margin
           flex: 0 0 auto;
-          margin-left: 1%; // matches margin between category and tag input
+          margin-left: 8px; // matches margin between category and tag input
           width: 39%;
         }
       }
@@ -45,12 +44,6 @@
       span {
         // protects the space of the user input in case there's a very long translation
         @include ellipsis;
-      }
-    }
-
-    &.show-preview {
-      .user-selector {
-        width: 50%;
       }
     }
   }
@@ -88,22 +81,16 @@
   }
 }
 
-.composer-popup-container {
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
-  width: calc(49% - 8px);
+  width: calc(50% - 8px);
   top: 8px; // .reply-to margin-top + .reply-area padding-top
   bottom: 8px;
-  left: 51%;
+  right: 8px;
   overflow-y: auto;
   z-index: z("composer", "popover");
-  padding: 8px 8px 32px 8px;
+  padding: 1.5em;
   box-shadow: shadow("dropdown");
   background: var(--highlight-medium);
 
@@ -133,10 +120,6 @@
   }
 
   h3 {
-    margin-bottom: 10px;
-  }
-
-  p {
     margin-bottom: 10px;
   }
 
@@ -239,7 +222,6 @@
 }
 
 .composer-popup:nth-of-type(2) {
-  margin-left: 10px;
   width: calc(50% - 65px);
 }
 
@@ -282,10 +264,7 @@ a.toggle-preview {
       .reply-to {
         border-bottom: 1px solid var(--primary-low);
         margin-bottom: 0;
-
-        .composer-controls {
-          margin-right: 0;
-        }
+        padding-bottom: 8px;
       }
 
       .d-editor-textarea-wrapper {

@@ -1,4 +1,4 @@
-{{d-editor
+{{#d-editor
   value=composer.reply
   placeholder=replyPlaceholder
   previewUpdated=(action "previewUpdated")
@@ -19,6 +19,8 @@
   disabled=disableTextarea
   outletArgs=(hash composer=composer editorType="composer")
 }}
+  {{yield}}
+{{/d-editor}}
 
 {{#if allowUpload}}
   {{#if acceptsAllFormats}}
