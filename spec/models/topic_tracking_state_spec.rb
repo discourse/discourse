@@ -354,18 +354,6 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-  it "correctly handles category_users with null notification level" do
-    post
-
-    report = TopicTrackingState.report(user)
-    expect(report.length).to eq(1)
-
-    CategoryUser.create!(user_id: user.id, category_id: post.topic.category_id)
-
-    report = TopicTrackingState.report(user)
-    expect(report.length).to eq(1)
-  end
-
   it "works when categories are default muted" do
     SiteSetting.mute_all_categories_by_default = true
 

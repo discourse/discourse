@@ -331,7 +331,7 @@ describe Jobs::ExportUserArchive do
           .category_users
           .where(category_id: category_id)
           .first_or_initialize
-          .update!(last_seen_at: reset_at)
+          .update!(last_seen_at: reset_at, notification_level: NotificationLevels.all[:regular])
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
@@ -355,7 +355,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data[1][:category_id]).to eq(subsubcategory.id.to_s)
       expect(data[1][:category_names]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
-      expect(data[1][:notification_level]).to eq('') # empty string, not 'normal'
+      expect(data[1][:notification_level]).to eq('regular')
       expect(DateTime.parse(data[1][:dismiss_new_timestamp])).to eq(reset_at)
 
       expect(data[2][:category_id]).to eq(announcements.id.to_s)

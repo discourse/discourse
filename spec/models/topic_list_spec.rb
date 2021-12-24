@@ -50,7 +50,11 @@ describe TopicList do
 
   describe '#load_topics' do
     it 'loads additional data for serialization' do
-      category_user = CategoryUser.create!(user: user, category: topic.category)
+      category_user = CategoryUser.create!(
+        user: user,
+        category: topic.category,
+        notification_level: NotificationLevels.all[:regular]
+      )
 
       topic = topic_list.load_topics.first
 
