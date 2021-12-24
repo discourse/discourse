@@ -267,12 +267,6 @@ basic:
     client: true
     default: true
     hidden: true
-  # TODO (martin) (2022-02-01) Remove this setting once plugins relying on
-  # it have been changed.
-  enable_experimental_composer_uploader:
-    client: true
-    default: false
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
