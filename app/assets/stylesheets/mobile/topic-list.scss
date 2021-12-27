@@ -128,7 +128,7 @@
       .pull-right {
         grid-area: replies;
         .num {
-          text-align: right;
+          justify-content: end;
         }
       }
       .topic-item-stats {
