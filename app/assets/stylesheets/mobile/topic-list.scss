@@ -114,7 +114,27 @@
 
   .topic-list-data {
     padding: 7px 0;
-    max-width: 300px;
+    display: flex;
+    .right {
+      margin-left: 10px;
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 75% 25%;
+      grid-template-rows: 50% 50%;
+      grid-template-areas: "title replies" "data data";
+      .main-link {
+        grid-area: title;
+      }
+      .pull-right {
+        grid-area: replies;
+        .num {
+          text-align: right;
+        }
+      }
+      .topic-item-stats {
+        grid-area: data;
+      }
+    }
   }
 
   .main-link {

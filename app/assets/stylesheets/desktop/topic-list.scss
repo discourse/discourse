@@ -5,6 +5,26 @@
 // Base list
 // --------------------------------------------------
 
+// Flex Layout
+.topic-list-header,
+.topic-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.topic-list-data {
+  &.main-link,
+  &.default {
+    flex-grow: 1;
+  }
+  &.posters {
+    width: 146px;
+  }
+  &.num {
+    min-width: 65px;
+  }
+}
+
 .topic-list-icons {
   .d-icon-thumbtack {
     color: var(--primary-med-or-secondary-med);
@@ -21,18 +41,21 @@
 }
 
 .topic-list {
-  @extend .topic-list-icons;
-
   margin: 0 0 10px;
-  .topic-list-data {
-    padding: 12px 5px;
-    &:first-of-type {
-      padding-left: 10px;
-    }
-    &:last-of-type {
-      padding-right: 10px;
-    }
+}
+
+.topic-list-data {
+  padding: 12px 5px;
+  &:first-of-type {
+    padding-left: 10px;
   }
+  &:last-of-type {
+    padding-right: 10px;
+  }
+}
+
+.topic-list-body {
+  @extend .topic-list-icons;
 
   button.bulk-select {
     padding: 0;
@@ -41,7 +64,6 @@
 
   .topic-list-data.bulk-select {
     padding: 0;
-    width: 30px;
     label {
       margin: 0px;
       padding: 12px 10px 16px 10px;
@@ -67,7 +89,6 @@
   .posters {
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
-    width: 146px;
     > a {
       float: left;
       margin-right: 4px;
@@ -94,16 +115,6 @@
     left: -2px;
   }
 
-  .likes {
-    width: 65px;
-  }
-  .views {
-    width: 65px;
-  }
-  .posts {
-    width: 65px;
-  }
-
   .post-actions {
     clear: both;
     width: auto;
@@ -121,7 +132,6 @@
     }
   }
   .activity {
-    width: 60px;
     &:lang(zh_CN) {
       width: 80px;
     }
@@ -216,14 +226,14 @@ button.dismiss-read {
       font-size: $font-0;
     }
     // suppress views column
-    .views {
+    .topic-list-data.views {
       display: none;
     }
     // reduce width for more title space
-    .posts {
+    .topic-list-data.posts {
       width: 50px;
     }
-    .posters {
+    .topic-list-data.posters {
       width: 30px;
       text-align: center;
     }

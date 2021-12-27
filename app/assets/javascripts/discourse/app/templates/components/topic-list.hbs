@@ -1,5 +1,5 @@
 {{#unless skipHeader}}
-  <thead class="topic-list-header">
+  <div class="topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
       toggleInTitle=toggleInTitle
@@ -14,7 +14,7 @@
       bulkSelectEnabled=bulkSelectEnabled
       canDoBulkActions=canDoBulkActions
     }}
-  </thead>
+  </div>
 {{/unless}}
 
 {{plugin-outlet
@@ -29,7 +29,7 @@
   tagName=""
   connectorTagName=""}}
 
-<tbody class="topic-list-body">
+<div class="topic-list-body">
   {{#each filteredTopics as |topic|}}
     {{topic-list-item topic=topic
                       bulkSelectEnabled=bulkSelectEnabled
@@ -45,7 +45,7 @@
                       tagsForUser=tagsForUser}}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
-</tbody>
+</div>
 
 {{plugin-outlet
   name="after-topic-list-body"

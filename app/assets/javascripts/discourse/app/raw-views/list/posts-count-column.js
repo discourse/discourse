@@ -3,7 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
-  tagName: "td",
+  tagName: "div",
 
   @discourseComputed("topic.like_count", "topic.posts_count")
   ratio(likeCount, postCount) {

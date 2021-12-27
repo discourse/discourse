@@ -129,7 +129,8 @@ table {
   border-collapse: collapse;
 }
 
-tbody {
+tbody,
+.topic-list-body {
   border-top: 3px solid var(--primary-low);
 }
 
