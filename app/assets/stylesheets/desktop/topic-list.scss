@@ -12,6 +12,10 @@
   align-items: center;
 }
 
+.topic-list-item {
+  min-height: 70px;
+}
+
 .topic-list-data {
   &.main-link,
   &.default {
@@ -103,9 +107,6 @@
         font-size: $font-down-1;
       }
     }
-  }
-  .topic-list-data.posters {
-    height: $td-posters-height;
   }
   .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);

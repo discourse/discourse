@@ -181,7 +181,6 @@
 
 .topic-list {
   width: 100%;
-  border-collapse: collapse;
 
   > .topic-list-body > .topic-list-item {
     &.has-excerpt .star {
@@ -288,7 +287,6 @@
     .badge-posts {
       font-weight: 700;
       color: inherit;
-      padding: 15px 5px;
     }
   }
 
