@@ -227,12 +227,6 @@
     color: currentColor;
   }
 
-  td,
-  .topic-list-data {
-    color: var(--primary-medium);
-    font-size: $font-0;
-  }
-
   .main-link {
     @extend .topic-list-main-link;
 
