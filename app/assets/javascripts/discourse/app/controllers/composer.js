@@ -1401,7 +1401,7 @@ export default Controller.extend({
 
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
-    elem.classList.remove("composer-open")
+    elem.classList.remove("composer-open");
 
     document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
