@@ -67,7 +67,7 @@ describe 'Recurring' do
         automation.trigger!
 
         pending_automation = DiscourseAutomation::PendingAutomation.last
-        expect(pending_automation.execute_at).to be_within_one_minute_of(Time.parse('2021-07-02 06:00:00 UTC'))
+        expect(pending_automation.execute_at).to be_within_one_minute_of(Time.parse('2021-07-02 08:00:00 UTC'))
       end
     end
 
