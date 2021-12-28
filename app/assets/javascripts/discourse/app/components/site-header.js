@@ -172,7 +172,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    dockCheck(info) {
+    dockCheck() {
       const header = document.querySelector("header.d-header");
 
       if (this.docAt === null) {
@@ -182,9 +182,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const offset = info.offset();
       const headerRect = header.getBoundingClientRect();
-      const doc = document.documentElement;
       let headerOffset = headerRect.top + headerRect.height;
 
       if (window.scrollY < 0) {
@@ -194,10 +192,10 @@ const SiteHeaderComponent = MountWidget.extend(
       const newValue = `${headerOffset}px`;
       if (newValue !== this.currentHeaderOffsetValue) {
         this.currentHeaderOffsetValue = newValue;
-        doc.style.setProperty("--header-offset", newValue);
+        document.documentElement.style.setProperty("--header-offset", newValue);
       }
 
-      if (offset >= this.docAt) {
+      if (window.pageYOffset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
