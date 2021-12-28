@@ -211,11 +211,14 @@ const Composer = RestModel.extend({
 
     if (this.composeState === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
+      elem.classList.add("composer-open")
     } else {
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
         this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
+        elem.classList.remove("composer-open")
       }
+      elem.classList.remove("composer-open")
       this.set("composerOpened", null);
     }
   },
