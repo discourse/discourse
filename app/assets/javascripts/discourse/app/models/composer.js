@@ -216,10 +216,9 @@ const Composer = RestModel.extend({
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
         this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
-        elem.classList.remove("composer-open");
       }
-      elem.classList.remove("composer-open");
       this.set("composerOpened", null);
+      elem.classList.remove("composer-open");
     }
   },
 
