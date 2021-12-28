@@ -1,10 +1,10 @@
 {{~raw-plugin-outlet name="topic-list-header-before"~}}
 {{#if bulkSelectEnabled}}
-  <div class="bulk-select topic-list-data">
+  <th class="bulk-select topic-list-data">
     {{#if canBulkSelect}}
       {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
     {{/if}}
-  </div>
+  </th>
 {{/if}}
 {{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions}}
 {{#if showPosters}}
