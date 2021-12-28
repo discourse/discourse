@@ -2544,7 +2544,7 @@ de:
     other: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunden geschlossen."
   system_messages:
     reviewables_reminder:
-      subject_template: "Es gibt Elemente in der Überprüfungswarteschlange, die überprüft werden müssen"
+      subject_template: "Es gibt Einträge in der Überprüfungswarteschlange, die überprüft werden müssen"
       text_body_template:
         one: "%{mentions} Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_url}/review)."
         other: "%{mentions} Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_url}/review)."

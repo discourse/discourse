@@ -5708,3 +5708,5 @@ ar:
       previews:
         share_button: "مشاركة"
         reply_button: "الرد"
+        topic_preview: "معاينة الموضوع"
+        homepage_preview: "معاينة الصفحة الرئيسية"

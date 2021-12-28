@@ -2649,8 +2649,6 @@ pl_PL:
     many: "Ten temat jest tymczasowo zamknięty na co najmniej %{count} godzin z powodu dużej liczby flag społeczności."
     other: "Ten temat jest tymczasowo zamknięty na co najmniej %{count} godzin z powodu dużej liczby flag społeczności."
   system_messages:
-    reviewables_reminder:
-      subject_template: "W kolejce do recenzji są elementy, które wymagają sprawdzenia"
     private_topic_title: "Temat#%{id}"
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
     post_hidden:

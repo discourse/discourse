@@ -2500,7 +2500,7 @@ sv:
     other: "Detta ämne är tillfälligt stängt i minst %{count} timmar på grund av ett stort antal flaggor."
   system_messages:
     reviewables_reminder:
-      subject_template: "Det finns artiklar i granskningskön som behöver granskas"
+      subject_template: "Det finns saker i granskningskön som behöver granskas"
       text_body_template:
         one: "%{mentions} Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_url}/review)."
         other: "%{mentions} Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_url}/review)."

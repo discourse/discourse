@@ -1686,6 +1686,7 @@ hu:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
       invite: "Adja meg a felhasználónevét vagy az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
+      invite_no_username: "Adja meg az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
       reset: "Jelszó visszaállítása"
       complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
@@ -2735,7 +2736,7 @@ hu:
         by_you:
           off_topic: "Nem a témába tartozónak jelölve"
           spam: "Spam-ként jelölted"
-          inappropriate: "Ide nem illőnek jelölted"
+          inappropriate: "Ezt ide nem illőnek jelölte."
           notify_moderators: "Moderálásra jelölted"
           notify_user: "Üzenetet küldtél ennek a felhasználónak"
       delete:
@@ -2903,7 +2904,7 @@ hu:
       notify_staff: "A személyzet titkos értesítése"
       formatted_name:
         off_topic: "Ez nem tartozik a témakörbe"
-        inappropriate: "Ez nem megfelelő"
+        inappropriate: "Ez ide nem illő"
         spam: "Ez szemét"
       custom_placeholder_notify_user: "Légy célra törő, építő jellegű és mindig legyél kedves másokhoz!"
       custom_placeholder_notify_moderators: "Tudasd velünk konkrétan, hogy mi a gond, és lehetőség szerint adj megfelelő linkeket és példákat."
@@ -3836,7 +3837,7 @@ hu:
           silence: "Elnémítás"
           link: "Hivatkozás"
         action_descriptions:
-          flag: "Engedélyezze az ezeket a szavakat tartalmazó bejegyzéseket, de nem megfelelőnek jelölje őket, így a moderátorok átnézhetik azokat."
+          flag: "Az ezen szavakat tartalmazó bejegyzések engedélyezése, de ide nem illőnek jelölése, hogy a moderátorok átnézhessék azokat."
         form:
           placeholder_regexp: "reguláris kifejezés"
           link_label: "Hivatkozás"

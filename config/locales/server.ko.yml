@@ -2415,8 +2415,6 @@ ko:
   temporarily_closed_due_to_flags:
     other: "이 글은 많은 신고로 인해 최소 %{count}시간 동안 일시적으로 닫힙니다."
   system_messages:
-    reviewables_reminder:
-      subject_template: "검토가 필요한 항목이 검토 대기열에 있습니다."
     private_topic_title: "주제 # %{id}"
     contents_hidden: "내용을 보려면 게시물을 방문하십시오."
     post_hidden:
