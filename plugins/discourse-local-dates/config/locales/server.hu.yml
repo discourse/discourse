@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    discourse_local_dates_enabled: "A discourse-local-dates funkció engedélyezése. Ez támogatást nyújt a bejegyzésekben lévő dátumok helyi időzónában történő megjelenítéséhez, a [date] elem használatával."
+    discourse_local_dates_default_formats: "Gyakran használt dátum- és időformátumok, lásd: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs karakterlánc formátum</a>"
+    discourse_local_dates_default_timezones: "Az időzónák alapértelmezett listája, érvényes <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> időzónának kell lennie"
+    discourse_local_dates_email_format: "A dátumok e-mailekben történő megjelenítéséhez használt formátum."

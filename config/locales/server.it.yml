@@ -2485,8 +2485,6 @@ it:
     one: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ora a causa di un numero elevato di segnalazioni dalla comunità."
     other: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ore a causa di un numero elevato di segnalazioni dalla comunità."
   system_messages:
-    reviewables_reminder:
-      subject_template: "Ci sono elementi nella coda di revisione che devono essere revisionati"
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
     post_hidden:

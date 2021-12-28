@@ -2666,7 +2666,6 @@ he:
     other: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
   system_messages:
     reviewables_reminder:
-      subject_template: "יש פריטים בתור הביקורת שדורשים סקירה"
       text_body_template:
         one: "%{mentions} פריטים הוגשו לפני למעלה משעה %{count}. [נא לסקור אותם](%{base_url}/review)."
         two: "%{mentions} פריטים הוגשו לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_url}/review)."

@@ -130,6 +130,8 @@ sr:
       previous_month: "Prethodni mesec"
       next_month: "Sledeći mesec"
       placeholder: datum
+      from_placeholder: "од датума"
+      to_placeholder: "до датума"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "poruka #%{postNumber}"
