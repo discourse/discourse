@@ -1,4 +1,3 @@
-import deprecated from "discourse-common/lib/deprecated";
 import loadScript from "discourse/lib/load-script";
 
 /*global hljs:true */
@@ -13,19 +12,6 @@ export default function highlightSyntax(elem, siteSettings, session) {
     ? "pre code"
     : "pre code[class]";
   const path = session.highlightJsPath;
-
-  // eslint-disable-next-line no-undef
-  if (elem instanceof jQuery) {
-    deprecated(
-      "highlightSyntax now takes a DOM node instead of a jQuery object.",
-      {
-        since: "2.6.0",
-        dropFrom: "2.7.0",
-      }
-    );
-
-    elem = elem[0];
-  }
 
   if (!path) {
     return;
