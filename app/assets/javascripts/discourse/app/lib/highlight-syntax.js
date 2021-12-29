@@ -11,6 +11,13 @@ export default function highlightSyntax(elem, siteSettings, session) {
   const selector = siteSettings.autohighlight_all_code
     ? "pre code"
     : "pre code[class]";
+
+  const codeblocks = elem.querySelectorAll(selector);
+
+  if (!codeblocks.length) {
+    return;
+  }
+
   const path = session.highlightJsPath;
 
   if (!path) {
@@ -20,7 +27,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
   return loadScript(path).then(() => {
     customHighlightJSLanguages();
 
-    elem.querySelectorAll(selector).forEach((e) => {
+    codeblocks.forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
       if (e.innerHTML.length > 30000) {
         return;
