@@ -316,7 +316,7 @@ task 'javascript:update' => 'clean_up' do
     if src.include? "ace.js"
       versions["ace/ace.js"] = versions.delete("ace.js")
       ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "worker-html"]
+      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "theme-chaos", "worker-html"]
       dest_path = dest.split('/')[0..-2].join('/')
       addtl_files.each do |file|
         FileUtils.cp_r("#{ace_root}#{file}.js", dest_path)
