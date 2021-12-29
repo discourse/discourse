@@ -3,7 +3,7 @@
     margin: 0 auto;
     padding: 8px;
     box-sizing: border-box;
-    height: 100%;
+    height: calc(100% - 11px);
     width: 100%;
 
     .submit-panel {
@@ -60,7 +60,6 @@
     cursor: row-resize;
     padding: 4px 0;
     background: var(--tertiary);
-    margin-top: -11px;
 
     &:before {
       content: "";

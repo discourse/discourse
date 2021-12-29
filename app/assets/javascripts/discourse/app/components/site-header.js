@@ -183,13 +183,13 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const headerRect = header.getBoundingClientRect();
-      let headerOffset = headerRect.top + headerRect.height;
+      let headerOffsetCalc = headerRect.top + headerRect.height;
 
       if (window.scrollY < 0) {
-        headerOffset += window.scrollY;
+        headerOffsetCalc += window.scrollY;
       }
 
-      const newValue = `${headerOffset}px`;
+      const newValue = `${headerOffsetCalc}px`;
       if (newValue !== this.currentHeaderOffsetValue) {
         this.currentHeaderOffsetValue = newValue;
         document.documentElement.style.setProperty("--header-offset", newValue);
@@ -389,7 +389,7 @@ const SiteHeaderComponent = MountWidget.extend(
             headerCloak.style.display = "block";
           }
 
-          const menuTop = this.site.mobileView ? headerTop() : headerHeight();
+          const menuTop = this.site.mobileView ? headerTop() : headerOffset();
 
           const winHeightOffset = 16;
           let initialWinHeight = window.innerHeight;
@@ -438,16 +438,13 @@ export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
 });
 
-export function headerHeight() {
-  const header = document.querySelector("header.d-header");
-
-  // Header may not exist in tests (e.g. in the user menu component test).
-  if (!header) {
-    return 0;
-  }
-
-  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
-  return header.offsetHeight + headerOffsetTop - document.body.scrollTop;
+export function headerOffset() {
+  return (
+    parseInt(
+      document.documentElement.style.getPropertyValue("--header-offset"),
+      10
+    ) || 0
+  );
 }
 
 export function headerTop() {

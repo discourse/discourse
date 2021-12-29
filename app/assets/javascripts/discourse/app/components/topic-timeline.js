@@ -1,5 +1,6 @@
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
+import { headerOffset } from "discourse/components/site-header";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
@@ -50,7 +51,7 @@ export default MountWidget.extend(Docking, {
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
 
     const prev = this.dockAt;
-    const posTop = this.headerOffset() + window.pageYOffset;
+    const posTop = headerOffset() + window.pageYOffset;
     const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
@@ -70,12 +71,6 @@ export default MountWidget.extend(Docking, {
     if (this.dockAt !== prev) {
       this.queueRerender();
     }
-  },
-
-  headerOffset() {
-    return (
-      parseInt(document.body.style.getPropertyValue("--header-offset"), 10) || 0
-    );
   },
 
   didInsertElement() {
