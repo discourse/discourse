@@ -89,8 +89,6 @@ export default Component.extend({
         return;
       }
 
-      emojiPicker.addEventListener("keydown", this._keyDown);
-
       const textareaWrapper = document.querySelector(
         ".d-editor-textarea-wrapper"
       );
@@ -139,9 +137,6 @@ export default Component.extend({
   @action
   onClose() {
     document.removeEventListener("click", this.handleOutsideClick);
-    document
-      .querySelector(".emoji-picker")
-      ?.removeEventListener("keydown", this._keyDown);
     this.onEmojiPickerClose && this.onEmojiPickerClose();
   },
 
@@ -220,8 +215,8 @@ export default Component.extend({
     section && section.scrollIntoView();
   },
 
-  @bind
-  _keyDown(event) {
+  @action
+  keydown(event) {
     if (event.code === "Escape") {
       this.onClose();
       return false;
