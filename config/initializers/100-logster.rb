@@ -33,8 +33,12 @@ end
 
 if Rails.env.production?
   Logster.store.ignore = [
-    # honestly, Rails should not be logging this, its real noisy
+    # These errors are caused by client requests. No need to log them.
+    # Rails itself defines these as 'silent exceptions', but this does
+    # not entirely prevent them from being logged
+    # https://github.com/rails/rails/blob/f2caed1e/actionpack/lib/action_dispatch/middleware/exception_wrapper.rb#L39-L42
     /^ActionController::RoutingError \(No route matches/,
+    /^ActionDispatch::Http::MimeNegotiation::InvalidType/,
 
     /^PG::Error: ERROR:\s+duplicate key/,
 
