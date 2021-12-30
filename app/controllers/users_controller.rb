@@ -1412,16 +1412,14 @@ class UsersController < ApplicationController
     require 'rotp' if !defined? ROTP
     totp_data = ROTP::Base32.random
     secure_session["staged-totp-#{current_user.id}"] = totp_data
-    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(
-      offset: 0,
-      color: '000',
-      shape_rendering: 'crispEdges',
-      module_size: 4
+    qrcode_png = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_png(
+      border_modules: 1,
+      size: 240
     )
 
     render json: success_json.merge(
              key: totp_data.scan(/.{4}/).join(" "),
-             qr: qrcode_svg
+             qr: qrcode_png.to_data_url
            )
   end
 
