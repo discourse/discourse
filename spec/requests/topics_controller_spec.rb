@@ -3308,72 +3308,65 @@ RSpec.describe TopicsController do
             DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
           }.by(1)
         end
-
-        it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-
-          expect do
-            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-              put "/topics/reset-new.json?tracked=true"
-            end
-          end.to change {
-            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-          }.by(5)
-        end
-
-        it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-          dismissing_topic_ids = topic_ids.sample(4)
-
-          expect do
-            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-              put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
-            end
-          end.to change {
-            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-          }.by(4)
-        end
       end
 
-      context "when tracked=false" do
-        it "updates the user_stat new_since column and dismisses all the new topics" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-          topic_ids << Fabricate(:topic).id
-          topic_ids << Fabricate(:topic).id
-          old_new_since = user.user_stat.new_since
-
-          put "/topics/reset-new.json?tracked=false"
-          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
-          expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+      context "when 5 tracked topics exist" do
+        before_all do
+          @tracked_topic_ids = 5.times.map { create_post(category: tracked_category).topic.id }
+          @tracked_topic_ids.freeze
         end
 
-        it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
-
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
+        describe "when tracked param is true" do
+          it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
+            expect do
+              stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+                put "/topics/reset-new.json?tracked=true"
+              end
+            end.to change {
+              DismissedTopicUser.where(user_id: user.id, topic_id: @tracked_topic_ids).count
+            }.by(5)
           end
-          topic_ids << Fabricate(:topic).id
-          topic_ids << Fabricate(:topic).id
 
-          dismiss_ids = topic_ids[0..1]
-          other_ids = topic_ids[2..-1].sort.reverse
+          it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
+            dismissing_topic_ids = @tracked_topic_ids.sample(4)
 
-          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
-          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+            expect do
+              stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+                put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
+              end
+            end.to change {
+              DismissedTopicUser.where(user_id: user.id, topic_id: @tracked_topic_ids).count
+            }.by(4)
+          end
+        end
 
-          expect { put "/topics/reset-new.json?tracked=false" }.to change {
-            DismissedTopicUser.where(user_id: user.id).count
-          }.by(5)
+        context "when two extra topics exist" do
+          before_all do
+            @topic_ids = @tracked_topic_ids + [Fabricate(:topic).id, Fabricate(:topic).id]
+            @topic_ids.freeze
+          end
+
+          context "when tracked=false" do
+            it "updates the user_stat new_since column and dismisses all the new topics" do
+              old_new_since = user.user_stat.new_since
+
+              put "/topics/reset-new.json?tracked=false"
+              expect(DismissedTopicUser.where(user_id: user.id, topic_id: @topic_ids).count).to eq(7)
+              expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+            end
+
+            it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
+              dismiss_ids = @topic_ids[0..1]
+              other_ids = @topic_ids[2..-1].sort.reverse
+
+              DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
+              DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+
+              expect { put "/topics/reset-new.json?tracked=false" }.to change {
+                DismissedTopicUser.where(user_id: user.id).count
+              }.by(5)
+            end
+          end
         end
       end
 
