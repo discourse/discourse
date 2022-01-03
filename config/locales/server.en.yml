@@ -2823,7 +2823,7 @@ en:
 
   system_messages:
     reviewables_reminder:
-      subject_template: "There're items in the review queue that need reviewing"
+      subject_template: "There are items in the review queue that need reviewing"
       text_body_template:
         one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_url}/review)."
         other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_url}/review)."

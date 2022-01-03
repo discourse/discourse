@@ -21,9 +21,20 @@ export default createWidget("topic-status", {
       const attributes = {
         title: escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
       };
-      result.push(h(`${canAct ? "a" : "span"}.topic-status`, attributes, icon));
+      let klass = "topic-status";
+      if (key === "unpinned" || key === "pinned") {
+        klass += `.pin-toggle-button.${key}`;
+      }
+      result.push(h(`${canAct ? "a" : "span"}.${klass}`, attributes, icon));
     });
 
     return result;
+  },
+
+  click(e) {
+    const parent = e.target.closest(".topic-statuses");
+    if (parent?.querySelector(".pin-toggle-button")?.contains(e.target)) {
+      this.attrs.topic.togglePinnedForUser();
+    }
   },
 });

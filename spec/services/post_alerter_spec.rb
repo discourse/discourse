@@ -1869,4 +1869,21 @@ describe PostAlerter do
       expect(email).to eq(last_email)
     end
   end
+
+  describe 'storing custom data' do
+    let(:custom_data) { 'custom_string' }
+
+    it 'stores custom data inside a notification' do
+      PostAlerter.new.create_notification(
+        admin,
+        Notification.types[:liked],
+        post,
+        custom_data: { custom_key: custom_data }
+      )
+
+      liked_notification = Notification.where(notification_type: Notification.types[:liked]).last
+
+      expect(liked_notification.data_hash[:custom_key]).to eq(custom_data)
+    end
+  end
 end

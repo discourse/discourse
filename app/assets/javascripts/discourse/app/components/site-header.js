@@ -172,7 +172,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    dockCheck(info) {
+    dockCheck() {
       const header = document.querySelector("header.d-header");
 
       if (this.docAt === null) {
@@ -182,22 +182,20 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const offset = info.offset();
       const headerRect = header.getBoundingClientRect();
-      const doc = document.documentElement;
-      let headerOffset = headerRect.top + headerRect.height;
+      let headerOffsetCalc = headerRect.top + headerRect.height;
 
       if (window.scrollY < 0) {
-        headerOffset += window.scrollY;
+        headerOffsetCalc += window.scrollY;
       }
 
-      const newValue = `${headerOffset}px`;
+      const newValue = `${headerOffsetCalc}px`;
       if (newValue !== this.currentHeaderOffsetValue) {
         this.currentHeaderOffsetValue = newValue;
-        doc.style.setProperty("--header-offset", newValue);
+        document.documentElement.style.setProperty("--header-offset", newValue);
       }
 
-      if (offset >= this.docAt) {
+      if (window.pageYOffset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
@@ -391,7 +389,7 @@ const SiteHeaderComponent = MountWidget.extend(
             headerCloak.style.display = "block";
           }
 
-          const menuTop = this.site.mobileView ? headerTop() : headerHeight();
+          const menuTop = this.site.mobileView ? headerTop() : headerOffset();
 
           const winHeightOffset = 16;
           let initialWinHeight = window.innerHeight;
@@ -440,16 +438,13 @@ export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
 });
 
-export function headerHeight() {
-  const header = document.querySelector("header.d-header");
-
-  // Header may not exist in tests (e.g. in the user menu component test).
-  if (!header) {
-    return 0;
-  }
-
-  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
-  return header.offsetHeight + headerOffsetTop - document.body.scrollTop;
+export function headerOffset() {
+  return (
+    parseInt(
+      document.documentElement.style.getPropertyValue("--header-offset"),
+      10
+    ) || 0
+  );
 }
 
 export function headerTop() {

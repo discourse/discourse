@@ -222,35 +222,6 @@ describe Auth::ManagedAuthenticator do
       end
     end
 
-    describe "email update" do
-      fab!(:user) { Fabricate(:user) }
-      let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
-
-      it "updates the user's email if currently invalid" do
-        user.update!(email: "someemail@discourse.org")
-        # Existing email is valid, do not change
-        expect { result = authenticator.after_authenticate(hash) }
-          .not_to change { user.reload.email }
-
-        user.update!(email: "someemail@discourse.invalid")
-        # Existing email is invalid, expect change
-        expect { result = authenticator.after_authenticate(hash) }
-          .to change { user.reload.email }
-
-        expect(user.email).to eq("awesome@example.com")
-      end
-
-      it "doesn't raise error if email is taken" do
-        other_user = Fabricate(:user, email: "awesome@example.com")
-        user.update!(email: "someemail@discourse.invalid")
-
-        expect { result = authenticator.after_authenticate(hash) }
-          .not_to change { user.reload.email }
-
-        expect(user.email).to eq("someemail@discourse.invalid")
-      end
-    end
-
     describe "avatar on create" do
       fab!(:user) { Fabricate(:user) }
       let!(:association) { UserAssociatedAccount.create!(provider_name: 'myauth', provider_uid: "1234") }

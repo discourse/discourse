@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import getURL from "discourse-common/lib/get-url";
 import loadScript from "discourse/lib/load-script";
 import I18n from "I18n";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
 const COLOR_VARS_REGEX = /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
@@ -103,7 +103,6 @@ export default Component.extend({
         }
         const editor = loadedAce.edit(this.element.querySelector(".ace"));
 
-        editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
         editor.setOptions({ fontSize: "14px", placeholder: this.placeholder });
         editor.getSession().setMode("ace/mode/" + this.mode);
@@ -145,8 +144,29 @@ export default Component.extend({
         if (this.autofocus) {
           this.send("focus");
         }
+
+        this.setAceTheme();
+        this._darkModeListener = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        );
+        this._darkModeListener.addListener(this.setAceTheme);
       });
     });
+  },
+
+  willDestroyElement() {
+    this._darkModeListener.removeListener(this.setAceTheme);
+  },
+
+  @bind
+  setAceTheme() {
+    const schemeType = getComputedStyle(document.body)
+      .getPropertyValue("--scheme-type")
+      .trim();
+
+    this._editor.setTheme(
+      `ace/theme/${schemeType === "dark" ? "chaos" : "chrome"}`
+    );
   },
 
   warnSCSSDeprecations() {

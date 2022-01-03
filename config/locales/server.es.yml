@@ -2538,8 +2538,6 @@ es:
     one: "Este tema está cerrado temporalmente durante al menos %{count} hora debido a un número elevado de denuncias de la comunidad."
     other: "Este tema está cerrado temporalmente durante al menos %{count} horas debido a un número elevado de denuncias de la comunidad."
   system_messages:
-    reviewables_reminder:
-      subject_template: "Hay elementos esperando a ser revisados en la cola de revisión."
     private_topic_title: "Tema #%{id}"
     contents_hidden: "Visita la publicación para ver su contenido."
     post_hidden:
