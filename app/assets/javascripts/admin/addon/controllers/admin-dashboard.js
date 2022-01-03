@@ -20,7 +20,7 @@ export default Controller.extend({
   foundProblems(lowPriorityProblemsLength, highPriorityProblemsLength) {
     const problemsLength =
       lowPriorityProblemsLength + highPriorityProblemsLength;
-    return this.currentUser.get("admin") && (problemsLength || 0) > 0;
+    return this.currentUser.admin && problemsLength > 0;
   },
 
   visibleTabs: computed("siteSettings.dashboard_visible_tabs", function () {
@@ -100,11 +100,11 @@ export default Controller.extend({
       .then((model) => {
         this.set(
           "highPriorityProblems",
-          model.problems.filter((p) => p.priority === "high")
+          model.problems.filterBy("priority", "high")
         );
         this.set(
           "lowPriorityProblems",
-          model.problems.filter((p) => p.priority === "low")
+          model.problems.filterBy("priority", "low")
         );
       })
       .finally(() => this.set("loadingProblems", false));
