@@ -118,6 +118,21 @@ function canModify(klass, type, resolverName, changes) {
   }
 }
 
+function wrapWithErrorHandler(func, messageKey) {
+  return function () {
+    try {
+      return func.call(this, ...arguments);
+    } catch (error) {
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey, error },
+        })
+      );
+      return;
+    }
+  };
+}
+
 class PluginApi {
   constructor(version, container) {
     this.version = version;
@@ -308,6 +323,8 @@ class PluginApi {
    **/
   decorateCookedElement(callback, opts) {
     opts = opts || {};
+
+    callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
