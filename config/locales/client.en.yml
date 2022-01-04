@@ -1521,11 +1521,11 @@ en:
         every_month: "every month"
         every_six_months: "every six months"
       email_level:
-        title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+        title: "Email me when I am quoted, replied to, my @username is mentioned, or when there is new activity in my watched categories, tags or topics"
         always: "always"
         only_when_away: "only when away"
         never: "never"
-      email_messages_level: "Send me an email when someone messages me"
+      email_messages_level: "Email me when I am sent a personal message"
       include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
 
