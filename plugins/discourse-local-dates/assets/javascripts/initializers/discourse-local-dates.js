@@ -69,6 +69,13 @@ function _rangeElements(element) {
   if (!element.parentElement) {
     return [];
   }
+  if (
+    Array.from(element.parentElement.children).some(
+      (child) => child.tagName === "BR"
+    )
+  ) {
+    return [element];
+  }
   return Array.from(element.parentElement.children).filter(
     (span) => span.dataset.date
   );
