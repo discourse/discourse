@@ -1348,6 +1348,7 @@ it:
         qtt_like: Mi piace - Ricevuti
       description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
   dashboard:
+    group_email_credentials_warning: 'Si è verificato un problema con le credenziali e-mail per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nessuna e-mail verrà inviata dalla casella di posta del gruppo fino a quando il problema non sarà risolto. %{error}'
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su Sidekiq</a>.'
