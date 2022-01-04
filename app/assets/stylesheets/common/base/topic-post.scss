@@ -293,7 +293,7 @@ nav.post-controls {
 
     button {
       flex: 0 1 auto;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
