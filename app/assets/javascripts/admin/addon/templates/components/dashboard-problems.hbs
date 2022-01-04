@@ -1,17 +1,10 @@
 {{#if foundProblems}}
   <div class="section dashboard-problems">
     <div class="section-title">
-      {{#if highPriorityProblems.length}}
-        <h2>
-          {{d-icon "exclamation-triangle"}}
-          {{i18n "admin.dashboard.critical_problems_found"}}
-        </h2>
-      {{else}}
-        <h2>
-          {{d-icon "heart"}}
-          {{i18n "admin.dashboard.problems_found"}}
-        </h2>
-      {{/if}}
+      <h2>
+        {{d-icon "heart"}}
+        {{i18n "admin.dashboard.problems_found"}}
+      </h2>
     </div>
 
     <div class="section-body">
@@ -20,7 +13,9 @@
           <div class="problem-messages priority-high">
             <ul>
               {{#each highPriorityProblems as |problem|}}
-                <li class={{concat "dashboard-problem " "priority-" problem.priority}}>{{html-safe problem.message}}</li>
+                <li class={{concat "dashboard-problem " "priority-" problem.priority}}>
+                  {{d-icon "exclamation-triangle"}} {{html-safe problem.message}}
+                </li>
               {{/each}}
             </ul>
           </div>
