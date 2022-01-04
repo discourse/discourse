@@ -16,6 +16,7 @@ ar:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y، %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
