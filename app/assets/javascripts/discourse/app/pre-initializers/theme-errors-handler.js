@@ -83,7 +83,7 @@ function reportGenericError(currentUser, e) {
 }
 
 function displayErrorNotice(currentUser, message) {
-  if (!currentUser || !currentUser.admin) {
+  if (!currentUser?.admin) {
     return;
   }
 
