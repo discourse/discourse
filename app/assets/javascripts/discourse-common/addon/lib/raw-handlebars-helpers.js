@@ -25,71 +25,28 @@ export function registerRawHelpers(hbs, handlebarsClass) {
     let firstContext = options.contexts[0];
     let val = firstContext[context];
 
-    if (context.toString().indexOf("controller.") === 0) {
-      context = context.slice(context.indexOf(".") + 1);
-    }
-
-    // This replaces:
-    //return val === undefined ? get(firstContext, context) : val;
-
-    // @see: https://api.emberjs.com/ember/3.28/functions/@ember%2Fobject/get
-    // @see: https://github.com/emberjs/ember.js/blob/3537670c14883346e11e841fcb71333384fcbc87/packages/%40ember/-internals/metal/lib/property_get.ts#L47-L77
-    /*
-    GET AND SET
-
-    If we are on a platform that supports accessors we can use those.
-    Otherwise simulate accessors by looking up the property directly on the
-    object.
-    […]
-    If you plan to run on IE8 and older browsers then you should use this
-    method anytime you want to retrieve a property on an object that you don't
-    know for sure is private. (Properties beginning with an underscore '_'
-    are considered private.)
-
-    On all newer browsers, you only need to use this method to retrieve
-    properties if the property might not be defined on the object and you want
-    to respect the `unknownProperty` handler. Otherwise you can ignore this
-    method.
-    […]
-     */
-
     if (val === undefined) {
+      if (context.toString().indexOf("controller.") === 0) {
+        context = context.slice(context.indexOf(".") + 1);
+      }
+      let isPath = context.indexOf('.') > -1;
+
       let type = typeof firstContext;
       let isObject = type === 'object';
       let isFunction = type === 'function';
       let isObjectLike = isObject || isFunction;
 
-      // replaces @ember/-internals/utils isPath
-      // @see: https://github.com/emberjs/ember.js/blob/3537670c14883346e11e841fcb71333384fcbc87/packages/%40ember/-internals/metal/lib/path_cache.ts#L5-L7
-      // @see: https://github.com/emberjs/ember.js/blob/255a0dd3c7de1187f4a2f61a97cf78bfff8f66a8/packages/%40ember/-internals/glimmer/lib/utils/bindings.ts#L70
-      let isPath = context.indexOf('.') > -1;
+      if (isPath && isObjectLike) {
+        let parts = typeof context === 'string' ? context.split('.') : context;
+        val = firstContext;
 
-      if (isPath) {
-        if (isObjectLike) {
-            // replaces @ember/object _getPath
-            // @see: https://github.com/emberjs/ember.js/blob/3537670c14883346e11e841fcb71333384fcbc87/packages/%40ember/-internals/metal/lib/property_get.ts#L146-L159
-            let obj = firstContext;
-            let path = context;
-            let parts = typeof path === 'string' ? path.split('.') : path;
+        for (let i = 0; i < parts.length; i++) {
+          if (val === undefined || val === null || val.isDestroyed) {
+            return undefined;
+          }
 
-            for (var i = 0; i < parts.length; i++) {
-              if (obj === undefined || obj === null || obj.isDestroyed) {
-                return undefined;
-              }
-
-              // TODO: remove recursive calls of 'get' - if possible
-              obj = get(obj, parts[i]);
-            }
-
-            return obj;
+          val = val[(parts[i])];
         }
-        return undefined;
-      }
-
-      // replaces @ember/object _getProp
-      // https://github.com/emberjs/ember.js/blob/3537670c14883346e11e841fcb71333384fcbc87/packages/%40ember/-internals/metal/lib/property_get.ts#L115-L128
-      if (isObject && !(context in firstContext) && typeof firstContext.unknownProperty === 'function') {
-        return firstContext.unknownProperty(context);
       }
     }
 
