@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  self.ignored_columns = [
-    "topic_id", # TODO (martin) (2021-12-01): remove
-    "reminder_type" # TODO (martin) (2021-12-01): remove
-  ]
-
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
