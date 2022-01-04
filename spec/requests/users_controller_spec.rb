@@ -3680,6 +3680,16 @@ describe UsersController do
       expect(response.body).to include(user1.username)
     end
 
+    it "should not be able to view a private user profile" do
+      user1.user_profile.update!(bio_raw: "Hello world!")
+      user1.user_option.update!(hide_profile_and_presence: true)
+
+      get "/u/#{user1.username}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Hello world!")
+    end
+
     describe 'when username contains a period' do
       before_all do
         user1.update!(username: 'test.test')
