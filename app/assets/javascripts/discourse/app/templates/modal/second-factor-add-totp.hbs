@@ -16,12 +16,9 @@
 
     <div class="control-group">
       <div class="controls">
-        <div class="qr-code-container">
-          <div class="qr-code">
-            {{html-safe secondFactorImage}}
-          </div>
+        <div class="qr-code">
+          <img src={{html-safe secondFactorImage}}>
         </div>
-
         <p>
           {{#if showSecondFactorKey}}
             {{secondFactorKey}}
