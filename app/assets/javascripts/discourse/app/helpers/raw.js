@@ -5,21 +5,21 @@ import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { buildResolver } from "discourse-common/resolver";
 
 let resolver;
-let viewsByTemplateName = [];
+let viewsByTemplateName = new Map();
 
 function lookupView(templateName) {
-  if (!(templateName in viewsByTemplateName)) {
+  if (!viewsByTemplateName.has(templateName)) {
     if (!resolver) {
       resolver = buildResolver("discourse").create();
     }
 
-    viewsByTemplateName[templateName] = resolver.customResolve({
+    viewsByTemplateName.set(templateName, resolver.customResolve({
       type: "raw-view",
       fullNameWithoutType: templateName,
-    });
+    }));
   }
 
-  return viewsByTemplateName[templateName];
+  return viewsByTemplateName.get(templateName);
 }
 
 function renderRaw(ctx, template, templateName, params) {
