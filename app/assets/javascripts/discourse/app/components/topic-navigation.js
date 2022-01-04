@@ -5,15 +5,19 @@ import PanEvents, {
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { headerOffset } from "discourse/components/site-header";
 import { later, next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 
 const MIN_WIDTH_TIMELINE = 924,
-  MIN_HEIGHT_TIMELINE = 325;
+  MIN_HEIGHT_TIMELINE = 350;
 
 export default Component.extend(PanEvents, {
-  classNameBindings: ["info.topicProgressExpanded:topic-progress-expanded"],
+  classNameBindings: [
+    "info.topicProgressExpanded:topic-progress-expanded",
+    "info.renderTimeline:with-timeline:with-topic-progress",
+  ],
   composerOpen: null,
   info: null,
   isPanning: false,
@@ -47,15 +51,12 @@ export default Component.extend(PanEvents, {
       let renderTimeline = !this.site.mobileView;
 
       if (renderTimeline) {
-        const width = window.innerWidth,
-          composer = document.getElementById("reply-control"),
-          headerContainer = document.querySelector(".d-header"),
-          headerHeight = (headerContainer && headerContainer.offsetHeight) || 0;
+        const composer = document.getElementById("reply-control");
 
         if (composer) {
           renderTimeline =
-            width > MIN_WIDTH_TIMELINE &&
-            window.innerHeight - composer.offsetHeight - headerHeight >
+            window.innerWidth > MIN_WIDTH_TIMELINE &&
+            window.innerHeight - composer.offsetHeight - headerOffset() >
               MIN_HEIGHT_TIMELINE;
         }
       }
