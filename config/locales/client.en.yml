@@ -195,6 +195,8 @@ en:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
 
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
