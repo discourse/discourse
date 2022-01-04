@@ -11,7 +11,7 @@ import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 
 const MIN_WIDTH_TIMELINE = 924,
-  MIN_HEIGHT_TIMELINE = 350;
+  MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
   classNameBindings: [
