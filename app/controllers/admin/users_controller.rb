@@ -193,7 +193,7 @@ class Admin::UsersController < Admin::AdminController
     result = run_second_factor!(SecondFactor::Actions::GrantAdmin)
     if result.no_second_factors_enabled?
       render json: success_json.merge(email_confirmation_required: true)
-    elsif result.second_factor_auth_successful?
+    else
       render json: success_json
     end
   end

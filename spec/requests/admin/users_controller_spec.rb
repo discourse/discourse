@@ -346,7 +346,15 @@ RSpec.describe Admin::UsersController do
       Discourse.redis.flushdb
     end
 
-    it "raises an error when the user doesn't have permission" do
+    it "returns a 404 when the acting user doesn't have permission" do
+      sign_in(user)
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+      expect(response.status).to eq(404)
+      expect(AdminConfirmation.exists_for?(another_user.id)).to eq(false)
+    end
+
+    it "returns a 404 when the acting user doesn't have permission even if they have 2FA enabled" do
+      Fabricate(:user_second_factor_totp, user: user)
       sign_in(user)
       put "/admin/users/#{another_user.id}/grant_admin.json"
       expect(response.status).to eq(404)
@@ -365,8 +373,8 @@ RSpec.describe Admin::UsersController do
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(true)
     end
 
-    it 'asks user for second factor if it is enabled' do
-      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+    it 'asks the acting admin for second factor if it is enabled' do
+      Fabricate(:user_second_factor_totp, user: admin)
 
       put "/admin/users/#{another_user.id}/grant_admin.json"
 
@@ -379,7 +387,6 @@ RSpec.describe Admin::UsersController do
 
       put "/admin/users/#{another_user.id}/grant_admin.json"
       nonce = response.parsed_body["second_factor_challenge_nonce"]
-      forum_session_cookie = response.cookies["_forum_session"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
 
@@ -390,13 +397,13 @@ RSpec.describe Admin::UsersController do
       }
       res = response.parsed_body
       expect(response.status).to eq(200)
-      expect(res["success"]).to eq(true)
+      expect(res["ok"]).to eq(true)
       expect(res["callback_method"]).to eq("PUT")
       expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
       expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
       expect(another_user.reload.admin).to eq(false)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json", params: {
+      put res["callback_path"], params: {
         second_factor_nonce: nonce
       }
       expect(response.status).to eq(200)
@@ -408,7 +415,6 @@ RSpec.describe Admin::UsersController do
 
       put "/admin/users/#{another_user.id}/grant_admin.json"
       nonce = response.parsed_body["second_factor_challenge_nonce"]
-      forum_session_cookie = response.cookies["_forum_session"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
 
@@ -424,6 +430,53 @@ RSpec.describe Admin::UsersController do
 
       put "/admin/users/#{another_user.id}/grant_admin.json", params: {
         second_factor_nonce: nonce
+      }
+      expect(response.status).to eq(401)
+      expect(another_user.reload.admin).to eq(false)
+    end
+
+    it 'does not grant admin if the acting admin loses permission in the middle of the process' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+      nonce = response.parsed_body["second_factor_challenge_nonce"]
+      expect(nonce).to be_present
+      expect(another_user.reload.admin).to eq(false)
+
+      post "/session/2fa.json", params: {
+        nonce: nonce,
+        second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+        second_factor_method: UserSecondFactor.methods[:totp]
+      }
+      res = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(res["ok"]).to eq(true)
+      expect(res["callback_method"]).to eq("PUT")
+      expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
+      expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
+      expect(another_user.reload.admin).to eq(false)
+
+      admin.update!(admin: false)
+      put res["callback_path"], params: {
+        second_factor_nonce: nonce
+      }
+      expect(response.status).to eq(404)
+      expect(another_user.reload.admin).to eq(false)
+    end
+
+    it 'does not accept backup codes' do
+      Fabricate(:user_second_factor_totp, user: admin)
+      Fabricate(:user_second_factor_backup, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+      nonce = response.parsed_body["second_factor_challenge_nonce"]
+      expect(nonce).to be_present
+      expect(another_user.reload.admin).to eq(false)
+
+      post "/session/2fa.json", params: {
+        nonce: nonce,
+        second_factor_token: "iAmValidBackupCode",
+        second_factor_method: UserSecondFactor.methods[:backup_codes]
       }
       expect(response.status).to eq(403)
       expect(another_user.reload.admin).to eq(false)

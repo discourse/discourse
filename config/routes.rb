@@ -373,6 +373,9 @@ Discourse::Application.routes.draw do
     post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
     post "session/2fa" => "session#second_factor_auth_perform"
+    if Rails.env.test?
+      post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
+    end
     get "composer_messages" => "composer_messages#index"
 
     resources :static

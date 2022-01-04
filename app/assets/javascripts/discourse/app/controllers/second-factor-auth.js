@@ -18,6 +18,7 @@ export default Controller.extend({
   queryParams: ["nonce"],
 
   message: null,
+  loadError: false,
   messageIsError: false,
   secondFactorToken: null,
   userSelectedMethod: null,
@@ -92,6 +93,7 @@ export default Controller.extend({
       alts.push({
         id: SECURITY_KEY,
         translationKey: "login.second_factor_toggle.security_key",
+        class: "security-key",
       });
     }
 
@@ -99,6 +101,7 @@ export default Controller.extend({
       alts.push({
         id: TOTP,
         translationKey: "login.second_factor_toggle.totp",
+        class: "totp",
       });
     }
 
@@ -106,6 +109,7 @@ export default Controller.extend({
       alts.push({
         id: BACKUP_CODE,
         translationKey: "login.second_factor_toggle.backup_code",
+        class: "backup-code",
       });
     }
 
@@ -136,11 +140,30 @@ export default Controller.extend({
     }
   },
 
+  @discourseComputed("messageIsError")
+  alertClass(messageIsError) {
+    if (messageIsError) {
+      return "alert-error";
+    } else {
+      return "alert-success";
+    }
+  },
+
+  @discourseComputed("showTotpForm", "showBackupCodesForm")
+  inputFormClass(showTotpForm, showBackupCodesForm) {
+    if (showTotpForm) {
+      return "totp-token";
+    } else if (showBackupCodesForm) {
+      return "backup-code-token";
+    }
+  },
+
   resetState() {
     this.set("message", null);
     this.set("messageIsError", false);
     this.set("secondFactorToken", null);
     this.set("userSelectedMethod", null);
+    this.set("loadError", false);
   },
 
   displayError(message) {
@@ -166,19 +189,12 @@ export default Controller.extend({
         this.displaySuccess(
           I18n.t("second_factor_auth.redirect_after_success")
         );
-        if (
-          response.success &&
-          response.callback_method &&
-          response.callback_path &&
-          response.redirect_path
-        ) {
-          ajax(response.callback_path, {
-            type: response.callback_method,
-            data: { second_factor_nonce: this.nonce },
-          })
-            .then(() => DiscourseURL.routeTo(response.redirect_path))
-            .catch((error) => this.displayError(extractError(error)));
-        }
+        ajax(response.callback_path, {
+          type: response.callback_method,
+          data: { second_factor_nonce: this.nonce },
+        })
+          .then(() => DiscourseURL.routeTo(response.redirect_path))
+          .catch((error) => this.displayError(extractError(error)));
       })
       .catch((error) => {
         this.displayError(extractError(error));

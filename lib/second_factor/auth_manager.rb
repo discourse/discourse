@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SecondFactor::AuthManager
+  MAX_CHALLENGE_AGE = 5.minutes
+
   class SecondFactorRequired < StandardError
     attr_reader :nonce
 
@@ -11,10 +13,10 @@ class SecondFactor::AuthManager
 
   attr_reader :allowed_methods
 
-  def initialize(current_user, guardian, action_class)
+  def initialize(current_user, guardian, action)
     @current_user = current_user
     @guardian = guardian
-    @action_class = action_class
+    @action = action
     @allowed_methods = Set.new([
       UserSecondFactor.methods[:totp],
       UserSecondFactor.methods[:security_key],
@@ -27,12 +29,11 @@ class SecondFactor::AuthManager
 
   def run!(request, params, secure_session)
     if !allowed_methods.any? { |m| @current_user.valid_second_factor_method_for_user?(m) }
-      action = @action_class.new(params, @current_user, @guardian)
-      action.no_second_factors_enabled!
+      @action.no_second_factors_enabled!(params)
       create_result(:no_second_factor)
     elsif nonce = params[:second_factor_nonce].presence
-      second_factor_auth_successful(nonce, secure_session)
-      create_result(:second_factor_auth_successful)
+      verify_second_factor_auth_completed(nonce, secure_session)
+      create_result(:second_factor_auth_completed)
     else
       nonce = initiate_second_factor_auth(params, secure_session, request)
       raise SecondFactorRequired.new(nonce: nonce)
@@ -42,43 +43,57 @@ class SecondFactor::AuthManager
   private
 
   def initiate_second_factor_auth(params, secure_session, request)
-    action = @action_class.new(params, @current_user, @guardian)
-    config = action.second_factor_auth_required!
+    config = @action.second_factor_auth_required!(params)
     nonce = SecureRandom.alphanumeric(32)
     callback_params = config[:callback_params] || {}
-    # TODO: subfolder support??
-    redirect_path = config[:redirect_path] || "/"
+    redirect_path = config[:redirect_path] || GlobalPath.path("/")
     challenge = {
       nonce: nonce,
-      callback_method: request.method,
+      callback_method: request.request_method,
       callback_path: request.path,
       callback_params: callback_params,
       redirect_path: redirect_path,
-      allowed_methods: allowed_methods.to_a
+      allowed_methods: allowed_methods.to_a,
+      generated_at: Time.zone.now.to_i
     }
-    secure_session.set(
-      "current_second_factor_auth_challenge",
-      challenge.to_json,
-      expires: 5.minutes
-    )
+    secure_session["current_second_factor_auth_challenge"] = challenge.to_json
     nonce
   end
 
-  def second_factor_auth_successful(nonce, secure_session)
+  def verify_second_factor_auth_completed(nonce, secure_session)
     json = secure_session["current_second_factor_auth_challenge"]
-    raise Discourse::InvalidAccess.new if json.blank?
+    if json.blank?
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_not_found",
+        status_code: 404,
+      )
+    end
 
     challenge = JSON.parse(json).deep_symbolize_keys
     if challenge[:nonce] != nonce
-      raise Discourse::InvalidAccess.new
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_not_found",
+        status_code: 404,
+      )
     end
+
     if !challenge[:successful]
-      raise Discourse::InvalidAccess.new
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_not_completed",
+        status_code: 401
+      )
     end
+
+    if challenge[:generated_at] < MAX_CHALLENGE_AGE.ago.to_i
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_expired",
+        status_code: 401
+      )
+    end
+
     secure_session["current_second_factor_auth_challenge"] = nil
     callback_params = challenge[:callback_params]
-    action = @action_class.new(callback_params, @current_user, @guardian)
-    action.second_factor_auth_successful!
+    @action.second_factor_auth_completed!(callback_params)
   end
 
   def add_method(id)
@@ -90,6 +105,6 @@ class SecondFactor::AuthManager
   end
 
   def create_result(status)
-    SecondFactor::AuthManagerResult.new.tap { |res| res.set_status(status) }
+    SecondFactor::AuthManagerResult.new(status)
   end
 end
