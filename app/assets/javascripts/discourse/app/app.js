@@ -52,7 +52,7 @@ const Discourse = Application.extend({
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
-    $("noscript").remove();
+    document.querySelector("noscript")?.remove();
 
     Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
