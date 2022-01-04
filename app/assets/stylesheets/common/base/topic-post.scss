@@ -345,7 +345,7 @@ nav.post-controls {
       background: var(--primary-low);
     }
     .d-icon {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
     .d-button-label + .d-icon {
       margin-left: 0.45em;
