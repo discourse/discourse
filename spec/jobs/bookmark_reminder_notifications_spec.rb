@@ -25,16 +25,13 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     Discourse.redis.flushdb
   end
 
-  it "sends every reminder and marks the reminder_at to nil for all bookmarks, as well as last sent date" do
+  it "sends every reminder and sets the reminder_last_sent_at" do
     subject.execute
     bookmark1.reload
     bookmark2.reload
     bookmark3.reload
-    expect(bookmark1.reminder_at).to eq(nil)
     expect(bookmark1.reminder_last_sent_at).not_to eq(nil)
-    expect(bookmark2.reminder_at).to eq(nil)
     expect(bookmark2.reminder_last_sent_at).not_to eq(nil)
-    expect(bookmark3.reminder_at).to eq(nil)
     expect(bookmark3.reminder_last_sent_at).not_to eq(nil)
   end
 
@@ -62,9 +59,9 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       begin
         Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
         subject.execute
-        expect(bookmark1.reload.reminder_at).to eq(nil)
-        expect(bookmark2.reload.reminder_at).to eq(nil)
-        expect(bookmark3.reload.reminder_at).not_to eq(nil)
+        expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
+        expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
+        expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
       end
     end
   end

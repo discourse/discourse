@@ -193,8 +193,7 @@ RSpec.describe BookmarkManager do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
-      expect(bookmark.reminder_at).to eq_time(new_reminder_at)
-      expect(bookmark.reminded).to eq(false)
+      expect(bookmark.reminder_last_sent_at).to eq(nil)
     end
 
     context "when options are provided" do
@@ -251,11 +250,10 @@ RSpec.describe BookmarkManager do
 
   describe ".send_reminder_notification" do
     let(:bookmark) { Fabricate(:bookmark, user: user) }
-    it "clears the reminder_at and sets the reminder_last_sent_at" do
+    it "sets the reminder_last_sent_at" do
       expect(bookmark.reminder_last_sent_at).to eq(nil)
       described_class.send_reminder_notification(bookmark.id)
       bookmark.reload
-      expect(bookmark.reminder_at).to eq(nil)
       expect(bookmark.reminder_last_sent_at).not_to eq(nil)
     end
 
@@ -279,10 +277,9 @@ RSpec.describe BookmarkManager do
       before do
         bookmark.post.trash!
       end
-      it "does not error, and does not create a notification, and clears the reminder" do
+      it "does not error and does not create a notification" do
         described_class.send_reminder_notification(bookmark.id)
         bookmark.reload
-        expect(bookmark.reminder_at).to eq(nil)
         expect(notifications_for_user.any?).to eq(false)
       end
     end

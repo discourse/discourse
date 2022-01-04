@@ -105,8 +105,8 @@ class BookmarkManager
       {
         name: name,
         reminder_at: reminder_at,
+        reminder_last_sent_at: nil,
         reminder_set_at: Time.zone.now,
-        reminded: false,
       }.merge(options)
     )
 

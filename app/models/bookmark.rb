@@ -83,10 +83,6 @@ class Bookmark < ActiveRecord::Base
     @is_for_first_post ||= new_record? ? Post.exists?(id: post_id, post_number: 1) : post.post_number == 1
   end
 
-  def no_reminder?
-    self.reminder_at.blank?
-  end
-
   def auto_delete_when_reminder_sent?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
   end
@@ -103,7 +99,6 @@ class Bookmark < ActiveRecord::Base
     update!(
       reminder_last_sent_at: Time.zone.now,
       reminder_set_at: nil,
-      reminded: true,
     )
   end
 
@@ -181,7 +176,6 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
-#  reminded               :boolean          default(FALSE), not null
 #
 # Indexes
 #
