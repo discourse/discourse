@@ -26,7 +26,7 @@ end
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
 if ENV["RAILS_ENV"] != "production"
-  logger Logger.new($stdout)
+  logger Logger.new(STDOUT)
   # we want a longer timeout in dev cause first request can be really slow
   timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 else

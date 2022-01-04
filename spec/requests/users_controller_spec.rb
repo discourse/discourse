@@ -1610,13 +1610,13 @@ describe UsersController do
 
     context 'is too long' do
       before do
-        get "/u/check_username.json", params: { username: generate_username(User.username_length.last + 1) }
+        get "/u/check_username.json", params: { username: SecureRandom.alphanumeric(SiteSetting.max_username_length.to_i + 1) }
       end
       include_examples 'checking an invalid username'
 
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
-        expect(response.parsed_body['errors']).to include(I18n.t(:'user.username.long', max: User.username_length.end))
+        expect(response.parsed_body['errors']).to include(I18n.t(:'user.username.long', max: SiteSetting.max_username_length))
       end
     end
 

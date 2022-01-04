@@ -80,14 +80,14 @@ if ARGV.include?("--help")
   exit
 end
 
-# this dev_mode hackery enables, the following to be used to restart unicorn:
+# this dev_mode hackery enables the following to be used to restart unicorn:
 #
 # pkill -USR2 -f 'ruby bin/unicorn'
 #
 # This is handy if you want to bind a key to restarting unicorn in dev
 
 if dev_mode
-  $unicorn_dev_supervisor_pid = Process.pid # rubocop:disable Style/GlobalVars
+  UNICORN_DEV_SUPERVISOR_PID = Process.pid
 
   restart = true
   while restart

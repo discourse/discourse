@@ -14,21 +14,15 @@ end
 
 require 'rubygems'
 require 'rbtrace'
-
 require 'pry'
 require 'pry-byebug'
 require 'pry-rails'
-
-# Loading more in this block will cause your tests to run faster. However,
-# if you change any configuration or code from libraries loaded here, you'll
-# need to restart spork for it take effect.
 require 'fabrication'
 require 'mocha/api'
 require 'certified'
 require 'webmock/rspec'
 
 class RspecErrorTracker
-
   def self.last_exception=(ex)
     @ex = ex
   end

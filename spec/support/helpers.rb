@@ -58,11 +58,6 @@ module Helpers
     post
   end
 
-  def generate_username(length = 10)
-    range = [*'a'..'z']
-    Array.new(length) { range.sample }.join
-  end
-
   def stub_guardian(user)
     guardian = Guardian.new(user)
     yield(guardian) if block_given?
@@ -80,14 +75,6 @@ module Helpers
 
     on_fail&.call
     expect(result).to eq(true)
-  end
-
-  def fill_email(mail, from, to, body = nil, subject = nil, cc = nil)
-    result = mail.gsub("FROM", from).gsub("TO", to)
-    result.gsub!(/Hey.*/m, body)  if body
-    result.sub!(/We .*/, subject) if subject
-    result.sub!("CC", cc.presence || "")
-    result
   end
 
   def email(email_name)
