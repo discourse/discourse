@@ -124,7 +124,21 @@ class AdminDashboardData
   end
 
   def self.register_default_scheduled_problem_checks
-    # TODO (martin) Add group SMTP check here
+    add_scheduled_problem_check(:group_smtp_credentials) do
+      problems = GroupEmailCredentialsCheck.run
+      problems.map do |p|
+        problem_message = I18n.t(
+          "dashboard.group_email_credentials_warning",
+          {
+            base_path: Discourse.base_path,
+            group_name: p[:group_name],
+            group_full_name: p[:group_full_name],
+            error: p[:message]
+          }
+        )
+        Problem.new(problem_message, priority: "high", identifier: "group_#{p[:group_id]}_email_credentials")
+      end
+    end
   end
 
   def self.execute_scheduled_checks
