@@ -2,20 +2,6 @@ import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { htmlSafe } from "@ember/template";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { buildResolver } from "discourse-common/resolver";
-
-let resolver;
-
-function lookupView(templateName) {
-  if (!resolver) {
-    resolver = buildResolver("discourse").create();
-  }
-
-  return resolver.customResolve({
-    type: "raw-view",
-    fullNameWithoutType: templateName,
-  });
-}
 
 function renderRaw(ctx, template, templateName, params) {
   params = Object.assign({}, params);
@@ -23,7 +9,7 @@ function renderRaw(ctx, template, templateName, params) {
 
   let context = helperContext();
   if (!params.view) {
-    const viewClass = lookupView(templateName);
+    const viewClass = context.registry.resolve(`raw-view:${templateName}`);
 
     if (viewClass) {
       params.view = viewClass.create(params, context);
