@@ -69,6 +69,16 @@ function _rangeElements(element) {
   if (!element.parentElement) {
     return [];
   }
+
+  // TODO: element.parentElement.children.length !== 2 is a fallback to old solution for ranges
+  // Condition can be removed after migration to [date-range]
+  if (
+    element.dataset.range !== "true" &&
+    element.parentElement.children.length !== 2
+  ) {
+    return [element];
+  }
+
   return Array.from(element.parentElement.children).filter(
     (span) => span.dataset.date
   );
