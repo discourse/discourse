@@ -334,7 +334,7 @@ nav.post-controls {
   }
 
   .show-replies {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
