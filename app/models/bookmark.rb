@@ -4,6 +4,7 @@ class Bookmark < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
+  belongs_to :bookmarkable, polymorphic: true
 
   delegate :topic_id, to: :post
 
@@ -171,9 +172,12 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
+#  bookmarkable_id        :integer
+#  bookmarkable_type      :string
 #
 # Indexes
 #
+#  idx_bookmarks_user_polymorphic_unique                 (user_id,bookmarkable_type,bookmarkable_id) UNIQUE
 #  index_bookmarks_on_post_id                            (post_id)
 #  index_bookmarks_on_reminder_at                        (reminder_at)
 #  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
