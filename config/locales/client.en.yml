@@ -2745,20 +2745,13 @@ en:
 
       progress:
         title: topic progress
-        go_top: "top"
-        go_bottom: "bottom"
-        go: "go"
-        jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
         jump_prompt_of:
           one: "of %{count} post"
           other: "of %{count} posts"
         jump_prompt_long: "Jump to..."
-        jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
         jump_prompt_or: "or"
-        total: total posts
-        current: current post
 
       notifications:
         title: change how often you get notified about this topic
