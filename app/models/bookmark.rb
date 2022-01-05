@@ -172,8 +172,8 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
-#  bookmarkable_id        :integer          not null
-#  bookmarkable_type      :string           not null
+#  bookmarkable_id        :integer
+#  bookmarkable_type      :string
 #
 # Indexes
 #
