@@ -2929,6 +2929,12 @@ en:
         %{flagged_post_raw_content}
         ```
 
+        To which you responded
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
         For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
 
     usage_tips:
