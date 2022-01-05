@@ -449,7 +449,7 @@ GEM
     sshkey (2.0.0)
     stackprof (0.2.17)
     test-prof (1.0.7)
-    thor (1.2.0)
+    thor (1.2.1)
     tilt (2.0.10)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
