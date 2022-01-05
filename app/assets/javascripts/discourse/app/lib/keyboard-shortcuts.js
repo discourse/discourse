@@ -6,9 +6,10 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
+import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
-import { minimumOffset } from "discourse/lib/offset-calculator";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -608,7 +609,7 @@ export default {
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
     if ($selected.length !== 0 && !fast) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       const beginScreen = $(window).scrollTop() - offset;
       const endScreen = beginScreen + window.innerHeight + offset;
       const beginArticle = $selected.offset().top;
@@ -621,7 +622,7 @@ export default {
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
     if (!$selected || $selected.length === 0) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       $selected = $articles
         .toArray()
         .find((article) =>
@@ -636,32 +637,32 @@ export default {
     }
 
     const index = $articles.index($selected);
-    let $article = $articles.eq(index);
+    let article = $articles.eq(index)[0];
 
     // Try doing a page scroll in the context of current post.
-    if (!fast && direction !== 0 && $article.length > 0) {
+    if (!fast && direction !== 0 && article) {
       // The beginning of first article is the beginning of the page.
       const beginArticle =
-        $article.is(".topic-post") && $article.find("#post_1").length
+        article.classList.contains("topic-post") &&
+        article.querySelector("#post_1")
           ? 0
-          : $article.offset().top;
-      const endArticle =
-        $article.offset().top + $article[0].getBoundingClientRect().height;
+          : domUtils.offset(article).top;
+      const endArticle = domUtils.offset(article).top + article.offsetHeight;
 
-      const beginScreen = $(window).scrollTop();
+      const beginScreen = window.scrollY;
       const endScreen = beginScreen + window.innerHeight;
 
       if (direction < 0 && beginScreen > beginArticle) {
         return this._scrollTo(
           Math.max(
-            beginScreen - window.innerHeight + 3 * minimumOffset(), // page up
-            beginArticle - minimumOffset() // beginning of article
+            beginScreen - window.innerHeight + 3 * headerOffset(), // page up
+            beginArticle - headerOffset() // beginning of article
           )
         );
-      } else if (direction > 0 && endScreen < endArticle - minimumOffset()) {
+      } else if (direction > 0 && endScreen < endArticle - headerOffset()) {
         return this._scrollTo(
           Math.min(
-            endScreen - 3 * minimumOffset(), // page down
+            endScreen - 3 * headerOffset(), // page down
             endArticle - window.innerHeight // end of article
           )
         );
@@ -678,34 +679,37 @@ export default {
       }
     }
 
-    $article = $articles.eq(index + direction);
-    if ($article.length > 0) {
-      $articles.removeClass("selected");
-      $article.addClass("selected");
-      this.appEvents.trigger("keyboard:move-selection", {
-        articles: $articles.get(),
-        selectedArticle: $article.get(0),
-      });
-
-      const articleRect = $article[0].getBoundingClientRect();
-      if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
-        // Scrolling to the last "page" of the previous post if post has multiple
-        // "pages" (if its height does not fit in the screen).
-        return this._scrollTo(
-          $article.offset().top + articleRect.height - window.innerHeight
-        );
-      } else if ($article.is(".topic-post")) {
-        return this._scrollTo(
-          $article.find("#post_1").length > 0
-            ? 0
-            : $article.offset().top - minimumOffset(),
-          () => $("a.tabLoc", $article).focus()
-        );
-      }
-
-      // Otherwise scroll through the suggested topic list.
-      this._scrollList($article, direction);
+    article = $articles.eq(index + direction)[0];
+    if (!article) {
+      return;
     }
+
+    $articles.removeClass("selected");
+    article.classList.add("selected");
+
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: $articles.get(),
+      selectedArticle: article,
+    });
+
+    const articleTop = domUtils.offset(article).top;
+    if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
+      // Scrolling to the last "page" of the previous post if post has multiple
+      // "pages" (if its height does not fit in the screen).
+      return this._scrollTo(
+        articleTop + article.offsetHeight - window.innerHeight
+      );
+    } else if (article.classList.contains("topic-post")) {
+      return this._scrollTo(
+        article.querySelector("#post_1") ? 0 : articleTop - headerOffset()
+      );
+    }
+
+    // Otherwise scroll through the suggested topic list.
+    article.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   },
 
   _scrollTo(scrollTop) {
@@ -713,33 +717,6 @@ export default {
       top: scrollTop,
       behavior: "smooth",
     });
-  },
-
-  _scrollList($article) {
-    // Try to keep the article on screen
-    const pos = $article.offset();
-    const height = $article.height();
-    const headerHeight = $("header.d-header").height();
-    const scrollTop = $(window).scrollTop();
-    const windowHeight = $(window).height();
-
-    // skip if completely on screen
-    if (
-      pos.top - headerHeight > scrollTop &&
-      pos.top + height < scrollTop + windowHeight
-    ) {
-      return;
-    }
-
-    let scrollPos = pos.top + height / 2 - windowHeight * 0.5;
-    if (height > windowHeight - headerHeight) {
-      scrollPos = pos.top - headerHeight;
-    }
-    if (scrollPos < 0) {
-      scrollPos = 0;
-    }
-
-    this._scrollTo(scrollPos);
   },
 
   categoriesTopicsList() {

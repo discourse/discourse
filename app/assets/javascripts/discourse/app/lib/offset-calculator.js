@@ -17,8 +17,17 @@ export function minimumOffset() {
     : 0;
 }
 
+export function headerOffset() {
+  return (
+    parseInt(
+      document.documentElement.style.getPropertyValue("--header-offset"),
+      10
+    ) || 0
+  );
+}
+
 export default function offsetCalculator() {
-  const min = minimumOffset();
+  const min = headerOffset();
 
   // on mobile, just use the header
   if (document.querySelector("html").classList.contains("mobile-view")) {

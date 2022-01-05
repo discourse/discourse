@@ -1,7 +1,7 @@
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import Site from "discourse/models/site";
 import { bind } from "discourse-common/utils/decorators";
-import { headerOffset } from "discourse/components/site-header";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { schedule } from "@ember/runloop";
 
 export default class StickyAvatars {
