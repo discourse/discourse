@@ -28,7 +28,7 @@ describe OptimizedImage do
         expect(cropped_size).to be > 50
 
       ensure
-        File.delete(tmp_path) if File.exists?(tmp_path)
+        File.delete(tmp_path) if File.exist?(tmp_path)
       end
     end
 
@@ -73,7 +73,7 @@ describe OptimizedImage do
           expect(new_size).not_to eq(0)
 
         ensure
-          File.delete(original_path) if File.exists?(original_path)
+          File.delete(original_path) if File.exist?(original_path)
         end
       end
 
@@ -124,7 +124,7 @@ describe OptimizedImage do
               )
             end.to raise_error(RuntimeError, /improper image header/)
           ensure
-            File.delete(tmp_path) if File.exists?(tmp_path)
+            File.delete(tmp_path) if File.exist?(tmp_path)
           end
         end
       end
@@ -146,7 +146,7 @@ describe OptimizedImage do
           expect(File.size(tmp_path)).to be < 2300
 
         ensure
-          File.delete(tmp_path) if File.exists?(tmp_path)
+          File.delete(tmp_path) if File.exist?(tmp_path)
         end
       end
     end

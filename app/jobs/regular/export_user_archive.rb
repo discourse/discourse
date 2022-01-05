@@ -70,7 +70,7 @@ module Jobs
       dirname = "#{UserExport.base_directory}/#{filename}"
 
       # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
 
       # Generate a compressed CSV file
       zip_filename = nil

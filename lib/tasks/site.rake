@@ -97,7 +97,7 @@ task 'site:export_structure', [:zip_path] => :environment do |task, args|
   if args[:zip_path].blank?
     STDERR.puts "ERROR: rake site:export_structure[<path to ZIP file>]"
     exit 1
-  elsif File.exists?(args[:zip_path])
+  elsif File.exist?(args[:zip_path])
     STDERR.puts "ERROR: File '#{args[:zip_path]}' already exists"
     exit 2
   end
@@ -328,7 +328,7 @@ task 'site:import_structure', [:zip_path] => :environment do |task, args|
   if args[:zip_path].blank?
     STDERR.puts "ERROR: rake site:import_structure[<path to ZIP file>]"
     exit 1
-  elsif !File.exists?(args[:zip_path])
+  elsif !File.exist?(args[:zip_path])
     STDERR.puts "ERROR: File '#{args[:zip_path]}' does not exist"
     exit 2
   end

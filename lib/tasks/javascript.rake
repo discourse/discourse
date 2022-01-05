@@ -307,7 +307,7 @@ task 'javascript:update' => 'clean_up' do
         path = "#{public_js}/#{package_dir_name}/#{package_version}"
         dest = "#{path}/#{filename}"
 
-        FileUtils.mkdir_p(path) unless File.exists?(path)
+        FileUtils.mkdir_p(path) unless File.exist?(path)
       end
     else
       dest = "#{vendor_js}/#{filename}"
@@ -336,7 +336,7 @@ task 'javascript:update' => 'clean_up' do
       system("yarn run browserify #{vendor_js}/custom-uppy.js -o node_modules/custom-uppy-build.js")
     end
 
-    unless File.exists?(dest)
+    unless File.exist?(dest)
       STDERR.puts "New dependency added: #{dest}"
     end
 

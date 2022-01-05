@@ -3,7 +3,7 @@
 # Importer for phpBB 3.0 and 3.1
 # Documentation: https://meta.discourse.org/t/importing-from-phpbb3/30810
 
-if ARGV.length != 1 || !File.exists?(ARGV[0])
+if ARGV.length != 1 || !File.exist?(ARGV[0])
   STDERR.puts '', 'Usage of phpBB3 importer:', 'bundle exec ruby phpbb3.rb <path/to/settings.yml>'
   STDERR.puts '', "Use the settings file from #{File.expand_path('phpbb3/settings.yml', File.dirname(__FILE__))} as an example."
   STDERR.puts '', 'Still having problems? Take a look at https://meta.discourse.org/t/importing-from-phpbb3/30810'

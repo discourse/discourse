@@ -140,7 +140,7 @@ class S3Inventory
   end
 
   def download_inventory_file_to_tmp_directory(file)
-    return if File.exists?(file[:filename])
+    return if File.exist?(file[:filename])
 
     log "Downloading inventory file '#{file[:key]}' to tmp directory..."
     failure_message = "Failed to inventory file '#{file[:key]}' to tmp directory."
@@ -219,8 +219,8 @@ class S3Inventory
   def cleanup!
     return if @preloaded_inventory_file
     files.each do |file|
-      File.delete(file[:filename]) if File.exists?(file[:filename])
-      File.delete(file[:filename][0...-3]) if File.exists?(file[:filename][0...-3])
+      File.delete(file[:filename]) if File.exist?(file[:filename])
+      File.delete(file[:filename][0...-3]) if File.exist?(file[:filename][0...-3])
     end
   end
 
@@ -253,7 +253,7 @@ class S3Inventory
 
   def download_and_decompress_files
     files.each do |file|
-      next if File.exists?(file[:filename][0...-3])
+      next if File.exist?(file[:filename][0...-3])
 
       download_inventory_file_to_tmp_directory(file)
       decompress_inventory_file(file)

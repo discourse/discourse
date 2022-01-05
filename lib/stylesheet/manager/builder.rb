@@ -12,7 +12,7 @@ class Stylesheet::Manager::Builder
 
   def compile(opts = {})
     if !opts[:force]
-      if File.exists?(stylesheet_fullpath)
+      if File.exist?(stylesheet_fullpath)
         unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
             source_map = begin

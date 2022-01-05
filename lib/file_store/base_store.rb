@@ -173,7 +173,7 @@ module FileStore
 
     def get_from_cache(filename)
       path = get_cache_path_for(filename)
-      File.open(path) if File.exists?(path)
+      File.open(path) if File.exist?(path)
     end
 
     def cache_file(file, filename)

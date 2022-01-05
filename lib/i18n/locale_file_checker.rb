@@ -49,7 +49,7 @@ class LocaleFileChecker
 
   def reference_file(path)
     path = path.gsub(/\.\w{2,}\.yml$/, ".#{REFERENCE_LOCALE}.yml")
-    path if File.exists?(path)
+    path if File.exist?(path)
   end
 
   def traverse_hash(hash, parent_keys, &block)

@@ -23,7 +23,7 @@ class ImportScripts::DrupalJson < ImportScripts::Base
 
   def load_json(arg)
     filename = File.join(JSON_FILES_DIR, arg)
-    raise RuntimeError.new("File #{filename} not found!") if !File.exists?(filename)
+    raise RuntimeError.new("File #{filename} not found!") if !File.exist?(filename)
     JSON.parse(File.read(filename)).reverse
   end
 
