@@ -38,6 +38,11 @@ ja:
     user_cant_post_in_topic: "このトピックに投稿できないため投票できません。"
     topic_must_be_open_to_vote: "トピックは投票できるようにオープンである必要があります。"
     poll_must_be_open_to_vote: "投票はオープンである必要があります。"
+    one_vote_per_user: "この投票には1票のみ投票できます。"
+    max_vote_per_user:
+      other: この投票では最大 %{count} 票投票できます。
+    min_vote_per_user:
+      other: この投票には最低 %{count} 票が必要です。
     topic_must_be_open_to_toggle_status: "ステータスを切り替えるには、トピックがオープンになっている必要があります。"
     only_staff_or_op_can_toggle_status: "スタッフメンバーまたは元の投稿者のみが投票のステータスを切り替えることができます。"
     insufficient_rights_to_create: "投票を作成することは許可されていません。"

@@ -227,6 +227,133 @@ $quote-share-maxwidth: 150px;
   }
 }
 
+nav.post-controls {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--primary-low-mid);
+
+  .actions {
+    display: inline-flex;
+    text-align: right;
+    margin-left: auto;
+
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      display: inline-flex;
+      flex: 0 1 auto;
+      align-items: center;
+      white-space: nowrap;
+      button {
+        // It looks really confusing when one half a double button has an inner shadow on click.
+        &:active {
+          box-shadow: none;
+        }
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: var(--primary-low-mid);
+            padding-left: 0.45em;
+          }
+        }
+        &.has-like {
+          // Like button after I've liked
+          .d-icon {
+            color: var(--love);
+          }
+        }
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+        }
+        &.button-count {
+          // Like count button
+          height: 100%; // sometimes the font might be shorter than the icon
+          &:not(.my-likes) {
+            padding-right: 0;
+          }
+          + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+          }
+        }
+      }
+    }
+    a,
+    button {
+      color: var(--primary-low-mid-or-secondary-high);
+      .d-icon {
+        opacity: 1;
+      }
+      display: inline-block;
+    }
+
+    button {
+      flex: 0 1 auto;
+      font-size: var(--font-up-1);
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      border: none;
+      &.d-hover,
+      &:focus,
+      &:active {
+        outline: none;
+        background: var(--primary-low);
+        color: var(--primary);
+      }
+      &.hidden {
+        display: none;
+      }
+      &.admin {
+        position: relative;
+      }
+      &.delete.d-hover,
+      &.delete:hover,
+      &.delete:focus {
+        background: var(--danger);
+        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
+      }
+      &.bookmarked .d-icon {
+        color: var(--tertiary);
+      }
+      &.create {
+        margin-right: 0;
+        color: var(--primary-high-or-secondary-low);
+        .d-icon {
+          color: var(--primary-high-or-secondary-low);
+        }
+      }
+    }
+  }
+
+  .show-replies {
+    font-size: var(--font-up-1);
+    font-size: inherit;
+    padding: 10px;
+    color: var(--primary-medium);
+    &:hover,
+    &:focus {
+      outline: none;
+      color: var(--primary);
+      background: var(--primary-low);
+    }
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+    .d-button-label + .d-icon {
+      margin-left: 0.45em;
+      margin-right: 0;
+    }
+  }
+}
+
 .deleted {
   .regular > .cooked {
     background-color: var(--danger-low-mid);

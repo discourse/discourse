@@ -52,6 +52,10 @@ $topic-progress-height: 42px;
       margin-left: 1em;
       z-index: z("timeline");
 
+      &.with-topic-progress {
+        align-self: end;
+      }
+
       &.topic-progress-expanded {
         z-index: z("fullscreen");
       }
@@ -153,7 +157,7 @@ $topic-progress-height: 42px;
   &:not(.docked) {
     @media screen and (min-width: $reply-area-max-width) {
       // position to right side of composer
-      right: 50%;
+      right: calc(50% + 10px);
       margin-right: calc(#{$reply-area-max-width} / 2 * -1);
     }
   }
