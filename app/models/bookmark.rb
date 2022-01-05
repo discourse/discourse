@@ -28,16 +28,6 @@ class Bookmark < ActiveRecord::Base
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
-  before_create do
-    if self.for_topic
-      self.bookmarkable_type = "Topic"
-      self.bookmarkable_id = Post.find(self.post_id).topic_id
-    else
-      self.bookmarkable_type = "Post"
-      self.bookmarkable_id = self.post_id
-    end
-  end
-
   def unique_per_post_for_user
     exists = if is_for_first_post?
       Bookmark.exists?(user_id: user_id, post_id: post_id, for_topic: for_topic)

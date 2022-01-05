@@ -46,7 +46,14 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
-  has_many :bookmarks
+
+  # This must be done manually until we promote the polymorphic columns
+  # to be the main way of accessing bookmarks.
+  #
+  # has_many :bookmarks
+  def bookmarks
+    Bookmark.where(post_id: self.id)
+  end
 
   has_one :incoming_email
 

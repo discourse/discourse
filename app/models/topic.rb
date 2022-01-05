@@ -203,7 +203,18 @@ class Topic < ActiveRecord::Base
   belongs_to :category
   has_many :category_users, through: :category
   has_many :posts
-  has_many :bookmarks, through: :posts
+
+  # This must be done manually until we promote the polymorphic columns
+  # to be the main way of accessing bookmarks. In the case of topics,
+  # we may also keep this around so you can query all of the bookmarks
+  # in a topic that are for the topic itself or for a post, as well as
+  # just the regular has_many :bookmarks association.
+  #
+  # has_many :bookmarks, through: :posts
+  def bookmarks
+    Bookmark.where(post: self.posts)
+  end
+
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
