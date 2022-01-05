@@ -7,7 +7,7 @@ module BackupRestore
       root_directory ||= File.join(Rails.root, "public", "backups")
 
       base_directory = File.join(root_directory, current_db)
-      FileUtils.mkdir_p(base_directory) unless Dir.exists?(base_directory)
+      FileUtils.mkdir_p(base_directory) unless Dir.exist?(base_directory)
       base_directory
     end
 

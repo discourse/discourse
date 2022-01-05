@@ -30,7 +30,7 @@ class HandleChunkUpload
     # path to chunk file
     dir = File.dirname(@chunk)
     # ensure directory exists
-    FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+    FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
     # save chunk to the directory
     File.open(@chunk, "wb") { |f| f.write(@params[:file].tempfile.read) }
   end

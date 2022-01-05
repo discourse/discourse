@@ -42,7 +42,7 @@ describe BackupRestore::LocalBackupStore do
 
   def create_file(db_name:, filename:, last_modified:, size_in_bytes:)
     path = File.join(@root_directory, db_name)
-    Dir.mkdir(path) unless Dir.exists?(path)
+    Dir.mkdir(path) unless Dir.exist?(path)
 
     path = File.join(path, filename)
     return if File.exist?(path)

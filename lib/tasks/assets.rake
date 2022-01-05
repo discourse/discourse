@@ -260,7 +260,7 @@ def copy_ember_cli_assets
           dest_sub = "#{dest}/#{Regexp.last_match[1]}"
         end
 
-        FileUtils.mkdir_p(dest_sub) unless Dir.exists?(dest_sub)
+        FileUtils.mkdir_p(dest_sub) unless Dir.exist?(dest_sub)
         log_file = File.basename(rel_file).sub("-#{digest}", "")
 
         # It's simpler to serve the file as `application.js`

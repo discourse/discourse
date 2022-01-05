@@ -424,7 +424,7 @@ class Plugin::Instance
   end
 
   def delete_extra_automatic_assets(good_paths)
-    return unless Dir.exists? auto_generated_path
+    return unless Dir.exist? auto_generated_path
 
     filenames = good_paths.map { |f| File.basename(f) }
     # nuke old files
@@ -701,7 +701,7 @@ class Plugin::Instance
     end
 
     public_data = File.dirname(path) + "/public"
-    if Dir.exists?(public_data)
+    if Dir.exist?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
