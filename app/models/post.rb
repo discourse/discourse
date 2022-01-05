@@ -47,13 +47,9 @@ class Post < ActiveRecord::Base
 
   has_one :post_stat
 
-  # This must be done manually until we promote the polymorphic columns
-  # to be the main way of accessing bookmarks.
-  #
-  # has_many :bookmarks
-  def bookmarks
-    Bookmark.where(post_id: self.id)
-  end
+  # When we are ready we can add as: :bookmarkable here to use the
+  # polymorphic association.
+  has_many :bookmarks
 
   has_one :incoming_email
 

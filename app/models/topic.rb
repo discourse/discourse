@@ -204,16 +204,13 @@ class Topic < ActiveRecord::Base
   has_many :category_users, through: :category
   has_many :posts
 
-  # This must be done manually until we promote the polymorphic columns
-  # to be the main way of accessing bookmarks. In the case of topics,
-  # we may also keep this around so you can query all of the bookmarks
-  # in a topic that are for the topic itself or for a post, as well as
-  # just the regular has_many :bookmarks association.
+  # When we are ready we can add as: :bookmarkable here to use the
+  # polymorphic association.
   #
-  # has_many :bookmarks, through: :posts
-  def bookmarks
-    Bookmark.where(post: self.posts)
-  end
+  # At that time we may also want to make another association for example
+  # :topic_bookmarks that get all of the bookmarks for that topic's bookmarkable id
+  # and type, because this one gets all of the post bookmarks.
+  has_many :bookmarks, through: :posts
 
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
