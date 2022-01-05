@@ -37,7 +37,7 @@ RSpec.describe Admin::BackupsController do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths&.each { |path| File.delete(path) if File.exist?(path) }
     @paths = nil
   end
 
@@ -133,14 +133,14 @@ RSpec.describe Admin::BackupsController do
       begin
         path = backup_path(backup_filename)
         create_backup_files(backup_filename)
-        expect(File.exists?(path)).to eq(true)
+        expect(File.exist?(path)).to eq(true)
 
         expect do
           delete "/admin/backups/#{backup_filename}.json"
         end.to change { UserHistory.where(action: UserHistory.actions[:backup_destroy]).count }.by(1)
 
         expect(response.status).to eq(200)
-        expect(File.exists?(path)).to eq(false)
+        expect(File.exist?(path)).to eq(false)
       end
     end
 

@@ -72,7 +72,7 @@ module Faker
       def load_image(image)
         cache_path = ::File.join(image_cache_dir, image[:filename])
 
-        if !::File.exists?(cache_path)
+        if !::File.exist?(cache_path)
           FileUtils.mkdir_p(image_cache_dir)
           temp_file = ::FileHelper.download(
             image[:url],

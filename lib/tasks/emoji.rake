@@ -511,12 +511,12 @@ class TestEmojiUpdate < MiniTest::Test
   end
 
   def test_groups_js_es6_creation
-    assert File.exists?(EMOJI_GROUPS_PATH)
+    assert File.exist?(EMOJI_GROUPS_PATH)
     assert File.size?(EMOJI_GROUPS_PATH)
   end
 
   def test_db_json_creation
-    assert File.exists?(EMOJI_DB_PATH)
+    assert File.exist?(EMOJI_DB_PATH)
     assert File.size?(EMOJI_DB_PATH)
   end
 
@@ -536,12 +536,12 @@ class TestEmojiUpdate < MiniTest::Test
 
   def test_scales
     original_image = image_path("apple", "blonde_woman")
-    assert File.exists?(original_image)
+    assert File.exist?(original_image)
     assert File.size?(original_image)
 
     (2..6).each do |scale|
       image = image_path("apple", "blonde_woman/#{scale}")
-      assert File.exists?(image)
+      assert File.exist?(image)
       assert File.size?(image)
     end
   end

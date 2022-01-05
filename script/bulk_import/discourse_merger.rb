@@ -359,7 +359,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           next if row['user_id'].nil?
         end
 
-        row['url'] = "/uploads/default/#{rel_filename}" if File.exists?(absolute_filename)
+        row['url'] = "/uploads/default/#{rel_filename}" if File.exist?(absolute_filename)
 
         @raw_connection.put_copy_data(row.values)
       end

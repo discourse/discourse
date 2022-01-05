@@ -367,7 +367,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
         if user
           filename = "avatar-#{user_id}.png"
           path = File.join(AVATAR_DIR, filename)
-          next if !File.exists?(path)
+          next if !File.exist?(path)
 
           # Scrape Avatars - Avatars are saved in the db, but it might be easier to just scrape them
           if SCRAPE_AVATARS == 1
@@ -403,7 +403,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
         filepath = File.basename(image).split('"')[0]
         filepath = File.join(ATTACHMENT_DIR, filepath)
 
-        if File.exists?(filepath)
+        if File.exist?(filepath)
           filename = File.basename(filepath)
           upload = create_upload(user_id, filepath, filename)
           image_html = html_for_upload(upload, filename)
@@ -421,7 +421,7 @@ class ImportScripts::AnswerHub < ImportScripts::Base
         filepath = File.basename(file).split('"')[0]
         filepath = File.join(ATTACHMENT_DIR, filepath)
 
-        if File.exists?(filepath)
+        if File.exist?(filepath)
           filename = File.basename(filepath)
           upload = create_upload(user_id, filepath, filename)
           file_html = html_for_upload(upload, filename)

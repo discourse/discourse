@@ -29,7 +29,7 @@ describe 'backups' do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths&.each { |path| File.delete(path) if File.exist?(path) }
     @paths = nil
   end
 

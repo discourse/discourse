@@ -362,7 +362,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
             _path = "#{assets_path}/#{_file}"
             max_compress = max_compress?(info["logical_path"], locales)
-            if File.exists?(_path)
+            if File.exist?(_path)
               STDERR.puts "Skipping: #{file} already compressed"
             elsif file.include? "discourse/tests"
               STDERR.puts "Skipping: #{file}"

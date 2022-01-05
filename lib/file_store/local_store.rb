@@ -14,11 +14,11 @@ module FileStore
     def remove_file(url, _)
       return unless is_relative?(url)
       source = "#{public_dir}#{url}"
-      return unless File.exists?(source)
+      return unless File.exist?(source)
       destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
-      FileUtils.remove(destination) if File.exists?(destination)
+      FileUtils.remove(destination) if File.exist?(destination)
       FileUtils.move(source, destination, force: true)
       FileUtils.touch(destination)
     end

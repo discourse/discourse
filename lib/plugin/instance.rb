@@ -839,7 +839,7 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    File.exists?(js_file_path)
+    File.exist?(js_file_path)
   end
 
   # Receives an array with two elements:
@@ -1085,7 +1085,7 @@ class Plugin::Instance
   end
 
   def write_asset(path, contents)
-    unless File.exists?(path)
+    unless File.exist?(path)
       ensure_directory(path)
       File.open(path, "w") { |f| f.write(contents) }
     end

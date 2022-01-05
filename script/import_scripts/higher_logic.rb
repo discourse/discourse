@@ -195,7 +195,7 @@ class ImportScripts::HigherLogic < ImportScripts::Base
         original_filename = "#{a['VersionName']}.#{a['FileExtension']}"
         path = File.join(ATTACHMENT_DIR, original_filename)
 
-        if File.exists?(path)
+        if File.exist?(path)
           if post = Post.find(post_id_from_imported_post_id(a['MessageKey']))
             filename = File.basename(original_filename)
             upload = create_upload(post.user.id, path, filename)

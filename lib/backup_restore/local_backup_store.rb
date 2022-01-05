@@ -25,13 +25,13 @@ module BackupRestore
 
     def file(filename, include_download_source: false)
       path = path_from_filename(filename)
-      create_file_from_path(path, include_download_source) if File.exists?(path)
+      create_file_from_path(path, include_download_source) if File.exist?(path)
     end
 
     def delete_file(filename)
       path = path_from_filename(filename)
 
-      if File.exists?(path)
+      if File.exist?(path)
         File.delete(path)
         reset_cache
       end
