@@ -20,6 +20,7 @@ describe Admin::ScreenedIpAddressesController do
       Fabricate(:screened_ip_address, ip_address: "1.2.3.5")
       Fabricate(:screened_ip_address, ip_address: "1.2.3.6")
       Fabricate(:screened_ip_address, ip_address: "4.5.6.7")
+      Fabricate(:screened_ip_address, ip_address: "5.0.0.0/8")
 
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "1.2.*" }
 
@@ -28,6 +29,12 @@ describe Admin::ScreenedIpAddressesController do
       expect(result.length).to eq(3)
 
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "4.5.6.7" }
+
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+      expect(result.length).to eq(1)
+
+      get "/admin/logs/screened_ip_addresses.json", params: { filter: "5.0.0.1" }
 
       expect(response.status).to eq(200)
       result = response.parsed_body
