@@ -5,7 +5,7 @@ import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
 import { inject as service } from "@ember/service";
 
-const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
+export default Component.extend(UrlRefresh, LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
   documentTitle: service(),
@@ -60,9 +60,10 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
         if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");
         }
+        if (this.loadingComplete) {
+          this.loadingComplete();
+        }
       });
     },
   },
 });
-
-export default DiscoveryTopicsListComponent;

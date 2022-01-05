@@ -19,6 +19,7 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
 {{#discovery-topics-list
   model=model
   refresh=(action "refresh")
+  loadingComplete=(action "loadingComplete")
   incomingCount=topicTrackingState.incomingCount
   autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
   bulkSelectEnabled=bulkSelectEnabled
