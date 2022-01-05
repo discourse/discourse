@@ -1959,7 +1959,7 @@ RSpec.describe TopicsController do
       let!(:nonexistent_topic_id) { Topic.last.id + 10000 }
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
-      shared_examples "various scenarios" do |expected, request_json: false|
+      shared_examples "various scenarios" do |expected, request_json:|
         expected.each do |key, value|
           it "returns #{value} for #{key}" do
             slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
@@ -1994,7 +1994,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'anonymous with login required' do
@@ -2011,7 +2011,7 @@ RSpec.describe TopicsController do
             nonexistent: 302,
             secure_accessible_topic: 302
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'anonymous with login required, requesting json' do
@@ -2046,7 +2046,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'allowed user' do
@@ -2064,7 +2064,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'moderator' do
@@ -2082,7 +2082,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'admin' do
@@ -2100,7 +2100,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 200
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
       end
 
@@ -2137,7 +2137,7 @@ RSpec.describe TopicsController do
             nonexistent: 302,
             secure_accessible_topic: 302
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'normal user' do
@@ -2173,7 +2173,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'moderator' do
@@ -2191,7 +2191,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'admin' do
@@ -2209,7 +2209,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 200
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
       end
 
