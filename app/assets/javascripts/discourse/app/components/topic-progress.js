@@ -159,22 +159,35 @@ export default Component.extend({
       return;
     }
 
+    const composerH =
+      document.querySelector("#reply-control")?.clientHeight || 0;
+
+    // on desktop, pin this element to the composer
+    // otherwise the grid layout will change too much when toggling the composer
+    // and jitter when the viewport is near the topic bottom
+    if (!this.site.mobileView && composerH) {
+      this.set("docked", false);
+      this.element.style.setProperty("bottom", `${composerH}px`);
+      return;
+    }
+
     if (entries[0].isIntersecting === true) {
       this.set("docked", true);
+      this.element.style.removeProperty("bottom");
     } else {
       if (entries[0].boundingClientRect.top > 0) {
         this.set("docked", false);
-        const wrapper = document.querySelector("#topic-progress-wrapper");
-        const composerH =
-          document.querySelector("#reply-control")?.clientHeight || 0;
         if (composerH === 0) {
           const filteredPostsHeight =
             document.querySelector(".posts-filtered-notice")?.clientHeight || 0;
           filteredPostsHeight === 0
-            ? wrapper.style.removeProperty("bottom")
-            : wrapper.style.setProperty("bottom", `${filteredPostsHeight}px`);
+            ? this.element.style.removeProperty("bottom")
+            : this.element.style.setProperty(
+                "bottom",
+                `${filteredPostsHeight}px`
+              );
         } else {
-          wrapper.style.setProperty("bottom", `${composerH}px`);
+          this.element.style.setProperty("bottom", `${composerH}px`);
         }
       }
     }
