@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SingleSignOn
+class DiscourseConnectBase
 
   class ParseError < RuntimeError; end
 
@@ -101,7 +101,7 @@ class SingleSignOn
   end
 
   def diagnostics
-    SingleSignOn::ACCESSORS.map { |a| "#{a}: #{public_send(a)}" }.join("\n")
+    DiscourseConnectBase::ACCESSORS.map { |a| "#{a}: #{public_send(a)}" }.join("\n")
   end
 
   def sso_secret

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'single_sign_on'
+require 'discourse_connect_base'
 
 RSpec.describe Users::OmniauthCallbacksController do
   fab!(:user) { Fabricate(:user) }
@@ -543,7 +543,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           SiteSetting.enable_discourse_connect_provider = true
           SiteSetting.discourse_connect_secret = "topsecret"
 
-          @sso = SingleSignOn.new
+          @sso = DiscourseConnectBase.new
           @sso.nonce = "mynonce"
           @sso.sso_secret = SiteSetting.discourse_connect_secret
           @sso.return_sso_url = "http://somewhere.over.rainbow/sso"

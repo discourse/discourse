@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DiscourseSingleSignOn < SingleSignOn
+class DiscourseConnect < DiscourseConnectBase
 
   class BlankExternalId < StandardError; end
   class BannedExternalId < StandardError; end
@@ -32,9 +32,9 @@ class DiscourseSingleSignOn < SingleSignOn
   def register_nonce(return_path)
     if nonce
       if SiteSetting.discourse_connect_csrf_protection
-        @secure_session.set(nonce_key, return_path, expires: SingleSignOn.nonce_expiry_time)
+        @secure_session.set(nonce_key, return_path, expires: DiscourseConnectBase.nonce_expiry_time)
       else
-        Discourse.cache.write(nonce_key, return_path, expires_in: SingleSignOn.nonce_expiry_time)
+        Discourse.cache.write(nonce_key, return_path, expires_in: DiscourseConnectBase.nonce_expiry_time)
       end
     end
   end
@@ -73,7 +73,7 @@ class DiscourseSingleSignOn < SingleSignOn
         Discourse.cache.delete nonce_key
       end
 
-      Discourse.cache.write(used_nonce_key, return_path, expires_in: SingleSignOn.used_nonce_expiry_time)
+      Discourse.cache.write(used_nonce_key, return_path, expires_in: DiscourseConnectBase.used_nonce_expiry_time)
     end
   end
 

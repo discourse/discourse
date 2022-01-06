@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe DiscourseSingleSignOn do
+describe DiscourseConnect do
   before do
     @discourse_connect_url = "http://example.com/discourse_sso"
     @discourse_connect_secret = "shjkfdhsfkjh"
@@ -15,7 +15,7 @@ describe DiscourseSingleSignOn do
   end
 
   def make_sso
-    sso = SingleSignOn.new
+    sso = DiscourseConnectBase.new
     sso.sso_url = "http://meta.discorse.org/topics/111"
     sso.sso_secret = "supersecret"
     sso.nonce = "testing"
@@ -39,7 +39,7 @@ describe DiscourseSingleSignOn do
   end
 
   def new_discourse_sso
-    DiscourseSingleSignOn.new(secure_session: secure_session)
+    DiscourseConnect.new(secure_session: secure_session)
   end
 
   def test_parsed(parsed, sso)
@@ -63,13 +63,13 @@ describe DiscourseSingleSignOn do
   end
 
   it "can do round trip parsing correctly" do
-    sso = SingleSignOn.new
+    sso = DiscourseConnectBase.new
     sso.sso_secret = "test"
     sso.name = "sam saffron"
     sso.username = "sam"
     sso.email = "sam@sam.com"
 
-    sso = SingleSignOn.parse(sso.payload, "test")
+    sso = DiscourseConnectBase.parse(sso.payload, "test")
 
     expect(sso.name).to eq "sam saffron"
     expect(sso.username).to eq "sam"
@@ -90,20 +90,20 @@ describe DiscourseSingleSignOn do
 
     expect do
       sso.lookup_or_create_user(ip_address)
-    end.to raise_error(DiscourseSingleSignOn::BlankExternalId)
+    end.to raise_error(DiscourseConnect::BlankExternalId)
 
     sso.external_id = nil
 
     expect do
       sso.lookup_or_create_user(ip_address)
-    end.to raise_error(DiscourseSingleSignOn::BlankExternalId)
+    end.to raise_error(DiscourseConnect::BlankExternalId)
 
     # going for slight duplication here so our intent is crystal clear
     %w{none nil Blank null}.each do |word|
       sso.external_id = word
       expect do
         sso.lookup_or_create_user(ip_address)
-      end.to raise_error(DiscourseSingleSignOn::BannedExternalId)
+      end.to raise_error(DiscourseConnect::BannedExternalId)
     end
   end
 
@@ -572,7 +572,7 @@ describe DiscourseSingleSignOn do
 
     url, payload = sso.to_url.split("?")
     expect(url).to eq sso.sso_url
-    parsed = SingleSignOn.parse(payload, "supersecret")
+    parsed = DiscourseConnectBase.parse(payload, "supersecret")
 
     test_parsed(parsed, sso)
   end
@@ -585,18 +585,18 @@ describe DiscourseSingleSignOn do
 
     url, payload = sso.to_url.split("?")
     expect(url).to eq "http://tcdev7.wpengine.com/"
-    parsed = SingleSignOn.parse(payload, "supersecret")
+    parsed = DiscourseConnectBase.parse(payload, "supersecret")
 
     test_parsed(parsed, sso)
   end
 
   it "validates nonce" do
-    _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+    _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
-    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
-    other_session_sso = DiscourseSingleSignOn.parse(payload, secure_session: SecureSession.new("differentsession"))
+    other_session_sso = DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq false
 
     sso.expire_nonce!
@@ -606,12 +606,12 @@ describe DiscourseSingleSignOn do
 
   it "allows disabling CSRF protection" do
     SiteSetting.discourse_connect_csrf_protection = false
-    _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+    _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
-    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
-    other_session_sso = DiscourseSingleSignOn.parse(payload, secure_session: SecureSession.new("differentsession"))
+    other_session_sso = DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq true
 
     sso.expire_nonce!
@@ -620,18 +620,18 @@ describe DiscourseSingleSignOn do
   end
 
   it "generates a correct sso url" do
-    url, payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+    url, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
     expect(url).to eq @discourse_connect_url
 
-    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+    sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce).to_not be_nil
   end
 
   context 'nonce error' do
     it "generates correct error message when nonce has already been used" do
-      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
-      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
 
       sso.expire_nonce!
@@ -639,9 +639,9 @@ describe DiscourseSingleSignOn do
     end
 
     it "generates correct error message when nonce is expired" do
-      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
-      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)
@@ -650,9 +650,9 @@ describe DiscourseSingleSignOn do
 
     it "generates correct error message when nonce is expired, and csrf protection disabled" do
       SiteSetting.discourse_connect_csrf_protection = false
-      _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
-      sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+      sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)

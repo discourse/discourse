@@ -462,8 +462,8 @@ class Admin::UsersController < Admin::AdminController
     return render body: nil, status: 404 unless SiteSetting.enable_discourse_connect
 
     begin
-      sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", secure_session: secure_session)
-    rescue DiscourseSingleSignOn::ParseError
+      sso = DiscourseConnect.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", secure_session: secure_session)
+    rescue DiscourseConnect::ParseError
       return render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")), status: 422
     end
 
@@ -472,7 +472,7 @@ class Admin::UsersController < Admin::AdminController
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
-    rescue DiscourseSingleSignOn::BlankExternalId => ex
+    rescue DiscourseConnect::BlankExternalId => ex
       render json: failed_json.merge(message: I18n.t('discourse_connect.blank_id_error')), status: 422
     end
   end
