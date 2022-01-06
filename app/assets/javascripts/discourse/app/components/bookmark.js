@@ -330,11 +330,7 @@ export default Component.extend({
     editingExistingBookmark,
     existingBookmarkHasReminder
   ) {
-    if (!editingExistingBookmark) {
-      return [];
-    }
-
-    if (!existingBookmarkHasReminder) {
+    if (editingExistingBookmark && !existingBookmarkHasReminder) {
       return [TIME_SHORTCUT_TYPES.NONE];
     }
 
