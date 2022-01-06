@@ -1,10 +1,4 @@
-import {
-  LATER_TODAY_CUTOFF_HOUR,
-  MOMENT_THURSDAY,
-  now,
-  parseCustomDatetime,
-  startOfDay,
-} from "discourse/lib/time-utils";
+import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
 import I18n from "I18n";
@@ -333,21 +327,6 @@ export default Component.extend({
     }
 
     return [];
-  },
-
-  @discourseComputed()
-  additionalTimeShortcutOptions() {
-    let additional = [];
-
-    if (now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
-    }
-
-    if (now(this.userTimezone).day() < MOMENT_THURSDAY) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
-    }
-
-    return additional;
   },
 
   @discourseComputed("model.reminderAt")

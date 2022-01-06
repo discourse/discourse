@@ -21,6 +21,7 @@ import {
   thisWeekend,
 } from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
@@ -113,7 +114,11 @@ export default Component.extend({
 
   @discourseComputed
   hiddenTimeShortcutOptions() {
-    return ["none"];
+    return [
+      TIME_SHORTCUT_TYPES.NONE,
+      TIME_SHORTCUT_TYPES.LATER_TODAY,
+      TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
+    ];
   },
 
   isCustom: equal("timerType", "custom"),
