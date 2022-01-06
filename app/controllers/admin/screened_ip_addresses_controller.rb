@@ -46,11 +46,6 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
     render json: success_json
   end
 
-  def roll_up
-    subnets = ScreenedIpAddress.roll_up(current_user)
-    render json: success_json.merge!(subnets: subnets)
-  end
-
   private
 
   def allowed_params
