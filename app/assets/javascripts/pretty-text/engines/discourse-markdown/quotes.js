@@ -11,6 +11,8 @@ const rule = {
     let username,
       postNumber,
       topicId,
+      chatChannelId,
+      chatMessageId,
       avatarImg,
       primaryGroupName,
       full,
@@ -29,6 +31,16 @@ const rule = {
 
         if (split[i].indexOf("topic:") === 0) {
           topicId = parseInt(split[i].substr(6), 10);
+          continue;
+        }
+
+        if (split[i].indexOf("chat_channel:") === 0) {
+          chatChannelId = parseInt(split[i].substr(13), 10);
+          continue;
+        }
+
+        if (split[i].indexOf("chat_message:") === 0) {
+          chatMessageId = parseInt(split[i].substr(13), 10);
           continue;
         }
 
@@ -67,10 +79,11 @@ const rule = {
     let token = state.push("bbcode_open", "aside", 1);
     token.attrs = [];
 
+    let classNames = ["quote"];
     if (primaryGroupName && primaryGroupName.length !== 0) {
-      token.attrs.push(["class", `quote group-${primaryGroupName}`]);
+      classNames.push(`group-${primaryGroupName}`);
     } else {
-      token.attrs.push(["class", "quote no-group"]);
+      classNames.push("no-group");
     }
 
     if (username) {
@@ -85,9 +98,17 @@ const rule = {
       token.attrs.push(["data-topic", topicId]);
     }
 
+    if (chatChannelId && chatMessageId) {
+      token.attrs.push(["data-chat-channel", chatChannelId]);
+      token.attrs.push(["data-chat-message", chatMessageId]);
+      classNames.push("chat-quote");
+    }
+
     if (full) {
       token.attrs.push(["data-full", "true"]);
     }
+
+    token.attrs.push(["class", classNames.join(" ")]);
 
     if (username) {
       let offTopicQuote =
@@ -175,7 +196,9 @@ export function setup(helper) {
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {
         return (
-          value === "quote no-group" || !!/^quote group\-(.+)$/.exec(value)
+          value === "quote no-group" ||
+          value === "quote no-group chat-quote" ||
+          !!/^quote group\-(.+)$/.exec(value)
         );
       }
     },
