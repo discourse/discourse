@@ -3265,6 +3265,9 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          clear_bookmark_reminder:
+            name: "Clear reminder"
+            description: "Clear the reminder date and time"
           pin_bookmark:
             name: "Pin bookmark"
             description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."

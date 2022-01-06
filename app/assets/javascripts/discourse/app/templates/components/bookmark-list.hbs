@@ -17,7 +17,7 @@
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.reminder_at}}
-                    <span class="bookmark-metadata-item {{if bookmark.reminderAtExpired "bookmark-expired-reminder"}}">
+                    <span class="bookmark-metadata-item bookmark-reminder {{if bookmark.reminderAtExpired "bookmark-expired-reminder"}}">
                       {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
                     </span>
                   {{/if}}
@@ -63,6 +63,7 @@
               bookmark=bookmark
               removeBookmark=(action "removeBookmark")
               editBookmark=(action "editBookmark")
+              clearBookmarkReminder=(action "clearBookmarkReminder")
               togglePinBookmark=(action "togglePinBookmark")
               }}
             </td>
