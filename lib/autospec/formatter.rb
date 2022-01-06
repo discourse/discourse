@@ -13,8 +13,8 @@ class Autospec::Formatter < RSpec::Core::Formatters::BaseTextFormatter
 
   def initialize(output)
     super
-    FileUtils.mkdir_p("tmp") unless Dir.exists?("tmp")
-    File.delete(RSPEC_RESULT) if File.exists?(RSPEC_RESULT)
+    FileUtils.mkdir_p("tmp") unless Dir.exist?("tmp")
+    File.delete(RSPEC_RESULT) if File.exist?(RSPEC_RESULT)
     @fail_file = File.open(RSPEC_RESULT, "w")
   end
 

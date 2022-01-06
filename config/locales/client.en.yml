@@ -195,6 +195,8 @@ en:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
 
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1521,11 +1523,11 @@ en:
         every_month: "every month"
         every_six_months: "every six months"
       email_level:
-        title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+        title: "Email me when I am quoted, replied to, my @username is mentioned, or when there is new activity in my watched categories, tags or topics"
         always: "always"
         only_when_away: "only when away"
         never: "never"
-      email_messages_level: "Send me an email when someone messages me"
+      email_messages_level: "Email me when I am sent a personal message"
       include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
 
@@ -1870,6 +1872,7 @@ en:
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
+      invite_no_username: "Enter your email address, and we'll send you a password reset email."
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
@@ -2742,20 +2745,13 @@ en:
 
       progress:
         title: topic progress
-        go_top: "top"
-        go_bottom: "bottom"
-        go: "go"
-        jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
         jump_prompt_of:
           one: "of %{count} post"
           other: "of %{count} posts"
         jump_prompt_long: "Jump to..."
-        jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
         jump_prompt_or: "or"
-        total: total posts
-        current: current post
 
       notifications:
         title: change how often you get notified about this topic

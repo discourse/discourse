@@ -927,7 +927,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     end
 
     filename = File.join(DISCUZX_BASE_DIR, ATTACHMENT_DIR, row['attachment_path'])
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return nil
     end

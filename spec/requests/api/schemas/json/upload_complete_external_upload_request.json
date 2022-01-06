@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "unique_identifier": {
+      "type": "string",
+      "example": "66e86218-80d9-4bda-b4d5-2b6def968705",
+      "description": "The unique identifier returned in the original /generate-presigned-put request."
+    },
+    "for_private_message": {
+      "type": "string",
+      "example": "true",
+      "description": "Optionally set this to true if the upload is for a private message."
+    },
+    "for_site_setting": {
+      "type": "string",
+      "example": "true",
+      "description": "Optionally set this to true if the upload is for a site setting."
+    },
+    "pasted": {
+      "type": "string",
+      "example": "true",
+      "description": "Optionally set this to true if the upload was pasted into the upload area. This will convert PNG files to JPEG."
+    }
+  },
+  "required": [
+    "unique_identifier"
+  ]
+}

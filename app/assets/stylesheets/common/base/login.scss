@@ -66,7 +66,6 @@
     display: inline;
   }
   .login-welcome-header {
-    z-index: z("modal", "content");
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
@@ -118,9 +117,11 @@
 
 // Login Form Styles
 .login-modal:not(.hidden),
-.create-account {
+.create-account,
+.invites-show {
   #login-form,
-  .login-form {
+  .login-form,
+  .invite-form {
     .input-group {
       position: relative;
       display: flex;
@@ -293,10 +294,29 @@
 }
 
 .invites-show {
+  display: grid;
+  justify-content: center;
   .two-col {
     position: relative;
-    display: flex;
+    display: grid;
     margin-top: 5px;
+  }
+
+  .invite-form,
+  .invite-success {
+    border-radius: 10px;
+    margin-top: 25px;
+  }
+
+  .invite-form {
+    padding-left: 20px;
+    margin-bottom: 50px;
+    .tip {
+      display: block;
+    }
+    .col-image {
+      display: none;
+    }
   }
 
   #login-buttons {
@@ -309,6 +329,7 @@
   .col-image {
     position: relative;
     margin-right: 20px;
+    justify-self: center;
     @media screen and (max-width: 600px) {
       display: none;
     }
@@ -318,9 +339,6 @@
     margin-top: 24px;
     button.btn-primary {
       margin-top: 10px;
-    }
-    label:not(.checkbox-label) {
-      font-weight: bold;
     }
     .controls,
     .input {

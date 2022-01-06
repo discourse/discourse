@@ -104,22 +104,7 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
-      destination: 'jquery.autoellipsis-1.0.10.js'
-    }, {
-      source: 'jquery-color/dist/jquery.color.js'
-    }, {
-      source: 'blueimp-file-upload/js/jquery.fileupload.js',
-    }, {
-      source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
-    }, {
-      source: 'blueimp-file-upload/js/jquery.fileupload-process.js',
-    }, {
-      source: 'blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-    }, {
       source: 'jquery/dist/jquery.js'
-    }, {
-      source: 'jquery-tags-input/src/jquery.tagsinput.js'
     }, {
       source: 'markdown-it/dist/markdown-it.js'
     }, {
@@ -138,8 +123,6 @@ def dependencies
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
-    }, {
-      source: 'resumablejs/resumable.js'
     }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',
@@ -324,7 +307,7 @@ task 'javascript:update' => 'clean_up' do
         path = "#{public_js}/#{package_dir_name}/#{package_version}"
         dest = "#{path}/#{filename}"
 
-        FileUtils.mkdir_p(path) unless File.exists?(path)
+        FileUtils.mkdir_p(path) unless File.exist?(path)
       end
     else
       dest = "#{vendor_js}/#{filename}"
@@ -333,7 +316,7 @@ task 'javascript:update' => 'clean_up' do
     if src.include? "ace.js"
       versions["ace/ace.js"] = versions.delete("ace.js")
       ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "worker-html"]
+      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "theme-chaos", "worker-html"]
       dest_path = dest.split('/')[0..-2].join('/')
       addtl_files.each do |file|
         FileUtils.cp_r("#{ace_root}#{file}.js", dest_path)
@@ -353,7 +336,7 @@ task 'javascript:update' => 'clean_up' do
       system("yarn run browserify #{vendor_js}/custom-uppy.js -o node_modules/custom-uppy-build.js")
     end
 
-    unless File.exists?(dest)
+    unless File.exist?(dest)
       STDERR.puts "New dependency added: #{dest}"
     end
 

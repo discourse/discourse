@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "upload_type": {
+      "type": "string",
+      "enum": [
+        "avatar",
+        "profile_background",
+        "card_background",
+        "custom_emoji",
+        "composer"
+      ]
+    },
+    "file_name": {
+      "type": "string",
+      "example": "IMG_2021.jpeg"
+    },
+    "file_size": {
+      "type": "integer",
+      "description": "File size should be represented in bytes.",
+      "example": 4096
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sha1-checksum": {
+          "type": "string",
+          "description": "The SHA1 checksum of the upload binary blob. Optionally be provided and serves as an additional security check when later processing the file in complete-external-upload endpoint."
+        }
+      }
+    }
+  },
+  "required": [
+    "upload_type",
+    "file_name",
+    "file_size"
+  ]
+}

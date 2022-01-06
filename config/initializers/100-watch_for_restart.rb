@@ -14,7 +14,7 @@
 
 Thread.new do
   file = "#{Rails.root}/tmp/restart"
-  old_time = File.ctime(file).to_i if File.exists? file
+  old_time = File.ctime(file).to_i if File.exist? file
   wait_seconds = 4
 
   if Rails.env.development? && $PROGRAM_NAME =~ /puma/
@@ -25,7 +25,7 @@ Thread.new do
     begin
       listener = Listen.to("#{Rails.root}/tmp", only: /restart/) do
 
-        time = File.ctime(file).to_i if File.exists? file
+        time = File.ctime(file).to_i if File.exist? file
 
         if old_time != time
           Rails.logger.info "attempting to reload #{$$} #{$PROGRAM_NAME} in #{wait_seconds} seconds"

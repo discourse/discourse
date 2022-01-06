@@ -2058,6 +2058,29 @@ describe SessionController do
   end
 
   describe '#forgot_password' do
+
+    context 'when hide_email_address_taken is set' do
+      before do
+        SiteSetting.hide_email_address_taken = true
+      end
+
+      it 'denies for username' do
+        post "/session/forgot_password.json",
+          params: { login: user.username }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+      end
+
+      it 'allows for email' do
+        post "/session/forgot_password.json",
+          params: { login: user.email }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      end
+    end
+
     it 'raises an error without a username parameter' do
       post "/session/forgot_password.json"
       expect(response.status).to eq(400)

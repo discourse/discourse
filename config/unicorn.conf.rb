@@ -71,7 +71,7 @@ before_fork do |server, worker|
     if supervisor > 0
       Thread.new do
         while true
-          unless File.exists?("/proc/#{supervisor}")
+          unless File.exist?("/proc/#{supervisor}")
             puts "Kill self supervisor is gone"
             Process.kill "TERM", Process.pid
           end

@@ -48,26 +48,22 @@ section.post-menu-area {
 }
 
 nav.post-controls {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
+  // for consistency, try to control spacing by editing these variables
+  --control-margin: 0.33em;
+  --control-icon-space: 0.33em;
   .actions {
-    text-align: right;
-    display: inline-block;
-    margin-left: auto;
-
-    .more-actions {
-      display: none;
-      overflow: hidden;
+    button {
+      margin-left: var(--control-margin);
+      &.create {
+        margin-left: calc(var(--control-margin) * 1.52);
+        .d-icon {
+          margin-right: var(--control-icon-space);
+        }
+      }
     }
-
     // Some buttons can be doubled up, like likes or flags
     .double-button {
-      display: inline-flex;
-      color: var(--primary-low-mid);
-      margin-right: 0.15em;
+      margin-left: var(--control-margin);
       &:hover {
         button {
           background: var(--primary-low);
@@ -75,21 +71,8 @@ nav.post-controls {
         }
       }
       button {
-        // It looks really confusing when one half a double button has an inner shadow on click.
-        &:active {
-          box-shadow: none;
-        }
         margin-left: 0;
         margin-right: 0;
-        &.my-likes,
-        &.read-indicator,
-        &.regular-likes {
-          // Like count on posts
-          .d-icon {
-            color: var(--primary-low-mid);
-            padding-left: 0.45em;
-          }
-        }
         &.like {
           // Like button with 0 likes
           &.d-hover {
@@ -101,9 +84,6 @@ nav.post-controls {
         }
         &.has-like {
           // Like button after I've liked
-          .d-icon {
-            color: var(--love);
-          }
           &.d-hover {
             background: var(--primary-low);
             .d-icon {
@@ -111,21 +91,13 @@ nav.post-controls {
             }
           }
         }
-        &[disabled] {
-          // Disabled like button
-          cursor: not-allowed;
-        }
         &.button-count {
           // Like count button
-          &:not(.my-likes) {
-            padding-right: 0;
-          }
           &.d-hover {
             color: var(--primary);
           }
           + .toggle-like {
             // Like button when like count is present
-            padding-left: 0.45em;
             &.d-hover {
               background: var(--primary-low);
             }
@@ -133,92 +105,11 @@ nav.post-controls {
         }
       }
     }
-    a,
-    button {
-      color: var(--primary-low-mid-or-secondary-high);
-      .d-icon {
-        opacity: 1;
-      }
-      margin-right: 2px;
-      display: inline-block;
-    }
-    a.toggle-likes {
-      padding: 8px 0;
-      margin-right: -3px;
-    }
-    span.badge-posts {
-      margin-right: 5px;
-      transition: all linear 0.15s;
-    }
-
-    button.create {
-      margin-right: 0;
-      color: var(--primary-high-or-secondary-low);
-      margin-left: 10px;
-      .d-icon {
-        color: var(--primary-high-or-secondary-low);
-      }
-    }
-    .create .d-icon {
-      margin-right: 5px;
-    }
-    button {
-      font-size: $font-up-1;
-      padding: 8px 10px;
-      vertical-align: top;
-      background: transparent;
-      border: none;
-      margin-left: 3px;
-      &.d-hover,
-      &:focus,
-      &:active {
-        outline: none;
-        background: var(--primary-low);
-        color: var(--primary);
-      }
-      &.hidden {
-        display: none;
-      }
-      &.admin {
-        position: relative;
-      }
-      &.delete.d-hover,
-      &.delete:hover,
-      &.delete:focus {
-        background: var(--danger);
-        color: var(--secondary);
-        .d-icon {
-          color: var(--secondary);
-        }
-      }
-      &.bookmark {
-        padding: 8px 11px;
-        &.bookmarked .d-icon {
-          color: var(--tertiary);
-        }
-      }
-    }
   }
-
   .show-replies {
-    font-size: $font-up-1;
-    margin-left: -10px;
-    font-size: inherit;
-    padding: 10px;
-    color: var(--primary-medium);
-    &:hover,
-    &:focus {
-      outline: none;
-      color: var(--primary);
-      background: var(--primary-low);
-    }
+    margin-left: -11px; // negates padding-left on .cooked, for visual alignment
     .d-icon {
-      margin-right: 5px;
-      font-size: $font-down-1;
-    }
-    .d-button-label + .d-icon {
-      margin-left: 5px;
-      margin-right: 0;
+      margin-right: var(--control-icon-space);
     }
   }
 }

@@ -1436,6 +1436,7 @@ en:
       description: "Top 10 users who have had the likes from a wide range of people."
 
   dashboard:
+    group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -1669,7 +1670,7 @@ en:
     allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
-    hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
+    hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
@@ -2822,10 +2823,10 @@ en:
 
   system_messages:
     reviewables_reminder:
-      subject_template: "There're items in the review queue that need reviewing"
+      subject_template: "There are items in the review queue that need reviewing"
       text_body_template:
-        one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_path}/review)."
-        other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
+        one: "%{mentions} Items were submitted over %{count} hour ago. [Please review them](%{base_url}/review)."
+        other: "%{mentions} Items were submitted over %{count} hours ago. [Please review them](%{base_url}/review)."
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
@@ -2926,6 +2927,12 @@ en:
 
         ``` markdown
         %{flagged_post_raw_content}
+        ```
+
+        To which you responded
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
         ```
 
         For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).

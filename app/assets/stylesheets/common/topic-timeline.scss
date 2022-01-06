@@ -6,10 +6,10 @@
   box-sizing: border-box;
   z-index: z("timeline");
   -webkit-transform: translate3d(0, 0, 0);
-  transition: margin-bottom 0.25s ease-in;
   &.timeline-docked-bottom {
+    margin-bottom: -4em;
     @media screen and (prefers-reduced-motion: no-preference) {
-      margin-bottom: -1.75em; // animate out footer button height
+      transition: margin-bottom 0.5s ease-in;
     }
     .timeline-footer-controls {
       opacity: 0;
@@ -187,7 +187,9 @@
 
     .timeline-footer-controls {
       margin-top: 1.5em;
-      transition: opacity 0.2s ease-in;
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity 0.2s ease-in;
+      }
       display: flex;
       flex-wrap: wrap;
       max-width: 9em;

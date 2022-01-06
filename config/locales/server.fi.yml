@@ -1540,7 +1540,6 @@ fi:
     blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
     allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY luoda tilinsä. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     auto_approve_email_domains: "Käyttäjät, joilla on sähköpostiosoite tästä verkkotunnusten luettelosta, hyväksytään automaattisesti."
-    hide_email_address_taken: "Älä kerro käyttäjälle, että käyttäjätili annetulla sähköpostiosoitteella on jo olemassa, kun hän liittyy palstalle tai pyytää salasanan palauttamista."
     log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos KAIKILTA laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä ilmoitus <a href='%{base_path}/admin' target='_blank'>/ylläpitäjän</a> hallintapaneelissa, kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email-osoitteeseen, kun uusi versio Discoursesta on saatavilla."

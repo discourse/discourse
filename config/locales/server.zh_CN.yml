@@ -199,6 +199,7 @@ zh_CN:
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用 S3 上传，因为 S3 上传已全局启用，启用此站点级设置可能会导致上传出现严重问题"
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中： %{values}。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
@@ -231,6 +232,7 @@ zh_CN:
       discourse_connect_enabled: "邀请已被禁用，因为 DiscourseConnect 已启用。"
       invalid_access: "您没有权限查看请求的资源。"
     requires_groups: "邀请已保存。要授予对指定话题的访问权限，请添加以下群组之一：%{groups}。"
+    domain_not_allowed: "您的电子邮件域名不符合邀请条件。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前 %{max_bulk_invites} 个邀请已发出。尝试将文件拆分成更小的部分。"
@@ -837,6 +839,8 @@ zh_CN:
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
+  user_activity:
+    no_log_search_queries: "搜索日志查询当前已禁用（管理员可以在站点设置中启用它们）。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
@@ -1277,17 +1281,24 @@ zh_CN:
         mutes_count: 被设为免打扰的次数
       description: "被许多其他用户设为免打扰和/或忽略的用户。"
     top_users_by_likes_received:
+      title: "收到最多喜欢的用户"
       labels:
         user: 用户
         qtt_like: 获赞
+      description: "获得更多喜欢的前10名用户。"
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "收到最多来自低信任级别用户喜欢的用户"
       labels:
         user: 用户
+        trust_level: 信任级别
         qtt_like: 获赞
+      description: "从低等级用户收到喜欢最多的10个高级用户"
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "从各种用户收到最多喜欢的用户"
       labels:
         user: 用户
         qtt_like: 获赞
+      description: "前10位有很多人喜欢的用户。"
   dashboard:
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
@@ -1366,6 +1377,7 @@ zh_CN:
     tl2_post_edit_time_limit: "信任级别 2 及更高的作者可以在发帖后的 (n) 分钟内编辑他们的帖子。设置为 0 表示永远可以编辑。"
     edit_history_visible_to_public: "允许所有人查看被编辑过的帖子的先前版本。禁用时，只有管理人员可以查看。"
     delete_removed_posts_after: "被作者移除的帖子将在 (n) 小时后自动删除。如果设置为 0，帖子将被立即删除。"
+    notify_users_after_responses_deleted_on_flagged_post: "当帖子被标记并被删除时，所有回复帖子并且回复被删除的用户都会收到通知。"
     max_image_width: "帖子中图片的最大缩略图宽度"
     max_image_height: "帖子中图片的最大缩略图高度"
     responsive_post_image_sizes: "调整灯箱预览图片的大小以允许以下像素比率的高 DPI 屏幕。移除所有值将禁用自适应图片。"
@@ -1503,7 +1515,6 @@ zh_CN:
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
     auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
-    hide_email_address_taken: "在注册期间和在“忘记密码”表单中不通知用户存在使用给定电子邮件地址的帐户。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"
@@ -4392,6 +4403,11 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
+      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或广告用户所为。请参阅 %{link}。"
+      auto_silence_regex: "第一个帖子匹配 %{link} 设置的新用户。"
+      watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
+      staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
+      category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:

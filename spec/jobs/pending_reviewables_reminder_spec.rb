@@ -78,7 +78,7 @@ describe Jobs::PendingReviewablesReminder do
     it 'deletes previous messages' do
       GroupMessage.create(
         Group[:moderators].name, 'reviewables_reminder',
-        { limit_once_per: false, message_params: { mentions: [], count: 1 } }
+        { limit_once_per: false, message_params: { mentions: '', count: 1 } }
       )
 
       create_flag(49.hours.ago)

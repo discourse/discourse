@@ -1,31 +1,14 @@
 import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import lightbox from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
-  loadingLightbox: false,
-
-  init() {
-    this._super(...arguments);
-    this._applyLightbox();
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-    const elem = $("a.lightbox");
-    if (elem && typeof elem.magnificPopup === "function") {
-      $("a.lightbox").magnificPopup("close");
-    }
-  },
-
   uploadingOrProcessing: or("uploading", "processing"),
 
   @discourseComputed("imageUrl", "placeholderUrl")
@@ -75,8 +58,6 @@ export default Component.extend(UppyUploadMixin, {
       imageHeight: upload.height,
     });
 
-    this._applyLightbox();
-
     // the value of the property used for imageUrl should be set
     // in this callback. this should be done in cases where imageUrl
     // is bound to a computed property of the parent component.
@@ -87,42 +68,21 @@ export default Component.extend(UppyUploadMixin, {
     }
   },
 
-  _openLightbox() {
-    next(() =>
-      $(this.element.querySelector("a.lightbox")).magnificPopup("open")
-    );
+  @on("didRender")
+  _applyLightbox() {
+    next(() => lightbox(this.element, this.siteSettings));
   },
 
-  _applyLightbox() {
-    if (this.imageUrl) {
-      next(() => lightbox(this.element, this.siteSettings));
+  @on("willDestroyElement")
+  _closeOnRemoval() {
+    if ($.magnificPopup?.instance) {
+      $.magnificPopup.instance.close();
     }
   },
 
   actions: {
     toggleLightbox() {
-      if (this.imageFilename) {
-        this._openLightbox();
-      } else {
-        this.set("loadingLightbox", true);
-
-        ajax(`/uploads/lookup-metadata`, {
-          type: "POST",
-          data: { url: this.imageUrl },
-        })
-          .then((json) => {
-            this.setProperties({
-              imageFilename: json.original_filename,
-              imageFilesize: json.human_filesize,
-              imageWidth: json.width,
-              imageHeight: json.height,
-            });
-
-            this._openLightbox();
-            this.set("loadingLightbox", false);
-          })
-          .catch(popupAjaxError);
-      }
+      $(this.element.querySelector("a.lightbox"))?.magnificPopup("open");
     },
 
     trash() {

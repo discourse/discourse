@@ -15,14 +15,16 @@ class Auth::Result
     :requires_invite,
     :not_allowed_from_ip_address,
     :admin_not_allowed_from_ip_address,
-    :omit_username, # Used by plugins to prevent username edits
     :skip_email_validation,
     :destination_url,
     :omniauth_disallow_totp,
     :failed,
     :failed_reason,
     :failed_code,
-    :associated_groups
+    :associated_groups,
+    :overrides_email,
+    :overrides_username,
+    :overrides_name,
   ]
 
   attr_accessor *ATTRIBUTES
@@ -33,12 +35,14 @@ class Auth::Result
     :email,
     :username,
     :email_valid,
-    :omit_username,
     :name,
     :authenticator_name,
     :extra_data,
     :skip_email_validation,
-    :associated_groups
+    :associated_groups,
+    :overrides_email,
+    :overrides_username,
+    :overrides_name,
   ]
 
   def [](key)
@@ -79,16 +83,19 @@ class Auth::Result
 
   def apply_user_attributes!
     change_made = false
-    if SiteSetting.auth_overrides_username? && username.present?
+    if (SiteSetting.auth_overrides_username? || overrides_username) && username.present?
       change_made = UsernameChanger.override(user, username)
     end
 
-    if SiteSetting.auth_overrides_email && email_valid && email.present? && user.email != Email.downcase(email)
+    if (SiteSetting.auth_overrides_email || overrides_email || user&.email&.ends_with?(".invalid")) &&
+        email_valid &&
+        email.present? &&
+        user.email != Email.downcase(email)
       user.email = email
       change_made = true
     end
 
-    if SiteSetting.auth_overrides_name && name.present? && user.name != name
+    if (SiteSetting.auth_overrides_name || overrides_name) && name.present? && user.name != name
       user.name = name
       change_made = true
     end
@@ -120,11 +127,11 @@ class Auth::Result
   end
 
   def can_edit_name
-    !SiteSetting.auth_overrides_name
+    !(SiteSetting.auth_overrides_name || overrides_name)
   end
 
   def can_edit_username
-    !(SiteSetting.auth_overrides_username || omit_username)
+    !(SiteSetting.auth_overrides_username || overrides_username)
   end
 
   def to_client_hash
@@ -189,7 +196,7 @@ class Auth::Result
   end
 
   def username_suggester_attributes
-    username || name || email
+    [username, name, email]
   end
 
   def authenticator
@@ -203,6 +210,6 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(username_suggester_attributes)
+    UserNameSuggester.suggest(*username_suggester_attributes)
   end
 end

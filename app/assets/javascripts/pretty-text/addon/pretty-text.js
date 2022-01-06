@@ -41,15 +41,11 @@ export function buildOptions(state) {
     watchedWordsLink,
   } = state;
 
+  // These are markdown-it rules defined in https://github.com/markdown-it/markdown-it#manage-rules.
   let features = {
     "bold-italics": true,
     "auto-link": true,
-    mentions: true,
-    bbcode: true,
-    quote: true,
     html: true,
-    "category-hashtag": true,
-    onebox: true,
     linkify: linkify !== false,
     newline: !siteSettings.traditional_markdown_linebreaks,
   };
@@ -84,8 +80,6 @@ export function buildOptions(state) {
       ? siteSettings.allowed_iframes.split("|")
       : [],
     markdownIt: true,
-    injectLineNumbersToPreview:
-      siteSettings.enable_advanced_editor_preview_sync,
     previewing,
     disableEmojis,
     watchedWordsReplace,

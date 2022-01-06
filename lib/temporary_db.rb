@@ -24,7 +24,7 @@ class TemporaryDb
     end
     if !@pg_bin_path
       bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-      if File.exists?("#{bin_path}/pg_ctl")
+      if File.exist?("#{bin_path}/pg_ctl")
         @pg_bin_path = bin_path
       end
     end

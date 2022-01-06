@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  self.ignored_columns = [
-    "topic_id", # TODO (martin) (2021-12-01): remove
-    "reminder_type" # TODO (martin) (2021-12-01): remove
-  ]
-
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
+  belongs_to :bookmarkable, polymorphic: true
 
   delegate :topic_id, to: :post
 
@@ -17,20 +13,6 @@ class Bookmark < ActiveRecord::Base
       never: 0,
       when_reminder_sent: 1,
       on_owner_reply: 2
-    )
-  end
-
-  # TODO (martin) (2021-12-01) Remove this once plugins are not using it.
-  def self.reminder_types
-    @reminder_types ||= Enum.new(
-      later_today: 1,
-      next_business_day: 2,
-      tomorrow: 3,
-      next_week: 4,
-      next_month: 5,
-      custom: 6,
-      start_of_next_business_week: 7,
-      later_this_week: 8
     )
   end
 
@@ -190,13 +172,15 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
+#  bookmarkable_id        :integer
+#  bookmarkable_type      :string
 #
 # Indexes
 #
+#  idx_bookmarks_user_polymorphic_unique                 (user_id,bookmarkable_type,bookmarkable_id) UNIQUE
 #  index_bookmarks_on_post_id                            (post_id)
 #  index_bookmarks_on_reminder_at                        (reminder_at)
 #  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
-#  index_bookmarks_on_topic_id                           (topic_id)
 #  index_bookmarks_on_user_id                            (user_id)
 #  index_bookmarks_on_user_id_and_post_id_and_for_topic  (user_id,post_id,for_topic) UNIQUE
 #

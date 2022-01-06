@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
@@ -877,7 +878,6 @@ describe GroupsController do
         it "should update default notification preference for existing users" do
           group.update!(default_notification_level: NotificationLevels.all[:watching])
           user1 = Fabricate(:user)
-          user2 = Fabricate(:user)
           group.add(user1)
           group.add(user2)
           group_user1 = user1.group_users.first
@@ -937,7 +937,6 @@ describe GroupsController do
 
         it "should update category & tag notification preferences for existing users" do
           user1 = Fabricate(:user)
-          user2 = Fabricate(:user)
           CategoryUser.create!(user: user1, category: category, notification_level: 4)
           TagUser.create!(user: user1, tag: tag, notification_level: 4)
           TagUser.create!(user: user2, tag: tag, notification_level: 4)
@@ -1317,8 +1316,6 @@ describe GroupsController do
       end
 
       it "can make incremental adds" do
-        user2 = Fabricate(:user)
-
         expect do
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
         end.to change { group.users.count }.by(1)
@@ -1340,8 +1337,6 @@ describe GroupsController do
       end
 
       it "does not notify users when the param is not present" do
-        user2 = Fabricate(:user)
-
         expect {
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
         }.to change { Topic.where(archetype: "private_message").count }.by(0)
@@ -1350,8 +1345,6 @@ describe GroupsController do
       end
 
       it "notifies users when the param is present" do
-        user2 = Fabricate(:user)
-
         expect {
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username, notify_users: true }
         }.to change { Topic.where(archetype: "private_message").count }.by(1)

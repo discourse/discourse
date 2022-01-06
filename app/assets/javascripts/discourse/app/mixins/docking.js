@@ -2,14 +2,6 @@ import Mixin from "@ember/object/mixin";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { cancel, later } from "@ember/runloop";
 
-const helper = {
-  offset() {
-    const main = document.querySelector("#main");
-    const offsetTop = main ? main.offsetTop : 0;
-    return window.pageYOffset - offsetTop;
-  },
-};
-
 export default Mixin.create({
   queueDockCheck: null,
   _initialTimer: null,
@@ -26,7 +18,7 @@ export default Mixin.create({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    this.dockCheck(helper);
+    this.dockCheck();
   },
 
   didInsertElement() {

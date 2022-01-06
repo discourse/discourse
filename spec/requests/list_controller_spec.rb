@@ -142,9 +142,9 @@ RSpec.describe ListController do
   end
 
   describe "filter private messages by tag" do
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:tag) { Fabricate(:tag) }
     let(:private_message) { Fabricate(:private_message_topic, user: admin) }
 
@@ -191,7 +191,7 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     describe 'with personal_messages disabled' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -732,10 +732,10 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_warnings" do
-    let(:target_user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
-    let(:moderator1) { Fabricate(:moderator) }
-    let(:moderator2) { Fabricate(:moderator) }
+    fab!(:target_user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:moderator1) { Fabricate(:moderator) }
+    fab!(:moderator2) { Fabricate(:moderator) }
 
     let(:create_args) do
       { title: 'you need a warning buddy!',

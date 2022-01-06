@@ -26,7 +26,7 @@ def ensure_cache_clean!
   super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
   hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
 
-  old_hash = File.exists?(hash_file) ? File.read(hash_file) : nil
+  old_hash = File.exist?(hash_file) ? File.read(hash_file) : nil
 
   if old_hash && old_hash != super_sha
     puts "WARNING: It looks like your discourse plugins or core version have recently changed."

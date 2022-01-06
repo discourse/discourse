@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe SvgSprite do
+  fab!(:theme) { Fabricate(:theme) }
 
   before do
     SvgSprite.expire_cache
@@ -50,7 +51,6 @@ describe SvgSprite do
   end
 
   it 'version should be based on bundled output, not requested icons' do
-    theme = Fabricate(:theme)
     fname = "custom-theme-icon-sprite.svg"
     upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
@@ -92,8 +92,6 @@ describe SvgSprite do
   end
 
   it 'includes icons defined in theme settings' do
-    theme = Fabricate(:theme)
-
     # Works for default settings:
     theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
     theme.save!
@@ -138,7 +136,6 @@ describe SvgSprite do
   end
 
   it 'includes icons defined in theme modifiers' do
-    theme = Fabricate(:theme)
     child_theme = Fabricate(:theme, component: true)
     theme.add_relative_theme!(:child, child_theme)
 
@@ -173,7 +170,6 @@ describe SvgSprite do
     end
 
     it 'includes svg sprites in themes stored in s3' do
-      theme = Fabricate(:theme)
       theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload_s3.id, type: :theme_upload_var)
       theme.save!
 
@@ -253,7 +249,6 @@ describe SvgSprite do
     end
 
     it 'includes custom icons in a theme' do
-      theme = Fabricate(:theme)
       fname = "custom-theme-icon-sprite.svg"
 
       upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
@@ -266,7 +261,6 @@ describe SvgSprite do
     end
 
     it 'does not fail on bad XML in custom icon sprite' do
-      theme = Fabricate(:theme)
       fname = "bad-xml-icon-sprite.svg"
 
       upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
@@ -279,7 +273,6 @@ describe SvgSprite do
     end
 
     it 'includes custom icons in a child theme' do
-      theme = Fabricate(:theme)
       fname = "custom-theme-icon-sprite.svg"
       child_theme = Fabricate(:theme, component: true)
       theme.add_relative_theme!(:child, child_theme)

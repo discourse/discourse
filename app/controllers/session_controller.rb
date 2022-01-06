@@ -434,7 +434,11 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = User.find_by_username_or_email(normalized_login_param)
+    if SiteSetting.hide_email_address_taken
+      user = User.find_by_email(Email.downcase(normalized_login_param))
+    else
+      user = User.find_by_username_or_email(normalized_login_param)
+    end
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
@@ -449,7 +453,8 @@ class SessionController < ApplicationController
     end
 
     json = success_json
-    unless SiteSetting.hide_email_address_taken
+
+    if !SiteSetting.hide_email_address_taken
       json[:user_found] = user_presence
     end
 

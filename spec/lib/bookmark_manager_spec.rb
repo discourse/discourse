@@ -12,12 +12,14 @@ RSpec.describe BookmarkManager do
   subject { described_class.new(user) }
 
   describe ".create" do
-    it "creates the bookmark for the user" do
+    it "creates the bookmark for the user with the correct polymorphic type" do
       subject.create(post_id: post.id, name: name)
       bookmark = Bookmark.find_by(user: user)
 
       expect(bookmark.post_id).to eq(post.id)
       expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.bookmarkable_id).to eq(post.id)
+      expect(bookmark.bookmarkable_type).to eq("Post")
     end
 
     it "allows creating a bookmark for the topic and for the first post" do
@@ -27,6 +29,8 @@ RSpec.describe BookmarkManager do
       expect(bookmark.post_id).to eq(post.id)
       expect(bookmark.topic_id).to eq(post.topic_id)
       expect(bookmark.for_topic).to eq(true)
+      expect(bookmark.bookmarkable_id).to eq(post.topic_id)
+      expect(bookmark.bookmarkable_type).to eq("Topic")
 
       subject.create(post_id: post.id, name: name)
       bookmark = Bookmark.find_by(user: user, post_id: post.id, for_topic: false)
@@ -34,6 +38,8 @@ RSpec.describe BookmarkManager do
       expect(bookmark.post_id).to eq(post.id)
       expect(bookmark.topic_id).to eq(post.topic_id)
       expect(bookmark.for_topic).to eq(false)
+      expect(bookmark.bookmarkable_id).to eq(post.id)
+      expect(bookmark.bookmarkable_type).to eq("Post")
     end
 
     it "errors when creating a for_topic bookmark for a post that is not the first one" do

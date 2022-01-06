@@ -4,7 +4,8 @@ require 'rails_helper'
 require 'csv'
 
 describe Jobs::ExportUserArchive do
-  let(:user) { Fabricate(:user, username: "john_doe") }
+  fab!(:user) { Fabricate(:user, username: "john_doe") }
+  fab!(:user2) { Fabricate(:user) }
   let(:extra) { {} }
   let(:job) {
     j = Jobs::ExportUserArchive.new
@@ -14,10 +15,10 @@ describe Jobs::ExportUserArchive do
   }
   let(:component) { raise 'component not set' }
 
-  let(:admin) { Fabricate(:admin) }
-  let(:category) { Fabricate(:category_with_definition) }
-  let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
-  let(:topic) { Fabricate(:topic, category: category) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:category) { Fabricate(:category_with_definition) }
+  fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+  fab!(:topic) { Fabricate(:topic, category: category) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
 
   def make_component_csv
@@ -111,7 +112,6 @@ describe Jobs::ExportUserArchive do
 
   context 'user_archive posts' do
     let(:component) { 'user_archive' }
-    let(:user2) { Fabricate(:user) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:subsubtopic) { Fabricate(:topic, category: subsubcategory) }
     let(:subsubpost) { Fabricate(:post, user: user, topic: subsubtopic) }
@@ -331,7 +331,7 @@ describe Jobs::ExportUserArchive do
           .category_users
           .where(category_id: category_id)
           .first_or_initialize
-          .update!(last_seen_at: reset_at)
+          .update!(last_seen_at: reset_at, notification_level: NotificationLevels.all[:regular])
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
@@ -355,7 +355,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data[1][:category_id]).to eq(subsubcategory.id.to_s)
       expect(data[1][:category_names]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
-      expect(data[1][:notification_level]).to eq('') # empty string, not 'normal'
+      expect(data[1][:notification_level]).to eq('regular')
       expect(DateTime.parse(data[1][:dismiss_new_timestamp])).to eq(reset_at)
 
       expect(data[2][:category_id]).to eq(announcements.id.to_s)
@@ -453,7 +453,6 @@ describe Jobs::ExportUserArchive do
 
   context 'visits' do
     let(:component) { 'visits' }
-    let(:user2) { Fabricate(:user) }
 
     it 'correctly exports the UserVisit table' do
       freeze_time '2017-03-01 12:00'

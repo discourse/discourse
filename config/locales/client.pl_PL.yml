@@ -1821,6 +1821,7 @@ pl_PL:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres email. Wyślemy do ciebie email z linkiem do zresetowania hasła."
+      invite_no_username: "Wpisz swój adres e-mail, a wyślemy Ci wiadomość e-mail umożliwiającą zresetowanie hasła."
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."

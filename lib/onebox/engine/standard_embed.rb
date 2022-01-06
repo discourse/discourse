@@ -58,7 +58,12 @@ module Onebox
         end
 
         favicon = get_favicon
-        @raw["favicon".to_sym] = favicon unless Onebox::Helpers::blank?(favicon)
+        @raw[:favicon] = favicon unless Onebox::Helpers::blank?(favicon)
+
+        unless @raw[:description]
+          description = get_description
+          @raw[:description] = description unless Onebox::Helpers::blank?(description)
+        end
 
         @raw
       end
@@ -104,6 +109,15 @@ module Onebox
         favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
 
         Onebox::Helpers::get_absolute_image_url(favicon, url)
+      end
+
+      def get_description
+        return nil unless html_doc
+
+        description = html_doc.at("meta[name='description']").to_h['content']
+        description ||= html_doc.at("meta[name='Description']").to_h['content']
+
+        description
       end
 
       def get_json_response

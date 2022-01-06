@@ -5,7 +5,7 @@ require 'rails_helper'
 describe Oneboxer do
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
-    File.exists?(file) ? File.read(file) : ""
+    File.exist?(file) ? File.read(file) : ""
   end
 
   it "returns blank string for an invalid onebox" do

@@ -19,7 +19,7 @@ def gather_uploads_for_all_sites
 end
 
 def file_exists?(path)
-  File.exists?(path) && File.size(path) > 0
+  File.exist?(path) && File.size(path) > 0
 rescue
   false
 end
@@ -188,7 +188,7 @@ def clean_up_uploads
   Upload.find_each do |upload|
     path = File.join(public_directory, upload.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       upload.destroy!
       putc "#"
     else
@@ -200,7 +200,7 @@ def clean_up_uploads
   OptimizedImage.find_each do |optimized_image|
     path = File.join(public_directory, optimized_image.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       optimized_image.destroy!
       putc "#"
     else
@@ -326,9 +326,9 @@ def regenerate_missing_optimized
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"
 
-      if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      if !File.exist?(thumbnail) || File.size(thumbnail) <= 0
         # make sure the original image exists locally
-        if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
+        if (!File.exist?(original) || File.size(original) <= 0) && upload.origin.present?
           # try to fix it by redownloading it
           begin
             downloaded = FileHelper.download(
@@ -346,7 +346,7 @@ def regenerate_missing_optimized
           end
         end
 
-        if File.exists?(original) && File.size(original) > 0
+        if File.exist?(original) && File.size(original) > 0
           FileUtils.mkdir_p(File.dirname(thumbnail))
           OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
           putc "#"

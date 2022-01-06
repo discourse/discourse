@@ -342,10 +342,10 @@ JSONStream@^1.0.3:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
-ace-builds@1.4.12:
-  version "1.4.12"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.12.tgz#888efa386e36f4345f40b5233fcc4fe4c588fae7"
-  integrity sha512-G+chJctFPiiLGvs3+/Mly3apXTcfgE45dT5yp12BcWZ1kUs+gm0qd3/fv4gsz6fVag4mM0moHVpjHDIgph6Psg==
+ace-builds@1.4.13:
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.13.tgz#186f42d3849ebcc6a48b93088a058489897514c1"
+  integrity sha512-SOLzdaQkY6ecPKYRDDg+MY1WoGgXA34cIvYJNNoBMGGUswHmlauU2Hy0UL96vW0Fs/LgFbMUjD+6vqzWTldIYQ==
 
 acorn-jsx@^5.2.0:
   version "5.3.1"
@@ -2601,20 +2601,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-jquery-color@3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/jquery-color/-/jquery-color-3.0.0-alpha.1.tgz#0c00ed91251bac45fc4ff3143939f434ef46d188"
-  integrity sha512-UjsdBsWuehWLfnXfL4JZtxGbRB2eUz6Rhn3qxBKaVR3Qwm7fQlY1y/Va0o7GzDwGJnOvYKc3H+i2k7bC1yGcJg==
-
-jquery-tags-input@1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/jquery-tags-input/-/jquery-tags-input-1.3.5.tgz#1c89cb95c61983ad14386d30a006920476b93ed7"
-  integrity sha1-HInLlcYZg60UOG0woAaSBHa5Ptc=
-
-"jquery.autoellipsis@https://github.com/pvdspek/jquery.autoellipsis":
-  version "0.0.0"
-  resolved "https://github.com/pvdspek/jquery.autoellipsis#756391145c09ec11ae2b88a0ca0c3b5fdf8d21a1"
-
 jquery@3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
@@ -3653,11 +3639,6 @@ restore-cursor@^3.1.0:
   dependencies:
     onetime "^5.1.0"
     signal-exit "^3.0.2"
-
-resumablejs@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/resumablejs/-/resumablejs-1.1.0.tgz#3160633688ac35bc2a0f119803c190ec369ef4d2"
-  integrity sha512-gUTWTtJ2aheRb5svHDGHMtQsBkGxTILpZApT11ODoxEe5D75GhYL7Nc/WYgCcJXY+5RVmm2BEsp2qriCkKWRRg==
 
 ret@~0.1.10:
   version "0.1.15"

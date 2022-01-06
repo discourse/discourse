@@ -1571,7 +1571,7 @@ de:
     allowed_email_domains: "Eine durch senkrechte Striche („|“) getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
     normalize_emails: "Überprüfe, ob normalisierte E-Mails eindeutig sind. Normalisierte E-Mail entfernt alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen."
     auto_approve_email_domains: "Benutzer mit E-Mail-Adressen aus dieser Liste von Domains werden automatisch genehmigt."
-    hide_email_address_taken: "Teile Benutzern während der Registrierung und beim „Passwort vergessen“-Formular nicht mit, wenn ein Konto mit der angegebenen E-Mail-Adresse existiert."
+    hide_email_address_taken: "Informiere Benutzer beim Anmelden oder Passwort-Zurücksetzen nicht über ein bereits bestehendes Konto mit dieser E-Mail-Adresse. Benötigt die Angabe vollständiger E-Mail-Adressen zum Passwort-Zurücksetzen."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen im <a href='%{base_path}/admin' target='_blank'>/admin</a>-Dashboard an."
     new_version_emails: "Sende eine E-Mail an die contact_email-Adresse, wenn eine neue Version von Discourse verfügbar ist."
@@ -2544,10 +2544,10 @@ de:
     other: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunden geschlossen."
   system_messages:
     reviewables_reminder:
-      subject_template: "Es gibt Elemente in der Überprüfungswarteschlange, die überprüft werden müssen"
+      subject_template: "Es gibt Einträge in der Überprüfungswarteschlange, die überprüft werden müssen"
       text_body_template:
-        one: "%{mentions} Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
-        other: "%{mentions} Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
+        one: "%{mentions} Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_url}/review)."
+        other: "%{mentions} Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_url}/review)."
     private_topic_title: "Thema #%{id}"
     contents_hidden: "Bitte besuche den Beitrag, um die Inhalte zu sehen."
     post_hidden:

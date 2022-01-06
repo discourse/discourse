@@ -51,14 +51,14 @@ describe "translate accelerator" do
 
   it "overrides for both string and symbol keys" do
     key = 'user.email.not_allowed'
-    text_overriden = 'foobar'
+    text_overridden = 'foobar'
 
     expect(I18n.t(key)).to be_present
 
-    override_translation('en', key, text_overriden)
+    override_translation('en', key, text_overridden)
 
-    expect(I18n.t(key)).to eq(text_overriden)
-    expect(I18n.t(key.to_sym)).to eq(text_overriden)
+    expect(I18n.t(key)).to eq(text_overridden)
+    expect(I18n.t(key.to_sym)).to eq(text_overridden)
   end
 
   describe ".overrides_by_locale" do
@@ -197,7 +197,7 @@ describe "translate accelerator" do
       expect(I18n.t('keys.magic', count: 2)).to eq('no magic keys')
     end
 
-    it "returns the overriden text when falling back" do
+    it "returns the overridden text when falling back" do
       override_translation('en', 'got', 'summer')
       expect(I18n.t('got')).to eq('summer')
       expect(I18n.with_locale(:zh_TW) { I18n.t('got') }).to eq('summer')
@@ -222,6 +222,78 @@ describe "translate accelerator" do
 
       override_translation('en', 'fish', 'fake fish')
       expect(Fish.model_name.human).to eq('Fish')
+    end
+  end
+
+  context "translation precedence" do
+    def translation_should_equal(key, expected_value)
+      I18n.locale = :en
+      expect(I18n.t(key, locale: :de)).to eq(expected_value)
+      expect(I18n.search(key, locale: :de)[key]).to eq(expected_value)
+
+      I18n.locale = :de
+      expect(I18n.t(key)).to eq(expected_value)
+      expect(I18n.search(key)[key]).to eq(expected_value)
+    end
+
+    context "with existing translations in current locale and fallback locale" do
+      context "with overrides in both locales" do
+        it "should return the override from the current locale" do
+          override_translation("de", "foo", "Override of foo in :de")
+          override_translation("en", "foo", "Override of foo in :en")
+          translation_should_equal("foo", "Override of foo in :de")
+        end
+      end
+
+      context "with override only in current locale" do
+        it "should return the override from the current locale" do
+          override_translation("de", "foo", "Override of foo in :de")
+          translation_should_equal("foo", "Override of foo in :de")
+        end
+      end
+
+      context "with override only in fallback locale" do
+        it "should return the translation from the current locale" do
+          override_translation("en", "foo", "Override of foo in :en")
+          translation_should_equal("foo", "Foo in :de")
+        end
+      end
+
+      context "with no overrides" do
+        it "should return the translation from the current locale" do
+          translation_should_equal("foo", "Foo in :de")
+        end
+      end
+    end
+
+    context "with existing translation in fallback locale" do
+      context "with overrides in both locales" do
+        it "should return the override from the current locale" do
+          override_translation("de", "fish", "Override of fish in :de")
+          override_translation("en", "fish", "Override of fish in :en")
+          translation_should_equal("fish", "Override of fish in :de")
+        end
+      end
+
+      context "with override only in current locale" do
+        it "should return the override from the current locale" do
+          override_translation("de", "fish", "Override of fish in :de")
+          translation_should_equal("fish", "Override of fish in :de")
+        end
+      end
+
+      context "with override only in fallback locale" do
+        it "should return the translation from the current locale" do
+          override_translation("en", "fish", "Override of fish in :en")
+          translation_should_equal("fish", "Override of fish in :en")
+        end
+      end
+
+      context "with no overrides" do
+        it "should return the translation from the fallback locale" do
+          translation_should_equal("fish", "original fish")
+        end
+      end
     end
   end
 end

@@ -1333,6 +1333,7 @@ sv:
         qtt_like: Mottagna gillningar
       description: "Topp 10 användare som har haft gillningar från ett brett spektrum av personer."
   dashboard:
+    group_email_credentials_warning: 'Det uppstod ett problem med autentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
     rails_env_warning: "Din server kör i %{env}-läge."
     host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, som att skicka e-post, utförs asynkront av sidekiq. Se till att minst en sidekiq-process körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
@@ -1551,7 +1552,7 @@ sv:
     allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
     auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
-    hide_email_address_taken: "Informera inte användare om att det finns ett konto med en given e-postadress vid registreringen eller från det glömda lösenordsformuläret."
+    hide_email_address_taken: "Informera inte användarna om att det finns ett konto med en given e-postadress under registreringen eller under flödet för glömda lösenord. Kräv fullständig e-post vid begäran om \"glömt lösenord\"."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hub för versionuppdateringar och visa nya versionsmeddelanden på instrumentpanelen <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Skicka e-post till contact_email när en ny version av Discourse finns tillgängligt."
@@ -2500,10 +2501,10 @@ sv:
     other: "Detta ämne är tillfälligt stängt i minst %{count} timmar på grund av ett stort antal flaggor."
   system_messages:
     reviewables_reminder:
-      subject_template: "Det finns artiklar i granskningskön som behöver granskas"
+      subject_template: "Det finns saker i granskningskön som behöver granskas"
       text_body_template:
-        one: "%{mentions} Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
-        other: "%{mentions} Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_path}/review)."
+        one: "%{mentions} Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_url}/review)."
+        other: "%{mentions} Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_url}/review)."
     private_topic_title: "Ämne #%{id}"
     contents_hidden: "Gå till inlägget för att se dess innehåll."
     post_hidden:

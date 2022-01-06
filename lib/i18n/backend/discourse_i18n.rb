@@ -55,14 +55,8 @@ module I18n
       end
 
       def search(locale, query)
-        results = {}
         regexp = self.class.create_search_regexp(query)
-
-        I18n.fallbacks[locale].each do |fallback|
-          find_results(regexp, results, translations[fallback])
-        end
-
-        results
+        find_results(regexp, {}, translations[locale])
       end
 
       protected

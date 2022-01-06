@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "unique_identifier": {
+      "type": "string",
+      "example": "66e86218-80d9-4bda-b4d5-2b6def968705",
+      "description": "The unique identifier returned in the original /create-multipart request."
+    },
+    "parts": {
+      "type": "array",
+      "example": [
+        {
+          "part_number": 1,
+          "etag": "0c376dcfcc2606f4335bbc732de93344"
+        },
+        {
+          "part_number": 2,
+          "etag": "09ert8cfcc2606f4335bbc732de91122"
+        }
+      ],
+      "description": "All of the part numbers and their corresponding ETags that have been uploaded must be provided."
+    }
+  },
+  "required": [
+    "unique_identifier",
+    "parts"
+  ]
+}

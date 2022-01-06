@@ -411,7 +411,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.confirm_password?("securepassword")).to eq(false)
       end
 
-      it "should update name/username/email when sso_overrides is enabled" do
+      it "should update name/username/email when SiteSetting.auth_overrides_* are enabled" do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true
         SiteSetting.auth_overrides_name = true

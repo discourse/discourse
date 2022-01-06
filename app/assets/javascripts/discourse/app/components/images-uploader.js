@@ -1,15 +1,15 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import UploadMixin from "discourse/mixins/upload";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend(UploadMixin, {
+export default Component.extend(UppyUploadMixin, {
   type: "avatar",
   tagName: "span",
 
-  @discourseComputed("uploading")
-  uploadButtonText(uploading) {
-    return uploading ? I18n.t("uploading") : I18n.t("upload");
+  @discourseComputed("uploadingOrProcessing")
+  uploadButtonText(uploadingOrProcessing) {
+    return uploadingOrProcessing ? I18n.t("uploading") : I18n.t("upload");
   },
 
   validateUploadedFilesOptions() {

@@ -369,8 +369,7 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      unless api_key.request_allowed?(@env)
-        Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
+      if !api_key.request_allowed?(@env)
         return nil
       end
 

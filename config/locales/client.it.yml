@@ -3817,8 +3817,6 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
-            uploads:
-              create: Carica un nuovo file.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.

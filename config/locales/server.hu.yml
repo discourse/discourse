@@ -891,6 +891,7 @@ hu:
     slow_down_crawler_user_agents: "A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie."
     enable_badges: "A jelvény rendszer engedélyezése"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
+    hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail-címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail-cím megkövetelése az „elfelejtett jelszó” kérésekhez."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     google_oauth2_hd_groups: "(kísérleti) A felhasználók a kiszolgálóhoz tartozó domainben lévő Google-csoportjainak lekérése hitelesítéskor. A lekért Google-csoportok segítségével automatikusan állíthat be Discourse csoporttagságot (lásd a csoportbeállításokat)."
@@ -1048,6 +1049,10 @@ hu:
     ignored: "Köszönjük, hogy jelezted, utánanézünk!"
     ignored_and_deleted: "Köszönjük, hogy jelezted, eltávolítottuk a bejegyzést."
   system_messages:
+    reviewables_reminder:
+      text_body_template:
+        one: "%{mentions} Elemek lettek beküldve %{count} órával ezelőtt. [Tekintse át őket](%{base_url}/review)."
+        other: "%{mentions} Elemek lettek beküldve %{count} órával ezelőtt. [Tekintse át őket](%{base_url}/review)."
     private_topic_title: "Téma #%{id}"
     contents_hidden: "Kérjük, látogass el a bejegyzésre, hogy a tartalom megtekintéséhez!"
     post_hidden:

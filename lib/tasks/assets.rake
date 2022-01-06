@@ -260,7 +260,7 @@ def copy_ember_cli_assets
           dest_sub = "#{dest}/#{Regexp.last_match[1]}"
         end
 
-        FileUtils.mkdir_p(dest_sub) unless Dir.exists?(dest_sub)
+        FileUtils.mkdir_p(dest_sub) unless Dir.exist?(dest_sub)
         log_file = File.basename(rel_file).sub("-#{digest}", "")
 
         # It's simpler to serve the file as `application.js`
@@ -362,7 +362,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
             _path = "#{assets_path}/#{_file}"
             max_compress = max_compress?(info["logical_path"], locales)
-            if File.exists?(_path)
+            if File.exist?(_path)
               STDERR.puts "Skipping: #{file} already compressed"
             elsif file.include? "discourse/tests"
               STDERR.puts "Skipping: #{file}"

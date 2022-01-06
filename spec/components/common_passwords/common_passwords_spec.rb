@@ -5,7 +5,7 @@ require "rails_helper"
 describe CommonPasswords do
 
   it "the passwords file should exist" do
-    expect(File.exists?(described_class::PASSWORD_FILE)).to eq(true)
+    expect(File.exist?(described_class::PASSWORD_FILE)).to eq(true)
   end
 
   describe "#common_password?" do

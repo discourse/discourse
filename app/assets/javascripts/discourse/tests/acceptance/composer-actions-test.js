@@ -360,7 +360,7 @@ acceptance("Composer Actions", function (needs) {
       "whisper icon is not visible"
     );
     assert.ok(
-      !exists(".composer-fields .whisper .d-icon-anchor"),
+      !exists(".reply-details .whisper .d-icon-anchor"),
       "no-bump icon is not visible"
     );
     assert.strictEqual(
@@ -380,7 +380,7 @@ acceptance("Composer Actions", function (needs) {
       "whisper icon is visible"
     );
     assert.strictEqual(
-      count(".composer-fields .no-bump .d-icon-anchor"),
+      count(".reply-details .no-bump .d-icon-anchor"),
       1,
       "no-bump icon is visible"
     );
