@@ -89,7 +89,7 @@
       </section>
     {{/if}}
     {{#if canAdminTag}}
-      {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) connectorTagName="" tagName="section"}}
+      {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) tagName="section"}}
       <div class="tag-actions">
         {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
         {{#if deleteAction}}

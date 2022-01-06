@@ -9,6 +9,6 @@
     {{#each navItems as |navItem|}}
       {{navigation-item content=navItem filterMode=filterMode category=category}}
     {{/each}}
-    {{plugin-outlet name="extra-nav-item" tagName="" connectorTagName="li" args=(hash category=category filterMode=filterMode)}}
+    {{plugin-outlet name="extra-nav-item" connectorTagName="li" args=(hash category=category filterMode=filterMode)}}
   </ul>
 {{/if}}
