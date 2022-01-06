@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { next } from "@ember/runloop";
-import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
 export default Component.extend(FilterModeMixin, {
   tagName: "ul",
@@ -12,7 +11,6 @@ export default Component.extend(FilterModeMixin, {
 
   init() {
     this._super(...arguments);
-    this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 
   @discourseComputed("filterType", "navItems")
