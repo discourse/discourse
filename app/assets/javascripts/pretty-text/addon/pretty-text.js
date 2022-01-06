@@ -33,7 +33,6 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     previewing,
-    linkify,
     censoredRegexp,
     disableEmojis,
     customEmojiTranslation,
@@ -41,14 +40,7 @@ export function buildOptions(state) {
     watchedWordsLink,
   } = state;
 
-  // These are markdown-it rules defined in https://github.com/markdown-it/markdown-it#manage-rules.
-  let features = {
-    "bold-italics": true,
-    "auto-link": true,
-    html: true,
-    linkify: linkify !== false,
-    newline: !siteSettings.traditional_markdown_linebreaks,
-  };
+  let features = {};
 
   if (state.features) {
     features = deepMerge(features, state.features);

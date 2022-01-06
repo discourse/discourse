@@ -374,7 +374,7 @@ export function setup(opts, siteSettings, state) {
   opts.engine = window.markdownit({
     discourse: opts.discourse,
     html: true,
-    breaks: opts.discourse.features.newline,
+    breaks: !siteSettings.traditional_markdown_linebreaks,
     xhtmlOut: false,
     linkify: siteSettings.enable_markdown_linkify,
     typographer: siteSettings.enable_markdown_typographer,
