@@ -1,3 +1,5 @@
+import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, schedule, throttle } from "@ember/runloop";
 import {
@@ -701,7 +703,8 @@ export default {
       );
     } else if (article.classList.contains("topic-post")) {
       return this._scrollTo(
-        article.querySelector("#post_1") ? 0 : articleTop - headerOffset()
+        article.querySelector("#post_1") ? 0 : articleTop - headerOffset(),
+        { focusTabLoc: true }
       );
     }
 
@@ -712,11 +715,25 @@ export default {
     });
   },
 
-  _scrollTo(scrollTop) {
+  _scrollTo(scrollTop, opts = {}) {
     window.scrollTo({
       top: scrollTop,
       behavior: "smooth",
     });
+
+    if (opts.focusTabLoc) {
+      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
+    }
+  },
+
+  @bind
+  _onScrollEnds() {
+    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
+    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
+  },
+
+  _onScrollEndsCallback() {
+    document.querySelector(".topic-post.selected a.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
