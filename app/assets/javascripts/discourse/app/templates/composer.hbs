@@ -204,7 +204,7 @@
 
             <div class={{if isUploading "hidden"}} id="draft-status">
               {{#if model.draftStatus}}
-                <span title={{model.draftStatus}}>
+                <span class="draft-error" title={{model.draftStatus}}>
                   {{#if model.draftConflictUser}}
                     {{avatar model.draftConflictUser imageSize="small"}} {{d-icon "user-edit"}}
                   {{else}}
