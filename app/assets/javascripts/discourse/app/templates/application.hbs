@@ -1,7 +1,7 @@
 {{#discourse-root}}
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   {{d-document}}
-  {{plugin-outlet name="above-site-header" tagName=""}}
+  {{plugin-outlet name="above-site-header" connectorTagName="div"}}
   {{site-header canSignUp=canSignUp
                 showCreateAccount=(route-action "showCreateAccount")
                 showLogin=(route-action "showLogin")
@@ -11,10 +11,10 @@
                 logout=(route-action "logout")}}
   {{software-update-prompt}}
 
-  {{plugin-outlet name="below-site-header" tagName="" args=(hash currentPath=router._router.currentPath)}}
+  {{plugin-outlet name="below-site-header" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
 
   <div id="main-outlet" class="wrap" role="main">
-    {{plugin-outlet name="above-main-container" tagName=""}}
+    {{plugin-outlet name="above-main-container" connectorTagName="div"}}
     <div class="container" id="main-container">
       {{#if showTop}}
         {{custom-html name="top"}}
@@ -23,17 +23,17 @@
       {{pwa-install-banner}}
       {{global-notice}}
       {{create-topics-notice}}
-      {{plugin-outlet name="top-notices" tagName="" args=(hash currentPath=router._router.currentPath)}}
+      {{plugin-outlet name="top-notices" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
     </div>
     {{outlet}}
     {{outlet "user-card"}}
   </div>
 
-  {{plugin-outlet name="above-footer" tagName="" args=(hash showFooter=showFooter)}}
+  {{plugin-outlet name="above-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
   {{#if showFooter}}
     {{custom-html name="footer" triggerAppEvent="true"}}
   {{/if}}
-  {{plugin-outlet name="below-footer" tagName="" args=(hash showFooter=showFooter)}}
+  {{plugin-outlet name="below-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
 
   {{outlet "modal"}}
   {{topic-entrance}}

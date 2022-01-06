@@ -17,7 +17,7 @@
 
     {{#if model.viewOpenOrFullscreen}}
       <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags" "without-tags"}}">
-        {{plugin-outlet name="composer-open" args=(hash model=model)}}
+        {{plugin-outlet name="composer-open" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
         <div class="reply-to">
           {{#unless model.viewFullscreen}}
@@ -29,7 +29,7 @@
                 canWhisper=canWhisper
               }}
 
-              {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
+              {{plugin-outlet name="composer-action-after" args=(hash model=model)}}
 
               {{#unless site.mobileView}}
                 {{#if model.unlistTopic}}
@@ -50,7 +50,7 @@
             </div>
           {{/unless}}
 
-          {{plugin-outlet name="before-composer-controls" args=(hash model=model) tagName="" connectorTagName=""}}
+          {{plugin-outlet name="before-composer-controls" args=(hash model=model)}}
 
           {{composer-toggles
             composeState=model.composeState
@@ -143,15 +143,15 @@
                 </div>
               {{/if}}
 
-              {{plugin-outlet name="composer-fields" args=(hash model=model showPreview=showPreview)}}
+              {{plugin-outlet name="composer-fields" tagName="span" connectorTagName="div" args=(hash model=model showPreview=showPreview)}}
             {{/unless}}
           </div>
         {{/composer-editor}}
 
-        {{plugin-outlet name="composer-after-composer-editor" connectorTagName="" args=(hash model=model)}}
+        {{plugin-outlet name="composer-after-composer-editor" tagName="span" args=(hash model=model)}}
 
         <div class="submit-panel">
-          {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
+          {{plugin-outlet name="composer-fields-below" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
           <div class="save-or-cancel">
             {{#unless model.viewFullscreen}}
@@ -217,11 +217,11 @@
               {{/if}}
             </div>
 
-            {{plugin-outlet name="composer-after-save-or-cancel" connectorTagName="" args=(hash model=model)}}
+            {{plugin-outlet name="composer-after-save-or-cancel" tagName="span" args=(hash model=model)}}
           </div>
 
           {{#if site.mobileView}}
-            {{plugin-outlet name="composer-mobile-buttons-bottom" connectorTagName="" args=(hash model=model)}}
+            {{plugin-outlet name="composer-mobile-buttons-bottom" tagName="span" args=(hash model=model)}}
 
             {{#if allowUpload}}
               <a id="mobile-file-upload" class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>

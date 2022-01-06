@@ -2,11 +2,11 @@
   {{#watch-read action=(action "markFaqRead") path=model.path}}
     <div class="contents clearfix body-page">
 
-      {{plugin-outlet name="above-static"}}
+      {{plugin-outlet name="above-static" tagName="span" connectorTagName="div"}}
 
       {{html-safe model.html}}
 
-      {{plugin-outlet name="below-static" tagName=""}}
+      {{plugin-outlet name="below-static" connectorTagName="div"}}
 
       {{#if anyButtons}}
         <div class="body-page-button-container">

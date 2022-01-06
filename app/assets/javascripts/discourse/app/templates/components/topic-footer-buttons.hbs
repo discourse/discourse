@@ -52,7 +52,6 @@
 
   {{plugin-outlet name="topic-footer-main-buttons-before-create"
                   args=(hash topic=topic)
-                  tagName=""
                   connectorTagName="span"}}
 
   {{#if topic.details.can_create_post}}
@@ -65,7 +64,6 @@
 
   {{plugin-outlet name="after-topic-footer-main-buttons"
                   args=(hash topic=topic)
-                  tagName=""
                   connectorTagName="span"}}
 </div>
 
@@ -80,5 +78,4 @@
 
 {{plugin-outlet name="after-topic-footer-buttons"
                 args=(hash topic=topic)
-                tagName=""
                 connectorTagName="span"}}

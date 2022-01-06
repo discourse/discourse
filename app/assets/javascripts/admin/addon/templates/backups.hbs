@@ -4,7 +4,7 @@
       <ul class="nav nav-pills">
         {{nav-item route="admin.backups.index" label="admin.backups.menu.backups"}}
         {{nav-item route="admin.backups.logs" label="admin.backups.menu.logs"}}
-        {{plugin-outlet name="downloader" tagName=""}}
+        {{plugin-outlet name="downloader" connectorTagName="div"}}
         <div class="admin-actions">
           {{#if model.canRollback}}
             {{d-button action=(route-action "rollback")
@@ -32,7 +32,7 @@
     </nav>
   </div>
 
-  {{plugin-outlet name="before-backup-list" tagName=""}}
+  {{plugin-outlet name="before-backup-list" connectorTagName="div"}}
 
   <div class="admin-container">
     {{outlet}}

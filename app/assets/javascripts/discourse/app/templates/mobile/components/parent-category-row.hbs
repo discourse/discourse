@@ -1,5 +1,5 @@
 {{#unless isHidden}}
-  {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=category)}}
+  {{plugin-outlet name="category-list-above-each-category" args=(hash category=category)}}
   <div data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} style={{border-color category.color}} class="category-list-item category {{if isMuted "muted"}}">
     <table class="topic-list">
       <tbody>
