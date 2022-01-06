@@ -30,7 +30,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.later_today",
       time: laterToday(timezone),
       timeFormatted: laterToday(timezone).format(I18n.t("dates.time")),
-      hidden: true,
     },
     {
       icon: "far-sun",
@@ -47,7 +46,6 @@ export function defaultShortcutOptions(timezone) {
       timeFormatted: laterThisWeek(timezone).format(
         I18n.t("dates.time_short_day")
       ),
-      hidden: true,
     },
     {
       icon: "briefcase",
