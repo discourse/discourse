@@ -120,12 +120,12 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     },
   });
 
-  componentTest("later today shows if it is after 5pm but before 6pm", {
+  componentTest("later today shows if it is before 5pm", {
     template,
 
     beforeEach() {
       this.clock = fakeTime(
-        "2100-12-11T14:30:00",
+        "2100-12-11T16:50:00",
         this.currentUser._timezone,
         true
       );
@@ -152,22 +152,6 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
         exists("#tap_tile_later_today"),
         "it does not have later today"
       );
-    },
-  });
-
-  componentTest("later today does show if it is before the end of the day", {
-    template,
-
-    beforeEach() {
-      this.clock = fakeTime(
-        "2100-12-11T13:00:00",
-        this.currentUser._timezone,
-        true
-      );
-    },
-
-    test(assert) {
-      assert.ok(exists("#tap_tile_later_today"), "it does have later today");
     },
   });
 
@@ -199,22 +183,25 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     },
   });
 
-  componentTest("Next Month points to the first day of the next month", {
-    template,
+  componentTest(
+    "the 'Next Month' option points to the first day of the next month",
+    {
+      template,
 
-    beforeEach() {
-      this.clock = fakeTime(
-        "2100-01-01T08:00:00",
-        this.currentUser._timezone,
-        true
-      );
-    },
+      beforeEach() {
+        this.clock = fakeTime(
+          "2100-01-01T08:00:00",
+          this.currentUser._timezone,
+          true
+        );
+      },
 
-    async test(assert) {
-      assert.strictEqual(
-        query("div#tap_tile_next_month div.tap-tile-date").innerText,
-        "Feb 1, 8:00 am"
-      );
-    },
-  });
+      async test(assert) {
+        assert.strictEqual(
+          query("div#tap_tile_next_month div.tap-tile-date").innerText,
+          "Feb 1, 8:00 am"
+        );
+      },
+    }
+  );
 });
