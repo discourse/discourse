@@ -1493,6 +1493,45 @@ var bar = 'bar';
     );
   });
 
+  test("customizing markdown-it rules", function (assert) {
+    assert.cookedOptions(
+      "**bold**",
+      { markdownItRules: [] },
+      "<p>**bold**</p>",
+      "does not apply bold markdown when rule is not enabled"
+    );
+
+    assert.cookedOptions(
+      "**bold**",
+      { markdownItRules: ["emphasis"] },
+      "<p><strong>bold</strong></p>",
+      "applies bold markdown when rule is enabled"
+    );
+  });
+
+  test("features override", function (assert) {
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: [] },
+      "<p>:grin: @sam</p>",
+      "does not cook emojis when Discourse markdown engines are disabled"
+    );
+
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: ["emoji"] },
+      '<p><img src="/images/emoji/google_classic/grin.png?v=10" title=":grin:" class="emoji" alt=":grin:"> @sam</p>',
+      "cooks emojis when only the emoji markdown engine is enabled"
+    );
+
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: ["mentions", "text-post-process"] },
+      `<p>:grin: <span class="mention">@sam</span></p>`,
+      "cooks mentions when only the mentions markdown engine is enabled"
+    );
+  });
+
   test("emoji", function (assert) {
     assert.cooked(
       ":smile:",

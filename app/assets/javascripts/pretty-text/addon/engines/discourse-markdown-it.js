@@ -353,6 +353,12 @@ export function setup(opts, siteSettings, state) {
     }
   });
 
+  if (opts.featuresOverride) {
+    Object.keys(opts.features).forEach((feature) => {
+      opts.features[feature] = opts.featuresOverride.includes(feature);
+    });
+  }
+
   let copy = {};
   Object.keys(opts).forEach((entry) => {
     copy[entry] = opts[entry];
@@ -371,14 +377,22 @@ export function setup(opts, siteSettings, state) {
     enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
   };
 
-  opts.engine = window.markdownit({
+  const markdownitOpts = {
     discourse: opts.discourse,
     html: true,
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
     linkify: siteSettings.enable_markdown_linkify,
     typographer: siteSettings.enable_markdown_typographer,
-  });
+  };
+
+  if (opts.discourse.markdownItRules !== undefined) {
+    opts.engine = window
+      .markdownit("zero", markdownitOpts) // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
+      .enable(opts.discourse.markdownItRules);
+  } else {
+    opts.engine = window.markdownit(markdownitOpts);
+  }
 
   const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
   if (quotation_marks) {

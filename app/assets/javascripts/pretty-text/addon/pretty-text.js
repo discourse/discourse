@@ -39,6 +39,8 @@ export function buildOptions(state) {
     customEmojiTranslation,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   } = state;
 
   // These are markdown-it rules defined in https://github.com/markdown-it/markdown-it#manage-rules.
@@ -84,6 +86,8 @@ export function buildOptions(state) {
     disableEmojis,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   };
 
   // note, this will mutate options due to the way the API is designed
