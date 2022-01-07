@@ -3140,6 +3140,17 @@ describe UsersController do
       expect(response.parsed_body["cannot_see"][user1.username]).to eq("private")
     end
 
+    it "returns user who was not invited to topic" do
+      sign_in(Fabricate(:admin))
+
+      get "/u/is_local_username.json", params: {
+        usernames: [admin.username], topic_id: private_topic.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cannot_see"][admin.username]).to eq("not_allowed")
+    end
+
     it "never returns a user who can see the topic" do
       get "/u/is_local_username.json", params: {
         usernames: [allowed_user.username], topic_id: private_topic.id

@@ -477,9 +477,7 @@ class UsersController < ApplicationController
     usernames = params[:usernames] if params[:usernames].present?
     usernames = [params[:username]] if params[:username].present?
 
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
-
-    usernames = usernames[0..20]
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || usernames.size > 20
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
@@ -499,8 +497,7 @@ class UsersController < ApplicationController
     usernames.each(&:downcase!)
 
     users = User
-      .where(staged: false)
-      .where(username_lower: usernames)
+      .where(staged: false, username_lower: usernames)
       .index_by(&:username_lower)
 
     cannot_see = {}
@@ -515,16 +512,18 @@ class UsersController < ApplicationController
         .pluck(:user_id)
         .to_set
 
-      topic_allowed_user_ids = TopicAllowedUser
-        .where(topic: topic)
-        .where(user_id: users.values.map(&:id))
-        .pluck(:user_id)
-        .to_set
+      if topic.private_message?
+        topic_allowed_user_ids = TopicAllowedUser
+          .where(topic: topic)
+          .where(user_id: users.values.map(&:id))
+          .pluck(:user_id)
+          .to_set
 
-      topic_allowed_group_ids = TopicAllowedGroup
-        .where(topic: topic)
-        .pluck(:group_id)
-        .to_set
+        topic_allowed_group_ids = TopicAllowedGroup
+          .where(topic: topic)
+          .pluck(:group_id)
+          .to_set
+      end
 
       usernames.each do |username|
         user = users[username]
