@@ -3,6 +3,7 @@ import {
   MOMENT_THURSDAY,
   START_OF_DAY_HOUR,
   laterToday,
+  nextMonth,
   now,
   parseCustomDatetime,
 } from "discourse/lib/time-utils";
@@ -276,12 +277,18 @@ export default Component.extend({
   },
 
   _hideDynamicOptions(options) {
-    if (now(this.userTimezone).hour() >= LATER_TODAY_CUTOFF_HOUR) {
+    const _now = now(this.userTimezone);
+
+    if (_now.hour() >= LATER_TODAY_CUTOFF_HOUR) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_TODAY);
     }
 
-    if (now(this.userTimezone).day() >= MOMENT_THURSDAY) {
+    if (_now.day() >= MOMENT_THURSDAY) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
+    }
+
+    if (nextMonth(this.userTimezone).diff(_now, "days") < 7) {
+      this._hideOption(options, TIME_SHORTCUT_TYPES.NEXT_MONTH);
     }
   },
 

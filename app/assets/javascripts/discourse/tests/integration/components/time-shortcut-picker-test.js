@@ -160,6 +160,33 @@ discourseModule(
       },
     });
 
+    componentTest("shows 'Next Month' if it is in 7 days or more from now", {
+      template,
+
+      beforeEach() {
+        this.clock = fakeTime("2100-01-25", this.currentUser._timezone, true);
+      },
+
+      test(assert) {
+        assert.ok(exists("#tap_tile_next_month"));
+      },
+    });
+
+    componentTest(
+      "does not show 'Next Month' if it is in less than 7 days from now",
+      {
+        template,
+
+        beforeEach() {
+          this.clock = fakeTime("2100-01-26", this.currentUser._timezone, true);
+        },
+
+        test(assert) {
+          assert.notOk(exists("#tap_tile_next_month"));
+        },
+      }
+    );
+
     componentTest(
       "the 'Next Month' option points to the first day of the next month",
       {
