@@ -1306,7 +1306,7 @@ module Email
                              import_mode: options[:import_mode],
                              post_alert_options: options[:post_alert_options]
                             ).enqueue_jobs
-        DiscourseEvent.trigger(:topic_created, result.post.topic, options, user)
+        DiscourseEvent.trigger(:topic_created, result.post.topic, options, user) if result.post.is_first_post?
         DiscourseEvent.trigger(:post_created, result.post, options, user)
       end
 
