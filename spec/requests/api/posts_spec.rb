@@ -291,6 +291,31 @@ describe 'posts' do
         end
       end
     end
+
+    delete 'delete a single post' do
+      tags 'Posts'
+      operationId 'deletePost'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('post_delete_request')
+      parameter name: :id, in: :path, schema: { type: :integer }
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = nil
+        schema expected_response_schema
+
+        let(:topic) { Fabricate(:topic) }
+        let(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+        let(:id) { post.id }
+        let(:params) { { 'force_destroy' => false } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
   end
 
   path '/posts/{id}/locked.json' do
