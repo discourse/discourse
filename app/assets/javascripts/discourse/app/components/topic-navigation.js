@@ -5,7 +5,7 @@ import PanEvents, {
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { headerOffset } from "discourse/components/site-header";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { later, next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
