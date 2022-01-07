@@ -11,6 +11,7 @@ import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
 
 const controllerOpts = {
   discovery: controller(),
@@ -31,6 +32,18 @@ const controllerOpts = {
   ascending: readOnly("model.params.ascending"),
 
   selected: null,
+
+  // Remove these actions which are defined in `DiscoveryController`
+  // We want them to bubble in DiscoveryTopicsController
+  @action
+  loadingBegan() {
+    return true;
+  },
+
+  @action
+  loadingComplete() {
+    return true;
+  },
 
   @discourseComputed("model.filter", "model.topics.length")
   showDismissRead(filter, topicsLength) {
