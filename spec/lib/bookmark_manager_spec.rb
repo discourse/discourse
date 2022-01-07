@@ -196,6 +196,13 @@ RSpec.describe BookmarkManager do
       expect(bookmark.reminder_last_sent_at).to eq(nil)
     end
 
+    it "does not reminder_last_sent_at if reminder did not change" do
+      bookmark.update(reminder_last_sent_at: 1.day.ago)
+      subject.update(bookmark_id: bookmark.id, name: new_name, reminder_at: bookmark.reminder_at)
+      bookmark.reload
+      expect(bookmark.reminder_last_sent_at).not_to eq(nil)
+    end
+
     context "when options are provided" do
       let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
 

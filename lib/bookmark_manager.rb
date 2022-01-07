@@ -101,11 +101,14 @@ class BookmarkManager
   def update(bookmark_id:, name:, reminder_at:, options: {})
     bookmark = find_bookmark_and_check_access(bookmark_id)
 
+    if bookmark.reminder_at != reminder_at
+      bookmark.reminder_at = reminder_at
+      bookmark.reminder_last_sent_at = nil
+    end
+
     success = bookmark.update(
       {
         name: name,
-        reminder_at: reminder_at,
-        reminder_last_sent_at: nil,
         reminder_set_at: Time.zone.now,
       }.merge(options)
     )
