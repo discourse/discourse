@@ -79,6 +79,9 @@ export default class StickyAvatars {
   @bind
   _initIntersectionObserver() {
     schedule("afterRender", () => {
+      const headerOffsetInPx =
+        headerOffset() <= 0 ? "0px" : `-${headerOffset()}px`;
+
       this.intersectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -99,7 +102,7 @@ export default class StickyAvatars {
         },
         {
           threshold: [0.0, 1.0],
-          rootMargin: `-${headerOffset()}px 0px 0px 0px`,
+          rootMargin: `${headerOffsetInPx} 0px 0px 0px`,
         }
       );
     });
