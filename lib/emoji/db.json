@@ -7638,6 +7638,12 @@
     ],
     "face_vomiting": [
       "puke"
+    ],
+    "smile": [
+      "grinning_face_with_smiling_eyes"
+    ],
+    "frowning_with_open_mouth": [
+      "frowning_face_with_open_mouth"
     ]
   },
   "searchAliases": {
