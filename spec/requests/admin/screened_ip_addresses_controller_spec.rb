@@ -25,20 +25,25 @@ describe Admin::ScreenedIpAddressesController do
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "1.2.*" }
 
       expect(response.status).to eq(200)
-      result = response.parsed_body
-      expect(result.length).to eq(3)
+      expect(response.parsed_body.map { |record| record["ip_address"] })
+        .to contain_exactly("1.2.3.4", "1.2.3.5", "1.2.3.6")
 
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "4.5.6.7" }
 
       expect(response.status).to eq(200)
-      result = response.parsed_body
-      expect(result.length).to eq(1)
+      expect(response.parsed_body.map { |record| record["ip_address"] })
+        .to contain_exactly("4.5.6.7")
 
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "5.0.0.1" }
 
       expect(response.status).to eq(200)
-      result = response.parsed_body
-      expect(result.length).to eq(1)
+      expect(response.parsed_body.map { |record| record["ip_address"] })
+        .to contain_exactly("5.0.0.0/8")
+
+      get "/admin/logs/screened_ip_addresses.json", params: { filter: "6.0.0.1" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to be_blank
     end
   end
 end
