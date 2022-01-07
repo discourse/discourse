@@ -113,16 +113,20 @@ function defaultDateConfig() {
   };
 }
 
+function parseTagAttributes(tag) {
+  const matchString = tag.replace(/‘|’|„|“|«|»|”/g, '"');
+
+  return parseBBCodeTag(
+    "[date date" + matchString + "]",
+    0,
+    matchString.length + 12
+  );
+}
+
 function addLocalDate(buffer, matches, state) {
   let config = defaultDateConfig();
 
-  const matchString = matches[1].replace(/‘|’|„|“|«|»|”/g, '"');
-
-  const parsed = parseBBCodeTag(
-    "[date date" + matchString + "]",
-    0,
-    matchString.length + 11
-  );
+  const parsed = parseTagAttributes(matches[1]);
 
   config.date = parsed.attrs.date;
   config.format = parsed.attrs.format;
@@ -139,12 +143,7 @@ function addLocalDate(buffer, matches, state) {
 function addLocalRange(buffer, matches, state) {
   let config = defaultDateConfig();
   let date, time;
-  const matchString = matches[1].replace(/‘|’|„|“|«|»|”/g, '"');
-  const parsed = parseBBCodeTag(
-    "[date-range" + matchString + "]",
-    0,
-    matchString.length + 12
-  );
+  const parsed = parseTagAttributes(matches[1]);
 
   config.format = parsed.attrs.format;
   config.calendar = parsed.attrs.calendar;
