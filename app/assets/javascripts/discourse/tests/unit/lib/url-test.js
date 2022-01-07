@@ -104,7 +104,7 @@ module("Unit | Utility | url", function () {
     );
   });
 
-  test("getCategoryAndTagUrl", async function (assert) {
+  test("getCategoryAndTagUrl", function (assert) {
     assert.strictEqual(
       getCategoryAndTagUrl(
         { path: "/c/foo/1", default_list_filter: "all" },
