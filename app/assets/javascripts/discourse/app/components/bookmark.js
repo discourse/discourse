@@ -1,11 +1,9 @@
 import {
   LATER_TODAY_CUTOFF_HOUR,
   MOMENT_THURSDAY,
-  laterToday,
   now,
   parseCustomDatetime,
   startOfDay,
-  tomorrow,
 } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
@@ -341,13 +339,7 @@ export default Component.extend({
   additionalTimeShortcutOptions() {
     let additional = [];
 
-    if (
-      !laterToday(this.userTimezone).isSame(
-        tomorrow(this.userTimezone),
-        "date"
-      ) &&
-      now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR
-    ) {
+    if (now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR) {
       additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
     }
 
