@@ -28,21 +28,29 @@ class AddTriggerForPolymorphicBookmarkColumnsToSyncData < ActiveRecord::Migratio
     SQL
 
     # sync data that already exists in the table
-    DB.exec(<<~SQL)
-      UPDATE bookmarks
-      SET bookmarkable_id = post_id, bookmarkable_type = 'Post'
-      WHERE NOT bookmarks.for_topic
-    SQL
-    DB.exec(<<~SQL)
-      UPDATE bookmarks
-      SET bookmarkable_id = posts.topic_id, bookmarkable_type = 'Topic'
-      FROM posts
-      WHERE bookmarks.for_topic AND posts.id = bookmarks.post_id
-    SQL
+    #
+    # Note from Martin:
+    #
+    # We cannot remove this migration but we also don't want to do this
+    # backfilling until this refactor is complete, removing the backfilling
+    # for now as DropBookmarkPolymorphicTrigger removes the trigger used
+    # here.
+    #
+    # DB.exec(<<~SQL)
+    #   UPDATE bookmarks
+    #   SET bookmarkable_id = post_id, bookmarkable_type = 'Post'
+    #   WHERE NOT bookmarks.for_topic
+    # SQL
+    # DB.exec(<<~SQL)
+    #   UPDATE bookmarks
+    #   SET bookmarkable_id = posts.topic_id, bookmarkable_type = 'Topic'
+    #   FROM posts
+    #   WHERE bookmarks.for_topic AND posts.id = bookmarks.post_id
+    # SQL
   end
 
   def down
-    DB.exec("DROP TRIGGER IF EXISTS bookmarks_polymorphic_data_sync")
+    DB.exec("DROP TRIGGER IF EXISTS bookmarks_polymorphic_data_sync ON bookmarks")
     DB.exec("DROP FUNCTION IF EXISTS sync_bookmarks_polymorphic_column_data")
   end
 end
