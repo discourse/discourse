@@ -53,7 +53,7 @@ export default {
             });
           });
         },
-        {id: "discourse-audio"}
+        { id: "discourse-audio" }
       );
 
       const caps = container.lookup("capabilities:main");
