@@ -145,7 +145,7 @@ task "themes:isolated_test" => :environment do |t, args|
 
   redis = TemporaryRedis.new
   redis.start
-  $redis = redis.instance # rubocop:disable Style/GlobalVars
+  Discourse.redis = redis.instance
   db = TemporaryDb.new
   db.start
   db.migrate

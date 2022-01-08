@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class DestroyTask
-
-  def initialize(io = $stdout)
+  def initialize(io = STDOUT)
     @io = io
   end
 
