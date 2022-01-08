@@ -1,4 +1,8 @@
-import DiscourseURL, { prefixProtocol, userPath } from "discourse/lib/url";
+import DiscourseURL, {
+  getCategoryAndTagUrl,
+  prefixProtocol,
+  userPath,
+} from "discourse/lib/url";
 import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -97,6 +101,40 @@ module("Unit | Utility | url", function () {
     assert.strictEqual(
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
+    );
+  });
+
+  test("getCategoryAndTagUrl", function (assert) {
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        true
+      ),
+      "/c/foo/1"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        false
+      ),
+      "/c/foo/1/none"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        true
+      ),
+      "/c/foo/1/all"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        false
+      ),
+      "/c/foo/1"
     );
   });
 
