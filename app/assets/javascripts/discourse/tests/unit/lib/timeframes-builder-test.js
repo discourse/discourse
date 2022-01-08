@@ -26,7 +26,7 @@ module("Unit | Lib | timeframes-builder", function (hooks) {
     }
   });
 
-  test("default options", function (assert) {
+  test("outputs default options", function (assert) {
     const timezone = moment.tz.guess();
     this.clock = fakeTime("2100-06-07T08:00:00", timezone, true); // Monday
 
@@ -142,9 +142,17 @@ module("Unit | Lib | timeframes-builder", function (hooks) {
     assert.not(timeframes.includes("later_this_week"));
   });
 
-  test("doesn't output 'Next Month' on the last day of the month", function (assert) {
+  test("outputs 'Next Month' if it is in more than 7 days from now", function (assert) {
     const timezone = moment.tz.guess();
-    this.clock = fakeTime("2100-04-30 18:00:00", timezone, true); // The last day of April
+    this.clock = fakeTime("2100-01-24", timezone, true);
+    const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
+
+    assert.ok(timeframes.includes("next_month"));
+  });
+
+  test("doesn't output 'Next Month' if it is in 7 or fewer days from now", function (assert) {
+    const timezone = moment.tz.guess();
+    this.clock = fakeTime("2100-01-25", timezone, true);
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
     assert.not(timeframes.includes("next_month"));
