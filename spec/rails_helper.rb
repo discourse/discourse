@@ -419,7 +419,7 @@ end
 
 def file_from_fixtures(filename, directory = "images")
   SpecSecureRandom.value ||= SecureRandom.hex
-  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exists?(file_from_fixtures_tmp_folder)
+  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exist?(file_from_fixtures_tmp_folder)
   tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)

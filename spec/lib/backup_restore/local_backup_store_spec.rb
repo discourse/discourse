@@ -36,16 +36,16 @@ describe BackupRestore::LocalBackupStore do
   end
 
   def remove_backups
-    @paths.each { |path| File.delete(path) if File.exists?(path) }
+    @paths.each { |path| File.delete(path) if File.exist?(path) }
     @paths.clear
   end
 
   def create_file(db_name:, filename:, last_modified:, size_in_bytes:)
     path = File.join(@root_directory, db_name)
-    Dir.mkdir(path) unless Dir.exists?(path)
+    Dir.mkdir(path) unless Dir.exist?(path)
 
     path = File.join(path, filename)
-    return if File.exists?(path)
+    return if File.exist?(path)
 
     @paths << path
     FileUtils.touch(path)

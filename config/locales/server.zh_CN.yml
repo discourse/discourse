@@ -4403,6 +4403,11 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
+      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或广告用户所为。请参阅 %{link}。"
+      auto_silence_regex: "第一个帖子匹配 %{link} 设置的新用户。"
+      watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
+      staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
+      category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:

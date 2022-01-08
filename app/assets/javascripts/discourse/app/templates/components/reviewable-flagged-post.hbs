@@ -14,7 +14,7 @@
         {{html-safe reviewable.cooked}}
       {{/if}}
     </div>
-    {{plugin-outlet name="after-reviewable-flagged-post-body" args=(hash model=reviewable)}}
+    {{plugin-outlet name="after-reviewable-flagged-post-body" tagName="span" connectorTagName="div" args=(hash model=reviewable)}}
     {{yield}}
   </div>
 </div>

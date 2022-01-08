@@ -203,7 +203,15 @@ class Topic < ActiveRecord::Base
   belongs_to :category
   has_many :category_users, through: :category
   has_many :posts
+
+  # When we are ready we can add as: :bookmarkable here to use the
+  # polymorphic association.
+  #
+  # At that time we may also want to make another association for example
+  # :topic_bookmarks that get all of the bookmarks for that topic's bookmarkable id
+  # and type, because this one gets all of the post bookmarks.
   has_many :bookmarks, through: :posts
+
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups

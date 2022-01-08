@@ -60,6 +60,7 @@ def update_themes
 
       puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
       remote_theme.update_from_remote
+      theme.save!
 
       raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e

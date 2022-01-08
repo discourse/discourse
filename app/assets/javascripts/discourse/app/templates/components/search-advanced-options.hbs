@@ -3,7 +3,7 @@
 </summary>
 <div class="search-advanced-filters">
   <div class="search-advanced-options">
-    {{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+    {{plugin-outlet name="advanced-search-options-above" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
 
     <div class="control-group advanced-search-category">
       <label class="control-label">{{i18n "search.advanced.in_category.label"}}</label>
@@ -173,7 +173,7 @@
       </div>
     </div>
 
-    {{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+    {{plugin-outlet name="advanced-search-options-below" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
   </div>
 
   <details class="search-advanced-additional-options">

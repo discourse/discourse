@@ -124,7 +124,7 @@ class UserAvatarsController < ApplicationController
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
-        image = optimized_path if File.exists?(optimized_path)
+        image = optimized_path if File.exist?(optimized_path)
       else
         return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
       end

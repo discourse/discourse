@@ -310,7 +310,7 @@
       </label>
     </section>
 
-    {{plugin-outlet name="category-email-in" args=(hash category=category)}}
+    {{plugin-outlet name="category-email-in" tagName="span" connectorTagName="div" args=(hash category=category)}}
   {{/if}}
 
   {{#unless emailInEnabled}}
@@ -321,4 +321,4 @@
   {{/unless}}
 </section>
 
-{{plugin-outlet name="category-custom-settings" args=(hash category=category) connectorTagName="" tagName="section"}}
+{{plugin-outlet name="category-custom-settings" args=(hash category=category) tagName="section"}}

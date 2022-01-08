@@ -2,7 +2,7 @@
   <div class="container badges">
     <h1>{{i18n "badges.title"}}</h1>
 
-    {{plugin-outlet name="below-badges-title"}}
+    {{plugin-outlet name="below-badges-title" tagName="span" connectorTagName="div"}}
 
     <div class="badge-groups">
       {{#each badgeGroups as |bg|}}

@@ -69,7 +69,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   def csv_filename(table_name, use_fixed: true)
     if use_fixed
       filename = File.join(@path, "#{table_name}_fixed.csv")
-      return filename if File.exists?(filename)
+      return filename if File.exist?(filename)
     end
 
     File.join(@path, "#{table_name}.csv")

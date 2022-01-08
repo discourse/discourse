@@ -293,6 +293,7 @@ function setupTestsCommon(application, container, config) {
       siteSettings: settings,
       capabilities: {},
       site,
+      registry: app.__registry__,
     });
 
     PreloadStore.reset();

@@ -1,8 +1,18 @@
+import deprecated from "discourse-common/lib/deprecated";
+
 export function scrollTopFor(y) {
   return y - offsetCalculator();
 }
 
 export function minimumOffset() {
+  deprecated(
+    "The minimumOffset() helper is deprecated, please use headerOffset() instead.",
+    {
+      since: "2.8.0.beta10",
+      dropFrom: "2.9.0.beta2",
+    }
+  );
+
   const header = document.querySelector("header.d-header"),
     iPadNav = document.querySelector(".footer-nav-ipad .footer-nav"),
     iPadNavHeight = iPadNav ? iPadNav.offsetHeight : 0;
@@ -17,8 +27,17 @@ export function minimumOffset() {
     : 0;
 }
 
+export function headerOffset() {
+  return (
+    parseInt(
+      document.documentElement.style.getPropertyValue("--header-offset"),
+      10
+    ) || 0
+  );
+}
+
 export default function offsetCalculator() {
-  const min = minimumOffset();
+  const min = headerOffset();
 
   // on mobile, just use the header
   if (document.querySelector("html").classList.contains("mobile-view")) {

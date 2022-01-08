@@ -28,7 +28,7 @@
 
     {{#if filtersExpanded}}
 
-      {{plugin-outlet name="above-review-filters" args=(hash model=model additionalFilters=additionalFilters)}}
+      {{plugin-outlet name="above-review-filters" tagName="span" connectorTagName="div" args=(hash model=model additionalFilters=additionalFilters)}}
 
       <div class="reviewable-filter">
         <label class="filter-label">{{i18n "review.filters.type.title"}}</label>

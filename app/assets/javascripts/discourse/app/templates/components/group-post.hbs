@@ -16,7 +16,7 @@
       <div class="group-member-info names">
         <span class="name">{{name}}</span>
         {{#if post.user.title}}<span class="user-title">{{post.user.title}}</span>{{/if}}
-        {{plugin-outlet name="group-post-additional-member-info" noTags=true args=(hash user=post.user)}}
+        {{plugin-outlet name="group-post-additional-member-info" args=(hash user=post.user)}}
       </div>
     {{/if}}
   </div>

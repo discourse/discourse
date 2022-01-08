@@ -42,10 +42,10 @@ class LetterAvatar
         size = FULLSIZE if size > FULLSIZE
         filename = cached_path(identity, size)
 
-        return filename if cache && File.exists?(filename)
+        return filename if cache && File.exist?(filename)
 
         fullsize = fullsize_path(identity)
-        generate_fullsize(identity) if !cache || !File.exists?(fullsize)
+        generate_fullsize(identity) if !cache || !File.exist?(fullsize)
 
         # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
         # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet

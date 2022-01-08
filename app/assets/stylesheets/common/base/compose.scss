@@ -580,3 +580,7 @@ body:not(.ios-safari-composer-hacks) {
     color: var(--primary-medium);
   }
 }
+
+.draft-error {
+  color: var(--danger);
+}

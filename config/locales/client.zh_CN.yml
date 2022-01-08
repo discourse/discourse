@@ -251,13 +251,13 @@ zh_CN:
       help:
         bookmark: "点击以将此话题的第一个帖子加入书签"
         edit_bookmark: "点击以编辑有关此话题的书签"
-        edit_bookmark_for_topic: "单击来为本主题编辑书签"
+        edit_bookmark_for_topic: "单击来为本主题编辑收藏"
         unbookmark: "点击以移除此话题中的所有书签"
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
       not_bookmarked: "将此帖子加入书签"
-      remove_reminder_keep_bookmark: "删除提醒并保留书签"
+      remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
       remove: "移除书签"
       delete: "删除书签"
@@ -962,7 +962,7 @@ zh_CN:
       no_bookmarks_title: "您还没有将任何内容加入书签"
       no_bookmarks_body: >
         使用 %{icon} 按钮开始将帖子加入书签，它们将出现在这里，便于参考。您也可以安排提醒！
-      no_bookmarks_search: "使用提供的搜索查询未找到书签。"
+      no_bookmarks_search: "使用提供的搜索查询未找到收藏。"
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
@@ -2002,7 +2002,7 @@ zh_CN:
       dismiss_confirmation:
         body:
           other: "您确定吗？您有 %{count} 个重要通知。"
-        dismiss: "关闭"
+        dismiss: "标记为已读"
         cancel: "取消"
       group_message_summary:
         other: "您的 %{group_name} 收件箱中有 %{count} 条消息"
@@ -2828,9 +2828,9 @@ zh_CN:
             button: "HTML"
       bookmarks:
         create: "创建书签"
-        create_for_topic: "为主题创建一个书签"
+        create_for_topic: "添加主题到收藏夹"
         edit: "编辑书签"
-        edit_for_topic: "为主题创建的书签进行编辑"
+        edit_for_topic: "编辑收藏"
         created: "已创建"
         updated: "更新"
         name: "名称"

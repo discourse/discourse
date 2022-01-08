@@ -15,7 +15,7 @@
     {{/if}}
   {{/if}}
 
-  {{plugin-outlet name="category-heading" args=(hash category=category)}}
+  {{plugin-outlet name="category-heading" tagName="span" connectorTagName="div" args=(hash category=category)}}
 </section>
 
 {{#d-section class="navigation-container category-navigation"}}
@@ -31,8 +31,7 @@
   }}
 
   {{plugin-outlet
-    name="category-navigation"
+    name="category-navigation" connectorTagName="div"
     args=(hash category=category)
-    tagName=""
   }}
 {{/d-section}}

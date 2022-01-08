@@ -267,7 +267,7 @@ class GlobalSetting
   class FileProvider < BaseProvider
     attr_reader :data
     def self.from(file)
-      if File.exists?(file)
+      if File.exist?(file)
         parse(file)
       end
     end

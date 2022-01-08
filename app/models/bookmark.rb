@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
+  # these columns were here for a very short amount of time,
+  # hence the very short ignore time
   self.ignored_columns = [
-    "topic_id", # TODO (martin) (2021-12-01): remove
-    "reminder_type" # TODO (martin) (2021-12-01): remove
+    "bookmarkable_id", # TODO (martin) 2022-01-12 remove
+    "bookmarkable_type" # TODO (martin) 2022-01-12 remove
   ]
 
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
+  belongs_to :bookmarkable, polymorphic: true
 
   delegate :topic_id, to: :post
 

@@ -56,7 +56,8 @@ export default (filterArg, params) => {
       if (
         (!params || params.no_subcategories === undefined) &&
         category.default_list_filter === "none" &&
-        filterArg === "default"
+        filterArg === "default" &&
+        modelParams
       ) {
         return this.replaceWith("discovery.categoryNone", {
           category,

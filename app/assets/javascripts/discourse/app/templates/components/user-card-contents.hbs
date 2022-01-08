@@ -30,7 +30,7 @@
 
           {{user-avatar-flair user=this.user}}
 
-          {{plugin-outlet name="user-card-avatar-flair" args=(hash user=this.user) tagName="div"}}
+          {{plugin-outlet name="user-card-avatar-flair" connectorTagName="div" args=(hash user=this.user) tagName="div"}}
         </div>
         <div class="names">
           <h1 class="{{this.staff}} {{this.newUser}} {{if this.nameFirst "full-name" "username"}}">
@@ -47,7 +47,7 @@
               </a>
             {{/if}}
           </h1>
-          {{plugin-outlet name="user-card-after-username" args=(hash user=this.user showUser=(action "showUser" this.user)) tagName=""}}
+          {{plugin-outlet name="user-card-after-username" connectorTagName="div" args=(hash user=this.user showUser=(action "showUser" this.user))}}
           {{#if this.nameFirst}}
             <h2 class="username">{{this.username}}</h2>
           {{else}}
@@ -61,7 +61,7 @@
           {{#if this.user.staged}}
             <h2 class="staged">{{i18n "user.staged"}}</h2>
           {{/if}}
-          {{plugin-outlet name="user-card-post-names" args=(hash user=this.user) tagName="div"}}
+          {{plugin-outlet name="user-card-post-names" connectorTagName="div" args=(hash user=this.user) tagName="div"}}
         </div>
         <ul class="usercard-controls">
           {{#if this.user.can_send_private_message_to_user}}
@@ -101,14 +101,14 @@
             </li>
           {{/if}}
           {{plugin-outlet
-            name="user-card-additional-buttons"
+            name="user-card-additional-buttons" connectorTagName="div"
             args=(hash user=this.user close=(action "close"))
             tagName="li"}}
         </ul>
         {{plugin-outlet
-        name="user-card-additional-controls"
+        name="user-card-additional-controls" connectorTagName="div"
         args=(hash user=this.user close=(action "close"))
-        tagName=""}}
+       }}
       </div>
 
       {{#if this.user.profile_hidden}}
@@ -184,7 +184,7 @@
                 <span>{{this.formattedUserLocalTime}}</span>
               </span>
             {{/if}}
-            {{plugin-outlet name="user-card-location-and-website" args=(hash user=this.user)}}
+            {{plugin-outlet name="user-card-location-and-website" tagName="span" connectorTagName="div" args=(hash user=this.user)}}
           </div>
         </div>
       {{/if}}
@@ -222,10 +222,10 @@
                 {{/if}}
               </h3>
             {{/if}}
-            {{plugin-outlet name="user-card-metadata" args=(hash user=this.user) tagName=""}}
+            {{plugin-outlet name="user-card-metadata" connectorTagName="div" args=(hash user=this.user)}}
           </div>
         {{/unless}}
-        {{plugin-outlet name="user-card-after-metadata" args=(hash user=this.user) tagName=""}}
+        {{plugin-outlet name="user-card-after-metadata" connectorTagName="div" args=(hash user=this.user)}}
       </div>
 
       {{#if this.publicUserFields}}
@@ -249,7 +249,7 @@
         </div>
       {{/if}}
 
-      {{plugin-outlet name="user-card-before-badges" args=(hash user=this.user) tagName=""}}
+      {{plugin-outlet name="user-card-before-badges" connectorTagName="div" args=(hash user=this.user)}}
 
       {{#if this.showBadges}}
         <div class="card-row">

@@ -152,7 +152,7 @@ module Autospec
 
     def try_to_find_module_name(file)
       file, _ = file.split(/:\d+$/)
-      return unless File.exists?(file)
+      return unless File.exist?(file)
       File.open(file, "r").each_line do |line|
         if m = /module\(['"]([^'"]+)/i.match(line)
           return m[1]

@@ -176,6 +176,12 @@ describe UserSearch do
       expect(results).to eq [mr_blue.username]
     end
 
+    it "does not include deleted posts users" do
+      post4.trash!
+      results = search_for("", topic_id: topic.id)
+      expect(results).to eq [mr_orange, mr_b].map(&:username)
+    end
+
     it "only reveals topic participants to people with permission" do
       pm_topic = Fabricate(:private_message_post).topic
 

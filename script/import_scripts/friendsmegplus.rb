@@ -178,7 +178,7 @@ class ImportScripts::FMGP < ImportScripts::Base
   end
 
   def load_fmgp_json(filename)
-    raise RuntimeError.new("File #{filename} not found") if !File.exists?(filename)
+    raise RuntimeError.new("File #{filename} not found") if !File.exist?(filename)
     JSON.parse(File.read(filename))
   end
 

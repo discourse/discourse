@@ -57,47 +57,46 @@
           {{#if shouldDisplayForm}}
             <form>
               {{#if isInviteLink}}
-                <div class="input email-input">
-                  <label for="new-account-email">
+                <div class="input email-input input-group">
+                  {{input type="email" value=email id="new-account-email" name="email" class=(value-entered email) autofocus="autofocus" disabled=externalAuthsOnly}}
+                  <label class="alt-placeholder" for="new-account-email">
                     {{i18n "user.email.title"}}
                     <span class="required">*</span>
                   </label>
-                  {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus" disabled=externalAuthsOnly}}
                   {{input-tip validation=emailValidation id="account-email-validation"}}
                   <div class="instructions">{{i18n "user.email.instructions"}}</div>
                 </div>
               {{/if}}
 
-              <div class="input username-input">
-                <label for="new-account-username">
+              <div class="input username-input input-group">
+                {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
+                <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
                   <span class="required">*</span>
                 </label>
-                {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
                 {{input-tip validation=usernameValidation id="username-validation"}}
                 <div class="instructions">{{i18n "user.username.instructions"}}</div>
               </div>
 
               {{#if fullnameRequired}}
-                <div class="input name-input">
-                  <label for="new-account-name">
+                <div class="input name-input input-group">
+                  {{input value=accountName class=(value-entered accountName) id="new-account-name" name="name"}}
+                  <label class="alt-placeholder" for="new-account-name">
                     {{i18n "invites.name_label"}}
                     {{#if siteSettings.full_name_required}}
                       <span class="required">*</span>
                     {{/if}}
                   </label>
-                  {{input value=accountName id="new-account-name" name="name"}}
                   <div class="instructions">{{nameInstructions}}</div>
                 </div>
               {{/if}}
 
               {{#unless externalAuthsOnly}}
-                <div class="input password-input">
-                  <label for="new-account-password">
+                <div class="input password-input input-group">
+                  {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                  <label class="alt-placeholder" for="new-account-password">
                     {{i18n "invites.password_label"}}
-                    <span class="required">*</span>
                   </label>
-                  {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
                   {{input-tip validation=passwordValidation}}
                   <div class="instructions">
                     {{passwordInstructions}} {{i18n "invites.optional_description"}}
@@ -111,7 +110,9 @@
               {{#if userFields}}
                 <div class="user-fields">
                   {{#each userFields as |f|}}
-                    {{user-field field=f.field value=f.value}}
+                    <div class="input-group">
+                      {{user-field field=f.field value=f.value class=(value-entered f.value)}}
+                    </div>
                   {{/each}}
                 </div>
               {{/if}}
