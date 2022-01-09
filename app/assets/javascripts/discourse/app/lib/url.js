@@ -12,7 +12,7 @@ import { setOwner } from "@ember/application";
 import { isTesting } from "discourse-common/config/environment";
 
 const rewrites = [];
-export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
+export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
