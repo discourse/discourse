@@ -718,7 +718,8 @@ export default {
       return;
     }
 
-    this._scrollTo(articleTopPosition - window.innerHeight * 0.25);
+    const scrollRatio = direction > 0 ? 0.2 : 0.7;
+    this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
   },
 
   _scrollTo(scrollTop, opts = {}) {
