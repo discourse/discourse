@@ -158,7 +158,7 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
-    faraday-retry (1.0.2)
+    faraday-retry (1.0.3)
     fast_blank (1.0.1)
     fast_xs (0.8.0)
     fastimage (2.2.6)
