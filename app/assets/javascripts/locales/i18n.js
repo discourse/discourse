@@ -168,7 +168,7 @@ I18n.translate = function(scope, options) {
   try {
     return this.interpolate(translation, options);
   } catch (error) {
-    return this.missingTranslation(scope);
+    return this.missingTranslation(scope, null, options);
   }
 };
 
@@ -297,11 +297,17 @@ I18n.pluralize = function(translation, scope, options) {
   return this.missingTranslation(scope, keys[0]);
 };
 
-I18n.missingTranslation = function(scope, key) {
+I18n.missingTranslation = function(scope, key, options) {
   var message = "[" + this.currentLocale() + this.SEPARATOR + scope;
+
   if (key) {
     message += this.SEPARATOR + key;
   }
+
+  if (options && options.hasOwnProperty("count")) {
+    message += " count=" + JSON.stringify(options.count);
+  }
+
   return message + "]";
 };
 
