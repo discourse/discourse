@@ -23,14 +23,6 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-
-  if (
-    actionCode === "public_topic" &&
-    Site.currentProp("siteSettings").login_required
-  ) {
-    actionCode = "open_topic";
-  }
-
   return I18n.t(`action_codes.${actionCode}`, { who, when }).htmlSafe();
 }
 
