@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+GIT_INITIAL_BRANCH_SUPPORTED = Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
+
 module Helpers
   extend ActiveSupport::Concern
 
@@ -157,7 +159,7 @@ module Helpers
 
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
-    `cd #{repo_dir} && git init .`
+    `cd #{repo_dir} && git init . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}`
     `cd #{repo_dir} && git config user.email 'someone@cool.com'`
     `cd #{repo_dir} && git config user.name 'The Cool One'`
     `cd #{repo_dir} && git config commit.gpgsign 'false'`
