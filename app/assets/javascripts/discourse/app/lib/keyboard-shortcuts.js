@@ -694,7 +694,8 @@ export default {
       selectedArticle: article,
     });
 
-    const articleTop = domUtils.offset(article).top;
+    const articleTop = domUtils.offset(article).top,
+      articleTopPosition = articleTop - headerOffset();
     if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
       // Scrolling to the last "page" of the previous post if post has multiple
       // "pages" (if its height does not fit in the screen).
@@ -703,16 +704,21 @@ export default {
       );
     } else if (article.classList.contains("topic-post")) {
       return this._scrollTo(
-        article.querySelector("#post_1") ? 0 : articleTop - headerOffset(),
+        article.querySelector("#post_1") ? 0 : articleTopPosition,
         { focusTabLoc: true }
       );
     }
 
-    // Otherwise scroll through the suggested topic list.
-    article.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    // Otherwise scroll through the topic list.
+    if (
+      articleTopPosition > window.pageYOffset &&
+      articleTop + article.offsetHeight <
+        window.pageYOffset + window.innerHeight
+    ) {
+      return;
+    }
+
+    this._scrollTo(articleTopPosition - window.innerHeight * 0.25);
   },
 
   _scrollTo(scrollTop, opts = {}) {
