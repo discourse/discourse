@@ -7,7 +7,6 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
-import Site from "discourse/models/site";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
