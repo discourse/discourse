@@ -44,7 +44,7 @@ export default {
           elem.querySelectorAll("audio").forEach((player) => {
             player.addEventListener("play", () => {
               const postId = parseInt(
-                elem.closest("article").dataset.postId,
+                elem.closest("article")?.dataset.postId,
                 10
               );
               if (postId) {
