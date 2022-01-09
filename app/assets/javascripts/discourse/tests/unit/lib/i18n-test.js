@@ -122,7 +122,7 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.strictEqual(
       I18n.t("hello.world"),
       "Hello World!",
-      "doesn't break if a key is overriden in a locale"
+      "doesn't break if a key is overridden in a locale"
     );
     assert.strictEqual(I18n.t("hello.universe"), "", "allows empty strings");
   });
@@ -213,6 +213,30 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.strictEqual(I18n.t("word_count", { count: 3 }), "3 words");
     assert.strictEqual(I18n.t("word_count", { count: 10 }), "10 words");
     assert.strictEqual(I18n.t("word_count", { count: 100 }), "100 words");
+  });
+
+  test("adds the count to the missing translation strings", function (assert) {
+    assert.strictEqual(
+      I18n.t("invalid_i18n_string", { count: 1 }),
+      `[fr.invalid_i18n_string count=1]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: "0" }),
+      `[fr.character_count count="0"]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: null }),
+      `[fr.character_count count=null]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: undefined }),
+      `[fr.character_count count=undefined]`
+    );
+
+    assert.strictEqual(I18n.t("character_count"), "[fr.character_count]");
   });
 
   test("fallback", function (assert) {
