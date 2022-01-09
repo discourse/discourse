@@ -667,7 +667,7 @@ module Discourse
 
   def self.full_version
     @full_version ||= begin
-      git_cmd = 'git describe --dirty --match "v[0-9]*"'
+      git_cmd = 'git describe --dirty --match "v[0-9]*" 2> /dev/null'
       self.try_git(git_cmd, 'unknown')
     end
   end
