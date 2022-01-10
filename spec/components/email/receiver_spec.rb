@@ -340,7 +340,7 @@ describe Email::Receiver do
       expect { process(:like) }.to raise_error(Email::Receiver::InvalidPostAction)
     end
 
-    it "works" do
+    it "creates a new reply post" do
       handler_calls = 0
       handler = proc { |_| handler_calls += 1 }
 
