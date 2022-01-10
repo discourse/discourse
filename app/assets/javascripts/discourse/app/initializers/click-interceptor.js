@@ -5,7 +5,9 @@ export default {
   name: "click-interceptor",
   initialize(container, app) {
     this.selector = app.rootElement;
-    $(this.selector).on("click.discourse", "a", interceptClick);
+    document
+      .querySelector(this.selector)
+      .addEventListener("click", interceptClick);
     window.addEventListener("hashchange", this.hashChanged);
   },
 
@@ -14,7 +16,9 @@ export default {
   },
 
   teardown() {
-    $(this.selector).off("click.discourse", "a", interceptClick);
+    document
+      .querySelector(this.selector)
+      .removeEventListener("click", interceptClick);
     window.removeEventListener("hashchange", this.hashChanged);
   },
 };
