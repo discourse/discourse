@@ -604,7 +604,11 @@ class Search
   end
 
   advanced_filter(/^group:(.+)$/i) do |posts, match|
-    group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
+    group_id = Group
+      .visible_groups(@guardian.user)
+      .members_visible_groups(@guardian.user)
+      .where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
+
     if group_id
       posts.where("posts.user_id IN (select gu.user_id from group_users gu where gu.group_id = ?)", group_id)
     else
