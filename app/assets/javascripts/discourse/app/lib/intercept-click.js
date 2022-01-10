@@ -1,6 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 
-export function wantsNewWindow(e) {
+export function wantsNewWindow(e, currentTarget = e.currentTarget) {
   return (
     e.defaultPrevented ||
     (e.isDefaultPrevented && e.isDefaultPrevented()) ||
@@ -8,7 +8,7 @@ export function wantsNewWindow(e) {
     e.metaKey ||
     e.ctrlKey ||
     (e.button && e.button !== 0) ||
-    (e.currentTarget && e.currentTarget.target === "_blank")
+    (currentTarget && currentTarget.target === "_blank")
   );
 }
 
@@ -18,15 +18,16 @@ export function wantsNewWindow(e) {
   This jQuery code intercepts clicks on those links and routes them properly.
 **/
 export default function interceptClick(e) {
-  if (!e.target.closest("a")) {
+  const currentTarget = e.target.closest("a");
+
+  if (!currentTarget) {
     return;
   }
 
-  if (wantsNewWindow(e)) {
+  if (wantsNewWindow(e, currentTarget)) {
     return;
   }
 
-  const currentTarget = e.currentTarget;
   const href = currentTarget.getAttribute("href");
 
   if (
