@@ -340,7 +340,12 @@ describe Email::Receiver do
       expect { process(:like) }.to raise_error(Email::Receiver::InvalidPostAction)
     end
 
-    it "works" do
+    it "creates a new reply post" do
+      handler_calls = 0
+      handler = proc { |_| handler_calls += 1 }
+
+      DiscourseEvent.on(:topic_created, &handler)
+
       expect { process(:text_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
       expect(topic.posts.last.via_email).to eq(true)
@@ -348,6 +353,9 @@ describe Email::Receiver do
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+
+      DiscourseEvent.off(:topic_created, &handler)
+      expect(handler_calls).to eq(0)
     end
 
     it "stores the created_via source against the incoming email" do
