@@ -2,6 +2,7 @@
   {{avatar item imageSize="tiny"}}
   <span class="identifier">{{format-username item.id}}</span>
   <span class="name">{{item.name}}</span>
+  {{decorate-username-selector item.id}}
 {{else if item.isGroup}}
   {{d-icon "users"}}
   <span class="identifier">{{item.id}}</span>
