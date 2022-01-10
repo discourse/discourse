@@ -24,6 +24,7 @@ describe Jobs::StalledTopicTracker do
 
     it 'triggers the associated automation' do
       create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
+      create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
 
       output = JSON.load(capture_stdout do
         Jobs::StalledTopicTracker.new.execute

@@ -26,7 +26,6 @@ class StalledTopicFinder
         SELECT p.id
         FROM posts p
         WHERE t.id = p.topic_id
-          AND p.post_number > 1
           AND p.deleted_at IS NULL
           AND t.user_id = p.user_id
           AND p.created_at > :stalled_date

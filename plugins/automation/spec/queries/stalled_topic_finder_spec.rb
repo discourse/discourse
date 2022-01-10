@@ -3,6 +3,8 @@
 require_relative '../discourse_automation_helper'
 
 describe StalledTopicFinder do
+  fab!(:user) { Fabricate(:user) }
+
   before do
     SiteSetting.discourse_automation_enabled = true
     SiteSetting.tagging_enabled = true
@@ -10,56 +12,85 @@ describe StalledTopicFinder do
   end
 
   context 'default' do
-    fab!(:topic_1) { create_topic }
-    fab!(:topic_2) { create_topic }
-    fab!(:topic_3) { create_topic }
+    # topic with only stalled OP
+    fab!(:topic_1) { create_topic(user: user) }
+    # topic with recent replies
+    fab!(:topic_2) { create_topic(user: user) }
+    # topic with stalled replies
+    fab!(:topic_3) { create_topic(user: user) }
+    # topic with only recent OP
+    fab!(:topic_4) { create_topic(user: user, created_at: 3.hours.from_now) }
 
-    it 'returns only topics with no replies and at least one post' do
-      create_post(topic: topic_1, user: topic_1.user)
-      create_post(topic: topic_3, user: topic_3.user)
-      create_post(topic: topic_3, user: topic_3.user)
+    it 'returns only stalled topics with replies' do
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_2, user: user, created_at: 3.hours.from_now)
+      create_post(topic: topic_2, user: user, created_at: 3.hours.from_now)
+      create_post(topic: topic_3, user: user)
+      create_post(topic: topic_3, user: user)
 
-      expect(described_class.call(2.hours.ago).map(&:id)).to contain_exactly(topic_1.id)
+      expect(described_class.call(2.hours.from_now).map(&:id)).to contain_exactly(topic_1.id, topic_3.id)
     end
   end
 
   context 'filter by tags' do
     fab!(:tag_1) { Fabricate(:tag) }
-    fab!(:topic_1) { create_topic(tags: [tag_1.name]) }
-    fab!(:topic_2) { create_topic }
+    # tagged topic with replies
+    fab!(:topic_1) { create_topic(tags: [tag_1.name], user: user) }
+    # untagged topic with replies
+    fab!(:topic_2) { create_topic(user: user) }
+    # tagged topic with no replies
+    fab!(:topic_3) { create_topic(user: user, tags: [tag_1.name]) }
+    # tagged topic with recent replies
+    fab!(:topic_4) { create_topic(user: user, tags: [tag_1.name]) }
 
-    it 'returns only topics using the tag' do
-      create_post(topic: topic_1, user: topic_1.user)
-      create_post(topic: topic_2, user: topic_2.user)
+    it 'returns only stalled topics with replies using the tag' do
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_2, user: user)
+      create_post(topic: topic_2, user: user)
+      create_post(topic: topic_4, user: user, created_at: 3.hours.from_now)
+      create_post(topic: topic_4, user: user, created_at: 3.hours.from_now)
 
-      expect(described_class.call(2.hours.ago, tags: [tag_1.name]).map(&:id)).to contain_exactly(topic_1.id)
+      expect(described_class.call(2.hours.from_now, tags: [tag_1.name]).map(&:id)).to contain_exactly(topic_1.id)
     end
   end
 
   context 'filter by categories' do
     fab!(:category_1) { Fabricate(:category) }
-    fab!(:topic_1) { create_topic(category: category_1) }
-    fab!(:topic_2) { create_topic }
+
+    # topic with stalled replies and category
+    fab!(:topic_1) { create_topic(user: user, category: category_1) }
+    # topic with stalled replies and no category
+    fab!(:topic_2) { create_topic(user: user) }
+    # topic with recent replies and category
+    fab!(:topic_3) { create_topic(user: user, category: category_1) }
 
     it 'returns only topics with the category' do
-      create_post(topic: topic_1, user: topic_1.user)
-      create_post(topic: topic_2, user: topic_1.user)
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_2, user: user)
+      create_post(topic: topic_2, user: user)
+      create_post(topic: topic_3, user: user, created_at: 3.hours.from_now)
+      create_post(topic: topic_3, user: user, created_at: 3.hours.from_now)
 
-      expect(described_class.call(2.hours.ago, categories: [category_1.id]).map(&:id)).to contain_exactly(topic_1.id)
+      expect(described_class.call(2.hours.from_now, categories: [category_1.id]).map(&:id)).to contain_exactly(topic_1.id)
     end
   end
 
   context 'filter recent topic owner replies' do
-    fab!(:topic_1) { create_topic }
-    fab!(:topic_2) { create_topic }
+    fab!(:another_user) { Fabricate(:user) }
+    # replies from topic owner
+    fab!(:topic_1) { create_topic(user: user) }
+    # replies from not topic owner
+    fab!(:topic_2) { create_topic(user: user) }
 
-    it 'returns only topics with old replies' do
-      create_post(topic: topic_1, user: topic_1.user, created_at: 1.day.ago)
-      create_post(topic: topic_1, user: topic_1.user, created_at: 1.day.ago)
-      create_post(topic: topic_2, user: topic_2.user, created_at: 1.hour.ago)
-      create_post(topic: topic_2, user: topic_2.user, created_at: 1.hour.ago)
+    it 'doesn’t consider replies from other users' do
+      create_post(topic: topic_1, user: user)
+      create_post(topic: topic_1, user: user, created_at: 3.hours.from_now)
+      create_post(topic: topic_2, user: user)
+      create_post(topic: topic_2, user: another_user, created_at: 3.hours.from_now)
 
-      expect(described_class.call(5.hours.ago).map(&:id)).to contain_exactly(topic_1.id)
+      expect(described_class.call(2.hours.from_now).map(&:id)).to contain_exactly(topic_2.id)
     end
   end
 end
