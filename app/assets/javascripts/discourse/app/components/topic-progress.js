@@ -3,6 +3,9 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { later, scheduleOnce } from "@ember/runloop";
 import { action } from "@ember/object";
+import { isTesting } from "discourse-common/config/environment";
+
+const CSS_TRANSITION_DELAY = isTesting() ? 0 : 500;
 
 export default Component.extend({
   elementId: "topic-progress-wrapper",
@@ -74,7 +77,7 @@ export default Component.extend({
 
     // start CSS transitions a tiny bit later
     // to avoid jumpiness on initial topic load
-    later(this._addCssTransitions, 500);
+    later(this._addCssTransitions, CSS_TRANSITION_DELAY);
   },
 
   willDestroyElement() {
