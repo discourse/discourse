@@ -232,7 +232,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
-    mini_racer (0.6.0)
+    mini_racer (0.6.1)
       libv8-node (~> 16.10.0.0)
     mini_scheduler (0.13.0)
       sidekiq (>= 4.2.3)
