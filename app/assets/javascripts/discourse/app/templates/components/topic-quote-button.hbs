@@ -1,0 +1,68 @@
+<div class="buttons">
+  {{#if embedQuoteButton}}
+    {{d-button
+      class="btn-flat insert-quote"
+      action=(action "insertQuote")
+      icon="quote-left"
+      label="post.quote_reply"
+      title="post.quote_reply_shortcut"
+    }}
+  {{/if}}
+
+  {{#if siteSettings.enable_fast_edit}}
+    {{#if _canEditPost}}
+      {{d-button
+        icon="pencil-alt"
+        action=(action "_toggleFastEditForm")
+        label="post.quote_edit"
+        class="btn-flat quote-edit-label"
+        title="post.quote_edit_shortcut"
+      }}
+    {{/if}}
+  {{/if}}
+
+  {{#if quoteSharingEnabled}}
+    <span class="quote-sharing">
+      {{#if quoteSharingShowLabel}}
+        {{d-button
+          icon="share"
+          label="post.quote_share"
+          class="btn-flat quote-share-label"}}
+      {{/if}}
+
+      <span class="quote-share-buttons">
+        {{#each quoteSharingSources as |source|}}
+          {{d-button
+            class="btn-flat"
+            action=(action "share" source)
+            translatedTitle=source.title
+            icon=source.icon}}
+        {{/each}}
+        {{plugin-outlet name="quote-share-buttons-after" connectorTagName="div"}}
+      </span>
+    </span>
+  {{/if}}
+</div>
+
+<div class="extra">
+  {{#if siteSettings.enable_fast_edit}}
+    {{#if _displayFastEditInput}}
+      <div class="fast-edit-container">
+        {{textarea
+          id="fast-edit-input"
+          value=_fastEditNewSelection
+        }}
+        {{d-button
+          action=(action "_saveFastEdit")
+          class="btn-small btn-primary save-fast-edit"
+          icon="pencil-alt"
+          label="composer.save_edit"
+          translatedTitle=_saveEditButtonTitle
+          disabled=_saveFastEditDisabled
+          isLoading=_isSavingFastEdit
+        }}
+      </div>
+    {{/if}}
+  {{/if}}
+  {{plugin-outlet name="quote-button-after" connectorTagName="div"}}
+</div>
