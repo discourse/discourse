@@ -1995,7 +1995,7 @@ export const aliases = {
   nerd_face: ["nerd"],
   hugs: ["hugging", "hugging_face"],
   roll_eyes: ["rolling_eyes", "face_with_rolling_eyes"],
-  slightly_frowning_face: ["slight_frown"],
+  slightly_frowning_face: ["frowning", "slight_frown"],
   frowning_face: ["frowning2", "white_frowning_face"],
   zipper_mouth_face: ["zipper_mouth"],
   face_with_head_bandage: ["head_bandage"],
