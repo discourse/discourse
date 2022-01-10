@@ -43,7 +43,6 @@ export default Component.extend({
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("recentEmojis", this.emojiStore.favorites);
     this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
@@ -80,6 +79,7 @@ export default Component.extend({
   @action
   onShow() {
     this.set("isLoading", true);
+    this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
       document.addEventListener("click", this.handleOutsideClick);
@@ -198,9 +198,9 @@ export default Component.extend({
 
     this.emojiSelected(code);
 
-    if (!img.parentNode.parentNode.classList.contains("recent")) {
-      this._trackEmojiUsage(code);
-    }
+    this._trackEmojiUsage(code, {
+      refresh: !img.parentNode.parentNode.classList.contains("recent"),
+    });
 
     if (this.site.isMobileDevice) {
       this.onClose();
@@ -244,9 +244,12 @@ export default Component.extend({
     }
   },
 
-  _trackEmojiUsage(code) {
+  _trackEmojiUsage(code, options = {}) {
     this.emojiStore.track(code);
-    this.set("recentEmojis", this.emojiStore.favorites.slice(0, 10));
+
+    if (options.refresh) {
+      this.set("recentEmojis", [...this.emojiStore.favorites]);
+    }
   },
 
   _replaceEmoji(code) {
