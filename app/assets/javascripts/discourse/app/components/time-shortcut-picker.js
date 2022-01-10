@@ -287,7 +287,7 @@ export default Component.extend({
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
     }
 
-    if (nextMonth(this.userTimezone).diff(_now, "days") < 7) {
+    if (nextMonth(this.userTimezone).diff(_now, "days") <= 7) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.NEXT_MONTH);
     }
   },
