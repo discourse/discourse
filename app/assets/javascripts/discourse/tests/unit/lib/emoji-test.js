@@ -158,4 +158,11 @@ discourseModule("Unit | Utility | emoji", function () {
 
     assert.deepEqual(matches, ["bowing_man"]);
   });
+
+  test("search does partial-match on emoji aliases", function (assert) {
+    const matches = emojiSearch("instru");
+
+    assert.ok(matches.includes("woman_teacher"));
+    assert.ok(matches.includes("violin"));
+  });
 });
