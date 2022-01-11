@@ -33,7 +33,7 @@ module Onebox
           elsif html_doc.css('.Box.rdoc')
             # For links to rdoc docs
             node = html_doc.css('h3').find { |n| n['id'] == "user-content-#{fragment.downcase}" }
-            subtitle = node&.css('text()')&.first&.text
+            subtitle = node&.xpath(".//text()")&.first&.text
           end
 
           title = "#{title} - #{subtitle}" if subtitle

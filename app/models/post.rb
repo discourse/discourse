@@ -987,7 +987,7 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5::fragment(self.cooked)
-    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
+    selectors = fragments.xpath(".//descendant-or-self::a/@href|.//descendant-or-self::img/@src|.//descendant-or-self::source/@src|.//descendant-or-self::track/@src|.//descendant-or-self::video/@poster")
 
     links = selectors.map do |media|
       src = media.value
