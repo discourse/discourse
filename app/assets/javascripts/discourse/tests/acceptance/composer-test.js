@@ -202,7 +202,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(
       queryAll(".cooked:last p").text(),
-      "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+      "this is the content of my reply"
     );
   });
 

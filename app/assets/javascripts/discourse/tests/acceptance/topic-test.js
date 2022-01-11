@@ -586,17 +586,12 @@ acceptance("Navigating between topics", function (needs) {
     const firstPost = topicResponse.post_stream.posts[0];
     firstPost.cooked += `\n<a class='same-topic-slugless' href='/t/280'>Link 1</a>`;
     firstPost.cooked += `\n<a class='same-topic-slugless-post' href='/t/280/3'>Link 2</a>`;
-    firstPost.cooked += `\n<a class='diff-topic-slugless' href='/t/281'>Link 3</a>`;
-    firstPost.cooked += `\n<a class='diff-topic-slugless-post' href='/t/281/3'>Link 3</a>`;
+    firstPost.cooked += `\n<a class='diff-topic-slugless' href='/t/28830'>Link 3</a>`;
+    firstPost.cooked += `\n<a class='diff-topic-slugless-post' href='/t/28830/1'>Link 4</a>`;
     firstPost.cooked += `\n<a class='by-post-id' href='/p/${firstPost.id}'>Link to Post</a>`;
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
-    );
-
-    server.get("/t/281.json", () => helper.response(topicResponse));
-    server.get("/t/281/:post_number.json", () =>
       helper.response(topicResponse)
     );
   });
@@ -613,10 +608,11 @@ acceptance("Navigating between topics", function (needs) {
   test("clicking slug-less URLs to a different topic", async function (assert) {
     await visit("/t/-/280");
     await click("a.diff-topic-slugless");
-    assert.ok(currentURL().includes("/281"));
+    assert.ok(currentURL().includes("/28830"));
 
+    await visit("/t/-/280");
     await click("a.diff-topic-slugless-post");
-    assert.ok(currentURL().includes("/281"));
+    assert.ok(currentURL().includes("/28830"));
   });
 
   test("clicking post URLs", async function (assert) {
