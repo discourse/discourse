@@ -2,8 +2,6 @@
 
 class DirectoryColumn < ActiveRecord::Base
 
-  # TODO(2021-06-18): Remove automatic column
-  self.ignored_columns = ["automatic"]
   self.inheritance_column = nil
 
   enum type: { automatic: 0, user_field: 1, plugin: 2 }, _scopes: false

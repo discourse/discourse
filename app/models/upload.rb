@@ -3,10 +3,6 @@
 require "digest/sha1"
 
 class Upload < ActiveRecord::Base
-  self.ignored_columns = [
-    "verified" # TODO(2020-12-10): remove
-  ]
-
   include ActionView::Helpers::NumberHelper
   include HasUrl
 
