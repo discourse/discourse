@@ -225,8 +225,6 @@ fr:
       <p>Si vous vous souvenez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">connecter</a>.</p>
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
-    not_found_template_link: |
-      La date d'expiration de <p>l'invitation à <a href="%{base_url}">%{site_name}</a> a été dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
     user_exists: "Inutile d'inviter <b>%{email}</b>, cette personne <a href='%{base_path}/u/%{username}/summary'>dispose déjà d'un compte !</a>"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
@@ -2531,6 +2529,27 @@ fr:
         ```
 
         Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted_for_responders:
+      text_body_template: |
+        Bonjour,
+
+        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer qu'un [post](%{base_url}%{url}) auquel vous aviez répondu, a été supprimé.
+
+        %{flag_reason}
+
+        Ce message a été signalé par la communauté et un responsable a décidé de le supprimer.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Auquel vous aviez répondu
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Pour plus d'informations, nous vous invitons à consulter notre [community guidelines](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).

@@ -225,8 +225,6 @@ fi:
       <p>Jos muistat salasanasi, voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
 
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
-    not_found_template_link: |
-      <p>Kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voida enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
     user_exists: "Osoitteeseen <b>%{email}</b> ei tarvitse lähettää kutsua, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tili!</a>"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."

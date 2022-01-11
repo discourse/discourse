@@ -243,8 +243,6 @@ pl_PL:
       <p>Jeśli pamiętasz hasło, możesz się <a href="%{base_url}/login">zalogować</a>.</p>
 
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
-    not_found_template_link: |
-      <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."

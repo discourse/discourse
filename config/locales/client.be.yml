@@ -996,13 +996,7 @@ be:
         back: "Назад"
       progress:
         title: прасоўванне па тэме
-        go_top: "топ"
-        go_bottom: "кнопка"
-        jump_bottom: "перайсці да апошняга паведамлення"
-        jump_bottom_with_number: "перайсці да паведамлення %{post_number}"
         jump_prompt_or: "або"
-        total: усяго паведамленняў
-        current: бягучы паведамленне
       notifications:
         reasons:
           "3_6": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай катэгорыяй."

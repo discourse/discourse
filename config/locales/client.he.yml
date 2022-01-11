@@ -172,6 +172,7 @@ he:
       url: "העתקה ושיתוף של כתובת"
     action_codes:
       public_topic: "נושא זה הפך לציבורי ב־%{when}"
+      open_topic: "המרה לנושא ב־%{when}"
       private_topic: "נושא זה הפך להודעה פרטית ב־%{when}"
       split_topic: "נושא זה פוצל ב־%{when}"
       invited_user: "נשלחה הזמנה אל %{who} ב־%{when}"
@@ -218,6 +219,7 @@ he:
     themes:
       default_description: "בררת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב %{theme} יש שגיאות. יש להשבית את אלה תחת %{path}."
+    broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי תוכני הפוסטים באתר שלך נתקל בשגיאה. נא לבדוק את כלי הפיתוח בדפדפן לקבלת פרטים נוספים."
     s3:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
@@ -1503,11 +1505,11 @@ he:
         every_month: "כל חודש"
         every_six_months: "כל שישה חודשים"
       email_level:
-        title: "נא לשלוח לי דוא״ל כשמצטטים אותי, מגיבים לפוסט שלי, מזכירים את @שם-המשתמש שלי, או מזמינים אותי לנושא"
+        title: "לשלוח לי הודעה בדוא״ל כשמצטטים אותי, מגיבים לי, מאזכרים את @שם_המשתמש שלי או כאשר יש פעילות חדשה בקטגוריות, תגיות או נושאים אחריהם אני עוקב"
         always: "תמיד"
         only_when_away: "רק בזמן העדרות"
         never: "אף פעם"
-      email_messages_level: "נא לשלוח לי דוא״ל כשכשנשלחות אלי הודעות"
+      email_messages_level: "לשלוח לי דוא״ל כששולחים לי הודעה פרטית"
       include_tl0_in_digests: "לכלול תכנים ממשתמשים חדשים בהודעות סיכום בדוא״ל"
       email_in_reply_to: "לכלול ציטוטים מתגובות לפוסטים בתוכן הדוא״ל"
       other_settings: "אחר"
@@ -2065,9 +2067,6 @@ he:
         two: "על ידי אזכור %{group}, אתם עומדים ליידע <a href='%{group_link}'>%{count} אנשים</a> – אתם בטוחים?"
         many: "על ידי אזכור %{group}, אתם עומדים ליידע <a href='%{group_link}'>%{count} אנשים</a> – אתם בטוחים?"
         other: "על ידי אזכור %{group}, אתם עומדים ליידע <a href='%{group_link}'>%{count} אנשים</a> – אתם בטוחים?"
-      cannot_see_mention:
-        category: "הזכרת את %{username} אבל לא תישלח אליו/ה התרעה עקב העדר גישה לקטגוריה זו. יהיה עליך להוסיף אותו/ה לקבוצה שיש לה גישה לקטגוריה הזו."
-        private: "הזכרתם את %{username} אבל הוא/היא לא יקבלו התראה כיוון שהם לא יכולים לראות את ההודעה הפרטית הזו. תצטרכו להזמין אותם להודעה פרטית זו."
       here_mention:
         one: "אזכור של <b>‎@%{here}</b> יודיע למשתמש %{count}, להמשיך?"
         two: "אזכור של <b>‎@%{here}</b> יודיע ל־%{count} משתמשים, להמשיך?"
@@ -2695,10 +2694,6 @@ he:
         replies_short: "%{current} / %{total}"
       progress:
         title: התקדמות נושא
-        go_top: "למעלה"
-        go_bottom: "למטה"
-        go: "קדימה"
-        jump_bottom: "מעבר לפוסט האחרון"
         jump_prompt: "קפצו אל..."
         jump_prompt_of:
           one: "מתוך פוסט %{count}"
@@ -2706,11 +2701,8 @@ he:
           many: "מתוך %{count} פוסטים"
           other: "מתוך %{count} פוסטים"
         jump_prompt_long: "מעבר אל…"
-        jump_bottom_with_number: "קפיצה לפוסט %{post_number}"
         jump_prompt_to_date: "עד לתאריך"
         jump_prompt_or: "או"
-        total: סך הכל הפוסטים
-        current: פוסט נוכחי
       notifications:
         title: שנו את תדירות ההתראות על הנושא הזה
         reasons:
@@ -4881,9 +4873,6 @@ he:
           title: "כתובות IP מפוקחות"
           description: 'כתובות IP במעקב. יש להשתמש ב„לאפשר” כדי להוסיף כתובות IP לרשימת ההיתר.'
           delete_confirm: "להסיר את הכלל לכתובת %{ip_address}?"
-          roll_up_confirm: "לצמצם כתובות IP מפוקחות לכדי מסכות רשת?"
-          rolled_up_some_subnets: "ערכי IP אסורים גולגלו בהצלחה לרשתות המשנה הבאות: %{subnets}."
-          rolled_up_no_subnet: "לא היה מה לגלגל."
           actions:
             block: "חסימה"
             do_nothing: "לאפשר"

@@ -1391,11 +1391,9 @@ es:
         every_month: "cada mes"
         every_six_months: "cada seis meses"
       email_level:
-        title: "Enviarme un correo electrónico cuando alguien me cite, me responda, mencione mi @nombre de usuario o me invite a un tema"
         always: "siempre"
         only_when_away: "solo cuando no esté en la página"
         never: "nunca"
-      email_messages_level: "Enviarme un correo electrónico cuando alguien me envíe un mensaje"
       include_tl0_in_digests: "Incluir contenido de usuarios nuevos en los correos electrónicos de resumen"
       email_in_reply_to: "Incluir un extracto de la publicación que recibió una respuesta en los correo electrónicos"
       other_settings: "Otros"
@@ -1912,9 +1910,6 @@ es:
       group_mentioned:
         one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> ¿Seguro que quieres hacerlo?"
         other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Seguro de que quieres hacerlo?"
-      cannot_see_mention:
-        category: "Mencionaste a %{username} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás añadirlos a un grupo que tenga acceso a esta categoría."
-        private: "Mencionaste a %{username} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
       here_mention:
         one: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuario – ¿quieres continuar?"
         other: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuarios – ¿quieres continuar?"
@@ -2504,20 +2499,13 @@ es:
         replies_short: "%{current} / %{total}"
       progress:
         title: avances
-        go_top: "arriba"
-        go_bottom: "abajo"
-        go: "ir"
-        jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicaciones"
         jump_prompt_long: "Saltar a..."
-        jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
         jump_prompt_or: "o"
-        total: total de publicaciones
-        current: publicación actual
       notifications:
         title: cambiar la frecuencia con la que se te notifica acerca de este tema
         reasons:
@@ -4566,9 +4554,6 @@ es:
           title: "Direcciones IP bloqueadas"
           description: 'Direcciones IP que se están vigilando. Usar «Allow» para añadir direcciones a la lista de permitidas.'
           delete_confirm: "¿Seguro que quieres quitar el bloqueo para %{ip_address}?"
-          roll_up_confirm: "¿Seguro que quieres agrupar las direcciones IP bloqueadas vistas con frecuencia en subredes?"
-          rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP bloqueadas a estas subredes: %{subnets}."
-          rolled_up_no_subnet: "No había nada para agrupar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
