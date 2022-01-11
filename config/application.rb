@@ -312,7 +312,7 @@ module Discourse
       config.relative_url_root = GlobalSetting.relative_url_root
     end
 
-    if Rails.env == "test" && GlobalSetting.load_plugins?
+    if Rails.env.test? && GlobalSetting.load_plugins?
       Discourse.activate_plugins!
     elsif GlobalSetting.load_plugins?
       plugin_initialization_guard do
