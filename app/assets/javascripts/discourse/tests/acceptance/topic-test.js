@@ -588,6 +588,7 @@ acceptance("Navigating between topics", function (needs) {
     firstPost.cooked += `\n<a class='same-topic-slugless-post' href='/t/280/3'>Link 2</a>`;
     firstPost.cooked += `\n<a class='diff-topic-slugless' href='/t/281'>Link 3</a>`;
     firstPost.cooked += `\n<a class='diff-topic-slugless-post' href='/t/281/3'>Link 3</a>`;
+    firstPost.cooked += `\n<a class='by-post-id' href='/p/${firstPost.id}'>Link to Post</a>`;
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
@@ -616,5 +617,11 @@ acceptance("Navigating between topics", function (needs) {
 
     await click("a.diff-topic-slugless-post");
     assert.ok(currentURL().includes("/281"));
+  });
+
+  test("clicking post URLs", async function (assert) {
+    await visit("/t/-/280");
+    await click("a.by-post-id");
+    assert.ok(currentURL().includes("/280"));
   });
 });
