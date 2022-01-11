@@ -206,6 +206,7 @@ tr_TR:
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA zorunluysa yerel girişi devre dışı bırakamazsınız. Yerel girişleri devre dışı bırakmadan önce zorunlu 2FA'yı devre dışı bırakın."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemeleri zaten küresel olarak etkin olduğundan S3 yüklemelerini etkinleştiremezsiniz ve bu site düzeyini etkinleştirmek yüklemelerde kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara aşağıdaki değerlerden herhangi birini ekleyemezsiniz: %{values}."
     conflicting_google_user_id: 'Bu hesap için Google Hesap Kimliği değişti; Güvenlik nedeniyle yetkili müdahalesi gerekmektedir. Lütfen yetkili ile iletişime geçin ve <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Üzgünüz, '%{hostname}' sunucusu bulunamadığı için bu web sayfası için bir önizleme oluşturamadık. Önizleme yerine, gönderinizde yalnızca bir bağlantı görünecektir. :cry:"
@@ -226,8 +227,6 @@ tr_TR:
       <p>Eğer şifrenizi hatırlıyorsanız <a href="%{base_url}/login">giriş yapabilirsiniz</a>.</p>
 
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">şifrenizi sıfırlayın</a>.</p>
-    not_found_template_link: |
-      <p> <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamaz. Lütfen sizi davet eden kişiden yeni bir davetiye göndermesini isteyin.</p>
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
     invite_exists: "<b>%{email}</b> adresini daha önce davet ettiniz."
     invalid_email: "%{email} geçerli bir e-posta adresi değil."
@@ -1324,19 +1323,26 @@ tr_TR:
         mutes_count: Susturma toplamı
       description: "Diğer birçok kullanıcı tarafından susturulmuş veya yok sayılmış kullanıcılar."
     top_users_by_likes_received:
+      title: "Alınan beğenilere göre En İyi Kullanıcılar"
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
+      description: "En fazla beğeni alan ilk 10 kullanıcı."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "Daha düşük güven düzeyine sahip bir kullanıcıdan alınan beğenilere göre En İyi Kullanıcılar"
       labels:
         user: Kullanıcı
         trust_level: Güven Düzeyi
         qtt_like: Alınan Beğeniler
+      description: "Daha yüksek güven düzeyindeki ilk 10 kullanıcı, daha düşük güven düzeyindeki kişiler tarafından beğeniliyor."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "Çeşitli kullanıcılardan alınan beğenilere göre En İyi Kullanıcılar"
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
+      description: "Çok çeşitli kullanıcılardan beğeni alan ilk 10 kullanıcı."
   dashboard:
+    group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta kimlik bilgileriyle ilgili bir sorun oluştu. Bu sorun çözülene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecektir. %{error}'
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak öntanımlı değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
@@ -1516,6 +1522,7 @@ tr_TR:
     allowed_iframes: "Gönderilerde güvenli bir şekilde izin verebilecek iframe src alan adı öneklerinin listesi"
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken ağ tarayıcılarının kullanıcı aracıları. UYARI! BU AYARLAR, BURADA LİSTEN OLMAYAN TÜM TARAYICILARI ÇIKARACAKTIR!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web tarayıcılarını tanımlayan kullanıcı aracısı dizesindeki benzersiz BÜYÜK/küçük harf duyarsız sözcük. İzin listesi tanımlanmışsa geçerli değildir."
+    slow_down_crawler_user_agents: "\"Tarayıcı hızını yavaşlat\" ayarında yapılandırıldığı gibi hızı sınırlandırılması gereken web tarayıcılarının kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır."
     slow_down_crawler_rate: "slow_down_crawler_user_agents belirtilirse bu oran tüm tarayıcılara uygulanır (istekler arasında saniye cinsinden gecikme sayısı)."
     content_security_policy: "İçerik-Güvenlik-Politikasını Etkinleştir"
     content_security_policy_report_only: "Yalnızca İçerik-Güvenlik-İlke-Raporunu Etkinleştir"
@@ -1554,6 +1561,7 @@ tr_TR:
     allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
     normalize_emails: "Normalleştirilmiş e-postanın benzersiz olup olmadığını kontrol edin. Normalleştirilmiş e-posta, kullanıcı adındaki tüm noktaları ve + ve @ sembolleri arasındaki her şeyi kaldırır."
     auto_approve_email_domains: "E-posta adresleri bu listedeki alan adlarından olan kullanıcılar otomatik olarak onaylanacaktır."
+    hide_email_address_taken: "Kullanıcılara kayıt sırasında yada şifremi unuttum akışı sırasında belirli bir e-posta adresiyle bir hesabın bulunduğunu bildirmeyin. 'Unutulan parola' istekleri için tam e-posta gerektir."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> kontrol panelinde yeni sürüm iletilerini gösterin"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
@@ -1571,11 +1579,25 @@ tr_TR:
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
     auth_skip_create_confirm: Harici kimlik doğrulaması ile kaydolurken hesap oluştur açılır penceresini atlayın. En iyi auth_overrides_email, auth_overrides_username ve auth_overrides_name ile birlikte kullanılır.
     auth_immediately: "Kullanıcı etkileşimi olmadan otomatik olarak harici giriş sistemine yönlendirin. Bu yalnızca login_required true olduğunda ve yalnızca bir harici kimlik doğrulama yöntemi olduğunda etkili olur."
+    enable_discourse_connect: "DiscourseConnect (eski adıyla 'Discourse SSO'su) aracılığıyla oturum açmayı etkinleştirin (UYARI: KULLANICILARIN E-POSTA ADRESLERİ *HARİCİ SİTE TARAFINDAN DOĞRULANMALIDIR*!)"
+    verbose_discourse_connect_logging: "SSO'larla ilgili ayrıntılı günlüğünü bu adrese <a href='%{base_path}/logs' target='_blank'>/logs</a> kaydet"
+    enable_discourse_connect_provider: "Discourse SSO sağlayıcı protokolünü /session/sso_provider uç noktasında uygulayın, sso_provider_secrets ayarlanmasını gerektirir"
     discourse_connect_url: "DiscourseConnect uç noktasının URL'si (http:// veya https:// içermelidir)"
     discourse_connect_secret: "DiscourseConnect bilgilerini kriptografik olarak doğrulamak için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
+    discourse_connect_provider_secrets: "SSO sağlayıcısı olarak Discourse kullanan alan adı gizli çiftlerin listesi. SSO sırrının 10 karakter veya daha uzun olduğundan emin olun. Joker karakter * herhangi bir alan adıyla veya yalnızca bir bölümüyle eşleşmek için kullanılabilir (örn. * .Example.com)."
     discourse_connect_overrides_bio: "Kullanıcı profilindeki kullanıcı biyografisini geçersiz kılar ve kullanıcının bunu değiştirmesini önler"
     discourse_connect_overrides_groups: "Tüm manuel grup üyeliklerini gruplar özelliğinde belirtilen gruplarla senkronize et (UYARI: grup belirtmezseniz kullanıcı için tüm manuel grup üyelikleri silinecektir)"
+    auth_overrides_email: "Her oturum açmada yerel e-postayı harici site e-postasıyla geçersiz kılar ve yerel değişiklikleri önler. Tüm kimlik doğrulama sağlayıcıları için geçerlidir. (UYARI: yerel e-postaların normalleştirilmesi nedeniyle tutarsızlıklar meydana gelebilir)"
+    auth_overrides_username: "Her oturum açmada yerel e-postayı harici site e-postasıyla geçersiz kılar ve yerel değişiklikleri önler. Tüm kimlik doğrulama sağlayıcıları için geçerlidir. (UYARI: yerel e-postaların normalleştirilmesi nedeniyle tutarsızlıklar meydana gelebilir)"
+    auth_overrides_name: "Her oturum açmada yerel tam adı harici site tam adıyla geçersiz kılar ve yerel değişiklikleri önler. Tüm kimlik doğrulama sağlayıcıları için geçerlidir."
+    discourse_connect_overrides_avatar: "SSO yükünden harici site avatarıyla kullanıcı avatarını geçersiz kılar. Etkinleştirilirse, kullanıcıların Discourse profiline avatar yüklemelerine izin verilmez."
+    discourse_connect_overrides_location: "DiscourseConnect yükünden gelen değerle kullanıcı konumunu geçersiz kılar ve yerel değişiklikleri önler."
+    discourse_connect_overrides_website: "DiscourseConnect veri yükünden gelen değerle kullanıcı web sitesini geçersiz kılar ve yerel değişiklikleri önler."
+    discourse_connect_overrides_profile_background: "Kullanıcı kartı arka planını DiscourseConnect'ten gelen harici site avatarıyla değiştirilir."
+    discourse_connect_overrides_card_background: "Kullanıcı kartı arka planını DiscourseConnect'ten gelen harici site avatarıyla değiştirilir."
     discourse_connect_not_approved_url: "Onaylanmamış DiscourseConnect hesaplarını bu URL'ye yönlendir"
+    discourse_connect_allows_all_return_paths: "Alan adını SSO tarafından sağlanan dönüş_yolları için kısıtlamayın (varsayılan olarak dönüş yolu geçerli sitede olmalıdır)"
+    enable_local_logins: "Yerel kullanıcı adı ve parola giriş tabanlı hesapları etkinleştirin. Davetiyelerin çalışması için bu etkinleştirilmiş olmalıdır. UYARI: devre dışı bırakılmışsa, daha önce en az bir alternatif oturum açma yöntemi yapılandırmadıysanız oturum açamayabilirsiniz."
     enable_local_logins_via_email: "Kullanıcıların e-posta yoluyla kendilerine tek tıklamayla giriş bağlantısı gönderilmesini istemesine izin ver."
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
     enable_signup_cta: "Geri dönen anonim kullanıcılara hesap oluşturmaları için bir uyarı göster."
@@ -1584,14 +1606,20 @@ tr_TR:
     google_oauth2_client_secret: "Google uygulamanıza ait client secret değeri."
     google_oauth2_prompt: "Yetkilendirme sunucusunun kullanıcıdan yeniden kimlik doğrulaması ve onay isteyip istemediğini belirten, isteğe bağlı, boşlukla ayrılmış bir dize değerleri listesi. Olası değerler için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt adresine</a> bakın."
     google_oauth2_hd: "Oturum açmanın sınırlı olacağı isteğe bağlı bir Google Apps Barındırılan alan adı. Daha fazla ayrıntı için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param adresine</a> bakın."
+    google_oauth2_hd_groups: "(deneysel) Kimlik doğrulamada barındırılan alandaki kullanıcıların Google gruplarını alın. Alınan Google grupları, otomatik Söylem grubu üyeliği vermek için kullanılabilir (grup ayarlarına bakın)."
     enable_twitter_logins: "Twitter kimlik doğrulamasını etkinleştir, twitter_consumer_key ve twitter_consumer_secret gerektirir. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse için Twitter girişini (ve zengin yerleştirmeleri) yapılandırma sayfasına göz atın</a> ."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer key'"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer secret'"
     enable_facebook_logins: "Facebook kimlik doğrulamasını etkinleştir, facebook_app_id ve facebook_app_secret gerektirir. Bkz. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse için Facebook oturumunu yapılandırma</a> ."
+    facebook_app_id: "Facebook kimlik doğrulaması için uygulama kimliği, <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps adresinde</a> kayıtlı"
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps adresinde</a> kayıtlı Facebook kimlik doğrulaması için uygulama sırrı"
+    enable_github_logins: "Github kimlik doğrulamasını etkinleştir, github_client_id ve github_client_secret gerektirir. Bkz <a href='https://meta.discourse.org/t/13745' target='_blank'>Discourse için GitHub giriş yapılandırma</a> ."
+    github_client_id: "<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers adresinde</a> kayıtlı Github kimlik doğrulaması için istemci kimliği"
+    github_client_secret: "<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers adresinde</a> kayıtlı Github kimlik doğrulaması için 'client secret'"
     enable_discord_logins: "Kullanıcıların Discord kullanarak kimlik doğrulamasına izin verilsin mi?"
     discord_client_id: 'Discord İstemci Kimliği (birine ihtiyacınız var mı? <a href="https://discordapp.com/developers/applications/me">Discord geliştirici portalını</a> ziyaret edin)'
     discord_secret: "Discord Gizli Anahtarı"
+    discord_trusted_guilds: 'Yalnızca bu Discord loncalarının üyelerinin Discord üzerinden giriş yapmasına izin verin. Lonca için sayısal kimliği kullanın. Daha fazla bilgi için, talimatları kontrol edin <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">buraya</a> . Bir loncaya izin vermek için boş bırakın.'
     enable_backups: "Yöneticilerin forumun yedeklerini oluşturmalarına izin ver"
     allow_restore: "Geri yüklemeye izin ver; ancak bu TÜM site verisini başkasıyla değiştirebilir. Bir yedekten geri yükleme yapmayı tasarlamıyorsanız devre dışı olarak bırakın."
     maximum_backups: "Diskte tutulacak en fazla yedek sayısı. Eski yedekler otomatik olarak silinir."
@@ -1600,6 +1628,7 @@ tr_TR:
     s3_backup_bucket: "Yedeklemelerin yüklenmesi için uzak biriktirme yeri. UYARI: Özel bir biriktirme yeri olduğundan emin olun"
     s3_endpoint: "Bitiş noktası, DigitalOcean Spaces veya Minio gibi S3 uyumlu bir hizmete yedekleme yapmak için değiştirilebilir. UYARI: AWS S3 kullanıyorsanız boş bırakın."
     s3_configure_tombstone_policy: "Kaldırıldı olarak işaretleme yüklemeleri için otomatik silme politikasını etkinleştirin. ÖNEMLİ: Devre dışı bırakılırsa yüklemeler silindikten sonra yer kazanılamaz."
+    s3_disable_cleanup: "İzin verilen maksimumdan daha fazla yedekleme olduğunda eski yedeklerin S3'ten kaldırılmasını önleyin."
     enable_s3_inventory: "Amazon S3 envanterini kullanarak raporlar oluşturun ve yüklemeleri doğrulayın. ÖNEMLİ: geçerli S3 kimlik bilgileri gerektirir (hem erişim anahtarı kimliği hem de gizli erişim anahtarı)."
     backup_time_of_day: "Yedeklemenin yapılacağı vaktin gün içindeki UTC zamanı."
     backup_with_uploads: "Planlanmış yedeklere yüklemeleri de dahil et. Etkisizleştirilirse sadece veritabanı yedeklenecek."
@@ -1627,6 +1656,9 @@ tr_TR:
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
     max_logins_per_ip_per_minute: "Her IP adresi için dakika başına izin verilen maksimum giriş sayısı"
+    max_post_deletions_per_minute: "Bir kullanıcının dakikada silebileceği maksimum gönderi sayısı. Gönderi silme işlemlerini devre dışı bırakmak için 0 girin."
+    max_post_deletions_per_day: "Bir kullanıcının dakikada silebileceği maksimum gönderi sayısı. Gönderi silme işlemlerini devre dışı bırakmak için 0 girin."
+    invite_link_max_redemptions_limit: "Normal kullanıcılar tarafından oluşturulan davet bağlantıları için izin verilen maksimum kullanım sayısı bu değerden fazla olamaz."
     invite_link_max_redemptions_limit_users: "Normal kullanıcılar tarafından oluşturulan davet bağlantıları için izin verilen maksimum kullanım sayısı bu değerden fazla olamaz."
     alert_admins_if_errors_per_minute: "Bir yönetici uyarısını tetiklemek için dakika başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     alert_admins_if_errors_per_hour: "Bir yönetici uyarısını tetiklemek için saat başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
@@ -1650,12 +1682,14 @@ tr_TR:
     external_system_avatars_enabled: "Dışsal sistem avatarları hizmeti kullan."
     external_system_avatars_url: "Harici sistem avatarları hizmetinin URL'si. İzin verilen değiştirme {username} {first_letter} {color} {size}"
     external_emoji_url: "Emojiler için harici servisin URL'si. Devre dışı bırakmak için boş bırakın."
+    use_site_small_logo_as_system_avatar: "Sistem kullanıcısının avatarı yerine sitenin küçük logosunu kullanın. Logonun mevcut olmasını gerektirir."
     restrict_letter_avatar_colors: "Harf avatarı arka planı için kullanılacak 6 basamaklı onaltılı renk değerlerinin listesi."
     enable_listing_suspended_users_on_search: "Askıya alınan kullanıcıları bulmak için normal kullanıcıların etkinleştir."
     selectable_avatars_enabled: "Kullanıcıları listeden bir avatar seçmeye zorlayın."
     selectable_avatars: "Kullanıcıların seçebileceği avatarların listesi."
     allow_all_attachments_for_group_messages: "Grup iletileri için tüm e-posta eklentilerine izin ver."
     png_to_jpg_quality: "Dönüştürülen JPG dosyasının kalitesi (1 en düşük kalite, 99 en iyi kalite, 100 devre dışı bırakmak için)."
+    recompress_original_jpg_quality: "Yeniden boyutlandırılan görüntü dosyalarının kalitesi (1 en düşük kalite, 99 en iyi kalite, devre dışı bırakmak için 100)."
     image_preview_jpg_quality: "Yeniden boyutlandırılan görüntü dosyalarının kalitesi (1 en düşük kalite, 99 en iyi kalite, devre dışı bırakmak için 100)."
     allow_staff_to_upload_any_file_in_pm: "Yetkili üyelerin PM'de dosya yüklemesine izin ver."
     strip_image_metadata: "Şerit görüntü meta verileri."
@@ -1716,6 +1750,9 @@ tr_TR:
     max_mentions_per_post: "Bir kullanıcının bir gönderi içinde kullanabileceği en fazla @ad bildiri sayısı."
     max_users_notified_per_group_mention: "Grubun bahsi geçtiğinde bildirim alabilecek maksimum kullanıcı sayısı (Eğer eşik uyuşursa bildirim yapılmayacak)"
     enable_mentions: "Kullanıcıların diğer kullanıcılardan bahsetmesine izin verin."
+    here_mention: "@burada bahsetmek için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
+    max_here_mentioned: "@burada tarafından belirtilen maksimum kişi sayısı."
+    min_trust_level_for_here_mention: "Kullanıcı davet etmek için gereken minimum güven düzeyi."
     create_thumbnails: "Gönderiye sığmayacak kadar büyük olan görseller için küçük resimler ve lightbox resimleri oluştur."
     email_time_window_mins: "Kullanıcılara, gönderilerini düzenlemelerine ve tamamlamalarına fırsat vermek için herhangi bir bildiri e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara iletilerini düzenleme ve sonlandırma şansı vermek için herhangi bir kişisel ileti bildirim e-postası göndermeden önce (n) saniye bekleyin."
@@ -1726,6 +1763,7 @@ tr_TR:
     body_min_entropy: "Gönderi içeriği için gereken en az entropi (tekil karakter, ingilizce-dışı karakterler daha fazla sayılır)"
     allow_uppercase_posts: "Konu başlığı ya da gönderi metninin tümünün büyük harf kullanılarak girilebilmesine izin ver."
     max_consecutive_replies: "Kullanıcının başka bir yanıt eklemesi engellenmeden önce bir konunun üst üste yapması gereken gönderi sayısı."
+    enable_filtered_replies_view: '"(n) yanıtlar" düğmesi diğer tüm gönderileri daraltır ve yalnızca mevcut gönderiyi ve yanıtlarını gösterir.'
     title_fancy_entities: "Yaygın ASCII karakterlerini konu başlıklarındaki süslü HTML varlıklarına dönüştürün, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Bir başlığın benzer konular için kontrolünün yapılmasından önce sahip olması gereken en az uzunluk."
     desktop_category_page_style: "/categories sayfasının görsel biçimi."
@@ -1733,11 +1771,13 @@ tr_TR:
     category_style: "Kategori rozetleri için görsel biçim."
     default_dark_mode_color_scheme_id: "Karanlık moddayken kullanılan renk şeması."
     dark_mode_none: "Hiçbiri"
+    max_image_size_kb: "KB cinsinden maksimum resim yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük resimler, yüklemeye sığacak şekilde yeniden boyutlandırılacaktır."
     max_attachment_size_kb: "Yüklenebilecek dosyaların KB cinsinden en fazla büyüklüğü. Bu nginx (client_max_body_size) / apache veya proxyde de ayarlanmalı."
     authorized_extensions: "Yüklenebilecek dosya uzantılarının listesi (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     authorized_extensions_for_staff: "`Yetkili_uzanımlar` site ayarında tanımlanan listeye ek olarak yetkili kullanıcılar için yüklenmeye izin verilen dosya uzantılarının listesi. (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     theme_authorized_extensions: "Tema yüklemeleri için izin verilen dosya uzantılarının listesi (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     max_similar_results: "Yeni bir konu oluştururken, düzenleyicinin üzerinde gösterilecek benzer konuların sayısı. Karşılaştırmalar başlık ve içerik üzerinden yapılır."
+    max_image_megapixels: "Bir resim için izin verilen maksimum megapiksel sayısı. Daha yüksek sayıda megapiksel içeren resimler reddedilecektir."
     title_prettify: "Tümü büyük harf, ilk karakteri küçük harf, çoklu ! ve ?, sonda ekstra . kullanımı gibi, sık yapılan yazım hatalarını önle."
     title_remove_extraneous_space: "Noktalama işaretlerinin önündeki ön boşlukları kaldırın."
     automatic_topic_heat_values: 'Site etkinliğine dayalı olarak "En çok görüntülenen konular" ve "En popüler konu gönderileri" ayarlarını otomatik olarak güncelleyin.'
@@ -1763,6 +1803,7 @@ tr_TR:
     topic_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni konu görüntülemesi say"
     user_profile_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni profil görüntülemesi say"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
+    max_new_accounts_per_registration_ip: "Eğer bu IP'den güven seviyesi 0 olan halihazırda (n) hesap varsa (hiçbiri görevli, GS2 ya da daha yüksek seviyede biri değilse), bu IP'den yeni kayıt kabul etme."
     min_ban_entries_for_roll_up: "Topla düğmesine tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
     max_age_unmatched_emails: "Taranmış e-posta kayıtlarından karşılığı olmayanları (N) gün sonunda sil."
     max_age_unmatched_ips: "Taranmış IP girişlerinden karşılığı olmayanları (N) gün sonunda sil."
@@ -1776,7 +1817,9 @@ tr_TR:
     reviewable_default_topics: "Konuya göre gruplandırılmış incelenebilir içeriği varsayılan olarak göster"
     reviewable_default_visibility: "Bu önceliği karşılamadıkça incelenebilir öğeleri gösterme"
     reviewable_low_priority_threshold: "Öncelik süzgeci, '(herhangi bir)' süzgeci kullanılmadığı sürece bu puanı karşılamayan incelenebilir ögeleri gizler."
+    high_trust_flaggers_auto_hide_posts: "Yeni kullanıcı gönderileri, bir TL3+ kullanıcısı tarafından spam olarak işaretlendikten sonra otomatik olarak gizlenir"
     cooldown_hours_until_reflag: "Kullanıcıların bir gönderiyi yeniden işaretleyebilene kadar beklemek zorunda kalacakları süre"
+    slow_mode_prevents_editing: "'Yavaş Modu', düzenlemeden sonra düzenlemeyi engelliyor mu?"
     reply_by_email_enabled: "Konuları e-posta üzerinden yanıtlamayı etkinleştir."
     reply_by_email_address: "Email ile yanıtla özelliği için gelen e-posta adresi şablonu, örnek: %%{reply_key}@yanıt.örnek veya yanıtlar+%%{reply_key}@örnek.com"
     alternative_reply_by_email_addresses: "E-posta adresleriyle gelen e-postaları yanıtlamak için alternatif şablonların listesi. Örnek:%%{reply_key}@reply.example.com |replies+%% {reply_key}@example.com"
@@ -1802,10 +1845,12 @@ tr_TR:
     bounce_score_threshold: "Kullanıcıya e-posta gönderimi durdurmak için gereken en fazla geri seken posta sayısı"
     reset_bounce_score_after_days: "X gün sonra sekme puanını otomatik olarak sıfırlayın."
     blocked_attachment_content_types: "İçerik türüne göre ekleri engellemek için kullanılan anahtar sözcüklerin listesi."
+    blocked_attachment_filenames: "Dosya adına göre ekleri kara listeye almak için kullanılan anahtar kelimelerin listesi."
     forwarded_emails_behaviour: "Discourse'a yönlendirilen bir e-posta nasıl ele alınır?"
     always_show_trimmed_content: "Her zaman gelen e-postaların kırpılmış bölümünü göster. UYARI: e-posta adreslerini gösterebilir."
     trim_incoming_emails: "Gelen e-postaların alakalı olmayan kısmını kırp."
     private_email: "E-posta başlığına veya e-posta gövdesine gönderilerden veya konulardan içerik eklemeyin. NOT: ayrıca özet e-postaları devre dışı bırakır."
+    email_total_attachment_size_limit_kb: "Giden e-postalara eklenen maksimum dosya boyutu. Eklerin gönderilmesini devre dışı bırakmak için 0 olarak ayarlayın."
     post_excerpts_in_emails: "Bildirim e-postalarında her zaman tam yayınlar yerine alıntılar gönderin"
     raw_email_max_length: "Gelen e-posta için kaç karakter saklanması gerektiği."
     raw_rejected_email_max_length: "Reddedilmiş gelen e-posta için kaç karakter saklanması gerektiği."
@@ -3230,11 +3275,11 @@ tr_TR:
       title: "Bağlantı yoluyla giriş yap"
       subject_template: "[%{email_prefix}] Bağlantı yoluyla giriş yapın"
       text_body_template: |
-        [%{site_name}](%{base_url}) 'e girebilmek için bağlantınız burada.
+        [%{site_name}](%{base_url}) topluluğu giriş bağlantınızı aşağıda bulabilirsiniz.
 
         Eğer bu bağlantıyı siz istemediyseniz bu e-postayı görmezden gelebilirsiniz.
 
-        Giriş yapmak için aşağıdaki bağlantıya tıklayın:
+        Giriş yapmak için bu bağlantıya tıklayın:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Parola Belirle"

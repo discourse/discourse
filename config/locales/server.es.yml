@@ -228,8 +228,6 @@ es:
       <p>Si te acuerdas de tu contraseña puedes <a href="%{base_url}/login">iniciar sesión</a>.</p>
 
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
-    not_found_template_link: |
-      <p>La invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Pídele a la persona que te invitó que te vuelva a enviar una.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
@@ -2623,20 +2621,6 @@ es:
     flags_agreed_and_post_deleted_for_responders:
       title: "Respuesta a un mensaje denunciado eliminada por el personal"
       subject_template: "Respuesta a un mensaje denunciado eliminada por el personal"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que hemos eliminado una [publicación](%{base_url}%{url}) a la que has respondido.
-
-        %{flag_reason}
-
-        Esta publicación fue denunciada por la comunidad, y un miembro del equipo decidió eliminarla.
-
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-
-        Para más detalles sobre el motivo de la eliminación, revisa nuestras [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

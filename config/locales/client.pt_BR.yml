@@ -1376,11 +1376,9 @@ pt_BR:
         every_month: "a cada mês"
         every_six_months: "a cada seis meses"
       email_level:
-        title: "Envie um e-mail quando alguém me citar, responder à minha postagem, mencionar meu @username ou me convidar para um tópico"
         always: "sempre"
         only_when_away: "somente quando estiver longe"
         never: "nunca"
-      email_messages_level: "Envie um e-mail quando alguém me enviar uma mensagem"
       include_tl0_in_digests: "Incluir conteúdo de usuários novos no resumo de e-mail"
       email_in_reply_to: "Incluir um trecho das respostas à postagem nos e-mails"
       other_settings: "Outros(as)"
@@ -1878,9 +1876,6 @@ pt_BR:
       group_mentioned:
         one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a>. Tem certeza?"
         other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a>. Tem certeza?"
-      cannot_see_mention:
-        category: "Você mencionou %{username}, mas ele(a) não será notificado(a), pois não tem acesso a esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
-        private: "Você mencionou %{username}, mas ele(a) não será notificado(a), pois não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta MP."
       duplicate_link: "Parece que o seu link de <b>%{domain}</b> já foi postado neste tópico por <b>@%{username}</b> em <a href='%{post_url}'>uma resposta em %{ago}</a>. Tem certeza de que deseja postar novamente?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2434,20 +2429,13 @@ pt_BR:
         replies_short: "%{current}/%{total}"
       progress:
         title: progresso do tópico
-        go_top: "topo"
-        go_bottom: "último"
-        go: "ir"
-        jump_bottom: "pular para a última postagem"
         jump_prompt: "pular para..."
         jump_prompt_of:
           one: "de %{count} postagem"
           other: "de %{count} postagens"
         jump_prompt_long: "Pular para..."
-        jump_bottom_with_number: "pular para postagem %{post_number}"
         jump_prompt_to_date: "até agora"
         jump_prompt_or: "ou"
-        total: total de postagens
-        current: postagem atual
       notifications:
         title: altere a frequência de notificações sobre este tópico
         reasons:
@@ -4426,9 +4414,6 @@ pt_BR:
           title: "IPs filtrados"
           description: 'Endereços IP que estão sendo observados. Use "Permitir" para adicionar endereços IP à lista de permissões.'
           delete_confirm: "Tem certeza que deseja remover a regra para %{ip_address}?"
-          roll_up_confirm: "Tem certeza que deseja acumular endereços IP filtrados comuns em subnets?"
-          rolled_up_some_subnets: "Entradas de IP banidos acumulados nestas subnets: %{subnets}."
-          rolled_up_no_subnet: "Não havia nada para acumular."
           actions:
             block: "Bloquear"
             do_nothing: "Permitido(a)"

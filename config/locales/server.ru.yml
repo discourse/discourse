@@ -245,7 +245,7 @@ ru:
 
       <p>В противном случае <a href="%{base_url}/password-reset">восстановите пароль</a>.</p>
     not_found_template_link: |
-      <p>Приглашение на сайт <a href="%{base_url}">%{site_name}</a> более недействительно. Попросите пригласившего вас прислать вам новое приглашение.</p>
+      <p>Это приглашение на сайт <a href="%{base_url}">%{site_name}</a> более недействительно. Попросите пригласившего вас прислать вам новое приглашение.</p>
     user_exists: "Нет необходимости приглашать пользователя с адресом <b>%{email}</b>, у него уже есть <a href='%{base_path}/u/%{username}/summary'>аккаунт</a>!"
     invite_exists: "Вы уже пригласили пользователя с адресом <b>%{email}</b>"
     invalid_email: "Адрес '%{email}' не является корректным адресом электронной почты."
@@ -1544,7 +1544,7 @@ ru:
     responsive_post_image_sizes: "Изменять размер превью в лайтбоксе, чтобы использовать экраны с высоким разрешением при указанных соотношениях пикселей. Удалите все значения, если необходимо отключить адаптивный дизайн."
     fixed_category_positions: "Отображать разделы в строго указанном порядке. В противном случае сортировка разделов будет зависеть от степени активности в них."
     fixed_category_positions_on_create: "Сохранять порядок отображения разделов в диалоговом окне создания темы (должен быть включён параметр fixed_category_positions)."
-    add_rel_nofollow_to_user_content: 'Добавлять "rel nofollow" для всех ссылок за исключением внутренних (включая родительский домен). Изменение данной настройки потребует обновления всех сообщений с помощью команды "rake posts:rebake"'
+    add_rel_nofollow_to_user_content: 'Добавлять «rel nofollow» для всех ссылок за исключением внутренних (включая родительский домен). Если вы измените эту настройку, то необходимо перезаписать все сообщения, выполнив команду «rake posts:rebake»'
     exclude_rel_nofollow_domains: "Список доменов, где атрибут 'nofollow' не следует добавлять в ссылки. Например, сайт example.com также автоматически разрешит sub.example.com. Как минимум вы должны добавить домен этого сайта, чтобы поисковые роботы могли найти весь контент. Если другие части вашего сайта находятся в других доменах, добавьте и их тоже."
     post_excerpt_maxlength: "Максимальная длина резюме сообщения."
     topic_excerpt_maxlength: "Максимальная длина фрагмента / резюме темы, созданного из первого сообщения темы."
@@ -1794,7 +1794,7 @@ ru:
     s3_access_key_id: "Идентификатор ключа доступа Amazon S3, который будет использоваться для загрузки изображений, вложений и резервных копий."
     s3_secret_access_key: "Секретный ключ доступа Amazon S3, который будет использоваться для загрузки изображений, вложений и резервных копий."
     s3_region: "Название региона Amazon S3, которое будет использоваться для загрузки изображений и резервных копий."
-    s3_cdn_url: "URL-адрес CDN, используемый для всех ресурсов s3 (например, https://cdn.somewhere.com). ВНИМАНИЕ: после изменения этого параметра вы должны обновить все старые сообщения."
+    s3_cdn_url: "URL-адрес CDN, используемый для всех ресурсов s3 (например, https://cdn.где-то.com). ВНИМАНИЕ: после изменения этого параметра вы должны обновить все старые сообщения."
     avatar_sizes: "Перечень автоматически создаваемых размеров аватара."
     external_system_avatars_enabled: "Использовать внешний сервис для загрузки аватаров."
     external_system_avatars_url: "URL внешнего сервиса загрузки аватаров. Допустимые замены: {username} {first_letter} {color} {size}"
@@ -2226,8 +2226,8 @@ ru:
       pop3_polling_username_is_empty: "Вы должны установить 'pop3 polling username' перед включением POP3 polling."
       pop3_polling_password_is_empty: "Вы должны установить 'pop3 polling password' перед включением POP3 polling."
       pop3_polling_authentication_failed: "Ошибка аутентификации POP3. Пожалуйста, проверьте ваши учетные данные pop3."
-      reply_by_email_address_is_empty: "Вы должны установить 'reply by email address' перед включением возможности ответа по e-mail."
-      email_polling_disabled: "Перед включением ответа по e-mail почте необходимо включить polling вручную или POP3."
+      reply_by_email_address_is_empty: "Вы должны установить «ответить по адресу электронной почты» перед включением возможности ответа по эл. почте."
+      email_polling_disabled: "Перед включением ответа по эл. почте необходимо включить polling вручную или POP3."
       user_locale_not_enabled: "Перед включением данной настройки необходимо включить 'allow user locale'."
       invalid_regex: "Регулярное выражение недействительно или не разрешено."
       email_editable_enabled: "Вы должны отключить «редактирование электронной почты» перед включением этого параметра."
@@ -2466,7 +2466,7 @@ ru:
         updating_user_ids: "Обновление идентификаторов пользователя..."
         deleting_source_user: "Удаление исходного пользователя..."
   user:
-    deactivated: "Был деактивирован из-за слишком большого количества возвращённых писем на адрес '%{email}'."
+    deactivated: "Была выключена из-за слишком большого количества возвращённых писем на адрес «%{email}»."
     deactivated_by_staff: "Выключено персоналом"
     deactivated_by_inactivity:
       one: "Автоматически деактивируется после %{count} дня бездействия"
@@ -2787,6 +2787,12 @@ ru:
 
         ``` markdown
         %{flagged_post_raw_content}
+        ```
+
+        На что вы ответили:
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
         ```
 
         С причинами, по которым эта темы была удалена, вы можете ознакомиться в разделе [Основные принципы сообщества](%{base_url}/guidelines).
@@ -3867,177 +3873,177 @@ ru:
   tos_topic:
     title: "Пользовательское соглашение"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      Эти условия регулируют использование интернет-форума на сайте <%{base_url}>. Чтобы пользоваться форумом, вы должны согласовать эти условия с %{company_name}, компанией, которая управляет форумом.
 
-      The company may offer other products and services, under different terms. These terms apply only to use of the forum.
+      Компания может предлагать другие продукты и услуги, на других условиях. Эти условия распространяются только на использование форума.
 
-      Skip to:
+      Переход:
 
-      - [Important Terms](#heading--important-terms)
-      - [Your Permission to Use the Forum](#heading--permission)
-      - [Conditions for Use of the Forum](#heading--conditions)
-      - [Acceptable Use](#heading--acceptable-use)
-      - [Content Standards](#heading--content-standards)
-      - [Enforcement](#heading--enforcement)
-      - [Your Account](#heading--your-account)
-      - [Your Content](#heading--your-content)
-      - [Your Responsibility](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Limits on Liability](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Termination](#heading--termination)
-      - [Disputes](#heading--disputes)
-      - [General Terms](#heading--general)
-      - [Contact](#heading--contact)
-      - [Changes](#heading--changes)
+      - [Важные условия](#heading--important-terms)
+      - [Ваше разрешение на использование форума](#heading--permission)
+      - [Условия использования форума](#heading--conditions)
+      - [Допустимое использование](#heading--acceptable-use)
+      - [Стандарты содержания](#heading--content-standards)
+      - [Правоприменение](#heading--enforcement)
+      - [Ваша учётная запись](#heading--your-account)
+      - [Ваш контент](#heading--your-content)
+      - [Ваша ответственность](#heading--responsibility)
+      - [Отказ от ответственности](#heading--disclaimers)
+      - [Пределы ответственности](#heading--liability)
+      - [Обратная связь](#heading--feedback)
+      - [Прекращение действия](#heading--termination)
+      - [Споры](#heading--disputes)
+      - [Общие положения](#heading--general)
+      - [Связаться с нами](#heading--contact)
+      - [Изменения](#heading--changes)
 
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Important Terms</a></h2>
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Важные условия</a></h2>
 
-      ***These terms include a number of important provisions that affect your rights and responsibilities, such as the disclaimers in [Disclaimers](#heading--disclaimers), limits on the company's liability to you in [Limits on Liability](#heading--liability), your agreement to cover the company for damages caused by your misuse of the forum in [Responsibility for Your Use](#heading--responsibility), and an agreement to arbitrate disputes in [Disputes](#heading--disputes).***
+      ***Эти условия включают ряд важных положений, которые влияют на ваши права и обязанности, например, отказ от ответственности в разделе [отказов от ответственности](#heading--disclaimers), ограничения ответственности компании перед вами в разделе [пределов ответственности](#heading--liability), ваше согласие покрыть компании ущерб, вызванный вашими неправильным использованиями форума в разделе [вашей ответственности](#heading--responsibility), и соглашение об арбитраже споров в разделе [разногласий](#heading--disputes).***
 
-      <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
+      <h2 id="heading--permission"><a href="#heading--permission">Ваше разрешение на использование форума</a></h2>
 
-      Subject to these terms, the company gives you permission to use the forum. Everyone needs to agree to these terms to use the forum.
+      При соблюдении этих условий компания даёт вам разрешение на использование форума. Каждый должен согласиться с этими условиями, чтобы использовать форум.
 
-      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
+      <h2 id="heading--conditions"><a href="#heading--conditions">Условия использования форума</a></h2>
 
-      Your permission to use the forum is subject to the following conditions:
+      Ваше разрешение использовать форум зависит от следующих условий:
 
-      1. You must be at least thirteen years old.
+      1. Вам должно быть не менее тринадцати лет.
 
-      2. You may no longer use the forum if the company contacts you directly to say that you may not.
+      2. Вы можете больше не пользоваться форумом, если компания свяжется с вами напрямую и скажет, что вы не можете этого делать.
 
-      3. You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
+      3. Вы должны использовать форум в соответствии с [допустимым использованием](#heading--acceptable-use) и [стандартам содержания](#heading--content-standards).
 
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Приемлемое использование</a></h2>
 
-      1. You may not break the law using the forum.
+      1. Вы не должны нарушать закон, используя форум.
 
-      2. You may not use or try to use another's account on the forum without their specific permission.
+      2. Вы не можете использовать или пытаться использовать чужую учётную запись на форуме без специального разрешения этого пользователя.
 
-      3. You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
+      3. Вы не можете покупать, продавать или иным образом торговать именами пользователей или другими уникальными ID на форуме.
 
-      4. You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
+      4. Вы не можете рассылать через форум рекламу, письма счастья или другие приглашения, а также использовать форум для сбора адресов или других персональных данных для коммерческих списков рассылки или баз данных.
 
-      5. You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser. You may crawl the forum to index it for a publicly available search engine, if you run one.
+      5. Вы не можете автоматизировать доступ к форуму или следить за форумом, например, с помощью веб-краулера, плагина для браузера или дополнения, или другой компьютерной программы, которая не является веб-браузером. Вы можете просматривать форум, чтобы проиндексировать его для общедоступной поисковой системы, если она у вас есть.
 
-      6. You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
+      6. Вы не можете использовать форум для отправки электронной почты в списки рассылки, группы новостей или групповые почтовые псевдонимы.
 
-      7. You may not falsely imply that you're affiliated with or endorsed by the company.
+      7. Вы не можете ложно подразумевать, что вы связаны с компанией (являетесь её сотрудником) или одобрены ею.
 
-      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+      8. Вы не можете ставить гиперссылки на изображения или другой негипертекстовый контент форума на других веб-страницах.
 
-      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
+      9. Вы не имеете права удалять какие-либо знаки, указывающие на право собственности, с материалов, которые вы скачиваете с форума.
 
-      10. You may not show any part of the forum on other websites with `<iframe>`.
+      10. Вы не имеете права показывать какую-либо часть форума на других сайтах с `<iframe>`.
 
-      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
+      11. Вы не имеете права отключать, избегать или обходить любые ограничения безопасности или доступа к форуму.
 
-      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
+      12. Вы не должны нагружать инфраструктуру форума необоснованным объёмом запросов или запросами, направленными на создание необоснованной нагрузки на информационные системы, лежащие в основе форума.
 
-      13. You may not impersonate others through the forum.
+      13. Вы не можете выдавать себя за других людей через форум.
 
-      14. You may not encourage or help anyone in violation of these terms.
+      14. Вы не имеете права поощрять или помогать кому-либо в нарушении этих условий.
 
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Стандарты содержания</a></h2>
 
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
+      1. Вы не можете размещать на форуме содержание, которое является незаконным, оскорбительным или иным образом вредным для других. Это включает в себя контент, который является домогающимся, неуместным или оскорбительным.
 
-      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
+      2. Вы не можете размещать на форуме контент, который нарушает закон, ущемляет чьи-либо права на интеллектуальную собственность, нарушает чью-либо конфиденциальность или нарушает соглашения, которые вы заключили с другими людьми.
 
-      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
+      3. Вы не можете отправлять на форум контент, содержащий вредоносный компьютерный код, такой как компьютерные вирусы или шпионские программы.
 
-      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
+      4. Вы не можете отправлять контент на форум в качестве простого заполнителя, чтобы сохранить определённый адрес, имя пользователя или другой уникальный ID.
 
-      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
+      5. Вы не можете использовать форум для раскрытия информации, которую вы не имеете права раскрывать, например, чужой конфиденциальной или личной информации.
 
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Правоприменение</a></h2>
 
-      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
+      Компания может расследовать и преследовать нарушения этих условий в полной законной мере. Компания может уведомлять и сотрудничать с правоохранительными органами в преследовании нарушений закона и этих условий.
 
-      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
+      Компания оставляет за собой право изменять, редактировать и удалять контент на форуме по любой причине. Если вы считаете, что кто-то отправил контент на форум в нарушение этих условий, [немедленно свяжитесь с нами](#heading--contact).
 
-      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
+      <h2 id="heading--your-account"><a href="#heading--your-account">Ваша учётная запись</a></h2>
 
-      You must create and log into an account to use some features of the forum.
+      Вы должны создать и войти в учётную запись, чтобы использовать некоторые возможности форума.
 
-      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
+      Чтобы создать учётную запись, вы должны предоставить некоторую информацию о себе. Если вы создаёте учётную запись, вы соглашаетесь предоставить, как минимум, действующий адрес электронной почты и поддерживать этот адрес в актуальном состоянии. Вы можете закрыть свою учётную запись в любое время, написав по электронной почте <%{contact_email}>.
 
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
+      Вы соглашаетесь нести ответственность за все действия, совершённые с использованием вашей учётной записи, независимо от того, санкционированы они вами или нет, до тех пор, пока вы либо не закроете свою учётную запись, либо не уведомите компанию о том, что ваша учётная запись была взломана. Вы согласны немедленно уведомить компанию, если вы подозреваете, что ваша учётная запись была взломана. Вы соглашаешься выбрать надёжный пароль для своей учётной записи и хранить его в тайне.
 
-      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
+      Компания может ограничить, приостановить или закрыть вашу учётную запись на форуме в соответствии со своей политикой обработки запросов на снятие авторских прав, или если компания обоснованно считает, что вы нарушили какое-либо правило из этих условий.
 
-      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
+      <h2 id="heading--your-content"><a href="#heading--your-content">Ваш контент</a></h2>
 
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
+      Ничто в этих условиях не даёт компании никаких прав собственности на интеллектуальную собственность, которой вы делитесь с форумом, такую как информация о вашей учётной записи, сообщения или другой контент, который вы отправляете на форум. Ничто в этих условиях также не даёт вам никаких прав собственности на интеллектуальную собственность компании.
 
-      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
+      Между вами и компанией, вы остаётесь единолично ответственными за контент, который вы отправляете на форуме. Вы соглашаетесь не подразумевать ошибочно, что контент, который вы отправляете на форум, спонсируется или одобряется компанией. Эти условия не обязывают компанию хранить, поддерживать или предоставлять копии контента, который вы отправляете, и изменять его, согласно этим условиям.
 
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
+      Контент, который вы отправляете на форум, принадлежит вам, и вы решаете, какое разрешение давать на него другим. Но, как минимум, вы выдаёте компании лицензию на предоставление контента, который вы отправляете на форум, другим пользователям форума. Эта специальная лицензия позволяет компании копировать, публиковать и анализировать контент, который вы отправляете на форум.
 
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
+      Когда контент, который вы предоставляете, удаляется с форума, будь то вами или компанией, действие специальной лицензии компании заканчивается, когда последняя копия исчезает из резервных копий, кэшей и других систем компании. Другие лицензии, которые вы применяете к размещаемому вами контенту, такие как лицензии [Creative Commons](https://creativecommons.org), могут действовать и после удаления вашего контента. Эти лицензии могут дать другим людям или самой компании право снова поделиться вашим контентом через форум.
 
-      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
+      Другие люди, получающие контент, который вы отправляете на форум, могут нарушать условия, на которых вы лицензируете свой контент. Вы соглашаетесь, что компания не будет нести перед вами ответственность за эти нарушения или их последствия.
 
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Ваша ответственность</a></h2>
 
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
+      Вы соглашаетесь возместить компании ущерб от судебных исков других лиц, связанных с вашим нарушением этих условий или нарушением этих условий другими лицами, использующими вашу учётную запись на форуме. И вы, и компания согласны как можно скорее уведомить другую сторону о любых юридических претензиях, по которым вам, возможно, придётся возмещать ущерб компании. Если компания не сможет оперативно уведомить вас о юридическом иске, вам не придётся возмещать компании ущерб, от которого вы могли бы защититься или смягчить его при оперативном уведомлении. Вы соглашаетесь разрешить компании контролировать расследование, защиту и урегулирование юридических претензий, по которым вам пришлось бы возмещать ущерб, и сотрудничать с этими усилиями. Компания соглашается не соглашаться на любое урегулирование, которое признает вашу вину или накладывает на вас обязательства без вашего предварительного согласия.
 
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Отказ от ответственности</a></h2>
 
-      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
+      ***Вы принимаете на себя весь риск использования форума и контента на форуме. Насколько позволяет закон, компания и её поставщики предоставляют форум как есть, без каких-либо гарантий.***
 
-      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
+      Форум может содержать гиперссылки и интегрировать форумы и сервисы, управляемые другими людьми. Компания не даёт никаких гарантий в отношении чужих сервисов или контента, который они могут предоставлять. Использование чужих сервисов может регулироваться другими условиями между вами и тем, кто их запускает.
 
-      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
+      <h2 id="heading--liability"><a href="#heading--liability">Ограничения ответственности</a></h2>
 
-      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
+      ***Ни компания, ни её поставщики не будут нести ответственность перед вами за ущерб, причинённый в результате нарушения договора, который их персонал не мог разумно предвидеть, когда вы соглашались на эти условия.***
 
-      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
+      ***Насколько позволяет закон, общая ответственность перед вами по искам любого рода, связанным с форумом или содержанием форума, будет ограничена $50.***
 
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
+      <h2 id="heading--feedback"><a href="#heading--feedback">Обратная связь</a></h2>
 
-      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
+      Компания приветствует ваши отзывы и предложения по работе форума. Способы связаться с нами смотри ниже в разделе [связаться с нами](#heading--contact).
 
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
+      Вы соглашаетесь с тем, что компания будет свободно действовать в соответствии с отзывами и предложениями, которые вы предоставите, и что компании не придётся уведомлять вас о том, что ваш отзыв был использован, получать ваше разрешение на его использование или платить вам. Вы соглашаетесь не предоставлять отзывы и предложения, которые, по вашему мнению, могут быть конфиденциальными или являться собственностью, вашей или других людей.
 
-      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
+      <h2 id="heading--termination"><a href="#heading--termination">Прекращение действия</a></h2>
 
-      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
+      Либо вы, либо компания может прекратить действие соглашения, прописанного в этих условиях, в любое время. Когда наше соглашение заканчивается, заканчивается и ваше разрешение на использование форума.
 
-      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
+      Следующие положения остаются в силе после окончания нашего соглашения: [Ваш контент](#heading--your-content), [обратная связь](#heading--feedback), [ваша ответственность](#heading--responsibility), [отказ от ответственности](#heading--disclaimers), [пределы ответственности](#heading--liability), и [общие положения](#heading--general).
 
-      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
+      <h2 id="heading--disputes"><a href="#heading--disputes">Споры</a></h2>
 
-      %{governing_law} will govern any dispute related to these terms or your use of the forum.
+      %{governing_law} будут регулировать любые споры, связанные с этими условиями или вашим использованием форума.
 
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+      Вы и компания согласны добиваться судебных запретов, связанных с этими условиями, только в государственном или федеральном суде в %{city_for_disputes}. Ни вы, ни компания не будут возражать против юрисдикции, форума или места рассмотрения дела в этих судах.
 
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+      ***За исключением исков о судебном запрете или исков по Закону о компьютерном мошенничестве и злоупотреблении, вы и компания будете решать любые споры путем обязательного арбитража Американской арбитражной ассоциации. Арбитраж будет следовать Правилам коммерческого арбитража ААА и дополнительным процедурам для споров, связанных с потребителями. Арбитраж будет происходить в %{city_for_disputes}. Вы будете разрешать любой спор как частное лицо, а не как часть коллективного иска или другого представительного разбирательства, будь то в качестве истца или члена группы. Ни один арбитр не будет объединять любой спор с любым другим арбитражем без разрешения компании.***
 
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
+      В любое арбитражное решение будут включены расходы на арбитраж, разумные гонорары адвокатов и разумные расходы на свидетелей. Вы и компания можете вступить в арбитражные решения в любом суде, обладающем юрисдикцией.
 
-      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
+      <h2 id="heading--general"><a href="#heading--general">Общие положения</a></h2>
 
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
+      Если положение этих условий неисполнимо в том виде, в котором оно написано, но может быть изменено, чтобы сделать его исполнимым, это положение должно быть изменено в минимальной степени, необходимой для того, чтобы сделать его исполнимым. В противном случае это положение должно быть удалено.
 
-      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
+      Вы не можете переуступать своё соглашение с компанией. Компания может переуступить ваше соглашение любому филиалу компании, любой другой компании, которая получает контроль над компанией, или любой другой компании, которая покупает активы компании, связанные с форумом. Любая попытка переуступки вопреки этим условиям не имеет юридической силы.
 
-      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
+      Ни осуществление любого права по данному соглашению, ни отказ от любого нарушения данного соглашения не отменяет любое другое нарушение данного соглашения.
 
-      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
+      Эти условия воплощают в себе все условия соглашения между вами и компанией об использовании форума. Эти условия полностью заменяют любые другие соглашения о вашем использовании форума, письменные или нет.
 
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+      <h2 id="heading--contact"><a href="#heading--contact">Связаться с нами</a></h2>
 
-      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
+      Вы можете уведомлять компанию по этим условиям и отправлять вопросы компании по адресу <%{contact_email}>.
 
-      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
+      Компания может уведомить вас в соответствии с этими условиями, используя адрес электронной почты, который вы указали для своё учётной записи на форуме, или разместив сообщение на главной странице форума или на странице вашей учётной записи.
 
-      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
+      <h2 id="heading--changes"><a href="#heading--changes">Изменения</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+      Компания последний раз обновляла эти условия 12 июля 2018 года и может обновить их снова. Компания будет публиковать все обновления на форуме. Для обновлений, содержащих существенные изменения, компания согласна отправлять вам сообщения по электронной почте, если вы создали учётную запись и указали действующий адрес электронной почты. Компания также может объявлять об обновлениях с помощью специальных сообщений или оповещений на форуме.
 
-      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
+      Как только вы получите уведомление об обновлении этих условий, вы должны согласиться с новыми условиями, чтобы продолжать пользоваться форумом.
   privacy_topic:
     title: "Политика конфиденциальности"
     body: |
@@ -4588,7 +4594,7 @@ ru:
     unknown: "неизвестно"
     user_merged: "Пользователь %{username} был объединен с этой учетной записью"
     user_delete_self: "Пользователь удалил свою учётную запись на сайте %{url}"
-    webhook_deactivation_reason: "Ваш вебхук был автоматически деактивирован. Мы получили несколько ответов «%{status}» о состоянии HTTP."
+    webhook_deactivation_reason: "Ваш вебхук был автоматически выключен. Мы получили несколько ответов «%{status}» о состоянии HTTP."
     api_key:
       automatic_revoked:
         one: "Отозван автоматически, последнее действие зафиксировано более %{count} дня назад"

@@ -1335,11 +1335,9 @@ zh_CN:
         every_month: "每月"
         every_six_months: "每六个月"
       email_level:
-        title: "当有人引用我的话、回复我的帖子、提及我的用户名或邀请我加入某个话题时，给我发送电子邮件"
         always: "始终"
         only_when_away: "只在离开时"
         never: "从不"
-      email_messages_level: "当有人给我发消息时给我发送电子邮件"
       include_tl0_in_digests: "在摘要电子邮件中包含来自新用户的内容"
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
@@ -1833,9 +1831,6 @@ zh_CN:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
         other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
-      cannot_see_mention:
-        category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
-        private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
       here_mention:
         other: "通过提及 <b>@%{here}</b>，您将要通知 %{count} 用户 – 您确定吗？"
       duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
@@ -2397,19 +2392,12 @@ zh_CN:
         replies_short: "%{current} / %{total}"
       progress:
         title: 话题进度
-        go_top: "顶部"
-        go_bottom: "底部"
-        go: "前往"
-        jump_bottom: "跳转到最后一个帖子"
         jump_prompt: "跳转到…"
         jump_prompt_of:
           other: "/%{count} 个帖子"
         jump_prompt_long: "跳转到…"
-        jump_bottom_with_number: "跳转到帖子 %{post_number}"
         jump_prompt_to_date: "截至日期"
         jump_prompt_or: "或者"
-        total: 帖子总数
-        current: 当前帖子
       notifications:
         title: 更改您接收有关此话题的通知的频率
         reasons:
@@ -4389,9 +4377,6 @@ zh_CN:
           title: "已屏蔽的 IP"
           description: '正在监视的 IP 地址。使用 “允许”以将 IP 地址列入许可名单。'
           delete_confirm: "确定要移除对 %{ip_address} 的规则吗？"
-          roll_up_confirm: "确定要将常用屏蔽 IP 地址汇总到子网中吗？"
-          rolled_up_some_subnets: "已成功将 IP 禁止条目汇总到这些子网：%{subnets}。"
-          rolled_up_no_subnet: "没有可以汇总的内容。"
           actions:
             block: "禁止"
             do_nothing: "允许"

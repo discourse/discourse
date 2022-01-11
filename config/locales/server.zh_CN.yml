@@ -219,8 +219,6 @@ zh_CN:
       <p>如果您记得密码，可以<a href="%{base_url}/login">登录</a>。</p>
 
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
-    not_found_template_link: |
-      <p> <a href="%{base_url}">%{site_name}</a> 的邀请无法再确认。请让邀请人重新发送新邀请。</p>
     user_exists: "不需要邀请 <b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有帐户！</a>"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"

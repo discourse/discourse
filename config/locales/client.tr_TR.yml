@@ -1392,11 +1392,9 @@ tr_TR:
         every_month: "her ay"
         every_six_months: "her altı ayda bir"
       email_level:
-        title: "Herhangi biri gönderimi yanıtladığında, benden alıntı yaptığında, @kullanıcıadı şeklinde bahsettiğinde veya beni bir konuya davet ettiğinde bana e-posta gönder"
         always: "her zaman"
         only_when_away: "yalnızca uzaktayken"
         never: "asla"
-      email_messages_level: "Herhangi biri bana ileti yazdığında bana e-posta gönder"
       include_tl0_in_digests: "Yeni kullanıcılardan gelen içeriği özet e-postalarına ekle"
       email_in_reply_to: "Gönderilerinize gelen yanıtların bir örneğini e-postaya ekle"
       other_settings: "Diğer"
@@ -1905,9 +1903,6 @@ tr_TR:
       group_mentioned:
         one: "%{group} hakkında konuşarak <a href='%{group_link}'>%{count} kişiyi</a> bilgilendirmek üzeresiniz; bundan emin misiniz?"
         other: "%{group} hakkında konuşarak <a href='%{group_link}'>%{count} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
-      cannot_see_mention:
-        category: "%{username} adlı kullanıcıdan bahsettin fakat bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye ulaşma izni yok. Kullanıcının bildirimi görebilmesi için onu bu gruba eklemen gerekiyor."
-        private: "%{username} adlı kullanıcıdan bahsettiniz; ancak bildirim gönderilmeyecek çünkü kullanıcının bu kişisel iletiye ulaşma izni yok. Kişisel iletiye ulaşabilmesi için kullanıcıyı bu kişisel ileti'ye eklemeniz gerekiyor."
       duplicate_link: "Görünüşe göre <b>%{domain}</b> alan adına bağlanan bağlantınız <b>@%{username}</b> tarafından konu içine <a href='%{post_url}'>gönderdiği yanıtta %{ago}</a> yayınlanmış görünüyor. Yeniden yayınlamak istediğinize emin misiniz?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2485,20 +2480,13 @@ tr_TR:
         replies_short: "%{current} / %{total}"
       progress:
         title: konu gidişatı
-        go_top: "en üst"
-        go_bottom: "en alt"
-        go: "git"
-        jump_bottom: "son gönderiye geç"
         jump_prompt: "geç"
         jump_prompt_of:
           one: "%{count} gönderi"
           other: "%{count} gönderi"
         jump_prompt_long: "Atla..."
-        jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         jump_prompt_to_date: "şimdiye kadar"
         jump_prompt_or: "veya"
-        total: toplam gönderiler
-        current: şu anki gönderi
       notifications:
         title: bu konu hakkında bildirim sıklığını değiştir
         reasons:
@@ -4512,9 +4500,6 @@ tr_TR:
           title: "Taranmış IPler"
           description: 'İzlenen IP adresleri. IP adreslerini beyaz listeye aktarmak için "İzin ver"i kullan.'
           delete_confirm: "%{ip_address} için konulan kuralı kaldırmak istediğine emin misin?"
-          roll_up_confirm: "Sık kullanılan IP adreslerini alt ağlara aktarmak istediğine emin misin?"
-          rolled_up_some_subnets: "Bu subnetlere başarıyla toplanmış tüm engellenen IP girişleri: %{subnets}."
-          rolled_up_no_subnet: "Toplanacak bir şey bulunamadı."
           actions:
             block: "Engelle"
             do_nothing: "İzin Ver"

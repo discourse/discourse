@@ -245,7 +245,7 @@ he:
 
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     not_found_template_link: |
-      <p>לא ניתן עוד לממש את ההזמנה שנשלח אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
+      <p>לא ניתן עוד לממש את ההזמנה הזאת שנשלחה אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
     invalid_email: "%{email} אינה כתובת דוא״ל תקפה."
@@ -1435,6 +1435,7 @@ he:
         qtt_like: לייקים שהתקבלו
       description: "10 המשתמשים המובילים שקיבלו לייקים ממגוון רחב של אנשים."
   dashboard:
+    group_email_credentials_warning: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
@@ -2177,6 +2178,7 @@ he:
     share_quote_buttons: "קביעת הפריטים שיופיעו בווידג׳ט שיתוף הציטוטים ובאיזה סדר."
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
     create_revision_on_bulk_topic_moves: "יצירת מהדורה לפוסטים הראשונים כאשר הנושאים מועברים לקטגוריה חדשה במרוכז."
+    allow_changing_staged_user_tracking: "לאפשר שינוי העדפות של קטגוריית המשתמשים המבוימים ותגיות על ידי ההנהלה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2479,6 +2481,7 @@ he:
       fixed_primary_email: "כתובת דוא״ל קבועה למשתמשים מבוימים"
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
+      reviewable_reject_auto: "לטפל אוטומטית בתור לביקורת"
       reviewable_reject: "משתמש לסקירה נדחה"
     email_in_spam_header: "כתובת הדוא״ל הראשונה של המשתמש סומנה כזבל"
     already_silenced: "המשתמש כבר הושתק על ידי %{staff} %{time_ago}."
@@ -2754,17 +2757,23 @@ he:
       text_body_template: |
         שלום רב,
 
-        זאת הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך ש[פוסט](%{base_url}%{url}) שהגבת אליו הוסר.
+        זאת הודעה אוטומטית מהאתר %{site_name} שנועדה ליידע אותך ש[פוסט](%{base_url}%{url}), אליו הגבת, הוסר.
 
         %{flag_reason}
 
-        הפוסט הזה סומן על ידי הקהילה ואחד או אחת מחברי הסגל בחרו להסיר אותו.
+        הפוסט הזה סומן על ידי הקהילה ואחד או אחת מחברי הסגל החליטו להסיר אותו.
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        למידע נוסף על סיבת ההסרה, כדאי לעיין ב[הנחיות הקהילה](%{base_url}/guidelines) שלנו.
+        שעל כך הגבת
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        לפרטים נוספים על סיבת ההסרה, נא לעיין ב[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         לעצות זריזות איך כדאי להתחיל להשתמש במערכת, ניתן [לקרוא את הפוסט הזה בבלוג](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
