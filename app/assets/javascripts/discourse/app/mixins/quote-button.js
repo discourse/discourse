@@ -22,8 +22,7 @@ export default Mixin.create(KeyEnterEscape, {
   classNames: ["quote-button"],
   classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
   visible: false,
-  editPost: null,
-  quoteHandler: null,
+  editText: null,
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -69,20 +68,20 @@ export default Mixin.create(KeyEnterEscape, {
       const $selectionStart = $(range.startContainer);
       const $ancestor = $(range.commonAncestorContainer);
 
-      if (this.quoteHandler.noCloseQuotableEl($selectionStart)) {
+      if (this._noCloseQuotableEl($selectionStart)) {
         return;
       }
 
       firstRange = firstRange || range;
 
-      requiredDataForQuote = this.quoteHandler.getRequiredData(
+      requiredDataForQuote = this._getRequiredQuoteData(
         $ancestor,
         requiredDataForQuote
       );
 
       if (
-        this.quoteHandler.noCloseContentEl($ancestor) ||
-        !this.quoteHandler.hasRequiredData(requiredDataForQuote)
+        this._noCloseContentEl($ancestor) ||
+        !this._hasRequiredQuoteData(requiredDataForQuote)
       ) {
         if (this.visible) {
           this._hideButton();
@@ -95,7 +94,7 @@ export default Mixin.create(KeyEnterEscape, {
     const _selectedText = selectedText();
 
     const $selectedElement = $(_selectedElement);
-    const cooked = this.quoteHandler.findCooked($selectedElement);
+    const cooked = this._findCooked($selectedElement);
     const markdownBody = toMarkdown(cooked.innerHTML);
 
     let opts = {
@@ -108,7 +107,7 @@ export default Mixin.create(KeyEnterEscape, {
       element = element.parentElement
     ) {
       if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
-        this.quoteHandler.quoteStateOpts(element, opts);
+        this._quoteStateOpts(element, opts);
         break;
       }
     }
@@ -116,9 +115,9 @@ export default Mixin.create(KeyEnterEscape, {
     quoteState.selected(requiredDataForQuote, _selectedText, opts);
     this.set("visible", quoteState.buffer.length > 0);
 
-    if (this.quoteHandler.canFastEdit) {
+    if (this.canFastEdit) {
       const quoteRegExp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      this.quoteHandler.fastEdit(
+      this._fastEdit(
         quoteState,
         quoteRegExp,
         markdownBody,
@@ -238,6 +237,7 @@ export default Mixin.create(KeyEnterEscape, {
           onSelectionChanged();
         }
       });
+
     this.appEvents.on("quote-button:quote", this, "insertQuote");
     this.appEvents.on("quote-button:edit", this, "_toggleFastEditForm");
   },
@@ -262,6 +262,11 @@ export default Mixin.create(KeyEnterEscape, {
   },
 
   @action
+  cancelled() {
+    this._hideButton();
+  },
+
+  @action
   _toggleFastEditForm() {
     if (this._isFastEditable) {
       this.toggleProperty("_displayFastEditInput");
@@ -275,30 +280,27 @@ export default Mixin.create(KeyEnterEscape, {
         document.querySelector("#fast-edit-input")?.focus();
       });
     } else {
-      // todo: better name?
-      return this.quoteHandler.toggleFastEdit();
+      return this._toggleFastEdit();
     }
   },
 
-  @action
-  _saveFastEdit() {
-    this.quoteHandler.saveFastEdit();
-  },
+  _fastEdit(quoteState, quoteRegExp, markdownBody, params = {}) {
+    this._setCanEdit(params);
 
-  @action
-  save() {
-    if (this._displayFastEditInput && !this._saveFastEditDisabled) {
-      this._saveFastEdit();
+    const matches = markdownBody.match(quoteRegExp);
+    if (
+      quoteState.buffer.length < 1 ||
+      quoteState.buffer.includes("|") || // tables are too complex
+      quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+      matches?.length > 1 // duplicates are too complex
+    ) {
+      this.set("_isFastEditable", false);
+      this.set("_fastEditInitalSelection", null);
+      this.set("_fastEditNewSelection", null);
+    } else if (matches?.length === 1) {
+      this.set("_isFastEditable", true);
+      this.set("_fastEditInitalSelection", quoteState.buffer);
+      this.set("_fastEditNewSelection", quoteState.buffer);
     }
-  },
-
-  @action
-  cancelled() {
-    this._hideButton();
-  },
-
-  @action
-  share(source) {
-    this.quoteHandler.share(source);
   },
 });

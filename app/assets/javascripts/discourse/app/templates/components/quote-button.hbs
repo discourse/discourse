@@ -10,7 +10,7 @@
   {{/if}}
 
   {{#if siteSettings.enable_fast_edit}}
-    {{#if _canEditPost}}
+    {{#if _canEdit}}
       {{d-button
         icon="pencil-alt"
         action=(action "_toggleFastEditForm")

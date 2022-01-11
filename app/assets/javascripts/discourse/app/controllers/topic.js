@@ -26,7 +26,6 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
-import { TopicQuoteHandler } from "discourse/lib/topic-quote-handler";
 
 let customPostMessageCallbacks = {};
 
@@ -88,9 +87,6 @@ export default Controller.extend(bufferedProperty("model"), {
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState(),
-      quoteHandler: TopicQuoteHandler.create({
-        topic: this.model,
-      }),
     });
   },
 

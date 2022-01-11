@@ -510,7 +510,7 @@ export default {
 
   isPostTextSelected() {
     const topicController = this.container.lookup("controller:topic");
-    return !!topicController?.get("quoteState")?.postId;
+    return !!topicController?.get("quoteState")?.data.postId;
   },
 
   sendToSelectedPost(action, elem) {
