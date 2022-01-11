@@ -3,15 +3,15 @@ export default class QuoteState {
     this.clear();
   }
 
-  selected(postId, buffer, opts) {
-    this.postId = postId;
+  selected(data, buffer, opts) {
+    this.data = data;
     this.buffer = buffer;
     this.opts = opts;
   }
 
   clear() {
     this.buffer = "";
-    this.postId = null;
+    this.data = null;
     this.opts = null;
   }
 }

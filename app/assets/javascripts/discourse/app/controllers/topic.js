@@ -26,6 +26,7 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { TopicQuoteHandler } from "discourse/lib/topic-quote-handler";
 
 let customPostMessageCallbacks = {};
 
@@ -87,6 +88,9 @@ export default Controller.extend(bufferedProperty("model"), {
     this.setProperties({
       selectedPostIds: [],
       quoteState: new QuoteState(),
+      quoteHandler: TopicQuoteHandler.create({
+        topic: this.model,
+      }),
     });
   },
 
@@ -330,7 +334,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     selectText() {
-      const { postId, buffer, opts } = this.quoteState;
+      const { data, buffer, opts } = this.quoteState;
+      const postId = data.postId;
       const loadedPost = this.get("model.postStream").findLoadedPost(postId);
       const promise = loadedPost
         ? Promise.resolve(loadedPost)
@@ -561,7 +566,7 @@ export default Controller.extend(bufferedProperty("model"), {
         return;
       }
 
-      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedPost = postStream.findLoadedPost(quoteState.data.postId);
       const quotedText = buildQuote(
         quotedPost,
         quoteState.buffer,

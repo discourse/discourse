@@ -408,12 +408,12 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{quote-button
+  {{topic-quote-button
     quoteState=quoteState
+    quoteHandler=quoteHandler
     selectText=(action "selectText")
     editPost=(action "editPost")
     topic=model
-    composerVisible=composer.visible
-
+    composer=composer
   }}
 {{/discourse-topic}}
