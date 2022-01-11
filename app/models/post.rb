@@ -10,11 +10,6 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url" # TODO(2021-06-01): remove
-  ]
-
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
   self.plugin_permitted_update_params = {}

@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class TopicUser < ActiveRecord::Base
-  self.ignored_columns = [
-    :highest_seen_post_number # Remove after 01 Jan 2022
-  ]
-
   belongs_to :user
   belongs_to :topic
 
