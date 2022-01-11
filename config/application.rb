@@ -30,7 +30,7 @@ require_relative '../lib/plugin_gem'
 # Global config
 require_relative '../app/models/global_setting'
 GlobalSetting.configure!
-unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+if GlobalSetting.load_plugins?
   require_relative '../lib/custom_setting_providers'
 end
 GlobalSetting.load_defaults
@@ -303,11 +303,9 @@ module Discourse
       config.relative_url_root = GlobalSetting.relative_url_root
     end
 
-    if Rails.env == "test"
-      if ENV['LOAD_PLUGINS'] == "1"
-        Discourse.activate_plugins!
-      end
-    else
+    if Rails.env.test? && GlobalSetting.load_plugins?
+      Discourse.activate_plugins!
+    elsif GlobalSetting.load_plugins?
       plugin_initialization_guard do
         Discourse.activate_plugins!
       end

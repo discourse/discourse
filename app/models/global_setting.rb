@@ -359,4 +359,15 @@ class GlobalSetting
     end
   end
 
+  def self.load_plugins?
+    if ENV["LOAD_PLUGINS"] == "1"
+      true
+    elsif ENV["LOAD_PLUGINS"] == "0"
+      false
+    elsif Rails.env.test?
+      false
+    else
+      true
+    end
+  end
 end
