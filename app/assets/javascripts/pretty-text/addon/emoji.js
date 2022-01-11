@@ -223,7 +223,9 @@ export function emojiSearch(term, options) {
   }
 
   if (searchAliases[term]) {
-    results.push.apply(results, searchAliases[term]);
+    for (const emoji of searchAliases[term]) {
+      addResult(emoji);
+    }
   }
 
   for (let i = 0; i < toSearch.length; i++) {

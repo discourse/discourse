@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -26,6 +27,15 @@ acceptance("EmojiPicker", function (needs) {
 
     await click("button.emoji.btn");
     assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
+  });
+
+  test("filters emoji", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await fillIn(".emoji-picker input.filter", "guitar");
+
+    assert.strictEqual(query(`.emoji-picker .results img`).title, "guitar");
   });
 
   test("emoji picker triggers event when picking emoji", async function (assert) {
