@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserApiKey < ActiveRecord::Base
+  self.ignored_columns = [
+    "scopes" # TODO(2020-12-18): remove
+  ]
+
   REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
 
   belongs_to :user

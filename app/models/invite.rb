@@ -8,6 +8,12 @@ class Invite < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
 
+  # TODO(2021-05-22): remove
+  self.ignored_columns = %w{
+    user_id
+    redeemed_at
+  }
+
   BULK_INVITE_EMAIL_LIMIT = 200
   DOMAIN_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
 
