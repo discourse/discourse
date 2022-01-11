@@ -194,7 +194,7 @@ desc 'run plugin qunit tests'
 task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = `which rake`.strip
+  rake = "#{Rails.root}/bin/rake"
 
   cmd = 'LOAD_PLUGINS=1 '
   cmd += 'QUNIT_SKIP_CORE=1 '
@@ -209,7 +209,8 @@ task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   cmd += "#{rake} qunit:test"
   cmd += "[#{args[:timeout]}]" if args[:timeout]
 
-  sh cmd
+  system cmd
+  exit $?.exitstatus
 end
 
 desc 'run all migrations of a plugin'

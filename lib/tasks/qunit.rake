@@ -58,15 +58,9 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     "UNICORN_TIMEOUT" => "90",
   }
 
-  cmd = if ember_cli
-    "#{Rails.root}/bin/ember-cli -u --port #{port} --proxy http://localhost:#{unicorn_port} -lr false"
-  else
-    "#{Rails.root}/bin/unicorn"
-  end
-
   pid = Process.spawn(
     env,
-    cmd,
+    "#{Rails.root}/bin/unicorn",
     pgroup: true
   )
 
@@ -74,9 +68,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     success = true
     test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path]
-    qunit_path ||= "/tests" if ember_cli
-    qunit_path ||= "/qunit"
-    cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
+    qunit_path ||= "/qunit" if !ember_cli
+
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
     %w{module filter qunit_skip_core qunit_single_plugin theme_name theme_url theme_id}.each do |arg|
@@ -87,11 +80,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
       options['report_requests'] = '1'
     end
 
-    cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
-
-    if args[:timeout].present?
-      cmd += " #{args[:timeout]}"
-    end
+    query = options.to_query
 
     @now = Time.now
     def elapsed
@@ -100,7 +89,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
     # wait for server to accept connections
     require 'net/http'
-    uri = URI("http://localhost:#{port}/#{qunit_path}")
+    warmup_path = ember_cli ? "/assets/discourse/tests/active-plugins.js" : "/qunit"
+    uri = URI("http://localhost:#{unicorn_port}/#{warmup_path}")
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
@@ -112,7 +102,18 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     end
     puts "Rails server is warmed up"
 
-    sh(cmd)
+    if ember_cli
+      Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir because this is not part of the app
+        cmd = ["env", "UNICORN_PORT=#{unicorn_port}", "yarn", "ember", "test", "--query", query]
+        cmd += ["--test-page", qunit_path.delete_prefix("/")] if qunit_path
+        system(*cmd)
+      end
+    else
+      cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
+      cmd += "?#{query.gsub('+', '%20').gsub("&", '\\\&')}"
+      cmd += " #{args[:timeout]}" if args[:timeout].present?
+      system(cmd)
+    end
     success &&= $?.success?
   ensure
     # was having issues with HUP
