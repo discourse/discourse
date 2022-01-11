@@ -9,7 +9,7 @@
     }}
   {{/if}}
 
-  {{#if siteSettings.enable_fast_edit}}
+  {{#if canFastEdit}}
     {{#if _canEdit}}
       {{d-button
         icon="pencil-alt"
@@ -45,7 +45,7 @@
 </div>
 
 <div class="extra">
-  {{#if siteSettings.enable_fast_edit}}
+  {{#if canFastEdit}}
     {{#if _displayFastEditInput}}
       <div class="fast-edit-container">
         {{textarea

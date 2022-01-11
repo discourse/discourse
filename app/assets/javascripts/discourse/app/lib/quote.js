@@ -18,3 +18,13 @@ export function buildQuote(post, contents, opts = {}) {
 
   return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
 }
+
+export function fixQuotes(str) {
+  // u+201c “
+  // u+201d ”
+  return str.replace(/[\u201C\u201D]/g, '"');
+}
+
+export function regexSafeStr(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

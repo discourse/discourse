@@ -1,7 +1,7 @@
 import QuoteButton from "discourse/components/quote-button";
 import afterTransition from "discourse/lib/after-transition";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { fixQuotes } from "discourse/mixins/quote-button";
+import { fixQuotes } from "discourse/lib/quote";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { postUrl, setCaretPosition } from "discourse/lib/utilities";
@@ -37,9 +37,7 @@ export default QuoteButton.extend({
   @discourseComputed("topic.details.can_create_post", "composerVisible")
   embedQuoteButton(canCreatePost, composerOpened) {
     return (
-      (canCreatePost || composerOpened) &&
-      this.currentUser &&
-      this.currentUser.get("enable_quoting")
+      (canCreatePost || composerOpened) && this.currentUser?.enable_quoting
     );
   },
 

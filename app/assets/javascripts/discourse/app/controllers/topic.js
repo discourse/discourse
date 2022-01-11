@@ -562,7 +562,7 @@ export default Controller.extend(bufferedProperty("model"), {
         return;
       }
 
-      const quotedPost = postStream.findLoadedPost(quoteState.data.postId);
+      const quotedPost = postStream.findLoadedPost(quoteState.data?.postId);
       const quotedText = buildQuote(
         quotedPost,
         quoteState.buffer,

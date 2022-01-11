@@ -7,16 +7,7 @@ import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
-
-export function fixQuotes(str) {
-  // u+201c “
-  // u+201d ”
-  return str.replace(/[\u201C\u201D]/g, '"');
-}
-
-function regexSafeStr(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+import { regexSafeStr } from "discourse/lib/quote";
 
 export default Mixin.create(KeyEnterEscape, {
   classNames: ["quote-button"],
@@ -59,9 +50,8 @@ export default Mixin.create(KeyEnterEscape, {
       return;
     }
 
-    // ensure we selected content inside 1 post *only*
-    //
-    // TODO (martin) Allow for > 1 element's worth of content for chat
+    // TODO (martin) Allow for > 1 element's worth of content for chat,
+    // post only allows one to be selected.
     let firstRange, requiredDataForQuote;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
