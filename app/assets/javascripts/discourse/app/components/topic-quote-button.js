@@ -65,7 +65,7 @@ export default QuoteButton.extend({
     );
   },
 
-  toggleFastEdit() {
+  _toggleFastEdit() {
     const postId = this.quoteState.data.postId;
     const postModel = this.topic.postStream.findLoadedPost(postId);
     return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false }).then(
