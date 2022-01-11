@@ -50,11 +50,11 @@
     <script src="{{rootURL}}assets/test-support.js"></script>
     <script src="{{rootURL}}assets/discourse.js"></script>
     <script src="{{rootURL}}assets/discourse-markdown.js"></script>
-    <script src="{{rootURL}}assets/discourse/tests/active-plugins.js"></script>
+    {{content-for "test-plugin-js"}}
     <script src="{{rootURL}}assets/admin.js"></script>
     <script src="{{rootURL}}assets/test-helpers.js"></script>
     <script src="{{rootURL}}assets/core-tests.js"></script>
-    <script src="{{rootURL}}assets/discourse/tests/plugin-tests.js"></script>
+    {{content-for "test-plugin-tests-js"}}
     <script>
       require('discourse/tests/test-boot-ember-cli');
     </script>
