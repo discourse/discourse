@@ -39,14 +39,9 @@ module Jobs
           next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
           next if UserProfile.where("bio_raw LIKE '%#{upload.sha1}%' OR bio_raw LIKE '%#{encoded_sha}%'").exists?
-          if defined?(ChatMessage)
-            # TODO after May 2022 - remove this. No longer needed as chat uploads are in a table
-            next if ChatMessage.where("message LIKE ? OR message LIKE ?", "%#{upload.sha1}%", "%#{encoded_sha}%").exists?
-          end
 
-          if defined?(ChatUpload)
-            next if ChatUpload.where(upload: upload).exists?
-          end
+          next if Upload.in_use_callbacks&.any? { |callback| callback.call(upload) }
+
           upload.destroy
         else
           upload.delete
