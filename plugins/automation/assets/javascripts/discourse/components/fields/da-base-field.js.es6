@@ -5,6 +5,7 @@ export default Component.extend({
   tagName: "",
   placeholders: null,
   field: null,
+  saveAutomation: null,
 
   @discourseComputed("placeholders.length", "field.acceptsPlaceholders")
   displayPlaceholders(hasPlaceholders, acceptsPlaceholders) {

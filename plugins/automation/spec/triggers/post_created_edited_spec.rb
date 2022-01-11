@@ -30,6 +30,34 @@ describe 'PostCreatedEdited' do
       expect(output['action']).to eq('edit')
     end
 
+    context 'trust_levels are restricted' do
+      before do
+        automation.upsert_field!('valid_trust_levels', 'trust-levels', { value: [0] }, target: 'trigger')
+      end
+
+      context 'trust level is allowed' do
+        it 'fires the trigger' do
+          output = JSON.load(capture_stdout do
+            user.trust_level = TrustLevel[0]
+            PostCreator.create(user, basic_topic_params)
+          end)
+
+          expect(output['kind']).to eq('post_created_edited')
+        end
+      end
+
+      context 'trust level is not allowed' do
+        it 'doesn’t fire the trigger' do
+          output = JSON.load(capture_stdout do
+            user.trust_level = TrustLevel[1]
+            PostCreator.create(user, basic_topic_params)
+          end)
+
+          expect(output).to be_nil
+        end
+      end
+    end
+
     context 'category is restricted' do
       before do
         automation.upsert_field!('restricted_category', 'category', { value: Category.first.id }, target: 'trigger')

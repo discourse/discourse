@@ -19,6 +19,8 @@ en:
       destroy_automation:
         confirm: "Are you sure you want to delete `%{name}`?"
       fields:
+        key_value:
+          label: Configure
         user:
           label: User
         pm:
@@ -122,11 +124,22 @@ en:
               label: Topic ID
         post_created_edited:
           fields:
+            valid_trust_levels:
+              label: Valid trust levels
+              description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
             restricted_category:
               label: Category
               description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        auto_responder:
+          fields:
+            word_answer_list:
+              label: List of word/answer pairs
+              description: Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply.
+            answering_user:
+              label: Answering user
+              description: Defaults to System user
         user_global_notice:
           fields:
             level:

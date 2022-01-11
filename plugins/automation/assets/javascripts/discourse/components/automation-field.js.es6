@@ -7,6 +7,7 @@ export default Component.extend({
   tagName: "",
   field: null,
   automation: null,
+  saveAutomation: null,
   tagName: "",
 
   @discourseComputed("automation.trigger.id", "field.triggerable")

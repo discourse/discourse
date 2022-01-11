@@ -42,6 +42,9 @@ en:
         description: Flags a post if it contains specified words
         flag_message: "Post contains disallowed words: %{words}"
         doc: Post containing all given words at once will be flagged and hidden. Note that defining multiple words delimited by a comma will be used as compound (each word has to be present).
+      auto_responder:
+        title: Auto Responder
+        description: Posts a reply to a post including specified keywords
       pin_topic:
         title: Pin Topic
         description: Pins a specified topic at a given date

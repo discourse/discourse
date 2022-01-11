@@ -1,0 +1,14 @@
+<section class="field key-value-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label field=field}}
+
+    <div class="controls">
+      {{d-button
+        label="discourse_automation.fields.key_value.label"
+        action=(action "openSchemaModal")
+      }}
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>

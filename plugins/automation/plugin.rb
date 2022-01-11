@@ -23,6 +23,11 @@ def handle_post_created_edited(post, action)
   DiscourseAutomation::Automation
     .where(trigger: name, enabled: true)
     .find_each do |automation|
+      valid_trust_levels = automation.trigger_field('valid_trust_levels')
+      if valid_trust_levels['value']
+        next unless valid_trust_levels['value'].include?(post.user.trust_level)
+      end
+
       restricted_category = automation.trigger_field('restricted_category')
       if restricted_category['value']
         category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
@@ -103,6 +108,7 @@ after_initialize do
     '../app/jobs/scheduled/stalled_topic_tracker',
     '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/user_promoted',
+    '../app/lib/discourse_automation/scripts/auto_responder',
     '../app/lib/discourse_automation/scripts/banner_topic',
     '../app/lib/discourse_automation/scripts/suspend_user_by_email',
     '../app/lib/discourse_automation/scripts/pin_topic',

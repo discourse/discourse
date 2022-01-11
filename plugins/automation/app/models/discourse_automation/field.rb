@@ -62,6 +62,22 @@ module DiscourseAutomation
     end
 
     SCHEMAS = {
+      'key-value' => {
+        'type' => "array",
+        'uniqueItems' => true,
+        'items' => {
+          'type' => "object",
+          'title' => "group",
+          'properties' => {
+            'key' => {
+              'type' => "string"
+            },
+            'value' => {
+              'type' => "string"
+            }
+          }
+        }
+      },
       'choices' => {
         'value' => {
           'type' => ['string', 'integer']
@@ -71,6 +87,12 @@ module DiscourseAutomation
         'value' => {
           'type' => 'array',
           'items' => [{ 'type': 'string' }]
+        }
+      },
+      'trust-levels' => {
+        'value' => {
+          'type' => 'array',
+          'items' => [{ 'type': 'integer' }]
         }
       },
       'categories' => {
