@@ -1520,7 +1520,7 @@ var bar = 'bar';
     assert.cookedOptions(
       ":grin: @sam",
       { featuresOverride: ["emoji"] },
-      '<p><img src="/images/emoji/google_classic/grin.png?v=10" title=":grin:" class="emoji" alt=":grin:"> @sam</p>',
+      `<p><img src="/images/emoji/google_classic/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:"> @sam</p>`,
       "cooks emojis when only the emoji markdown engine is enabled"
     );
 
