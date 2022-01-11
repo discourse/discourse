@@ -432,6 +432,11 @@ class PostSerializer < BasicPostSerializer
     scope.is_staff? ? object.version : object.public_version
   end
 
+  def action_code
+    return "open_topic" if object.action_code == "public_topic" && SiteSetting.login_required?
+    object.action_code
+  end
+
   def include_action_code?
     object.action_code.present?
   end

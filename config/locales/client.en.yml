@@ -145,6 +145,7 @@ en:
 
     action_codes:
       public_topic: "made this topic public %{when}"
+      open_topic: "converted this to a topic %{when}"
       private_topic: "made this topic a personal message %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
