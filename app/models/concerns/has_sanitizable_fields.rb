@@ -20,4 +20,9 @@ module HasSanitizableFields
 
     field
   end
+
+  def sanitize_strict(field)
+    CGI.unescape_html(Rails::Html::FullSanitizer.new.sanitize(field))
+  end
+  module_function :sanitize_strict
 end

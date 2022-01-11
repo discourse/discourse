@@ -7,6 +7,7 @@ class Invite < ActiveRecord::Base
 
   include RateLimiter::OnCreateRecord
   include Trashable
+  include HasSanitizableFields
 
   # TODO(2021-05-22): remove
   self.ignored_columns = %w{
@@ -62,12 +63,7 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:base, I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      errors.add(:base, user_exists_error_msg(email, user.username))
     end
   end
 
@@ -106,12 +102,7 @@ class Invite < ActiveRecord::Base
     email = Email.downcase(opts[:email]) if opts[:email].present?
 
     if user = find_user_by_email(email)
-      raise UserExists.new(I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      raise UserExists.new(new.user_exists_error_msg(email, user.username))
     end
 
     if email.present?
@@ -293,8 +284,18 @@ class Invite < ActiveRecord::Base
     self.domain.downcase!
 
     if self.domain !~ Invite::DOMAIN_REGEX
-      self.errors.add(:base, I18n.t('invite.domain_not_allowed', domain: self.domain))
+      self.errors.add(:base, I18n.t('invite.domain_not_allowed'))
     end
+  end
+
+  def user_exists_error_msg(email, username)
+    sanitized_email = sanitize_strict(email)
+    sanitized_username = sanitize_strict(username)
+
+    I18n.t(
+      "invite.user_exists",
+      email: sanitized_email, username: sanitized_username, base_path: Discourse.base_path
+    )
   end
 end
 

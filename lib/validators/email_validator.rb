@@ -5,7 +5,8 @@ class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     unless value =~ EmailValidator.email_regex
       if Invite === record && attribute == :email
-        record.errors.add(:base, I18n.t(:'invite.invalid_email', email: value))
+        sanitized_value = HasSanitizableFields.sanitize_strict(value)
+        record.errors.add(:base, I18n.t(:'invite.invalid_email', email: sanitized_value))
       else
         record.errors.add(attribute, I18n.t(:'user.email.invalid'))
       end

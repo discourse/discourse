@@ -4,6 +4,8 @@ require 'rails_helper'
 
 describe Invite do
   fab!(:user) { Fabricate(:user) }
+  let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
+  let(:sanitized_email) { 'email@test.com' }
 
   context 'validators' do
     it { is_expected.to validate_presence_of :invited_by_id }
@@ -14,10 +16,11 @@ describe Invite do
       expect(invite).to be_valid
     end
 
-    it 'does not allow invites with invalid emails' do
-      invite = Fabricate.build(:invite, email: 'John Doe <john.doe@example.com>')
+    it 'sanitizes the invalid email before attaching the error message' do
+      invite = Fabricate.build(:invite, email: xss_email)
+
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: sanitized_email))
     end
 
     it 'does not allow an invite with the same email as an existing user' do
@@ -80,6 +83,20 @@ describe Invite do
     it 'raises an error when inviting an existing user' do
       expect { Invite.generate(user, email: user.email) }
         .to raise_error(Invite::UserExists)
+    end
+
+    it 'sanitizes the existing user error message' do
+      user.email = xss_email
+      user.save(validate: false)
+
+      expect { Invite.generate(user, email: user.email) }
+        .to raise_error(
+          Invite::UserExists,
+          I18n.t(
+            'invite.user_exists',
+            email: sanitized_email, username: user.username, base_path: Discourse.base_path
+          )
+        )
     end
 
     context 'via email' do
