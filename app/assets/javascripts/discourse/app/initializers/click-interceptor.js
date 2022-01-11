@@ -3,8 +3,9 @@ import interceptClick from "discourse/lib/intercept-click";
 
 export default {
   name: "click-interceptor",
-  initialize() {
-    $("#main").on("click.discourse", "a", interceptClick);
+  initialize(container, app) {
+    this.selector = app.rootElement;
+    $(this.selector).on("click.discourse", "a", interceptClick);
     window.addEventListener("hashchange", this.hashChanged);
   },
 
@@ -13,7 +14,7 @@ export default {
   },
 
   teardown() {
-    $("#main").off("click.discourse", "a", interceptClick);
+    $(this.selector).off("click.discourse", "a", interceptClick);
     window.removeEventListener("hashchange", this.hashChanged);
   },
 };

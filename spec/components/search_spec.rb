@@ -1248,15 +1248,55 @@ describe Search do
       expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
     end
 
-    it 'supports group' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
-      post = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+    context "searching for posts made by users of a group" do
+      fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:user_2) { Fabricate(:user) }
+      fab!(:user_3) { Fabricate(:user) }
+      fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }
+      fab!(:group_2) { Fabricate(:group).tap { |g| g.add(user_2) } }
+      let!(:post) { Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, user: user) }
+      let!(:post_2) { Fabricate(:post, user: user_2) }
 
-      group = Group.create!(name: "Like_a_Boss")
-      GroupUser.create!(user_id: post.user_id, group_id: group.id)
+      it 'should not return any posts if group does not exist' do
+        group.update!(
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:public]
+        )
 
-      expect(Search.execute('group:like_a_boss').posts.length).to eq(1)
-      expect(Search.execute('group:"like a brick"').posts.length).to eq(0)
+        expect(Search.execute('group:99999').posts).to eq([])
+      end
+
+      it 'should return the right posts for a public group' do
+        group.update!(
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:public]
+        )
+
+        expect(Search.execute('group:like_a_boss').posts).to contain_exactly(post)
+        expect(Search.execute("group:#{group.id}").posts).to contain_exactly(post)
+      end
+
+      it "should return the right posts for a public group with members' visibility restricted to logged on users" do
+        group.update!(
+          visibility_level: Group.visibility_levels[:public],
+          members_visibility_level: Group.visibility_levels[:logged_on_users]
+        )
+
+        expect(Search.execute("group:#{group.id}").posts).to eq([])
+        expect(Search.execute("group:#{group.id}", guardian: Guardian.new(user_3)).posts).to contain_exactly(post)
+      end
+
+      it "should return the right posts for a group with visibility restricted to logged on users with members' visibility restricted to members" do
+        group.update!(
+          visibility_level: Group.visibility_levels[:logged_on_users],
+          members_visibility_level: Group.visibility_levels[:members]
+        )
+
+        expect(Search.execute("group:#{group.id}").posts).to eq([])
+        expect(Search.execute("group:#{group.id}", guardian: Guardian.new(user_3)).posts).to eq([])
+        expect(Search.execute("group:#{group.id}", guardian: Guardian.new(user)).posts).to contain_exactly(post)
+      end
     end
 
     it 'supports badge' do
