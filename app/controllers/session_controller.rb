@@ -8,6 +8,8 @@ class SessionController < ApplicationController
 
   skip_before_action :check_xhr, only: %i(second_factor_auth_show)
 
+  requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -428,7 +430,6 @@ class SessionController < ApplicationController
 
   def second_factor_auth_show
     user = current_user
-    raise Discourse::NotFound if !user
 
     nonce = params.require(:nonce)
     challenge = nil
@@ -472,8 +473,6 @@ class SessionController < ApplicationController
   end
 
   def second_factor_auth_perform
-    raise Discourse::NotFound if !current_user
-
     nonce = params.require(:nonce)
     challenge = nil
     error_key = nil
