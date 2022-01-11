@@ -2093,7 +2093,7 @@ HTML
 
       cooked = PrettyText.cook(':grin: @mention', features_override: ["emoji"])
 
-      expect(cooked).to eq("<p><img src=\"/images/emoji/twitter/grin.png?v=10\" title=\":grin:\" class=\"emoji\" alt=\":grin:\"> @mention</p>")
+      expect(cooked).to eq("<p><img src=\"/images/emoji/twitter/grin.png?v=#{Emoji::EMOJI_VERSION}\" title=\":grin:\" class=\"emoji\" alt=\":grin:\"> @mention</p>")
 
       cooked = PrettyText.cook(':grin: @mention', features_override: ["mentions", "text-post-process"])
 
