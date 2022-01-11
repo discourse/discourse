@@ -4,6 +4,9 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  # TODO(2021-05-13): Remove
+  self.ignored_columns = ["topic_reply_count"]
+
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count

@@ -10,6 +10,9 @@ class EmbeddableHost < ActiveRecord::Base
     self.host.sub!(/\/.*$/, '')
   end
 
+  # TODO(2021-07-23): Remove
+  self.ignored_columns = ["path_whitelist"]
+
   def self.record_for_url(uri)
 
     if uri.is_a?(String)

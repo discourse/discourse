@@ -3,6 +3,10 @@
 class TopicTimer < ActiveRecord::Base
   MAX_DURATION_MINUTES = 20.years.to_i / 60
 
+  self.ignored_columns = [
+    "duration" # TODO(2021-06-01): remove
+  ]
+
   include Trashable
 
   belongs_to :user

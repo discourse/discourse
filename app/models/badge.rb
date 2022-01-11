@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Badge < ActiveRecord::Base
+  # TODO: Drop in July 2021
+  self.ignored_columns = %w{image}
+
   include GlobalPath
   include HasSanitizableFields
 

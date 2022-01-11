@@ -5,6 +5,11 @@ class Category < ActiveRecord::Base
     'none'
   ]
 
+  # TODO(2020-11-18): remove
+  self.ignored_columns = %w{
+    suppress_from_latest
+  }
+
   include Searchable
   include Positionable
   include HasCustomFields
