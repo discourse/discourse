@@ -247,10 +247,11 @@ const TopicRoute = DiscourseRoute.extend({
   },
 
   @action
-  willTransition() {
+  willTransition(transition) {
     this._super(...arguments);
     cancel(this.scheduledReplace);
     this.set("isTransitioning", true);
+    transition.catch(() => this.set("isTransitioning", false));
     return true;
   },
 
