@@ -6,17 +6,12 @@
     <%- if !@suggested_themes %>
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
       <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
-      <%= preload_script "locales/en" %>
-      <%= preload_script "discourse/tests/theme_qunit_ember_jquery" %>
-      <%= preload_script "discourse/tests/theme_qunit_vendor" %>
-      <%= preload_script "discourse/tests/theme_qunit_tests_vendor" %>
-      <%= preload_script "markdown-it-bundle" %>
-      <%= preload_script "application" %>
-      <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
-        <%= preload_script file %>
-      <%- end %>
+      <%= preload_script "locales/#{I18n.locale}" %>
+      <%= vendor_theme_tests %>
+      <%= preload_script @app_bundle %>
       <%= preload_script "admin" %>
-      <%= preload_script "discourse/tests/theme_qunit_helper" %>
+      <%= preload_script "discourse/tests/active-plugins" %>
+      <%= support_bundles %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
@@ -24,7 +19,7 @@
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">
       <meta property="og:url" content="">
-      <%= preload_script "discourse/tests/test_starter" %>
+      <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
     <%- else %>
       <style>
         html {
@@ -35,8 +30,10 @@
   </head>
   <body>
     <%- if !@suggested_themes %>
-      <div id="qunit"></div>
-      <div id="qunit-fixture"></div>
+      <%- if @legacy_ember %>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+      <%- end %>
     <%- else %>
       <h2>Theme QUnit Test Runner</h2>
       <%- if @suggested_themes.size == 0 %>
@@ -49,4 +46,7 @@
       <%- end %>
     <%- end %>
   </body>
+  <%- if !@suggested_themes %>
+    <%= boot_bundles %>
+  <%- end %>
 </html>
