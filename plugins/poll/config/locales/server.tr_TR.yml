@@ -6,7 +6,7 @@
 
 tr_TR:
   site_settings:
-    poll_enabled: "Anketlere izin verin?"
+    poll_enabled: "Anketlere izin verilsin mi?"
     poll_maximum_options: "Bir ankette izin verilen en fazla seçenek sayısı."
     poll_edit_window_mins: "Gönderinin oluşturulmasından sonra anketin düzenlenebileceği dakika sayısı"
     poll_minimum_trust_level_to_create: "Anket oluşturmak için gereken minimum güven düzeyini tanımlayın."
@@ -40,6 +40,7 @@ tr_TR:
     user_cant_post_in_topic: "Oy veremezsiniz çünkü bu konuda gönderi gönderemezsiniz."
     topic_must_be_open_to_vote: "Konu oylanabilmesi için açık olmalı."
     poll_must_be_open_to_vote: "Anket oylanabilmesi için açık olmalı."
+    one_vote_per_user: "Bu anket için sadece 1 oy hakkı vardır."
     topic_must_be_open_to_toggle_status: "Durumun değiştirilebilmesi için konu açık olmalı."
     only_staff_or_op_can_toggle_status: "Bir anketin durumunu sadece o anketin asıl sahibi ya da bir görevli değiştirebilir."
     insufficient_rights_to_create: "Anket oluşturma izniniz yok"

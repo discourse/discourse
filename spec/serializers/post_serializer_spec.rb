@@ -282,6 +282,16 @@ describe PostSerializer do
 
   end
 
+  context "post with small action" do
+    fab!(:post) { Fabricate(:small_action, action_code: "public_topic") }
+
+    it "returns `action_code` based on `login_required` site setting" do
+      expect(serialized_post_for_user(nil)[:action_code]).to eq("public_topic")
+      SiteSetting.login_required = true
+      expect(serialized_post_for_user(nil)[:action_code]).to eq("open_topic")
+    end
+  end
+
   def serialized_post(u)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true

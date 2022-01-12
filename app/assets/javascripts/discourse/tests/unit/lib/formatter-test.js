@@ -38,7 +38,7 @@ function shortDateTester(format) {
 }
 
 function strip(html) {
-  return domFromString(html).innerText;
+  return domFromString(html)[0].innerText;
 }
 
 discourseModule("Unit | Utility | formatter", function (hooks) {
@@ -121,12 +121,12 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     );
 
     assert.strictEqual(
-      domFromString(formatDays(0, { format: "medium" })).title,
+      domFromString(formatDays(0, { format: "medium" }))[0].title,
       longDate(new Date())
     );
 
     assert.ok(
-      domFromString(formatDays(0, { format: "medium" })).classList.contains(
+      domFromString(formatDays(0, { format: "medium" }))[0].classList.contains(
         "date"
       )
     );
@@ -226,12 +226,12 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
   test("autoUpdatingRelativeAge", function (assert) {
     let d = moment().subtract(1, "day").toDate();
 
-    let elem = domFromString(autoUpdatingRelativeAge(d));
+    let elem = domFromString(autoUpdatingRelativeAge(d))[0];
     assert.strictEqual(elem.dataset.format, "tiny");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, "");
 
-    elem = domFromString(autoUpdatingRelativeAge(d, { title: true }));
+    elem = domFromString(autoUpdatingRelativeAge(d, { title: true }))[0];
     assert.strictEqual(elem.title, longDate(d));
 
     elem = domFromString(
@@ -240,14 +240,14 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
         title: true,
         leaveAgo: true,
       })
-    );
+    )[0];
 
     assert.strictEqual(elem.dataset.format, "medium-with-ago");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, longDate(d));
     assert.strictEqual(elem.innerHTML, "1 day ago");
 
-    elem = domFromString(autoUpdatingRelativeAge(d, { format: "medium" }));
+    elem = domFromString(autoUpdatingRelativeAge(d, { format: "medium" }))[0];
     assert.strictEqual(elem.dataset.format, "medium");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, "");
@@ -256,7 +256,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
 
   test("updateRelativeAge", function (assert) {
     let d = new Date();
-    let elem = domFromString(autoUpdatingRelativeAge(d));
+    let elem = domFromString(autoUpdatingRelativeAge(d))[0];
     elem.dataset.time = d.getTime() - 2 * 60 * 1000;
 
     updateRelativeAge(elem);
@@ -266,7 +266,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     d = new Date();
     elem = domFromString(
       autoUpdatingRelativeAge(d, { format: "medium", leaveAgo: true })
-    );
+    )[0];
     elem.dataset.time = d.getTime() - 2 * 60 * 1000;
 
     updateRelativeAge(elem);

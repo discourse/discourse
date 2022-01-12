@@ -229,7 +229,7 @@ de:
 
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
-      <p>Die Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr angenommen werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
+      <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, die Person <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
@@ -1353,6 +1353,7 @@ de:
         qtt_like: Erhaltene „Gefällt mir“
       description: "Top 10 Benutzer, die von einer Vielzahl von Leuten Likes bekommen haben."
   dashboard:
+    group_email_credentials_warning: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
@@ -2643,7 +2644,13 @@ de:
         %{flagged_post_raw_content}
         ```
 
-        Weitere Einzelheiten zum Grund für die Entfernung findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+        Worauf du geantwortet hast
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Für weitere Details zum Grund der Entfernung lies bitte unsere [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

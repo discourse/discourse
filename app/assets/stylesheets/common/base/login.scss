@@ -70,6 +70,8 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     background: var(--secondary);
+    max-width: 33em;
+    word-break: break-word;
     .login-title {
       margin-bottom: 0;
     }
@@ -136,6 +138,7 @@
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 0.25em;
+        width: 100%;
       }
       input:focus {
         outline: none;
@@ -309,8 +312,8 @@
   }
 
   .invite-form {
-    padding-left: 20px;
     margin-bottom: 50px;
+    max-width: 33em;
     .tip {
       display: block;
     }

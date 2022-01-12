@@ -1264,11 +1264,9 @@ vi:
         every_month: "mỗi tháng"
         every_six_months: "mỗi sáu tháng"
       email_level:
-        title: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
         always: "luôn luôn"
         only_when_away: "chỉ khi rời xa"
         never: "không bao giờ"
-      email_messages_level: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
       include_tl0_in_digests: "Bao gồm nội dung của những thành viên mới trong email tóm tắt."
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       other_settings: "Khác"
@@ -1734,9 +1732,6 @@ vi:
         other: "<b>Cảnh báo!</b> Bạn đã đề cập <a href='%{group_link}'>%{group}</a>, tuy nhiên nhóm này có nhiều thành viên hơn giới hạn đề cập của quản trị viên là %{count} người dùng. Không ai sẽ được thông báo."
       group_mentioned:
         other: "Bằng cách đề cập đến số %{group}, bạn sắp thông báo cho <a href='%{group_link}'>%{count} người</a> - bạn có chắc không?"
-      cannot_see_mention:
-        category: "Bạn đã đề cập đến %{username} nhưng họ sẽ không được thông báo vì họ không có quyền truy cập vào danh mục này. Bạn sẽ cần thêm họ vào một nhóm có quyền truy cập vào danh mục này."
-        private: "Bạn đã đề cập đến %{username} nhưng họ sẽ không được thông báo vì họ không thể xem tin nhắn cá nhân này. Bạn sẽ cần phải mời họ đến tin nhắn này."
       duplicate_link: "Có vẻ như liên kết của bạn đến <b>%{domain}</b> đã được đăng trong chủ đề bởi <b>@%{username}</b> in <a href='%{post_url}'>một câu trả lời trên %{ago}</a> - bạn có chắc chắn muốn đăng lại không?"
       reference_topic_title: "Trả lời đến: %{title}"
       error:
@@ -2233,19 +2228,12 @@ vi:
         replies_short: "%{current} / %{total}"
       progress:
         title: tiến trình của chủ đề
-        go_top: "trên cùng"
-        go_bottom: "dưới cùng"
-        go: "đi tới"
-        jump_bottom: "nhảy tới bài viết cuối cùng"
         jump_prompt: "Nhảy đến..."
         jump_prompt_of:
           other: "của %{count} bài viết"
         jump_prompt_long: "Chuyển đến ..."
-        jump_bottom_with_number: "nhảy tới bài viết %{post_number}"
         jump_prompt_to_date: "đến nay"
         jump_prompt_or: "hoặc"
-        total: tổng số bài viết
-        current: bài viết hiện tại
       notifications:
         title: thay đổi tần suất bạn nhận được thông báo về chủ đề này
         reasons:
@@ -4063,9 +4051,6 @@ vi:
           title: "Screened IPs"
           description: 'Địa chỉ IP đang được theo dõi. Sử dụng "Cho phép" để cho phép địa chỉ IP.'
           delete_confirm: "Bạn có chắc chắn muốn xóa quy tắc cho %{ip_address}?"
-          roll_up_confirm: "Bạn có chắc chắn muốn cuộn các địa chỉ IP thông thường vào các mạng con?"
-          rolled_up_some_subnets: "Cuộn thành công các IP cấm vào các mạng con: %{subnets}."
-          rolled_up_no_subnet: "Không có gì để cuộn lên."
           actions:
             block: "Khóa"
             do_nothing: "Cho phép"

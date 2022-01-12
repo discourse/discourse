@@ -1353,11 +1353,9 @@ nb_NO:
         every_month: "hver måned"
         every_six_months: "hver sjette måned"
       email_level:
-        title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
         always: "alltid"
         only_when_away: "bare når du er borte"
         never: "aldri"
-      email_messages_level: "Motta en e-post når noen sender meg en melding"
       include_tl0_in_digests: "Inkluder innhold fra nye brukere i oppsummerings-eposter"
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
@@ -1849,9 +1847,6 @@ nb_NO:
       group_mentioned:
         one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
         other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
-      cannot_see_mention:
-        category: "Du nevnte %{username}, men de vil ikke ikke bli varslet fordi de ikke har tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
-        private: "Du nevnte %{username}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til denne private samtalen."
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2370,17 +2365,10 @@ nb_NO:
         replies_short: "%{current} / %{total}"
       progress:
         title: fremgang i emne
-        go_top: "topp"
-        go_bottom: "bunn"
-        go: "gå"
-        jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_long: "Hopp til…"
-        jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
-        total: innlegg totalt
-        current: gjeldende innlegg
       notifications:
         title: endre hvor ofte du blir varslet om dette emnet
         reasons:
@@ -4214,9 +4202,6 @@ nb_NO:
         screened_ips:
           title: "Kontrollerte IP-er"
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
-          roll_up_confirm: "Er du sikker på at du vil rulle opp vanligvis undersøkte IP-adresser i delnett?"
-          rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-adresser til disse subnettene: %{subnets}."
-          rolled_up_no_subnet: "Det var ingenting å slå sammen."
           actions:
             block: "Blokker"
             do_nothing: "Tillat"

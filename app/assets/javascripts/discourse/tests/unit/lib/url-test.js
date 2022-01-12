@@ -77,6 +77,11 @@ module("Unit | Utility | url", function () {
     logIn();
     const user = User.current();
 
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return {
+        currentURL: "/forum",
+      };
+    });
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
     assert.ok(

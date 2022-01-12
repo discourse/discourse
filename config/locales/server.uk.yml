@@ -244,8 +244,6 @@ uk:
       <p>Якщо ви пам'ятаєте ваш пароль, ви можете <a href="%{base_url}/login">Увійти в акаунт</a>.</p>
 
       <p>В іншому випадку <a href="%{base_url}/password-reset">Відновіть пароль</a>.</p>
-    not_found_template_link: |
-      <p>Запрошення на <a href="%{base_url}">%{site_name}</a> більше не дійсне. Будь ласка, попросіть того, хто запросив вас, надіслати вам нове запрошення.</p>
     user_exists: "Немає необхідності надсилати запрошення <b>%{email}</b>, такий <a href='%{base_path}/u/%{username}/summary'>акаунт вже існує!</a>"
     invite_exists: "Ви вже запросили <b>%{email}</b>."
     invalid_email: "%{email} не є дійсною адресою електронної пошти."

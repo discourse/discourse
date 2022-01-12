@@ -1202,11 +1202,9 @@ ca:
         every_month: "cada mes"
         every_six_months: "cada sis mesos"
       email_level:
-        title: "Envia'm un correu quan algú em citi, respongui a una entrada, mencioni el meu @nomdusuari, o m'inviti a un tema"
         always: "sempre"
         only_when_away: "només quan sigui absent"
         never: "mai"
-      email_messages_level: "Envia'm un correu quan algú m'enviï un missatge"
       include_tl0_in_digests: "Inclou contingut d'usuaris nous en els correus de resum "
       email_in_reply_to: "Inclou un extracte del que s'ha respost a la publicació en els correus."
       other_settings: "Altres"
@@ -1601,9 +1599,6 @@ ca:
       group_mentioned:
         one: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count}persona</a>. Esteu segur?"
         other: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count} persones</a>. Esteu segur?"
-      cannot_see_mention:
-        category: "Heu mencionat %{username}, però no se li notificarà res perquè aquesta persona no gaudeix d'accés a aquesta categoria. Us caldrà afegir-la a un grup que tingui accés a aquesta categoria."
-        private: "Heu mencionat %{username}, però no es notificarà res perquè aquest usuari no pot veure aquest missatge personal. Haureu de convidar-lo al MP."
       duplicate_link: "Sembla que l'enllaç a <b>%{domain}</b> ja havia estat publicat en el tema per <b>@%{username}</b> en <a href='%{post_url}'>una resposta %{ago}</a>. Esteu segur que voleu publicar-lo una altra vegada?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2027,17 +2022,10 @@ ca:
         replies_short: "%{current} / %{total}"
       progress:
         title: progrés del tema
-        go_top: "a dalt"
-        go_bottom: "a baix"
-        go: "vés"
-        jump_bottom: "salta a la darrera publicació"
         jump_prompt: "salta a..."
         jump_prompt_long: "Salta a..."
-        jump_bottom_with_number: "salta a la publicació %{post_number}"
         jump_prompt_to_date: "fins a la data"
         jump_prompt_or: "o"
-        total: total de publicacions
-        current: publicació actual
       notifications:
         title: canvieu la freqüència d'alertes que rebeu sobre aquest tema
         reasons:
@@ -3687,9 +3675,6 @@ ca:
         screened_ips:
           title: "IPs sota supervisió"
           delete_confirm: "Esteu segur que voleu eliminar la regla per a %{ip_address}?"
-          roll_up_confirm: "¿Esteu segur que voleu agrupar les adreces IP sota supervisió més comunes en subxarxes?"
-          rolled_up_some_subnets: "S'han agrupat amb èxit les entrades IP bandejades en aquestes subxarxes: %{subnets}."
-          rolled_up_no_subnet: "No hi ha res per a agrupar."
           actions:
             block: "Bloca"
             do_nothing: "Permet"

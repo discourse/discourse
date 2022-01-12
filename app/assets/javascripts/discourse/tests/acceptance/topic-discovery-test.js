@@ -156,4 +156,26 @@ acceptance("Topic Discovery", function (needs) {
     await click(".navigation-container a[href='/categories']");
     assert.strictEqual(currentURL(), "/categories", "switches to categories");
   });
+
+  test("refreshing tabs", async function (assert) {
+    const assertShowingLatest = () => {
+      assert.strictEqual(currentURL(), "/latest", "stays on latest");
+      const el = query(".topic-list-body .topic-list-item:first-of-type");
+      assert.strictEqual(el.closest(".hidden"), null, "topic list is visible");
+      assert.strictEqual(
+        el.dataset.topicId,
+        "11557",
+        "shows the correct topic"
+      );
+    };
+
+    await visit("/latest");
+    assertShowingLatest();
+
+    await click(".navigation-container a[href='/latest']");
+    assertShowingLatest();
+
+    await click("#site-logo");
+    assertShowingLatest();
+  });
 });

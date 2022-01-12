@@ -1386,11 +1386,9 @@ hu:
         every_month: "minden hónapban"
         every_six_months: "hat hónaponként"
       email_level:
-        title: "E-mail küldése, ha valaki idéz tőlem, válaszol a bejegyzésemre, megemlíti a @felhasználónevem vagy meghív egy témába"
         always: "mindig"
         only_when_away: "csak ha távol van"
         never: "soha"
-      email_messages_level: "E-mail küldése, ha valaki üzen nekem"
       include_tl0_in_digests: "Új felhasználóktól származó tartalom mellékelése az e-mailekben"
       email_in_reply_to: "Az e-mailekbe illessze be annak a bejegyzésnek a kivonatát, amelyre válaszoltak"
       other_settings: "Egyéb"
@@ -1902,9 +1900,6 @@ hu:
       group_mentioned:
         one: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
         other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
-      cannot_see_mention:
-        category: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a témához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
-        private: "Megemlítette %{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
       here_mention:
         one: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
         other: "A(z) <b>@%{here}</b> megemlítésével %{count} felhasználót fog értesíteni – biztos benne?"
@@ -2475,17 +2470,10 @@ hu:
         replies_short: "%{current} / %{total}"
       progress:
         title: téma állapota
-        go_top: "teteje"
-        go_bottom: "alja"
-        go: "ugrás"
-        jump_bottom: "ugrás az utolsó bejegyzéshez"
         jump_prompt: "ugrás..."
         jump_prompt_long: "Ugrás..."
-        jump_bottom_with_number: "ugrás a következő bejegyzéshez: %{post_number}"
         jump_prompt_to_date: "Mostanáig"
         jump_prompt_or: "vagy"
-        total: összes bejegyzés
-        current: jelenlegi bejegyzés
       notifications:
         title: módosítsd a témakörről érkező értesítések gyakoriságát
         reasons:
