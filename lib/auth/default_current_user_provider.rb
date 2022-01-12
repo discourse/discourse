@@ -211,8 +211,8 @@ class Auth::DefaultCurrentUserProvider
     end
 
     # keep this rule here as a safeguard
-    # under no conditions to suspended, inactive or unapproved accounts get current_user
-    if current_user && (current_user.suspended? || !current_user.active || !current_user.approved)
+    # under no conditions to suspended or inactive accounts get current_user
+    if current_user && (current_user.suspended? || !current_user.active)
       current_user = nil
     end
 
