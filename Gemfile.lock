@@ -119,8 +119,8 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
-    ecma-re-validator (0.3.0)
-      regexp_parser (~> 2.0)
+    ecma-re-validator (0.4.0)
+      regexp_parser (~> 2.2)
     email_reply_trimmer (0.1.13)
     ember-data-source (3.0.2)
       ember-source (>= 2, < 3.0)
