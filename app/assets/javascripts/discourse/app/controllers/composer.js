@@ -632,7 +632,9 @@ export default Controller.extend({
 
     save(ignore, event) {
       this.save(false, {
-        jump: !event?.shiftKey && !this.skipJumpOnSave,
+        jump:
+          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+          !this.skipJumpOnSave,
       });
     },
 
