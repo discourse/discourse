@@ -238,17 +238,21 @@ class InvitesController < ApplicationController
         return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
       end
 
-      log_on_user(user) if user.active?
+      log_on_user(user) if user.active? && user.guardian.can_access_forum?
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
 
       topic = invite.topics.first
       response = {}
 
-      if user.present? && user.active?
+      if user.present? && user.active? && user.guardian.can_access_forum?
         response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
       elsif user.present?
-        response[:message] = I18n.t('invite.confirm_email')
+        response[:message] = if user.active?
+          I18n.t('activation.approval_required')
+        else
+          I18n.t('invite.confirm_email')
+        end
         cookies[:destination_url] = path(topic.relative_url) if topic.present?
       end
 
