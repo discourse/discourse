@@ -394,14 +394,17 @@
 .email-login,
 .invites-show {
   .col-form {
-    padding-left: 20px;
-    width: 470px;
+    padding: 0.5em 2em 1em;
+    max-width: 30em;
   }
   .col-image {
     width: 175px;
     img {
       width: 100%;
     }
+  }
+  details {
+    width: 100%;
   }
   h2 {
     margin-bottom: 12px;
@@ -412,7 +415,7 @@
   }
   .invite-form,
   .invite-success {
-    box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+    box-shadow: shadow("card");
   }
 }
 
