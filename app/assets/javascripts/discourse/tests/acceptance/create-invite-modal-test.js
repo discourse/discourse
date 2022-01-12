@@ -4,6 +4,7 @@ import {
   count,
   exists,
   fakeTime,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -128,6 +129,16 @@ acceptance("Invites - Email Invites", function (needs) {
 
     server.post("/invites", (request) => {
       lastRequest = request;
+
+      const data = helper.parsePostData(request.requestBody);
+      if (data.email === "existing@example.com") {
+        return helper.response(422, {
+          errors: [
+            "There's no need to invite <b>existing@example.com</b>, they <a href='/u/existing/summary'>already have an account!</a>",
+          ],
+        });
+      }
+
       return helper.response(inviteData);
     });
 
@@ -160,6 +171,19 @@ acceptance("Invites - Email Invites", function (needs) {
     assert.ok(
       lastRequest.requestBody.indexOf("send_email=true") !== -1,
       "sends send_email to server"
+    );
+  });
+
+  test("shows error", async function (assert) {
+    await visit("/u/eviltrout/invited/pending");
+
+    await click(".user-invite-buttons .btn:first-child");
+    await fillIn("#invite-email", "existing@example.com");
+    await click(".save-invite");
+
+    assert.equal(
+      query(".alert-error").textContent.trim(),
+      "There's no need to invite existing@example.com, they already have an account!"
     );
   });
 });
