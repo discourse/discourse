@@ -7,7 +7,7 @@ workbox.setConfig({
   debug: false
 });
 
-var authUrl = "<%= Discourse.base_path %>/auth/";
+var authUrls = ["auth", "session/sso_login"].map(path => `<%= Discourse.base_path %>/${path}`);
 
 var cacheVersion = "1";
 var discourseCacheName = "discourse-" + cacheVersion;
@@ -17,7 +17,7 @@ var externalCacheName = "external-" + cacheVersion;
 
 workbox.routing.registerRoute(
   function(args) {
-    return args.url.origin === location.origin && !args.url.pathname.startsWith(authUrl);
+    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u));
   }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: discourseCacheName,
