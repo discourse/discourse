@@ -158,29 +158,39 @@ export default QuoteButton.extend({
   // of quote buttons that we implement, because everything
   // can have different data needed to form the quote and
   // different CSS classes etc.
-  _getRequiredQuoteData($ancestor, requiredData = {}) {
+  _getRequiredQuoteData(ancestor, requiredData = {}) {
     if (requiredData.postId) {
       return requiredData;
     }
-    return { postId: $ancestor.closest(".boxed, .reply").data("post-id") };
+
+    return { postId: ancestor.closest(".boxed, .reply").dataset.postId };
   },
 
   _hasRequiredQuoteData(requiredQuoteData) {
     return requiredQuoteData.postId !== null;
   },
 
-  _noCloseContentEl($ancestor) {
-    return $ancestor.closest(".contents").length === 0;
+  _noCloseContentEl(ancestor) {
+    if (!ancestor) {
+      return;
+    }
+    return !ancestor.closest(".contents");
   },
 
-  _noCloseQuotableEl($selectionStart) {
-    return $selectionStart.closest(".cooked").length === 0;
+  _noCloseQuotableEl(selectionStart) {
+    if (!selectionStart) {
+      return;
+    }
+    return !selectionStart.closest(".cooked");
   },
 
-  _findCooked($selectedElement) {
+  _findCooked(selectedElement) {
+    if (!selectedElement) {
+      return;
+    }
     return (
-      $selectedElement.find(".cooked")[0] ||
-      $selectedElement.closest(".cooked")[0]
+      selectedElement.querySelectorAll(".cooked")[0] ||
+      selectedElement.closest(".cooked")
     );
   },
 

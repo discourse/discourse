@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import QuoteButtonMixin from "discourse/mixins/quote-button";
+import QuoteSelectionMixin from "discourse/mixins/quote-selection";
 import { translateModKey } from "discourse/lib/utilities";
 
-export default Component.extend(QuoteButtonMixin, {
+export default Component.extend(QuoteSelectionMixin, {
   init() {
     this._super(...arguments);
 
