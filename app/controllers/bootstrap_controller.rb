@@ -69,7 +69,7 @@ class BootstrapController < ApplicationController
       locale_script: locale,
       stylesheets: @stylesheets,
       plugin_js: plugin_js,
-      plugin_test_js: [script_asset_path("plugin_tests")],
+      plugin_test_js: [script_asset_path("plugin-tests")],
       setup_data: client_side_setup_data,
       preloaded: @preloaded,
       html: create_html,
