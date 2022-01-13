@@ -615,6 +615,8 @@ aside.onebox.twitterstatus .onebox-body {
 
   .tweet {
     white-space: pre-line;
+    top: calc(-1 * var(--font-0) * var(--line-height-large));
+    position: relative;
   }
 
   p,
