@@ -225,7 +225,7 @@ en:
           - or, push the <kbd><b>B</b></kbd> or <kbd><i>I</i></kbd> buttons in the editor
 
         reply: |-
-          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](http://commonmark.org/help) :nerd:
+          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Aww, I didn’t find any formatting in your reply. :pencil2:
 
