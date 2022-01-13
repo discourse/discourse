@@ -447,6 +447,22 @@ describe InvitesController do
         expect(response.status).to eq(412)
       end
 
+      it 'does not log in the user if they were not approved' do
+        SiteSetting.must_approve_users = true
+
+        put "/invites/show/#{invite.invite_key}.json", params: { password: SecureRandom.hex, email_token: invite.email_token }
+
+        expect(session[:current_user_id]).to eq(nil)
+        expect(response.parsed_body["message"]).to eq(I18n.t('activation.approval_required'))
+      end
+
+      it 'does not log in the user if they were not activated' do
+        put "/invites/show/#{invite.invite_key}.json", params: { password: SecureRandom.hex }
+
+        expect(session[:current_user_id]).to eq(nil)
+        expect(response.parsed_body["message"]).to eq(I18n.t('invite.confirm_email'))
+      end
+
       it 'fails when local login is disabled and no external auth is configured' do
         SiteSetting.enable_local_logins = false
 
