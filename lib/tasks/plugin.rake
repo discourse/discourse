@@ -109,6 +109,13 @@ end
 
 desc 'pull compatible plugin versions for all plugins'
 task 'plugin:pull_compatible_all' do |t|
+  if GlobalSetting.load_plugins?
+    STDERR.puts <<~TEXT
+      WARNING: Plugins were activated before running `rake plugin:pull_compatible_all`
+        You should prefix this command with LOAD_PLUGINS=0
+    TEXT
+  end
+
   # Loop through each directory
   plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
   # run plugin:pull_compatible

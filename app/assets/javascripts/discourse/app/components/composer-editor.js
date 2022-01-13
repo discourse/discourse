@@ -22,6 +22,7 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
+  cannotSee,
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
@@ -540,7 +541,7 @@ export default Component.extend(ComposerUploadUppy, {
                   `.mention.cannot-see[data-name="${name}"]`
                 )?.length > 0
               ) {
-                this.cannotSeeMention([{ name }]);
+                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
                 found.push(name);
               }
             },

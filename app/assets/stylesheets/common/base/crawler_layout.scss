@@ -25,6 +25,8 @@ body.crawler {
   }
 
   .topic-list {
+    table-layout: fixed;
+    overflow: hidden;
     margin-bottom: 1em;
     @media (max-width: 850px) {
       td {

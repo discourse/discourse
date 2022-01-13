@@ -145,6 +145,7 @@ en:
 
     action_codes:
       public_topic: "made this topic public %{when}"
+      open_topic: "converted this to a topic %{when}"
       private_topic: "made this topic a personal message %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
@@ -194,6 +195,8 @@ en:
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
+
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
 
     s3:
       regions:
@@ -1521,11 +1524,11 @@ en:
         every_month: "every month"
         every_six_months: "every six months"
       email_level:
-        title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+        title: "Email me when I am quoted, replied to, my @username is mentioned, or when there is new activity in my watched categories, tags or topics"
         always: "always"
         only_when_away: "only when away"
         never: "never"
-      email_messages_level: "Send me an email when someone messages me"
+      email_messages_level: "Email me when I am sent a personal message"
       include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
 
@@ -2107,8 +2110,10 @@ en:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
         other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
       cannot_see_mention:
-        category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
-        private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+        category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
+        private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
+        muted_topic: "You mentioned @%{username} but they won't be notified because they muted this topic."
+        not_allowed: "You mentioned @%{username} but they won't be notified because they were not invited to this topic."
       here_mention:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
@@ -2743,20 +2748,13 @@ en:
 
       progress:
         title: topic progress
-        go_top: "top"
-        go_bottom: "bottom"
-        go: "go"
-        jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
         jump_prompt_of:
           one: "of %{count} post"
           other: "of %{count} posts"
         jump_prompt_long: "Jump to..."
-        jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
         jump_prompt_or: "or"
-        total: total posts
-        current: current post
 
       notifications:
         title: change how often you get notified about this topic
@@ -4910,9 +4908,6 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to allowlist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
-          rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "Block"
             do_nothing: "Allow"

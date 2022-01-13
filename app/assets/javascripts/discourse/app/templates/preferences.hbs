@@ -50,7 +50,7 @@
       {{/link-to}}
     </li>
 
-    {{plugin-outlet name="user-preferences-nav-under-interface" args=(hash model=model)}}
+    {{plugin-outlet name="user-preferences-nav-under-interface" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
     {{#if model.userApiKeys}}
       <li class="nav-apps">
@@ -59,12 +59,12 @@
         {{/link-to}}
       </li>
     {{/if}}
-    {{plugin-outlet name="user-preferences-nav" connectorTagName="li" args=(hash model=model)}}
+    {{plugin-outlet name="user-preferences-nav" tagName="span" connectorTagName="li" args=(hash model=model)}}
   {{/mobile-nav}}
 {{/d-section}}
 
 <section class="user-content user-preferences">
-  {{plugin-outlet name="above-user-preferences" args=(hash model=model)}}
+  {{plugin-outlet name="above-user-preferences" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
   <form class="form-vertical">
     {{outlet}}

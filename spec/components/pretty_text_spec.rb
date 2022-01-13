@@ -2072,4 +2072,32 @@ HTML
 
     expect(cooked).to match_html(html)
   end
+
+  context "customizing markdown-it rules" do
+    it 'customizes the markdown-it rules correctly' do
+      cooked = PrettyText.cook('This is some text **bold**', markdown_it_rules: [])
+
+      expect(cooked).to eq("<p>This is some text **bold**</p>")
+
+      cooked = PrettyText.cook('This is some text **bold**', markdown_it_rules: ["emphasis"])
+
+      expect(cooked).to eq("<p>This is some text <strong>bold</strong></p>")
+    end
+  end
+
+  context "enabling/disabling features" do
+    it "allows features to be overriden" do
+      cooked = PrettyText.cook(':grin: @mention', features_override: [])
+
+      expect(cooked).to eq("<p>:grin: @mention</p>")
+
+      cooked = PrettyText.cook(':grin: @mention', features_override: ["emoji"])
+
+      expect(cooked).to eq("<p><img src=\"/images/emoji/twitter/grin.png?v=#{Emoji::EMOJI_VERSION}\" title=\":grin:\" class=\"emoji\" alt=\":grin:\"> @mention</p>")
+
+      cooked = PrettyText.cook(':grin: @mention', features_override: ["mentions", "text-post-process"])
+
+      expect(cooked).to eq("<p>:grin: <span class=\"mention\">@mention</span></p>")
+    end
+  end
 end

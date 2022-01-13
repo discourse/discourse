@@ -612,6 +612,13 @@ aside.onebox.twitterstatus .onebox-body {
   .twitter-screen-name {
     font-size: var(--font-down-1);
   }
+
+  .tweet {
+    white-space: pre-line;
+    top: calc(-1 * var(--font-0) * var(--line-height-large));
+    position: relative;
+  }
+
   p,
   .tweet {
     clear: left;

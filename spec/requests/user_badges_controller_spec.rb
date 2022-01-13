@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe UserBadgesController do
   fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:badge) { Fabricate(:badge) }
 
   context 'index' do
@@ -107,7 +108,6 @@ describe UserBadgesController do
     end
 
     it 'grants badges from staff' do
-      admin = Fabricate(:admin)
       post_1 = create_post
 
       sign_in(admin)
@@ -169,7 +169,6 @@ describe UserBadgesController do
     end
 
     it 'does not grant badge when external link is used in reason' do
-      admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
@@ -184,7 +183,6 @@ describe UserBadgesController do
     end
 
     it 'does not grant badge if invalid discourse post/topic link is used in reason' do
-      admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
@@ -199,7 +197,6 @@ describe UserBadgesController do
     end
 
     it 'grants badge when valid post/topic link is given in reason' do
-      admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
@@ -217,7 +214,6 @@ describe UserBadgesController do
       it 'grants badge when valid post/topic link is given in reason' do
         set_subfolder "/discuss"
 
-        admin = Fabricate(:admin)
         post = create_post
 
         sign_in(admin)
@@ -248,7 +244,6 @@ describe UserBadgesController do
     end
 
     it 'revokes the badge' do
-      admin = Fabricate(:admin)
       sign_in(admin)
       delete "/user_badges/#{user_badge.id}.json"
 

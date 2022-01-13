@@ -94,6 +94,7 @@ ja:
       previous_month: "前月"
       next_month: "翌月"
       placeholder: 日付
+      from_placeholder: "開始日"
       to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
@@ -136,6 +137,7 @@ ja:
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
       forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックの操作"
+    skip_to_main_content: "メインコンテンツにスキップ"
     wizard_required: "Discourse へようこそ！ <a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     software_update_prompt:
@@ -160,6 +162,7 @@ ja:
         cn_northwest_1: "中国 (寧夏)"
         eu_central_1: "EU (フランクフルト)"
         eu_north_1: "EU (ストックホルム)"
+        eu_south_1: "EU（ミラノ）"
         eu_west_1: "EU (アイルランド)"
         eu_west_2: "EU (ロンドン)"
         eu_west_3: "EU (パリ)"
@@ -214,6 +217,8 @@ ja:
     max_of_count: "最大 %{count}"
     character_count:
       other: "%{count} 文字"
+    period_chooser:
+      aria_label: "期間でフィルタ"
     related_messages:
       title: "関連メッセージ"
       see_all: '@%{username} からの<a href="%{path}">すべてのメッセージ</a>を表示...'
@@ -246,11 +251,13 @@ ja:
       help:
         bookmark: "クリックしてこのトピックの最初の投稿をブックマークします"
         edit_bookmark: "クリックしてこのトピックのブックマークを編集します"
+        edit_bookmark_for_topic: "クリックしてこのトピックのブックマークを編集します"
         unbookmark: "クリックしてこのトピック内のすべてのブックマークを削除します"
         unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
       not_bookmarked: "この投稿をブックマークする"
+      remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
       remove: "ブックマークを削除"
       delete: "ブックマークを削除"
@@ -277,6 +284,7 @@ ja:
       copied: "コピーしました！"
     drafts:
       label: "下書き"
+      label_with_count: "下書き（%{count}）"
       resume: "再開"
       remove: "削除"
       remove_confirmation: "この下書きを削除してもよろしいですか？"
@@ -335,6 +343,7 @@ ja:
         placeholder: "ここにメッセージのタイトル、URL、または ID を入力してください"
     review:
       order_by: "並べ替え順"
+      date_filter: "投稿期間"
       in_reply_to: "返信"
       explain:
         why: "この項目が、キューに追加された理由を説明してください"
@@ -749,6 +758,7 @@ ja:
         owner: "オーナー"
         primary: "プライマリー"
         forbidden: "メンバーの表示は許可されていません。"
+        no_filter_matches: "その検索に一致するメンバーはいません。"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -879,6 +889,7 @@ ja:
           all: "すべて"
           read: "既読"
           unread: "未読"
+          unseen: "未読"
         ignore_duration_title: "ユーザーを無視"
         ignore_duration_username: "ユーザー名"
         ignore_duration_when: "期間:"
@@ -922,7 +933,9 @@ ja:
       use_current_timezone: "現在のタイムゾーンを使用"
       profile_hidden: "このユーザーの公開プロフィールは非公開です。"
       expand_profile: "展開"
+      sr_expand_profile: "プロファイルの詳細を展開する"
       collapse_profile: "折りたたむ"
+      sr_collapse_profile: "プロファイルの詳細を折りたたむ"
       bookmarks: "ブックマーク"
       bio: "自己紹介"
       timezone: "タイムゾーン"
@@ -954,6 +967,8 @@ ja:
       no_notifications_body: >
         あなたのトピックや投稿に対する返信があったとき、誰かがあなたを <b>@メンション</b>または引用したとき、あなたがウォッチ中のトピックに返信があったときなど、あなたに直接関連するアクティビティはこのパネルで通知されます。あなたがしばらくログインしていない場合は、メールにも通知が送信されます。<br><br>%{icon} を探して、どの特定のトピック、カテゴリ、およびタグについて通知するかを決めましょう。詳細については、<a href='%{preferencesUrl}'>通知の設定</a>をご覧ください。
       no_notifications_page_title: "まだ通知はありません"
+      no_notifications_page_body: >
+        あなたのトピックや投稿に対する返信があったとき、誰かがあなたを <b>@メンション</b>または引用したとき、あなたがウォッチ中のトピックに返信があったときなど、あなたに直接関連するアクティビティが通知されます。あなたがしばらくログインしていない場合は、メールにも通知が送信されます。<br><br>%{icon} を探して、どの特定のトピック、カテゴリ、およびタグについて通知するかを決めましょう。詳細については、<a href='%{preferencesUrl}'>通知の設定</a>をご覧ください。
       first_notification: "最初の通知です！選択して開始してください。"
       dynamic_favicon: "ブラウザのアイコンに件数を表示する"
       skip_new_user_tips:
@@ -1056,7 +1071,9 @@ ja:
         warnings_received: "警告"
         rejected_posts: "拒否された投稿"
       messages:
+        all: "すべての受信トレイ"
         inbox: "受信トレイ"
+        personal: "個人メッセージ"
         latest: "最新"
         sent: "送信済み"
         unread: "未読"
@@ -1072,6 +1089,8 @@ ja:
         failed_to_move: "選択されたメッセージを移動できませんでした (ネットワークがダウンしている可能性があります)"
         tags: "タグ"
         warnings: "運営スタッフからの警告"
+        read_more_in_group: "もっと読みますか？%{groupLink} での他のメッセージを閲覧できます。"
+        read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1228,6 +1247,7 @@ ja:
         not_connected: "(未接続)"
         confirm_modal_title: "%{provider} アカウントを接続"
         confirm_description:
+          disconnect: "既存の %{provider} アカウント「%{account_description}」は切断されます。"
           account_specific: "あなたの %{provider} アカウント '%{account_description}' が認証に使用されます。"
           generic: "あなたの %{provider} アカウントが認証に使用されます。"
       name:
@@ -1315,11 +1335,9 @@ ja:
         every_month: "毎月"
         every_six_months: "6 か月毎"
       email_level:
-        title: "誰かが自分の投稿を引用またはそれに返信したとき、@ユーザー名で自分をメンションしたとき、または自分をトピックに招待したときにメールでその通知を受け取る"
         always: "常時"
         only_when_away: "離れている時のみ"
         never: "通知しない"
-      email_messages_level: "メッセージを受け取ったときにメールで通知を受け取る"
       include_tl0_in_digests: "要約メールに新規ユーザーのコンテンツを含める"
       email_in_reply_to: "メールに投稿への返信の抜粋を含める"
       other_settings: "その他"
@@ -1405,11 +1423,16 @@ ja:
           expired_at_time: "%{time} に期限切れ"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
+          restrict_email: "メールに制限"
+          restrict_domain: "ドメインに制限"
+          email_or_domain_placeholder: "name@example.com または example.com"
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
+          invite_to_topic: "トピックに到着"
           expires_at: "有効期限"
           custom_message: "オプションの個人メッセージ"
           send_invite_email: "保存してメールを送信"
+          send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
           save_invite: "招待を保存"
           invite_saved: "招待は保存されました。"
         bulk_invite:
@@ -1567,6 +1590,8 @@ ja:
       description_time_MF: "{replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。"
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
+      short_label: "要約"
+      short_title: "このトピックの要約を表示: コミュニティが最も面白いと判断した投稿"
     deleted_filter:
       enabled_description: "削除された投稿は非表示になっています。"
       disabled_description: "削除された投稿は表示されています。"
@@ -1594,10 +1619,12 @@ ja:
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
       title: "アカウントの作成"
       failed: "エラーが発生しました。このメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
+      associate: "アカウントをお持ちですか？<a href='%{associate_link}'>ログイン</a>して %{provider} アカウントにリンクします。"
     forgot_password:
       title: "パスワードをリセット"
       action: "パスワードを忘れました"
       invite: "ユーザー名またはメールアドレスを入力してください。パスワードのリセットメールを送信します。"
+      invite_no_username: "メールアドレスを入力してください。パスワードのリセットメールを送信します。"
       reset: "パスワードをリセット"
       complete_username: "アカウントがユーザー名 <b>%{username}</b> に一致する場合、まもなく、パスワードのリセット方法が記載されたメールが届きます。"
       complete_email: "アカウントと <b>%{email}</b> が一致する場合、まもなく、パスワードのリセット方法が記載されたメールが届きます。"
@@ -1671,21 +1698,27 @@ ja:
       google_oauth2:
         name: "Google"
         title: "Google"
+        sr_title: "Google でログイン"
       twitter:
         name: "Twitter"
         title: "Twitter"
+        sr_title: "Twitter でログイン"
       instagram:
         name: "Instagram"
         title: "Instagram"
+        sr_title: "Instagram でログイン"
       facebook:
         name: "Facebook"
         title: "Facebook"
+        sr_title: "Facebook でログイン"
       github:
         name: "GitHub"
         title: "GitHub"
+        sr_title: "GitHub でログイン"
       discord:
         name: "Discord"
         title: "Discord"
+        sr_title: "Discord でログイン"
       second_factor_toggle:
         totp: "代わりに認証アプリを使用する"
         backup_code: "代わりにバックアップコードを使用する"
@@ -1737,6 +1770,8 @@ ja:
       select_to_filter: "フィルタする値を選択する"
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
+      results_count:
+        other: "%{count} 件の結果"
       filter_placeholder: 検索...
       filter_placeholder_with_any: 検索または作成...
       create: "作成: '%{content}'"
@@ -1798,9 +1833,8 @@ ja:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
         other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
-      cannot_see_mention:
-        category: "%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
-        private: "%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
+      here_mention:
+        other: "<b>@%{here}</b> をメンションして %{count} 人のユーザーに通知しようとしています。よろしいですか？"
       duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1828,6 +1862,7 @@ ja:
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
+      title: "または %{modifier}Enter キーを押します"
       users_placeholder: "ユーザーを追加"
       title_placeholder: "トピックのタイトルを入力してください"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
@@ -1917,6 +1952,8 @@ ja:
           desc: "最新の返信日を変更せずに返信します"
       reload: "再読み込み"
       ignore: "無視する"
+      image_alt_text:
+        aria_label: 画像の代替テキスト
     notifications:
       tooltip:
         regular:
@@ -1960,6 +1997,8 @@ ja:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
       dismiss_confirmation:
+        body:
+          other: "本当によろしいですか？重要な通知が %{count} 件あります。"
         dismiss: "閉じる"
         cancel: "キャンセル"
       group_message_summary:
@@ -2016,6 +2055,9 @@ ja:
       select_all: "すべて選択"
       clear_all: "すべてクリア"
       too_short: "検索文字が短すぎます。"
+      open_advanced: "高度な検索を開く"
+      clear_search: "検索をクリア"
+      sort_or_bulk_actions: "結果の並べ替えまたは一括選択"
       result_count:
         other: "<span class='term'>%{term}</span> の <span>%{count}%{plus} 件の結果</span>"
       title: "検索"
@@ -2031,8 +2073,14 @@ ja:
       search_google: "Google で検索してみてください:"
       search_google_button: "Google"
       search_button: "検索"
+      search_term_label: "検索キーワードを入力"
       categories: "カテゴリ"
       tags: "タグ"
+      in: "検索対象"
+      in_this_topic: "このトピック"
+      in_this_topic_tooltip: "全トピックの検索に切り替えます"
+      in_topics_posts: "すべてのトピックと投稿"
+      enter_hint: "または Enter キーを押します"
       type:
         users: "ユーザー"
         categories: "カテゴリ"
@@ -2318,19 +2366,12 @@ ja:
         replies_short: "%{current} / %{total}"
       progress:
         title: トピックの進捗
-        go_top: "上"
-        go_bottom: "下"
-        go: "移動"
-        jump_bottom: "最後の投稿へジャンプ"
         jump_prompt: "ジャンプ..."
         jump_prompt_of:
           other: "/ %{count} の投稿"
         jump_prompt_long: "ジャンプ..."
-        jump_bottom_with_number: "%{post_number} 番へジャンプ"
         jump_prompt_to_date: "日付"
         jump_prompt_or: "または"
-        total: 全投稿
-        current: 現在の投稿
       notifications:
         title: このトピックに関する通知頻度の変更
         reasons:
@@ -3212,7 +3253,17 @@ ja:
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
     download_calendar:
+      title: "カレンダーをダウンロード"
+      save_ics: ".ics ファイルをダウンロード"
+      save_google: "Google カレンダーに追加"
+      remember: "今後表示しない"
+      remember_explanation: "（この設定はユーザー設定で変更できます）"
       download: "ダウンロード"
+      default_calendar: "デフォルトカレンダー"
+      default_calendar_instruction: "日付を保存する際に、どのカレンダーを使用するかを決定します"
+      add_to_calendar: "カレンダーに追加"
+      google: "Google カレンダー"
+      ics: "ICS"
     tagging:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
@@ -3221,7 +3272,11 @@ ja:
       changed: "タグを変更しました:"
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
+      choose_for_topic_required:
+        other: "少なくとも %{count} 個のタグを選択してください..."
       info: "情報"
+      default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。"
+      staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
       synonyms: "同義語"
       synonyms_description: "次のタグが使用されている場合、<b>%{base_tag_name}</b> に置き換えられます。"
@@ -4241,9 +4296,6 @@ ja:
           title: "スクリーン対象 IP"
           description: 'ウォッチ中の IP アドレスです。IP アドレスのホワイトリストに追加するには "許可" を使用します。'
           delete_confirm: "%{ip_address} のルールを削除してもよろしいですか？"
-          roll_up_confirm: "共通スクリーン対象 IP アドレスをサブネットにロールアップしてもよろしいですか？"
-          rolled_up_some_subnets: "IP ブロックエントリを次のサブネットにロールアップしました: %{subnets}。"
-          rolled_up_no_subnet: "ロールアップするものがありません。"
           actions:
             block: "ブロック"
             do_nothing: "許可"

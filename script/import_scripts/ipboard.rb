@@ -213,7 +213,7 @@ EOM
           post_create_action: proc do |newuser|
             if user['avatar_url'] && user['avatar_url'].length > 0
               photo_path = AVATARS_DIR + user['avatar_url']
-              if File.exists?(photo_path)
+              if File.exist?(photo_path)
                 begin
                   upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
                   if upload && upload.persisted?

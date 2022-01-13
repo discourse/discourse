@@ -106,7 +106,10 @@ export const DefaultNotificationItem = createWidget(
     },
 
     icon(notificationName) {
-      let icon = iconNode(`notification.${notificationName}`);
+      return iconNode(`notification.${notificationName}`);
+    },
+
+    _addA11yAttrsTo(icon, notificationName) {
       icon.properties.attributes["aria-label"] = I18n.t(
         `notifications.titles.${notificationName}`
       );
@@ -131,6 +134,7 @@ export const DefaultNotificationItem = createWidget(
       let { data } = attrs;
       let text = emojiUnescape(this.text(notificationName, data));
       let icon = this.icon(notificationName, data);
+      this._addA11yAttrsTo(icon, notificationName);
 
       const title = this.notificationTitle(notificationName, data);
 

@@ -1391,11 +1391,9 @@ es:
         every_month: "cada mes"
         every_six_months: "cada seis meses"
       email_level:
-        title: "Enviarme un correo electrónico cuando alguien me cite, me responda, mencione mi @nombre de usuario o me invite a un tema"
         always: "siempre"
         only_when_away: "solo cuando no esté en la página"
         never: "nunca"
-      email_messages_level: "Enviarme un correo electrónico cuando alguien me envíe un mensaje"
       include_tl0_in_digests: "Incluir contenido de usuarios nuevos en los correos electrónicos de resumen"
       email_in_reply_to: "Incluir un extracto de la publicación que recibió una respuesta en los correo electrónicos"
       other_settings: "Otros"
@@ -1482,10 +1480,13 @@ es:
           expired_at_time: "Caducada en %{time}"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          restrict: "Restringir a"
           restrict_email: "Restringir al correo electrónico"
+          restrict_domain: "Restringir a un dominio"
+          email_or_domain_placeholder: "nombre@ejemplo.com o ejemplo.com"
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
-          invite_to_topic: "Llegar al tema"
+          invite_to_topic: "Abrir tema al terminar el registro"
           expires_at: "Caducar tras"
           custom_message: "Mensaje personal opcional"
           send_invite_email: "Guardar y enviar correo electrónico"
@@ -1691,6 +1692,7 @@ es:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
       invite: "Introduce tu nombre de usuario o tu dirección de correo electrónico, y te enviaremos un correo electrónico para restablecer tu contraseña."
+      invite_no_username: "Escribe tu correo y te mandamos un enlace para que cambies la contraseña."
       reset: "Restablecer contraseña"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
@@ -1908,9 +1910,9 @@ es:
       group_mentioned:
         one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> ¿Seguro que quieres hacerlo?"
         other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Seguro de que quieres hacerlo?"
-      cannot_see_mention:
-        category: "Mencionaste a %{username} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás añadirlos a un grupo que tenga acceso a esta categoría."
-        private: "Mencionaste a %{username} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
+      here_mention:
+        one: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuario – ¿quieres continuar?"
+        other: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuarios – ¿quieres continuar?"
       duplicate_link: "Parece que tu enlace a <b>%{domain}</b> ya fue publicado en el tema por <b>@%{username}</b> en <a href='%{post_url}'>una respuesta el %{ago}</a>. ¿Seguro que deseas volver a publicarlo?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2083,6 +2085,9 @@ es:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
       dismiss_confirmation:
+        body:
+          one: "¿Quieres descartar? Tienes %{count} notificación importante."
+          other: "¿Quieres descartar? Tienes %{count} notificaciones importantes."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:
@@ -2494,20 +2499,13 @@ es:
         replies_short: "%{current} / %{total}"
       progress:
         title: avances
-        go_top: "arriba"
-        go_bottom: "abajo"
-        go: "ir"
-        jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicaciones"
         jump_prompt_long: "Saltar a..."
-        jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
         jump_prompt_or: "o"
-        total: total de publicaciones
-        current: publicación actual
       notifications:
         title: cambiar la frecuencia con la que se te notifica acerca de este tema
         reasons:
@@ -2590,7 +2588,7 @@ es:
         copied: "Enlace al tema copiado."
         restricted_groups:
           one: "Sólo visible para los miembros del grupo: %{groupNames}"
-          other: "Sólo visible para los miembros de los grupos: %{groupNames}"
+          other: "Solo visible para los miembros de los grupos: %{groupNames}"
         notify_users:
           title: "Notificar"
           instructions: "Notificar sobre este tema a los siguientes usuarios:"
@@ -3483,15 +3481,18 @@ es:
         other: "selecciona al menos %{count} etiquetas…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
+      staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
+      save: "Guardar el nombre y la descripción de la etiqueta"
       tag_groups_info:
         one: 'Esta etiqueta pertence al grupo: «%{tag_groups}»'
         other: "Esta etiqueta pertence a estos grupos: %{tag_groups}."
       category_restrictions:
         one: "Solo se puede utilizar en esta categoría:"
         other: "Solo se puede utilizar en estas categorías:"
+      edit_synonyms: "Editar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
       add_synonyms: "Añadir"
       add_synonyms_explanation:
@@ -3508,6 +3509,7 @@ es:
       delete_confirm_synonyms:
         one: "Su sinónimo también se eliminará"
         other: "Sus %{count} sinónimos también se eliminarán."
+      edit_tag: "Editar el nombre y la descripción de la etiqueta"
       description: "Descripción"
       sort_by: "Ordenar por:"
       sort_by_count: "cantidad"
@@ -3783,6 +3785,7 @@ es:
             automatic_membership_user_count:
               one: "%{count} usuario tiene el nuevo dominio de correo electrónico y será añadido al grupo"
               other: "%{count} usuarios tienen el nuevo dominio de correo electrónico y serán añadidos al grupo"
+            automatic_membership_associated_groups: "Los usuarios que sean miembros de un grupo en uno de los proveedores listados aquí serán añadidos automáticamente a este grupo cuando inicien sesión con el proveedor."
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"
@@ -3830,6 +3833,7 @@ es:
         no_description: (sin descripción)
         all_api_keys: Todas las claves de API
         user_mode: Nivel de usuario
+        scope_mode: Ámbito
         impersonate_all_users: Suplantar cualquier usuario
         single_user: "Un usuario"
         user_placeholder: Introducir nombre de usuario
@@ -3847,6 +3851,7 @@ es:
           granular: Granular
           read_only: Solo lectura
           global: Global
+          global_description: Esta clave de API no tiene restricciones y puede acceder a todas las rutas.
           resource: Recurso
           action: Acción
           allowed_parameters: Parámetros permitidos
@@ -3854,6 +3859,8 @@ es:
           any_parameter: (cualquier parámetro)
           allowed_urls: Direcciones URL permitidas
           descriptions:
+            global:
+              read: Restringir clave de API a rutas de solo lectura.
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
@@ -3862,7 +3869,7 @@ es:
             posts:
               edit: Edita cualquier publicación o una específica.
             uploads:
-              create: Sube un nuevo archivo.
+              create: Subir un nuevo archivo o iniciar subidas directas de uno o varios archivos al almacenamiento externo.
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincroniza un usuario usando DiscourseConnect.
@@ -3875,6 +3882,14 @@ es:
               list: Obtener una lista de usuarios.
             email:
               receive_emails: Combinar este ámbito con el ámbito mail-receiver para procesar correos entrantes.
+            badges:
+              create: Crear nuevas medallas.
+              show: Obtener información sobre las medallas.
+              update: Editar medallas.
+              delete: Eliminar medallas.
+              list_user_badges: Listar las medallas de los usuarios.
+              assign_badge_to_user: Dar medallas a los usuarios.
+              revoke_badge_from_user: Quitar medallas de los usuarios.
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -4242,8 +4257,10 @@ es:
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
           head_tag:
             text: "Cabecera"
+            title: "HTML que se insertará después de la etiqueta head"
           body_tag:
             text: "Cuerpo"
+            title: "HTML que se insertará antes de la etiqueta body"
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
@@ -4537,9 +4554,6 @@ es:
           title: "Direcciones IP bloqueadas"
           description: 'Direcciones IP que se están vigilando. Usar «Allow» para añadir direcciones a la lista de permitidas.'
           delete_confirm: "¿Seguro que quieres quitar el bloqueo para %{ip_address}?"
-          roll_up_confirm: "¿Seguro que quieres agrupar las direcciones IP bloqueadas vistas con frecuencia en subredes?"
-          rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP bloqueadas a estas subredes: %{subnets}."
-          rolled_up_no_subnet: "No había nada para agrupar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
@@ -5095,6 +5109,7 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
+        help: "Añade nuevos emojis, que cualquiera podrá usar. Arrastra y suelta varios archivos a la vez sin escribir un nombre para crear emojis en masa y nombrarlos según el nombre de archivo que tengan."
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"
@@ -5105,6 +5120,7 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
+        sample: "Incluye el siguiente código HTML en tu página para crear e incrustar en ella temas de Discourse. Sustituye <b>REPLACE_ME</b> con la dirección URL real de la página en la que estés incrustando el código."
         title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"

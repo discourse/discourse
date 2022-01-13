@@ -8,6 +8,7 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
 
   # only option at the moment is :trusted
   def initialize(name, opts = {})
+    Discourse.deprecate("OAuth2Authenticator is deprecated. Use `ManagedAuthenticator` and `UserAssociatedAccount` instead. For more information, see https://meta.discourse.org/t/106695", drop_from: '2.9.0', output_in_test: true)
     @name = name
     @opts = opts
   end

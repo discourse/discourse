@@ -40,6 +40,13 @@ hu:
     user_cant_post_in_topic: "Nem szavazhat, mert nem tehet bejegyzést ebben a témában."
     topic_must_be_open_to_vote: "A témának nyitottnak kell lennie, hogy szavazni lehessen."
     poll_must_be_open_to_vote: "A szavazásnak nyitottnak kell lennie ahhoz, hogy szavazni lehessen."
+    one_vote_per_user: "Csak 1 szavazat engedélyezett ennél a szavazásnál."
+    max_vote_per_user:
+      one: Csak %{count} szavazat engedélyezett ennél a szavazásnál.
+      other: Legfeljebb %{count} szavazat engedélyezett ennél a szavazásnál.
+    min_vote_per_user:
+      one: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+      other: Legalább %{count} szavazat szükséges ennél a szavazásnál.
     topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie ahhoz, hogy átváltsa az állapotát."
     only_staff_or_op_can_toggle_status: "Csak egy stábtag vagy az eredeti szerző tudja átváltani a szavazás állapotát."
     insufficient_rights_to_create: "Nem hozhat létre szavazásokat."

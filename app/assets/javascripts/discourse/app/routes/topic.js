@@ -7,8 +7,9 @@ import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
+import { isTesting } from "discourse-common/config/environment";
 
-const SCROLL_DELAY = 500;
+const SCROLL_DELAY = isTesting() ? 0 : 500;
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
@@ -230,7 +231,7 @@ const TopicRoute = DiscourseRoute.extend({
           this,
           "_replaceUnlessScrolling",
           postUrl,
-          Ember.Test ? 0 : SCROLL_DELAY
+          SCROLL_DELAY
         ),
       });
     }
@@ -246,10 +247,11 @@ const TopicRoute = DiscourseRoute.extend({
   },
 
   @action
-  willTransition() {
+  willTransition(transition) {
     this._super(...arguments);
     cancel(this.scheduledReplace);
     this.set("isTransitioning", true);
+    transition.catch(() => this.set("isTransitioning", false));
     return true;
   },
 

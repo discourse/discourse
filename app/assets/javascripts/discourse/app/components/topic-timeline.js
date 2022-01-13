@@ -1,24 +1,16 @@
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
-import outletHeights from "discourse/lib/header-outlet-height";
-
-const headerPadding = () => {
-  let topPadding = parseInt($("#main-outlet").css("padding-top"), 10) + 3;
-  const iPadNavHeight = $(".footer-nav-ipad .footer-nav").height();
-  if (iPadNavHeight) {
-    topPadding += iPadNavHeight;
-  }
-  return topPadding;
-};
 
 export default MountWidget.extend(Docking, {
   adminTools: optionalService(),
   widget: "topic-timeline-container",
   dockBottom: null,
   dockAt: null,
+  intersectionObserver: null,
 
   buildArgs() {
     let attrs = {
@@ -39,8 +31,6 @@ export default MountWidget.extend(Docking, {
     if (this.fullscreen) {
       attrs.fullScreen = true;
       attrs.addShowClass = this.addShowClass;
-    } else {
-      attrs.top = this.dockAt || headerPadding();
     }
 
     return attrs;
@@ -56,38 +46,26 @@ export default MountWidget.extend(Docking, {
     this.queueRerender();
   },
 
-  dockCheck(info) {
-    const mainOffset = $("#main").offset();
-    const offsetTop = mainOffset ? mainOffset.top : 0;
-    const topicTop = $(".container.posts").offset().top - offsetTop;
-    const topicBottom =
-      $("#topic-bottom").offset().top - $("#main-outlet").offset().top;
+  dockCheck() {
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
-    const footerHeight = $(".timeline-footer-controls").outerHeight(true) || 0;
 
     const prev = this.dockAt;
-    const posTop = headerPadding() + info.offset();
-    const pos = posTop + timelineHeight - outletHeights();
+    const posTop = headerOffset() + window.pageYOffset;
+    const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
-    if (posTop < topicTop) {
-      this.dockAt = parseInt(topicTop, 10);
-    } else if (pos > topicBottom + footerHeight) {
-      this.dockAt = parseInt(
-        topicBottom - timelineHeight + footerHeight + outletHeights(),
-        10
-      );
+    if (posTop < this.topicTop) {
+      this.dockAt = parseInt(this.topicTop, 10);
+    } else if (pos > this.topicBottom) {
+      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) {
         this.dockAt = 0;
       }
     } else {
       this.dockAt = null;
-      this.fastDockAt = parseInt(
-        topicBottom - timelineHeight + footerHeight - offsetTop,
-        10
-      );
+      this.fastDockAt = parseInt(this.topicBottom - timelineHeight, 10);
     }
 
     if (this.dockAt !== prev) {
@@ -114,6 +92,28 @@ export default MountWidget.extend(Docking, {
       this.appEvents.on("composer:opened", this, this.queueRerender);
       this.appEvents.on("composer:resized", this, this.queueRerender);
       this.appEvents.on("composer:closed", this, this.queueRerender);
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            const bounds = entry.boundingClientRect;
+
+            if (entry.target.id === "topic-bottom") {
+              this.set("topicBottom", bounds.y + window.scrollY);
+            } else {
+              this.set("topicTop", bounds.y + window.scrollY);
+            }
+          }
+        });
+
+        const elements = [
+          document.querySelector(".container.posts"),
+          document.querySelector("#topic-bottom"),
+        ];
+
+        for (let i = 0; i < elements.length; i++) {
+          this.intersectionObserver.observe(elements[i]);
+        }
+      }
     }
   },
 
@@ -124,6 +124,10 @@ export default MountWidget.extend(Docking, {
       this.appEvents.off("composer:opened", this, this.queueRerender);
       this.appEvents.off("composer:resized", this, this.queueRerender);
       this.appEvents.off("composer:closed", this, this.queueRerender);
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver?.disconnect();
+        this.intersectionObserver = null;
+      }
     }
   },
 });

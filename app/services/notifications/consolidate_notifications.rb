@@ -22,6 +22,15 @@
 # Need to call #set_mutations to configure this:
 #
 # - set_data_blk: A block that receives the notification data hash and mutates it, adding additional data needed for consolidation.
+#
+# Need to call #before_consolidation_callbacks to configure this:
+#
+# - before_update_blk: A block that is called before updating an already consolidated notification.
+#                      Receives the consolidated object, the data hash, and the original notification.
+#
+# - before_consolidation_blk: A block that is called before creating a consolidated object.
+#                             Receives an ActiveRecord::Relation with notifications about to be consolidated, and the new data hash.
+#
 
 module Notifications
   class ConsolidateNotifications < ConsolidationPlan
@@ -37,6 +46,12 @@ module Notifications
       @bump_notification = bump_notification
     end
 
+    def before_consolidation_callbacks(before_update_blk: nil, before_consolidation_blk: nil)
+      @before_update_blk = before_update_blk
+      @before_consolidation_blk = before_consolidation_blk
+      self
+    end
+
     def can_consolidate_data?(notification)
       return false if get_threshold.zero? || to.blank?
       return false if notification.notification_type != from
@@ -44,7 +59,7 @@ module Notifications
       @data = consolidated_data(notification)
 
       return true if @precondition_blk.nil?
-      @precondition_blk.call(data)
+      @precondition_blk.call(data, notification)
     end
 
     def consolidate_or_save!(notification)
@@ -75,6 +90,10 @@ module Notifications
       data_hash = consolidated.data_hash.merge(data)
       data_hash[:count] += 1 if data_hash[:count].present?
 
+      if @before_update_blk
+        @before_update_blk.call(consolidated, data_hash, notification)
+      end
+
       # Hack: We don't want to cache the old data if we're about to update it.
       consolidated.instance_variable_set(:@data_hash, nil)
 
@@ -99,6 +118,10 @@ module Notifications
 
       timestamp = notifications.last.created_at
       data[:count] = count_after_saving_notification
+
+      if @before_consolidation_blk
+        @before_consolidation_blk.call(notifications, data)
+      end
 
       consolidated = nil
 

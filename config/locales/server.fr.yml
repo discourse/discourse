@@ -225,8 +225,6 @@ fr:
       <p>Si vous vous souvenez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">connecter</a>.</p>
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
-    not_found_template_link: |
-      La date d'expiration de <p>l'invitation à <a href="%{base_url}">%{site_name}</a> a été dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
     user_exists: "Inutile d'inviter <b>%{email}</b>, cette personne <a href='%{base_path}/u/%{username}/summary'>dispose déjà d'un compte !</a>"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
@@ -1540,7 +1538,6 @@ fr:
     blocked_email_domains: "Une liste de domaines de courriels, séparés par des barres verticales (caractère « | ») que les utilisateurs ne sont pas autorisés à utiliser pour s'inscrire. Exemple : mailinator.com|trashmail.net"
     allowed_email_domains: "Une liste de domaines de courriels, séparés par des barres verticales (caractère « | ») que les utilisateurs DOIVENT utiliser pour s'inscrire. ATTENTION : les utilisateurs avec une adresse de courriel d'un domaine non repris dans la liste ne seront pas autorisés à s'inscrire !"
     auto_approve_email_domains: "Les utilisateurs dont le domaine de l'adresse courriel appartient à cette liste seront automatiquement approuvés."
-    hide_email_address_taken: "Ne pas informer les utilisateurs qu'un compte existe avec une adresse courriel donnée lors de l'inscription ou à partir du formulaire d'oubli du mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions de l'utilisateur sur tous les appareils"
     version_checks: "Vérifier périodiquement les serveurs Discourse pour obtenir des informations de mises à jour et les afficher sur le tableau de bord <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -2532,6 +2529,27 @@ fr:
         ```
 
         Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted_for_responders:
+      text_body_template: |
+        Bonjour,
+
+        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer qu'un [post](%{base_url}%{url}) auquel vous aviez répondu, a été supprimé.
+
+        %{flag_reason}
+
+        Ce message a été signalé par la communauté et un responsable a décidé de le supprimer.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Auquel vous aviez répondu
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Pour plus d'informations, nous vous invitons à consulter notre [community guidelines](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).

@@ -1502,11 +1502,9 @@ pl_PL:
         every_month: "każdego miesiąca"
         every_six_months: "co 6 miesięcy"
       email_level:
-        title: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
         always: "zawsze"
         only_when_away: "tylko kiedy jest daleko"
         never: "nigdy"
-      email_messages_level: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
@@ -1821,6 +1819,7 @@ pl_PL:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres email. Wyślemy do ciebie email z linkiem do zresetowania hasła."
+      invite_no_username: "Wpisz swój adres e-mail, a wyślemy Ci wiadomość e-mail umożliwiającą zresetowanie hasła."
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
@@ -2056,9 +2055,6 @@ pl_PL:
         few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
-      cannot_see_mention:
-        category: "Wspomniałeś/łaś o %{username} lecz nie zostaną oni powiadomieni ponieważ nie mają dostępu do tej kategorii. Dodaj ich do grupy która ma dostęp do tej kategorii."
-        private: "Wspomniałeś/łaś o %{username} lecz nie zostaną powiadomieni ponieważ nie mogą odczytać tej wiadomości . Będziesz musiał ich zaprosić do odczytania tej wiadomości "
       duplicate_link: "Wygląda na to, że Twój link do <b>%{domain}</b> został już wcześniej przesłany w tym wątku przez <b>@%{username}</b> w <a href='%{post_url}'>odpowiedzi przesłanej %{ago}</a> - jesteś pewien, że chcesz go wysłać ponownie?"
       reference_topic_title: "Odpowiedz: %{title}"
       error:
@@ -2690,10 +2686,6 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
-        go_top: "początek"
-        go_bottom: "koniec"
-        go: "idź"
-        jump_bottom: "Przejdź na koniec"
         jump_prompt: "skocz do..."
         jump_prompt_of:
           one: "z %{count} postu"
@@ -2701,11 +2693,8 @@ pl_PL:
           many: "z %{count} postów"
           other: "z %{count} postów"
         jump_prompt_long: "Skocz do..."
-        jump_bottom_with_number: "skocz do postu %{post_number}"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
-        total: w sumie wpisów
-        current: obecny wpis
       notifications:
         title: Ustaw jak często chcesz być powiadamiany o tym temacie
         reasons:
@@ -4852,9 +4841,6 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adresy IP, które są obserwowane. Użyj opcji "Zezwalaj", aby dodać adresy IP do dozwolonej listy.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
-          roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
-          rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
-          rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
             block: "Zablokuj"
             do_nothing: "Zezwól"

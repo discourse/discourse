@@ -65,11 +65,15 @@ sup img.emoji {
     background: var(--secondary);
 
     .section {
-      margin-bottom: 1em;
+      margin: 0 0 1em;
 
       .trash-recent {
         background: none;
         font-size: $font-down-1;
+
+        &:hover .d-icon {
+          color: var(--danger-hover);
+        }
       }
     }
 
@@ -95,6 +99,11 @@ sup img.emoji {
 
     .results {
       padding: 0.25em 0;
+
+      &:empty {
+        display: none;
+      }
+
       img.emoji {
         padding: 0.5em;
       }

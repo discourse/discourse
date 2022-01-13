@@ -109,10 +109,24 @@ export default Component.extend({
     if (this.onKeyDown) {
       e.stopPropagation();
       this.onKeyDown(e);
+    } else if (e.key === "Enter") {
+      this._triggerAction(e);
+      return false;
     }
   },
 
   click(event) {
+    this._triggerAction(event);
+    return false;
+  },
+
+  mouseDown(event) {
+    if (this.preventFocus) {
+      event.preventDefault();
+    }
+  },
+
+  _triggerAction(event) {
     let { action } = this;
 
     if (action) {
@@ -141,13 +155,5 @@ export default Component.extend({
 
     event.preventDefault();
     event.stopPropagation();
-
-    return false;
-  },
-
-  mouseDown(event) {
-    if (this.preventFocus) {
-      event.preventDefault();
-    }
   },
 });

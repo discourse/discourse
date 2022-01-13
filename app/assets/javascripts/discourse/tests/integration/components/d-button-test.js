@@ -7,6 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { triggerKeyEvent } from "@ember/test-helpers";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
 
@@ -217,6 +218,51 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         query("button").getAttribute("aria-controls"),
         "foo-bar"
       );
+    },
+  });
+
+  componentTest("onKeyDown callback", {
+    template: hbs`{{d-button action=action onKeyDown=onKeyDown}}`,
+
+    beforeEach() {
+      this.set("foo", null);
+      this.set("onKeyDown", () => {
+        this.set("foo", "bar");
+      });
+      this.set("action", () => {
+        this.set("foo", "baz");
+      });
+    },
+
+    async test(assert) {
+      await triggerKeyEvent(".btn", "keydown", 32);
+
+      assert.strictEqual(this.foo, "bar");
+
+      await triggerKeyEvent(".btn", "keydown", 13);
+
+      assert.strictEqual(this.foo, "bar");
+    },
+  });
+
+  componentTest("press Enter", {
+    template: hbs`{{d-button action=action}}`,
+
+    beforeEach() {
+      this.set("foo", null);
+      this.set("action", () => {
+        this.set("foo", "bar");
+      });
+    },
+
+    async test(assert) {
+      await triggerKeyEvent(".btn", "keydown", 32);
+
+      assert.strictEqual(this.foo, null);
+
+      await triggerKeyEvent(".btn", "keydown", 13);
+
+      assert.strictEqual(this.foo, "bar");
     },
   });
 });

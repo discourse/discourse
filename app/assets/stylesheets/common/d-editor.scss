@@ -10,17 +10,19 @@
   min-height: 0;
 }
 
-.d-editor-textarea-wrapper,
-.d-editor-preview-wrapper {
+.d-editor-textarea-column {
+  display: flex;
   flex: 1;
+  flex-direction: column;
 }
 
 .d-editor-textarea-wrapper {
   display: flex;
+  flex: 1;
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--primary-medium);
 
   textarea {
     background: transparent;
@@ -44,13 +46,10 @@
 }
 
 .d-editor-preview-wrapper {
-  max-width: 49%;
-  margin-left: 1%;
   display: flex;
+  flex: 1;
   flex-direction: column;
-}
-
-.d-editor-preview-wrapper {
+  margin-left: 16px;
   overflow: auto;
   cursor: default;
   -webkit-overflow-scrolling: touch;
@@ -297,8 +296,6 @@
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
-  padding-left: 2px;
-  padding-right: 2px;
 
   .d-editor-spacer {
     height: 1em;

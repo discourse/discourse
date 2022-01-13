@@ -43,6 +43,9 @@ fr:
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Afficher les résultats"
+      remove-vote:
+        title: "Supprimer votre vote"
+        label: "Supprimer le vote"
       hide-results:
         title: "Retourner au vote"
         label: "Afficher le sondage"

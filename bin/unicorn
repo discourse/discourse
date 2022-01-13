@@ -26,7 +26,7 @@ def ensure_cache_clean!
   super_sha = Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha)
   hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
 
-  old_hash = File.exists?(hash_file) ? File.read(hash_file) : nil
+  old_hash = File.exist?(hash_file) ? File.read(hash_file) : nil
 
   if old_hash && old_hash != super_sha
     puts "WARNING: It looks like your discourse plugins or core version have recently changed."
@@ -80,14 +80,14 @@ if ARGV.include?("--help")
   exit
 end
 
-# this dev_mode hackery enables, the following to be used to restart unicorn:
+# this dev_mode hackery enables the following to be used to restart unicorn:
 #
 # pkill -USR2 -f 'ruby bin/unicorn'
 #
 # This is handy if you want to bind a key to restarting unicorn in dev
 
 if dev_mode
-  $unicorn_dev_supervisor_pid = Process.pid # rubocop:disable Style/GlobalVars
+  UNICORN_DEV_SUPERVISOR_PID = Process.pid
 
   restart = true
   while restart

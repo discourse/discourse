@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'screening_model'
-require 'ip_addr'
 
 # A ScreenedIpAddress record represents an IP address or subnet that is being watched,
 # and possibly blocked from creating accounts.
@@ -68,7 +67,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    find_by("? <<= ip_address", ip_address.to_s)
+    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address.to_s)
   end
 
   def self.should_block?(ip_address)
@@ -81,8 +80,8 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   def self.exists_for_ip_address_and_action?(ip_address, action_type, opts = {})
     b = match_for_ip_address(ip_address)
-    found = (!!b && b.action_type == (action_type))
-    b.record_match! if found && opts[:record_match] != (false)
+    found = !!b && b.action_type == action_type
+    b.record_match! if found && opts[:record_match] != false
     found
   end
 

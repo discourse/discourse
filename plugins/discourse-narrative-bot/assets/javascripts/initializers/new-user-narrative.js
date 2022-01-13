@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
@@ -85,17 +86,10 @@ function initialize(api) {
             return;
           }
 
-          const headerOffset =
-            parseInt(
-              getComputedStyle(document.body).getPropertyValue(
-                "--header-offset"
-              ),
-              10
-            ) || 0;
           const viewportOffset = post.getBoundingClientRect();
 
           window.scrollTo({
-            top: window.scrollY + viewportOffset.top - headerOffset,
+            top: window.scrollY + viewportOffset.top - headerOffset(),
             behavior: "smooth",
           });
         },

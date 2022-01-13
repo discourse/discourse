@@ -1393,11 +1393,9 @@ sv:
         every_month: "varje månad"
         every_six_months: "varje halvår"
       email_level:
-        title: "Sänd mig e-post när någon citerar mig, besvarar mitt inlägg, nämner mitt @användarnamn eller bjuder in mig till ett ämne."
         always: "alltid"
         only_when_away: "bara när jag är borta"
         never: "aldrig"
-      email_messages_level: "Sänd mig e-post när någon skickar mig ett meddelande"
       include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningen som skickas via e-post"
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
@@ -1696,6 +1694,7 @@ sv:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
       invite: "Skriv in ditt användarnamn eller din e-postadress, så skickar vi dig ett e-postmeddelande om lösenordsåterställning."
+      invite_no_username: "Ange din e-postadress så skickar vi ett e-postmeddelande för återställning av lösenordet."
       reset: "Återställ lösenord"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
       complete_email: "Om ett konto matchar <b>%{email}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
@@ -1913,9 +1912,6 @@ sv:
       group_mentioned:
         one: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} person</a> – är du säker?"
         other: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} medlemmar</a> – är du säker?"
-      cannot_see_mention:
-        category: "Du nämnde %{username}, men hen kommer inte att få någon avisering för hen har inte tillgång till denna kategori. Du måste lägga till hen till en grupp som har tillgång till den här kategorin."
-        private: "Du nämnde %{username}, men hen kommer inte få någon avisering eftersom hen inte kan se detta personliga meddelande. Du måste bjuda in hen till detta PM."
       here_mention:
         one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
         other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
@@ -2505,20 +2501,13 @@ sv:
         replies_short: "%{current} / %{total}"
       progress:
         title: ämnesförlopp
-        go_top: "toppen"
-        go_bottom: "botten"
-        go: "gå"
-        jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till..."
         jump_prompt_of:
           one: "av %{count} inlägg"
           other: "av %{count} inlägg"
         jump_prompt_long: "Hoppa till..."
-        jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_to_date: "till datum"
         jump_prompt_or: "eller"
-        total: antal inlägg
-        current: nuvarande inlägg
       notifications:
         title: ändra hur ofta du får aviseringar om det här ämnet
         reasons:
@@ -3883,7 +3872,7 @@ sv:
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             uploads:
-              create: Ladda upp en ny fil.
+              create: Ladda upp en ny fil eller påbörja enstaka eller flerdelade direktuppladdningar till extern lagring.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
               sync_sso: Synkronisera en användare med DiscourseConnect.
@@ -4568,9 +4557,6 @@ sv:
           title: "Granskade IP-adresser"
           description: 'IP-adresser som är under bevakning. Använd "Tillåt" för att vitlista IP-adresser.'
           delete_confirm: "Är du säker på att du vill ta bort regeln för %{ip_address}?"
-          roll_up_confirm: "Är du säker på att du vill rulla upp vanligen undersökta IP-adresser i delnät?"
-          rolled_up_some_subnets: "Framgångsrikt rullat upp förbjudna IP-poster till de här delnäten: %{subnets}."
-          rolled_up_no_subnet: "Det fanns inget att rulla upp."
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"

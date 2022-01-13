@@ -4,9 +4,7 @@ require 'rails_helper'
 
 describe TopicTrackingState do
 
-  fab!(:user) do
-    Fabricate(:user)
-  end
+  fab!(:user) { Fabricate(:user) }
 
   let(:post) do
     create_post
@@ -335,8 +333,6 @@ describe TopicTrackingState do
   end
 
   it "correctly handles muted categories" do
-
-    user = Fabricate(:user)
     post
 
     report = TopicTrackingState.report(user)
@@ -358,23 +354,9 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-  it "correctly handles category_users with null notification level" do
-    user = Fabricate(:user)
-    post
-
-    report = TopicTrackingState.report(user)
-    expect(report.length).to eq(1)
-
-    CategoryUser.create!(user_id: user.id, category_id: post.topic.category_id)
-
-    report = TopicTrackingState.report(user)
-    expect(report.length).to eq(1)
-  end
-
   it "works when categories are default muted" do
     SiteSetting.mute_all_categories_by_default = true
 
-    user = Fabricate(:user)
     post
 
     report = TopicTrackingState.report(user)
@@ -394,7 +376,6 @@ describe TopicTrackingState do
   context 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
@@ -420,7 +401,6 @@ describe TopicTrackingState do
 
     it "remove_muted_tags_from_latest is set to only_muted" do
       SiteSetting.remove_muted_tags_from_latest = 'only_muted'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
@@ -454,7 +434,6 @@ describe TopicTrackingState do
 
     it "remove_muted_tags_from_latest is set to never" do
       SiteSetting.remove_muted_tags_from_latest = 'never'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
       post
@@ -474,7 +453,7 @@ describe TopicTrackingState do
 
   it "correctly handles dismissed topics" do
     freeze_time 1.minute.ago
-    user = Fabricate(:user)
+    user.update!(created_at: Time.now)
     post
 
     report = TopicTrackingState.report(user)
@@ -492,8 +471,6 @@ describe TopicTrackingState do
   end
 
   it "correctly handles capping" do
-    user = Fabricate(:user)
-
     post1 = create_post
     Fabricate(:post, topic: post1.topic)
 

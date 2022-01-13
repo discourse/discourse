@@ -21,7 +21,7 @@ class HandleChunkUpload
 
   def check_chunk
     # check whether the chunk has already been uploaded
-    has_chunk_been_uploaded = File.exists?(@chunk) && File.size(@chunk) == @params[:current_chunk_size]
+    has_chunk_been_uploaded = File.exist?(@chunk) && File.size(@chunk) == @params[:current_chunk_size]
     # 200 = exists, 404 = not uploaded yet
     status = has_chunk_been_uploaded ? 200 : 404
   end
@@ -30,7 +30,7 @@ class HandleChunkUpload
     # path to chunk file
     dir = File.dirname(@chunk)
     # ensure directory exists
-    FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+    FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
     # save chunk to the directory
     File.open(@chunk, "wb") { |f| f.write(@params[:file].tempfile.read) }
   end

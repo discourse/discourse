@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal, not } from "@ember/object/computed";
+import { action } from "@ember/object";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import { inject as service } from "@ember/service";
@@ -20,11 +21,13 @@ export default Controller.extend({
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
+  @action
   loadingBegan() {
     this.set("loading", true);
     this.set("application.showFooter", false);
   },
 
+  @action
   loadingComplete() {
     this.set("loading", false);
     this.set("application.showFooter", this.loadedAllItems);

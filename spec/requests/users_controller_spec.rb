@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'rotp'
 
 describe UsersController do
+  fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:invitee) { Fabricate(:user) }
@@ -1609,13 +1610,13 @@ describe UsersController do
 
     context 'is too long' do
       before do
-        get "/u/check_username.json", params: { username: generate_username(User.username_length.last + 1) }
+        get "/u/check_username.json", params: { username: SecureRandom.alphanumeric(SiteSetting.max_username_length.to_i + 1) }
       end
       include_examples 'checking an invalid username'
 
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
-        expect(response.parsed_body['errors']).to include(I18n.t(:'user.username.long', max: User.username_length.end))
+        expect(response.parsed_body['errors']).to include(I18n.t(:'user.username.long', max: SiteSetting.max_username_length))
       end
     end
 
@@ -1930,7 +1931,6 @@ describe UsersController do
 
         it "allows staff to edit the field" do
           sign_in(admin)
-          user = Fabricate(:user)
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
             title: "foobar",
@@ -2346,7 +2346,6 @@ describe UsersController do
 
       describe 'when user does not have a valid session' do
         it 'should not be valid' do
-          user = Fabricate(:user)
           post "/u/action/send_activation_email.json", params: {
             username: user.username
           }
@@ -2867,7 +2866,6 @@ describe UsersController do
       end
 
       it "returns emails and associated_accounts for self" do
-        user = Fabricate(:user)
         Fabricate(:email_change_request, user: user1)
         sign_in(user)
 
@@ -2882,7 +2880,6 @@ describe UsersController do
       end
 
       it "returns emails and associated_accounts when you're allowed to see them" do
-        user = Fabricate(:user)
         Fabricate(:email_change_request, user: user1)
         sign_in_admin
 
@@ -3076,34 +3073,30 @@ describe UsersController do
       get "/u/is_local_username.json", params: { username: user1.username }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["valid"][0]).to eq(user1.username)
+      expect(response.parsed_body["valid"][0]).to eq(user1.username)
     end
 
     it "finds the group" do
       sign_in(user1)
       get "/u/is_local_username.json", params: { username: group.name }
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["valid_groups"]).to include(group.name)
-      expect(json["mentionable_groups"].find { |g| g['name'] == group.name }).to be_present
+      expect(response.parsed_body["valid_groups"]).to include(group.name)
+      expect(response.parsed_body["mentionable_groups"].find { |g| g['name'] == group.name }).to be_present
     end
 
     it "finds unmentionable groups" do
       sign_in(user1)
       get "/u/is_local_username.json", params: { username: unmentionable.name }
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["valid_groups"]).to include(unmentionable.name)
-      expect(json["mentionable_groups"]).to be_blank
+      expect(response.parsed_body["valid_groups"]).to include(unmentionable.name)
+      expect(response.parsed_body["mentionable_groups"]).to be_blank
     end
 
     it "supports multiples usernames" do
       get "/u/is_local_username.json", params: { usernames: [user1.username, "system"] }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["valid"].size).to eq(2)
+      expect(response.parsed_body["valid"]).to contain_exactly(user1.username, "system")
     end
 
     it "never includes staged accounts" do
@@ -3112,8 +3105,7 @@ describe UsersController do
       get "/u/is_local_username.json", params: { usernames: [staged.username] }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["valid"].size).to eq(0)
+      expect(response.parsed_body["valid"]).to be_blank
     end
 
     it "returns user who cannot see topic" do
@@ -3124,44 +3116,57 @@ describe UsersController do
       }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["cannot_see"].size).to eq(1)
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("category")
     end
 
     it "never returns a user who can see the topic" do
-      Guardian.any_instance.expects(:can_see?).with(topic).returns(true)
-
       get "/u/is_local_username.json", params: {
         usernames: [user1.username], topic_id: topic.id
       }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["cannot_see"].size).to eq(0)
+      expect(response.parsed_body["cannot_see"]).to be_blank
     end
 
     it "returns user who cannot see a private topic" do
-      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(false)
-
       get "/u/is_local_username.json", params: {
         usernames: [user1.username], topic_id: private_topic.id
       }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["cannot_see"].size).to eq(1)
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("private")
+    end
+
+    it "returns user who was not invited to topic" do
+      sign_in(Fabricate(:admin))
+
+      get "/u/is_local_username.json", params: {
+        usernames: [admin.username], topic_id: private_topic.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cannot_see"][admin.username]).to eq("not_allowed")
     end
 
     it "never returns a user who can see the topic" do
-      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(true)
-
       get "/u/is_local_username.json", params: {
         usernames: [allowed_user.username], topic_id: private_topic.id
       }
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json["cannot_see"].size).to eq(0)
+      expect(response.parsed_body["cannot_see"]).to be_blank
+    end
+
+    it "returns the appropriate reason why user cannot see the topic" do
+      TopicUser.create!(user_id: user1.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:muted])
+
+      sign_in(admin)
+      get "/u/is_local_username.json", params: {
+        usernames: [user1.username], topic_id: topic.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cannot_see"][user1.username]).to eq("muted_topic")
     end
   end
 
@@ -3189,7 +3194,6 @@ describe UsersController do
 
   describe '#summary' do
     it "generates summary info" do
-      user = Fabricate(:user)
       create_post(user: user)
 
       get "/u/#{user.username_lower}/summary.json"
@@ -3467,8 +3471,6 @@ describe UsersController do
       end
 
       it "raises an error when the new email is taken" do
-        user = Fabricate(:user)
-
         put "/u/update-activation-email.json", params: {
           username: inactive_user.username,
           password: 'qwerqwer123',

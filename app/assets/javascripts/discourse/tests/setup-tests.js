@@ -73,9 +73,29 @@ function createApplication(config, settings) {
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
+  // Modern Ember only sets up a container when the ApplicationInstance
+  // is booted. We have legacy code which relies on having access to a container
+  // before boot (e.g. during pre-initializers)
+  //
+  // This hack sets up a container early, then stubs the container setup method
+  // so that Ember will use the same container instance when it boots the ApplicationInstance
+  //
+  // Note that this hack is not required in production because we use the default `autoboot` flag,
+  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
+  // an Application is initialized (via the `_buildDeprecatedInstance` method).
+  //
+  // In the future, we should move away from relying on the `container` before the ApplicationInstance
+  // is booted, and then remove this hack.
   let container = app.__registry__.container();
   app.__container__ = container;
   setDefaultOwner(container);
+  sinon
+    .stub(Object.getPrototypeOf(app.__registry__), "container")
+    .callsFake((opts) => {
+      container.owner = opts.owner;
+      container.registry = opts.owner.__registry__;
+      return container;
+    });
 
   if (!started) {
     app.start();
@@ -293,6 +313,7 @@ function setupTestsCommon(application, container, config) {
       siteSettings: settings,
       capabilities: {},
       site,
+      registry: app.__registry__,
     });
 
     PreloadStore.reset();
@@ -394,6 +415,7 @@ export default function setupTests(config) {
   let settings = resetSettings();
   app = createApplication(config, settings);
   setupTestsCommon(app, app.__container__, config);
+  sinon.restore();
 }
 
 function getUrlParameter(name) {

@@ -2,7 +2,7 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "10"
+  EMOJI_VERSION = "11"
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 

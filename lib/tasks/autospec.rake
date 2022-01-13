@@ -22,3 +22,21 @@ task "autospec" => :environment do
 
   Autospec::Manager.run(force_polling: force_polling, latency: latency, debug: debug)
 end
+
+desc "Regenerate swagger docs on API spec change"
+task "autospec:swagger" => :environment do
+  require 'listen'
+  require 'open3'
+
+  puts "Listening to changes in spec/requests/api to regenerate Swagger docs."
+  listener = Listen.to("spec/requests/api") do |modified, added, removed|
+    puts "API doc file changed."
+    Open3.popen3("spec/regenerate_swagger_docs") do |stdin, stdout, stderr, wait_thr|
+      while line = stdout.gets
+        puts line
+      end
+    end
+  end
+  listener.start
+  sleep
+end

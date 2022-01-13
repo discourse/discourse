@@ -632,7 +632,9 @@ export default Controller.extend({
 
     save(ignore, event) {
       this.save(false, {
-        jump: !event?.shiftKey && !this.skipJumpOnSave,
+        jump:
+          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+          !this.skipJumpOnSave,
       });
     },
 
@@ -696,16 +698,12 @@ export default Controller.extend({
 
     cannotSeeMention(mentions) {
       mentions.forEach((mention) => {
-        const translation = this.get("model.topic.isPrivateMessage")
-          ? "composer.cannot_see_mention.private"
-          : "composer.cannot_see_mention.category";
-        const body = I18n.t(translation, {
-          username: `@${mention.name}`,
-        });
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
           templateName: "custom-body",
-          body,
+          body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
+            username: mention.name,
+          }),
         });
       });
     },
@@ -894,7 +892,11 @@ export default Controller.extend({
 
         if (result.responseJson.action === "create_post") {
           this.appEvents.trigger("composer:created-post");
-          this.appEvents.trigger("post:highlight", result.payload.post_number);
+          this.appEvents.trigger(
+            "post:highlight",
+            result.payload.post_number,
+            options
+          );
         }
 
         if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
@@ -1397,6 +1399,7 @@ export default Controller.extend({
 
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
+    elem.classList.remove("composer-open");
 
     document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });

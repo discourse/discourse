@@ -267,12 +267,6 @@ basic:
     client: true
     default: true
     hidden: true
-  # TODO (martin) (2022-02-01) Remove this setting once plugins relying on
-  # it have been changed.
-  enable_experimental_composer_uploader:
-    client: true
-    default: false
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -1431,7 +1425,7 @@ files:
   strip_image_metadata: true
   min_ratio_to_crop:
     type: float
-    default: 0.45 # 90% of 18:9
+    default: 0.22
     min: 0
     max: 1
   simultaneous_uploads:

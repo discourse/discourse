@@ -310,6 +310,7 @@ nl:
       remove: "Verwijderen"
       remove_confirmation: "Weet u zeker dat u dit concept wilt verwijderen?"
       new_topic: "Nieuw-topicconcept"
+      new_private_message: "Nieuw privé-bericht concept"
       topic_reply: "Conceptantwoord"
       abandon:
         confirm: "U hebt een concept in uitvoering voor dit topic. Wat wilt u er mee doen?"
@@ -964,7 +965,9 @@ nl:
       use_current_timezone: "Huidige tijdzone gebruiken"
       profile_hidden: "Het openbare profiel van deze gebruiker is verborgen."
       expand_profile: "Uitvouwen"
+      sr_expand_profile: "Profieldetails uitvouwen"
       collapse_profile: "Samenvouwen"
+      sr_collapse_profile: "Profieldetails inklappen"
       bookmarks: "Favorieten"
       bio: "Over mij"
       timezone: "Tijdzone"
@@ -1361,11 +1364,9 @@ nl:
         every_month: "elke maand"
         every_six_months: "elke zes maanden"
       email_level:
-        title: "Mij een e-mail sturen wanneer iemand mij citeert, op mijn bericht antwoordt, mijn @gebruikersnaam vermeldt, of mij voor een topic uitnodigt"
         always: "altijd"
         only_when_away: "alleen wanneer afwezig"
         never: "nooit"
-      email_messages_level: "Mij een e-mail sturen wanneer iemand mij een bericht stuurt"
       include_tl0_in_digests: "Bijdragen van nieuwe gebruikers in e-mailsamenvattingen bijvoegen"
       email_in_reply_to: "Fragment van antwoord op bericht in e-mails bijvoegen"
       other_settings: "Overige"
@@ -1870,9 +1871,6 @@ nl:
       group_mentioned:
         one: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} personen</a> op de hoogte brengen – weet u dit zeker?"
-      cannot_see_mention:
-        category: "U hebt %{username} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij geen toegang heeft tot deze categorie. U dient de gebruiker toe te voegen aan een groep die toegang heeft tot deze categorie."
-        private: "U hebt %{username} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij dit persoonlijke bericht niet kan zien. U dient de gebruiker voor dit PB uit te nodigen."
       duplicate_link: "Het lijkt erop dat uw koppeling naar <b>%{domain}</b> al in het topic is geplaatst door <b>@%{username}</b> in <a href='%{post_url}'>een antwoord op %{ago}</a> – weet u zeker dat u deze opnieuw wilt plaatsen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2150,6 +2148,7 @@ nl:
           label: Met badge
         with_tags:
           label: Getagd
+          aria_label: Filter met tags
         filters:
           label: Alleen topics/berichten weergeven...
           title: Die alleen met de titel overeenkomen
@@ -2425,20 +2424,13 @@ nl:
         replies_short: "%{current} / %{total}"
       progress:
         title: topicvoortgang
-        go_top: "boven"
-        go_bottom: "onder"
-        go: "gaan"
-        jump_bottom: "naar laatste bericht"
         jump_prompt: "springen naar..."
         jump_prompt_of:
           one: "van %{count} bericht"
           other: "van %{count} berichten"
         jump_prompt_long: "Springen naar..."
-        jump_bottom_with_number: "naar bericht %{post_number}"
         jump_prompt_to_date: "tot datum"
         jump_prompt_or: "of"
-        total: totale aantal berichten
-        current: huidige bericht
       notifications:
         title: wijzigen hoe vaak u meldingen over dit topic ontvangt
         reasons:
@@ -3373,17 +3365,23 @@ nl:
       changed: "gewijzigde tags:"
       tags: "Tags"
       choose_for_topic: "optionele tags"
+      choose_for_topic_required:
+        one: "selecteer minstens %{count} tag..."
+        other: "selecteer minstens %{count} tags..."
       info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
+      staff_info: "Om beperkingen toe te voegen, plaats deze tag in een <a href=%{basePath}/tag_groups>tag-groep</a>."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe u geen toegang hebt."
       synonyms: "Synoniemen"
       synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
+      save: "Sla de naam en omschrijving van de tag op"
       tag_groups_info:
         one: 'Deze tag behoort tot de groep ''%{tag_groups}''.'
         other: "Deze tag behoort tot deze groepen: %{tag_groups}."
       category_restrictions:
         one: "Deze kan alleen worden gebruikt in deze categorie:"
         other: "Deze kan alleen worden gebruikt in deze categorieën:"
+      edit_synonyms: "Synoniemen bewerken"
       add_synonyms_label: "Synoniemen toevoegen:"
       add_synonyms: "Toevoegen"
       add_synonyms_explanation:
@@ -3400,6 +3398,7 @@ nl:
       delete_confirm_synonyms:
         one: "Het synoniem ervan wordt ook verwijderd."
         other: "De %{count} synoniemen ervan worden ook verwijderd."
+      edit_tag: "Naam en omschrijving van de tag bewerken"
       description: "Omschrijving"
       sort_by: "Sorteren op:"
       sort_by_count: "aantal"
@@ -3444,9 +3443,15 @@ nl:
           description: "U ontvangt geen enkele melding over nieuwe topics met deze tag, en ze verschijnen niet op uw tabblad Ongelezen."
       groups:
         title: "Tag-groepen"
+        about_heading: "Selecteer een tag-groep of maak een nieuwe aan"
+        about_heading_empty: "Om te beginnen maak een tag-groep aan"
+        about_description: "Met tag-groepen kunt u toestemmingen voor meerdere tags op één plek beheren."
         new: "Nieuwe groep"
+        new_title: "Maak nieuwe groep"
+        edit_title: "Bewerk tag-groep"
         tags_label: "Tags in deze groep"
         parent_tag_label: "Bovenliggende tag"
+        parent_tag_description: "Tags uit deze groep kunnen alleen worden gebruikt als de bovenliggende tag aanwezig is."
         one_per_topic_label: "Beperken tot 1 tag per topic uit deze groep"
         new_name: "Nieuwe tag-groep"
         name_placeholder: "Naam"
@@ -3459,6 +3464,8 @@ nl:
         cannot_save: "Kan tag-groep niet opslaan. Zorg ervoor dat er ten minste één tag aanwezig is, de tag-group naam niet leeg is en een groep geselecteerd is voor tags toestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
+        select_groups_placeholder: "Selecteer groepen..."
+        disabled: "Taggen is uitgeschakeld. "
       topics:
         none:
           unread: "U hebt geen ongelezen topics."
@@ -3714,6 +3721,8 @@ nl:
             Bij het gebruik van scopes kunt u een API-sleutel tot een bepaalde groep eindpunten beperken.
             U kunt ook definiëren welke parameters worden toegestaan. Gebruik komma's om meerdere waarden te scheiden.
           title: Scopes
+          read_only: Alleen-lezen
+          global: Globaal
           resource: Bron
           action: Actie
           allowed_parameters: Toegestane parameters
@@ -4101,6 +4110,8 @@ nl:
               %{example}
 
               Het toevoegen van voorvoegsels aan de eigenschapsnamen wordt sterk aanbevolen om conflicten met plug-ins en/of core te voorkomen.
+          head_tag:
+            text: "Hoofd"
           body_tag:
             text: "Inhoud"
           yaml:
@@ -4392,9 +4403,6 @@ nl:
           title: "Gecontroleerde IP-adressen"
           description: 'IP-adressen die in de gaten worden gehouden. Gebruik ''Toestaan'' om IP-adressen op de acceptatielijst te zetten.'
           delete_confirm: "Weet u zeker dat u de regel voor %{ip_address} wilt verwijderen?"
-          roll_up_confirm: "Weet u zeker dat u regelmatig gecontroleerde IP-adressen in subnetten wilt samenvoegen?"
-          rolled_up_some_subnets: "Verbannen IP-adressen zijn zojuist succesvol tot deze subnetten samengevoegd: %{subnets}."
-          rolled_up_no_subnet: "Er was niets om samen te voegen."
           actions:
             block: "Blokkeren"
             do_nothing: "Toestaan"

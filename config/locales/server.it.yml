@@ -1348,6 +1348,7 @@ it:
         qtt_like: Mi piace - Ricevuti
       description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
   dashboard:
+    group_email_credentials_warning: 'Si è verificato un problema con le credenziali e-mail per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nessuna e-mail verrà inviata dalla casella di posta del gruppo fino a quando il problema non sarà risolto. %{error}'
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su Sidekiq</a>.'
@@ -1564,7 +1565,6 @@ it:
     allowed_email_domains: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
     normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
     auto_approve_email_domains: "Gli utenti con indirizzi email appartenenti a questo elenco di domini verranno approvati automaticamente."
-    hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Controlla in Discourse Hub la presenza di aggiornamenti della versione e mostra i messaggi della nuova versione nel pannello <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
@@ -2486,8 +2486,6 @@ it:
     one: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ora a causa di un numero elevato di segnalazioni dalla comunità."
     other: "Questo argomento resterà temporaneamente chiuso per almeno %{count} ore a causa di un numero elevato di segnalazioni dalla comunità."
   system_messages:
-    reviewables_reminder:
-      subject_template: "Ci sono elementi nella coda di revisione che devono essere revisionati"
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
     post_hidden:
@@ -2546,7 +2544,6 @@ it:
     flags_agreed_and_post_deleted_for_responders:
       title: "Risposta rimossa dal messaggio segnalato da parte dello staff"
       subject_template: "Risposta rimossa dal messaggio segnalato da parte dello staff"
-      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [un messaggio](%{base_url}%{url}) al quale avevi risposto è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità quindi un membro dello staff ha deciso di rimuoverlo. \n \n```markdown\n%{flagged_post_raw_content}\n```\n\nPer ulteriori dettagli sul motivo della cancellazione, consulta le [linee guida della comunità](%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)

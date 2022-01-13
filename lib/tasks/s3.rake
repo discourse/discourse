@@ -38,7 +38,7 @@ def upload(path, remote_path, content_type, content_encoding = nil)
     end
   end
 
-  File.delete(path) if (File.exists?(path) && ENV["DELETE_ASSETS_AFTER_S3_UPLOAD"])
+  File.delete(path) if (File.exist?(path) && ENV["DELETE_ASSETS_AFTER_S3_UPLOAD"])
 end
 
 def use_db_s3_config

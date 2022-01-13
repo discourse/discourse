@@ -535,8 +535,32 @@ describe CookedPostProcessor do
         end
       end
 
-      context "with tall images" do
-        fab!(:upload) { Fabricate(:image_upload, width: 860, height: 2000) }
+      context "with tall images > default aspect ratio" do
+        fab!(:upload) { Fabricate(:image_upload, width: 500, height: 2200) }
+
+        fab!(:post) do
+          Fabricate(:post, raw: <<~HTML)
+          <img src="#{upload.url}">
+          HTML
+        end
+
+        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+        before do
+          SiteSetting.create_thumbnails = true
+        end
+
+        it "resizes the image instead of crop" do
+          cpp.post_process
+
+          expect(cpp.html).to match(/width="113" height="500">/)
+          expect(cpp).to be_dirty
+        end
+
+      end
+
+      context "with taller images < default aspect ratio" do
+        fab!(:upload) { Fabricate(:image_upload, width: 500, height: 2300) }
 
         fab!(:post) do
           Fabricate(:post, raw: <<~HTML)
@@ -553,7 +577,7 @@ describe CookedPostProcessor do
         it "crops the image" do
           cpp.post_process
 
-          expect(cpp.html).to match(/width="690" height="500">/)
+          expect(cpp.html).to match(/width="500" height="500">/)
           expect(cpp).to be_dirty
         end
 

@@ -118,7 +118,7 @@
       {{/if}}
     {{/if}}
 
-    {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
+    {{plugin-outlet name="full-page-search-below-search-info" tagName="span" connectorTagName="div" args=(hash search=searchTerm)}}
 
     {{#if searching}}
       {{loading-spinner size="medium"}}

@@ -35,7 +35,7 @@
     {{/if}}
   {{/if}}
 
-  {{plugin-outlet name="before-create-topic-button" tagName=""
+  {{plugin-outlet name="before-create-topic-button" connectorTagName="div" tagName=""
     args=(hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled
@@ -54,7 +54,7 @@
     canCreateTopicOnTag=canCreateTopicOnTag
   }}
 
-  {{plugin-outlet name="after-create-topic-button" tagName=""
+  {{plugin-outlet name="after-create-topic-button" connectorTagName="div" tagName=""
     args=(hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled

@@ -223,7 +223,7 @@ def crawl
   start_time = Time.now
   status_filename = File.join(@path, "status.yml")
 
-  if File.exists?(status_filename)
+  if File.exist?(status_filename)
     yaml = YAML.load_file(status_filename)
     @finished = yaml[:finished]
     @scraped_topic_urls = yaml[:urls]

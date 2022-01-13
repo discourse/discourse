@@ -33,26 +33,16 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     previewing,
-    linkify,
     censoredRegexp,
     disableEmojis,
     customEmojiTranslation,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   } = state;
 
-  let features = {
-    "bold-italics": true,
-    "auto-link": true,
-    mentions: true,
-    bbcode: true,
-    quote: true,
-    html: true,
-    "category-hashtag": true,
-    onebox: true,
-    linkify: linkify !== false,
-    newline: !siteSettings.traditional_markdown_linebreaks,
-  };
+  let features = {};
 
   if (state.features) {
     features = deepMerge(features, state.features);
@@ -88,6 +78,8 @@ export function buildOptions(state) {
     disableEmojis,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   };
 
   // note, this will mutate options due to the way the API is designed

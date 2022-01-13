@@ -216,8 +216,6 @@ ko:
       <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
 
       <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
-    not_found_template_link: |
-      <p> <a href="%{base_url}">%{site_name}</a>의 초대장은 더 이상 사용할 수 없습니다. 초대 한 사람에게 새 초대장을 보내달라고 요청하십시오.</p>
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     invite_exists: "<b>%{email}</b> 이메일로 이미 초대되었습니다."
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
@@ -229,6 +227,7 @@ ko:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
     requires_groups: "초대가 저장되었습니다. 지정된 글에 대한 접근 권한을 부여하려면 다음 그룹 중 하나를 추가하십시오: %{groups}."
+    domain_not_allowed: "사용자님의 이메일은 이 초대를 사용하는데 사용할 수 없습니다."
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     max_rows: "첫 번째 %{max_bulk_invites} 초대가 전송되었습니다. 파일을 작은 부분으로 분할하십시오."
@@ -1277,17 +1276,21 @@ ko:
         mutes_count: 음소거 수
       description: "다른 많은 사용자가 음소거하거나 무시한 사용자"
     top_users_by_likes_received:
+      title: "좋아요를 많이 받은 사용자"
       labels:
         user: 사용자
         qtt_like: '''좋아요'' 받은 횟수'
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 사용자
+        trust_level: 회원 레벨
         qtt_like: '''좋아요'' 받은 횟수'
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "여러 사람들로부터 좋아요를 받은 상위 사용자"
       labels:
         user: 사용자
         qtt_like: '''좋아요'' 받은 횟수'
+      description: "여러 사람들로부터 좋아요를 받은 상위 10명의 사용자."
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     host_names_warning: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
@@ -1501,7 +1504,7 @@ ko:
     blocked_email_domains: "사용자가 계정을 등록 할 수없는 파이프- 로 구분 된 이메일 도메인 목록입니다. 예: mailinator.com | trashmail.net"
     allowed_email_domains: "사용자가 계정 등록에 사용해야하는 파이프로 구분 된 이메일 도메인 목록입니다. 경고: 나열된 것 이외의 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
     auto_approve_email_domains: "이 도메인 목록의 이메일 주소를 가진 사용자는 자동으로 승인됩니다."
-    hide_email_address_taken: "가입하는 동안 및 비밀번호를 잊어 버린 양식에서 지정된 이메일 주소로 계정이 존재한다고 사용자에게 알리지 마십시오."
+    hide_email_address_taken: "가입하는 동안 또는 비밀번호 찾기 과정에서 입력한 이메일 주소를 사용하는 계정이 있다는 사실을 사용자에게 알리지 마세요. '비밀번호 찾기' 요청에는 전체 이메일이 필요합니다."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "버전 관리를 위해 Discourse Hub를 핑 (Ping)하여 <a href='%{base_path}/admin' target='_blank'>/ admin</a> 대시 보드에 새 버전 메시지를 표시합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -1890,6 +1893,7 @@ ko:
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
+    show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
     embed_set_canonical_url: "포함된 글의 표준 URL을 포함된 콘텐츠의 URL로 설정합니다."
@@ -2056,6 +2060,7 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
+      google_oauth2_hd_groups: "이 설정을 활성화하기 전에 먼저 'google oauth2 hd'를 설정해야 합니다."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2492,6 +2497,9 @@ ko:
         ```
 
         [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하시기 바랍니다.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "관리자가 신고한 게시물을 삭제했습니다."
+      subject_template: "관리자가 신고한 게시물을 삭제했습니다."
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.

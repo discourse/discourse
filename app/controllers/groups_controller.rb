@@ -174,6 +174,7 @@ class GroupsController < ApplicationController
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
       update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
+      AdminDashboardData.clear_found_problem("group_#{group.id}_email_credentials")
 
       if guardian.can_see?(group)
         render json: success_json

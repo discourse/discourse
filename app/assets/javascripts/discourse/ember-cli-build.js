@@ -28,29 +28,29 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true,
     },
+    fingerprint: {
+      // Disabled here, but handled manually below when in production mode.
+      // This is so we can apply a single AssetRev operation over the application and our additional trees
+      enabled: false,
+    },
+    SRI: {
+      // We don't use SRI in Rails. Disable here to match:
+      enabled: false,
+    },
   });
-
-  // Ember CLI does this by default for the app tree, but for our extra bundles we
-  // need to do it ourselves in production mode.
-  const isProduction = EmberApp.env().includes("production");
-  function digest(tree) {
-    return isProduction ? new AssetRev(tree) : tree;
-  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
   app.import(vendorJs + "bootstrap-modal.js");
   app.import(vendorJs + "jquery.ui.widget.js");
-  app.import(vendorJs + "jquery.fileupload.js");
-  app.import(vendorJs + "jquery.fileupload-process.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
-  return mergeTrees([
+  const mergedTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
@@ -59,18 +59,28 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    digest(
-      concat(mergeTrees([app.options.adminTree]), {
-        outputFile: `assets/admin.js`,
-      })
-    ),
-    digest(prettyTextEngine(vendorJs, "discourse-markdown")),
-    digest(
-      concat("public/assets/scripts", {
-        outputFile: `assets/start-discourse.js`,
-        headerFiles: [`start-app.js`],
-        inputFiles: [`discourse-boot.js`],
-      })
-    ),
+    concat(mergeTrees([app.options.adminTree]), {
+      outputFile: `assets/admin.js`,
+    }),
+    prettyTextEngine(vendorJs, "discourse-markdown"),
+    concat("public/assets/scripts", {
+      outputFile: `assets/start-discourse.js`,
+      headerFiles: [`start-app.js`],
+      inputFiles: [`discourse-boot.js`],
+    }),
   ]);
+
+  const isProduction = EmberApp.env().includes("production");
+  if (isProduction) {
+    return new AssetRev(mergedTree, {
+      exclude: [
+        "javascripts/**/*",
+        "assets/test-i18n*",
+        "assets/highlightjs",
+        "assets/testem.css",
+      ],
+    });
+  } else {
+    return mergedTree;
+  }
 };

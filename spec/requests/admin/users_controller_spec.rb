@@ -922,7 +922,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#sync_sso' do
-    let(:sso) { SingleSignOn.new }
+    let(:sso) { DiscourseConnectBase.new }
     let(:sso_secret) { "sso secret" }
 
     before do
@@ -942,7 +942,7 @@ RSpec.describe Admin::UsersController do
       sso.email = "bob@bob.com"
       sso.external_id = "1"
 
-      user = DiscourseSingleSignOn.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
+      user = DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
 
       sso.name = "Bill"
       sso.username = "Hokli$$!!"

@@ -125,7 +125,7 @@ describe UserOption do
             end
 
             after do
-              $redis.flushdb
+              Discourse.redis.flushdb
             end
 
             it "should have a reason for the first visit" do

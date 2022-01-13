@@ -100,7 +100,7 @@
               {{#if user.second_factor_enabled}}
                 {{d-icon "lock" title="admin.user.second_factor_enabled" }}
               {{/if}}
-              {{plugin-outlet name="admin-users-list-icon" tagName="" args=(hash user=user query=query)}}
+              {{plugin-outlet name="admin-users-list-icon" connectorTagName="div" args=(hash user=user query=query)}}
             </td>
           </tr>
         {{/each}}

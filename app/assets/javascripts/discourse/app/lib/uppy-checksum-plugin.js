@@ -24,6 +24,12 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
       );
       return false;
     }
+    if (!Blob.prototype.arrayBuffer) {
+      this._consoleWarn(
+        "The required File API is unavailable in this browser."
+      );
+      return false;
+    }
     if (!this._hasCryptoCipher()) {
       this._consoleWarn(
         "The required cipher suite is unavailable in this browser."

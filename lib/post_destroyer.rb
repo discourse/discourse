@@ -183,6 +183,7 @@ class PostDestroyer
       DB.after_commit do
         if @opts[:reviewable]
           notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
+          ignore(@post.reviewable_flag) if @post.reviewable_flag && SiteSetting.notify_users_after_responses_deleted_on_flagged_post
         elsif reviewable = @post.reviewable_flag
           @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
         end
@@ -332,6 +333,7 @@ class PostDestroyer
       message_type: notify_responders ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
       message_options: {
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
+        flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,
         flag_reason: I18n.t(
           "flag_reasons#{".responder" if notify_responders}.#{PostActionType.types[rs.reviewable_score_type]}",

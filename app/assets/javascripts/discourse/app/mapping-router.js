@@ -141,10 +141,8 @@ export function mapRoutes() {
     this.route("unknown", { path: "*path" });
   });
 }
-export function teardownRouter(container) {
-  const router = container.lookup("router:main");
-  const constructor = Object.getPrototypeOf(router).constructor;
-  constructor.dslCallbacks.splice(0, constructor.dslCallbacks.length);
+export function teardownRouter(routerClass) {
+  routerClass.dslCallbacks.splice(0, routerClass.dslCallbacks.length);
 }
 
 export function registerRouter(registry) {

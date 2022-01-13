@@ -169,6 +169,10 @@ export function buildResolver(baseName) {
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 
+    resolveRawView(parsedName) {
+      return this.customResolve(parsedName) || this._super(parsedName);
+    },
+
     resolveRoute(parsedName) {
       if (parsedName.fullNameWithoutType === "basic") {
         return requirejs("discourse/routes/discourse", null, null, true)

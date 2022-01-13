@@ -1,4 +1,4 @@
-{{plugin-outlet name="above-discovery-categories" tagName="" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}
+{{plugin-outlet name="above-discovery-categories" connectorTagName="div" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}
 
 {{#discovery-categories refresh=(action "refresh")}}
   {{#if topicTrackingState.hasIncoming}}
@@ -14,4 +14,4 @@
               topics=model.topics}}
 {{/discovery-categories}}
 
-{{plugin-outlet name="below-discovery-categories" tagName="" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}
+{{plugin-outlet name="below-discovery-categories" connectorTagName="div" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}

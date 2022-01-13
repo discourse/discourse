@@ -17,6 +17,7 @@ module.exports = function (environment) {
         Date: false,
       },
     },
+    exportApplicationGlobal: true,
 
     APP: {
       // Here you can pass flags/options to your application instance

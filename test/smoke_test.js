@@ -76,6 +76,13 @@ const path = require("path");
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
+      if (resp.status() === 429) {
+        const headers = resp.headers();
+        console.log("Response headers:");
+        Object.keys(headers).forEach((key) => {
+          console.log(`${key}: ${headers[key]}`);
+        });
+      }
     }
     return resp;
   });

@@ -251,13 +251,13 @@ zh_CN:
       help:
         bookmark: "点击以将此话题的第一个帖子加入书签"
         edit_bookmark: "点击以编辑有关此话题的书签"
-        edit_bookmark_for_topic: "单击来为本主题编辑书签"
+        edit_bookmark_for_topic: "单击来为本主题编辑收藏"
         unbookmark: "点击以移除此话题中的所有书签"
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
       not_bookmarked: "将此帖子加入书签"
-      remove_reminder_keep_bookmark: "删除提醒并保留书签"
+      remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
       remove: "移除书签"
       delete: "删除书签"
@@ -962,7 +962,7 @@ zh_CN:
       no_bookmarks_title: "您还没有将任何内容加入书签"
       no_bookmarks_body: >
         使用 %{icon} 按钮开始将帖子加入书签，它们将出现在这里，便于参考。您也可以安排提醒！
-      no_bookmarks_search: "使用提供的搜索查询未找到书签。"
+      no_bookmarks_search: "使用提供的搜索查询未找到收藏。"
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
         您将直接在此面板上收到与您相关的活动通知，包括对您的话题和帖子的回复，以及当有人<b>提及 (@)</b> 您或引用您以及回复您关注的话题时。当您有一段时间没有登录时，通知还将发送到您的电子邮件。<br><br>查找 %{icon} 以决定您想收到通知的具体话题、类别和标签。有关详情，请参阅您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
@@ -1335,11 +1335,9 @@ zh_CN:
         every_month: "每月"
         every_six_months: "每六个月"
       email_level:
-        title: "当有人引用我的话、回复我的帖子、提及我的用户名或邀请我加入某个话题时，给我发送电子邮件"
         always: "始终"
         only_when_away: "只在离开时"
         never: "从不"
-      email_messages_level: "当有人给我发消息时给我发送电子邮件"
       include_tl0_in_digests: "在摘要电子邮件中包含来自新用户的内容"
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
@@ -1429,6 +1427,7 @@ zh_CN:
           email_or_domain_placeholder: "name@example.com 或者 example.com"
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
+          invite_to_topic: "直达此主题"
           expires_at: "过期时间"
           custom_message: "可选个人信息"
           send_invite_email: "保存并发送电子邮件"
@@ -1623,6 +1622,7 @@ zh_CN:
       title: "密码重置"
       action: "我忘记密码了"
       invite: "输入您的用户名或电子邮件地址，我们将向您发送密码重置电子邮件。"
+      invite_no_username: "输入您的电子邮件地址，我们将向您发送密码重置电子邮件。"
       reset: "重置密码"
       complete_username: "如果存在与用户名 <b>%{username}</b> 相匹配的帐户，您应该会收到一封电子邮件，其中包含有关如何尽快重置密码的说明。"
       complete_email: "如果存在与 <b>%{email}</b> 相匹配的帐户，您应该会收到一封电子邮件，其中包含有关如何尽快重置密码的说明。"
@@ -1831,9 +1831,6 @@ zh_CN:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
         other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
-      cannot_see_mention:
-        category: "您提及了 %{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
-        private: "您提及了 %{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
       here_mention:
         other: "通过提及 <b>@%{here}</b>，您将要通知 %{count} 用户 – 您确定吗？"
       duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
@@ -2000,7 +1997,7 @@ zh_CN:
       dismiss_confirmation:
         body:
           other: "您确定吗？您有 %{count} 个重要通知。"
-        dismiss: "关闭"
+        dismiss: "标记为已读"
         cancel: "取消"
       group_message_summary:
         other: "您的 %{group_name} 收件箱中有 %{count} 条消息"
@@ -2395,19 +2392,12 @@ zh_CN:
         replies_short: "%{current} / %{total}"
       progress:
         title: 话题进度
-        go_top: "顶部"
-        go_bottom: "底部"
-        go: "前往"
-        jump_bottom: "跳转到最后一个帖子"
         jump_prompt: "跳转到…"
         jump_prompt_of:
           other: "/%{count} 个帖子"
         jump_prompt_long: "跳转到…"
-        jump_bottom_with_number: "跳转到帖子 %{post_number}"
         jump_prompt_to_date: "截至日期"
         jump_prompt_or: "或者"
-        total: 帖子总数
-        current: 当前帖子
       notifications:
         title: 更改您接收有关此话题的通知的频率
         reasons:
@@ -2826,9 +2816,9 @@ zh_CN:
             button: "HTML"
       bookmarks:
         create: "创建书签"
-        create_for_topic: "为主题创建一个书签"
+        create_for_topic: "添加主题到收藏夹"
         edit: "编辑书签"
-        edit_for_topic: "为主题创建的书签进行编辑"
+        edit_for_topic: "编辑收藏"
         created: "已创建"
         updated: "更新"
         name: "名称"
@@ -3278,6 +3268,7 @@ zh_CN:
         title: "搜索菜单"
         prev_next: "%{shortcut} 上下移动所选内容"
         insert_url: "%{shortcut} 将所选内容插入到打开的编辑器"
+        full_page_search: "%{shortcut} 启动完整页面搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -3317,6 +3308,7 @@ zh_CN:
       remember_explanation: "（您可以在用户偏好设置中更改此配置）"
       download: "下载"
       default_calendar: "默认日历"
+      default_calendar_instruction: "决定保存日期时应使用哪个日历"
       add_to_calendar: "添加到日历"
       google: "Google 日历"
       ics: "ICS"
@@ -3332,6 +3324,7 @@ zh_CN:
         other: "您必须至少选择 %{count} 个标签。"
       info: "信息"
       default_info: "该标签不限于任何类别，并且没有同义词。"
+      staff_info: "要添加限制，请将此标签放在 <a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
@@ -3689,6 +3682,7 @@ zh_CN:
             您还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
           read_only: 只读
+          global: 全局范围
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
@@ -3703,8 +3697,6 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
-            uploads:
-              create: 上传一个新文件。
             users:
               bookmarks: 列出用户书签。使用 ICS 格式时返回书签提醒。
               sync_sso: 使用 DiscourseConnect 同步用户。
@@ -4385,9 +4377,6 @@ zh_CN:
           title: "已屏蔽的 IP"
           description: '正在监视的 IP 地址。使用 “允许”以将 IP 地址列入许可名单。'
           delete_confirm: "确定要移除对 %{ip_address} 的规则吗？"
-          roll_up_confirm: "确定要将常用屏蔽 IP 地址汇总到子网中吗？"
-          rolled_up_some_subnets: "已成功将 IP 禁止条目汇总到这些子网：%{subnets}。"
-          rolled_up_no_subnet: "没有可以汇总的内容。"
           actions:
             block: "禁止"
             do_nothing: "允许"
