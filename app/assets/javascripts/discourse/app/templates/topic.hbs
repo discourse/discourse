@@ -133,7 +133,9 @@
       {{plugin-outlet name="above-timeline" connectorTagName="div"}}
 
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
-        {{plugin-outlet name="topic-navigation" connectorTagName="div" args=(hash topic=model)}}
+        {{#unless site.mobileView}}
+          {{plugin-outlet name="topic-navigation" connectorTagName="div" args=(hash topic=model)}}
+        {{/unless}}
 
         {{#if info.renderTimeline}}
           {{topic-timeline
