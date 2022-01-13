@@ -109,6 +109,8 @@ export default Component.extend({
     if (this.onKeyDown) {
       e.stopPropagation();
       this.onKeyDown(e);
+    } else if (e.key === "Enter") {
+      this.click(e);
     }
   },
 
