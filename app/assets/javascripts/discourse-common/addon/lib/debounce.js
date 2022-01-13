@@ -11,9 +11,7 @@ let testingFunc = isLegacyEmber() ? run : next;
 
 export default function () {
   if (isTesting()) {
-    // Don't include the time argument (in ms)
-    let args = [].slice.call(arguments, 0, -1);
-    return testingFunc.apply(void 0, args);
+    return testingFunc(...arguments);
   } else {
     return debounce(...arguments);
   }
