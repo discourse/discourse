@@ -562,15 +562,15 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      exists(".advanced-filters[open]"),
       "launching a search collapses advanced filters"
     );
 
     await visit("/search");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      exists(".advanced-filters[open]"),
       "filters are collapsed when query param is not present"
     );
 
