@@ -8,6 +8,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
+import { later, scheduleOnce } from "@ember/runloop";
 import transformPost from "discourse/lib/transform-post";
 
 let transformCallbacks = null;
@@ -62,6 +63,16 @@ addWidgetCleanCallback("post-stream", () => {
   _cloaked = {};
   _heights = {};
 });
+
+const _postsOnFirstPaint = 2;
+let _isFirstPaint = true;
+// TODO: when topic is scrolled and first post is not at top of view
+// * either show placeholder posts all-screen on load: _postsOnFirstPaint = 0
+// * or disable special first-paint handling: _isFirstPaint = false
+function _refreshAfterFirstPaint() {
+  _isFirstPaint = false;
+  this.appEvents.trigger("post-stream:refresh");
+}
 
 createWidget("posts-filtered-notice", {
   buildKey: (attrs) => `posts-filtered-notice-${attrs.id}`,
@@ -195,15 +206,21 @@ export default createWidget("post-stream", {
     const before = attrs.gaps && attrs.gaps.before ? attrs.gaps.before : {};
     const after = attrs.gaps && attrs.gaps.after ? attrs.gaps.after : {};
     const mobileView = this.site.mobileView;
+    const widgetPostPlaceholder = this.attach("post-placeholder");
 
     let prevPost;
     let prevDate;
 
     for (let i = 0; i < postArrayLength; i++) {
+      if (_isFirstPaint && i >= _postsOnFirstPaint) {
+        result.push(widgetPostPlaceholder);
+        continue;
+      }
+
       const post = postArray[i];
 
       if (post instanceof Placeholder) {
-        result.push(this.attach("post-placeholder"));
+        result.push(widgetPostPlaceholder);
         continue;
       }
 
@@ -306,6 +323,14 @@ export default createWidget("post-stream", {
           filteredPostsCount: attrs.filteredPostsCount,
         })
       );
+    }
+
+    if (_isFirstPaint) {
+      // 50ms break makes the browser paint and display the first elements.
+      // Then render further elements and do a re-paint.
+      later(() => {
+        scheduleOnce("afterRender", this, _refreshAfterFirstPaint);
+      }, 50);
     }
 
     return result;
