@@ -17,7 +17,7 @@ import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
-import { on } from "discourse-common/utils/decorators";
+import { bind, on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 import bootbox from "bootbox";
 
@@ -54,6 +54,7 @@ export default Mixin.create(UppyS3Multipart, {
       "change",
       this.fileInputEventListener
     );
+    this.appEvents.off(`upload-mixin:${this.id}:add-files`, this._addFiles);
     this._uppyInstance?.close();
     this._uppyInstance = null;
   },
@@ -228,6 +229,7 @@ export default Mixin.create(UppyS3Multipart, {
       }
     }
 
+    this.appEvents.on(`upload-mixin:${this.id}:add-files`, this._addFiles);
     this._uppyReady();
   },
 
@@ -320,21 +322,30 @@ export default Mixin.create(UppyS3Multipart, {
   _bindFileInputChange() {
     this.fileInputEventListener = bindFileInputChangeListener(
       this.fileInputEl,
-      (file) => {
-        try {
-          this._uppyInstance.addFile({
-            source: `${this.id} file input`,
+      this._addFiles
+    );
+  },
+
+  @bind
+  _addFiles(files, opts = {}) {
+    files = Array.isArray(files) ? files : [files];
+    try {
+      this._uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: this.id,
             name: file.name,
             type: file.type,
             data: file,
-          });
-        } catch (err) {
-          warn(`error adding files to uppy: ${err}`, {
-            id: "discourse.upload.uppy-add-files-error",
-          });
-        }
-      }
-    );
+            meta: { pasted: opts.pasted },
+          };
+        })
+      );
+    } catch (err) {
+      warn(`error adding files to uppy: ${err}`, {
+        id: "discourse.upload.uppy-add-files-error",
+      });
+    }
   },
 
   _completeExternalUpload(file) {
