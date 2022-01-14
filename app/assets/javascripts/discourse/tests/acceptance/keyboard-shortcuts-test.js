@@ -5,6 +5,7 @@ import {
   acceptance,
   exists,
   query,
+  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { test } from "qunit";
@@ -32,20 +33,27 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
 
   test("go to first suggested topic", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
-    await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
-    await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    // Only #post_1 and #post_2 are visible after very first paint of topic view.
+    // Wait for all posts and widgets to appear in post-stream.
+    await waitFor(assert, async () => {
+      await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
+      assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
 
-    // Suggested topics elements exist.
-    await visit("/t/internationalization-localization/280");
-    await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
-    await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
-    assert.strictEqual(currentURL(), "/t/polls-are-still-very-buggy/27331/4");
+      // Suggested topics elements exist.
+      await visit("/t/internationalization-localization/280");
+      await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
+      assert.strictEqual(currentURL(), "/t/polls-are-still-very-buggy/27331/4");
 
-    await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
-    await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
-    await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
-    assert.strictEqual(currentURL(), "/t/keyboard-shortcuts-are-awesome/27331");
+      await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
+      await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
+      assert.strictEqual(
+        currentURL(),
+        "/t/keyboard-shortcuts-are-awesome/27331"
+      );
+    });
   });
 });
 

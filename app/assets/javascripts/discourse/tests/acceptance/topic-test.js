@@ -7,6 +7,7 @@ import {
   queryAll,
   selectText,
   visible,
+  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -329,23 +330,28 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");
-    await click("#post_3 .select-below");
 
-    assert.ok(
-      queryAll(".selected-posts")
-        .html()
-        .includes(I18n.t("topic.multi_select.description", { count: 18 })),
-      "it should select the right number of posts"
-    );
+    // Only #post_1 and #post_2 are visible after very first paint of topic view.
+    // Wait for all posts and widgets to appear in post-stream.
+    await waitFor(assert, async () => {
+      await click("#post_3 .select-below");
 
-    await click("#post_2 .select-below");
+      assert.ok(
+        queryAll(".selected-posts")
+          .html()
+          .includes(I18n.t("topic.multi_select.description", { count: 18 })),
+        "it should select the right number of posts"
+      );
 
-    assert.ok(
-      queryAll(".selected-posts")
-        .html()
-        .includes(I18n.t("topic.multi_select.description", { count: 19 })),
-      "it should select the right number of posts"
-    );
+      await click("#post_2 .select-below");
+
+      assert.ok(
+        queryAll(".selected-posts")
+          .html()
+          .includes(I18n.t("topic.multi_select.description", { count: 19 })),
+        "it should select the right number of posts"
+      );
+    });
   });
 
   test("View Hidden Replies", async function (assert) {
@@ -541,17 +547,21 @@ acceptance("Topic last visit line", function (needs) {
   test("visit topic", async function (assert) {
     await visit("/t/-/280");
 
-    assert.ok(
-      exists(".topic-post-visited-line.post-10"),
-      "shows the last visited line on the right post"
-    );
+    // Only #post_1 and #post_2 are visible after very first paint of topic view.
+    // Wait for all posts and widgets to appear in post-stream.
+    await waitFor(assert, async () => {
+      assert.ok(
+        exists(".topic-post-visited-line.post-10"),
+        "shows the last visited line on the right post"
+      );
 
-    await visit("/t/-/9");
+      await visit("/t/-/9");
 
-    assert.ok(
-      !exists(".topic-post-visited-line"),
-      "does not show last visited line if post is the last post"
-    );
+      assert.ok(
+        !exists(".topic-post-visited-line"),
+        "does not show last visited line if post is the last post"
+      );
+    });
   });
 });
 

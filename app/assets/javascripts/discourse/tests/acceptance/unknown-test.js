@@ -1,4 +1,8 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  waitFor,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -15,12 +19,16 @@ acceptance("Category 404", function (needs) {
   test("Navigating to a bad category link does not break the router", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click('[data-for-test="category-404"]');
-    assert.strictEqual(currentURL(), "/404");
+    // Only #post_1 and #post_2 are visible after very first paint of topic view.
+    // Wait for all posts and widgets to appear in post-stream.
+    await waitFor(assert, async () => {
+      await click('[data-for-test="category-404"]');
+      assert.strictEqual(currentURL(), "/404");
 
-    // See that we can navigate away
-    await click("#site-logo");
-    assert.strictEqual(currentURL(), "/");
+      // See that we can navigate away
+      await click("#site-logo");
+      assert.strictEqual(currentURL(), "/");
+    });
   });
 });
 

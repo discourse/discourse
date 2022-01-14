@@ -7,6 +7,7 @@ import {
   exists,
   query,
   queryAll,
+  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
@@ -698,13 +699,17 @@ third line`
     },
 
     async test(assert) {
-      jumpEnd(query("textarea.d-editor-input"));
-      await click("button.emoji");
+      // Only #post_1 and #post_2 are visible after very first paint of topic view.
+      // Wait for all posts and widgets to appear in stream.
+      await waitFor(assert, async () => {
+        jumpEnd(query("textarea.d-editor-input"));
+        await click("button.emoji");
 
-      await click(
-        '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-      );
-      assert.strictEqual(this.value, "hello world. :grinning:");
+        await click(
+          '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+        );
+        assert.strictEqual(this.value, "hello world. :grinning:");
+      });
     },
   });
 
