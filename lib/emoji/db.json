@@ -774,7 +774,7 @@
     },
     {
       "code": "1f935",
-      "name": "man_in_tuxedo"
+      "name": "person_in_tuxedo"
     },
     {
       "code": "1f3c3-200d-2640-fe0f",
@@ -910,7 +910,7 @@
     },
     {
       "code": "1f491",
-      "name": "couple_with_heart_woman_man"
+      "name": "couple_with_heart"
     },
     {
       "code": "1f469-200d-2764-fe0f-200d-1f469",
@@ -934,7 +934,7 @@
     },
     {
       "code": "1f46a",
-      "name": "family_man_woman_boy"
+      "name": "family"
     },
     {
       "code": "1f468-200d-1f469-200d-1f467",
@@ -1318,7 +1318,7 @@
     },
     {
       "code": "1f41e",
-      "name": "beetle"
+      "name": "lady_beetle"
     },
     {
       "code": "1f41c",
@@ -5806,7 +5806,7 @@
     },
     {
       "code": "1f9dc",
-      "name": "mermaid"
+      "name": "merperson"
     },
     {
       "code": "1f9dc-200d-2642-fe0f",
@@ -6085,11 +6085,11 @@
       "name": "superhero"
     },
     {
-      "code": "1f9b8-200d-2642",
+      "code": "1f9b8-200d-2642-fe0f",
       "name": "man_superhero"
     },
     {
-      "code": "1f9b8-200d-2640",
+      "code": "1f9b8-200d-2640-fe0f",
       "name": "woman_superhero"
     },
     {
@@ -6097,11 +6097,11 @@
       "name": "supervillain"
     },
     {
-      "code": "1f9b9-200d-2640",
+      "code": "1f9b9-200d-2640-fe0f",
       "name": "woman_supervillain"
     },
     {
-      "code": "1f9b9-200d-2642",
+      "code": "1f9b9-200d-2642-fe0f",
       "name": "man_supervillain"
     },
     {
@@ -6577,27 +6577,27 @@
       "name": "man_with_probing_cane"
     },
     {
-      "code": "1f9ce-200d-2640",
+      "code": "1f9ce-200d-2640-fe0f",
       "name": "woman_kneeling"
     },
     {
-      "code": "1f9ce-200d-2642",
+      "code": "1f9ce-200d-2642-fe0f",
       "name": "man_kneeling"
     },
     {
-      "code": "1f9cd-200d-2642",
+      "code": "1f9cd-200d-2642-fe0f",
       "name": "man_standing"
     },
     {
-      "code": "1f9cd-200d-2640",
+      "code": "1f9cd-200d-2640-fe0f",
       "name": "woman_standing"
     },
     {
-      "code": "1f9cf-200d-2640",
+      "code": "1f9cf-200d-2640-fe0f",
       "name": "deaf_woman"
     },
     {
-      "code": "1f9cf-200d-2642",
+      "code": "1f9cf-200d-2642-fe0f",
       "name": "deaf_man"
     },
     {
@@ -6647,10 +6647,6 @@
     {
       "code": "1f977",
       "name": "ninja"
-    },
-    {
-      "code": "",
-      "name": "lungs"
     },
     {
       "code": "1f9d1-200d-1f384",
@@ -6867,6 +6863,562 @@
     {
       "code": "1f43b-200d-2744",
       "name": "polar_bear"
+    },
+    {
+      "code": "1fae0",
+      "name": "melting_face"
+    },
+    {
+      "code": "263a",
+      "name": "smiling_face"
+    },
+    {
+      "code": "1fae2",
+      "name": "face_with_open_eyes_and_hand_over_mouth"
+    },
+    {
+      "code": "1fae3",
+      "name": "face_with_peeking_eye"
+    },
+    {
+      "code": "1fae1",
+      "name": "saluting_face"
+    },
+    {
+      "code": "1fae5",
+      "name": "dotted_line_face"
+    },
+    {
+      "code": "1f636-200d-1f32b",
+      "name": "face_in_clouds"
+    },
+    {
+      "code": "1f62e-200d-1f4a8",
+      "name": "face_exhaling"
+    },
+    {
+      "code": "1f635-200d-1f4ab",
+      "name": "face_with_spiral_eyes"
+    },
+    {
+      "code": "1fae4",
+      "name": "face_with_diagonal_mouth"
+    },
+    {
+      "code": "2639",
+      "name": "frowning_face"
+    },
+    {
+      "code": "1f979",
+      "name": "face_holding_back_tears"
+    },
+    {
+      "code": "2764-fe0f-200d-1f525",
+      "name": "heart_on_fire"
+    },
+    {
+      "code": "2764-fe0f-200d-1fa79",
+      "name": "mending_heart"
+    },
+    {
+      "code": "1f441-fe0f-200d-1f5e8",
+      "name": "eye_in_speech_bubble"
+    },
+    {
+      "code": "1faf1",
+      "name": "rightwards_hand"
+    },
+    {
+      "code": "1faf2",
+      "name": "leftwards_hand"
+    },
+    {
+      "code": "1faf3",
+      "name": "palm_down_hand"
+    },
+    {
+      "code": "1faf4",
+      "name": "palm_up_hand"
+    },
+    {
+      "code": "1faf0",
+      "name": "hand_with_index_finger_and_thumb_crossed"
+    },
+    {
+      "code": "1faf5",
+      "name": "index_pointing_at_the_viewer"
+    },
+    {
+      "code": "1faf6",
+      "name": "heart_hands"
+    },
+    {
+      "code": "1fae6",
+      "name": "biting_lip"
+    },
+    {
+      "code": "1f9d4-200d-2642",
+      "name": "man_beard"
+    },
+    {
+      "code": "1f9d4-200d-2640",
+      "name": "woman_beard"
+    },
+    {
+      "code": "1f9d1-200d-1f9b0",
+      "name": "person_red_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b1",
+      "name": "person_curly_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b3",
+      "name": "person_white_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b2",
+      "name": "person_bald"
+    },
+    {
+      "code": "1f471-200d-2642-fe0f",
+      "name": "man_blond_hair"
+    },
+    {
+      "code": "1f64d",
+      "name": "person_frowning"
+    },
+    {
+      "code": "1f64e",
+      "name": "person_pouting"
+    },
+    {
+      "code": "1f645",
+      "name": "person_gesturing_no"
+    },
+    {
+      "code": "1f646",
+      "name": "person_gesturing_ok"
+    },
+    {
+      "code": "1f481",
+      "name": "person_tipping_hand"
+    },
+    {
+      "code": "1f64b",
+      "name": "person_raising_hand"
+    },
+    {
+      "code": "1f9cf",
+      "name": "deaf_person"
+    },
+    {
+      "code": "1f647-200d-2642-fe0f",
+      "name": "man_bowing"
+    },
+    {
+      "code": "1f926",
+      "name": "person_facepalming"
+    },
+    {
+      "code": "1f937",
+      "name": "person_shrugging"
+    },
+    {
+      "code": "1f9d1-200d-2695-fe0f",
+      "name": "health_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f393",
+      "name": "student"
+    },
+    {
+      "code": "1f9d1-200d-1f3eb",
+      "name": "teacher"
+    },
+    {
+      "code": "1f9d1-200d-2696-fe0f",
+      "name": "judge"
+    },
+    {
+      "code": "1f9d1-200d-1f33e",
+      "name": "farmer"
+    },
+    {
+      "code": "1f9d1-200d-1f373",
+      "name": "cook"
+    },
+    {
+      "code": "1f9d1-200d-1f527",
+      "name": "mechanic"
+    },
+    {
+      "code": "1f9d1-200d-1f3ed",
+      "name": "factory_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f4bc",
+      "name": "office_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f52c",
+      "name": "scientist"
+    },
+    {
+      "code": "1f9d1-200d-1f4bb",
+      "name": "technologist"
+    },
+    {
+      "code": "1f9d1-200d-1f3a4",
+      "name": "singer"
+    },
+    {
+      "code": "1f9d1-200d-1f3a8",
+      "name": "artist"
+    },
+    {
+      "code": "1f9d1-200d-2708-fe0f",
+      "name": "pilot"
+    },
+    {
+      "code": "1f9d1-200d-1f680",
+      "name": "astronaut"
+    },
+    {
+      "code": "1f9d1-200d-1f692",
+      "name": "firefighter"
+    },
+    {
+      "code": "1f46e-200d-2642-fe0f",
+      "name": "man_police_officer"
+    },
+    {
+      "code": "1f575-fe0f-200d-2642-fe0f",
+      "name": "man_detective"
+    },
+    {
+      "code": "1f482-200d-2642-fe0f",
+      "name": "man_guard"
+    },
+    {
+      "code": "1f477-200d-2642-fe0f",
+      "name": "man_construction_worker"
+    },
+    {
+      "code": "1fac5",
+      "name": "person_with_crown"
+    },
+    {
+      "code": "1f473-200d-2642-fe0f",
+      "name": "man_wearing_turban"
+    },
+    {
+      "code": "1f935-200d-2642-fe0f",
+      "name": "man_in_tuxedo"
+    },
+    {
+      "code": "1f935-200d-2640-fe0f",
+      "name": "woman_in_tuxedo"
+    },
+    {
+      "code": "1f470-200d-2642-fe0f",
+      "name": "man_with_veil"
+    },
+    {
+      "code": "1f470-200d-2640-fe0f",
+      "name": "woman_with_veil"
+    },
+    {
+      "code": "1fac3",
+      "name": "pregnant_man"
+    },
+    {
+      "code": "1fac4",
+      "name": "pregnant_person"
+    },
+    {
+      "code": "1f469-200d-1f37c",
+      "name": "woman_feeding_baby"
+    },
+    {
+      "code": "1f9d9-200d-2642-fe0f",
+      "name": "man_mage"
+    },
+    {
+      "code": "1f9da-200d-2642-fe0f",
+      "name": "man_fairy"
+    },
+    {
+      "code": "1f9da-200d-2640-fe0f",
+      "name": "woman_fairy"
+    },
+    {
+      "code": "1f9db-200d-2642-fe0f",
+      "name": "man_vampire"
+    },
+    {
+      "code": "1f9db-200d-2640-fe0f",
+      "name": "woman_vampire"
+    },
+    {
+      "code": "1f9dc-200d-2640-fe0f",
+      "name": "mermaid"
+    },
+    {
+      "code": "1f9dd-200d-2642-fe0f",
+      "name": "man_elf"
+    },
+    {
+      "code": "1f9dd-200d-2640-fe0f",
+      "name": "woman_elf"
+    },
+    {
+      "code": "1f9de-200d-2642",
+      "name": "man_genie"
+    },
+    {
+      "code": "1f9df-200d-2642",
+      "name": "man_zombie"
+    },
+    {
+      "code": "1f9cc",
+      "name": "troll"
+    },
+    {
+      "code": "1f486",
+      "name": "person_getting_massage"
+    },
+    {
+      "code": "1f487",
+      "name": "person_getting_haircut"
+    },
+    {
+      "code": "1f6b6-200d-2642-fe0f",
+      "name": "man_walking"
+    },
+    {
+      "code": "1f9cd",
+      "name": "person_standing"
+    },
+    {
+      "code": "1f9ce",
+      "name": "person_kneeling"
+    },
+    {
+      "code": "1f9d1-200d-1f9af",
+      "name": "person_with_white_cane"
+    },
+    {
+      "code": "1f9d1-200d-1f9bc",
+      "name": "person_in_motorized_wheelchair"
+    },
+    {
+      "code": "1f9d1-200d-1f9bd",
+      "name": "person_in_manual_wheelchair"
+    },
+    {
+      "code": "1f3c3-200d-2642-fe0f",
+      "name": "man_running"
+    },
+    {
+      "code": "1f46f-200d-2640",
+      "name": "women_with_bunny_ears"
+    },
+    {
+      "code": "1f9d6-200d-2642-fe0f",
+      "name": "man_in_steamy_room"
+    },
+    {
+      "code": "1f9d7-200d-2642-fe0f",
+      "name": "man_climbing"
+    },
+    {
+      "code": "1f3cc-fe0f-200d-2642-fe0f",
+      "name": "man_golfing"
+    },
+    {
+      "code": "1f3c4-200d-2642-fe0f",
+      "name": "man_surfing"
+    },
+    {
+      "code": "1f6a3-200d-2642-fe0f",
+      "name": "man_rowing_boat"
+    },
+    {
+      "code": "1f3ca-200d-2642-fe0f",
+      "name": "man_swimming"
+    },
+    {
+      "code": "26f9-fe0f-200d-2642-fe0f",
+      "name": "man_bouncing_ball"
+    },
+    {
+      "code": "1f3cb-fe0f-200d-2642-fe0f",
+      "name": "man_lifting_weights"
+    },
+    {
+      "code": "1f6b4-200d-2642-fe0f",
+      "name": "man_biking"
+    },
+    {
+      "code": "1f6b5-200d-2642-fe0f",
+      "name": "man_mountain_biking"
+    },
+    {
+      "code": "1f938",
+      "name": "person_cartwheeling"
+    },
+    {
+      "code": "1f93c",
+      "name": "people_wrestling"
+    },
+    {
+      "code": "1f93d",
+      "name": "person_playing_water_polo"
+    },
+    {
+      "code": "1f93e",
+      "name": "person_playing_handball"
+    },
+    {
+      "code": "1f939",
+      "name": "person_juggling"
+    },
+    {
+      "code": "1f9d8-200d-2642-fe0f",
+      "name": "man_in_lotus_position"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f48b-200d-1f468",
+      "name": "kiss_woman_man"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f468",
+      "name": "couple_with_heart_woman_man"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f466",
+      "name": "family_man_woman_boy"
+    },
+    {
+      "code": "1f9b0",
+      "name": "red_hair"
+    },
+    {
+      "code": "1f9b1",
+      "name": "curly_hair"
+    },
+    {
+      "code": "1f9b3",
+      "name": "white_hair"
+    },
+    {
+      "code": "1f9b2",
+      "name": "bald"
+    },
+    {
+      "code": "1fab8",
+      "name": "coral"
+    },
+    {
+      "code": "1fab7",
+      "name": "lotus"
+    },
+    {
+      "code": "1fab9",
+      "name": "empty_nest"
+    },
+    {
+      "code": "1faba",
+      "name": "nest_with_eggs"
+    },
+    {
+      "code": "1fad8",
+      "name": "beans"
+    },
+    {
+      "code": "1fad7",
+      "name": "pouring_liquid"
+    },
+    {
+      "code": "1fad9",
+      "name": "jar"
+    },
+    {
+      "code": "1f6dd",
+      "name": "playground_slide"
+    },
+    {
+      "code": "1f6de",
+      "name": "wheel"
+    },
+    {
+      "code": "1f6df",
+      "name": "ring_buoy"
+    },
+    {
+      "code": "1faac",
+      "name": "hamsa"
+    },
+    {
+      "code": "1faa9",
+      "name": "mirror_ball"
+    },
+    {
+      "code": "1faab",
+      "name": "low_battery"
+    },
+    {
+      "code": "1fa7c",
+      "name": "crutch"
+    },
+    {
+      "code": "1fa7b",
+      "name": "xray"
+    },
+    {
+      "code": "1f6d7",
+      "name": "elevator"
+    },
+    {
+      "code": "1fae7",
+      "name": "bubbles"
+    },
+    {
+      "code": "1faaa",
+      "name": "identification_card"
+    },
+    {
+      "code": "23cf",
+      "name": "eject_button"
+    },
+    {
+      "code": "2640",
+      "name": "female_sign"
+    },
+    {
+      "code": "2642",
+      "name": "male_sign"
+    },
+    {
+      "code": "1f7f0",
+      "name": "heavy_equals_sign"
+    },
+    {
+      "code": "2695",
+      "name": "medical_symbol"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0065-e006e-e0067-e007f",
+      "name": "england"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0073-e0063-e0074-e007f",
+      "name": "scotland"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0077-e006c-e0073-e007f",
+      "name": "wales"
     }
   ],
   "tonableEmojis": [
@@ -6887,6 +7439,7 @@
     "open_hands",
     "muscle",
     "pray",
+    "handshake",
     "point_up",
     "point_up_2",
     "point_down",
@@ -6960,13 +7513,16 @@
     "princess",
     "prince",
     "bride_with_veil",
-    "man_in_tuxedo",
+    "person_in_tuxedo",
     "running_woman",
     "running_man",
     "walking_woman",
     "walking_man",
     "dancer",
     "man_dancing",
+    "couple",
+    "two_men_holding_hands",
+    "two_women_holding_hands",
     "bowing_woman",
     "bowing_man",
     "man_facepalming",
@@ -7025,7 +7581,7 @@
     "woman_mage",
     "fairy",
     "vampire",
-    "mermaid",
+    "merperson",
     "merman",
     "elf",
     "person_in_steamy_room",
@@ -7035,7 +7591,116 @@
     "person_in_lotus_position",
     "woman_in_lotus_position",
     "love_you_gesture",
-    "palms_up_together"
+    "palms_up_together",
+    "man_red_haired",
+    "man_curly_haired",
+    "man_white_haired",
+    "man_bald",
+    "woman_red_haired",
+    "woman_curly_haired",
+    "woman_white_haired",
+    "woman_bald",
+    "superhero",
+    "man_superhero",
+    "woman_superhero",
+    "supervillain",
+    "woman_supervillain",
+    "man_supervillain",
+    "leg",
+    "foot",
+    "pinching_hand",
+    "people_holding_hands",
+    "woman_in_manual_wheelchair",
+    "man_in_manual_wheelchair",
+    "woman_in_motorized_wheelchair",
+    "man_in_motorized_wheelchair",
+    "woman_with_probing_cane",
+    "man_with_probing_cane",
+    "woman_kneeling",
+    "man_kneeling",
+    "man_standing",
+    "woman_standing",
+    "deaf_woman",
+    "deaf_man",
+    "hear_with_hearing_aid",
+    "pinched_fingers",
+    "ninja",
+    "mx_claus",
+    "man_feeding_baby",
+    "person_feeding_baby",
+    "person_red_hair",
+    "person_curly_hair",
+    "person_white_hair",
+    "person_bald",
+    "man_blond_hair",
+    "person_frowning",
+    "person_pouting",
+    "person_gesturing_no",
+    "person_gesturing_ok",
+    "person_tipping_hand",
+    "person_raising_hand",
+    "deaf_person",
+    "man_bowing",
+    "person_facepalming",
+    "person_shrugging",
+    "health_worker",
+    "student",
+    "teacher",
+    "judge",
+    "farmer",
+    "cook",
+    "mechanic",
+    "factory_worker",
+    "office_worker",
+    "scientist",
+    "technologist",
+    "singer",
+    "artist",
+    "pilot",
+    "astronaut",
+    "firefighter",
+    "man_police_officer",
+    "man_detective",
+    "man_guard",
+    "man_construction_worker",
+    "man_wearing_turban",
+    "man_in_tuxedo",
+    "woman_in_tuxedo",
+    "man_with_veil",
+    "woman_with_veil",
+    "woman_feeding_baby",
+    "man_mage",
+    "man_fairy",
+    "woman_fairy",
+    "man_vampire",
+    "woman_vampire",
+    "mermaid",
+    "man_elf",
+    "woman_elf",
+    "person_getting_massage",
+    "person_getting_haircut",
+    "man_walking",
+    "person_standing",
+    "person_kneeling",
+    "person_with_white_cane",
+    "person_in_motorized_wheelchair",
+    "person_in_manual_wheelchair",
+    "man_running",
+    "man_in_steamy_room",
+    "man_climbing",
+    "man_golfing",
+    "man_surfing",
+    "man_rowing_boat",
+    "man_swimming",
+    "man_bouncing_ball",
+    "man_lifting_weights",
+    "man_biking",
+    "man_mountain_biking",
+    "person_cartwheeling",
+    "person_playing_water_polo",
+    "person_playing_handball",
+    "person_juggling",
+    "man_in_lotus_position"
   ],
   "aliases": {
     "right_anger_bubble": [
@@ -7653,11 +8318,13 @@
       "slightly_frowning_face",
       "sob",
       "crying_cat_face",
-      "cry"
+      "cry",
+      "face_holding_back_tears"
     ],
     "cry": [
       "sob",
-      "crying_cat_face"
+      "crying_cat_face",
+      "face_holding_back_tears"
     ],
     "face": [
       "grinning",
@@ -7790,7 +8457,11 @@
       "moyai",
       "star_struck",
       "face_with_monocle",
-      "disguised_face"
+      "disguised_face",
+      "smiling_face",
+      "frowning_face",
+      "person_facepalming",
+      "person_getting_massage"
     ],
     "grin": [
       "grinning",
@@ -7839,7 +8510,8 @@
       "smiley_cat",
       "smile_cat",
       "heart_eyes_cat",
-      "smirk_cat"
+      "smirk_cat",
+      "smiling_face"
     ],
     "face with tears of joy": [
       "joy"
@@ -7944,7 +8616,8 @@
       "alien",
       "angel",
       "princess",
-      "crystal_ball"
+      "crystal_ball",
+      "troll"
     ],
     "halo": [
       "innocent"
@@ -7979,10 +8652,12 @@
     "love": [
       "heart_eyes",
       "heart_eyes_cat",
-      "couple_with_heart_woman_man",
+      "couple_with_heart",
       "love_hotel",
       "love_letter",
-      "two_hearts"
+      "two_hearts",
+      "hand_with_index_finger_and_thumb_crossed",
+      "heart_hands"
     ],
     "smiling face with heart-eyes": [
       "heart_eyes"
@@ -8054,7 +8729,8 @@
       "heavy_dollar_sign",
       "currency_exchange",
       "red_gift_envelope",
-      "coin"
+      "coin",
+      "hand_with_index_finger_and_thumb_crossed"
     ],
     "money-mouth face": [
       "money_mouth_face"
@@ -8150,7 +8826,8 @@
     "meh": [
       "neutral_face",
       "expressionless",
-      "confused"
+      "confused",
+      "face_with_diagonal_mouth"
     ],
     "neutral": [
       "neutral_face"
@@ -8216,14 +8893,16 @@
     "angry": [
       "rage",
       "anger",
-      "right_anger_bubble"
+      "right_anger_bubble",
+      "face_holding_back_tears"
     ],
     "enraged": [
       "rage"
     ],
     "pouting": [
       "rage",
-      "pouting_cat"
+      "pouting_cat",
+      "person_pouting"
     ],
     "red": [
       "rage",
@@ -8253,7 +8932,9 @@
     ],
     "frown": [
       "slightly_frowning_face",
-      "frowning_with_open_mouth"
+      "frowning_with_open_mouth",
+      "frowning_face",
+      "person_frowning"
     ],
     "persevering face": [
       "persevere"
@@ -8286,14 +8967,16 @@
     ],
     "fear": [
       "scream",
-      "fearful"
+      "fearful",
+      "biting_lip"
     ],
     "munch": [
       "scream"
     ],
     "scared": [
       "scream",
-      "fearful"
+      "fearful",
+      "face_with_open_eyes_and_hand_over_mouth"
     ],
     "fearful face": [
       "fearful"
@@ -8334,7 +9017,8 @@
       "cry"
     ],
     "disappointed": [
-      "disappointed_relieved"
+      "disappointed_relieved",
+      "face_with_diagonal_mouth"
     ],
     "relieved": [
       "disappointed_relieved",
@@ -8417,7 +9101,8 @@
       "hospital",
       "pill",
       "lab_coat",
-      "stethoscope"
+      "stethoscope",
+      "xray"
     ],
     "face with medical mask": [
       "mask"
@@ -8443,7 +9128,8 @@
       "face_with_head_bandage"
     ],
     "hurt": [
-      "face_with_head_bandage"
+      "face_with_head_bandage",
+      "crutch"
     ],
     "injury": [
       "face_with_head_bandage",
@@ -8482,7 +9168,8 @@
       "ghost",
       "robot",
       "space_invader",
-      "skull_and_crossbones"
+      "skull_and_crossbones",
+      "troll"
     ],
     "pile of poo": [
       "poop"
@@ -8500,7 +9187,8 @@
       "princess",
       "dragon",
       "dragon_face",
-      "crystal_ball"
+      "crystal_ball",
+      "troll"
     ],
     "horns": [
       "smiling_imp",
@@ -8581,7 +9269,8 @@
       "stethoscope",
       "white_heart",
       "brown_heart",
-      "anatomical_heart"
+      "anatomical_heart",
+      "hand_with_index_finger_and_thumb_crossed"
     ],
     "smiling cat with heart-eyes": [
       "heart_eyes_cat"
@@ -8636,7 +9325,12 @@
     ],
     "gesture": [
       "raised_hands",
-      "bowing_man"
+      "bowing_man",
+      "person_frowning",
+      "person_pouting",
+      "person_gesturing_no",
+      "person_gesturing_ok",
+      "person_raising_hand"
     ],
     "hand": [
       "raised_hands",
@@ -8668,14 +9362,22 @@
       "two_women_holding_hands",
       "love_you_gesture",
       "gloves",
-      "people_holding_hands"
+      "people_holding_hands",
+      "rightwards_hand",
+      "leftwards_hand",
+      "person_gesturing_no",
+      "person_gesturing_ok",
+      "person_tipping_hand",
+      "person_raising_hand",
+      "hamsa"
     ],
     "hooray": [
       "raised_hands"
     ],
     "raised": [
       "raised_hands",
-      "raised_back_of_hand"
+      "raised_back_of_hand",
+      "person_raising_hand"
     ],
     "raising hands": [
       "raised_hands"
@@ -8765,7 +9467,9 @@
     ],
     "OK": [
       "ok_hand",
-      "ok"
+      "ok",
+      "saluting_face",
+      "person_gesturing_ok"
     ],
     "OK hand": [
       "ok_hand"
@@ -8843,7 +9547,8 @@
       "point_up_2",
       "point_down",
       "point_left",
-      "point_right"
+      "point_right",
+      "index_pointing_at_the_viewer"
     ],
     "backhand index pointing up": [
       "point_up_2"
@@ -9007,7 +9712,8 @@
       "blonde_man"
     ],
     "hair": [
-      "blonde_man"
+      "blonde_man",
+      "white_hair"
     ],
     "person: blond hair": [
       "blonde_man"
@@ -9035,13 +9741,15 @@
       "man_in_manual_wheelchair",
       "man_in_motorized_wheelchair",
       "man_with_probing_cane",
-      "man_feeding_baby"
+      "man_feeding_baby",
+      "male_sign"
     ],
     "old": [
       "older_man",
       "older_woman",
       "old_key",
-      "older_adult"
+      "older_adult",
+      "white_hair"
     ],
     "old man": [
       "older_man"
@@ -9072,7 +9780,9 @@
       "womens",
       "woman_in_manual_wheelchair",
       "woman_in_motorized_wheelchair",
-      "woman_with_probing_cane"
+      "woman_with_probing_cane",
+      "woman_feeding_baby",
+      "female_sign"
     ],
     "old woman": [
       "older_woman"
@@ -9087,7 +9797,7 @@
     "person": [
       "man_with_gua_pi_mao",
       "bride_with_veil",
-      "man_in_tuxedo",
+      "person_in_tuxedo",
       "business_suit_levitating",
       "adult",
       "bearded_person",
@@ -9128,7 +9838,8 @@
     "worker": [
       "construction_worker_man",
       "woman_factory_worker",
-      "man_factory_worker"
+      "man_factory_worker",
+      "factory_worker"
     ],
     "construction worker": [
       "construction_worker_man"
@@ -9151,15 +9862,18 @@
     ],
     "gardener": [
       "woman_farmer",
-      "man_farmer"
+      "man_farmer",
+      "farmer"
     ],
     "rancher": [
       "woman_farmer",
-      "man_farmer"
+      "man_farmer",
+      "farmer"
     ],
     "chef": [
       "woman_cook",
-      "man_cook"
+      "man_cook",
+      "cook"
     ],
     "cook": [
       "woman_cook",
@@ -9167,7 +9881,8 @@
     ],
     "graduate": [
       "woman_student",
-      "man_student"
+      "man_student",
+      "student"
     ],
     "student": [
       "woman_student",
@@ -9175,16 +9890,19 @@
     ],
     "actor": [
       "woman_singer",
-      "man_singer"
+      "man_singer",
+      "singer"
     ],
     "entertainer": [
       "woman_singer",
-      "man_singer"
+      "man_singer",
+      "singer"
     ],
     "rock": [
       "woman_singer",
       "man_singer",
-      "curling_stone"
+      "curling_stone",
+      "singer"
     ],
     "singer": [
       "woman_singer",
@@ -9201,15 +9919,18 @@
       "star_of_david",
       "six_pointed_star",
       "eight_pointed_black_star",
-      "star_struck"
+      "star_struck",
+      "singer"
     ],
     "instructor": [
       "woman_teacher",
-      "man_teacher"
+      "man_teacher",
+      "teacher"
     ],
     "professor": [
       "woman_teacher",
-      "man_teacher"
+      "man_teacher",
+      "teacher"
     ],
     "teacher": [
       "woman_teacher",
@@ -9217,31 +9938,38 @@
     ],
     "assembly": [
       "woman_factory_worker",
-      "man_factory_worker"
+      "man_factory_worker",
+      "factory_worker"
     ],
     "factory": [
       "woman_factory_worker",
-      "man_factory_worker"
+      "man_factory_worker",
+      "factory_worker"
     ],
     "industrial": [
       "woman_factory_worker",
-      "man_factory_worker"
+      "man_factory_worker",
+      "factory_worker"
     ],
     "coder": [
       "woman_technologist",
-      "man_technologist"
+      "man_technologist",
+      "technologist"
     ],
     "developer": [
       "woman_technologist",
-      "man_technologist"
+      "man_technologist",
+      "technologist"
     ],
     "inventor": [
       "woman_technologist",
-      "man_technologist"
+      "man_technologist",
+      "technologist"
     ],
     "software": [
       "woman_technologist",
-      "man_technologist"
+      "man_technologist",
+      "technologist"
     ],
     "technologist": [
       "woman_technologist",
@@ -9249,24 +9977,29 @@
     ],
     "architect": [
       "woman_office_worker",
-      "man_office_worker"
+      "man_office_worker",
+      "office_worker"
     ],
     "business": [
       "woman_office_worker",
       "man_office_worker",
-      "business_suit_levitating"
+      "business_suit_levitating",
+      "office_worker"
     ],
     "manager": [
       "woman_office_worker",
-      "man_office_worker"
+      "man_office_worker",
+      "office_worker"
     ],
     "white-collar": [
       "woman_office_worker",
-      "man_office_worker"
+      "man_office_worker",
+      "office_worker"
     ],
     "electrician": [
       "woman_mechanic",
-      "man_mechanic"
+      "man_mechanic",
+      "mechanic"
     ],
     "mechanic": [
       "woman_mechanic",
@@ -9276,30 +10009,36 @@
     "plumber": [
       "woman_mechanic",
       "man_mechanic",
-      "plunger"
+      "plunger",
+      "mechanic"
     ],
     "tradesperson": [
       "woman_mechanic",
-      "man_mechanic"
+      "man_mechanic",
+      "mechanic"
     ],
     "biologist": [
       "woman_scientist",
       "man_scientist",
       "petri_dish",
-      "dna"
+      "dna",
+      "scientist"
     ],
     "chemist": [
       "woman_scientist",
       "man_scientist",
-      "test_tube"
+      "test_tube",
+      "scientist"
     ],
     "engineer": [
       "woman_scientist",
-      "man_scientist"
+      "man_scientist",
+      "scientist"
     ],
     "physicist": [
       "woman_scientist",
-      "man_scientist"
+      "man_scientist",
+      "scientist"
     ],
     "scientist": [
       "woman_scientist",
@@ -9313,7 +10052,8 @@
     "palette": [
       "woman_artist",
       "man_artist",
-      "art"
+      "art",
+      "artist"
     ],
     "firefighter": [
       "woman_firefighter",
@@ -9321,7 +10061,8 @@
     ],
     "firetruck": [
       "woman_firefighter",
-      "man_firefighter"
+      "man_firefighter",
+      "firefighter"
     ],
     "astronaut": [
       "woman_astronaut",
@@ -9329,7 +10070,8 @@
     ],
     "rocket": [
       "woman_astronaut",
-      "man_astronaut"
+      "man_astronaut",
+      "astronaut"
     ],
     "Christmas": [
       "mrs_claus",
@@ -9364,13 +10106,16 @@
       "baby_symbol",
       "breast_feeding",
       "man_feeding_baby",
-      "person_feeding_baby"
+      "person_feeding_baby",
+      "woman_feeding_baby"
     ],
     "baby angel": [
       "angel"
     ],
     "pregnant": [
-      "pregnant_woman"
+      "pregnant_woman",
+      "pregnant_man",
+      "pregnant_person"
     ],
     "bride": [
       "bride_with_veil"
@@ -9385,13 +10130,10 @@
       "bride_with_veil"
     ],
     "groom": [
-      "man_in_tuxedo"
-    ],
-    "person in tuxedo": [
-      "man_in_tuxedo"
+      "person_in_tuxedo"
     ],
     "tuxedo": [
-      "man_in_tuxedo"
+      "person_in_tuxedo"
     ],
     "marathon": [
       "running_man"
@@ -9419,7 +10161,8 @@
     "dance": [
       "dancer",
       "man_dancing",
-      "ballet_shoes"
+      "ballet_shoes",
+      "mirror_ball"
     ],
     "dancing": [
       "dancer",
@@ -9456,7 +10199,7 @@
     "couple": [
       "two_men_holding_hands",
       "two_women_holding_hands",
-      "couple_with_heart_woman_man",
+      "couple_with_heart",
       "couplekiss_man_woman",
       "people_holding_hands"
     ],
@@ -9492,12 +10235,6 @@
     ],
     "sorry": [
       "bowing_man"
-    ],
-    "couple with heart": [
-      "couple_with_heart_woman_man"
-    ],
-    "family": [
-      "family_man_woman_boy"
     ],
     "clothing": [
       "womans_clothes",
@@ -9773,7 +10510,8 @@
       "stuffed_flatbread",
       "green_salad",
       "shallow_pan_of_food",
-      "olive"
+      "olive",
+      "beans"
     ],
     "molusc": [
       "squid"
@@ -9809,7 +10547,8 @@
       "no_bicycles",
       "no_mobile_phones",
       "no_smoking",
-      "no_bell"
+      "no_bell",
+      "person_gesturing_no"
     ],
     "see": [
       "see_no_evil"
@@ -9818,7 +10557,8 @@
       "see_no_evil"
     ],
     "hear": [
-      "hear_no_evil"
+      "hear_no_evil",
+      "deaf_person"
     ],
     "hear-no-evil monkey": [
       "hear_no_evil"
@@ -9870,22 +10610,23 @@
       "honeybee",
       "bug",
       "butterfly",
-      "beetle",
+      "lady_beetle",
       "ant",
       "spider",
+      "beetle",
       "cockroach"
     ],
     "pretty": [
       "butterfly"
     ],
-    "lady beetle": [
-      "beetle"
+    "beetle": [
+      "lady_beetle"
     ],
     "ladybird": [
-      "beetle"
+      "lady_beetle"
     ],
     "ladybug": [
-      "beetle"
+      "lady_beetle"
     ],
     "scorpio": [
       "scorpion"
@@ -9965,7 +10706,8 @@
       "aquarius",
       "non-potable_water",
       "wc",
-      "potable_water"
+      "potable_water",
+      "person_playing_water_polo"
     ],
     "bull": [
       "ox",
@@ -10089,7 +10831,8 @@
     ],
     "palm": [
       "palm_tree",
-      "coconut"
+      "coconut",
+      "person_facepalming"
     ],
     "leaf": [
       "herb",
@@ -10178,7 +10921,8 @@
     ],
     "ear": [
       "ear_of_rice",
-      "corn"
+      "corn",
+      "deaf_person"
     ],
     "grain": [
       "ear_of_rice"
@@ -10202,7 +10946,8 @@
       "cherry_blossom",
       "bouquet",
       "white_flower",
-      "flower_playing_cards"
+      "flower_playing_cards",
+      "lotus"
     ],
     "wilted": [
       "wilted_flower"
@@ -10233,7 +10978,8 @@
     "spiral": [
       "shell",
       "spiral_calendar",
-      "spiral_notepad"
+      "spiral_notepad",
+      "face_with_spiral_eyes"
     ],
     "spiral shell": [
       "shell"
@@ -10291,7 +11037,9 @@
     "full": [
       "full_moon",
       "full_moon_with_face",
-      "100"
+      "100",
+      "pregnant_man",
+      "pregnant_person"
     ],
     "moon": [
       "full_moon",
@@ -10476,7 +11224,8 @@
     ],
     "drop": [
       "umbrella",
-      "droplet"
+      "droplet",
+      "palm_down_hand"
     ],
     "umbrella with rain drops": [
       "umbrella"
@@ -10855,7 +11604,8 @@
       "confetti_ball",
       "softball",
       "lacrosse",
-      "yarn"
+      "yarn",
+      "person_playing_handball"
     ],
     "cooked": [
       "rice"
@@ -10879,7 +11629,8 @@
       "dango",
       "ice_hockey",
       "field_hockey",
-      "lacrosse"
+      "lacrosse",
+      "crutch"
     ],
     "dessert": [
       "dango",
@@ -10966,7 +11717,8 @@
       "baby_bottle",
       "amphora",
       "maté",
-      "teapot"
+      "teapot",
+      "pouring_liquid"
     ],
     "glass": [
       "milk_glass",
@@ -10975,7 +11727,8 @@
       "tumbler_glass",
       "cocktail",
       "mag",
-      "mag_right"
+      "mag_right",
+      "pouring_liquid"
     ],
     "glass of milk": [
       "milk_glass"
@@ -11881,7 +12634,8 @@
     ],
     "amusement park": [
       "ferris_wheel",
-      "roller_coaster"
+      "roller_coaster",
+      "playground_slide"
     ],
     "ferris": [
       "ferris_wheel"
@@ -12059,7 +12813,8 @@
     ],
     "store": [
       "department_store",
-      "convenience_store"
+      "convenience_store",
+      "jar"
     ],
     "Japanese post office": [
       "post_office"
@@ -12078,7 +12833,8 @@
       "pill",
       "syringe",
       "stethoscope",
-      "drop_of_blood"
+      "drop_of_blood",
+      "medical_symbol"
     ],
     "convenience": [
       "convenience_store"
@@ -12477,7 +13233,8 @@
     ],
     "balance": [
       "balance_scale",
-      "libra"
+      "libra",
+      "person_juggling"
     ],
     "justice": [
       "balance_scale",
@@ -12592,7 +13349,8 @@
       "palms_up_together"
     ],
     "haircut": [
-      "barber"
+      "barber",
+      "person_getting_haircut"
     ],
     "barber pole": [
       "barber"
@@ -12716,7 +13474,8 @@
     "party": [
       "tada",
       "partying_face",
-      "piñata"
+      "piñata",
+      "mirror_ball"
     ],
     "popper": [
       "tada"
@@ -13115,7 +13874,8 @@
       "heartpulse"
     ],
     "nervous": [
-      "heartpulse"
+      "heartpulse",
+      "biting_lip"
     ],
     "pulse": [
       "heartpulse",
@@ -13194,7 +13954,8 @@
       "capricorn"
     ],
     "ID": [
-      "id"
+      "id",
+      "identification_card"
     ],
     "ID button": [
       "id"
@@ -13419,7 +14180,8 @@
       "o2"
     ],
     "help": [
-      "sos"
+      "sos",
+      "person_tipping_hand"
     ],
     "SOS": [
       "sos"
@@ -13454,7 +14216,8 @@
       "do_not_litter",
       "no_bicycles",
       "underage",
-      "no_smoking"
+      "no_smoking",
+      "person_gesturing_no"
     ],
     "badge": [
       "name_badge"
@@ -13494,7 +14257,8 @@
       "purple_circle",
       "green_circle",
       "yellow_circle",
-      "orange_circle"
+      "orange_circle",
+      "wheel"
     ],
     "hollow red circle": [
       "o"
@@ -13558,7 +14322,8 @@
     "outlined": [
       "grey_exclamation",
       "grey_question",
-      "white_square_button"
+      "white_square_button",
+      "smiling_face"
     ],
     "white exclamation mark": [
       "grey_exclamation"
@@ -13744,7 +14509,8 @@
     ],
     "dizzy": [
       "cyclone",
-      "woozy_face"
+      "woozy_face",
+      "face_with_spiral_eyes"
     ],
     "hurricane": [
       "cyclone"
@@ -13956,14 +14722,16 @@
     ],
     "play": [
       "arrow_forward",
-      "play_or_pause_button"
+      "play_or_pause_button",
+      "playground_slide"
     ],
     "play button": [
       "arrow_forward"
     ],
     "right": [
       "arrow_forward",
-      "play_or_pause_button"
+      "play_or_pause_button",
+      "rightwards_hand"
     ],
     "pause": [
       "pause_button",
@@ -14020,7 +14788,8 @@
       "repeat_one"
     ],
     "left": [
-      "arrow_backward"
+      "arrow_backward",
+      "leftwards_hand"
     ],
     "reverse": [
       "arrow_backward"
@@ -14144,7 +14913,8 @@
       "information_source"
     ],
     "information": [
-      "information_source"
+      "information_source",
+      "person_tipping_hand"
     ],
     "alphabet": [
       "abc"
@@ -14210,7 +14980,8 @@
     "math": [
       "heavy_plus_sign",
       "heavy_minus_sign",
-      "heavy_division_sign"
+      "heavy_division_sign",
+      "heavy_equals_sign"
     ],
     "plus": [
       "heavy_plus_sign"
@@ -14735,7 +15506,8 @@
     "nursing": [
       "breast_feeding",
       "man_feeding_baby",
-      "person_feeding_baby"
+      "person_feeding_baby",
+      "woman_feeding_baby"
     ],
     "sorcerer": [
       "mage"
@@ -14768,14 +15540,14 @@
       "vampire",
       "zombie"
     ],
-    "merman": [
-      "mermaid"
+    "mermaid": [
+      "merperson"
     ],
-    "merperson": [
-      "mermaid"
+    "merman": [
+      "merperson"
     ],
     "merwoman": [
-      "mermaid"
+      "merperson"
     ],
     "magical": [
       "elf"
@@ -15009,7 +15781,8 @@
       "foot"
     ],
     "skeleton": [
-      "bone"
+      "bone",
+      "xray"
     ],
     "dentist": [
       "tooth"
@@ -15092,7 +15865,8 @@
     ],
     "proud": [
       "peacock",
-      "smiling_face_with_tear"
+      "smiling_face_with_tear",
+      "face_holding_back_tears"
     ],
     "pirate": [
       "parrot"
@@ -15152,7 +15926,8 @@
       "bagel"
     ],
     "condiment": [
-      "salt"
+      "salt",
+      "jar"
     ],
     "shaker": [
       "salt"
@@ -15459,7 +16234,12 @@
       "man_with_probing_cane",
       "hear_with_hearing_aid",
       "mechanical_leg",
-      "mechanical_arm"
+      "mechanical_arm",
+      "deaf_person",
+      "person_with_white_cane",
+      "person_in_motorized_wheelchair",
+      "person_in_manual_wheelchair",
+      "elevator"
     ],
     "assistance": [
       "service_dog"
@@ -15518,7 +16298,8 @@
       "probing_cane",
       "guide_dog",
       "woman_with_probing_cane",
-      "man_with_probing_cane"
+      "man_with_probing_cane",
+      "person_with_white_cane"
     ],
     "white cane": [
       "probing_cane"
@@ -15566,7 +16347,8 @@
       "safety_vest"
     ],
     "safety": [
-      "safety_vest"
+      "safety_vest",
+      "ring_buoy"
     ],
     "vest": [
       "safety_vest"
@@ -15617,7 +16399,9 @@
       "woman_in_manual_wheelchair",
       "man_in_manual_wheelchair",
       "woman_in_motorized_wheelchair",
-      "man_in_motorized_wheelchair"
+      "man_in_motorized_wheelchair",
+      "person_in_motorized_wheelchair",
+      "person_in_manual_wheelchair"
     ],
     "woman with white cane": [
       "woman_with_probing_cane"
@@ -15636,7 +16420,8 @@
       "mechanical_arm"
     ],
     "white": [
-      "white_heart"
+      "white_heart",
+      "white_hair"
     ],
     "grateful": [
       "smiling_face_with_tear"
@@ -15840,7 +16625,9 @@
       "magic_wand"
     ],
     "nesting": [
-      "nesting_dolls"
+      "nesting_dolls",
+      "empty_nest",
+      "nest_with_eggs"
     ],
     "russia": [
       "nesting_dolls"
@@ -15933,7 +16720,8 @@
       "screwdriver"
     ],
     "catch": [
-      "hook"
+      "hook",
+      "palm_up_hand"
     ],
     "crook": [
       "hook"
@@ -16008,7 +16796,8 @@
       "toothbrush"
     ],
     "clean": [
-      "toothbrush"
+      "toothbrush",
+      "bubbles"
     ],
     "dental": [
       "toothbrush"
@@ -16045,7 +16834,427 @@
     ],
     "feeding": [
       "man_feeding_baby",
-      "person_feeding_baby"
+      "person_feeding_baby",
+      "woman_feeding_baby"
+    ],
+    "disappear": [
+      "melting_face",
+      "dotted_line_face"
+    ],
+    "dissolve": [
+      "melting_face"
+    ],
+    "liquid": [
+      "melting_face"
+    ],
+    "melt": [
+      "melting_face"
+    ],
+    "relaxed": [
+      "smiling_face"
+    ],
+    "amazement": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "awe": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "disbelief": [
+      "face_with_open_eyes_and_hand_over_mouth",
+      "person_facepalming"
+    ],
+    "embarrass": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "surprise": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "captivated": [
+      "face_with_peeking_eye"
+    ],
+    "peep": [
+      "face_with_peeking_eye"
+    ],
+    "stare": [
+      "face_with_peeking_eye"
+    ],
+    "salute": [
+      "saluting_face"
+    ],
+    "sunny": [
+      "saluting_face"
+    ],
+    "troops": [
+      "saluting_face"
+    ],
+    "yes": [
+      "saluting_face"
+    ],
+    "depressed": [
+      "dotted_line_face"
+    ],
+    "hide": [
+      "dotted_line_face"
+    ],
+    "introvert": [
+      "dotted_line_face"
+    ],
+    "invisible": [
+      "dotted_line_face"
+    ],
+    "exhale": [
+      "face_exhaling"
+    ],
+    "gasp": [
+      "face_exhaling"
+    ],
+    "groan": [
+      "face_exhaling"
+    ],
+    "relief": [
+      "face_exhaling"
+    ],
+    "whisper": [
+      "face_exhaling"
+    ],
+    "whistle": [
+      "face_exhaling"
+    ],
+    "hypnotized": [
+      "face_with_spiral_eyes"
+    ],
+    "trouble": [
+      "face_with_spiral_eyes"
+    ],
+    "whoa": [
+      "face_with_spiral_eyes"
+    ],
+    "skeptical": [
+      "face_with_diagonal_mouth"
+    ],
+    "unsure": [
+      "face_with_diagonal_mouth"
+    ],
+    "resist": [
+      "face_holding_back_tears"
+    ],
+    "rightward": [
+      "rightwards_hand"
+    ],
+    "leftward": [
+      "leftwards_hand"
+    ],
+    "dismiss": [
+      "palm_down_hand"
+    ],
+    "shoo": [
+      "palm_down_hand"
+    ],
+    "beckon": [
+      "palm_up_hand"
+    ],
+    "come": [
+      "palm_up_hand"
+    ],
+    "offer": [
+      "palm_up_hand"
+    ],
+    "expensive": [
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "snap": [
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "you": [
+      "index_pointing_at_the_viewer"
+    ],
+    "anxious": [
+      "biting_lip"
+    ],
+    "flirting": [
+      "biting_lip"
+    ],
+    "uncomfortable": [
+      "biting_lip"
+    ],
+    "worried": [
+      "biting_lip"
+    ],
+    "person gesturing NO": [
+      "person_gesturing_no"
+    ],
+    "person gesturing OK": [
+      "person_gesturing_ok"
+    ],
+    "sassy": [
+      "person_tipping_hand"
+    ],
+    "tipping": [
+      "person_tipping_hand"
+    ],
+    "happy": [
+      "person_raising_hand"
+    ],
+    "deaf": [
+      "deaf_person"
+    ],
+    "exasperation": [
+      "person_facepalming"
+    ],
+    "doubt": [
+      "person_shrugging"
+    ],
+    "ignorance": [
+      "person_shrugging"
+    ],
+    "indifference": [
+      "person_shrugging"
+    ],
+    "shrug": [
+      "person_shrugging"
+    ],
+    "monarch": [
+      "person_with_crown"
+    ],
+    "noble": [
+      "person_with_crown"
+    ],
+    "regal": [
+      "person_with_crown"
+    ],
+    "royalty": [
+      "person_with_crown"
+    ],
+    "belly": [
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "bloated": [
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "massage": [
+      "person_getting_massage"
+    ],
+    "salon": [
+      "person_getting_massage"
+    ],
+    "barber": [
+      "person_getting_haircut"
+    ],
+    "beauty": [
+      "person_getting_haircut"
+    ],
+    "parlor": [
+      "person_getting_haircut"
+    ],
+    "stand": [
+      "person_standing"
+    ],
+    "standing": [
+      "person_standing"
+    ],
+    "kneel": [
+      "person_kneeling"
+    ],
+    "kneeling": [
+      "person_kneeling"
+    ],
+    "cartwheel": [
+      "person_cartwheeling"
+    ],
+    "gymnastics": [
+      "person_cartwheeling"
+    ],
+    "wrestle": [
+      "people_wrestling"
+    ],
+    "wrestler": [
+      "people_wrestling"
+    ],
+    "polo": [
+      "person_playing_water_polo"
+    ],
+    "handball": [
+      "person_playing_handball"
+    ],
+    "juggle": [
+      "person_juggling"
+    ],
+    "multitask": [
+      "person_juggling"
+    ],
+    "skill": [
+      "person_juggling"
+    ],
+    "ginger": [
+      "red_hair"
+    ],
+    "redhead": [
+      "red_hair"
+    ],
+    "afro": [
+      "curly_hair"
+    ],
+    "curly": [
+      "curly_hair"
+    ],
+    "ringlets": [
+      "curly_hair"
+    ],
+    "gray": [
+      "white_hair"
+    ],
+    "chemotherapy": [
+      "bald"
+    ],
+    "hairless": [
+      "bald"
+    ],
+    "no hair": [
+      "bald"
+    ],
+    "shaven": [
+      "bald"
+    ],
+    "ocean": [
+      "coral"
+    ],
+    "reef": [
+      "coral"
+    ],
+    "Buddhism": [
+      "lotus"
+    ],
+    "Hinduism": [
+      "lotus"
+    ],
+    "India": [
+      "lotus"
+    ],
+    "purity": [
+      "lotus"
+    ],
+    "Vietnam": [
+      "lotus"
+    ],
+    "kidney": [
+      "beans"
+    ],
+    "legume": [
+      "beans"
+    ],
+    "empty": [
+      "pouring_liquid",
+      "jar"
+    ],
+    "spill": [
+      "pouring_liquid"
+    ],
+    "container": [
+      "jar"
+    ],
+    "sauce": [
+      "jar"
+    ],
+    "tire": [
+      "wheel"
+    ],
+    "turn": [
+      "wheel"
+    ],
+    "float": [
+      "ring_buoy"
+    ],
+    "life preserver": [
+      "ring_buoy"
+    ],
+    "life saver": [
+      "ring_buoy"
+    ],
+    "rescue": [
+      "ring_buoy"
+    ],
+    "amulet": [
+      "hamsa"
+    ],
+    "Fatima": [
+      "hamsa"
+    ],
+    "Mary": [
+      "hamsa"
+    ],
+    "Miriam": [
+      "hamsa"
+    ],
+    "protection": [
+      "hamsa"
+    ],
+    "disco": [
+      "mirror_ball"
+    ],
+    "glitter": [
+      "mirror_ball"
+    ],
+    "electronic": [
+      "low_battery"
+    ],
+    "low energy": [
+      "low_battery"
+    ],
+    "cane": [
+      "crutch"
+    ],
+    "disability": [
+      "crutch"
+    ],
+    "mobility aid": [
+      "crutch"
+    ],
+    "bones": [
+      "xray"
+    ],
+    "medical": [
+      "xray"
+    ],
+    "x-ray": [
+      "xray"
+    ],
+    "hoist": [
+      "elevator"
+    ],
+    "lift": [
+      "elevator"
+    ],
+    "burp": [
+      "bubbles"
+    ],
+    "soap": [
+      "bubbles"
+    ],
+    "underwater": [
+      "bubbles"
+    ],
+    "credentials": [
+      "identification_card"
+    ],
+    "license": [
+      "identification_card"
+    ],
+    "security": [
+      "identification_card"
+    ],
+    "eject": [
+      "eject_button"
+    ],
+    "equality": [
+      "heavy_equals_sign"
+    ],
+    "aesculapius": [
+      "medical_symbol"
+    ],
+    "staff": [
+      "medical_symbol"
     ]
   },
   "translations": {
