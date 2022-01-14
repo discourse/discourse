@@ -268,7 +268,7 @@ EMOJI_SETS ||= {
   "windows" => "win10",
 }
 
-EMOJI_DB_REPO ||= "git@github.com:jjaffeux/emoji-db.git"
+EMOJI_DB_REPO ||= "git@github.com:xfalcox/emoji-db.git"
 
 EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
 
@@ -332,7 +332,7 @@ def optimize_images(images)
 end
 
 def copy_emoji_db
-  `rm -rf tmp/emoji-db && git clone --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
+  `rm -rf tmp/emoji-db && git clone -b unicodeorg-as-source-of-truth --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
 
   path = "#{EMOJI_IMAGES_PATH}/**/*"
   confirm_overwrite(path)
