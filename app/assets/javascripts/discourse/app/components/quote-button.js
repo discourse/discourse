@@ -19,7 +19,7 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 
 function getQuoteTitle(element) {
@@ -48,8 +48,13 @@ function regexSafeStr(str) {
 
 export default Component.extend(KeyEnterEscape, {
   classNames: ["quote-button"],
-  classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
+  classNameBindings: [
+    "visible",
+    "_displayFastEditInput:fast-editing",
+    "animated",
+  ],
   visible: false,
+  animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
 
@@ -69,6 +74,7 @@ export default Component.extend(KeyEnterEscape, {
   _hideButton() {
     this.quoteState.clear();
     this.set("visible", false);
+    this.set("animated", false);
 
     this.set("_isFastEditable", false);
     this.set("_displayFastEditInput", false);
@@ -234,6 +240,12 @@ export default Component.extend(KeyEnterEscape, {
       }
 
       $quoteButton.offset({ top, left });
+
+      if (!this.animated) {
+        // We only enable CSS transitions after the initial positioning
+        // otherwise the button can appear to fly in from off-screen
+        next(() => this.set("animated", true));
+      }
     });
   },
 
