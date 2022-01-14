@@ -71,13 +71,7 @@ module.exports = function (defaults) {
     });
 
     let tests = concat(appTestTrees, {
-      inputFiles: [
-        "**/tests/acceptance/*.js",
-        "**/tests/integration/*.js",
-        "**/tests/integration/**/*.js",
-        "**/tests/unit/*.js",
-        "**/tests/unit/**/*.js",
-      ],
+      inputFiles: ["**/tests/**/*-test.js"],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
       outputFile: "/assets/core-tests.js",
