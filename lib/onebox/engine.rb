@@ -17,7 +17,8 @@ module Onebox
     end
 
     def self.origins_to_regexes(origins)
-      return /.*/ if origins.include?("*")
+      return [/.*/] if origins.include?("*")
+
       origins.map do |origin|
         escaped_origin = Regexp.escape(origin)
         if origin.start_with?("*.", "https://*.", "http://*.")
