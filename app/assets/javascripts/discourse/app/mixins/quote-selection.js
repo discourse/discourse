@@ -1,5 +1,4 @@
 import Mixin from "@ember/object/mixin";
-import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 import { propertyEqual } from "discourse/lib/computed";
 import { selectedElement, selectedText } from "discourse/lib/utilities";
@@ -28,6 +27,9 @@ export default Mixin.create(KeyEnterEscape, {
   _reselected: false,
 
   _hideButton() {
+    if (this._isDestroyed()) {
+      return;
+    }
     this.quoteState.clear();
     this.set("visible", false);
 
@@ -37,12 +39,12 @@ export default Mixin.create(KeyEnterEscape, {
     this.set("_fastEditNewSelection", null);
   },
 
-  _selectionChanged() {
-    if (this._displayFastEditInput) {
-      return;
-    }
+  _isDestroyed() {
+    return !this.element || this.isDestroying || this.isDestroyed;
+  },
 
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+  _selectionChanged() {
+    if (this._displayFastEditInput || this._isDestroyed()) {
       return;
     }
 
@@ -168,7 +170,7 @@ export default Mixin.create(KeyEnterEscape, {
 
     // change the position of the button
     schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
+      if (this._isDestroyed()) {
         return;
       }
 
@@ -208,15 +210,17 @@ export default Mixin.create(KeyEnterEscape, {
       );
     });
 
-    document.addEventListener("mousedown", this._onMouseDown);
-    document.addEventListener("mouseup", this._onMouseUp);
-    document.addEventListener("selectionchange", this._onSelectionChange);
+    document.addEventListener("mousedown", this._onMouseDown.bind(this));
+    document.addEventListener("mouseup", this._onMouseUp.bind(this));
+    document.addEventListener(
+      "selectionchange",
+      this._onSelectionChange.bind(this)
+    );
 
     this.appEvents.on("quote-button:quote", this, "insertQuote");
     this.appEvents.on("quote-button:edit", this, "_toggleFastEditForm");
   },
 
-  @bind
   _onMouseDown(event) {
     this._prevSelection = null;
     this._isMouseDown = true;
@@ -232,7 +236,6 @@ export default Mixin.create(KeyEnterEscape, {
     }
   },
 
-  @bind
   _onMouseUp(event) {
     // prevents fast-edit input event to trigger mouseup
     if (event.target.classList.contains("fast-edit-input")) {
@@ -244,7 +247,6 @@ export default Mixin.create(KeyEnterEscape, {
     this.selectionChangedDebounceFn();
   },
 
-  @bind
   _onSelectionChange() {
     if (!this._isMouseDown && !this._reselected) {
       this.selectionChangedDebounceFn();
@@ -252,9 +254,12 @@ export default Mixin.create(KeyEnterEscape, {
   },
 
   willDestroyElement() {
-    document.removeEventListener("mousedown", this._onMouseDown);
-    document.removeEventListener("mouseup", this._onMouseDown);
-    document.removeEventListener("selectionchange", this._onMouseDown);
+    document.removeEventListener("mousedown", this._onMouseDown.bind(this));
+    document.removeEventListener("mouseup", this._onMouseDown.bind(this));
+    document.removeEventListener(
+      "selectionchange",
+      this._onMouseDown.bind(this)
+    );
     this.appEvents.off("quote-button:quote", this, "insertQuote");
     this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
   },
