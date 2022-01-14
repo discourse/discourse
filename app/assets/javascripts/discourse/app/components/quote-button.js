@@ -233,6 +233,44 @@ export default Component.extend(KeyEnterEscape, {
         top = top - $quoteButton.outerHeight() - 5;
       }
 
+      if (isIOS) {
+        // The selection-handles on iOS have a hit area of ~50px radius
+        // so we need to make sure our buttons are outside that radius
+
+        const safeRadius = 50;
+        const endHandlePosition = markerOffset;
+        const width = this.element.clientWidth;
+
+        const possiblePositions = [
+          { top, left },
+          { top, left: endHandlePosition.left - width - safeRadius - 10 }, // move to left
+          { top, left: left + safeRadius }, // move to right
+          { top: top + safeRadius, left: endHandlePosition.left - width / 2 }, // centered below end handle
+        ];
+
+        let newPos;
+        for (const pos of possiblePositions) {
+          if (pos.left < 0 || pos.left + width + 10 > window.innerWidth) {
+            continue; // Offscreen
+          }
+
+          const clearOfEndHandle =
+            pos.top - endHandlePosition.top >= safeRadius ||
+            pos.left + width <= endHandlePosition.left - safeRadius ||
+            pos.left >= endHandlePosition.left + safeRadius;
+
+          if (clearOfEndHandle) {
+            newPos = pos;
+            break;
+          }
+        }
+
+        if (newPos) {
+          left = newPos.left;
+          top = newPos.top;
+        }
+      }
+
       $quoteButton.offset({ top, left });
     });
   },
