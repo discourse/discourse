@@ -56,6 +56,6 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone(upload) {
     this.done(upload, this.group);
-    this.setProperties({ name: null, group: DEFAULT_GROUP });
+    this.setProperties({ name: null });
   },
 });
