@@ -74,7 +74,9 @@ module.exports = function (defaults) {
       inputFiles: [
         "**/tests/acceptance/*.js",
         "**/tests/integration/*.js",
-        "**tests/unit/*.js",
+        "**/tests/integration/**/*.js",
+        "**/tests/unit/*.js",
+        "**/tests/unit/**/*.js",
       ],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
