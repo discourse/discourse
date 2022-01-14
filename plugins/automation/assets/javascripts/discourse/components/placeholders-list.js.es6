@@ -7,9 +7,6 @@ export default Component.extend({
 
   @action
   copyPlaceholder(placeholder) {
-    // const target = document.querySelector(`#${this.targetId}`);
-    // target.value = target.value + ` %%${placeholder.toUpperCase()}%%`;
-
     this.set(
       "currentValue",
       this.currentValue + ` %%${placeholder.toUpperCase()}%%`
