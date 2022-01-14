@@ -68,6 +68,7 @@ class ApplicationController < ActionController::Base
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
+      !request.user_agent.include?('Chrome-Lighthouse') &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
