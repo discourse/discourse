@@ -320,4 +320,39 @@ describe ScreenedIpAddress do
       end
     end
   end
+
+  describe '#roll_up' do
+    it 'rolls up IPv4 addresses' do
+      # roll up to /24 requires 256 * 1% ~ 3 IPs
+      # roll up to /22 requires 1024 * 1% ~ 10 IPs
+      SiteSetting.min_ban_entries_for_roll_up = 1
+
+      Fabricate(:screened_ip_address, ip_address: "1.1.1.1")
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
+
+      Fabricate(:screened_ip_address, ip_address: "1.1.1.2")
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
+
+      Fabricate(:screened_ip_address, ip_address: "1.1.1.3")
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-2)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.1.0/24")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
+
+      # Roll up is stable
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.1.0/24")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
+
+      Fabricate(:screened_ip_address, ip_address: "1.1.2.0/24")
+      Fabricate(:screened_ip_address, ip_address: "1.1.3.0/24")
+      # 1.1.1.0/24, 1.1.2.0/24, 1.1.3.0/24 sum up to 9 IPs
+      # at least 10 are needed for roll up to /22
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+
+      Fabricate(:screened_ip_address, ip_address: "1.1.0.1/24")
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-3)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.0.0/22")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.0/24", "1.1.2.0/24", "1.1.3.0/24", "1.1.3.0/24")
+    end
+  end
 end
