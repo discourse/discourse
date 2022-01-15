@@ -247,7 +247,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:titleasd");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-title:checked"),
       "does not populate title only checkbox"
     );
@@ -287,7 +287,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:personal-direct");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-private:checked"),
       "does not populate messages checkbox"
     );
@@ -311,7 +311,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:seenasdan");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-seen:checked"),
       "does not populate seen checkbox"
     );
@@ -479,7 +479,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "in:likesasdas");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-likes:checked"),
       "does not populate the likes checkbox"
     );

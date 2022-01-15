@@ -183,7 +183,7 @@ acceptance("Bookmarking", function (needs) {
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it shows the bookmarked icon on the post"
     );
-    assert.not(
+    assert.notOk(
       exists(
         ".topic-post:first-child button.bookmark.bookmarked > .d-icon-discourse-bookmark-clock"
       ),
@@ -215,7 +215,7 @@ acceptance("Bookmarking", function (needs) {
 
     await click(".bootbox.modal .btn-primary");
 
-    assert.not(
+    assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it no longer shows the bookmarked icon on the post after bookmark is deleted"
     );
@@ -225,7 +225,7 @@ acceptance("Bookmarking", function (needs) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".d-modal-cancel");
-    assert.not(
+    assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it does not show the bookmarked icon on the post because it is not saved"
     );

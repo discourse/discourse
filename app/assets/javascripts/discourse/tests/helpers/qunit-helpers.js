@@ -399,6 +399,11 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
+  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+    since: "2.9.0.beta1",
+    dropFrom: "2.10.0.beta1",
+  });
+
   this.pushResult({
     result: !actual,
     actual,

@@ -119,7 +119,7 @@ acceptance("Invite accept", function (needs) {
     );
 
     await fillIn("#new-account-email", "john.doe@example.com");
-    assert.not(
+    assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled"
     );
@@ -151,7 +151,7 @@ acceptance("Invite accept", function (needs) {
     assert.ok(exists(".username-input .good"), "username is valid");
     assert.ok(exists(".password-input .good"), "password is valid");
     assert.ok(exists(".email-input .good"), "email is valid");
-    assert.not(
+    assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled"
     );

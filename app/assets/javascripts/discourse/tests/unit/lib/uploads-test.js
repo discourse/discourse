@@ -17,15 +17,15 @@ import { test } from "qunit";
 
 discourseModule("Unit | Utility | uploads", function () {
   test("validateUploadedFiles", function (assert) {
-    assert.not(
+    assert.notOk(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),
       "no files are invalid"
     );
-    assert.not(
+    assert.notOk(
       validateUploadedFiles(undefined, { siteSettings: this.siteSettings }),
       "undefined files are invalid"
     );
-    assert.not(
+    assert.notOk(
       validateUploadedFiles([], { siteSettings: this.siteSettings }),
       "empty array of files is invalid"
     );
@@ -34,7 +34,7 @@ discourseModule("Unit | Utility | uploads", function () {
   test("uploading one file", function (assert) {
     sinon.stub(bootbox, "alert");
 
-    assert.not(
+    assert.notOk(
       validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
     );
     assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
@@ -44,7 +44,7 @@ discourseModule("Unit | Utility | uploads", function () {
     this.siteSettings.newuser_max_embedded_media = 0;
     sinon.stub(bootbox, "alert");
 
-    assert.not(
+    assert.notOk(
       validateUploadedFiles([{ name: "image.png" }], {
         user: User.create(),
         siteSettings: this.siteSettings,
@@ -88,7 +88,7 @@ discourseModule("Unit | Utility | uploads", function () {
     this.siteSettings.newuser_max_attachments = 0;
     sinon.stub(bootbox, "alert");
 
-    assert.not(
+    assert.notOk(
       validateUploadedFiles([{ name: "roman.txt" }], {
         user: User.create(),
         siteSettings: this.siteSettings,
@@ -103,7 +103,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("ensures an authorized upload", function (assert) {
     sinon.stub(bootbox, "alert");
-    assert.not(
+    assert.notOk(
       validateUploadedFiles([{ name: "unauthorized.html" }], {
         siteSettings: this.siteSettings,
       })
@@ -124,7 +124,7 @@ discourseModule("Unit | Utility | uploads", function () {
     const files = [{ name: "backup.tar.gz" }];
     sinon.stub(bootbox, "alert");
 
-    assert.not(
+    assert.notOk(
       validateUploadedFiles(files, {
         skipValidation: false,
         siteSettings: this.siteSettings,
@@ -144,7 +144,7 @@ discourseModule("Unit | Utility | uploads", function () {
     sinon.stub(bootbox, "alert");
 
     let user = User.create({ moderator: true });
-    assert.not(
+    assert.notOk(
       validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
     );
     assert.ok(
@@ -193,7 +193,7 @@ discourseModule("Unit | Utility | uploads", function () {
       })
     );
 
-    assert.not(bootbox.alert.calledOnce);
+    assert.notOk(bootbox.alert.calledOnce);
   });
 
   test("isImage", function (assert) {
@@ -205,9 +205,9 @@ discourseModule("Unit | Utility | uploads", function () {
         image + " is recognized as an image"
       );
     });
-    assert.not(isImage("file.txt"));
-    assert.not(isImage("http://foo.bar/path/to/file.txt"));
-    assert.not(isImage(""));
+    assert.notOk(isImage("file.txt"));
+    assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
+    assert.notOk(isImage(""));
   });
 
   test("allowsImages", function (assert) {
@@ -235,7 +235,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("allowsAttachments", function (assert) {
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-    assert.not(
+    assert.notOk(
       allowsAttachments(false, this.siteSettings),
       "no attachments allowed by default"
     );
