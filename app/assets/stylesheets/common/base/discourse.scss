@@ -255,6 +255,8 @@ textarea {
   height: auto;
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);
+  border-radius: 0;
+
   &:focus {
     @include default-focus;
   }
