@@ -2,7 +2,7 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "10"
+  EMOJI_VERSION = "12"
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
@@ -180,6 +180,7 @@ class Emoji
       replacements["\u{263B}"] = 'slight_smile'
       replacements["\u{2661}"] = 'heart'
       replacements["\u{2665}"] = 'heart'
+      replacements["\u{263A}"] = 'relaxed'
 
       replacements
     end

@@ -3,10 +3,10 @@
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
 
-  {{plugin-outlet name="discovery-list-controls-above"}}
+  {{plugin-outlet name="discovery-list-controls-above" tagName="span" connectorTagName="div"}}
 
   <div class="list-controls">
-    {{plugin-outlet name="discovery-navigation-bar-above" tagName=""}}
+    {{plugin-outlet name="discovery-navigation-bar-above" connectorTagName="div"}}
     <div class="container">
       <section class="navigation-container tag-navigation">
         {{d-navigation
@@ -27,8 +27,8 @@
 
         {{plugin-outlet
           name="tag-navigation"
+          connectorTagName="div"
           args=(hash category=category tag=tag)
-          tagName=""
         }}
       </section>
     </div>
@@ -38,12 +38,12 @@
     {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
   {{/if}}
 
-  {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
+  {{plugin-outlet name="discovery-list-container-top" tagName="span" connectorTagName="div" args=(hash category=category)}}
 
   {{topic-dismiss-buttons position="top" selectedTopics=selected
     model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
-  {{plugin-outlet name="discovery-above"}}
+  {{plugin-outlet name="discovery-above" tagName="span" connectorTagName="div"}}
 
   <div class="container list-container">
     <div class="row">
@@ -100,5 +100,5 @@
     </div>
   </div>
 
-  {{plugin-outlet name="discovery-below"}}
+  {{plugin-outlet name="discovery-below" tagName="span" connectorTagName="div"}}
 {{/d-section}}

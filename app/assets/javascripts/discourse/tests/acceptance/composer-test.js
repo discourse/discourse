@@ -202,7 +202,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(
       queryAll(".cooked:last p").text(),
-      "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+      "this is the content of my reply"
     );
   });
 
@@ -563,7 +563,7 @@ acceptance("Composer", function (needs) {
 
     await click("#create-topic");
     assert.ok(
-      !exists(".composer-fields .whisper .d-icon-far-eye-slash"),
+      !exists(".reply-details .whisper .d-icon-far-eye-slash"),
       "it should reset the state of the composer's model"
     );
 
@@ -573,9 +573,9 @@ acceptance("Composer", function (needs) {
     );
 
     assert.ok(
-      queryAll(".composer-fields .unlist")
-        .text()
-        .indexOf(I18n.t("composer.unlist")) > 0,
+      query(".reply-details .unlist").innerText.includes(
+        I18n.t("composer.unlist")
+      ),
       "it sets the topic to unlisted"
     );
 
@@ -583,7 +583,7 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.reply");
     assert.ok(
-      !exists(".composer-fields .whisper"),
+      !exists(".reply-details .whisper"),
       "it should reset the state of the composer's model"
     );
   });

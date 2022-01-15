@@ -43,7 +43,7 @@ class GroupMessage
     end
   end
 
-  def delete_previous!
+  def delete_previous!(match_raw: true)
     posts = Post
       .joins(topic: { topic_allowed_groups: :group })
       .where(topic: {
@@ -57,7 +57,10 @@ class GroupMessage
         }
       })
       .where("posts.created_at > ?", RECENT_MESSAGE_PERIOD.ago)
-      .where(raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params).rstrip)
+
+    if match_raw
+      posts = posts.where(raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params).rstrip)
+    end
 
     posts.find_each do |post|
       PostDestroyer.new(Discourse.system_user, post).destroy

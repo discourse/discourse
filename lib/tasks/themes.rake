@@ -56,10 +56,11 @@ def update_themes
   Theme.includes(:remote_theme).where(enabled: true, auto_update: true).find_each do |theme|
     begin
       remote_theme = theme.remote_theme
-      next if remote_theme.blank?
+      next if remote_theme.blank? || remote_theme.remote_url.blank?
 
       puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
       remote_theme.update_from_remote
+      theme.save!
 
       raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
@@ -144,7 +145,7 @@ task "themes:isolated_test" => :environment do |t, args|
 
   redis = TemporaryRedis.new
   redis.start
-  $redis = redis.instance # rubocop:disable Style/GlobalVars
+  Discourse.redis = redis.instance
   db = TemporaryDb.new
   db.start
   db.migrate

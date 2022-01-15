@@ -69,11 +69,17 @@ class InvitesController < ApplicationController
 
       hidden_email = email != invite.email
 
+      if hidden_email || invite.email.nil?
+        username = ""
+      else
+        username = UserNameSuggester.suggest(invite.email)
+      end
+
       info = {
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: email,
         hidden_email: hidden_email,
-        username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
+        username: username,
         is_invite_link: invite.is_invite_link?,
         email_verified_by_link: email_verified_by_link
       }
@@ -128,6 +134,7 @@ class InvitesController < ApplicationController
     begin
       invite = Invite.generate(current_user,
         email: params[:email],
+        domain: params[:domain],
         skip_email: params[:skip_email],
         invited_by: current_user,
         custom_message: params[:custom_message],
@@ -203,6 +210,17 @@ class InvitesController < ApplicationController
           else
             Invite.emailed_status_types[:not_required]
           end
+        end
+
+        invite.domain = nil if invite.email.present?
+      end
+
+      if params.has_key?(:domain)
+        invite.domain = params[:domain]
+
+        if invite.domain.present?
+          invite.email = nil
+          invite.emailed_status = Invite.emailed_status_types[:not_required]
         end
       end
 
@@ -280,7 +298,7 @@ class InvitesController < ApplicationController
         return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
       end
 
-      log_on_user(user) if user.active?
+      log_on_user(user) if user.active? && user.guardian.can_access_forum?
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
       create_topic_invite_notifications(invite, user)
@@ -289,14 +307,19 @@ class InvitesController < ApplicationController
       response = {}
 
       if user.present?
-        if user.active?
+        if user.active? && user.guardian.can_access_forum?
           if user.guardian.can_see?(topic)
             response[:redirect_to] = path(topic.relative_url)
           else
             response[:redirect_to] = path("/")
           end
         else
-          response[:message] = I18n.t('invite.confirm_email')
+          response[:message] = if user.active?
+            I18n.t('activation.approval_required')
+          else
+            I18n.t('invite.confirm_email')
+          end
+
           if user.guardian.can_see?(topic)
             cookies[:destination_url] = path(topic.relative_url)
           end

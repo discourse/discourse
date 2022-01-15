@@ -28,96 +28,64 @@ span.badge-posts {
   display: none;
 }
 
-.topic-post {
-  nav.post-controls {
-    color: var(--primary-low-mid-or-secondary-high);
-    &.expanded {
-      // on small devices with many buttons this can overflow
-      overflow-x: scroll;
+nav.post-controls {
+  // for consistency, try to control spacing by editing these variables
+  --control-space: 0.58em;
+  --control-space-small: calc(var(--control-space) / 2);
+  --control-space-large: calc(var(--control-space) * 1.3);
+  &.expanded {
+    // on small devices with many buttons this can overflow
+    overflow-x: scroll;
+  }
+  .actions {
+    // using an auto margin on first-child instead of justify-content on the parent
+    // because justify-content breaks overflow scrolling
+    :first-child {
+      margin-left: auto;
     }
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-
-      // Handles the like and flag buttons in the post menu.
-      .double-button {
-        display: flex;
-        flex: 0 1 auto;
-        align-items: center;
-        button {
-          &.like,
-          &.read-indicator,
-          &.create-flag {
-            flex: 1 1 auto;
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      button {
+        &.button-count {
+          padding: var(--control-space);
+          + .toggle-like,
+          + .create-flag {
+            padding: var(--control-space) var(--control-space-large)
+              var(--control-space) var(--control-space-small);
           }
-          &.button-count {
-            padding: 8px 4px 8px 8px;
-            + .toggle-like,
-            + .create-flag {
-              padding: 8px 8px 8px 4px;
-            }
-            &.my-likes,
-            &.regular-likes {
-              display: flex;
-              max-width: unset;
-              padding: 8px;
-              .d-icon {
-                padding-left: 8px;
-              }
-            }
+          &.regular-likes {
+            padding: var(--control-space) var(--control-space-small)
+              var(--control-space) var(--control-space-large);
           }
         }
+      }
+    }
+    button {
+      padding: var(--control-space) var(--control-space-large);
+      &.expand-post {
+        margin: var(--control-space) 0 var(--control-space) 0;
+      }
+      &.has-like {
+        .d-icon {
+          color: var(--love);
+        }
+      }
+    }
+  }
+  &.replies-button-visible {
+    display: flex;
+    align-items: center;
+    .show-replies {
+      display: flex;
+      + .reply {
+        margin-left: 0;
       }
       .d-icon {
-        opacity: 1;
-      }
-      button {
-        border: none;
-        font-size: $font-up-1;
-        padding: 10px 8px;
-        background: transparent;
-        flex: 1 1 auto;
-        max-width: 45px;
-        &.hidden {
-          display: none;
-        }
-        &.admin {
-          position: relative;
-        }
-        &.expand-post {
-          margin: 10px 0 10px 0;
-        }
-
-        &.has-like {
-          .d-icon {
-            color: var(--love);
-          }
-        }
-        &.bookmarked {
-          .d-icon {
-            color: var(--tertiary);
-          }
-        }
+        padding-left: var(--control-space);
       }
     }
-    &.replies-button-visible {
-      display: flex;
-      align-items: center;
-      .show-replies {
-        display: flex;
-        font-size: $font-up-1;
-        padding: 10px 8px;
-        + .reply {
-          margin-left: 0;
-        }
-        .d-icon {
-          padding-left: 8px;
-          font-size: $font-down-1;
-        }
-      }
-      .actions {
-        flex-grow: 2;
-      }
+    .actions {
+      flex-grow: 2;
     }
   }
 }

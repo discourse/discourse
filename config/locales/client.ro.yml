@@ -1205,10 +1205,8 @@ ro:
         every_month: "în fiecare lună"
         every_six_months: "la fiecare șase luni"
       email_level:
-        title: "Trimite un email când cineva mă citează, îmi răspunde la o postare, menționează numele meu de utilizator, sau mă invită la un subiect."
         always: "întotdeauna"
         never: "niciodată"
-      email_messages_level: "Trimite-mi un email când cineva îmi trimite un mesaj."
       include_tl0_in_digests: "Include conținut de la utilizatori noi în rezumatul de pe email."
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
       other_settings: "Altele"
@@ -1575,9 +1573,6 @@ ro:
         one: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>o persoană</a> – ești sigur?"
         few: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} persoane</a> – ești sigur?"
         other: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} de persoane</a> – ești sigur?"
-      cannot_see_mention:
-        category: "Ai menționat utilizatorii: %{username}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
-        private: "Ai menționat utilizatorii: %{username}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
       duplicate_link: "Se pare că link-ul dv. către <b>%{domain}</b> a fost deja postat în cadrul discuției de către <b>@%{username}</b> în <a href='%{post_url}'> un răspuns %{ago} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"
@@ -1945,16 +1940,9 @@ ro:
         replies_short: "%{current} / %{total}"
       progress:
         title: Evoluția subiectului
-        go_top: "început"
-        go_bottom: "sfârșit"
-        go: "mergi"
-        jump_bottom: "sari la ultimul mesaj"
         jump_prompt: "sari la..."
         jump_prompt_long: "Sari la..."
-        jump_bottom_with_number: "sari la mesajul %{post_number}"
         jump_prompt_or: "sau"
-        total: toate postările
-        current: Postarea curentă
       notifications:
         title: schimbă frecvența cu care vei fi notificat despre acest subiect
         reasons:
@@ -2488,6 +2476,9 @@ ro:
       unlisted:
         help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
+    pending_posts:
+      label: "În așteptare"
+      label_with_count: "În așteptare: (%{count})"
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
@@ -2706,8 +2697,7 @@ ro:
         few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
         other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
-      rename_tag: "Redenumire etichetă"
-      rename_instructions: "Alege un nume nou pentru etichetă:"
+      description: "Descriere"
       sort_by: "Sortat după:"
       sort_by_count: "contor"
       sort_by_name: "nume"
@@ -3319,9 +3309,6 @@ ro:
         screened_ips:
           title: "IP-uri filtrate"
           delete_confirm: "Ești sigur că vrei să anulezi regula pentru %{ip_address}?"
-          roll_up_confirm: "Ești sigur că vrei să consolidezi adresele IP monitorizate în mod obișnuit în subrețele?"
-          rolled_up_some_subnets: "S-au consolidat cu succes înregistrările de IP-uri blocate pe următoarele subrețele: %{subnets}."
-          rolled_up_no_subnet: "Nu e nimic de consolidat"
           actions:
             block: "Blochează"
             do_nothing: "Permite"

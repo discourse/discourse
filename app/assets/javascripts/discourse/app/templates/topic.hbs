@@ -11,7 +11,7 @@
     {{shared-draft-controls topic=model}}
   {{/if}}
 
-  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model editFirstPost=(action "editFirstPost"))}}
+  {{plugin-outlet name="topic-above-post-stream" tagName="span" connectorTagName="div" args=(hash model=model editFirstPost=(action "editFirstPost"))}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
@@ -42,7 +42,7 @@
               }}
             {{/if}}
 
-            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+            {{plugin-outlet name="edit-topic" tagName="span" connectorTagName="div" args=(hash model=model buffered=buffered)}}
 
             <div class="edit-controls">
               {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check" ariaLabel="composer.save_edit"}}
@@ -130,9 +130,11 @@
         }}
       </div>
 
-      {{plugin-outlet name="above-timeline" tagName=""}}
+      {{plugin-outlet name="above-timeline" connectorTagName="div"}}
 
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
+        {{plugin-outlet name="topic-navigation" connectorTagName="div" args=(hash topic=model)}}
+
         {{#if info.renderTimeline}}
           {{topic-timeline
             topic=model
@@ -168,7 +170,7 @@
             topic=model
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
-            {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
+            {{plugin-outlet name="before-topic-progress" tagName="span" connectorTagName="div" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
             {{topic-admin-menu-button
               topic=model
               openUpwards="true"
@@ -196,7 +198,7 @@
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
-            {{plugin-outlet name="topic-above-posts" args=(hash model=model)}}
+            {{plugin-outlet name="topic-above-posts" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
             {{#unless model.postStream.loadingFilter}}
               {{scrolling-post-stream
@@ -342,7 +344,7 @@
         {{signup-cta}}
       {{else}}
         {{#if currentUser}}
-          {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+          {{plugin-outlet name="topic-above-footer-buttons" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
           {{topic-footer-buttons
             topic=model
@@ -372,7 +374,7 @@
         {{/if}}
       {{/if}}
 
-      {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
+      {{plugin-outlet name="topic-above-suggested" tagName="span" connectorTagName="div" args=(hash model=model)}}
       <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
         {{#if model.relatedMessages.length}}
           {{related-messages topic=model}}

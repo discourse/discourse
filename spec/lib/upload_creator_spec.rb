@@ -547,6 +547,23 @@ RSpec.describe UploadCreator do
     end
   end
 
+  describe '#convert_favicon_to_png!' do
+    let(:filename) { "smallest.ico" }
+    let(:file) { file_from_fixtures(filename, "images") }
+
+    before do
+      SiteSetting.authorized_extensions = 'png|jpg|ico'
+    end
+
+    it 'converts to png' do
+      upload = UploadCreator.new(file, filename).create_for(user.id)
+
+      expect(upload.persisted?).to eq(true)
+      expect(upload.extension).to eq('png')
+    end
+
+  end
+
   describe '#clean_svg!' do
     let(:b64) do
       Base64.encode64('<svg onmouseover="alert(alert)" />')

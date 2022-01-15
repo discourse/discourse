@@ -1,4 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { headerOffset } from "discourse/lib/offset-calculator";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PLUGIN_ID = "new-user-narrative";
@@ -38,6 +41,61 @@ function initialize(api) {
         });
       }
       return this._super(bookmark, post);
+    },
+
+    subscribe() {
+      this._super(...arguments);
+
+      this.messageBus.subscribe(`/topic/${this.get("model.id")}`, (data) => {
+        const topic = this.model;
+
+        // scroll only for discobot (-2 is discobot id)
+        if (
+          topic.get("isPrivateMessage") &&
+          this.currentUser &&
+          this.currentUser.get("id") !== data.user_id &&
+          data.user_id === -2 &&
+          data.type === "created"
+        ) {
+          const postNumber = data.post_number;
+          const notInPostStream =
+            topic.get("highest_post_number") <= postNumber;
+          const postNumberDifference = postNumber - topic.get("currentPost");
+
+          if (
+            notInPostStream &&
+            postNumberDifference > 0 &&
+            postNumberDifference < 7
+          ) {
+            this._scrollToDiscobotPost(data.post_number);
+          }
+        }
+      });
+      // No need to unsubscribe, core unsubscribes /topic/* routes
+    },
+
+    _scrollToDiscobotPost(postNumber) {
+      discourseDebounce(
+        this,
+        function () {
+          const post = document.querySelector(
+            `.topic-post article#post_${postNumber}`
+          );
+
+          if (!post || isElementInViewport(post)) {
+            return;
+          }
+
+          const viewportOffset = post.getBoundingClientRect();
+
+          window.scrollTo({
+            top: window.scrollY + viewportOffset.top - headerOffset(),
+            behavior: "smooth",
+          });
+        },
+        postNumber,
+        500
+      );
     },
   });
 

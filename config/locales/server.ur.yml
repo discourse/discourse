@@ -707,12 +707,6 @@ ur:
       title: "لائیک"
       description: " اِس پوسٹ کو لائیک کریں"
       short_description: " اِس پوسٹ کو لائیک کریں"
-  user_activity:
-    no_bookmarks:
-      self: "آپ کے پاس کوئی بُک مارک کی ہوئی پوسٹس نہیں ہیں؛ بُک مارکس آپ کو مخصوص پوسٹس کے فوری حوالہ فراہم کرتے ہیں۔"
-      others: "کوئی بُک مارکس نہیں"
-    no_drafts:
-      self: "آپ کے پاس کوئی ڈرافٹس نہیں ہیں؛ کسی بھی ٹاپک میں جواب لکھنا شروع کریں اور یہ ایک نئے ڈرافٹ کے طور پر خود کار طریقے سے محفوظ کر لیا جائے گا۔"
   topic_flag_types:
     spam:
       title: "سپَیم"
@@ -1111,6 +1105,18 @@ ur:
         ignores_count: شمار کو نظر انداز
         mutes_count: شمار کو خاموش
       description: "جو صارفین بہت سے دوسرے صارفین کی طرف سے خاموش اور/یا نظر انداز کیے گئے ہیں۔"
+    top_users_by_likes_received:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: صارف
+        qtt_like: لائیکس موصول ہوے
   dashboard:
     rails_env_warning: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
     host_names_warning: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
@@ -1244,7 +1250,6 @@ ur:
     allowed_internal_hosts: "اندرونی ہَوسٹس کی فہرست جو ڈِسکَورس محفوظ طریقے سے وَن باکس اور دیگر مقاصد کیلئے کرال کر سکتا ہے"
     allowed_iframes: "iframe src ڈَومَین کے سابقوں کی ایک فہرست جو ڈِسکَورس محفوظ طریقے سے پوسٹس میں شامل ہونے کی اجازت دے سکتا ہے"
     allowed_crawler_user_agents: "وَیب کرالرز کے صارف ایجنٹوں جن کو سائٹ تک رسائی کی اجازت دی جانی چاہیئے۔ انتباہ! اِس ترتیب کو فعال کرنے سے وہ تمام کرالرز جو یہاں فہرست کردہ نہیں ہیں رد کر دہے جائیں گے!"
-    slow_down_crawler_user_agents: "crawl-delay ہدایت کا استعمال کرتے ہوئے، ویب کرالرز کے صارف ایجنٹ جو robots.txt میں شرح محدود ہونے چاہئیں"
     slow_down_crawler_rate: "اگر slow_down_crawler_user_agents کی وضاحت کی گئی ہے تو یہ شرح تمام کرالرز پر لاگو ہوگی (درخواستوں کے درمیان سیکنڈوں کی تاخیر)"
     content_security_policy: "کَنٹینٹ-سیکورٹی-پالیسی فعال کریں"
     content_security_policy_report_only: "کَنٹینٹ-حفاظتی-پالیسی-رپورٹ-اَونلی فعال کریں"
@@ -1276,7 +1281,6 @@ ur:
     allow_index_in_robots_txt: "robots.txt فائل میں وضاحت کریں کہ یہ سائٹ وَیب سرچ اِنجنوں کی طرف سے انڈیکس کی جاسکتی ہے۔ غیر معمولی معاملات میں آپ مستقل طور پر <a href='%{base_path}/admin/customize/robots'>robots.txt کو اَووَررائڈ</a> کرسکتے ہیں۔"
     blocked_email_domains: "ای میل ڈومینز کی پائپ سے علیحدہ کردہ فہرست جن کے ساتھ صارفین کو اکاؤنٹس رجسٹر کرنے کی اجازت نہیں ہے۔ مثال: mailinator.com|trashmail.net"
     allowed_email_domains: "ای میل ڈومینز کی پائپ سے علیحدہ کردہ فہرست جن کے ساتھ صارفین کو اکاؤنٹس رجسٹر کرنا لاذمی ہے۔ انتباہ: اِس فہرست کے علاوہ ای میل ڈومینز والے صارفین کو روک دیا جائے گی!"
-    hide_email_address_taken: "سائن اَپ کے دوران اور بھولا پاسورڈ فارم سے صارفین کو مطلع نہ کریں کہ فراہم کیے گئے ای میل ایڈریس کے ساتھ ایک اکاؤنٹ موجود ہے۔"
     log_out_strict: "لاگ آؤٹ ہونے پر، صارف کیلئے تمام ڈِیوائیسِز پر تمام سیشنوں کو لاگ آؤٹ کریں"
     version_checks: "ورژن اپ ڈیٹ کیلئے ڈِسکورس ہَب کو پِنگ کریں اور <a href='%{base_path}/admin' target='_blank'>/admin</a> ڈیش بورڈ پر نئے ورژن کا پیغام دکھائیں"
     new_version_emails: "جب ڈِسکورس کا نیا ورژن دستیاب ہو تو contact_email ایڈریس پر ایک ای میل بھیجیں۔"
@@ -1878,13 +1882,6 @@ ur:
       fixed_primary_email: "سٹَیجڈ صارف کیلئے بنیادی ای میل مقرر کر دیا گیا"
       same_ip_address: "دوسرے صارفین کی طرح ایک ہی IP ایڈریس (%{ip_address})"
       inactive_user: "غیر متحرک صارف"
-  reviewables_reminder:
-    submitted:
-      one: "اشیاء %{count} گھنٹہ پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/review)۔"
-      other: "اشیاء %{count} گھنٹوں پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/review)۔"
-    subject_template:
-      one: "%{count} شے کا جائزہ لینے کی ضرورت ہے"
-      other: "%{count} اشیاء کا جائزہ لینے کی ضرورت ہے"
   unsubscribe_mailer:
     title: "مَیلر غیر سَبسکرائب کریں"
     subject_template: "تصدیق کریں کہ اب آپ %{site_title} سے ای میل اَپ ڈیٹس حاصل نہیں کرنا چاہتے ہیں"

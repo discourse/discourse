@@ -41,6 +41,7 @@ ca:
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>HH:mm"
       wrap_ago: "fa %{date} "
+      wrap_on: "el %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -157,9 +158,11 @@ ca:
         disabled: "ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
       forwarded: "el missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
+    skip_to_main_content: "Vés al contingut principal"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
+      message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
     themes:
@@ -169,6 +172,7 @@ ca:
       regions:
         ap_northeast_1: "Àsia Pacífic (Tòquio)"
         ap_northeast_2: "Àsia Pacífic (Seül)"
+        ap_east_1: "Àsia Pacífic (Hong Kong)"
         ap_south_1: "Àsia Pacífic (Mumbai)"
         ap_southeast_1: "Àsia Pacífic (Singapur)"
         ap_southeast_2: "Àsia Pacífic (Sydney)"
@@ -177,6 +181,7 @@ ca:
         cn_northwest_1: "la Xina (Ningxia)"
         eu_central_1: "UE (Frankfurt)"
         eu_north_1: "UE (Stockholm)"
+        eu_south_1: "UE (Milà)"
         eu_west_1: "UE (Irlanda)"
         eu_west_2: "UE (Londres)"
         eu_west_3: "UE (París)"
@@ -234,6 +239,8 @@ ca:
     character_count:
       one: "%{count} caràcter"
       other: "%{count} caràcters"
+    period_chooser:
+      aria_label: "Filtra per període"
     related_messages:
       title: "Missatges relacionats"
       see_all: 'Mostra <a href="%{path}">tots els missatges</a> de @%{username}...'
@@ -266,19 +273,25 @@ ca:
       help:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         edit_bookmark: "Feu clic per editar el marcador sobre aquest tema"
+        edit_bookmark_for_topic: "Cliqueu per editar el marcador d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
         unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       not_bookmarked: "marca aquesta publicació com a preferit"
+      remove_reminder_keep_bookmark: "Elimina el recordatori i mantén el marcador"
       created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
       remove: "Elimina preferit"
       delete: "Suprimeix el marcador"
       confirm_delete: "Esteu segur que voleu suprimir aquest marcador? El recordatori també se suprimirà."
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
+      no_timezone: 'Encara no heu establert una zona horària. No podreu establir recordatoris. Configureu una <a href="%{basePath}/my/preferences/profile">al vostre perfil</a>.'
+      invalid_custom_datetime: "La data i l'hora que heu proporcionat no són vàlides, torneu-ho a provar."
+      list_permission_denied: "No teniu permís per veure els marcadors d'aquest usuari."
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
       auto_delete_preference:
+        label: "Esborra automàticament"
         never: "Mai"
         when_reminder_sent: "Una vegada enviat el recordatori"
         on_owner_reply: "Després de respondre a aquest tema"
@@ -293,12 +306,17 @@ ca:
       copied: "copiat!"
     drafts:
       label: "Esborranys"
+      label_with_count: "Esborranys (%{count})"
       resume: "Reprèn"
       remove: "Elimina"
+      remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
+      new_private_message: "Nou esborrany de missatge personal"
       topic_reply: "Esborrany de resposta"
       abandon:
+        confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
+        no_value: "Reprèn l'edició"
     topic_count_categories:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -316,12 +334,14 @@ ca:
       other: "Vegeu %{count} temes nous"
     preview: "previsualitza"
     cancel: "cancel·la"
+    deleting: "Suprimint..."
     save: "Desa els canvis"
     saving: "Desant..."
     saved: "Desat!"
     upload: "Carrega"
     uploading: "Carregant..."
     uploading_filename: "Pujant: %{filename}..."
+    processing_filename: "Processant: %{filename}..."
     clipboard: "porta-retalls"
     uploaded: "Carregat!"
     pasting: "Enganxant..."
@@ -350,6 +370,7 @@ ca:
         placeholder: "escriviu aquí el títol, l'URL o l'identificador del missatge"
     review:
       order_by: "Ordena per"
+      date_filter: "Publicat entre"
       in_reply_to: "en resposta a"
       explain:
         why: "expliqueu per què aquest element ha acabat a la cua"
@@ -504,20 +525,29 @@ ca:
           other: "Teniu <strong>%{count}</strong> publicacions pendents."
         ok: "D'acord"
       example_username: "nom d'usuari"
+      reject_reason:
+        title: "Per què rebutgeu aquest usuari?"
+        send_email: "Envia un correu electrònic de rebuig"
     relative_time_picker:
       days:
         one: "dia"
         other: "dies"
+      relative: "Relatiu"
     time_shortcut:
       later_today: "Més tard avui"
       next_business_day: "El pròxim dia feiner"
       tomorrow: "Demà"
+      post_local_date: "Data en la publicació"
       later_this_week: "Més avant aquesta setmana"
       this_weekend: "Aquest cap de setmana"
       start_of_next_business_week: "Dilluns"
       start_of_next_business_week_alt: "Dilluns vinent"
+      two_weeks: "Dues setmanes"
       next_month: "El mes que ve"
+      six_months: "Sis mesos"
       custom: "Data i hora personalitzades"
+      relative: "Temps relatiu"
+      none: "No cal cap"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha publicat <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vós</a> heu publicat <a href='%{topicUrl}'>el tema</a>"
@@ -570,9 +600,12 @@ ca:
       member_added: "Afegit"
       member_requested: "Sol·licitat"
       add_members:
+        title: "Afegeix usuaris a %{group_name}"
+        description: "Introduïu una llista d'usuaris que voleu convidar al grup o enganxeu-la en una llista separada per comes:"
         usernames_placeholder: "noms d'usuari"
         usernames_or_emails_placeholder: "noms d’usuari o correus electrònics"
         notify_users: "Notifiqueu els usuaris"
+        set_owner: "Estableix usuaris com a propietaris d'aquest grup"
       requests:
         title: "Sol·licituds"
         reason: "Motiu"
@@ -586,6 +619,7 @@ ca:
         title: "Gestiona"
         name: "Nom"
         full_name: "Nom complet"
+        add_members: "Afegeix usuaris"
         invite_members: "Convida"
         delete_member_confirm: "Voleu eliminar '%{username}' del grup '%{group}'?"
         profile:
@@ -596,7 +630,13 @@ ca:
           notification: Notificació
         email:
           title: "Correu electrònic"
+          status: "S'han sincronitzat %{old_emails} / %{total_emails} correus electrònics via IMAP."
+          enable_smtp: "Activa SMTP"
+          enable_imap: "Activa IMAP"
+          save_settings: "Desa la configuració"
+          last_updated: "Darrera actualització:"
           last_updated_by: "per"
+          settings_required: "Tots els paràmetres són obligatoris, si us plau ompli tots els camps abans de la validació."
           credentials:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
@@ -1162,11 +1202,9 @@ ca:
         every_month: "cada mes"
         every_six_months: "cada sis mesos"
       email_level:
-        title: "Envia'm un correu quan algú em citi, respongui a una entrada, mencioni el meu @nomdusuari, o m'inviti a un tema"
         always: "sempre"
         only_when_away: "només quan sigui absent"
         never: "mai"
-      email_messages_level: "Envia'm un correu quan algú m'enviï un missatge"
       include_tl0_in_digests: "Inclou contingut d'usuaris nous en els correus de resum "
       email_in_reply_to: "Inclou un extracte del que s'ha respost a la publicació en els correus."
       other_settings: "Altres"
@@ -1561,9 +1599,6 @@ ca:
       group_mentioned:
         one: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count}persona</a>. Esteu segur?"
         other: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count} persones</a>. Esteu segur?"
-      cannot_see_mention:
-        category: "Heu mencionat %{username}, però no se li notificarà res perquè aquesta persona no gaudeix d'accés a aquesta categoria. Us caldrà afegir-la a un grup que tingui accés a aquesta categoria."
-        private: "Heu mencionat %{username}, però no es notificarà res perquè aquest usuari no pot veure aquest missatge personal. Haureu de convidar-lo al MP."
       duplicate_link: "Sembla que l'enllaç a <b>%{domain}</b> ja havia estat publicat en el tema per <b>@%{username}</b> en <a href='%{post_url}'>una resposta %{ago}</a>. Esteu segur que voleu publicar-lo una altra vegada?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1987,17 +2022,10 @@ ca:
         replies_short: "%{current} / %{total}"
       progress:
         title: progrés del tema
-        go_top: "a dalt"
-        go_bottom: "a baix"
-        go: "vés"
-        jump_bottom: "salta a la darrera publicació"
         jump_prompt: "salta a..."
         jump_prompt_long: "Salta a..."
-        jump_bottom_with_number: "salta a la publicació %{post_number}"
         jump_prompt_to_date: "fins a la data"
         jump_prompt_or: "o"
-        total: total de publicacions
-        current: publicació actual
       notifications:
         title: canvieu la freqüència d'alertes que rebeu sobre aquest tema
         reasons:
@@ -2572,6 +2600,9 @@ ca:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
+    pending_posts:
+      label: "Pendent"
+      label_with_count: "Pendents (%{count})"
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -2788,8 +2819,7 @@ ca:
         one: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la del tema %{count} al qual és assignada?"
         other: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la dels %{count} temes als quals és assignada?"
       delete_confirm_no_topics: "Esteu segur que voleu suprimir aquesta etiqueta?"
-      rename_tag: "Reanomena l'etiqueta"
-      rename_instructions: "Trieu un nom nou per a l'etiqueta:"
+      description: "Descripció"
       sort_by: "Ordena per:"
       sort_by_count: "comptabilitza"
       sort_by_name: "nom"
@@ -3645,9 +3675,6 @@ ca:
         screened_ips:
           title: "IPs sota supervisió"
           delete_confirm: "Esteu segur que voleu eliminar la regla per a %{ip_address}?"
-          roll_up_confirm: "¿Esteu segur que voleu agrupar les adreces IP sota supervisió més comunes en subxarxes?"
-          rolled_up_some_subnets: "S'han agrupat amb èxit les entrades IP bandejades en aquestes subxarxes: %{subnets}."
-          rolled_up_no_subnet: "No hi ha res per a agrupar."
           actions:
             block: "Bloca"
             do_nothing: "Permet"

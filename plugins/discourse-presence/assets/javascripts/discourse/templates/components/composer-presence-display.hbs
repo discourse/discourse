@@ -2,7 +2,7 @@
   <div class="presence-users">
     <div class="presence-avatars">
       {{#each presenceUsers as |user|}}
-        {{avatar user avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
+        {{avatar user imageSize="small"}}
       {{/each}}
     </div>
     <span class="presence-text">
@@ -12,10 +12,14 @@
         {{~else~}}
           {{i18n "presence.editing" count=presenceUsers.length}}
         {{~/if}}
-      </span>{{!-- (using comment to stop whitespace)
---}}</span>{{!--
---}}<span class="wave">
-      <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        {{~""~}}
+      </span>
+      {{~""~}}
+      <span class="wave">
+        {{~""~}}
+        <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        {{~""~}}
+      </span>
     </span>
   </div>
 {{/if}}

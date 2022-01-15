@@ -598,6 +598,14 @@ class PostsController < ApplicationController
     render_serialized(posts, AdminUserActionSerializer)
   end
 
+  def pending
+    params.require(:username)
+    user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_edit_user?(user)
+
+    render_serialized(user.pending_posts.order(created_at: :desc), PendingPostSerializer, root: :pending_posts)
+  end
+
   protected
 
   # We can't break the API for making posts. The new, queue supporting API

@@ -144,6 +144,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
     .user-card-avatar {
       margin-top: $avatar_margin;
+      max-height: $avatar_width;
     }
     .new-user a {
       color: var(--primary-low-mid);

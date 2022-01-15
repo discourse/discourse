@@ -7,11 +7,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  after_save do |site_setting|
-    DiscourseEvent.trigger(:site_setting_saved, site_setting)
-    true
-  end
-
   def self.load_settings(file, plugin: nil)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
       setting(name, default, opts.merge(category: category, plugin: plugin))
@@ -20,7 +15,7 @@ class SiteSetting < ActiveRecord::Base
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
-  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+  if GlobalSetting.load_plugins?
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
       load_settings(file, plugin: file.split("/")[-3])
     end
@@ -243,11 +238,11 @@ class SiteSetting < ActiveRecord::Base
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS.each_pair do |old_method, new_method|
     self.define_singleton_method(old_method) do
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
+      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
       send(new_method)
     end
     self.define_singleton_method("#{old_method}=") do |args|
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
+      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
       send("#{new_method}=", args)
     end
   end

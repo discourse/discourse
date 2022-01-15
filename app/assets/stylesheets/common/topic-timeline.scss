@@ -6,10 +6,10 @@
   box-sizing: border-box;
   z-index: z("timeline");
   -webkit-transform: translate3d(0, 0, 0);
-  transition: margin-bottom 0.25s ease-in;
   &.timeline-docked-bottom {
+    margin-bottom: -4em;
     @media screen and (prefers-reduced-motion: no-preference) {
-      margin-bottom: -1.75em; // animate out footer button height
+      transition: margin-bottom 0.5s ease-in;
     }
     .timeline-footer-controls {
       opacity: 0;
@@ -72,7 +72,6 @@
       touch-action: none;
 
       .timeline-date-wrapper {
-        float: right;
         text-align: right;
       }
       .post-excerpt {
@@ -142,7 +141,6 @@
         border-right-style: solid;
         border-right-width: 1px;
         max-width: 120px;
-        margin-top: 2em;
 
         .timeline-scroller {
           position: relative;
@@ -150,6 +148,9 @@
           padding-right: 1.5em;
           justify-content: flex-end;
           .timeline-scroller-content {
+            box-sizing: border-box;
+            max-width: 100%;
+            overflow: hidden;
             text-align: right;
             padding-left: 0;
             padding-right: 1em;
@@ -186,7 +187,9 @@
 
     .timeline-footer-controls {
       margin-top: 1.5em;
-      transition: opacity 0.2s ease-in;
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity 0.2s ease-in;
+      }
       display: flex;
       flex-wrap: wrap;
       max-width: 9em;
@@ -235,6 +238,9 @@
     }
 
     .timeline-scroller-content {
+      box-sizing: border-box;
+      max-width: 100%;
+      overflow: hidden;
       padding-left: 1em;
       position: absolute; // prevents text length from impacting width
     }
@@ -259,6 +265,8 @@
     }
 
     .timeline-replies {
+      overflow: hidden;
+      overflow-wrap: break-word;
       font-weight: bold;
     }
 

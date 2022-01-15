@@ -31,6 +31,7 @@ export default Service.extend({
 
   set favorites(value) {
     this.store.setObject({ key: EMOJI_USAGE, value: value || [] });
+    this.notifyPropertyChange("favorites");
   },
 
   track(code) {

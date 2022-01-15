@@ -14,7 +14,7 @@ jobs:
   build:
     name: run
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:release
+    container: discourse/discourse_test:slim
     timeout-minutes: 30
 
     steps:
@@ -37,6 +37,7 @@ jobs:
 
       - name: Setup gems
         run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development

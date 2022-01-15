@@ -1256,11 +1256,9 @@ bs_BA:
         every_month: "svaki mjesec"
         every_six_months: "svakih šest mjeseci"
       email_level:
-        title: "Pošalji mi email kada me neko citira, odgovori na moju objavu, spomene moje korisničko @ime ili pozove me u neku temu"
         always: "uvijek"
         only_when_away: "samo kad je odsutan"
         never: "nikad"
-      email_messages_level: "Pošalji mi email kada mi neko pošalje privatnu poruku"
       include_tl0_in_digests: "Uključi i sadržaj od strane novih korisnika u e-mail Sažetku"
       email_in_reply_to: "Uključi odlomake sa odgovorenih objava u e-mailovima"
       other_settings: "Ostalo"
@@ -1680,9 +1678,6 @@ bs_BA:
         one: "Spominjući %{group}, obavijestiti će te %{count} korisnika – da li ste sigurni?"
         few: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
         other: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
-      cannot_see_mention:
-        category: "Spomenuli ste %{username} ali isti neće biti obavješteni zbog toga što nemaju pristup ovoj kategoriji. Morate ih dodati u Grupu koja ima pristup ka ovoj kategoriji."
-        private: "Spomenuli ste %{username}, no oni neće biti obaviješteni jer ne mogu vidjeti ovu osobnu poruku. Morat ćete ih pozvati da se pridruže ovoj privatnoj poruci."
       duplicate_link: "Izgleda da vaš link ka <b>%{domain}</b> je već objavljen u temi od strane <b>@%{username}</b> u<a href='%{post_url}'>odgovoru prije %{ago}</a> – da li ste sigurni da želite ponovno objaviti link?"
       reference_topic_title: "RE:%{title}"
       error:
@@ -2117,17 +2112,10 @@ bs_BA:
         replies_short: "%{current} / %{total}"
       progress:
         title: progres teme
-        go_top: "vrh"
-        go_bottom: "dno"
-        go: "idi"
-        jump_bottom: "idi na posljednju objavu"
         jump_prompt: "skoči na..."
         jump_prompt_long: "Skoči na ..."
-        jump_bottom_with_number: "skoči na post %{post_number}"
         jump_prompt_to_date: "do datuma"
         jump_prompt_or: "ili"
-        total: ukupan broj
-        current: trenutni post
       notifications:
         title: izmijenite učestalost dobijanja obavještenja o ovoj temi
         reasons:
@@ -2729,6 +2717,9 @@ bs_BA:
         title: "Ova tema je lična poruka"
         help: "Ova tema je lična poruka"
     posts: "Odgovori"
+    pending_posts:
+      label: "Na čekanju"
+      label_with_count: "Na čekanju (%{count})"
     original_post: "Originalni Odgovor"
     views: "Pregledi"
     views_lowercase:
@@ -2971,6 +2962,7 @@ bs_BA:
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"
+      default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
       synonyms_description: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa <b>%{base_tag_name}</b>."
@@ -2982,7 +2974,6 @@ bs_BA:
         one: "Moguće je koristiti samo u sljedećoj kategoriji:"
         few: "Moguće je koristiti samo u sljedećim kategorijama:"
         other: "Moguće je koristiti samo u sljedećim kategorijama:"
-      edit_synonyms: "Uredi sinonime"
       add_synonyms_label: "Dodaj sinonime:"
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
@@ -3002,8 +2993,7 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
-      rename_tag: "Promjeni ime Oznake"
-      rename_instructions: "Odaberite novo ime za oznaku:"
+      description: "Description"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3860,9 +3850,6 @@ bs_BA:
           title: "Screened IPs"
           description: 'IP adrese koje su na posmatranju. Koristi "Dopusti" da biste sastavili dozvoljenu listu IP adresa.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Jeste li sigurni da želite preusmjeriti obično prikazane IP adrese u podmreže?"
-          rolled_up_some_subnets: "Uspješno unesene IP zabrane unosa u ove podmreže: %{subnets}."
-          rolled_up_no_subnet: "Nije bilo ničega što bi se moglo zamotati."
           actions:
             block: "Block"
             do_nothing: "Allow"

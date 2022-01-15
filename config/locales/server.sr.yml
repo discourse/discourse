@@ -64,9 +64,6 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
-  invite:
-    not_found_template_link: |
-      <p>Pozivnica za <a href="%{base_url}">%{site_name}</a> je istekla. Molimo vas da pitate osobu koja vam je poslala pozivnicu da posalje novu.</p>
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -231,9 +228,6 @@ sr:
       title: "Nepoželjno"
     bookmark:
       title: "Markiraj"
-  user_activity:
-    no_bookmarks:
-      self: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
   topic_flag_types:
     spam:
       title: "Nepoželjno"
@@ -327,6 +321,18 @@ sr:
     top_uploads:
       labels:
         filename: Ime datoteke
+    top_users_by_likes_received:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Korisnik
+        qtt_like: Primljeno Lajkova
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"

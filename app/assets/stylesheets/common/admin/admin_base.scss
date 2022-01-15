@@ -229,13 +229,33 @@ $mobile-breakpoint: 700px;
     button.edit {
       float: right;
     }
+
+    $maxHeight: 8 * 1.4em;
+    $gradientHeight: 2.2em;
+
     .site-text-value {
       margin: 0.5em 5em 0.5em 0;
-      @include breakpoint(medium, min-width) {
-        max-height: 100px;
+      max-height: $maxHeight;
+      overflow: hidden;
+      position: relative;
+      &::after {
+        content: " ";
+        position: absolute;
+        background-color: red;
+        left: 0;
+        right: 0;
+        top: $maxHeight - $gradientHeight;
+        height: $gradientHeight;
+        background: linear-gradient(
+          to top,
+          rgba(var(--secondary-rgb), 1),
+          rgba(var(--secondary-rgb), 0.15)
+        );
       }
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
+        max-width: 80vw;
+        margin-right: 3em;
       }
       color: var(--primary-medium);
     }

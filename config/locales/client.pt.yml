@@ -1367,11 +1367,9 @@ pt:
         every_month: "cada mês"
         every_six_months: "a cada seis meses"
       email_level:
-        title: "Enviem-me um email quando alguém me citar, responder a uma publicação minha, mencionar o meu @nome_de_utilizador ou me convidar para um tópico"
         always: "sempre"
         only_when_away: "só quando não estiver online"
         never: "nunca"
-      email_messages_level: "Enviem-me um email cada vez que alguém me enviar uma mensagem"
       include_tl0_in_digests: "Incluir o conteúdo dos novos utilizadores nas mensagens de resumo"
       email_in_reply_to: "Incluir um excerto de resposta para publicar nas mensgaens"
       other_settings: "Outros"
@@ -1849,9 +1847,6 @@ pt:
       group_mentioned:
         one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
         other: "Ao mencionar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoas</a> – tem a certeza?"
-      cannot_see_mention:
-        category: "Mencionou %{username} , mas este não será notificado porque não têm acesso a esta categoria. Terá de os adicionar a um grupo que tenha acesso a esta categoria."
-        private: "Mencionou %{username}, mas este não será notificado porque não consegue ver esta mensagem privada. Terá de o convidar para esta MP."
       duplicate_link: "Parce que a sua hiperligação para <b>%{domain}</b> já foi publicada neste tópico por <b>@%{username}</b> numa <a href='%{post_url}'>resposta %{ago}</a> – tem a certeza que a quer publicar novamente?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2386,17 +2381,10 @@ pt:
         replies_short: "%{current} / %{total}"
       progress:
         title: progresso do tópico
-        go_top: "topo"
-        go_bottom: "fim"
-        go: "ir"
-        jump_bottom: "ir para a última publicação"
         jump_prompt: "ir para..."
         jump_prompt_long: "Ir para..."
-        jump_bottom_with_number: "ir para a mensagem %{post_number}"
         jump_prompt_to_date: "ir para data"
         jump_prompt_or: "ou"
-        total: total de publicações
-        current: publicação atual
       notifications:
         title: mudar quão frequentemente é notificado sobre este tópico
         reasons:
@@ -3053,6 +3041,9 @@ pt:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Publicações"
+    pending_posts:
+      label: "Pendente"
+      label_with_count: "Pendentes (%{count})"
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -3279,7 +3270,6 @@ pt:
       tags: "Etiquetas"
       choose_for_topic: "tags opcionais"
       info: "Informações"
-      default_info: "Esta tag não está restrita a nenhuma categoria e não possui sinônimos. Para adicionar restrições, coloque esta tag em um <a href=%{basePath}/tag_groups>grupo de tags</a>."
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
       synonyms_description: "Quando as tags seguintes forem usadas, elas serão substituídas por <b>%{base_tag_name}</b>."
@@ -3289,7 +3279,6 @@ pt:
       category_restrictions:
         one: "Só pode ser usado nesta categoria:"
         other: "Só pode ser usado nessas categorias:"
-      edit_synonyms: "Gerenciar Sinônimos"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
       remove_synonym: "Remover Sinônimo"
@@ -3301,8 +3290,7 @@ pt:
       delete_confirm_synonyms:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
-      rename_tag: "Renomear Etiqueta"
-      rename_instructions: "Escolha o novo nome para a etiqueta:"
+      description: "Descrição"
       sort_by: "Ordenar por:"
       sort_by_count: "contagem"
       sort_by_name: "nome"
@@ -4145,9 +4133,6 @@ pt:
           title: "IPs Filtrados"
           description: 'Endereços IP que estão sendo monitorados. Use "Permitir" para colocar endereços IP na lista de permisão.'
           delete_confirm: "Tem a certeza que quer remover esta regra para %{ip_address}?"
-          roll_up_confirm: "Tem a certeza que quer trazer os endereços IP frequentemente vistoriados para as sub-redes?"
-          rolled_up_some_subnets: "Interdições das sub-redes %{subnets} inseridas com sucesso."
-          rolled_up_no_subnet: "Não há nada para atualizar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"

@@ -2,8 +2,8 @@
 // Update it by running `rake javascript:update`
 
 export const PUBLIC_JS_VERSIONS = {
-  "ace/ace.js": "ace.js/1.4.12/ace.js",
-  "jsoneditor.js": "@json-editor/json-editor/2.5.2/jsoneditor.js",
+  "ace/ace.js": "ace.js/1.4.13/ace.js",
+  "jsoneditor.js": "@json-editor/json-editor/2.6.1/jsoneditor.js",
   "Chart.min.js": "chart.js/3.5.1/Chart.min.js",
   "chartjs-plugin-datalabels.min.js":
     "chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js",

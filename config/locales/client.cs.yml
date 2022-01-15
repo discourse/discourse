@@ -1162,10 +1162,8 @@ cs:
         every_month: "každý měsíc"
         every_six_months: "každých šest měsíců"
       email_level:
-        title: "Zašli mi email, pokud mě někde cituje, odpoví na můj příspěvek, zmíní mé @jméno nebo mě pozve do tématu."
         always: "vždy"
         never: "nikdy"
-      email_messages_level: "Zašli mi email, pokud mi někdo pošle zprávu."
       include_tl0_in_digests: "Zahrnout obsah nových uživatelů v souhrnných emailech"
       email_in_reply_to: "Zahrnout v emailech úryvek příspěvku, na který je reagováno"
       other_settings: "Ostatní"
@@ -1553,9 +1551,6 @@ cs:
         few: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidi</a> – jste si jistý/á?"
         many: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidí</a> – jste si jistý/á?"
         other: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidí</a> – jste si jistý/á?"
-      cannot_see_mention:
-        category: "Zmínili jste uživatele %{username}, ale oznámení se mu nepošle, protože nemá přístup do této kategorie. Budete jej muset přidat do skupiny, která má přístup do této kategorie."
-        private: "Zmínili jste uživatele %{username}, ale oznámení se mu nepošle, protože tuto osobní zprávu nevidí. Musíte ho pozvat do této osobní konverzace."
       duplicate_link: "Zdá se, že odkaz na <b>%{domain}</b> už uvedl v tomto tématu <b>@ %{username}</b> v <a href='%{post_url}'>odpovědi %{ago}</a> - opravdu chcete odkaz poslat znovu?"
       error:
         title_missing: "Název musí být vyplněn"
@@ -1963,17 +1958,10 @@ cs:
         replies_short: "%{current} / %{total}"
       progress:
         title: pozice v tématu
-        go_top: "nahoru"
-        go_bottom: "dolů"
-        go: "go"
-        jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
         jump_prompt_long: "Přejít na..."
-        jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
-        total: celkem příspěvků
-        current: aktuální příspěvek
       notifications:
         title: změňte, jak často budete upozornění na toto téma
         reasons:
@@ -2535,6 +2523,9 @@ cs:
       unlisted:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
+    pending_posts:
+      label: "Čeká na schválení"
+      label_with_count: "Nevyřízeno (%{count})"
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase:
@@ -2768,8 +2759,7 @@ cs:
         many: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z %{count} témat, kterým je přiřazen?"
         other: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z %{count} témat, kterým je přiřazen?"
       delete_confirm_no_topics: "Opravdu chceš smazat tento štítek? "
-      rename_tag: "Přejmenovat štítek"
-      rename_instructions: "Vyber název nového štítku:"
+      description: "Popis"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
       sort_by_name: "jména"
@@ -3424,9 +3414,6 @@ cs:
         screened_ips:
           title: "Filtrované IP"
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Určitě chcete rolovat běžně screenované IP adresy do podsítí? "
-          rolled_up_some_subnets: "Úspěšně vyrolován IP ban k přístupu do těchto podsítí: %{subnets}."
-          rolled_up_no_subnet: "Není zde nic ke srolování."
           actions:
             block: "Zablokovat"
             do_nothing: "Povolit"

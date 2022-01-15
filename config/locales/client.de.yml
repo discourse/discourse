@@ -128,6 +128,7 @@ de:
       url: "URL kopieren und teilen"
     action_codes:
       public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
+      open_topic: "hat dies in ein Thema %{when} umgewandelt"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
       split_topic: "hat dieses Thema aufgeteilt, %{when}"
       invited_user: "hat %{who} eingeladen, %{when}"
@@ -172,6 +173,7 @@ de:
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil Theme/Komponente %{theme} Fehler hat. Deaktiviere es in %{path}."
+    broken_decorator_alert: "Beiträge werden möglicherweise nicht korrekt angezeigt, weil einer der Beitragsdekorateure auf deiner Seite einen Fehler ausgelöst hat. Überprüfe die Entwickler-Tools deines Browsers für weitere Informationen."
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -1393,11 +1395,11 @@ de:
         every_month: "jeden Monat"
         every_six_months: "alle sechs Monate"
       email_level:
-        title: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen Benutzernamen mit @ erwähnt oder mich zu einem Thema einlädt."
+        title: "Schicke mir eine E-Mail, wenn ich zitiert werde, wenn auf mich geantwortet wird, wenn mein @Nutzername erwähnt wird oder wenn es neue Aktivitäten in meinen beobachteten Kategorien, Tags oder Themen gibt"
         always: "immer"
         only_when_away: "nur bei Abwesenheit"
         never: "nie"
-      email_messages_level: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
+      email_messages_level: "Mich per E-Mail benachrichtigen, wenn ich eine persönliche Nachricht erhalte"
       include_tl0_in_digests: "Inhalte neuer Benutzer in E-Mail-Zusammenfassung einschließen."
       email_in_reply_to: "Einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
       other_settings: "Andere"
@@ -1484,7 +1486,10 @@ de:
           expired_at_time: "Abgelaufen um %{time}"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
+          restrict: "Beschränken auf"
           restrict_email: "Auf E-Mail beschränken"
+          restrict_domain: "Auf Domain beschränken"
+          email_or_domain_placeholder: "name@beispiel.de oder beispiel.de"
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
           invite_to_topic: "Ankommen beim Thema"
@@ -1693,6 +1698,7 @@ de:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
+      invite_no_username: "Gib deine E-Mail-Adresse ein. Dann senden wir dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail-Adresse <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
@@ -1911,8 +1917,13 @@ de:
         one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
       cannot_see_mention:
-        category: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
-        private: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
+        category: "Du hast @%{username} erwähnt, aber diese Personen werden nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie haben. Füge sie einer Gruppe hinzu, diese Zugriff auf diese Kategorie haben."
+        private: "Du hast @%{username} erwähnt, aber diese Personen werden nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen können. Lade sie zu dieser persönlichen Nachricht ein."
+        muted_topic: "Du hast @%{username} erwähnt, aber sie werden nicht benachrichtigt, weil sie dieses Thema stumm geschaltet haben."
+        not_allowed: "Du hast @%{username} erwähnt, aber sie werden nicht benachrichtigt, weil sie nicht zu diesem Thema eingeladen wurden."
+      here_mention:
+        one: "Indem du <b>@%{here}</b>erwähnst, bist du dabei, %{count} Benutzer zu benachrichtigen - bist du sicher?"
+        other: "Indem du <b>@%{here}</b>erwähnst, benachrichtigst du %{count} Benutzer - bist du sicher?"
       duplicate_link: "Es sieht so aus, als ob dein Link zu <b>%{domain}</b> bereits im Thema von <b>@%{username}</b> in <a href='%{post_url}'>einer Antwort vor %{ago}</a> geteilt wurde – bist du sicher, dass du ihn noch einmal teilen möchtest?"
       reference_topic_title: "AW: %{title}"
       error:
@@ -2173,6 +2184,10 @@ de:
       in_topics_posts: "in allen Themen und Beiträgen"
       enter_hint: "oder drücke die Eingabetaste"
       in_posts_by: "in Beiträgen von %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "nochmal um die native Browsersuche zu verwenden"
+      recent: "Letzte Suchanfragen"
+      clear_recent: "Letzte Suchanfragen löschen"
       type:
         default: "Themen/Beiträge"
         users: "Benutzer"
@@ -2495,20 +2510,13 @@ de:
         replies_short: "%{current}/%{total}"
       progress:
         title: Themen-Fortschritt
-        go_top: "Anfang"
-        go_bottom: "Ende"
-        go: "Los"
-        jump_bottom: "springe zum letzten Beitrag"
         jump_prompt: "springe zu …"
         jump_prompt_of:
           one: "von %{count} Beitrag"
           other: "von %{count} Beiträgen"
         jump_prompt_long: "Zu … springen"
-        jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         jump_prompt_to_date: "zu Datum"
         jump_prompt_or: "oder"
-        total: Beiträge insgesamt
-        current: aktueller Beitrag
       notifications:
         title: ändere, wie häufig du zu diesem Thema benachrichtigt wirst
         reasons:
@@ -3217,6 +3225,9 @@ de:
         title: "Dieses Thema ist eine persönliche Nachricht"
         help: "Dieses Thema ist eine persönliche Nachricht"
     posts: "Beiträge"
+    pending_posts:
+      label: "Ausstehend"
+      label_with_count: "Ausstehend (%{count})"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
         low {mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
@@ -3480,17 +3491,19 @@ de:
         one: "mindestens %{count} Schlagwort auswählen..."
         other: "mindestens %{count} Schlagwörter auswählen..."
       info: "Info"
-      default_info: "Dieses Schlagwort ist nicht auf bestimmte Kategorien beschränkt und hat keine Synonyme. Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
+      default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
+      staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort in eine <a href=%{basePath}/tag_groups>Tag-Gruppe</a>ein."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
+      save: "Name und Beschreibung des Schlagwortes speichern"
       tag_groups_info:
         one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
         other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
         other: "Es kann nur in folgenden Kategorien verwendet werden:"
-      edit_synonyms: "Synonyme Verwalten"
+      edit_synonyms: "Synonyme bearbeiten"
       add_synonyms_label: "Synonyme hinzufügen:"
       add_synonyms: "Hinzufügen"
       add_synonyms_explanation:
@@ -3507,8 +3520,8 @@ de:
       delete_confirm_synonyms:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
-      rename_tag: "Schlagwort umbenennen"
-      rename_instructions: "Neuen Namen für das Schlagwort wählen:"
+      edit_tag: "Schlagwortname und Beschreibung bearbeiten"
+      description: "Beschreibung"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"
@@ -3783,6 +3796,7 @@ de:
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            automatic_membership_associated_groups: "Nutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels diesen Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Primäre Gruppe"
@@ -3867,7 +3881,7 @@ de:
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
             uploads:
-              create: Lade eine neue Datei hoch.
+              create: Lade eine neue Datei hoch oder starte einzelne oder mehrteilige direkte Uploads auf einen externen Speicher.
             users:
               bookmarks: Listet die Lesezeichen des Benutzers auf. Gibt Lesezeichen-Erinnerungen zurück, wenn du das ICS-Format verwendest.
               sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
@@ -3880,6 +3894,14 @@ de:
               list: Benutzerliste anfordern
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
+            badges:
+              create: Erstelle ein neues Abzeichen.
+              show: Erhalte Informationen über ein Abzeichen.
+              update: Abzeichen aktualisieren.
+              delete: Abzeichen löschen.
+              list_user_badges: Abzeichen eines Nutzers auflisten.
+              assign_badge_to_user: Abzeichen einem Nutzer zuweisen.
+              revoke_badge_from_user: Abzeichen einem Nutzer entziehen.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
@@ -4544,9 +4566,6 @@ de:
           title: "Gefilterte IPs"
           description: 'IP-Adressen, die überwacht werden. Verwende „Erlauben“, um IP-Adressen zuzulassen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
-          roll_up_confirm: "Möchtest du wirklich die häufig gefilterten IP-Adressen zu Subnetzen zusammenfassen?"
-          rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
-          rolled_up_no_subnet: "Es gab nichts zum Zusammenfassen."
           actions:
             block: "Blockieren"
             do_nothing: "Erlauben"

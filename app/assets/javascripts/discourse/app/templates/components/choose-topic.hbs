@@ -1,8 +1,15 @@
 <label for="choose-topic-title">
-  {{#if labelIcon}}{{d-icon labelIcon}}{{/if}}{{i18n labelText}}
+  {{#if labelIcon}}
+    {{d-icon labelIcon}}
+  {{/if}}
+  <span>{{i18n labelText}}</span>
 </label>
 
-{{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
+{{text-field
+  value=topicTitle
+  placeholderKey="choose_topic.title.placeholder"
+  id="choose-topic-title"
+}}
 
 {{#if loading}}
   <p>{{i18n "loading"}}</p>
@@ -10,19 +17,31 @@
   {{#if noResults}}
     <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
-    {{#each topics as |t|}}
-      <div class="controls existing-topic">
-        <label class="radio">
-          <input id="choose-topic-{{t.id}}" {{action "chooseTopic" t}} type="radio" name="choose_topic_id">
-          {{raw "topic-status" topic=t}}
-          <span class="topic-title">
-            {{replace-emoji t.fancy_title}}
-          </span>
-          <span class="topic-categories">
-            {{bound-category-link t.category recursive=true hideParent=true}}
-          </span>
-        </label>
-      </div>
-    {{/each}}
+    <div class="choose-topic-list">
+      {{#each topics as |t|}}
+        <div class="controls existing-topic">
+          <label class="radio">
+            {{input
+              id=(concat "choose-topic-" t.id)
+              checked=(eq t.id selectedTopicId)
+              click=(action "chooseTopic" t)
+              type="radio"
+              name="choose_topic_id"
+            }}
+            {{topic-status topic=t disableActions=true}}
+            <span class="topic-title">
+              {{replace-emoji t.fancy_title}}
+            </span>
+            <span class="topic-categories">
+              {{bound-category-link t.category
+                recursive=true
+                hideParent=true
+                link=false
+              }}
+            </span>
+          </label>
+        </div>
+      {{/each}}
+    </div>
   {{/if}}
 {{/if}}

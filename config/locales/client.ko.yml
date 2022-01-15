@@ -149,6 +149,7 @@ ko:
     themes:
       default_description: "기본"
       broken_theme_alert: "테마 / %{theme} 구성 요소에 오류가있어 사이트가 작동하지 않을 수 있습니다. %{path}에서 비활성화 하십시오."
+    broken_decorator_alert: "사이트의 게시물 콘텐츠 데코레이터 중 하나에서 오류가 발생하여 게시물이 올바르게 표시되지 않을 수 있습니다. 자세한 내용은 브라우저 개발자 도구를 확인하세요."
     s3:
       regions:
         ap_northeast_1: "아시아 태평양 (도쿄)"
@@ -1331,11 +1332,10 @@ ko:
         every_month: "매달"
         every_six_months: "6개월마다"
       email_level:
-        title: "누군가가 나를 인용하거나, 내 게시물에 댓글을 달거나, 내 @username 을 언급하거나, 글에 나를 초대 할 때 이메일을 보냅니다."
         always: "항상 알림 받기"
         only_when_away: "방문이 없을때 알림 받기"
         never: "알림 받지 않음"
-      email_messages_level: "누군가 나에게 메시지를 보내면 나에게 이메일 보내기"
+      email_messages_level: "개인 메시지를 받으면 이메일을 보내주세요"
       include_tl0_in_digests: "신규 사용자가 작성한 내용도 요약 메일에 포함시키기"
       email_in_reply_to: "이메일에 댓글 내용을 발췌해서 포함"
       other_settings: "기타"
@@ -1420,6 +1420,9 @@ ko:
           expired_at_time: "%{time}에 만료됨"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          restrict: "다음으로 제한"
+          restrict_email: "이메일로 제한"
+          restrict_domain: "도메인으로 제한"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
           expires_at: "다음 후 만료"
@@ -1823,9 +1826,6 @@ ko:
         other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a>을 언급했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
       group_mentioned:
         other: "%{group}을 언급하면, <a href='%{group_link}'>%{count}명</a>의 회원에게 알림이 전송됩니다. 그렇게 하시겠습니까?"
-      cannot_see_mention:
-        category: "%{username}에게 멘션을 썼지만, 해당 사용자가 이 카테고리에 접근할 수 없기 때문에 알림이 가지 않습니다. 이 카테고리에 접근할 수 있는 그룹에 해당 멤버가 추가되어야 합니다."
-        private: "%{username}에게 멘션을 썼지만, 해당 사용자가 개인 메시지를 볼 수 없기 때문에 알림이 가지 않습니다. 이 개인 메시지에 해당 사용자를 초대해야 합니다."
       duplicate_link: "이 글에는 이미<b>%{domain}</b>의 링크가 <b>@%{username}</b>님이 <a href='%{post_url}'>%{ago}</a>에 쓴 게시글에 포함되어 있습니다. 그래도 다시 작성하시겠습니까?"
       reference_topic_title: "RE : %{title}"
       error:
@@ -1988,6 +1988,8 @@ ko:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
       dismiss_confirmation:
+        body:
+          other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
         dismiss: "읽음"
         cancel: "취소"
       group_message_summary:
@@ -2070,6 +2072,10 @@ ko:
       in_topics_posts: "모든 글과 댓글에서"
       enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "다시 기본 브라우저 검색 사용"
+      recent: "최근 검색"
+      clear_recent: "최근 검색 지우기"
       type:
         default: "글/댓글"
         users: "사용자"
@@ -2376,19 +2382,12 @@ ko:
         replies_short: "%{current} / %{total}"
       progress:
         title: 진행 중인 주제
-        go_top: "맨 위"
-        go_bottom: "맨 아래"
-        go: "이동"
-        jump_bottom: "마지막 게시물로 이동"
         jump_prompt: "이동..."
         jump_prompt_of:
           other: "번째, %{count}개 중"
         jump_prompt_long: "이동..."
-        jump_bottom_with_number: "%{post_number}로 이동"
         jump_prompt_to_date: "현재까지"
         jump_prompt_or: "또는"
-        total: 총 게시물
-        current: 현재 글
       notifications:
         title: 이 글에 대한 알림을 받는 빈도 변경
         reasons:
@@ -2469,6 +2468,8 @@ ko:
         help: "이 글의 링크 공유"
         instructions: "이 글의 링크 공유:"
         copied: "글 링크가 복사되었습니다."
+        restricted_groups:
+          other: "그룹 구성원만 볼 수 있음: %{groupNames}"
         notify_users:
           title: "알림"
           instructions: "다음 사용자에게 이 항목에 대해 알립니다."
@@ -3061,6 +3062,9 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
+    pending_posts:
+      label: "보류중"
+      label_with_count: "보류중 (%{count})"
     original_post: "원본 글"
     views: "조회수"
     views_lowercase:
@@ -3244,6 +3248,7 @@ ko:
         title: "검색 메뉴"
         prev_next: "%{shortcut} 선택을 위아래로 이동"
         insert_url: "%{shortcut} 열린 글 작성기에 선택 영역 삽입"
+        full_page_search: "%{shortcut} 전체 페이지 검색"
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 받았습니다"
@@ -3298,15 +3303,16 @@ ko:
       choose_for_topic_required:
         other: "최소한 %{count}개의 태그를 선택해야합니다..."
       info: "정보"
-      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다. 제한을 추가하려면 이 태그를 <a href=%{basePath}/tag_groups>태그 그룹</a>에 넣으십시오."
+      default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
       synonyms: "동의어"
       synonyms_description: "다음 태그를 사용하면 <b>%{base_tag_name}</b> 으로 대체됩니다."
+      save: "태그 이름 및 설명 저장"
       tag_groups_info:
         other: "이 태그는 다음 그룹에 속합니다: %{tag_groups}."
       category_restrictions:
         other: "다음 카테고리에서만 사용할 수 있습니다:"
-      edit_synonyms: "동의어 관리"
+      edit_synonyms: "동의어 편집"
       add_synonyms_label: "동의어 추가 :"
       add_synonyms: "추가"
       add_synonyms_explanation:
@@ -3320,8 +3326,8 @@ ko:
       delete_confirm_no_topics: "정말로 이 태그를 삭제할까요?"
       delete_confirm_synonyms:
         other: "%{count}개의 동의어도 삭제됩니다."
-      rename_tag: "태그명 변경"
-      rename_instructions: "새로운 태그명을 입력하세요:"
+      edit_tag: "태그 이름 및 설명 수정"
+      description: "설명"
       sort_by: "정렬 기준:"
       sort_by_count: "개수"
       sort_by_name: "이름"
@@ -3649,8 +3655,10 @@ ko:
             범위를 사용할 때 API키를 특정 엔드 포인트 세트로 제한 할 수 있습니다.
             허용 할 매개 변수를 정의 할 수도 있습니다. 여러 값을 구분하려면 쉼표를 사용하십시오.
           title: 범위
+          granular: 세분화
           read_only: 읽기 전용
           global: 글로벌
+          global_description: API 키에는 제한이 없으며 모든 엔드포인트에 액세스할 수 있습니다.
           resource: 자원
           action: 동작
           allowed_parameters: 허용된 매개 변수
@@ -3677,6 +3685,13 @@ ko:
               list: 사용자 목록을 가져옵니다.
             email:
               receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
+            badges:
+              create: 새 배지를 만들기
+              update: 배지 업데이트
+              delete: 배지 삭제
+              list_user_badges: 사용자 배지 리스트
+              assign_badge_to_user: 사용자에게 배지를 할당합니다.
+              revoke_badge_from_user: 사용자 배지 취소
       web_hooks:
         title: "Webhook"
         none: "현재 webhook이 없습니다."
@@ -4338,9 +4353,6 @@ ko:
           title: "노출된 IP들"
           description: '감시 중인 IP 주소입니다. IP 주소를 허용하려면 "허용"을 사용하십시오.'
           delete_confirm: "%{ip_address}를 규칙에 의해 삭제할까요?"
-          roll_up_confirm: "화면에 표시되는 IP 주소를 subnet으로 바꾸시겠습니까?"
-          rolled_up_some_subnets: "다음의 subnet들의 IP 주소들을 차단하였습니다: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "블락"
             do_nothing: "허용"

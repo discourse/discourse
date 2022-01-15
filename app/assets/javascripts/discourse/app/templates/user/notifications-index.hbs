@@ -7,12 +7,10 @@
     {{/if}}
   </div>
 {{else if doesNotHaveNotifications}}
-  <div class="empty-state">
-    <span class="empty-state-title">{{i18n "user.no_notifications_page_title"}}</span>
-    <div class="empty-state-body">
-      <p>{{emptyStateBody}}</p>
-    </div>
-  </div>
+  <EmptyState
+    @title={{i18n "user.no_notifications_page_title"}}
+    @body={{emptyStateBody}}
+  />
 {{else}}
   <div class="user-notifications-filter">
     {{notifications-filter value=filter onChange=(action (mut filter))}}

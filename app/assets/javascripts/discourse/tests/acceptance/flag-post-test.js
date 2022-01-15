@@ -6,7 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { run } from "@ember/runloop";
 
@@ -29,9 +29,8 @@ function pressEnter(element, modifier) {
 acceptance("flagging", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    const userResponse = Object.assign({}, userFixtures["/u/charlie.json"]);
     server.get("/u/uwe_keim.json", () => {
-      return helper.response(userResponse);
+      return helper.response(userFixtures["/u/charlie.json"]);
     });
     server.get("/admin/users/255.json", () => {
       return helper.response({
@@ -154,7 +153,7 @@ acceptance("flagging", function (needs) {
     assert.ok(!exists(".bootbox.modal:visible"));
   });
 
-  skip("CTRL + ENTER accepts the modal", async function (assert) {
+  test("CTRL + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
@@ -170,7 +169,7 @@ acceptance("flagging", function (needs) {
     assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
   });
 
-  skip("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
+  test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 

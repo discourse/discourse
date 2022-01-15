@@ -149,6 +149,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
       expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -163,6 +164,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -219,6 +221,7 @@ describe Admin::ThemesController do
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["id"]).not_to eq(existing_theme.id)
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
   end

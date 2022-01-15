@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 describe Notification do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   before do
     NotificationEmailer.enable
   end
@@ -60,8 +63,6 @@ describe Notification do
       { user: topic.user, topic: topic }
     end
 
-    let(:coding_horror) { Fabricate(:coding_horror) }
-
     describe 'replies' do
       def process_alerts(post)
         PostAlerter.post_created(post)
@@ -89,7 +90,7 @@ describe Notification do
     describe 'watching' do
       it "does notify watching users of new posts" do
         post = PostAlerter.post_created(Fabricate(:post, post_args))
-        user2 = Fabricate(:coding_horror)
+        user2 = coding_horror
         post_args[:topic].notify_watch!(user2)
         expect {
           PostAlerter.post_created(Fabricate(:post, user: post.user, topic: post.topic))
@@ -101,7 +102,7 @@ describe Notification do
       it "does not notify users of new posts" do
         post = Fabricate(:post, post_args)
         user = post_args[:user]
-        user2 = Fabricate(:coding_horror)
+        user2 = coding_horror
 
         post_args[:topic].notify_muted!(user)
         expect {
@@ -269,8 +270,6 @@ describe Notification do
 
   describe 'saw_regular_notification_id' do
     it 'correctly updates the read state' do
-      user = Fabricate(:user)
-
       t = Fabricate(:topic)
 
       Notification.create!(read: false,
@@ -308,8 +307,6 @@ describe Notification do
 
   describe 'mark_posts_read' do
     it "marks multiple posts as read if needed" do
-      user = Fabricate(:user)
-
       (1..3).map do |i|
         Notification.create!(read: false, user_id: user.id, topic_id: 2, post_number: i, data: '{}', notification_type: 1)
       end
@@ -345,7 +342,6 @@ describe Notification do
     end
 
     it 'does not delete chat_message notifications' do
-      user = Fabricate(:user)
       Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
                            notification_type: Notification.types[:chat_mention])
 
@@ -355,39 +351,8 @@ describe Notification do
     end
   end
 
-  describe '.filter_by_consolidation_data' do
-    let(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:user) }
-
-    before do
-      PostActionNotifier.enable
-    end
-
-    it 'should return the right notifications' do
-      expect(Notification.filter_by_consolidation_data(
-        Notification.types[:liked], display_username: user.username_lower
-      )).to eq([])
-
-      expect do
-        PostAlerter.post_created(Fabricate(:basic_reply,
-          user: user,
-          topic: post.topic
-        ))
-
-        PostActionCreator.like(user, post)
-      end.to change { Notification.count }.by(2)
-
-      expect(Notification.filter_by_consolidation_data(
-        Notification.types[:liked], display_username: user.username_lower
-      )).to contain_exactly(
-        Notification.find_by(notification_type: Notification.types[:liked])
-      )
-    end
-  end
-
   describe "do not disturb" do
     it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
-      user = Fabricate(:user)
       notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
       NotificationEmailer.expects(:process_notification).with(notification)
       notification.save!
@@ -395,7 +360,6 @@ describe Notification do
 
     it "doesn't call NotificationEmailer.process_notification when user is in 'do not disturb'" do
       freeze_time
-      user = Fabricate(:user)
       Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
@@ -482,7 +446,7 @@ describe Notification do
       fab!(:post) { Fabricate(:post) }
 
       def create_membership_request_notification
-        Notification.create(
+        Notification.consolidate_or_create!(
           notification_type: Notification.types[:private_message],
           user_id: user.id,
           data: {
@@ -500,23 +464,21 @@ describe Notification do
       end
 
       it 'should consolidate membership requests to a new notification' do
-        notification = create_membership_request_notification
-        notification.reload
+        original_notification = create_membership_request_notification
+        starting_count = SiteSetting.notification_consolidation_threshold
 
-        notification = create_membership_request_notification
-        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        consolidated_notification = create_membership_request_notification
+        expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
-        notification = Notification.last
-        expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
+        expect(consolidated_notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
 
-        data = notification.data_hash
+        data = consolidated_notification.data_hash
         expect(data[:group_name]).to eq(group.name)
-        expect(data[:count]).to eq(4)
+        expect(data[:count]).to eq(starting_count + 1)
 
-        notification = create_membership_request_notification
-        expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        updated_consolidated_notification = create_membership_request_notification
 
-        expect(Notification.last.data_hash[:count]).to eq(5)
+        expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
       end
 
       it 'consolidates membership requests with "processed" false if user is in DND' do

@@ -548,6 +548,18 @@ id:
       labels:
         user: Pengguna
         location: Lokasi
+    top_users_by_likes_received:
+      labels:
+        user: Pengguna
+        qtt_like: Likes Diterima
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Pengguna
+        qtt_like: Likes Diterima
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Pengguna
+        qtt_like: Likes Diterima
   dashboard:
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."

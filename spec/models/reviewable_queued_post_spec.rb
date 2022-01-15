@@ -196,4 +196,36 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(Post.count).to eq(post_count)
     end
   end
+
+  describe "Callbacks" do
+    context "when creating a new pending reviewable" do
+      let(:reviewable) { Fabricate.build(:reviewable_queued_post_topic, category: category, created_by: user) }
+      let(:user) { Fabricate(:user) }
+      let(:user_stats) { user.user_stat }
+
+      it "updates user stats" do
+        user_stats.expects(:update_pending_posts)
+        reviewable.save!
+      end
+    end
+
+    context "when updating an existing reviewable" do
+      let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
+      let(:user_stats) { reviewable.created_by.user_stat }
+
+      context "when status changes from 'pending' to something else" do
+        it "updates user stats" do
+          user_stats.expects(:update_pending_posts)
+          reviewable.update!(status: described_class.statuses[:approved])
+        end
+      end
+
+      context "when status doesn’t change" do
+        it "doesn’t update user stats" do
+          user_stats.expects(:update_pending_posts).never
+          reviewable.update!(score: 10)
+        end
+      end
+    end
+  end
 end

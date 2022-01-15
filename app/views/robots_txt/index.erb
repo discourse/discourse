@@ -5,9 +5,6 @@
 #
 <% @robots_info[:agents].each do |agent| %>
 User-agent: <%= agent[:name] %>
-<%- if agent[:delay] -%>
-Crawl-delay: <%= agent[:delay] %>
-<%- end -%>
 <% agent[:disallow].each do |path| %>
 Disallow: <%= path %>
 <% end %>

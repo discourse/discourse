@@ -1,4 +1,4 @@
-{{#d-section pageClass="user-activity" class="user-secondary-navigation" scrollTop="false"}}
+{{#d-section pageClass="user-activity" class="user-secondary-navigation" scrollTop=false}}
   <nav role="navigation">
     {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked"}}
       {{#d-navigation-item route="userActivity.index"}}{{i18n "user.filters.all"}}{{/d-navigation-item}}
@@ -17,6 +17,12 @@
         {{/d-navigation-item}}
       {{/if}}
 
+      {{#if (gt model.pending_posts_count 0)}}
+        {{#d-navigation-item route="userActivity.pending"}}
+          {{pendingLabel}}
+        {{/d-navigation-item}}
+      {{/if}}
+
       {{#d-navigation-item route="userActivity.likesGiven"}}{{i18n "user_action_groups.1"}}{{/d-navigation-item}}
 
       {{#if user.showBookmarks}}
@@ -24,7 +30,7 @@
       {{/if}}
 
       {{plugin-outlet
-        name="user-activity-bottom"
+        name="user-activity-bottom" tagName="span"
         connectorTagName="li"
         args=(hash model=model)
       }}

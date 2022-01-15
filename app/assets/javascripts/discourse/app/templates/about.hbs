@@ -21,7 +21,6 @@
 
       {{plugin-outlet name="about-after-description"
               connectorTagName="section"
-              tagName=""
               args=(hash model=model)}}
 
       {{#if model.admins}}
@@ -35,6 +34,7 @@
       {{/if}}
 
       {{plugin-outlet name="about-after-admins"
+                    tagName="span"
                     connectorTagName="section"
                     args=(hash model=model)}}
 
@@ -50,6 +50,7 @@
       {{/if}}
 
       {{plugin-outlet name="about-after-moderators"
+                    tagName="span"
                     connectorTagName="section"
                     args=(hash model=model)}}
 

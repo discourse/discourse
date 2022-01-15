@@ -23,6 +23,10 @@ export function startPageTracking(router, appEvents, documentTitle) {
     return;
   }
   router.on("routeDidChange", (transition) => {
+    if (transition.isAborted) {
+      return;
+    }
+
     // we occasionally prevent tracking of replaced pages when only query params changed
     // eg: google analytics
     const replacedOnlyQueryParams =

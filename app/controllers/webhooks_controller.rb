@@ -13,7 +13,7 @@ class WebhooksController < ActionController::Base
   def sendgrid
     events = params["_json"] || [params]
     events.each do |event|
-      message_id = Email.message_id_clean((event["smtp-id"] || ""))
+      message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
       to_address = event["email"]
       if event["event"] == "bounce"
         if event["status"]["4."]
@@ -150,7 +150,7 @@ class WebhooksController < ActionController::Base
     return mailgun_failure unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
 
     event = params["event"]
-    message_id = Email.message_id_clean(params["Message-Id"])
+    message_id = Email::MessageIdService.message_id_clean(params["Message-Id"])
     to_address = params["recipient"]
 
     # only handle soft bounces, because hard bounces are also handled

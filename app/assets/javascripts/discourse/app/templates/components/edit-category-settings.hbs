@@ -27,7 +27,7 @@
   </section>
 
   <section class="field search-priority">
-    <label for="category-search-priority">
+    <label>
       {{i18n "category.search_priority.label"}}
     </label>
     <div class="controls">
@@ -90,9 +90,7 @@
   <h3>{{i18n "category.settings_sections.moderation"}}</h3>
   {{#if siteSettings.enable_category_group_moderation}}
     <section class="field reviewable-by-group">
-      <label for="reviewable-by-group">
-        {{i18n "category.reviewable_by_group"}}
-      </label>
+      <label>{{i18n "category.reviewable_by_group"}}</label>
       {{group-selector
         groupFinder=groupFinder
         single="true"
@@ -171,7 +169,7 @@
   <h3>{{i18n "category.settings_sections.appearance"}}</h3>
 
   <section class="field default-view-field">
-    <label for="category-default-view">
+    <label>
       {{i18n "category.default_view"}}
     </label>
     <div class="controls">
@@ -188,7 +186,7 @@
   </section>
 
   <section class="field default-top-period-field">
-    <label for="category-default-period">
+    <label>
       {{i18n "category.default_top_period"}}
     </label>
     <div class="controls">
@@ -205,7 +203,7 @@
   </section>
 
   <section class="field sort-order">
-    <label for="category-sort-order">
+    <label>
       {{i18n "category.sort_order"}}
     </label>
     <div class="controls">
@@ -234,7 +232,7 @@
   </section>
 
   <section class="field default-filter">
-    <label for="category-default-filter">
+    <label>
       {{i18n "category.default_list_filter"}}
     </label>
     <div class="controls">
@@ -258,7 +256,7 @@
 
   {{#if showSubcategoryListStyle}}
     <section class="field subcategory-list-style-field">
-      <label for="subcategory-list-style">
+      <label>
         {{i18n "category.subcategory_list_style"}}
       </label>
       {{combo-box
@@ -274,9 +272,7 @@
   {{/if}}
 
   <section class="field category-read-only-banner">
-    <label for="category-read-only-banner">
-      {{i18n "category.read_only_banner"}}
-    </label>
+    <label for="read-only-message">{{i18n "category.read_only_banner"}}</label>
     {{text-field
         valueProperty="value"
         id="read-only-message"
@@ -314,7 +310,7 @@
       </label>
     </section>
 
-    {{plugin-outlet name="category-email-in" args=(hash category=category)}}
+    {{plugin-outlet name="category-email-in" tagName="span" connectorTagName="div" args=(hash category=category)}}
   {{/if}}
 
   {{#unless emailInEnabled}}
@@ -325,4 +321,4 @@
   {{/unless}}
 </section>
 
-{{plugin-outlet name="category-custom-settings" args=(hash category=category) connectorTagName="" tagName="section"}}
+{{plugin-outlet name="category-custom-settings" args=(hash category=category) tagName="section"}}

@@ -394,8 +394,8 @@
 .email-login,
 .invites-show {
   .col-form {
-    padding-left: 20px;
-    width: 400px;
+    padding: 0.5em 2em 1em;
+    max-width: 30em;
   }
   .col-image {
     width: 175px;
@@ -403,12 +403,19 @@
       width: 100%;
     }
   }
+  details {
+    width: 100%;
+  }
   h2 {
     margin-bottom: 12px;
   }
   input:not([type="checkbox"]) {
     // 80% width on checkboxes messes up the layout for custom fields
     width: 80%;
+  }
+  .invite-form,
+  .invite-success {
+    box-shadow: shadow("card");
   }
 }
 

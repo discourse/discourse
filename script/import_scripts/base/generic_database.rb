@@ -6,7 +6,7 @@ module ImportScripts
   class GenericDatabase
     def initialize(directory, batch_size:, recreate: false, numeric_keys: false)
       filename = "#{directory}/index.db"
-      File.delete(filename) if recreate && File.exists?(filename)
+      File.delete(filename) if recreate && File.exist?(filename)
 
       @db = SQLite3::Database.new(filename, results_as_hash: true)
       @batch_size = batch_size

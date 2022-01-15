@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class StaticController < ApplicationController
-
   skip_before_action :check_xhr, :redirect_to_login_if_required
   skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
   skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
@@ -11,24 +10,26 @@ class StaticController < ApplicationController
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
   MODAL_PAGES = ['password_reset', 'signup']
+  DEFAULT_PAGES = {
+    "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
+    "tos" => { redirect: "tos_url", topic_id: "tos_topic_id" },
+    "privacy" => { redirect: "privacy_policy_url", topic_id: "privacy_topic_id" },
+  }
+  CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
+
     if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines'].include?(params[:id])
       return redirect_to path('/login')
     end
 
-    map = {
-      "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
-      "tos" => { redirect: "tos_url", topic_id: "tos_topic_id" },
-      "privacy" => { redirect: "privacy_policy_url", topic_id: "privacy_topic_id" }
-    }
-
+    map = DEFAULT_PAGES.deep_merge(CUSTOM_PAGES)
     @page = params[:id]
 
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
-      url = SiteSetting.get(site_setting_key)
+      url = SiteSetting.get(site_setting_key) if site_setting_key
       return redirect_to(url) if url.present?
     end
 
@@ -39,8 +40,12 @@ class StaticController < ApplicationController
     @page = @page.gsub(/[^a-z0-9\_\-]/, '')
 
     if map.has_key?(@page)
-      @topic = Topic.find_by_id(SiteSetting.get(map[@page][:topic_id]))
+      topic_id = map[@page][:topic_id]
+      topic_id = instance_exec(&topic_id) if topic_id.is_a?(Proc)
+
+      @topic = Topic.find_by_id(SiteSetting.get(topic_id))
       raise Discourse::NotFound unless @topic
+
       title_prefix = if I18n.exists?("js.#{@page}")
         I18n.t("js.#{@page}")
       else
@@ -48,17 +53,16 @@ class StaticController < ApplicationController
       end
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
-      @faq_overriden = !SiteSetting.faq_url.blank?
+      @faq_overridden = !SiteSetting.faq_url.blank?
+
       render :show, layout: !request.xhr?, formats: [:html]
       return
     end
 
-    unless @title.present?
-      @title = if SiteSetting.short_site_description.present?
-        "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
-      else
-        SiteSetting.title
-      end
+    @title = SiteSetting.title.dup
+
+    if SiteSetting.short_site_description.present?
+      @title << " - #{SiteSetting.short_site_description}"
     end
 
     if I18n.exists?("static.#{@page}")

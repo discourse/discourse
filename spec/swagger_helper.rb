@@ -74,6 +74,18 @@ def api_docs_description
   HEREDOC
 end
 
+def direct_uploads_disclaimer
+  <<~HEREDOC
+    You must have the correct permissions and CORS settings configured in your
+    external provider. We support AWS S3 as the default. See:
+
+    https://meta.discourse.org/t/-/210469#s3-multipart-direct-uploads-4.
+
+    An external file store must be set up and `enable_direct_s3_uploads` must
+    be set to true for this endpoint to function.
+  HEREDOC
+end
+
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need

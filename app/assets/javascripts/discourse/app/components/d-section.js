@@ -1,24 +1,35 @@
+import deprecated from "discourse-common/lib/deprecated";
 import Component from "@ember/component";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
 // Can add a body class from within a component, also will scroll to the top automatically.
 export default Component.extend({
-  tagName: "section",
+  tagName: null,
+  pageClass: null,
+  bodyClass: null,
+  scrollTop: true,
 
   didInsertElement() {
     this._super(...arguments);
 
-    const pageClass = this.pageClass;
-    if (pageClass) {
-      $("body").addClass(`${pageClass}-page`);
+    if (this.pageClass) {
+      document.body.classList.add(`${this.pageClass}-page`);
     }
 
-    const bodyClass = this.bodyClass;
-    if (bodyClass) {
-      $("body").addClass(bodyClass);
+    if (this.bodyClass) {
+      document.body.classList.add(...this.bodyClass.split(" "));
     }
 
     if (this.scrollTop === "false") {
+      deprecated("Uses boolean instead of string for scrollTop.", {
+        since: "2.8.0.beta9",
+        dropFrom: "2.9.0.beta1",
+      });
+
+      return;
+    }
+
+    if (!this.scrollTop) {
       return;
     }
 
@@ -27,14 +38,13 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    const pageClass = this.pageClass;
-    if (pageClass) {
-      $("body").removeClass(`${pageClass}-page`);
+
+    if (this.pageClass) {
+      document.body.classList.remove(`${this.pageClass}-page`);
     }
 
-    const bodyClass = this.bodyClass;
-    if (bodyClass) {
-      $("body").removeClass(bodyClass);
+    if (this.bodyClass) {
+      document.body.classList.remove(...this.bodyClass.split(" "));
     }
   },
 });

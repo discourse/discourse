@@ -613,10 +613,6 @@ el:
       title: "Σας αρέσει"
       description: "Μου αρέσει η ανάρτηση"
       short_description: "Μου αρέσει η ανάρτηση"
-  user_activity:
-    no_bookmarks:
-      self: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
-      others: "Κανένας σελιδοδείκτης."
   topic_flag_types:
     spam:
       title: "Ανεπιθύμητα"
@@ -887,6 +883,18 @@ el:
     top_uploads:
       labels:
         filename: Όνομα αρχείου
+    top_users_by_likes_received:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
   dashboard:
     rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
     host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
@@ -994,7 +1002,6 @@ el:
     enable_whispers: "Επιτρέπεται στο προσωπικό η ιδιωτική επικοινωνία μεταξύ νημάτων"
     blocked_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες δεν μπορούν να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. Πχ: mailinator.com|trashmail.net"
     allowed_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες ΘΑ ΠΡΕΠΕΙ να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. ΠΡΟΣΟΧΗ: οι χρήστες με διευθύνσεις email οι οποίες δεν βρίσκονται σε αυτή τη λίστα δεν θα μπορούν να δημιουργήσουν λογαριασμό."
-    hide_email_address_taken: "Μην ενημερώνεις του χρήστες ότι υπάρχει λογαριασμός χρήστη με αυτήν την διεύθυνση email κατά την εγγραφή και στην φόρμα επαναφοράς κωδικού."
     log_out_strict: "Όταν αποσυνδεθείτε, ΟΛΕΣ οι δραστηριότητες σας σε ΟΛΕΣ τις συσκευές θα αποσυνδεθούν"
     new_version_emails: "Αποστολή email στην contact_email διεύθυνση όταν μια νέα έκδοση του Discourse είναι διαθέσιμη."
     invite_expiry_days: "Για πόσο καιρό οι κύριες προσκλήσεις ισχύουν, σε μέρες "

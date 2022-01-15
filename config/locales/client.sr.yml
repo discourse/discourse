@@ -130,6 +130,8 @@ sr:
       previous_month: "Prethodni mesec"
       next_month: "Sledeći mesec"
       placeholder: datum
+      from_placeholder: "од датума"
+      to_placeholder: "до датума"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "poruka #%{postNumber}"
@@ -829,7 +831,6 @@ sr:
       email_level:
         always: "uvek"
         never: "nikada"
-      email_messages_level: "Pošalji mi email kada mi neko pošalje poruku"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
       new_topic_duration:
@@ -1276,13 +1277,7 @@ sr:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredak teme
-        go_top: "vrh"
-        go_bottom: "dno"
-        go: "idi"
-        jump_bottom_with_number: "skoči na poruku %{post_number}"
         jump_prompt_or: "ili"
-        total: ukupno poruka
-        current: trenutna poruka
       notifications:
         reasons:
           "3_6": "Primaćete obaveštenja jer posmatrate ovu kategoriju."
@@ -1604,6 +1599,8 @@ sr:
       unlisted:
         help: "Ova tema je ne-listovana; neće se prikazivati na listi tema i može joj se pristupiti samo preko direktnog linka."
     posts: "Poruke"
+    pending_posts:
+      label: "U toku"
     original_post: "Originalna Poruka"
     views: "Pregledi"
     replies: "Odgovori"
@@ -1760,6 +1757,7 @@ sr:
       download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
+      description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       cancel_delete_unused: "Odustani"
@@ -2130,9 +2128,6 @@ sr:
         screened_ips:
           title: "Provereni IP-ovi"
           delete_confirm: "Jeste li sigruni da želite ukloniti pravilo za %{ip_address}?"
-          roll_up_confirm: "Jeste li sigurni da želite zaokružiti često proveraavnje IP adrese u pod-mreže?"
-          rolled_up_some_subnets: "Uspešno zaokruženi zabranjeni IP unosi u ove pod-mreže: %{subnets}."
-          rolled_up_no_subnet: "Nema ničega za zaokružiti."
           actions:
             block: "Blokiraj"
             do_nothing: "Dozvoli"

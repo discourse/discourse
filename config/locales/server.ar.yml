@@ -16,6 +16,7 @@ ar:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y، %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -257,8 +258,6 @@ ar:
       <p>إذا كنت تتذكر كلمة مرورك، يمكنك <a href="%{base_url}/login">تسجيل الدخول</a>.</p>
 
       <p>بخلاف ذلك، يُرجى <a href="%{base_url}/password-reset">إعادة ضبط كلمة المرور</a>.</p>
-    not_found_template_link: |
-      <p> لم يعُد من الممكن استرداد الدعوة الموجهة إلى <a href="%{base_url}">%{site_name}</a>. يُرجى مطالبة الشخص الذي أرسل إليك الدعوة بإرسال دعوة جديدة.</p>
     user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، <a href='%{base_path}/u/%{username}/summary'>فلديه حساب بالفعل!</a>"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."
     invalid_email: "%{email} ليس عنوان بريد إلكتروني صالحًا."
@@ -1085,13 +1084,6 @@ ar:
   draft_backup:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
-  user_activity:
-    no_bookmarks:
-      self: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
-      search: "لم يتم العثور على إشارات مرجعية تطابق استعلام البحث المقدَّم."
-      others: "لا توجد إشارات مرجعية."
-    no_drafts:
-      self: "ليس لديك أي مسودات. ابدأ في كتابة رد في أي موضوع وسيتم حفظه تلقائيًا كمسودة جديدة."
   email_settings:
     pop3_authentication_error: "حدثت مشكلة في بيانات اعتماد POP3 المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_authentication_error: "حدثت مشكلة في بيانات اعتماد IMAP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
@@ -1530,6 +1522,18 @@ ar:
         ignores_count: عدد التجاهلات
         mutes_count: عدد مرات الكتم
       description: "المستخدمون الذين تم كتمهم أو تجاهلهم بواسطة العديد من المستخدمين الآخرين"
+    top_users_by_likes_received:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: المستخدم
+        qtt_like: الإعجابات المتلقاة
   dashboard:
     rails_env_warning: "الخادم يعمل في وضع %{env}."
     host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
@@ -1711,7 +1715,6 @@ ar:
     allowed_iframes: "قائمة بادئات نطاقات iframe src التي يمكن أن يسمح بها Discourse بأمان في المنشورات"
     allowed_crawler_user_agents: "وكلاء المستخدمين لزاحفات الويب التي يجب السماح لها بالوصول إلى الموقع. تحذير! سيؤدي ضبط هذا الإعداد إلى عدم السماح بجميع الزاحفات غير المُدرَجة هنا!"
     blocked_crawler_user_agents: "الكلمة الفريدة غير حساسة لحالة الأحرف في سلسلة وكيل المستخدم والتي تحدِّد زاحفات الويب التي لا ينبغي السماح لها بالوصول إلى الموقع. لا تنطبق إذا تم تعريف قائمة السماح."
-    slow_down_crawler_user_agents: "وكلاء المستخدمين لزاحفات الويب التي يجب أن يكون معدَّلها محدودًا في ملف robots.txt باستخدام توجيه تأخير الزحف"
     slow_down_crawler_rate: "إذا تم تحديد slow_down_crawler_user_agents، فسيتم تطبيق هذا المعدَّل على جميع الزاحفات (عدد ثواني التأخير بين الطلبات)"
     content_security_policy: "تفعيل Content-Security-Policy"
     content_security_policy_report_only: "تفعيل Content-Security-Policy-Report-Only"
@@ -1749,7 +1752,6 @@ ar:
     blocked_email_domains: "قائمة مفصولة بشرائط عمودية لنطاقات البريد الإلكتروني التي لا يتم السماح للمستخدمين بتسجيل حسابات عليها. مثال: mailinator.com|trashmail.net"
     allowed_email_domains: "قائمة مفصولة بشرائط عمودية لنطاقات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات عليها. تحذير: لن يتم السماح بالمستخدمين المسجَّلين على نطاقات بريد إلكتروني أخرى بخلاف المذكورة هنا!"
     auto_approve_email_domains: "ستتم الموافقة تلقائيًا على المستخدمين الذين لديهم عناوين بريد إلكتروني من قائمة النطاقات هذه."
-    hide_email_address_taken: "لا تُخبر المستخدمين بوجود حساب بعنوان البريد الإلكتروني نفسه في أثناء الاشتراك وفي نموذج نسيان كلمة المرور."
     log_out_strict: "تسجيل خروج المستخدم من جميع الجلسات على جميع الأجهزة عند تسجيل الخروج"
     version_checks: "فحص Discourse Hub للحصول على تحديثات الإصدار وإظهار رسائل الإصدار الجديد على <a href='%{base_path}/admin' target='_blank'>/admin</a> لوحة المعلومات"
     new_version_emails: "إرسال رسالة إلكترونية إلى عنوان contact_email عند توفُّر إصدار جديد من Discourse"
@@ -2616,21 +2618,6 @@ ar:
       few: "لدى المستخدم %{username} %{count} منشورات في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
       many: "لدى المستخدم %{username} %{count} منشورًا في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
       other: "لدى المستخدم %{username} %{count} منشور في الموضوعات العامة أو الرسائل الخاصة؛ لذا لا يمكن حذفه."
-  reviewables_reminder:
-    submitted:
-      zero: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-      one: "تم إرسال العناصر قبل ساعة واحدة (%{count}). [يُرجى مراجعتها](%{base_path}/review)."
-      two: "تم إرسال العناصر قبل ساعتَين (%{count}). [يُرجى مراجعتها](%{base_path}/review)."
-      few: "تم إرسال العناصر قبل %{count} ساعات. [يُرجى مراجعتها](%{base_path}/review)."
-      many: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-      other: "تم إرسال العناصر قبل %{count} ساعة. [يُرجى مراجعتها](%{base_path}/review)."
-    subject_template:
-      zero: "يجب مراجعة %{count} عنصر"
-      one: "يجب مراجعة عنصر واحد (%{count})"
-      two: "يجب مراجعة عنصرَين (%{count})"
-      few: "يجب مراجعة %{count} عناصر"
-      many: "يجب مراجعة %{count} عنصرًا"
-      other: "يجب مراجعة %{count} عنصر"
   unsubscribe_mailer:
     title: "رسالة إلغاء الاشتراك"
     subject_template: "التأكيد أنك لم تعُد تريد تلقي تحديثات البريد الإلكتروني من %{site_title}"

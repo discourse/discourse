@@ -2,13 +2,14 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import { get } from "@ember/object";
+import { action, get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
+import { isTesting } from "discourse-common/config/environment";
 
-const SCROLL_DELAY = 500;
+const SCROLL_DELAY = isTesting() ? 0 : 500;
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
@@ -60,185 +61,198 @@ const TopicRoute = DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    showInvite() {
-      let invitePanelTitle;
+  @action
+  showInvite() {
+    let invitePanelTitle;
 
-      if (this.isPM) {
-        invitePanelTitle = "topic.invite_private.title";
-      } else if (this.invitingToTopic) {
-        invitePanelTitle = "topic.invite_reply.title";
-      } else {
-        invitePanelTitle = "user.invited.create";
-      }
+    if (this.isPM) {
+      invitePanelTitle = "topic.invite_private.title";
+    } else if (this.invitingToTopic) {
+      invitePanelTitle = "topic.invite_reply.title";
+    } else {
+      invitePanelTitle = "user.invited.create";
+    }
 
-      showModal("share-and-invite", {
-        modalClass: "share-and-invite",
-        panels: [
-          {
-            id: "invite",
-            title: invitePanelTitle,
-            model: {
-              inviteModel: this.modelFor("topic"),
-            },
+    showModal("share-and-invite", {
+      modalClass: "share-and-invite",
+      panels: [
+        {
+          id: "invite",
+          title: invitePanelTitle,
+          model: {
+            inviteModel: this.modelFor("topic"),
           },
-        ],
-      });
-    },
+        },
+      ],
+    });
+  },
 
-    showFlags(model) {
-      let controller = showModal("flag", { model });
-      controller.setProperties({ flagTopic: false });
-    },
+  @action
+  showFlags(model) {
+    let controller = showModal("flag", { model });
+    controller.setProperties({ flagTopic: false });
+  },
 
-    showFlagTopic() {
-      const model = this.modelFor("topic");
-      let controller = showModal("flag", { model });
-      controller.setProperties({ flagTopic: true });
-    },
+  @action
+  showFlagTopic() {
+    const model = this.modelFor("topic");
+    let controller = showModal("flag", { model });
+    controller.setProperties({ flagTopic: true });
+  },
 
-    showPagePublish() {
-      const model = this.modelFor("topic");
-      showModal("publish-page", {
-        model,
-        title: "topic.publish_page.title",
-      });
-    },
+  @action
+  showPagePublish() {
+    const model = this.modelFor("topic");
+    showModal("publish-page", {
+      model,
+      title: "topic.publish_page.title",
+    });
+  },
 
-    showTopicTimerModal() {
-      const model = this.modelFor("topic");
+  @action
+  showTopicTimerModal() {
+    const model = this.modelFor("topic");
 
-      const topicTimer = model.get("topic_timer");
-      if (!topicTimer) {
-        model.set("topic_timer", {});
+    const topicTimer = model.get("topic_timer");
+    if (!topicTimer) {
+      model.set("topic_timer", {});
+    }
+
+    showModal("edit-topic-timer", { model });
+    this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
+  },
+
+  @action
+  showTopicSlowModeUpdate() {
+    const model = this.modelFor("topic");
+
+    showModal("edit-slow-mode", { model });
+  },
+
+  @action
+  showChangeTimestamp() {
+    showModal("change-timestamp", {
+      model: this.modelFor("topic"),
+      title: "topic.change_timestamp.title",
+    });
+  },
+
+  @action
+  showFeatureTopic() {
+    showModal("featureTopic", {
+      model: this.modelFor("topic"),
+      title: "topic.feature_topic.title",
+    });
+    this.controllerFor("modal").set("modalClass", "feature-topic-modal");
+    this.controllerFor("feature_topic").reset();
+  },
+
+  @action
+  showHistory(model, revision) {
+    let historyController = showModal("history", {
+      model,
+      modalClass: "history-modal",
+    });
+    historyController.refresh(model.get("id"), revision || "latest");
+    historyController.set("post", model);
+    historyController.set("topicController", this.controllerFor("topic"));
+  },
+
+  @action
+  showGrantBadgeModal() {
+    showModal("grant-badge", {
+      model: this.modelFor("topic"),
+      title: "admin.badges.grant_badge",
+    });
+  },
+
+  @action
+  showRawEmail(model) {
+    showModal("raw-email", { model });
+    this.controllerFor("raw_email").loadRawEmail(model.get("id"));
+  },
+
+  @action
+  moveToTopic() {
+    showModal("move-to-topic", {
+      model: this.modelFor("topic"),
+      title: "topic.move_to.title",
+    });
+  },
+
+  @action
+  changeOwner() {
+    showModal("change-owner", {
+      model: this.modelFor("topic"),
+      title: "topic.change_owner.title",
+    });
+  },
+
+  // Use replaceState to update the URL once it changes
+  @action
+  postChangedRoute(currentPost) {
+    // do nothing if we are transitioning to another route
+    if (this.isTransitioning || TopicRoute.disableReplaceState) {
+      return;
+    }
+
+    const topic = this.modelFor("topic");
+    if (topic && currentPost) {
+      let postUrl;
+      if (currentPost > 1) {
+        postUrl = topic.urlForPostNumber(currentPost);
+      } else {
+        postUrl = topic.url;
       }
 
-      showModal("edit-topic-timer", { model });
-      this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
-    },
+      if (this._router.currentRoute.queryParams) {
+        let searchParams;
 
-    showTopicSlowModeUpdate() {
-      const model = this.modelFor("topic");
-
-      showModal("edit-slow-mode", { model });
-    },
-
-    showChangeTimestamp() {
-      showModal("change-timestamp", {
-        model: this.modelFor("topic"),
-        title: "topic.change_timestamp.title",
-      });
-    },
-
-    showFeatureTopic() {
-      showModal("featureTopic", {
-        model: this.modelFor("topic"),
-        title: "topic.feature_topic.title",
-      });
-      this.controllerFor("modal").set("modalClass", "feature-topic-modal");
-      this.controllerFor("feature_topic").reset();
-    },
-
-    showHistory(model, revision) {
-      let historyController = showModal("history", {
-        model,
-        modalClass: "history-modal",
-      });
-      historyController.refresh(model.get("id"), revision || "latest");
-      historyController.set("post", model);
-      historyController.set("topicController", this.controllerFor("topic"));
-    },
-
-    showGrantBadgeModal() {
-      showModal("grant-badge", {
-        model: this.modelFor("topic"),
-        title: "admin.badges.grant_badge",
-      });
-    },
-
-    showRawEmail(model) {
-      showModal("raw-email", { model });
-      this.controllerFor("raw_email").loadRawEmail(model.get("id"));
-    },
-
-    moveToTopic() {
-      showModal("move-to-topic", {
-        model: this.modelFor("topic"),
-        title: "topic.move_to.title",
-      });
-    },
-
-    changeOwner() {
-      showModal("change-owner", {
-        model: this.modelFor("topic"),
-        title: "topic.change_owner.title",
-      });
-    },
-
-    // Use replaceState to update the URL once it changes
-    postChangedRoute(currentPost) {
-      // do nothing if we are transitioning to another route
-      if (this.isTransitioning || TopicRoute.disableReplaceState) {
-        return;
-      }
-
-      const topic = this.modelFor("topic");
-
-      if (topic && currentPost) {
-        let postUrl;
-
-        if (currentPost > 1) {
-          postUrl = topic.urlForPostNumber(currentPost);
-        } else {
-          postUrl = topic.url;
-        }
-
-        if (this._router.currentRoute.queryParams) {
-          let searchParams;
-
-          Object.entries(this._router.currentRoute.queryParams).map(
-            ([key, value]) => {
-              if (!searchParams) {
-                searchParams = new URLSearchParams();
-              }
-
-              searchParams.append(key, value);
+        Object.entries(this._router.currentRoute.queryParams).map(
+          ([key, value]) => {
+            if (!searchParams) {
+              searchParams = new URLSearchParams();
             }
-          );
 
-          if (searchParams) {
-            postUrl += `?${searchParams.toString()}`;
+            searchParams.append(key, value);
           }
+        );
+
+        if (searchParams) {
+          postUrl += `?${searchParams.toString()}`;
         }
-
-        cancel(this.scheduledReplace);
-
-        this.setProperties({
-          lastScrollPos: parseInt($(document).scrollTop(), 10),
-          scheduledReplace: later(
-            this,
-            "_replaceUnlessScrolling",
-            postUrl,
-            Ember.Test ? 0 : SCROLL_DELAY
-          ),
-        });
       }
-    },
 
-    didTransition() {
-      const controller = this.controllerFor("topic");
-      controller._showFooter();
-      const topicId = controller.get("model.id");
-      setTopicId(topicId);
-      return true;
-    },
-
-    willTransition() {
-      this._super(...arguments);
       cancel(this.scheduledReplace);
-      this.set("isTransitioning", true);
-      return true;
-    },
+
+      this.setProperties({
+        lastScrollPos: parseInt($(document).scrollTop(), 10),
+        scheduledReplace: later(
+          this,
+          "_replaceUnlessScrolling",
+          postUrl,
+          SCROLL_DELAY
+        ),
+      });
+    }
+  },
+
+  @action
+  didTransition() {
+    const controller = this.controllerFor("topic");
+    controller._showFooter();
+    const topicId = controller.get("model.id");
+    setTopicId(topicId);
+    return true;
+  },
+
+  @action
+  willTransition(transition) {
+    this._super(...arguments);
+    cancel(this.scheduledReplace);
+    this.set("isTransitioning", true);
+    transition.catch(() => this.set("isTransitioning", false));
+    return true;
   },
 
   // replaceState can be very slow on Android Chrome. This function debounces replaceState

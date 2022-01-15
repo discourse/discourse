@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -118,23 +119,9 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
-  class EmberCLIHijacked < StandardError; end
-
-  def catch_ember_cli_hijack
-    yield
-  rescue ActionView::Template::Error => ex
-    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
-    send_ember_cli_bootstrap
-  end
 
   rescue_from RenderEmpty do
-    catch_ember_cli_hijack do
-      with_resolved_locale { render 'default/empty' }
-    end
-  end
-
-  rescue_from EmberCLIHijacked do
-    send_ember_cli_bootstrap
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
@@ -323,19 +310,11 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      catch_ember_cli_hijack do
-        with_resolved_locale do
-          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-          render html: build_not_found_page(error_page_opts)
-        end
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
       end
     end
-  end
-
-  def send_ember_cli_bootstrap
-    response.headers['X-Discourse-Bootstrap-Required'] = true
-    response.headers['Content-Type'] = "application/json"
-    render json: { preloaded: @preloaded }
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
@@ -840,7 +819,11 @@ class ApplicationController < ActionController::Base
 
     if !current_user && SiteSetting.login_required?
       flash.keep
-      redirect_to_login
+      if (request.format && request.format.json?) || request.xhr? || !request.get?
+        ensure_logged_in
+      else
+        redirect_to_login
+      end
       return
     end
 
@@ -957,5 +940,28 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  def rate_limit_crawlers
+    return if current_user.present?
+    return if SiteSetting.slow_down_crawler_user_agents.blank?
+
+    user_agent = request.user_agent&.downcase
+    return if user_agent.blank?
+
+    SiteSetting.slow_down_crawler_user_agents.downcase.split("|").each do |crawler|
+      if user_agent.include?(crawler)
+        key = "#{crawler}_crawler_rate_limit"
+        limiter = RateLimiter.new(
+          nil,
+          key,
+          1,
+          SiteSetting.slow_down_crawler_rate,
+          error_code: key
+        )
+        limiter.performed!
+        break
+      end
+    end
   end
 end

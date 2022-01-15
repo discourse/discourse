@@ -480,9 +480,6 @@ sw:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-  user_activity:
-    no_bookmarks:
-      others: "Hakuna mialamisho."
   topic_flag_types:
     spam:
       title: "Barua Taka"
@@ -745,6 +742,18 @@ sw:
     top_uploads:
       labels:
         filename: Jina la faili
+    top_users_by_likes_received:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."

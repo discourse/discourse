@@ -107,7 +107,7 @@ class Stylesheet::Manager
 
   def self.last_file_updated
     if Rails.env.production?
-      @last_file_updated ||= if File.exists?(MANIFEST_FULL_PATH)
+      @last_file_updated ||= if File.exist?(MANIFEST_FULL_PATH)
         File.readlines(MANIFEST_FULL_PATH, 'r')[0]
       else
         mtime = max_file_mtime
@@ -195,7 +195,7 @@ class Stylesheet::Manager
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
       theme_name = stylesheet[:theme_name]
-      data_theme_name = theme_name ? "data-theme-name=\"#{theme_name}\"" : ""
+      data_theme_name = theme_name ? "data-theme-name=\"#{CGI.escapeHTML(theme_name)}\"" : ""
       %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
     end.join("\n").html_safe
   end
@@ -224,7 +224,7 @@ class Stylesheet::Manager
           builder = Builder.new(target: target, theme: theme, manager: self)
 
           next if builder.theme&.component && !scss_checker.has_scss(theme_id)
-          builder.compile unless File.exists?(builder.stylesheet_fullpath)
+          builder.compile unless File.exist?(builder.stylesheet_fullpath)
           href = builder.stylesheet_path(current_hostname)
 
           data[:new_href] = href
@@ -242,7 +242,7 @@ class Stylesheet::Manager
         end
       else
         builder = Builder.new(target: target, manager: self)
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
+        builder.compile unless File.exist?(builder.stylesheet_fullpath)
         href = builder.stylesheet_path(current_hostname)
 
         data = { target: target, new_href: href }
@@ -285,7 +285,7 @@ class Stylesheet::Manager
       manager: self
     )
 
-    builder.compile unless File.exists?(builder.stylesheet_fullpath)
+    builder.compile unless File.exist?(builder.stylesheet_fullpath)
 
     href = builder.stylesheet_path(current_hostname)
     stylesheet[:new_href] = href

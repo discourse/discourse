@@ -7,6 +7,7 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -172,7 +173,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    dockCheck(info) {
+    dockCheck() {
       const header = document.querySelector("header.d-header");
 
       if (this.docAt === null) {
@@ -182,18 +183,20 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const offset = info.offset();
-      const headerRect = header.getBoundingClientRect(),
-        headerOffset = headerRect.top + headerRect.height,
-        doc = document.documentElement;
+      const headerRect = header.getBoundingClientRect();
+      let headerOffsetCalc = headerRect.top + headerRect.height;
 
-      const newValue = `${headerOffset}px`;
-      if (newValue !== this.currentHeaderOffsetValue) {
-        this.currentHeaderOffsetValue = newValue;
-        doc.style.setProperty("--header-offset", newValue);
+      if (window.scrollY < 0) {
+        headerOffsetCalc += window.scrollY;
       }
 
-      if (offset >= this.docAt) {
+      const newValue = `${headerOffsetCalc}px`;
+      if (newValue !== this.currentHeaderOffsetValue) {
+        this.currentHeaderOffsetValue = newValue;
+        document.documentElement.style.setProperty("--header-offset", newValue);
+      }
+
+      if (window.pageYOffset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
@@ -334,11 +337,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const windowWidth = document.body.offsetWidth;
-      const headerWidth =
-        document.querySelector("#main-outlet .container").offsetWidth || 1100;
-      const remaining = (windowWidth - headerWidth) / 2;
-      const viewMode =
-        this.site.mobileView || remaining < 50 ? "slide-in" : "drop-down";
+      const viewMode = this.site.mobileView ? "slide-in" : "drop-down";
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
@@ -391,7 +390,7 @@ const SiteHeaderComponent = MountWidget.extend(
             headerCloak.style.display = "block";
           }
 
-          const menuTop = this.site.mobileView ? headerTop() : headerHeight();
+          const menuTop = this.site.mobileView ? headerTop() : headerOffset();
 
           const winHeightOffset = 16;
           let initialWinHeight = window.innerHeight;
@@ -439,18 +438,6 @@ const SiteHeaderComponent = MountWidget.extend(
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
 });
-
-export function headerHeight() {
-  const header = document.querySelector("header.d-header");
-
-  // Header may not exist in tests (e.g. in the user menu component test).
-  if (!header) {
-    return 0;
-  }
-
-  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
-  return header.offsetHeight + headerOffsetTop - document.body.scrollTop;
-}
 
 export function headerTop() {
   const header = document.querySelector("header.d-header");

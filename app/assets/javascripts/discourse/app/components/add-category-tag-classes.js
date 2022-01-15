@@ -15,21 +15,19 @@ export default Component.extend({
       return;
     }
     const slug = this.get("category.fullSlug");
-    const tags = this.tags;
 
     this._removeClass();
 
-    let classes = [];
+    const classes = [];
+
     if (slug) {
       classes.push("category");
       classes.push(`category-${slug}`);
     }
-    if (tags) {
-      tags.forEach((t) => classes.push(`tag-${t}`));
-    }
-    if (classes.length > 0) {
-      $("body").addClass(classes.join(" "));
-    }
+
+    this.tags?.forEach((t) => classes.push(`tag-${t}`));
+
+    document.body.classList.add(...classes);
   },
 
   @observes("category.fullSlug", "tags")
@@ -37,14 +35,23 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._updateClass);
   },
 
-  _removeClass() {
-    $("body").removeClass((_, css) =>
-      (css.match(/\b(?:category|tag)-\S+|( category )/g) || []).join(" ")
-    );
-  },
-
   willDestroyElement() {
     this._super(...arguments);
     this._removeClass();
+  },
+
+  _removeClass() {
+    const invalidClasses = [];
+    const regex = /\b(?:category|tag)-\S+|( category )/g;
+
+    document.body.classList.forEach((name) => {
+      if (regex.test(name)) {
+        invalidClasses.push(name);
+      }
+    });
+
+    if (invalidClasses.length) {
+      document.body.classList.remove(...invalidClasses);
+    }
   },
 });

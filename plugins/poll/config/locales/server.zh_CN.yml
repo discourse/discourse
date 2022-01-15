@@ -38,6 +38,7 @@ zh_CN:
     user_cant_post_in_topic: "您无法投票，因为您无法在此话题中发帖。"
     topic_must_be_open_to_vote: "话题必须处于开放状态才能投票。"
     poll_must_be_open_to_vote: "投票必须处于开放状态才能投票。"
+    one_vote_per_user: "本投票只允许投 1 票。"
     topic_must_be_open_to_toggle_status: "话题必须处于开放状态才能切换状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能切换投票状态。"
     insufficient_rights_to_create: "您无权创建投票。"

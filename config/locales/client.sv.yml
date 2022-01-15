@@ -1393,11 +1393,9 @@ sv:
         every_month: "varje månad"
         every_six_months: "varje halvår"
       email_level:
-        title: "Sänd mig e-post när någon citerar mig, besvarar mitt inlägg, nämner mitt @användarnamn eller bjuder in mig till ett ämne."
         always: "alltid"
         only_when_away: "bara när jag är borta"
         never: "aldrig"
-      email_messages_level: "Sänd mig e-post när någon skickar mig ett meddelande"
       include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningen som skickas via e-post"
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
@@ -1484,7 +1482,10 @@ sv:
           expired_at_time: "Utgår kl. %{time}"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
+          restrict: "Begränsa till"
           restrict_email: "Begränsa till e-post"
+          restrict_domain: "Begränsa till domän"
+          email_or_domain_placeholder: "namn@exempel.se eller exempel.se"
           max_redemptions_allowed: "Max antal användningar"
           add_to_groups: "Lägg till i grupper"
           invite_to_topic: "Anländ till ämne"
@@ -1693,6 +1694,7 @@ sv:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
       invite: "Skriv in ditt användarnamn eller din e-postadress, så skickar vi dig ett e-postmeddelande om lösenordsåterställning."
+      invite_no_username: "Ange din e-postadress så skickar vi ett e-postmeddelande för återställning av lösenordet."
       reset: "Återställ lösenord"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
       complete_email: "Om ett konto matchar <b>%{email}</b> bör du inom kort få ett e-postmeddelande med instruktioner för hur du återställer ditt lösenord."
@@ -1910,9 +1912,9 @@ sv:
       group_mentioned:
         one: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} person</a> – är du säker?"
         other: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} medlemmar</a> – är du säker?"
-      cannot_see_mention:
-        category: "Du nämnde %{username}, men hen kommer inte att få någon avisering för hen har inte tillgång till denna kategori. Du måste lägga till hen till en grupp som har tillgång till den här kategorin."
-        private: "Du nämnde %{username}, men hen kommer inte få någon avisering eftersom hen inte kan se detta personliga meddelande. Du måste bjuda in hen till detta PM."
+      here_mention:
+        one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
+        other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
       duplicate_link: "Det verkar som din länk till <b>%{domain}</b> redan har lagts in i ämnet av <b>@%{username}</b> i <a href='%{post_url}'> ett svar den %{ago}</a> – är du säker på att du vill lägga upp den igen?"
       reference_topic_title: "SV: %{title}"
       error:
@@ -2175,6 +2177,8 @@ sv:
       in_posts_by: "i inlägg av %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
+      recent: "Senaste sökningar"
+      clear_recent: "Rensa senaste sökningar"
       type:
         default: "Ämnen/inlägg"
         users: "Användare"
@@ -2497,20 +2501,13 @@ sv:
         replies_short: "%{current} / %{total}"
       progress:
         title: ämnesförlopp
-        go_top: "toppen"
-        go_bottom: "botten"
-        go: "gå"
-        jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till..."
         jump_prompt_of:
           one: "av %{count} inlägg"
           other: "av %{count} inlägg"
         jump_prompt_long: "Hoppa till..."
-        jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_to_date: "till datum"
         jump_prompt_or: "eller"
-        total: antal inlägg
-        current: nuvarande inlägg
       notifications:
         title: ändra hur ofta du får aviseringar om det här ämnet
         reasons:
@@ -3219,6 +3216,9 @@ sv:
         title: "Detta ämne är ett personligt meddelande"
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
+    pending_posts:
+      label: "Väntande"
+      label_with_count: "Väntande (%{count})"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
         low {med ett högt förhållande mellan gillningar/inlägg}
@@ -3482,17 +3482,19 @@ sv:
         one: "välj minst %{count} tagg..."
         other: "välj minst %{count} taggar..."
       info: "Info"
-      default_info: "Denna tagg är inte begränsad till några kategorier, och har inga synonymer. Om du vill lägga till begränsningar lägger du denna tagg i en <a href=%{basePath}/tag_groups>taggrupp</a>."
+      default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
+      staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."
       synonyms: "Synonymer"
       synonyms_description: "När följande taggar används, kommer de att ersättas med <b>%{base_tag_name}</b>."
+      save: "Spara namn och beskrivning av taggen"
       tag_groups_info:
         one: 'Denna tagg tillhör gruppen "%{tag_groups}".'
         other: "Denna tagg tillhör dessa grupper: %{tag_groups}."
       category_restrictions:
         one: "Den kan enbart användas i denna kategori:"
         other: "Den kan enbart användas i dessa kategorier:"
-      edit_synonyms: "Hantera synonymer"
+      edit_synonyms: "Redigera synonymer"
       add_synonyms_label: "Lägg till synonymer:"
       add_synonyms: "Lägg till"
       add_synonyms_explanation:
@@ -3509,8 +3511,8 @@ sv:
       delete_confirm_synonyms:
         one: "Dess synonym kommer också att raderas."
         other: "Dess %{count} synonymer kommer också att raderas."
-      rename_tag: "Döp om taggen"
-      rename_instructions: "Välj ett nytt namn för taggen:"
+      edit_tag: "Redigera taggnamn och beskrivning"
+      description: "Beskrivning"
       sort_by: "Sortera efter:"
       sort_by_count: "summa"
       sort_by_name: "namn"
@@ -3785,6 +3787,7 @@ sv:
             automatic_membership_user_count:
               one: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
               other: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
+            automatic_membership_associated_groups: "Användare som är medlemmar i en grupp på en tjänst som listas här kommer automatiskt att läggas till i denna grupp när de loggar in med tjänsten."
             primary_group: "Automatiskt inställd som primär grupp"
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
@@ -3869,7 +3872,7 @@ sv:
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             uploads:
-              create: Ladda upp en ny fil.
+              create: Ladda upp en ny fil eller påbörja enstaka eller flerdelade direktuppladdningar till extern lagring.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
               sync_sso: Synkronisera en användare med DiscourseConnect.
@@ -3882,6 +3885,14 @@ sv:
               list: Få en lista över användare.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
+            badges:
+              create: Skapa ett nytt märke.
+              show: Hämta information om ett märke.
+              update: Uppdatera ett märke.
+              delete: Radera ett märke.
+              list_user_badges: Lista användarens märken.
+              assign_badge_to_user: Tilldela ett märke till en användare.
+              revoke_badge_from_user: Återkalla ett märke från en användare.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."
@@ -4546,9 +4557,6 @@ sv:
           title: "Granskade IP-adresser"
           description: 'IP-adresser som är under bevakning. Använd "Tillåt" för att vitlista IP-adresser.'
           delete_confirm: "Är du säker på att du vill ta bort regeln för %{ip_address}?"
-          roll_up_confirm: "Är du säker på att du vill rulla upp vanligen undersökta IP-adresser i delnät?"
-          rolled_up_some_subnets: "Framgångsrikt rullat upp förbjudna IP-poster till de här delnäten: %{subnets}."
-          rolled_up_no_subnet: "Det fanns inget att rulla upp."
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"

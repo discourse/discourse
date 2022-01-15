@@ -13,9 +13,11 @@ module ApplicationHelper
     @extra_body_classes ||= Set.new
   end
 
-  def discourse_config_environment
+  def discourse_config_environment(testing: false)
+
     # TODO: Can this come from Ember CLI somehow?
-    { modulePrefix: "discourse",
+    config = {
+      modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
       locationType: "auto",
@@ -32,7 +34,16 @@ module ApplicationHelper
         version: "#{Discourse::VERSION::STRING} #{Discourse.git_version}",
         exportApplicationGlobal: true
       }
-    }.to_json
+    }
+
+    if testing
+      config[:environment] = "test"
+      config[:locationType] = "none"
+      config[:APP][:autoboot] = false
+      config[:APP][:rootElement] = '#ember-testing'
+    end
+
+    config.to_json
   end
 
   def google_universal_analytics_json(ua_domain_name = nil)
@@ -645,12 +656,6 @@ module ApplicationHelper
         cookies.delete(:authentication_data, path: Discourse.base_path("/"))
       end
       current_user ? nil : value
-    end
-  end
-
-  def hijack_if_ember_cli!
-    if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
-      raise ApplicationController::EmberCLIHijacked.new
     end
   end
 end

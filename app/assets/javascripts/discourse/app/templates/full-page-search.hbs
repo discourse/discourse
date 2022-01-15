@@ -81,12 +81,27 @@
           {{/if}}
 
           {{#if bulkSelectEnabled}}
-            {{d-button icon="check-square" class="btn-default" action=(action "selectAll") label="search.select_all"~}}
-            {{d-button icon="far-square" class="btn-default" action=(action "clearAll") label="search.clear_all"}}
+            {{#if hasUnselectedResults}}
+              {{d-button
+                icon="check-square"
+                class="btn-default"
+                action=(action "selectAll")
+                label="search.select_all"
+              }}
+            {{/if}}
+
+            {{#if hasSelection}}
+              {{d-button
+                icon="far-square"
+                class="btn-default"
+                action=(action "clearAll")
+                label="search.clear_all"
+              }}
+            {{/if}}
           {{/if}}
 
           <div class="sort-by inline-form">
-            <label for="search-sort-by">
+            <label>
               {{i18n "search.sort_by"}}
             </label>
             {{combo-box
@@ -103,7 +118,7 @@
       {{/if}}
     {{/if}}
 
-    {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
+    {{plugin-outlet name="full-page-search-below-search-info" tagName="span" connectorTagName="div" args=(hash search=searchTerm)}}
 
     {{#if searching}}
       {{loading-spinner size="medium"}}

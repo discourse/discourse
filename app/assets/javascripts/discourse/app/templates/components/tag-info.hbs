@@ -1,16 +1,28 @@
 <section class="tag-info">
   {{#if tagInfo}}
     <div class="tag-name">
-      {{discourse-tag tagInfo.name tagName="div" size="large"}}
+      {{#if editing}}
+        <div class="edit-tag-wrapper">
+          {{text-field id="edit-name" value=(readonly tagInfo.name) maxlength=siteSettings.max_tag_length input=(action (mut newTagName) value="target.value") autofocus="true"}}
+          {{text-field id="edit-description" value=(readonly tagInfo.description) placeholder=(i18n "tagging.description") maxlength=280 input=(action (mut newTagDescription) value="target.value") autofocus="true"}}
 
-      {{#if canAdminTag}}
-        {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) connectorTagName="" tagName="section"}}
-
-        {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag" id="rename-tag"}}
-        {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
-        {{#if deleteAction}}
-          {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag" id="delete-tag"}}
-        {{/if}}
+          <div class="edit-controls">
+            {{#unless updateDisabled}}
+              {{d-button action=(action "finishedEditing") class="btn-primary submit-edit" icon="check" ariaLabel="tagging.save"}}
+            {{/unless}}
+            {{d-button action=(action "cancelEditing") class="btn-default cancel-edit" icon="times" ariaLabel="cancel"}}
+          </div>
+        </div>
+      {{else}}
+        <div class="tag-name-wrapper">
+          {{discourse-tag tagInfo.name tagName="div"}}
+          {{#if canAdminTag}}
+            <a href {{action "edit"}} class="edit-tag" title={{i18n "tagging.edit_tag"}}>{{d-icon "pencil-alt"}}</a>
+          {{/if}}
+        </div>
+        <div class="tag-description-wrapper">
+          {{tagInfo.description}}
+        </div>
       {{/if}}
     </div>
     <div class="tag-associations">
@@ -28,7 +40,10 @@
         {{#if tagInfo.category_restricted}}
           {{i18n "tagging.category_restricted"}}
         {{else}}
-          {{html-safe (i18n "tagging.default_info" basePath=(base-path))}}
+          {{html-safe (i18n "tagging.default_info")}}
+          {{#if canAdminTag}}
+            {{html-safe (i18n "tagging.staff_info" basePath=(base-path))}}
+          {{/if}}
         {{/if}}
       {{/if}}
     </div>
@@ -56,20 +71,31 @@
     {{#if editSynonymsMode}}
       <section class="add-synonyms field">
         <label for="add-synonyms">{{i18n "tagging.add_synonyms_label"}}</label>
-        {{tag-chooser
-          id="add-synonyms"
-          tags=newSynonyms
-          blockedTags=(array tagInfo.name)
-          everyTag=true
-          excludeSynonyms=true
-          excludeHasSynonyms=true
-          unlimitedTagCount=true}}
+        <div>
+          {{tag-chooser
+            id="add-synonyms"
+            tags=newSynonyms
+            blockedTags=(array tagInfo.name)
+            everyTag=true
+            excludeSynonyms=true
+            excludeHasSynonyms=true
+            unlimitedTagCount=true}}
+          {{d-button
+            class="ok"
+            action=(action "addSynonyms")
+            disabled=addSynonymsDisabled
+            icon="check"}}
+        </div>
       </section>
-      {{d-button
-        class="btn-default"
-        action=(action "addSynonyms")
-        disabled=addSynonymsDisabled
-        label="tagging.add_synonyms"}}
+    {{/if}}
+    {{#if canAdminTag}}
+      {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) tagName="section"}}
+      <div class="tag-actions">
+        {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
+        {{#if deleteAction}}
+          {{d-button class="btn-danger delete-tag" action=(action "deleteTag") icon="far-trash-alt" label="tagging.delete_tag" id="delete-tag"}}
+        {{/if}}
+      </div>
     {{/if}}
   {{/if}}
   {{#if loading}}

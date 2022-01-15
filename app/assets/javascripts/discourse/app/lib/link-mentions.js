@@ -46,7 +46,7 @@ const found = {};
 const foundGroups = {};
 const mentionableGroups = {};
 const checked = {};
-const cannotSee = [];
+export const cannotSee = {};
 
 function updateFound(mentions, usernames) {
   mentions.forEach((mention, index) => {
@@ -73,6 +73,7 @@ export function linkSeenMentions(elem, siteSettings) {
 
     deprecated("linkSeenMentions now expects a DOM node as first parameter", {
       since: "2.8.0.beta7",
+      dropFrom: "2.9.0.beta1",
     });
   }
 
@@ -100,7 +101,9 @@ export function fetchUnseenMentions(usernames, topic_id) {
     r.valid.forEach((v) => (found[v] = true));
     r.valid_groups.forEach((vg) => (foundGroups[vg] = true));
     r.mentionable_groups.forEach((mg) => (mentionableGroups[mg.name] = mg));
-    r.cannot_see.forEach((cs) => (cannotSee[cs] = true));
+    Object.entries(r.cannot_see).forEach(
+      ([username, reason]) => (cannotSee[username] = reason)
+    );
     maxGroupMention = r.max_users_notified_per_group_mention;
     usernames.forEach((u) => (checked[u] = true));
     return r;

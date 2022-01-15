@@ -28,22 +28,21 @@ export default class MediaOptimizationWorkerService extends Service {
   promiseResolvers = null;
 
   async optimizeImage(data, opts = {}) {
-    this.usingUppy = data.id && data.id.includes("uppy");
     this.promiseResolvers = this.promiseResolvers || {};
     this.stopWorkerOnError = opts.hasOwnProperty("stopWorkerOnError")
       ? opts.stopWorkerOnError
       : true;
 
-    let file = this.usingUppy ? data : data.files[data.index];
+    let file = data;
     if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
-      return this.usingUppy ? Promise.resolve() : data;
+      return Promise.resolve();
     }
     if (
       file.size <
       this.siteSettings
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
-      return this.usingUppy ? Promise.resolve() : data;
+      return Promise.resolve();
     }
     await this.ensureAvailiableWorker();
 
@@ -51,18 +50,14 @@ export default class MediaOptimizationWorkerService extends Service {
       this.logIfDebug(`Transforming ${file.name}`);
 
       this.currentComposerUploadData = data;
-      this.promiseResolvers[this.usingUppy ? file.id : file.name] = resolve;
+      this.promiseResolvers[file.id] = resolve;
 
       let imageData;
       try {
-        if (this.usingUppy) {
-          imageData = await fileToImageData(file.data);
-        } else {
-          imageData = await fileToImageData(file);
-        }
+        imageData = await fileToImageData(file.data);
       } catch (error) {
         this.logIfDebug(error);
-        return this.usingUppy ? resolve() : resolve(data);
+        return resolve();
       }
 
       this.worker.postMessage(
@@ -104,8 +99,9 @@ export default class MediaOptimizationWorkerService extends Service {
   }
 
   async install() {
-    this.installPromise = new Promise((resolve) => {
+    this.installPromise = new Promise((resolve, reject) => {
       this.afterInstalled = resolve;
+      this.failedInstall = reject;
       this.logIfDebug("Installing worker.");
       this.startWorker();
       this.registerMessageHandler();
@@ -152,13 +148,7 @@ export default class MediaOptimizationWorkerService extends Service {
             `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
           );
 
-          if (this.usingUppy) {
-            this.promiseResolvers[e.data.fileId](optimizedFile);
-          } else {
-            let data = this.currentComposerUploadData;
-            data.files[data.index] = optimizedFile;
-            this.promiseResolvers[optimizedFile.name](data);
-          }
+          this.promiseResolvers[e.data.fileId](optimizedFile);
 
           break;
         case "error":
@@ -170,25 +160,29 @@ export default class MediaOptimizationWorkerService extends Service {
             this.stopWorker();
           }
 
-          if (this.usingUppy) {
-            this.promiseResolvers[e.data.fileId]();
-          } else {
-            this.promiseResolvers[e.data.fileName](
-              this.currentComposerUploadData
-            );
-          }
+          this.promiseResolvers[e.data.fileId]();
           break;
         case "installed":
           this.logIfDebug("Worker installed.");
           this.workerInstalled = true;
           this.afterInstalled();
-          this.afterInstalled = null;
-          this.installPromise = null;
+          this.cleanupInstallPromises();
+          break;
+        case "installFailed":
+          this.logIfDebug("Worker failed to install.");
+          this.failedInstall(e.data.errorMessage);
+          this.cleanupInstallPromises();
           break;
         default:
           this.logIfDebug(`Sorry, we are out of ${e}.`);
       }
     };
+  }
+
+  cleanupInstallPromises() {
+    this.afterInstalled = null;
+    this.failedInstall = null;
+    this.installPromise = null;
   }
 
   logIfDebug(message) {

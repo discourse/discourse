@@ -17,7 +17,7 @@
           <h3>
             {{category-title-before category=c}}
             {{#if c.read_restricted}}
-              {{d-icon "lock"}}
+              {{d-icon lockIcon}}
             {{/if}}
             {{c.name}}
           </h3>
@@ -35,7 +35,7 @@
           {{/if}}
         </div>
       {{/unless}}
-      {{plugin-outlet name="category-box-below-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
+      {{plugin-outlet name="category-box-below-each-category" args=(hash category=c)}}
     </div>
   </div>
 {{/each}}

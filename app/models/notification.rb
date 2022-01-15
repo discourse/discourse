@@ -16,40 +16,28 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  scope :filter_by_consolidation_data, ->(notification_type, data) {
-    notifications = where(notification_type: notification_type)
-
-    case notification_type
-    when types[:liked], types[:liked_consolidated]
-      key = "display_username"
-      consolidation_window = SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
-    when types[:private_message]
-      key = "topic_title"
-      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
-    when types[:membership_request_consolidated]
-      key = "group_name"
-      consolidation_window = MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS.hours.ago
-    end
-
-    notifications = notifications.where("created_at > ? AND data::json ->> '#{key}' = ?", consolidation_window, data[key.to_sym]) if data[key&.to_sym].present?
-    notifications = notifications.where("data::json ->> 'username2' IS NULL") if notification_type == types[:liked]
-
-    notifications
-  }
-
   attr_accessor :skip_send_email
 
   after_commit :refresh_notification_count, on: [:create, :update, :destroy]
+  after_commit :send_email, on: :create
 
   after_commit(on: :create) do
     DiscourseEvent.trigger(:notification_created, self)
-    send_email unless NotificationConsolidator.new(self).consolidate!
   end
 
   before_create do
     # if we have manually set the notification to high_priority on create then
     # make sure that is respected
     self.high_priority = self.high_priority || Notification.high_priority_types.include?(self.notification_type)
+  end
+
+  def self.consolidate_or_create!(notification_params)
+    notification = new(notification_params)
+    consolidation_planner = Notifications::ConsolidationPlanner.new
+
+    consolidated_notification = consolidation_planner.consolidate_or_save!(notification)
+
+    consolidated_notification == :no_plan ? notification.tap(&:save!) : consolidated_notification
   end
 
   def self.purge_old!
@@ -120,6 +108,7 @@ class Notification < ActiveRecord::Base
                         event_invitation: 28,
                         chat_mention: 29,
                         chat_message: 30,
+                        chat_invitation: 31
                        )
   end
 

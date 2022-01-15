@@ -72,14 +72,6 @@ describe SiteSettings::YamlLoader do
     receiver.load_yaml(enum_client)
   end
 
-  it "raises deprecation when load settings based on environment" do
-    expect { receiver.load_yaml(deprecated_env) }.to raise_error(Discourse::Deprecation)
-  end
-
-  it "raises deprecation when hidden property is based on environment" do
-    expect { receiver.load_yaml(deprecated_hidden) }.to raise_error(Discourse::Deprecation)
-  end
-
   it "raises invalid parameter when default value is not present" do
     expect { receiver.load_yaml(nil_default) }.to raise_error(StandardError)
   end

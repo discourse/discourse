@@ -40,7 +40,7 @@ const FooterNavComponent = MountWidget.extend(
       if (this.capabilities.isIpadOS) {
         document.body.classList.add("footer-nav-ipad");
       } else {
-        this.bindScrolling({ name: "footer-nav" });
+        this.bindScrolling();
         window.addEventListener("resize", this.scrolled, false);
         this.appEvents.on("composer:opened", this, "_composerOpened");
         this.appEvents.on("composer:closed", this, "_composerClosed");
@@ -60,7 +60,7 @@ const FooterNavComponent = MountWidget.extend(
       if (this.capabilities.isIpadOS) {
         document.body.classList.remove("footer-nav-ipad");
       } else {
-        this.unbindScrolling("footer-nav");
+        this.unbindScrolling();
         window.removeEventListener("resize", this.scrolled);
         this.appEvents.off("composer:opened", this, "_composerOpened");
         this.appEvents.off("composer:closed", this, "_composerClosed");

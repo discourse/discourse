@@ -3,15 +3,45 @@
 class AdminDashboardData
   include StatsCacheable
 
+  cattr_reader :problem_syms,
+    :problem_blocks,
+    :problem_messages,
+    :problem_scheduled_check_blocks
+
+  class Problem
+    VALID_PRIORITIES = ["low", "high"].freeze
+
+    attr_reader :message, :priority, :identifier
+
+    def initialize(message, priority: "low", identifier: nil)
+      @message = message
+      @priority = VALID_PRIORITIES.include?(priority) ? priority : "low"
+      @identifier = identifier
+    end
+
+    def to_s
+      @message
+    end
+
+    def to_h
+      { message: message, priority: priority, identifier: identifier }
+    end
+
+    def self.from_h(h)
+      h = h.with_indifferent_access
+      return if h[:message].blank?
+      new(h[:message], priority: h[:priority], identifier: h[:identifier])
+    end
+  end
+
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
 
+  PROBLEM_MESSAGE_PREFIX = "admin-problem:"
+  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems"
+
   def initialize(opts = {})
     @opts = opts
-  end
-
-  def self.fetch_stats
-    new.as_json
   end
 
   def get_json
@@ -22,31 +52,21 @@ class AdminDashboardData
     @json ||= get_json
   end
 
-  def self.reports(source)
-    source.map { |type| Report.find(type).as_json }
-  end
-
-  def self.stats_cache_key
-    "dashboard-data-#{Report::SCHEMA_VERSION}"
-  end
-
-  def self.add_problem_check(*syms, &blk)
-    @problem_syms.push(*syms) if syms
-    @problem_blocks << blk if blk
-  end
-  class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
-
   def problems
     problems = []
-    AdminDashboardData.problem_syms.each do |sym|
-      problems << public_send(sym)
+    self.class.problem_syms.each do |sym|
+      message = public_send(sym)
+      problems << Problem.new(message) if message.present?
     end
-    AdminDashboardData.problem_blocks.each do |blk|
-      problems << instance_exec(&blk)
+    self.class.problem_blocks.each do |blk|
+      message = instance_exec(&blk)
+      problems << Problem.new(message) if message.present?
     end
-    AdminDashboardData.problem_messages.each do |i18n_key|
-      problems << AdminDashboardData.problem_message_check(i18n_key)
+    self.class.problem_messages.each do |i18n_key|
+      message = self.class.problem_message_check(i18n_key)
+      problems << Problem.new(message) if message.present?
     end
+    problems += self.class.load_found_scheduled_check_problems
     problems.compact!
 
     if problems.empty?
@@ -56,6 +76,140 @@ class AdminDashboardData
     end
 
     problems
+  end
+
+  def self.add_problem_check(*syms, &blk)
+    @@problem_syms.push(*syms) if syms
+    @@problem_blocks << blk if blk
+  end
+
+  def self.add_scheduled_problem_check(check_identifier, &blk)
+    @@problem_scheduled_check_blocks[check_identifier] = blk
+  end
+
+  def self.add_found_scheduled_check_problem(problem)
+    problems = load_found_scheduled_check_problems
+    if problem.identifier.present?
+      return if problems.find { |p| p.identifier == problem.identifier }
+    end
+    problems << problem
+    set_found_scheduled_check_problems(problems)
+  end
+
+  def self.set_found_scheduled_check_problems(problems)
+    Discourse.redis.setex(SCHEDULED_PROBLEM_STORAGE_KEY, 300, JSON.dump(problems.map(&:to_h)))
+  end
+
+  def self.clear_found_scheduled_check_problems
+    Discourse.redis.del(SCHEDULED_PROBLEM_STORAGE_KEY)
+  end
+
+  def self.clear_found_problem(identifier)
+    problems = load_found_scheduled_check_problems
+    problems.reject! { |p| p.identifier == identifier }
+    set_found_scheduled_check_problems(problems)
+  end
+
+  def self.load_found_scheduled_check_problems
+    found_problems_json = Discourse.redis.get(SCHEDULED_PROBLEM_STORAGE_KEY)
+    return [] if found_problems_json.blank?
+    begin
+      JSON.parse(found_problems_json).map do |problem|
+        Problem.from_h(problem)
+      end
+    rescue JSON::ParserError => err
+      Discourse.warn_exception(err, message: "Error parsing found problem JSON in admin dashboard: #{found_problems_json}")
+      []
+    end
+  end
+
+  def self.register_default_scheduled_problem_checks
+    add_scheduled_problem_check(:group_smtp_credentials) do
+      problems = GroupEmailCredentialsCheck.run
+      problems.map do |p|
+        problem_message = I18n.t(
+          "dashboard.group_email_credentials_warning",
+          {
+            base_path: Discourse.base_path,
+            group_name: p[:group_name],
+            group_full_name: p[:group_full_name],
+            error: p[:message]
+          }
+        )
+        Problem.new(problem_message, priority: "high", identifier: "group_#{p[:group_id]}_email_credentials")
+      end
+    end
+  end
+
+  def self.execute_scheduled_checks
+    found_problems = []
+    problem_scheduled_check_blocks.each do |check_identifier, blk|
+      problems = nil
+
+      begin
+        problems = instance_exec(&blk)
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "A scheduled admin dashboard problem check (#{check_identifier}) errored.")
+        # we don't want to hold up other checks because this one errored
+        next
+      end
+
+      found_problems += Array.wrap(problems)
+    end
+
+    found_problems.compact.each do |problem|
+      next if !problem.is_a?(Problem)
+      add_found_scheduled_check_problem(problem)
+    end
+  end
+
+  ##
+  # We call this method in the class definition below
+  # so all of the problem checks in this class are registered on
+  # boot. These problem checks are run when the problems are loaded in
+  # the admin dashboard controller.
+  #
+  # This method also can be used in testing to reset checks between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
+  def self.reset_problem_checks
+    @@problem_syms = []
+    @@problem_blocks = []
+    @@problem_scheduled_check_blocks = {}
+
+    @@problem_messages = [
+      'dashboard.bad_favicon_url',
+      'dashboard.poll_pop3_timeout',
+      'dashboard.poll_pop3_auth_error',
+    ]
+
+    add_problem_check :rails_env_check, :host_names_check, :force_https_check,
+                      :ram_check, :google_oauth2_config_check,
+                      :facebook_config_check, :twitter_config_check,
+                      :github_config_check, :s3_config_check, :s3_cdn_check,
+                      :image_magick_check, :failing_emails_check,
+                      :subfolder_ends_in_slash_check,
+                      :email_polling_errored_recently,
+                      :out_of_date_themes, :unreachable_themes, :watched_words_check
+
+    register_default_scheduled_problem_checks
+
+    add_problem_check do
+      sidekiq_check || queue_size_check
+    end
+  end
+  reset_problem_checks
+
+  def self.fetch_stats
+    new.as_json
+  end
+
+  def self.reports(source)
+    source.map { |type| Report.find(type).as_json }
+  end
+
+  def self.stats_cache_key
+    "dashboard-data-#{Report::SCHEMA_VERSION}"
   end
 
   def self.problems_started_key
@@ -76,40 +230,19 @@ class AdminDashboardData
     s ? Time.zone.parse(s) : nil
   end
 
-  # used for testing
-  def self.reset_problem_checks
-    @problem_syms = []
-    @problem_blocks = []
-
-    @problem_messages = [
-      'dashboard.bad_favicon_url',
-      'dashboard.poll_pop3_timeout',
-      'dashboard.poll_pop3_auth_error',
-    ]
-
-    add_problem_check :rails_env_check, :host_names_check, :force_https_check,
-                      :ram_check, :google_oauth2_config_check,
-                      :facebook_config_check, :twitter_config_check,
-                      :github_config_check, :s3_config_check, :s3_cdn_check,
-                      :image_magick_check, :failing_emails_check,
-                      :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration, :email_polling_errored_recently,
-                      :out_of_date_themes, :unreachable_themes, :watched_words_check
-
-    add_problem_check do
-      sidekiq_check || queue_size_check
-    end
-  end
-  reset_problem_checks
-
   def self.fetch_problems(opts = {})
-    AdminDashboardData.new(opts).problems
+    new(opts).problems
   end
 
   def self.problem_message_check(i18n_key)
     Discourse.redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key, base_path: Discourse.base_path) : nil
   end
 
+  ##
+  # Arbitrary messages cannot be added here, they must already be defined
+  # in the @problem_messages array which is defined in reset_problem_checks.
+  # The array is iterated over and each key that exists in redis will be added
+  # to the final problems output in #problems.
   def self.add_problem_message(i18n_key, expire_seconds = nil)
     if expire_seconds.to_i > 0
       Discourse.redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
@@ -123,7 +256,7 @@ class AdminDashboardData
   end
 
   def self.problem_message_key(i18n_key)
-    "admin-problem:#{i18n_key}"
+    "#{PROBLEM_MESSAGE_PREFIX}#{i18n_key}"
   end
 
   def rails_env_check
@@ -205,10 +338,6 @@ class AdminDashboardData
 
   def subfolder_ends_in_slash_check
     I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_path =~ /\/$/
-  end
-
-  def pop3_polling_configuration
-    POP3PollingEnabledSettingValidator.new.error_message if SiteSetting.pop3_polling_enabled
   end
 
   def email_polling_errored_recently

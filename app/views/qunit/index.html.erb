@@ -5,8 +5,15 @@
     <%= discourse_color_scheme_stylesheets %>
     <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
     <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
-    <%= preload_script "discourse/tests/test_helper" %>
-    <%= preload_script "discourse/tests/core_plugins_tests" %>
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script "vendor" %>
+    <%= preload_script "application" %>
+    <%= preload_script "admin" %>
+    <%= preload_script "discourse/tests/test-support-rails" %>
+    <%= preload_script "discourse/tests/test-helpers-rails" %>
+    <%= preload_script "discourse/tests/active-plugins" %>
+    <%= preload_script "discourse/tests/core-tests" %>
+    <%= preload_script "discourse/tests/plugin-tests" %>
     <%= preload_script "discourse/tests/test_starter" %>
     <%= csrf_meta_tags %>
     <meta property="og:title" content="">

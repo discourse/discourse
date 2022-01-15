@@ -9,8 +9,9 @@ import { schedule } from "@ember/runloop";
 export default Component.extend({
   className: "json-editor-holder",
   editor: null,
+  saveChangesCallback: null,
 
-  didReceiveAttrs() {
+  didInsertElement() {
     this._super(...arguments);
 
     loadScript("/javascripts/jsoneditor.js").then(() => {
@@ -33,7 +34,7 @@ export default Component.extend({
           disable_edit_json: true,
           disable_properties: true,
           disable_collapse: true,
-          show_errors: "always",
+          show_errors: "never",
           startval: this.model.value ? JSON.parse(this.model.value) : null,
         });
       });
@@ -47,9 +48,22 @@ export default Component.extend({
 
   @action
   saveChanges() {
-    const fieldValue = JSON.stringify(this.editor.getValue());
-    this.saveChangesCallback(fieldValue);
-    this.editor.destroy();
+    const errors = this.editor.validate();
+    if (!errors.length) {
+      const fieldValue = JSON.stringify(this.editor.getValue());
+      this?.saveChangesCallback(fieldValue);
+    } else {
+      this.appEvents.trigger("modal-body:flash", {
+        text: errors.mapBy("message").join("\n"),
+        messageClass: "error",
+      });
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.editor?.destroy();
   },
 });
 

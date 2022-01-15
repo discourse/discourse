@@ -12,7 +12,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
   ]
 
   Listen.to(*paths, only: /\.rb$/) do |modified, added, removed|
-    supervisor_pid = $unicorn_dev_supervisor_pid # rubocop:disable Style/GlobalVars
+    supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
     auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
     files = modified + added + removed

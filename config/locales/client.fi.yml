@@ -1367,11 +1367,9 @@ fi:
         every_month: "kuukausittain"
         every_six_months: "kuuden kuukauden välein"
       email_level:
-        title: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @käyttäjätunnukseni tai kutsuu minut ketjuun"
         always: "aina"
         only_when_away: "vain, kun olen poissa"
         never: "ei koskaan"
-      email_messages_level: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       include_tl0_in_digests: "Lisää uusien käyttäjien sisältö yhteenvetosähköposteihin"
       email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköposteihin"
       other_settings: "Muut"
@@ -1869,9 +1867,6 @@ fi:
       group_mentioned:
         one: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
         other: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjää</a> saa ilmoituksen – oletko varma?"
-      cannot_see_mention:
-        category: "Mainitsit käyttäjän %{username}, mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
-        private: "Mainitsit käyttäjän %{username}, mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
       duplicate_link: "Näyttää siltä, että <b>@%{username}</b> linkitti jo samaan kohteeseen <b>%{domain}</b> ketjun <a href='%{post_url}'>aiemmassa vastauksessa %{ago}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2413,20 +2408,13 @@ fi:
         replies_short: "%{current} / %{total}"
       progress:
         title: ketjun edistyminen
-        go_top: "alkuun"
-        go_bottom: "loppuun"
-        go: "siirry"
-        jump_bottom: "siirry viimeisimpään viestiin"
         jump_prompt: "siirry..."
         jump_prompt_of:
           one: "%{count} viestistä"
           other: "%{count} viestistä"
         jump_prompt_long: "Siirry..."
-        jump_bottom_with_number: "siirry viestiin %{post_number}"
         jump_prompt_to_date: "päivämäärään"
         jump_prompt_or: "tai"
-        total: viestejä yhteensä
-        current: tämänhetkinen viesti
       notifications:
         title: muuta sitä, kuinka usein saat muistutuksia tästä ketjusta
         reasons:
@@ -3117,6 +3105,9 @@ fi:
         title: "Tämä ketju on yksityisviesti"
         help: "Tämä ketju on yksityisviesti"
     posts: "Viestejä"
+    pending_posts:
+      label: "Odottaa"
+      label_with_count: "Avoimet (%{count})"
     posts_likes_MF: |
       Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}}{ratio, select,
       low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}
@@ -3361,7 +3352,7 @@ fi:
       tags: "Tunnisteet"
       choose_for_topic: "valinnaiset tunnisteet"
       info: "Tietoa"
-      default_info: "Tätä tunnistetta ei ole rajoitettu mihinkään alueeseen, eikä sillä ole synonyymejä. Lisää rajoituksia laittamalla tämä tunniste <a href=%{basePath}/tag_groups>tunnisteryhmään</a>."
+      default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle eikä sillä ole synonyymejä."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
       synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella <b>%{base_tag_name}</b>."
@@ -3371,7 +3362,6 @@ fi:
       category_restrictions:
         one: "Sitä voi käyttää vain tällä alueella:"
         other: "Sitä voi käyttää vain näillä alueilla:"
-      edit_synonyms: "Hallitse synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
       add_synonyms_explanation:
@@ -3388,8 +3378,7 @@ fi:
       delete_confirm_synonyms:
         one: "Sen synonyymi poistetaan myös."
         other: "Sen %{count} synonyymiä poistetaan myös."
-      rename_tag: "Nimeä tunniste uudelleen"
-      rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
+      description: "Kuvaus"
       sort_by: "Järjestys:"
       sort_by_count: "lukumäärä"
       sort_by_name: "nimi"
@@ -4392,9 +4381,6 @@ fi:
           title: "Seulottavat IP:t"
           description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen sallittujen listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön IP-osoitteelle %{ip_address}?"
-          roll_up_confirm: "Oletko varma, että haluat koota seulottavat IP-osoitteet aliverkoiksi?"
-          rolled_up_some_subnets: "IP-estomerkinnät koottiin näihin aliverkkoihin: %{subnets}."
-          rolled_up_no_subnet: "Koottavaa ei ole."
           actions:
             block: "Estä"
             do_nothing: "Salli"

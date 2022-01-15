@@ -31,7 +31,7 @@ task "smoke:test" do
   end
 
   dir = ENV["SMOKE_TEST_SCREENSHOT_PATH"] || 'tmp/smoke-test-screenshots'
-  FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+  FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
 
   wait = ENV["WAIT_FOR_URL"].to_i
 

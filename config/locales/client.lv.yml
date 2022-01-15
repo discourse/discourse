@@ -1297,11 +1297,9 @@ lv:
         every_month: "katru mēnesi"
         every_six_months: "katrus sešus mēnešus"
       email_level:
-        title: "Sūtīt man e-pastu, kad kāds citē mani, atbild manam ierakstam, piemin manu @lietotājvārdu vai ielūdz mani kādā tēmā"
         always: "vienmēr"
         only_when_away: "tikai tad, kad prom"
         never: "nekad"
-      email_messages_level: "Sūtīt man e-pastu, kad kāds sūta man ziņu"
       include_tl0_in_digests: "Iekļaut kopsavilkuma e-pastos saturu no jaunajiem lietotājiem"
       email_in_reply_to: "Iekļaut e-pastā citātu no atbildes uz ierakstu"
       other_settings: "Citi"
@@ -1733,9 +1731,6 @@ lv:
         zero: "Pieminot %{group}, neviens nesaņems paziņojumu, jo grupa ir tukša."
         one: "Pieminot %{group}, šis cilvēks saņems paziņojumu – esat pārliecināti?"
         other: "Pieminot %{group}, šiem <a href='%{group_link}'>%{count} cilvēki</a> saņems paziņojumu – esat pārliecināti?"
-      cannot_see_mention:
-        category: "Jūs pieminējāt %{username}, kas ir bez piekļuves šai sadaļai un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus grupai ar pieeju šai sadaļai."
-        private: "Jūsu pieminējāt %{username}, kas neredzēs šo privāto ziņu un tāpēc nesaņems nekādu paziņojumu. Lai to izlabotu, pievieno viņus šai ziņai."
       duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
@@ -2084,16 +2079,9 @@ lv:
         replies_short: "%{current} / %{total}"
       progress:
         title: tēmas progress
-        go_top: "pāriet uz augšu"
-        go_bottom: "pāriet uz leju"
-        go: "doties"
-        jump_bottom: "pāriet pie pēdējā ieraksta"
         jump_prompt: "pāriet pie..."
         jump_prompt_long: "Pāriet pie..."
-        jump_bottom_with_number: "pāriet pie ieraksta %{post_number}"
         jump_prompt_or: "vai"
-        total: kopējais ierakstu skaits
-        current: šis ieraksts
       notifications:
         title: izmainīt to, cik bieži jūs saņemsiet paziņojumus par šo temu
         reasons:
@@ -2569,6 +2557,9 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
+    pending_posts:
+      label: "Gaidošie"
+      label_with_count: "Gaidošie (%{count})"
     original_post: "Oriģinālais ieraksts"
     views: "Skatījumi"
     views_lowercase:
@@ -2772,8 +2763,7 @@ lv:
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
-      rename_tag: "Pārsaukt tagu"
-      rename_instructions: "Izvēlēties jaunu nosaukumu tagam:"
+      description: "Apraksts"
       sort_by: "Kārtot pēc:"
       sort_by_count: "skaita"
       sort_by_name: "vārda"
@@ -3291,9 +3281,6 @@ lv:
         screened_ips:
           title: "Pārbaudītās IP"
           delete_confirm: "Vai esi drošs, ka vēlies noņemt šo noteikumu priekš %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?\nVai esi drošs ka vēlies (roll up) nesen paŗbaudīt IP adresi iekš \"subneta\"?"
-          rolled_up_some_subnets: "Sveiksmīgi augšuplādēja IP \"banotās\" adreses šajos \"subnetos\"%{subnets}"
-          rolled_up_no_subnet: "Nebija nekas ko (roll up)"
           actions:
             block: "Bloķēt"
             do_nothing: "Atļaut"

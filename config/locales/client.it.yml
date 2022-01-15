@@ -128,6 +128,7 @@ it:
       url: "Copia e condividi l'URL"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
+      open_topic: "convertito in un argomento %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "ha invitato %{who} %{when}"
@@ -1391,11 +1392,9 @@ it:
         every_month: "ogni mese"
         every_six_months: "ogni sei mesi"
       email_level:
-        title: "Inviami una email quando qualcuno mi cita, risponde ad un mio messaggio, menziona il mio @nomeutente, o mi invita in un argomento."
         always: "sempre"
         only_when_away: "solo quando non collegato"
         never: "mai"
-      email_messages_level: "Inviami una email quando qualcuno mi manda un messaggio"
       include_tl0_in_digests: "Includi contenuti dei nuovi utenti nelle email riepilogative"
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       other_settings: "Altro"
@@ -1482,6 +1481,9 @@ it:
           expired_at_time: "Scaduto alle %{time}"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
+          restrict: "Limita a"
+          restrict_domain: "Limita al dominio"
+          email_or_domain_placeholder: "nome@esempio.com o esempio.com"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           expires_at: "Scadenza:"
@@ -1896,8 +1898,13 @@ it:
         one: "Menzionando %{group}, una notifica sarà inviata a <a href='%{group_link}'>%{count} persona</a>. Vuoi procedere?"
         other: "Menzionando %{group}, saranno inviate notifiche a <a href='%{group_link}'>%{count} persone</a>. Vuoi procedere?"
       cannot_see_mention:
-        category: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
-        private: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questo messaggio personale. Dovrai invitarlo a questo MP."
+        category: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
+        private: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questo messaggio privato. Dovrai invitarlo a questo messaggio privato."
+        muted_topic: "Hai menzionato @%{username} ma non riceverà alcuna notifica perché ha silenziato questo argomento."
+        not_allowed: "Hai menzionato @%{username} ma non riceverà alcuna notifica perché ha silenziato questo argomento."
+      here_mention:
+        one: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utente – confermi?"
+        other: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utenti – confermi?"
       duplicate_link: "Sembra che il tuo collegamento a <b>%{domain}</b> sia già stato pubblicato in questo argomento da <b>@%{username}</b> in <a href='%{post_url}'>una risposta di %{ago}</a> - sei sicuro di volerlo pubblicare ancora?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2464,20 +2471,13 @@ it:
         replies_short: "%{current} / %{total}"
       progress:
         title: Avanzamento lettura argomento
-        go_top: "alto"
-        go_bottom: "basso"
-        go: "vai"
-        jump_bottom: "salta all'ultimo messaggio"
         jump_prompt: "vai a..."
         jump_prompt_of:
           one: "di %{count} messaggio"
           other: "di %{count} messaggi"
         jump_prompt_long: "Vai a..."
-        jump_bottom_with_number: "Vai al messaggio %{post_number}"
         jump_prompt_to_date: "ad oggi"
         jump_prompt_or: "o"
-        total: totale messaggi
-        current: messaggio corrente
       notifications:
         title: cambia la frequenza con cui sarai avvertito su questo argomento
         reasons:
@@ -3176,6 +3176,9 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
+    pending_posts:
+      label: "In attesa"
+      label_with_count: "In sospeso (%{count})"
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
         low {con un'alta percentuale di 'mi piace' sulle risposte}
@@ -3431,17 +3434,19 @@ it:
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       info: "Info"
-      default_info: "Questa etichetta non è limitata ad alcuna categoria e non ha sinonimi. Per aggiungere restrizioni, inseriscila in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>."
+      default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
+      staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
       synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
+      save: "Salva il nome e la descrizione dell’etichetta"
       tag_groups_info:
         one: 'Questa etichetta appartiene al gruppo "%{tag_groups}".'
         other: "Questa etichetta appartiene a questi gruppi: %{tag_groups}."
       category_restrictions:
         one: "Può essere utilizzato solo in questa categoria:"
         other: "Può essere utilizzato solo in queste categorie:"
-      edit_synonyms: "Gestisci sinonimi"
+      edit_synonyms: "Modifica Sinonimi"
       add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"
       add_synonyms_explanation:
@@ -3458,8 +3463,8 @@ it:
       delete_confirm_synonyms:
         one: "Anche il suo sinonimo verrà eliminato."
         other: "I suoi %{count} sinonimi verranno a loro volta eliminati."
-      rename_tag: "Rinomina Etichetta"
-      rename_instructions: "Scegli un altro nome per l'etichetta:"
+      edit_tag: "Modifica il nome e la descrizione dell’etichetta"
+      description: "Descrizione"
       sort_by: "Ordina per:"
       sort_by_count: "conteggio"
       sort_by_name: "nome"
@@ -3806,8 +3811,6 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
-            uploads:
-              create: Carica un nuovo file.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
@@ -3820,6 +3823,14 @@ it:
               list: Ottieni un elenco di utenti.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
+            badges:
+              create: Crea un nuovo distintivo.
+              show: Informazioni su un distintivo.
+              update: Aggiorna un distintivo.
+              delete: Cancella un distintivo.
+              list_user_badges: Elenca i distintivi dell'utente.
+              assign_badge_to_user: Assegna un distintivo ad un utente.
+              revoke_badge_from_user: Revoca un distintivo ad un utente.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -4483,9 +4494,6 @@ it:
           title: "IP scansionati"
           description: 'Indirizzi IP in osservazione. Usa "Permetti" per aggiungerli alla lista di indirizzi consentiti.'
           delete_confirm: "Vuoi rimuovere la regola per %{ip_address}?"
-          roll_up_confirm: "Vuoi raggruppare gli indirizzi IP scansionati normalmente?"
-          rolled_up_some_subnets: "Gli elenchi di indirizzi IP interdetti sono stati raggruppati correttamente: %{subnets}."
-          rolled_up_no_subnet: "Non c'era nulla da raggruppare."
           actions:
             block: "Blocca"
             do_nothing: "Permetti"

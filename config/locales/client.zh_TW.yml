@@ -1154,11 +1154,9 @@ zh_TW:
         every_month: "每個月"
         every_six_months: "每半年"
       email_level:
-        title: "當有人引用、回覆我的發文，或以 @使用者名稱 提及我時，請以電子郵件通知我。"
         always: "總是"
         only_when_away: "只在離開時"
         never: "永不"
-      email_messages_level: "當有人寄給我私人訊息時，以電子郵件通知我。"
       include_tl0_in_digests: "摘要郵件中包含新使用者的內容"
       email_in_reply_to: "郵件中包含回覆你的內容節選"
       other_settings: "其它"
@@ -1526,9 +1524,6 @@ zh_TW:
         other: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{count}位），因此不會有任何人收到通知。"
       group_mentioned:
         other: "提及 %{group} 時，你將通知 <a href='%{group_link}'>%{count} 人</a> － 確定嗎？"
-      cannot_see_mention:
-        category: "您提及了%{userrname}，但他們不能進入該分類，所以他們不會收到通知。您必須把他們加入到有權限進入該分類的群組中。"
-        private: "您提及了%{username}，但他們不能看到私人訊息，所以他們不會收到通知。您必須把他們邀請至私訊對話中。"
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
@@ -1923,19 +1918,12 @@ zh_TW:
         replies_short: "%{current} / %{total}"
       progress:
         title: 主題進度
-        go_top: "頂部"
-        go_bottom: "底部"
-        go: "前往"
-        jump_bottom: "跳至最後一則貼文"
         jump_prompt: "跳到..."
         jump_prompt_of:
           other: "%{count} 貼文"
         jump_prompt_long: "跳到..."
-        jump_bottom_with_number: "跳至第 %{post_number} 篇貼文"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
-        total: 所有貼文
-        current: 目前的貼文
       notifications:
         title: 改變你收到該話題通知的頻率
         reasons:
@@ -2481,6 +2469,9 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
+    pending_posts:
+      label: "申請中"
+      label_with_count: "等待中 (%{count})"
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
@@ -2674,8 +2665,7 @@ zh_TW:
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
-      rename_tag: "重命名標籤"
-      rename_instructions: "標籤的新名稱："
+      description: "描述"
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
@@ -3480,9 +3470,6 @@ zh_TW:
         screened_ips:
           title: "過濾的 IP 位址"
           delete_confirm: "你確定要刪除 %{ip_address} 的規則嗎?"
-          roll_up_confirm: "您確定要將常用的 IP 地址歸類為子網域位址嗎？"
-          rolled_up_some_subnets: "成功地 roll up 了 IP 封鎖記錄至這些子網域： %{subnets}。"
-          rolled_up_no_subnet: "無法 roll up"
           actions:
             block: "封鎖"
             do_nothing: "允許"

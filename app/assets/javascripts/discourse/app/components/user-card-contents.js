@@ -174,7 +174,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       include_post_count_for: this.get("topic.id"),
     };
 
-    User.findByUsername(username, args)
+    return User.findByUsername(username, args)
       .then((user) => {
         if (user.topic_post_count) {
           this.set(
@@ -183,6 +183,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           );
         }
         this.setProperties({ user });
+        return user;
       })
       .catch(() => this._close())
       .finally(() => this.set("loading", null));

@@ -148,7 +148,7 @@ async function runAllTests() {
     });
   }
 
-  console.log("navigate to ", url);
+  console.log("navigate to", url);
   Page.navigate({ url });
 
   Page.loadEventFired(async () => {

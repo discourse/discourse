@@ -225,8 +225,6 @@ pt_BR:
       <p>Se você se lembrar da sua senha, <a href="%{base_url}/login">entre com a sua conta</a>.</p>
 
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
-    not_found_template_link: |
-      <p>O convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
@@ -881,13 +879,6 @@ pt_BR:
   draft_backup:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
-  user_activity:
-    no_bookmarks:
-      self: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
-      search: "Nenhum favorito encontrado com a consulta de pesquisa fornecida."
-      others: "Nenhum favorito."
-    no_drafts:
-      self: "Você não tem rascunhos. Comece a compor uma resposta em qualquer tópico e ela será salva automaticamente como um novo rascunho."
   email_settings:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
     imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
@@ -1326,6 +1317,18 @@ pt_BR:
         ignores_count: Contagem de ações de ignorar
         mutes_count: Contagem de ações de silenciar
       description: "Usuários(as) que foram silenciados(as) e/ou ignorados(as) por muitos outros(as) usuários(as)."
+    top_users_by_likes_received:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuário(a)
+        qtt_like: Curtidas recebidas
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
@@ -1503,7 +1506,6 @@ pt_BR:
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o Discourse pode permitir com segurança em postagens"
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    slow_down_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (quantidade de segundos de atraso entre os pedidos)"
     content_security_policy: "Ativar Content-Security-Policy"
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only"
@@ -1541,7 +1543,6 @@ pt_BR:
     blocked_email_domains: "Lista delimitada por barras de domínios de e-mail que não são permitidos para registrar contas. Por exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista delimitada por barras de domínios de e-mail que os(as) usuários(as) DEVEM usar para registrar contas. AVISO: usuários(as) com domínios de e-mail que não estão na lista não terão permissão!"
     auto_approve_email_domains: "Os(as) usuários(as) com endereços de e-mail da lista de domínios serão aprovados automaticamente."
-    hide_email_address_taken: "Não informe os(as) usuários(as) de que existe uma conta com um determinado endereço de e-mail durante o cadastro e o formulário de recuperação de senha."
     log_out_strict: "Ao sair com a conta, sair de TODAS as sessões do(a) usuário(a) em todos os dispositivos"
     version_checks: "Procurar na central do Discourse por atualizações de versão e exibir mensagens de nova versão no painel de controle <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
@@ -2324,13 +2325,6 @@ pt_BR:
     cannot_delete_has_posts:
       one: "O(a) usuário(a) %{username} tem %{count} postagem em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
       other: "O(a) usuário(a) %{username} tem %{count} postagens em um tópico público ou mensagem pessoal, de forma que não pode ser excluído(a)."
-  reviewables_reminder:
-    submitted:
-      one: "Os itens foram enviados durante %{count} hora atrás. [Revise-os](%{base_path}/review)."
-      other: "Os itens foram enviados durante %{count} horas atrás. [Revise-os](%{base_path}/review)."
-    subject_template:
-      one: "%{count} item precisa ser revisado"
-      other: "%{count} itens precisam ser revisados"
   unsubscribe_mailer:
     title: "Cancelar inscrição do remetente"
     subject_template: "Confirme que você não deseja mais receber atualizações por e-mail de %{site_title}"

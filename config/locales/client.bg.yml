@@ -1377,11 +1377,9 @@ bg:
         every_month: "всеки месец"
         every_six_months: "на всеки шест месеца"
       email_level:
-        title: "Изпращайте ми имейл, когато някой ме цитира, отговаря на моите публикации, цитира моето @потребителско_име или ме кани да се присъединя към тема."
         always: "винаги"
         only_when_away: "само когато не съм на линия"
         never: "никога"
-      email_messages_level: "Изпращай ми имейл, когато някой ми изпрати съобщение"
       include_tl0_in_digests: "Включи мненията от нови потребители в обобщените имейли"
       email_in_reply_to: "Включи откъс от отговора на поста в мейлите"
       other_settings: "Други"
@@ -1830,9 +1828,6 @@ bg:
       group_mentioned:
         one: "Споменавайки %{group}, вие ще уведомите <a href='%{group_link}'>%{count} човек</a> – сигурни ли сте?"
         other: "Споменавайки %{group}, вие ще уведомите <a href='%{group_link}'>%{count} души</a> – сигурни ли сте?"
-      cannot_see_mention:
-        category: "Споменахте %{username} но те няма да бъдат уведомени, защото нямат достъп до тази категория. Ще трябва да ги добавите към група, която има достъп до тази категория."
-        private: "Споменахте %{username} но те няма да бъдат уведомени, защото не могат да видят това лично съобщение. Ще трябва да ги поканите на това PM."
       duplicate_link: "Изглежда, че връзката ви към <b>%{domain}</b> вече е публикувана в темата от <b>@%{username}</b> от <a href='%{post_url}'>отговор на %{ago}</a> – сигурни ли сте, че искате да я публикувате отново?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2255,16 +2250,9 @@ bg:
         back: "Назад"
       progress:
         title: прогрес на темата
-        go_top: "горе"
-        go_bottom: "долу"
-        go: "go"
-        jump_bottom: "към последната публикация"
         jump_prompt: "отиди на..."
         jump_prompt_long: "Отиди на..."
-        jump_bottom_with_number: "отиди на публикация %{post_number}"
         jump_prompt_or: "или"
-        total: всички публикации
-        current: текуща публикация
       notifications:
         reasons:
           "3_10": "Ще получавате известия, защото наблюдавате таг на тази тема."
@@ -2786,6 +2774,9 @@ bg:
       unlisted:
         help: "Тази тема е скрита; не се появява в списъка с теми и може да бъде достъпна само с директен линк."
     posts: "Публикации"
+    pending_posts:
+      label: "Чакащи"
+      label_with_count: "Чакащи (%{count})"
     original_post: "Оригинална публикация"
     views: "Прегледи"
     views_lowercase:
@@ -2967,6 +2958,7 @@ bg:
       choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
+      description: "Описание"
       sort_by: "Сортирай по:"
       sort_by_count: "брой"
       sort_by_name: "име"
@@ -3448,9 +3440,6 @@ bg:
         screened_ips:
           title: "Проверени IP-та"
           delete_confirm: "Сигурни ли сте, че искате да премахнете правилото за %{ip_address}? "
-          roll_up_confirm: "Сигурни ли сте, че искате да обедените често проверените IP адреси в подмрежи?"
-          rolled_up_some_subnets: "Успешно групирани IP бан записи към следните подмрежи: %{subnets}. "
-          rolled_up_no_subnet: "Няма нищо за обединяване. "
           actions:
             block: "Блокирай"
             do_nothing: "Позволи"

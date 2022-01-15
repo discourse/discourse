@@ -1074,7 +1074,6 @@ id:
         always: "selalu"
         only_when_away: "hanya ketika pergi"
         never: "tidak pernah"
-      email_messages_level: "Kirimkan saya surel bila seseorang mengirimkan pesan kepada saya"
       other_settings: "Lainnya"
       categories_settings: "Kategori"
       new_topic_duration:
@@ -1634,6 +1633,9 @@ id:
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
     posts: "Pos"
+    pending_posts:
+      label: "Tertunda"
+      label_with_count: "Tertunda (%{count})"
     replies: "Balasan"
     activity: "Aktifitas"
     likes: "Suka"

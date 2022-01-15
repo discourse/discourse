@@ -37,7 +37,7 @@ task "release_note:plugins:generate", :from, :to, :plugin_glob, :org do |t, args
   plugin_glob = args[:plugin_glob] || "./plugins/*"
   git_org = args[:org]
 
-  all_repos = Dir.glob(plugin_glob).filter { |f| File.directory?(f) && File.exists?("#{f}/.git")  }
+  all_repos = Dir.glob(plugin_glob).filter { |f| File.directory?(f) && File.exist?("#{f}/.git")  }
 
   if git_org
     all_repos = all_repos.filter { |dir| `git -C #{dir} remote get-url origin`.match?(/github.com[\/:]#{git_org}\//) }

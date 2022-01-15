@@ -959,10 +959,8 @@ sk:
         weekly: "týždenne"
         every_month: "každý mesiac"
       email_level:
-        title: "Pošlite mi email ak ma niekto cituje, odpovie na môj príspevok, zmieni moje @meno alebo ma pozve do témy."
         always: "vždy"
         never: "nikdy"
-      email_messages_level: "Pošlite mi email keď mi niekto pošle správu"
       include_tl0_in_digests: "Zahrnúť obsah od nových používateľov do súhrnných emailov"
       email_in_reply_to: "Zahrnúť úryvok príspevku, na ktorý používateľ reagoval, v emailoch"
       other_settings: "Ostatné"
@@ -1562,16 +1560,9 @@ sk:
         back: "Späť"
       progress:
         title: pozícia v téme
-        go_top: "na začiatok"
-        go_bottom: "na spodok"
-        go: "Choď"
-        jump_bottom: "choď na posledný príspevok"
         jump_prompt: "choď na..."
         jump_prompt_long: "Choď na..."
-        jump_bottom_with_number: "choď na príspevok číslo %{post_number}"
         jump_prompt_or: "alebo"
-        total: Všetkých príspevkov
-        current: tento príspevok
       notifications:
         title: zmeň ako často dostávaš upozornenia o tejto téme
         reasons:
@@ -2028,6 +2019,9 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
+    pending_posts:
+      label: "Čakajúce správy"
+      label_with_count: "Čakajúce (%{count})"
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:
@@ -2232,8 +2226,7 @@ sk:
       tags: "Štítky"
       add_synonyms: "Pridať"
       delete_tag: "Zmazať štítok"
-      rename_tag: "Premenovať štítok"
-      rename_instructions: "Vyberte nové meno pre štítok:"
+      description: "Popis"
       sort_by: "Zoradiť podľa:"
       sort_by_count: "počtu"
       sort_by_name: "mena"
@@ -2742,9 +2735,6 @@ sk:
         screened_ips:
           title: "Kontrolované IP adresy"
           delete_confirm: "Ste si istý, že chcete zrušiť pravidlo pre %{ip_address}?"
-          roll_up_confirm: "Ste si istý, že chcete zosumarizovať bežne kontrolované IP do podsietí?"
-          rolled_up_some_subnets: "Zakázané IP adresy boli úspešne zosumarizované do podsietí: %{subnets}."
-          rolled_up_no_subnet: "Nebolo čo zbaliť."
           actions:
             block: "Blokovať"
             do_nothing: "Povoliť"

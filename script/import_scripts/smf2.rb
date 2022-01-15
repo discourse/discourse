@@ -303,7 +303,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     [ filename, "#{attachment_id}_#{file_hash}", legacy_name ]
       .map { |name| File.join(options.smfroot, 'attachments', name) }
-      .detect { |file| File.exists?(file) }
+      .detect { |file| File.exist?(file) }
   end
 
   def decode_entities(*args)

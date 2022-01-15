@@ -36,7 +36,8 @@ module TurboTests
         pending_message: result.pending_message,
         status: result.status,
         pending_fixed?: result.pending_fixed?,
-        exception: exception_to_json(result.exception)
+        exception: exception_to_json(result.exception),
+        pending_exception: exception_to_json(result.pending_exception),
       }
     end
 

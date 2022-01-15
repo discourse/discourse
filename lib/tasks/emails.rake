@@ -80,30 +80,22 @@ task 'emails:test', [:email] => [:environment] do |_, args|
 
     puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
 
-    # TODO (martin, post-2.7 release) Change to use EmailSettingsValidator
-    # EmailSettingsValidator.validate_smtp(
-    #   host: smtp[:address],
-    #   port: smtp[:port],
-    #   domain: smtp[:domain] || 'localhost',
-    #   username: smtp[:user_name],
-    #   password: smtp[:password],
-    #   authentication: smtp[:authentication] || 'plain'
-    # )
-
-    # We would like to do this, but Net::SMTP errors out using starttls
-    #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|
-    #  s.starttls if !!smtp[:enable_starttls_auto] && s.capable_starttls?
-    #  s.auth_login(smtp[:user_name], smtp[:password])
-    #end
-
-    Net::SMTP.start(smtp[:address], smtp[:port], smtp[:domain] || 'localhost',  smtp[:user_name], smtp[:password], smtp[:authentication])
-
+    # We are not formatting the messages using EmailSettingsExceptionHandler here
+    # because we are doing custom messages in the rake task with more details.
+    EmailSettingsValidator.validate_smtp(
+      host: smtp[:address],
+      port: smtp[:port],
+      domain: smtp[:domain] || 'localhost',
+      username: smtp[:user_name],
+      password: smtp[:password],
+      authentication: smtp[:authentication] || 'plain'
+    )
   rescue Exception => e
 
     if e.to_s.match(/execution expired/)
       message = <<~STR
         ======================================== ERROR ========================================
-        Connection to port #{ENV["DISCOURSE_SMTP_PORT"]} failed.
+        Connection to port #{smtp[:port]} failed.
         ====================================== SOLUTION =======================================
         The most likely problem is that your server has outgoing SMTP traffic blocked.
         If you are using a service like Mailgun or Sendgrid, try using port 2525.

@@ -8,6 +8,7 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
 
   # only option at the moment is :trusted
   def initialize(name, opts = {})
+    Discourse.deprecate("OAuth2Authenticator is deprecated. Use `ManagedAuthenticator` and `UserAssociatedAccount` instead. For more information, see https://meta.discourse.org/t/106695", drop_from: '2.9.0', output_in_test: true)
     @name = name
     @opts = opts
   end
@@ -45,13 +46,10 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
 
   def after_create_account(user, auth)
     data = auth[:extra_data]
-    Oauth2UserInfo.create(
-      uid: data[:uid],
-      provider: data[:provider],
-      name: auth[:name],
-      email: auth[:email],
-      user_id: user.id
-    )
+    association = Oauth2UserInfo.find_or_initialize_by(provider: data[:provider], uid: data[:uid])
+    association.user = user
+    association.email = auth[:email]
+    association.save!
   end
 
   def description_for_user(user)

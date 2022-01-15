@@ -1,7 +1,6 @@
 import RawHtml from "discourse/widgets/raw-html";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
-import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
@@ -71,15 +70,5 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
     return ajax(`/u/${this.currentUser.username}/bookmarks.json`).then(
       ({ user_bookmark_list }) => user_bookmark_list.bookmarks
     );
-  },
-
-  loadUserActivityBookmarks() {
-    return ajax("/user_actions.json", {
-      data: {
-        username: this.currentUser.username,
-        filter: UserAction.TYPES.bookmarks,
-        no_results_help_key: "user_activity.no_bookmarks",
-      },
-    }).then(({ user_actions }) => user_actions);
   },
 });

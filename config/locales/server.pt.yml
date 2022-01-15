@@ -214,8 +214,6 @@ pt:
       <p>Se você se lembrar da sua senha, você pode <a href="%{base_url}/login">Efetuar Login</a>.</p>
 
       <p>Caso contrário, <a href="%{base_url}/password-reset">Redefinir senha</a>.</p>
-    not_found_template_link: |
-      <p>O convite para <a href="%{base_url}">%{site_name}</a> não pode mais ser resgatado. Peça à pessoa que o convidou para enviar um novo convite.</p>
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já têm uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>."
     invalid_email: "%{email} não é um endereço de email válido."
@@ -667,10 +665,6 @@ pt:
       title: "Gostar"
       description: "Gostar desta mensagem"
       short_description: "Gostar desta publicação"
-  user_activity:
-    no_bookmarks:
-      self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
-      others: "Sem marcadores."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -946,6 +940,18 @@ pt:
     top_uploads:
       labels:
         filename: Nome do ficheiro
+    top_users_by_likes_received:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
   dashboard:
     rails_env_warning: "O seu servidor está a executar em modo %{env}."
     host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."

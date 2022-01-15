@@ -426,7 +426,7 @@ EOM
     real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       if row['dbsize'].to_i == 0
         puts "Attachment file #{row['filedataid']} doesn't exist"
         return nil

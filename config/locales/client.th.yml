@@ -974,10 +974,8 @@ th:
         every_month: "ทุกเดือน"
         every_six_months: "ทุกหกเดือน"
       email_level:
-        title: "ส่งอีเมลเมื่อมีบางคนอ้างอิงถึงฉัน ตอบโพสต์ฉัน กล่าวถึงฉัน @ชื่อผู้ใช้ หรือเชิญฉันเข้าไปในกระทู้"
         always: "เสมอ"
         never: "ไม่เคย"
-      email_messages_level: "ส่งอีเมลหาฉันเมื่อมีคนส่งข้อความส่วนตัวมาหาฉัน"
       include_tl0_in_digests: "รวมเนื้อหาจากผู้ใช้ใหม่ในอีเมลสรุป"
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
@@ -1717,19 +1715,12 @@ th:
         back_description: "กลับไปยังโพสต์ล่าสุดที่ยังไม่ได้อ่าน"
         replies_short: "%{current} / %{total}"
       progress:
-        go_top: "ด้านบน"
-        go_bottom: "ปุ่ม"
-        go: "ไป"
-        jump_bottom: "ข้ามไปยังโพสต์ล่าสุด"
         jump_prompt: "ข้ามไปยัง..."
         jump_prompt_of:
           other: "ของ %{count} โพสต์"
         jump_prompt_long: "ข้ามไปยัง..."
-        jump_bottom_with_number: "ข้ามไปยังโพสต์ %{post_number}"
         jump_prompt_to_date: "ไปวันที่"
         jump_prompt_or: "หรือ"
-        total: โพสต์ทั้งหมด
-        current: โพสต์ปัจจุบัน
       notifications:
         title: เปลี่ยนความถี่ในการรับการแจ้งเตือนเกี่ยวกระทู้นี้
         reasons:
@@ -2174,6 +2165,9 @@ th:
         title: "กระทู้นี้เป็นข้อความส่วนตัว"
         help: "กระทู้นี้เป็นข้อความส่วนตัว"
     posts: "โพสต์"
+    pending_posts:
+      label: "อยู่ระหว่างการพิจารณา"
+      label_with_count: "กำลังรอ (%{count})"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:
@@ -2371,8 +2365,7 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
-      rename_tag: "เปลี่ยนชื่อแท็ก"
-      rename_instructions: "เลือกชื่อใหม่สำหรับแท็ก:"
+      description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"

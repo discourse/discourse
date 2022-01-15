@@ -5,6 +5,7 @@ class InviteSerializer < ApplicationSerializer
              :invite_key,
              :link,
              :email,
+             :domain,
              :emailed,
              :max_redemptions_allowed,
              :redemption_count,

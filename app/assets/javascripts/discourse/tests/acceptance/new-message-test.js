@@ -22,7 +22,7 @@ acceptance("New Message - Authenticated", function (needs) {
 
   test("accessing new-message route when logged in", async function (assert) {
     await visit(
-      "/new-message?username=charlie&title=message%20title&body=message%20body"
+      "/new-message?username=charlie,john&title=message%20title&body=message%20body"
     );
 
     assert.ok(exists(".composer-fields"), "it opens composer");
@@ -40,7 +40,7 @@ acceptance("New Message - Authenticated", function (needs) {
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
       privateMessageUsers.header().value(),
-      "charlie",
+      "charlie,john",
       "it selects correct username"
     );
   });

@@ -638,12 +638,6 @@ hy:
       title: "Հավանել"
       description: "Հավանել այս գրառումը"
       short_description: "Հավանել այս գրառումը"
-  user_activity:
-    no_bookmarks:
-      self: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
-      others: "Էջանշումներ չկան:"
-    no_drafts:
-      self: "Դուք սևագրեր չունեք; սկսեք կզամել պատասխան ցանկացած թեմայում, և այն ավտոմատ կերպով կպահպանվի որպես նոր սևագիր:"
   topic_flag_types:
     spam:
       title: "Սպամ"
@@ -1026,6 +1020,18 @@ hy:
         ignored_user: Անտեսված Օգտատեր
         ignores_count: Անտեսումների քանակ
         mutes_count: Խլացվածների քանակը
+    top_users_by_likes_received:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Օգտատեր
+        qtt_like: Ստացած Հավանումները
   dashboard:
     rails_env_warning: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"
     host_names_warning: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"
@@ -1145,7 +1151,6 @@ hy:
     blocked_ip_blocks: "Մասնավոր IP արգելափակումների ցանկ, որոնք երբեք չպետք է ենթարկվեն տվյալների հավաքագրման Discourse-ի կողմից:"
     allowed_internal_hosts: "Ներքին հոսթերի ցանկ, որը discourse-ը կարող է ապահով հավաքագրել սմարթ-ներդիրի և այլ նպատակների համար"
     allowed_iframes: "iframe src դոմենի նախամասնիկներ, որ discourse-ը կարող է ապահով թույլատրել գրառումներում"
-    slow_down_crawler_user_agents: "Ցանցային տվյալների հավաքագրիչների օգտատերերի գործակալներ, որոնք պետք է սահմանափակված լինեն robots.txt-ով՝ օգտագործելով Crawl-delay ուղղորդիչը"
     slow_down_crawler_rate: "Եթե slow_down_crawler_user_agents -ը որոշված է, այս գնահատականը կկիրառվի տվյալների բոլոր հավաքագրիչների նկատմամբ (հարցումների միջև դադարի վայրկյանների քանակը)"
     content_security_policy: "Միացնել Content-Security-Policy"
     content_security_policy_report_only: "Միացնել Content-Security-Policy-Report-Only"
@@ -1176,7 +1181,6 @@ hy:
     enable_whispers: "Թույլատրել անձնակազմի մասնավոր հաղորդակցությունը թեմաների ներսում:"
     blocked_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերին չի թույլատրվում գրանցել հաշիվ: Օրինակ՝ mailinator.com|trashmail.net"
     allowed_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերը ՊԵՏՔ Է գրանցեն հաշիվներ: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ այս ցանկի դոմեններից տարբեր էլ. հասցեներ ունեցող օգտատերերին չի թույլատրվի!"
-    hide_email_address_taken: "Գրանցման ընթացքում և ՛մոռացել եմ գաղտնաբառը՛ էջում օգտատերերին ցույց չտալ, որ տրված էլ. հասցեով հաշիվ գոյություն ունի:"
     log_out_strict: "Ելքագրվելիս դուրս գալ օգտատիրոջ ԲՈԼՈՐ գործընթացներից բոլոր սարքերի վրա:"
     version_checks: "Ստուգել Discourse Hub -ը տարբերակի թարմացումների համար և ցուցադրել նոր տարբերակի հաղորդագրությունները <a href='%{base_path}/admin' target='_blank'>/admin</a> կառավարման հարթակում:"
     new_version_emails: "Ուղարկել էլ. նամակ contact_email հասցեին, երբ հասանելի է Discourse -ի նոր տարբերակ:"

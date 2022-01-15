@@ -86,7 +86,7 @@ module BackupRestore
         if @is_archive
           # for compatibility with backups from Discourse v1.5 and below
           old_dump_path = File.join(@tmp_directory, OLD_DUMP_FILENAME)
-          File.exists?(old_dump_path) ? old_dump_path : File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          File.exist?(old_dump_path) ? old_dump_path : File.join(@tmp_directory, BackupRestore::DUMP_FILE)
         else
           File.join(@tmp_directory, @filename)
         end

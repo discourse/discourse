@@ -174,6 +174,7 @@ class GroupsController < ApplicationController
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
       update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
+      AdminDashboardData.clear_found_problem("group_#{group.id}_email_credentials")
 
       if guardian.can_see?(group)
         render json: success_json
@@ -734,6 +735,10 @@ class GroupsController < ApplicationController
         permitted_params << { "#{level}_category_ids" => [] }
         permitted_params << { "#{level}_tags" => [] }
       end
+    end
+
+    if guardian.can_associate_groups?
+      permitted_params << { associated_group_ids: [] }
     end
 
     permitted_params = permitted_params | DiscoursePluginRegistry.group_params

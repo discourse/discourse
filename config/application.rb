@@ -30,7 +30,7 @@ require_relative '../lib/plugin_gem'
 # Global config
 require_relative '../app/models/global_setting'
 GlobalSetting.configure!
-unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+if GlobalSetting.load_plugins?
   require_relative '../lib/custom_setting_providers'
 end
 GlobalSetting.load_defaults
@@ -176,12 +176,17 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
-      discourse/tests/theme_qunit_ember_jquery.js
-      discourse/tests/theme_qunit_vendor.js
-      discourse/tests/theme_qunit_tests_vendor.js
-      discourse/tests/theme_qunit_helper.js
+      discourse/tests/active-plugins.js
       discourse/tests/test_starter.js
     }
+
+    if ENV['EMBER_CLI_PROD_ASSETS'] != "1"
+      config.assets.precompile += %w{
+        discourse/tests/test-support-rails.js
+        discourse/tests/test-helpers-rails.js
+        vendor-theme-tests.js
+      }
+    end
 
     # Precompile all available locales
     unless GlobalSetting.try(:omit_base_locales)
@@ -291,8 +296,11 @@ module Discourse
     require 'logster/redis_store'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
-    $redis = DiscourseRedis.new # rubocop:disable Style/GlobalVars
+    Discourse.redis = DiscourseRedis.new
     Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
+
+    # Deprecated
+    $redis = Discourse.redis # rubocop:disable Style/GlobalVars
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx
@@ -309,11 +317,9 @@ module Discourse
       config.relative_url_root = GlobalSetting.relative_url_root
     end
 
-    if Rails.env == "test"
-      if ENV['LOAD_PLUGINS'] == "1"
-        Discourse.activate_plugins!
-      end
-    else
+    if Rails.env.test? && GlobalSetting.load_plugins?
+      Discourse.activate_plugins!
+    elsif GlobalSetting.load_plugins?
       plugin_initialization_guard do
         Discourse.activate_plugins!
       end
@@ -369,7 +375,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              discourse/tests/test_helper.js
+              discourse/tests/test-boot-rails.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||

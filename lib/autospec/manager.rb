@@ -295,7 +295,7 @@ class Autospec::Manager
             if spec == file && line
               with_line = spec + ":" << line.to_s
             end
-            if File.exists?(spec) || Dir.exists?(spec)
+            if File.exist?(spec) || Dir.exist?(spec)
               if with_line != spec
                 specs << [file, spec, runner]
               end

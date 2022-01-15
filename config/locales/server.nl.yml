@@ -806,13 +806,6 @@ nl:
   draft_backup:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
-  user_activity:
-    no_bookmarks:
-      self: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
-      search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
-      others: "Geen bladwijzers."
-    no_drafts:
-      self: "U hebt geen concepten; begin met het opstellen van een antwoord in een topic en het wordt automatisch als nieuw concept opgeslagen."
   webauthn:
     validation:
       invalid_type_error: "Het opgegeven type webauthn was ongeldig. Geldige typen zijn webauthn.get en webauthn.create."
@@ -1236,6 +1229,18 @@ nl:
         ignores_count: Aantal genegeerd
         mutes_count: Aantal gedempt
       description: "Gebruikers die door veel andere gebruikers zijn gedempt en/of genegeerd."
+    top_users_by_likes_received:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Gebruiker
+        qtt_like: Ontvangen likes
   dashboard:
     rails_env_warning: "Uw server werkt in de modus voor %{env}."
     host_names_warning: "Uw bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van uw website."
@@ -1388,7 +1393,6 @@ nl:
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_iframes: "Een lijst van 'iframe src'-domeinvoorvoegsels die Discourse veilig kan toestaan in berichten"
     allowed_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
-    slow_down_crawler_user_agents: "Useragents van webcrawlers waarvan aanvragen beperkt moeten zijn in robots.txt via de Crawl-delay-instructie"
     slow_down_crawler_rate: "Als slow_down_crawler_user_agents is opgegeven, is deze beperking op alle crawlers van toepassing (aantal seconden vertraging tussen aanvragen)"
     content_security_policy: "Content-Security-Policy inschakelen"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only inschakelen"
@@ -1424,7 +1428,6 @@ nl:
     blocked_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarbij gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
     allowed_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     auto_approve_email_domains: "Gebruikers met e-mailadressen van deze lijst met domeinen worden automatisch goedgekeurd."
-    hide_email_address_taken: "Gebruikers niet informeren dat een account met een bepaald e-mailadres bestaat tijdens registratie en vanaf het formulier voor vergeten wachtwoorden."
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
     version_checks: "De Discourse Hub pingen voor versie-updates en berichten over nieuwe versies tonen op het <a href='%{base_path}/admin' target='_blank'>/admin</a>-dashboard"
     new_version_emails: "Een e-mail naar het contact_email-adres sturen wanneer een nieuwe versie van Discourse beschikbaar is."
@@ -2118,10 +2121,6 @@ nl:
     email_in_spam_header: "Eerste e-mail van gebruiker is als spam gemarkeerd"
     already_silenced: "Gebruiker is %{time_ago} al gedempt door %{staff}."
     already_suspended: "Gebruiker is %{time_ago} al geschorst door %{staff}."
-  reviewables_reminder:
-    subject_template:
-      one: "%{count} item moet worden beoordeeld"
-      other: "%{count} items moeten worden beoordeeld"
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
     subject_template: "Bevestig dat u geen e-mailupdates van %{site_title} meer wilt ontvangen"

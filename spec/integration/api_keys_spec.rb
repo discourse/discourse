@@ -45,13 +45,13 @@ describe 'api keys' do
 
     # Confirm not allowed for json
     get "/latest.json?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
-    expect(response.status).to eq(302)
+    expect(response.status).to eq(403)
   end
 
   context "with a plugin registered filter" do
     before do
       plugin = Plugin::Instance.new
-      plugin.add_api_parameter_route method: :get, route: "session#current", format: "*"
+      plugin.add_api_parameter_route methods: [:get], actions: ["session#current"]
     end
 
     it 'allows parameter access to the registered route' do
@@ -96,7 +96,7 @@ describe 'user api keys' do
 
     # Confirm not allowed for json
     get "/latest.json?user_api_key=#{user_api_key.key}"
-    expect(response.status).to eq(302)
+    expect(response.status).to eq(403)
   end
 
   it "can restrict scopes by parameters" do

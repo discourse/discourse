@@ -1,6 +1,7 @@
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import Site from "discourse/models/site";
 import { bind } from "discourse-common/utils/decorators";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { schedule } from "@ember/runloop";
 
 export default class StickyAvatars {
@@ -78,12 +79,8 @@ export default class StickyAvatars {
   @bind
   _initIntersectionObserver() {
     schedule("afterRender", () => {
-      const headerOffset =
-        parseInt(
-          getComputedStyle(document.body).getPropertyValue("--header-offset"),
-          10
-        ) || 0;
-      const headerHeight = Math.max(headerOffset, 0);
+      const headerOffsetInPx =
+        headerOffset() <= 0 ? "0px" : `-${headerOffset()}px`;
 
       this.intersectionObserver = new IntersectionObserver(
         (entries) => {
@@ -97,13 +94,16 @@ export default class StickyAvatars {
               ?.clientHeight;
             if (
               this.direction === "⬆️" ||
-              postContentHeight > window.innerHeight - headerHeight
+              postContentHeight > window.innerHeight - headerOffset()
             ) {
               entry.target.classList.add(this.stickyClass);
             }
           });
         },
-        { threshold: [0.0, 1.0], rootMargin: `-${headerHeight}px 0px 0px 0px` }
+        {
+          threshold: [0.0, 1.0],
+          rootMargin: `${headerOffsetInPx} 0px 0px 0px`,
+        }
       );
     });
   }

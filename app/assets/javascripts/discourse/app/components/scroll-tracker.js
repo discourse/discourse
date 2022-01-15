@@ -12,7 +12,7 @@ export default Component.extend(Scrolling, {
   didInsertElement() {
     this._super(...arguments);
 
-    this.bindScrolling({ name: this.name });
+    this.bindScrolling();
   },
 
   didRender() {
@@ -27,7 +27,7 @@ export default Component.extend(Scrolling, {
   willDestroyElement() {
     this._super(...arguments);
 
-    this.unbindScrolling(this.name);
+    this.unbindScrolling();
   },
 
   scrolled() {

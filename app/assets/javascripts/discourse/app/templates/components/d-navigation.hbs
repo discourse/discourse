@@ -31,11 +31,11 @@
 
   {{#if tag}}
     {{#if showToggleInfo}}
-      {{d-button icon="wrench" class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
+      {{d-button icon=(if currentUser.staff "wrench" "info-circle") class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
     {{/if}}
   {{/if}}
 
-  {{plugin-outlet name="before-create-topic-button" tagName=""
+  {{plugin-outlet name="before-create-topic-button" connectorTagName="div" tagName=""
     args=(hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled
@@ -54,7 +54,7 @@
     canCreateTopicOnTag=canCreateTopicOnTag
   }}
 
-  {{plugin-outlet name="after-create-topic-button" tagName=""
+  {{plugin-outlet name="after-create-topic-button" connectorTagName="div" tagName=""
     args=(hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled

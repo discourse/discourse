@@ -5,6 +5,7 @@ import {
 import { module, test } from "qunit";
 import { Promise } from "rsvp";
 import pretender from "discourse/tests/helpers/create-pretender";
+import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | Utility | link-mentions", function () {
   test("linkSeenMentions replaces users and groups", async function (assert) {
@@ -32,20 +33,14 @@ module("Unit | Utility | link-mentions", function () {
       "invalid",
     ]);
 
-    let html = `
+    const root = domFromString(`
       <div>
         <span class="mention">@invalid</span>
         <span class="mention">@valid_user</span>
         <span class="mention">@valid_group</span>
         <span class="mention">@mentionable_group</span>
       </div>
-    `;
-
-    let template = document.createElement("template");
-    html = html.trim();
-    template.innerHTML = html;
-    const root = template.content.firstChild;
-
+    `)[0];
     await linkSeenMentions(root);
 
     // Ember.Test.registerWaiter is not available here, so we are implementing

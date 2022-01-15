@@ -901,13 +901,7 @@ te:
         replies_short: "%{current} / %{total}"
       progress:
         title: విషయపు పురోగతి
-        go_top: "అగ్ర"
-        go_bottom: "అడుగు"
-        go: "వెళ్లు"
-        jump_bottom_with_number: "%{post_number} టపాకు వళ్లు"
         jump_prompt_or: "లేదా"
-        total: అన్ని టపాలు
-        current: ప్రస్తుత టపా
       notifications:
         reasons:
           "3_6": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ వర్గాంపై కన్నేసారు"
@@ -1198,6 +1192,8 @@ te:
       unlisted:
         help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
     posts: "టపాలు"
+    pending_posts:
+      label: "పెండింగు"
     original_post: "మూల టపా"
     views: "చూపులు"
     replies: "జవాబులు"
@@ -1323,6 +1319,7 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
+      description: "వివరణ"
       sort_by_name: "పేరు"
       cancel_delete_unused: "రద్దుచేయి"
       filters:
@@ -1702,8 +1699,6 @@ te:
         screened_ips:
           title: "స్క్రీన్ చేసిన ఐపీలు"
           delete_confirm: "మీరు నిజంగా %{ip_address} కు ఈ నియమాన్ని తొలగించాలనుకుంటున్నారా? "
-          rolled_up_some_subnets: "IP నిషేధిత ప్రవేశాలు ఈ సబ్‌నెట్స్‌కు విజయవంతంగా చేర్చారు: %{subnets}."
-          rolled_up_no_subnet: "రోల్ అప్ చేయుటకు ఏమీ లేదు."
           actions:
             block: "ఖండం"
             do_nothing: "అనుమతించు"

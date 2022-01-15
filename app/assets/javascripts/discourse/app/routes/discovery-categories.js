@@ -1,6 +1,6 @@
 import CategoryList from "discourse/models/category-list";
 import DiscourseRoute from "discourse/routes/discourse";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
 import PreloadStore from "discourse/lib/preload-store";
@@ -130,31 +130,34 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     });
   },
 
-  actions: {
-    triggerRefresh() {
-      this.refresh();
-    },
+  @action
+  triggerRefresh() {
+    this.refresh();
+  },
 
-    createCategory() {
-      this.transitionTo("newCategory");
-    },
+  @action
+  createCategory() {
+    this.transitionTo("newCategory");
+  },
 
-    reorderCategories() {
-      showModal("reorderCategories");
-    },
+  @action
+  reorderCategories() {
+    showModal("reorderCategories");
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        this.openComposer(this.controllerFor("discovery/categories"));
-      }
-    },
+  @action
+  createTopic() {
+    if (this.get("currentUser.has_topic_draft")) {
+      this.openTopicDraft();
+    } else {
+      this.openComposer(this.controllerFor("discovery/categories"));
+    }
+  },
 
-    didTransition() {
-      next(() => this.controllerFor("application").set("showFooter", true));
-      return true;
-    },
+  @action
+  didTransition() {
+    next(() => this.controllerFor("application").set("showFooter", true));
+    return true;
   },
 });
 

@@ -1243,11 +1243,9 @@ ur:
         every_month: "ہر مہینے"
         every_six_months: "ہر چھ ماہ"
       email_level:
-        title: "مجھے ایک اِی میل بھیجیں اگر کوئی میرے پوسٹ کا اقتباس کرے، میری پوسٹ کا جواب دے، میرے @صارفنام کا تذکرا کرے، یا پجھے کسی ٹاپک میں مدعو کرے"
         always: "ہمیشہ"
         only_when_away: "صرف جب غیر حاضر"
         never: "کبھی نہیں "
-      email_messages_level: "اگر کوئی مجھے پیغام بھیجیے تو مجھے ایک اِی میل بھیجیں"
       include_tl0_in_digests: "اِی میل خلاصہ میں نئے صارفین سے مواد شامل کریں"
       email_in_reply_to: "ای میل میں پوسٹ کے جواب کا اقتباس شامل کریں"
       other_settings: "دیگر"
@@ -1678,9 +1676,6 @@ ur:
       group_mentioned:
         one: "%{group} کا ذکر کر کہ، آپ <a href='%{group_link}'>%{count} شخص</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
         other: "%{group} کا ذکر کر کہ، آپ <a href='%{group_link}'>%{count} لوگوں</a> کو مطلع کرنے لگے ہیں - کیا آپ واقعی یہ کرنا چاہتے ہیں؟"
-      cannot_see_mention:
-        category: "آپ نے %{username} کا زکر کیا ہے لیکن چونکہ اُن کو اِس زمرے تک رسائی حاصل نہیں، اُن کو مطلع نہیں کیا جائے گا۔ آپ کو انہیں ایک ایسے گروپ میں شامل کرنے کی ضرورت ہے جسے اِس زمرے تک رسائی حاصل ہے۔"
-        private: "آپ نے %{username} کا زکر کیا ہے لیکن چونکہ وہ یہ ذاتی پیغام نہیں دیکھ سکتے اُن کو مطلع نہیں کیا جائے گا۔ آپ کو اُنہیں اِس ذاتی پیغام میں مدعو کرنے کی ضرورت ہے۔"
       duplicate_link: "لگتا ہے کہ آپ کا <b>%{domain}</b> لنک <b>@%{username}</b> نے <a href='%{post_url}'>%{ago} کو ٹاپک میں پہلے سے ہی ایک جواب</a> میں پوسٹ کر دیا تھا - کیا آپ واقعی یہ دوبارہ پوسٹ کرنا چاہتے ہیں؟"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2155,17 +2150,10 @@ ur:
         replies_short: "%{current}/ %{total} "
       progress:
         title: ٹاپک پیش رَفت
-        go_top: "سب سے اوپر"
-        go_bottom: "سب سے نیچے"
-        go: "جائیں"
-        jump_bottom: "آخری پوسٹ پر جائیں"
         jump_prompt: "پر جائیں..."
         jump_prompt_long: "پر جائیں..."
-        jump_bottom_with_number: "پوسٹ %{post_number} پر جائیں"
         jump_prompt_to_date: "اِس تاریخ تک"
         jump_prompt_or: "یا "
-        total: کُل پوسٹس
-        current: موجودہ پوسٹ
       notifications:
         title: آپ کو اس ٹاپک کے بارے میں کتنی بار مطلع کیا جاتا ہے، تبدیل کریں
         reasons:
@@ -2764,6 +2752,9 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
+    pending_posts:
+      label: "زیرِاِلتوَاء"
+      label_with_count: "زیرِاِلتوَاء (%{count})"
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -2979,8 +2970,7 @@ ur:
         one: "کیا آپ واقعی اس ٹیگ کو حذف اور %{count} ٹاپک، جس کو یہ آسائین ہواوا ہے، سے ہٹا دینا چاہتے ہیں؟"
         other: "کیا آپ واقعی اس ٹیگ کو حذف اور %{count} ٹاپکس، جن کو یہ آسائین ہواوا ہے، سے ہٹا دینا چاہتے ہیں؟"
       delete_confirm_no_topics: "کیا آپ واقعی اِس ٹَیگ کو حذف کرنا چاہتے ہیں؟"
-      rename_tag: "ٹیگ کا نام تبدیل کریں"
-      rename_instructions: "ٹیگ کے لیے نئے نام کا انتخاب کریں:"
+      description: "تفصیل"
       sort_by: "ترتیب بہ:"
       sort_by_count: "شمار"
       sort_by_name: "نام"
@@ -3819,9 +3809,6 @@ ur:
         screened_ips:
           title: "سکرین کیے گئے IP"
           delete_confirm: "کیا آپ واقعی %{ip_address} کیلئے اصول کو ہٹانا چاہتے ہیں؟"
-          roll_up_confirm: "کیا آپ واقعی عام سکرین کیے گئے IP ایڈریسوں کو subnets میں رول اَپ کرنا چاہتے ہیں؟"
-          rolled_up_some_subnets: "کامیابی کے ساتھ IP بین اندراجات کو اِن subnets میں رول اَپ کر دیا گیا: %{subnets}۔"
-          rolled_up_no_subnet: "رول اَپ کرنے کیلئے کچھ بھی نہیں تھا۔"
           actions:
             block: "بلاک کریں"
             do_nothing: "اجازت دیں"

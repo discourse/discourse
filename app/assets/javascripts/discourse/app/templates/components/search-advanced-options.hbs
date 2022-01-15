@@ -3,10 +3,10 @@
 </summary>
 <div class="search-advanced-filters">
   <div class="search-advanced-options">
-    {{plugin-outlet name="advanced-search-options-above" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+    {{plugin-outlet name="advanced-search-options-above" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
 
     <div class="control-group advanced-search-category">
-      <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
+      <label class="control-label">{{i18n "search.advanced.in_category.label"}}</label>
       <div class="controls">
         {{search-advanced-category-chooser
           id="search-in-category"
@@ -18,7 +18,7 @@
 
     {{#if siteSettings.tagging_enabled}}
       <div class="control-group advanced-search-tags">
-        <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
+        <label class="control-label">{{i18n "search.advanced.with_tags.label"}}</label>
         <div class="controls">
           {{tag-chooser
             id="search-with-tags"
@@ -51,7 +51,7 @@
     <div class="control-group advanced-search-topics-posts">
       <div class="controls">
         <fieldset class="grouped-control">
-          <legend class="grouped-control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</legend>
+          <legend class="grouped-control-label">{{i18n "search.advanced.filters.label"}}</legend>
 
           {{#if currentUser}}
             <div class="grouped-control-field">
@@ -117,7 +117,7 @@
     </div>
 
     <div class="control-group advanced-search-topic-status">
-      <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
+      <label class="control-label">{{i18n "search.advanced.statuses.label"}}</label>
       <div class="controls">
         {{combo-box
           id="search-status-options"
@@ -135,7 +135,7 @@
     </div>
 
     <div class="control-group advanced-search-posted-by">
-      <label class="control-label" for="search-posted-by">
+      <label class="control-label">
         {{i18n "search.advanced.posted_by.label"}}
       </label>
       <div class="controls">
@@ -153,7 +153,7 @@
     </div>
 
     <div class="control-group advanced-search-posted-date">
-      <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
+      <label class="control-label">{{i18n "search.advanced.post.time.label"}}</label>
       <div class="controls inline-form full-width">
         {{combo-box
           id="postTime"
@@ -173,7 +173,7 @@
       </div>
     </div>
 
-    {{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}
+    {{plugin-outlet name="advanced-search-options-below" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
   </div>
 
   <details class="search-advanced-additional-options">
@@ -182,7 +182,7 @@
     </summary>
     <div class="count-group control-group">
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
-      <span class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</span>
+      <span class="control-label">{{i18n "search.advanced.post.count.label"}}</span>
       <div class="controls">
         {{input
           type="number"
@@ -208,7 +208,7 @@
 
     <div class="count-group control-group">
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
-      <span class="control-label" for="search-min-views">{{i18n "search.advanced.views.label"}}</span>
+      <span class="control-label">{{i18n "search.advanced.views.label"}}</span>
       <div class="controls">
         {{input
           type="number"
@@ -217,7 +217,7 @@
           id="search-min-views"
           input=(action "onChangeSearchTermMinViews" value="target.value")
           placeholder=(i18n "search.advanced.min_views.placeholder")
-          aria-label=(i18n "search.advanced.post.min_views.aria_label")
+          aria-label=(i18n "search.advanced.min_views.aria_label")
         }}
         {{d-icon "arrows-alt-h"}}
         {{input
@@ -227,7 +227,7 @@
           id="search-max-views"
           input=(action "onChangeSearchTermMaxViews" value="target.value")
           placeholder=(i18n "search.advanced.max_views.placeholder")
-          aria-label=(i18n "search.advanced.post.max_views.aria_label")
+          aria-label=(i18n "search.advanced.max_views.aria_label")
         }}
       </div>
     </div>

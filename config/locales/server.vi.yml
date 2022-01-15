@@ -545,11 +545,6 @@ vi:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
-  user_activity:
-    no_bookmarks:
-      self: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
-    no_drafts:
-      self: "Bạn không có bản nháp nào; bắt đầu soạn một câu trả lời trong bất kỳ chủ đề nào và nó sẽ được tự động lưu dưới dạng một bản nháp mới."
   topic_flag_types:
     spam:
       title: "Rác"
@@ -850,6 +845,18 @@ vi:
       labels:
         filename: Tên tập tin
         author: Tác giả
+    top_users_by_likes_received:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
@@ -1330,11 +1337,6 @@ vi:
       inactive_user: "Người dùng không hoạt động"
     email_in_spam_header: "Email đầu tiên của người dùng đã bị gắn cờ là spam"
     already_silenced: "Người dùng đã bị tắt tiếng bởi %{staff} %{time_ago}."
-  reviewables_reminder:
-    submitted:
-      other: "Các mục đã được gửi hơn %{count} giờ trước. [Vui lòng xem lại chúng](%{base_path}/review)."
-    subject_template:
-      other: "%{count} mục cần được xem xét"
   unsubscribe_mailer:
     title: "Hủy đăng ký gửi thư"
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"

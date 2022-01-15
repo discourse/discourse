@@ -65,7 +65,7 @@ export function buildResolver(baseName) {
       if (fullName === "app-events:main") {
         deprecated(
           "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0" }
+          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
         );
         return "service:app-events";
       }
@@ -166,6 +166,10 @@ export function buildResolver(baseName) {
     },
 
     resolveService(parsedName) {
+      return this.customResolve(parsedName) || this._super(parsedName);
+    },
+
+    resolveRawView(parsedName) {
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 

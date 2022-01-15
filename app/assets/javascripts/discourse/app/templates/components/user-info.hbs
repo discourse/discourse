@@ -9,7 +9,7 @@
   <div class="name-line">
     <span class={{if nameFirst "name bold" "username bold"}}><a href={{this.userPath}} data-user-card={{@user.username}}>{{if nameFirst this.name (format-username @user.username)}}</a></span>
     <span class={{if nameFirst "username margin" "name margin"}}><a href={{this.userPath}} data-user-card={{@user.username}}>{{if nameFirst (format-username @user.username) this.name}}</a></span>
-    {{plugin-outlet name="after-user-name" connectorTagName="span" args=(hash user=user)}}
+    {{plugin-outlet name="after-user-name" tagName="span" connectorTagName="span" args=(hash user=user)}}
   </div>
   <div class="title">{{@user.title}}</div>
 
@@ -21,4 +21,4 @@
 
 </div>
 
-{{plugin-outlet name="after-user-info" args=(hash user=user)}}
+{{plugin-outlet name="after-user-info" tagName="span" connectorTagName="div" args=(hash user=user)}}

@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -16,7 +17,7 @@ import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
-import { on } from "discourse-common/utils/decorators";
+import { bind, on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
 import bootbox from "bootbox";
 
@@ -30,6 +31,7 @@ export default Mixin.create(UppyS3Multipart, {
   inProgressUploads: null,
   id: null,
   uploadRootPath: "/uploads",
+  fileInputSelector: ".hidden-upload-field",
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -41,6 +43,8 @@ export default Mixin.create(UppyS3Multipart, {
     return {};
   },
 
+  uploadingOrProcessing: or("uploading", "processing"),
+
   @on("willDestroyElement")
   _destroy() {
     if (this.messageBus) {
@@ -50,6 +54,7 @@ export default Mixin.create(UppyS3Multipart, {
       "change",
       this.fileInputEventListener
     );
+    this.appEvents.off(`upload-mixin:${this.id}:add-files`, this._addFiles);
     this._uppyInstance?.close();
     this._uppyInstance = null;
   },
@@ -57,7 +62,7 @@ export default Mixin.create(UppyS3Multipart, {
   @on("didInsertElement")
   _initialize() {
     this.setProperties({
-      fileInputEl: this.element.querySelector(".hidden-upload-field"),
+      fileInputEl: this.element.querySelector(this.fileInputSelector),
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
@@ -96,7 +101,11 @@ export default Mixin.create(UppyS3Multipart, {
           this.validateUploadedFilesOptions()
         );
         const isValid = validateUploadedFile(currentFile, validationOpts);
-        this.setProperties({ uploadProgress: 0, uploading: isValid });
+        this.setProperties({
+          uploadProgress: 0,
+          uploading: isValid && this.autoStartUploads,
+          filesAwaitingUpload: !this.autoStartUploads,
+        });
         return isValid;
       },
 
@@ -133,7 +142,7 @@ export default Mixin.create(UppyS3Multipart, {
       },
     });
 
-    this._uppyInstance.use(DropTarget, { target: this.element });
+    this._uppyInstance.use(DropTarget, this._uploadDropTargetOptions());
     this._uppyInstance.use(UppyChecksum, { capabilities: this.capabilities });
 
     this._uppyInstance.on("progress", (progress) => {
@@ -219,6 +228,25 @@ export default Mixin.create(UppyS3Multipart, {
         this._useXHRUploads();
       }
     }
+
+    this.appEvents.on(`upload-mixin:${this.id}:add-files`, this._addFiles);
+    this._uppyReady();
+  },
+
+  // This should be overridden in a child component if you need to
+  // hook into uppy events and be sure that everything is already
+  // set up for _uppyInstance.
+  _uppyReady() {},
+
+  _startUpload() {
+    if (!this.filesAwaitingUpload) {
+      return;
+    }
+    if (!this._uppyInstance?.getFiles().length) {
+      return;
+    }
+    this.set("uploading", true);
+    return this._uppyInstance?.upload();
   },
 
   _useXHRUploads() {
@@ -294,21 +322,30 @@ export default Mixin.create(UppyS3Multipart, {
   _bindFileInputChange() {
     this.fileInputEventListener = bindFileInputChangeListener(
       this.fileInputEl,
-      (file) => {
-        try {
-          this._uppyInstance.addFile({
-            source: `${this.id} file input`,
+      this._addFiles
+    );
+  },
+
+  @bind
+  _addFiles(files, opts = {}) {
+    files = Array.isArray(files) ? files : [files];
+    try {
+      this._uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: this.id,
             name: file.name,
             type: file.type,
             data: file,
-          });
-        } catch (err) {
-          warn(`error adding files to uppy: ${err}`, {
-            id: "discourse.upload.uppy-add-files-error",
-          });
-        }
-      }
-    );
+            meta: { pasted: opts.pasted },
+          };
+        })
+      );
+    } catch (err) {
+      warn(`error adding files to uppy: ${err}`, {
+        id: "discourse.upload.uppy-add-files-error",
+      });
+    }
   },
 
   _completeExternalUpload(file) {
@@ -327,6 +364,7 @@ export default Mixin.create(UppyS3Multipart, {
       uploading: false,
       processing: false,
       uploadProgress: 0,
+      filesAwaitingUpload: false,
     });
     this.fileInputEl.value = "";
   },
@@ -336,5 +374,15 @@ export default Mixin.create(UppyS3Multipart, {
       "inProgressUploads",
       this.inProgressUploads.filter((upl) => upl.id !== fileId)
     );
+  },
+
+  // target must be provided as a DOM element, however the
+  // onDragOver and onDragLeave callbacks can also be provided.
+  // it is advisable to debounce/add a setTimeout timer when
+  // doing anything in these callbacks to avoid jumping. uppy
+  // also adds a .uppy-is-drag-over class to the target element by
+  // default onDragOver and removes it onDragLeave
+  _uploadDropTargetOptions() {
+    return { target: this.element };
   },
 });

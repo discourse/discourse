@@ -37,12 +37,12 @@ export default Component.extend({
   hoveredEmoji: null,
   isActive: false,
   isLoading: true,
+  usePopper: true,
 
   init() {
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("recentEmojis", this.emojiStore.favorites);
     this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
@@ -79,6 +79,7 @@ export default Component.extend({
   @action
   onShow() {
     this.set("isLoading", true);
+    this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
       document.addEventListener("click", this.handleOutsideClick);
@@ -88,25 +89,24 @@ export default Component.extend({
         return;
       }
 
-      if (!this.site.isMobileDevice) {
-        this._popper = createPopper(
-          document.querySelector(".d-editor-textarea-wrapper"),
-          emojiPicker,
-          {
-            placement: "auto",
-            modifiers: [
-              {
-                name: "preventOverflow",
+      const textareaWrapper = document.querySelector(
+        ".d-editor-textarea-wrapper"
+      );
+      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+        this._popper = createPopper(textareaWrapper, emojiPicker, {
+          placement: "auto",
+          modifiers: [
+            {
+              name: "preventOverflow",
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [5, 5],
               },
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 5],
-                },
-              },
-            ],
-          }
-        );
+            },
+          ],
+        });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
@@ -198,9 +198,9 @@ export default Component.extend({
 
     this.emojiSelected(code);
 
-    if (!img.parentNode.parentNode.classList.contains("recent")) {
-      this._trackEmojiUsage(code);
-    }
+    this._trackEmojiUsage(code, {
+      refresh: !img.parentNode.parentNode.classList.contains("recent"),
+    });
 
     if (this.site.isMobileDevice) {
       this.onClose();
@@ -213,6 +213,14 @@ export default Component.extend({
       `.emoji-picker-emoji-area .section[data-section="${sectionName}"]`
     );
     section && section.scrollIntoView();
+  },
+
+  @action
+  keydown(event) {
+    if (event.code === "Escape") {
+      this.onClose();
+      return false;
+    }
   },
 
   @action
@@ -236,9 +244,12 @@ export default Component.extend({
     }
   },
 
-  _trackEmojiUsage(code) {
+  _trackEmojiUsage(code, options = {}) {
     this.emojiStore.track(code);
-    this.set("recentEmojis", this.emojiStore.favorites.slice(0, 10));
+
+    if (options.refresh) {
+      this.set("recentEmojis", [...this.emojiStore.favorites]);
+    }
   },
 
   _replaceEmoji(code) {

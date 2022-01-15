@@ -316,7 +316,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
       attachments.each do |a|
         print_status(count += 1, total_attachments, get_start_time("attachments_from_postmeta"))
         path = File.join(BB_PRESS_ATTACHMENTS_DIR, a["meta_value"])
-        if File.exists?(path)
+        if File.exist?(path)
           if post = Post.find_by(id: post_id_from_imported_post_id(a["post_id"]))
             filename = File.basename(a["meta_value"])
             upload = create_upload(post.user.id, path, filename)
