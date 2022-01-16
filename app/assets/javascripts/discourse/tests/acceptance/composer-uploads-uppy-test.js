@@ -2,6 +2,7 @@ import {
   acceptance,
   createFile,
   loggedInUser,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -15,8 +16,7 @@ function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
     return helper.response([
       {
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
         short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
       },
@@ -38,8 +38,7 @@ function pretender(server, helper) {
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         thumbnail_height: 320,
         thumbnail_width: 690,
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
         width: 1920,
       });
     },
@@ -172,6 +171,146 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image = createFile("avatar.png");
     const image2 = createFile("avatar2.png");
     appEvents.trigger("composer:add-files", [image, image2]);
+  });
+
+  test("should insert a newline before and after an image when pasting in the end of the line", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline before and after an image when pasting in the middle of the line", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image: Text after the image.");
+    const textArea = query(".d-editor-input");
+    textArea.selectionStart = 10;
+    textArea.selectionEnd = 10;
+
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline before and after an image when pasting with text selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(
+      ".d-editor-input",
+      "The image: [paste here] Text after the image."
+    );
+    const textArea = query(".d-editor-input");
+    textArea.selectionStart = 10;
+    textArea.selectionEnd = 23;
+
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline only after an image when pasting into an empty composer", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline only after an image when pasting into a blank line", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        queryAll(".d-editor-input").val(),
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
   });
 });
 
