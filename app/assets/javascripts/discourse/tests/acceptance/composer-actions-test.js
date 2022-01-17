@@ -76,7 +76,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - reply_to_topic", async function (assert) {
+  skip("replying to post - reply_to_topic", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -103,7 +103,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper", async function (assert) {
+  skip("replying to post - toggle_whisper", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
