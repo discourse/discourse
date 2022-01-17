@@ -8,7 +8,7 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -286,7 +286,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Cannot use the post date for a reminder when the post date is in the past", async function (assert) {
+  skip("Cannot use the post date for a reminder when the post date is in the past", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(2);
     assert.notOk(

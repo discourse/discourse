@@ -17,7 +17,7 @@ import {
 } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -355,7 +355,7 @@ acceptance("Topic featured links", function (needs) {
     assert.ok(!exists(".gap"), "it hides gap");
   });
 
-  test("Quoting a quote keeps the original poster name", async function (assert) {
+  skip("Quoting a quote keeps the original poster name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
     await click(".quote-button .insert-quote");
@@ -367,7 +367,7 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
+  skip("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_9 blockquote");
     await click(".quote-button .insert-quote");
@@ -381,7 +381,7 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
+  skip("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
     await click(".reply");

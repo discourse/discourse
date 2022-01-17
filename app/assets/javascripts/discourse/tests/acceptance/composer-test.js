@@ -234,7 +234,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Posting on a different topic", async function (assert) {
+  skip("Posting on a different topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(

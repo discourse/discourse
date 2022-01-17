@@ -7,7 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`
 acceptance("Topic - Quote button - logged in", function (needs) {
@@ -27,25 +27,22 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     }
   );
 
-  chromeTest(
-    "Shows quote share buttons with the right site settings",
-    async function (assert) {
-      this.siteSettings.share_quote_visibility = "all";
+  skip("Shows quote share buttons with the right site settings", async function (assert) {
+    this.siteSettings.share_quote_visibility = "all";
 
-      await visit("/t/internationalization-localization/280");
-      await selectText("#post_5 blockquote");
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_5 blockquote");
 
-      assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
-      assert.ok(
-        exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-        "it includes the twitter share button"
-      );
-      assert.ok(
-        exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
-        "it includes the email share button"
-      );
-    }
-  );
+    assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
+    assert.ok(
+      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
+      "it includes the twitter share button"
+    );
+    assert.ok(
+      exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
+      "it includes the email share button"
+    );
+  });
 
   chromeTest(
     "Quoting a Onebox should not copy the formatting of the rendered Onebox",
@@ -91,25 +88,22 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     }
   );
 
-  chromeTest(
-    "Shows single share button when site setting only has one item",
-    async function (assert) {
-      this.siteSettings.share_quote_buttons = "twitter";
+  skip("Shows single share button when site setting only has one item", async function (assert) {
+    this.siteSettings.share_quote_buttons = "twitter";
 
-      await visit("/t/internationalization-localization/280");
-      await selectText("#post_5 blockquote");
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_5 blockquote");
 
-      assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
-      assert.ok(
-        exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-        "it includes the twitter share button"
-      );
-      assert.ok(
-        !exists(".quote-share-label"),
-        "it does not show the Share label"
-      );
-    }
-  );
+    assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
+    assert.ok(
+      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
+      "it includes the twitter share button"
+    );
+    assert.ok(
+      !exists(".quote-share-label"),
+      "it does not show the Share label"
+    );
+  });
 
   chromeTest(
     "Shows nothing when visibility is disabled",
