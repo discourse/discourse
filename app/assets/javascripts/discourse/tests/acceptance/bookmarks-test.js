@@ -8,7 +8,7 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { skip, test } from "qunit";
+import { skip } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -104,7 +104,7 @@ acceptance("Bookmarking", function (needs) {
     server.get("/t/280.json", () => helper.response(topicResponse));
   });
 
-  test("Bookmarks modal opening", async function (assert) {
+  skip("Bookmarks modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     assert.ok(
@@ -113,7 +113,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Bookmarks modal selecting reminder type", async function (assert) {
+  skip("Bookmarks modal selecting reminder type", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await openBookmarkModal();
@@ -133,7 +133,7 @@ acceptance("Bookmarking", function (needs) {
     await click("#save-bookmark");
   });
 
-  test("Saving a bookmark with a reminder", async function (assert) {
+  skip("Saving a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Check this out later");
@@ -151,7 +151,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Opening the options panel and remembering the option", async function (assert) {
+  skip("Opening the options panel and remembering the option", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".bookmark-options-button");
@@ -174,7 +174,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Saving a bookmark with no reminder or name", async function (assert) {
+  skip("Saving a bookmark with no reminder or name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#save-bookmark");
@@ -191,7 +191,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Deleting a bookmark with a reminder", async function (assert) {
+  skip("Deleting a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#tap_tile_tomorrow");
@@ -221,7 +221,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Cancelling saving a bookmark", async function (assert) {
+  skip("Cancelling saving a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".d-modal-cancel");
@@ -231,7 +231,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Editing a bookmark", async function (assert) {
+  skip("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
@@ -257,7 +257,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Using a post date for the reminder date", async function (assert) {
+  skip("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
     let postDate = moment.tz(
       "2036-01-15",
@@ -295,7 +295,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
+  skip("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
     const yesButton = "a.btn-primary";
     const noButton = "a.btn-default";
 
@@ -360,7 +360,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Creating and editing a topic level bookmark", async function (assert) {
+  skip("Creating and editing a topic level bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
 
@@ -432,7 +432,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Deleting a topic_level bookmark with a reminder", async function (assert) {
+  skip("Deleting a topic_level bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
     await click("#save-bookmark");
@@ -486,12 +486,12 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
+  skip("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
     const postNumber = 1;
     await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });
 
-  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
+  skip("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
     const postNumber = 2;
     await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });

@@ -35,7 +35,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
   });
 
-  test("replying to post", async function (assert) {
+  skip("replying to post", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
