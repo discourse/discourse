@@ -341,7 +341,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
+  skip("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(1);
     await click("#save-bookmark");
@@ -467,7 +467,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
+  skip("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(2);
     await click("#save-bookmark");

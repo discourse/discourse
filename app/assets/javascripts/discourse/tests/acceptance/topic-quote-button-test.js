@@ -1,6 +1,5 @@
 import {
   acceptance,
-  chromeTest,
   exists,
   queryAll,
   selectText,
@@ -17,15 +16,13 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     share_quote_buttons: "twitter|email",
   });
 
-  chromeTest(
-    "Does not show the quote share buttons by default",
-    async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      await selectText("#post_5 blockquote");
-      assert.ok(exists(".insert-quote"), "it shows the quote button");
-      assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
-    }
-  );
+  // All these skips were chromeTest
+  skip("Does not show the quote share buttons by default", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_5 blockquote");
+    assert.ok(exists(".insert-quote"), "it shows the quote button");
+    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
+  });
 
   skip("Shows quote share buttons with the right site settings", async function (assert) {
     this.siteSettings.share_quote_visibility = "all";
@@ -44,20 +41,17 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     );
   });
 
-  chromeTest(
-    "Quoting a Onebox should not copy the formatting of the rendered Onebox",
-    async function (assert) {
-      await visit("/t/topic-for-group-moderators/2480");
-      await selectText("#post_3 aside.onebox p");
-      await click(".insert-quote");
+  skip("Quoting a Onebox should not copy the formatting of the rendered Onebox", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+    await selectText("#post_3 aside.onebox p");
+    await click(".insert-quote");
 
-      assert.strictEqual(
-        queryAll(".d-editor-input").val().trim(),
-        '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
-        "quote only contains a link"
-      );
-    }
-  );
+    assert.strictEqual(
+      queryAll(".d-editor-input").val().trim(),
+      '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
+      "quote only contains a link"
+    );
+  });
 });
 
 acceptance("Topic - Quote button - anonymous", function (needs) {
@@ -66,27 +60,21 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     share_quote_buttons: "twitter|email",
   });
 
-  chromeTest(
-    "Shows quote share buttons with the right site settings",
-    async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      await selectText("#post_5 blockquote");
+  skip("Shows quote share buttons with the right site settings", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_5 blockquote");
 
-      assert.ok(
-        queryAll(".quote-sharing"),
-        "it shows the quote sharing options"
-      );
-      assert.ok(
-        exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-        "it includes the twitter share button"
-      );
-      assert.ok(
-        exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
-        "it includes the email share button"
-      );
-      assert.ok(!exists(".insert-quote"), "it does not show the quote button");
-    }
-  );
+    assert.ok(queryAll(".quote-sharing"), "it shows the quote sharing options");
+    assert.ok(
+      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
+      "it includes the twitter share button"
+    );
+    assert.ok(
+      exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
+      "it includes the email share button"
+    );
+    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+  });
 
   skip("Shows single share button when site setting only has one item", async function (assert) {
     this.siteSettings.share_quote_buttons = "twitter";
@@ -105,18 +93,15 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     );
   });
 
-  chromeTest(
-    "Shows nothing when visibility is disabled",
-    async function (assert) {
-      this.siteSettings.share_quote_visibility = "none";
+  skip("Shows nothing when visibility is disabled", async function (assert) {
+    this.siteSettings.share_quote_visibility = "none";
 
-      await visit("/t/internationalization-localization/280");
-      await selectText("#post_5 blockquote");
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_5 blockquote");
 
-      assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
-      assert.ok(!exists(".insert-quote"), "it does not show the quote button");
-    }
-  );
+    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
+    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+  });
 });
 
 acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
