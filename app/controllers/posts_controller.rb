@@ -41,11 +41,10 @@ class PostsController < ApplicationController
     elsif params[:post_number].present?
       markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
     else
-      topic = Topic.find_by(id: params[:topic_id].to_i)
-      raise Discourse::NotFound unless guardian.can_see?(topic)
-      offset = [((params[:page] || 1).to_i * MARKDOWN_TOPIC_PAGE_SIZE) - MARKDOWN_TOPIC_PAGE_SIZE, 0].max
-      posts = topic.posts.order(:post_number).limit(MARKDOWN_TOPIC_PAGE_SIZE).offset(offset)
-      content = posts.map do |p|
+      opts = params.slice(:page)
+      opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
+      topic_view = TopicView.new(params[:topic_id], current_user, opts)
+      content = topic_view.posts.map do |p|
         <<~HEREDOC
           #{p.user.username} | #{p.updated_at} | ##{p.post_number}
 
