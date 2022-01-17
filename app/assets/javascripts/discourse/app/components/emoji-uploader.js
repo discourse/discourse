@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal, notEmpty } from "@ember/object/computed";
+import { notEmpty } from "@ember/object/computed";
 
 const DEFAULT_GROUP = "default";
 
@@ -23,8 +23,6 @@ export default Component.extend(UppyUploadMixin, {
     this._super(...arguments);
     this.set("newEmojiGroups", this.emojiGroups);
   },
-
-  addDisabled: equal("uploading", true),
 
   @action
   createEmojiGroup(group) {
