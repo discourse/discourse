@@ -6,18 +6,23 @@ export default Component.extend({
   tagName: "",
   hidden: false,
 
-  didInsertElement() {
+  init() {
     this._super(...arguments);
 
-    if (this.noticeKey && this.keyValueStore.getItem(this.noticeKey)) {
-      this.set("hidden", true);
+    if (this.popupKey) {
+      const value = this.keyValueStore.getItem(this.popupKey);
+      if (value === true || value > +new Date()) {
+        this.set("hidden", true);
+      } else {
+        this.keyValueStore.removeItem(this.popupKey);
+      }
     }
   },
 
-  @discourseComputed("noticeId")
-  noticeKey(noticeId) {
-    if (noticeId) {
-      return `dismiss_topic_nav_popup_${noticeId}`;
+  @discourseComputed("popupId")
+  popupKey(popupId) {
+    if (popupId) {
+      return `dismiss_topic_nav_popup_${popupId}`;
     }
   },
 
@@ -25,8 +30,13 @@ export default Component.extend({
   close() {
     this.set("hidden", true);
 
-    if (this.noticeId) {
-      this.keyValueStore.setItem(this.noticeKey, true);
+    if (this.popupKey) {
+      if (this.dismissDuration) {
+        const expiry = +new Date() + this.dismissDuration;
+        this.keyValueStore.setItem(this.popupKey, expiry);
+      } else {
+        this.keyValueStore.setItem(this.popupKey, true);
+      }
     }
   },
 });
