@@ -28,6 +28,8 @@ class PostsController < ApplicationController
     :user_posts_feed
   ]
 
+  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+
   def markdown_id
     markdown Post.find(params[:id].to_i)
   end
@@ -36,8 +38,24 @@ class PostsController < ApplicationController
     if params[:revision].present?
       post_revision = find_post_revision_from_topic_id
       render plain: post_revision.modifications[:raw].last
+    elsif params[:post_number].present?
+      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
     else
-      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+      topic = Topic.find_by(id: params[:topic_id].to_i)
+      raise Discourse::NotFound unless guardian.can_see?(topic)
+      offset = [((params[:page] || 1).to_i * MARKDOWN_TOPIC_PAGE_SIZE) - MARKDOWN_TOPIC_PAGE_SIZE, 0].max
+      posts = topic.posts.order(:post_number).limit(MARKDOWN_TOPIC_PAGE_SIZE).offset(offset)
+      content = posts.map do |p|
+        <<~HEREDOC
+          #{p.user.username} | #{p.updated_at} | ##{p.post_number}
+
+          #{p.raw}
+
+          -------------------------
+
+        HEREDOC
+      end
+      render plain: content.join
     end
   end
 
