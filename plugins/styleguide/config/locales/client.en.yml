@@ -81,3 +81,5 @@ en:
           title: "Header Icons"
         spinners:
           title: "Spinners"
+        empty_state_placeholder:
+          title: "Empty State Placeholder"
