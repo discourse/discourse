@@ -168,9 +168,6 @@ async function runAllTests() {
         expression: "QUnit.config.logAllRequests = true",
       });
     }
-    await Runtime.evaluate({
-      expression: "QUnit.config.testTimeout = 3000",
-    });
 
     const timeout = parseInt(args[1] || 300000, 10);
     let start = Date.now();
