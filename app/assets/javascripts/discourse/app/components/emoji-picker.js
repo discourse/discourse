@@ -92,20 +92,41 @@ export default Component.extend({
       const textareaWrapper = document.querySelector(
         ".d-editor-textarea-wrapper"
       );
+
       if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+        const modifiers = [
+          {
+            name: "preventOverflow",
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [5, 5],
+            },
+          },
+        ];
+
+        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+          modifiers.push({
+            name: "computeStyles",
+            enabled: true,
+            fn({ state }) {
+              state.styles.popper = {
+                ...state.styles.popper,
+                position: "fixed",
+                left: `${(window.innerWidth - state.rects.popper.width) / 2}px`,
+                top: "50%",
+                transform: "translateY(-50%)",
+              };
+
+              return state;
+            },
+          });
+        }
+
         this._popper = createPopper(textareaWrapper, emojiPicker, {
           placement: "auto",
-          modifiers: [
-            {
-              name: "preventOverflow",
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [5, 5],
-              },
-            },
-          ],
+          modifiers,
         });
       }
 
