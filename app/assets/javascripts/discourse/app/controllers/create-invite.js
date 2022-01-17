@@ -11,6 +11,7 @@ import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
+import { sanitize } from "discourse/lib/text";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -130,7 +131,7 @@ export default Controller.extend(
 
           if (result.warnings) {
             this.setProperties({
-              flashText: result.warnings.join(","),
+              flashText: sanitize(result.warnings.join(",")),
               flashClass: "warning",
               flashLink: !this.editing,
             });
@@ -139,7 +140,7 @@ export default Controller.extend(
               this.send("closeModal");
             } else {
               this.setProperties({
-                flashText: I18n.t("user.invited.invite.invite_saved"),
+                flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
                 flashClass: "success",
                 flashLink: !this.editing,
               });
@@ -148,7 +149,7 @@ export default Controller.extend(
         })
         .catch((e) =>
           this.setProperties({
-            flashText: extractError(e),
+            flashText: sanitize(extractError(e)),
             flashClass: "error",
             flashLink: false,
           })
