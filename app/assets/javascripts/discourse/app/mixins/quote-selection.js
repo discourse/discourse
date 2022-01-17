@@ -254,11 +254,11 @@ export default Mixin.create(KeyEnterEscape, {
   },
 
   willDestroyElement() {
-    document.removeEventListener("mousedown", this._onMouseDown.bind(this));
+    document.removeEventListener("mousedown", this._onMouseUp.bind(this));
     document.removeEventListener("mouseup", this._onMouseDown.bind(this));
     document.removeEventListener(
       "selectionchange",
-      this._onMouseDown.bind(this)
+      this._onSelectionChange.bind(this)
     );
     this.appEvents.off("quote-button:quote", this, "insertQuote");
     this.appEvents.off("quote-button:edit", this, "_toggleFastEditForm");
