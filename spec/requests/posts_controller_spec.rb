@@ -1888,6 +1888,16 @@ describe PostsController do
       expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
+
+    it "can show whole topics" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
+      post_2 = Fabricate(:post, topic: topic, post_number: 2, raw: "abcdefghij")
+      post.save
+      get "/raw/#{topic.id}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("123456789", "abcdefghij")
+    end
   end
 
   describe '#short_link' do
