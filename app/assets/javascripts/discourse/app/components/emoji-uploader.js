@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -29,22 +30,28 @@ export default Component.extend(UppyUploadMixin, {
 
   @action
   createEmojiGroup(group) {
+    let newEmojiGroups = this.newEmojiGroups;
+    if (group !== DEFAULT_GROUP) {
+      newEmojiGroups = this.emojiGroups.concat([group]).uniq();
+    }
     this.setProperties({
-      newEmojiGroups: this.emojiGroups.concat([group]).uniq(),
+      newEmojiGroups,
       group,
     });
   },
 
-  @discourseComputed("hasName", "name", "hasGroup", "group")
-  data(hasName, name, hasGroup, group) {
+  _perFileData() {
     const payload = {};
 
-    if (hasName) {
-      payload.name = name;
+    if (!isEmpty(this.name)) {
+      payload.name = this.name;
+
+      // if uploading multiple files, we can't use the name for every emoji
+      this.set("name", null);
     }
 
-    if (hasGroup && group !== DEFAULT_GROUP) {
-      payload.group = group;
+    if (!isEmpty(this.group) && this.group !== DEFAULT_GROUP) {
+      payload.group = this.group;
     }
 
     return payload;
@@ -56,6 +63,6 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone(upload) {
     this.done(upload, this.group);
-    this.setProperties({ name: null });
+    this.set("name", null);
   },
 });
