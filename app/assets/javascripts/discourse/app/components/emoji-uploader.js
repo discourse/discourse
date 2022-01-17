@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { action } from "@ember/object";
@@ -21,11 +22,6 @@ export default Component.extend(UppyUploadMixin, {
   didReceiveAttrs() {
     this._super(...arguments);
     this.set("newEmojiGroups", this.emojiGroups);
-  },
-
-  @discourseComputed("hasName", "uploading")
-  addDisabled() {
-    return !this.hasName || this.uploading;
   },
 
   @action
@@ -64,5 +60,28 @@ export default Component.extend(UppyUploadMixin, {
   uploadDone(upload) {
     this.done(upload, this.group);
     this.set("name", null);
+  },
+
+  @action
+  chooseFiles() {
+    this.fileInputEl.click();
+  },
+
+  @discourseComputed("uploading", "uploadProgress")
+  buttonLabel(uploading, uploadProgress) {
+    if (uploading) {
+      return `${I18n.t("admin.emoji.uploading")} ${uploadProgress}%`;
+    } else {
+      return I18n.t("admin.emoji.add");
+    }
+  },
+
+  @discourseComputed("uploading")
+  buttonIcon(uploading) {
+    if (uploading) {
+      return "spinner";
+    } else {
+      return "plus";
+    }
   },
 });
