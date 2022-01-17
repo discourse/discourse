@@ -1,6 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 acceptance("Jump to", function (needs) {
   needs.user();
@@ -37,7 +37,7 @@ acceptance("Jump to", function (needs) {
     );
   });
 
-  test("invalid date", async function (assert) {
+  skip("invalid date", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("nav#topic-progress .nums");
     await click("button.jump-to-post");
