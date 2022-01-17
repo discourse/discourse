@@ -686,7 +686,7 @@ acceptance("Composer", function (needs) {
     }
   });
 
-  test("Can switch states without abandon popup", async function (assert) {
+  skip("Can switch states without abandon popup", async function (assert) {
     try {
       toggleCheckDraftPopup(true);
 
