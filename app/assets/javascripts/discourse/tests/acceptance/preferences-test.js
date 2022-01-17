@@ -28,7 +28,7 @@ function preferencesPretender(server, helper) {
   server.post("/u/create_second_factor_totp.json", () => {
     return helper.response({
       key: "rcyryaqage3jexfj",
-      qr: "data:image/png;base64,notarealimage",
+      qr: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
     });
   });
 
