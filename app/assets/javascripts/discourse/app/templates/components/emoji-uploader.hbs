@@ -34,21 +34,21 @@
   </div>
   <div class="control-group">
     <div class="input">
-      <label class="btn btn-default btn-primary {{if addDisabled "disabled"}}">
+      <input
+        class="hidden-upload-field"
+        disabled={{uploading}}
+        type="file"
+        multiple="true"
+        accept=".png,.gif">
+      {{#d-button class="btn-primary" action=(action "chooseFiles") disabled=uploading}}
         {{#if uploading}}
-          {{d-icon "spinner" class="loading-icon"}}
+          {{d-icon "spinner" class="loading-icon"}} &nbsp;
           <span>{{i18n "admin.emoji.uploading"}} {{uploadProgress}}%</span>
         {{else}}
-          {{d-icon "plus"}}
+          {{d-icon "plus"}} &nbsp;
           <span>{{i18n "admin.emoji.add"}}</span>
         {{/if}}
-        <input
-          class="hidden-upload-field"
-          disabled={{addDisabled}}
-          type="file"
-          multiple="true"
-          accept=".png,.gif">
-      </label>
+      {{/d-button}}
     </div>
   </div>
 </div>

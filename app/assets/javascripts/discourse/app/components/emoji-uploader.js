@@ -23,9 +23,9 @@ export default Component.extend(UppyUploadMixin, {
     this.set("newEmojiGroups", this.emojiGroups);
   },
 
-  @discourseComputed("hasName", "uploading")
+  @discourseComputed("uploading")
   addDisabled() {
-    return !this.hasName || this.uploading;
+    return this.uploading;
   },
 
   @action
@@ -64,5 +64,10 @@ export default Component.extend(UppyUploadMixin, {
   uploadDone(upload) {
     this.done(upload, this.group);
     this.set("name", null);
+  },
+
+  @action
+  chooseFiles() {
+    this.fileInputEl.click();
   },
 });
