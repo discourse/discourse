@@ -7,7 +7,6 @@ class Invite < ActiveRecord::Base
 
   include RateLimiter::OnCreateRecord
   include Trashable
-  include HasSanitizableFields
 
   # TODO(2021-05-22): remove
   self.ignored_columns = %w{
@@ -289,8 +288,8 @@ class Invite < ActiveRecord::Base
   end
 
   def user_exists_error_msg(email, username)
-    sanitized_email = sanitize_strict(email)
-    sanitized_username = sanitize_strict(username)
+    sanitized_email = CGI.escapeHTML(email)
+    sanitized_username = CGI.escapeHTML(username)
 
     I18n.t(
       "invite.user_exists",

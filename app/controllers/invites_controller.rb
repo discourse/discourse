@@ -201,7 +201,7 @@ class InvitesController < ApplicationController
         if new_email
           if Invite.where.not(id: invite.id).find_by(email: new_email.downcase, invited_by_id: current_user.id)&.redeemable?
             return render_json_error(
-              I18n.t("invite.invite_exists", email: HasSanitizableFields.sanitize_strict(new_email)),
+              I18n.t("invite.invite_exists", email: CGI.escapeHTML(new_email)),
               status: 409
             )
           end
