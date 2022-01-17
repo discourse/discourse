@@ -40,15 +40,7 @@
         type="file"
         multiple="true"
         accept=".png,.gif">
-      {{#d-button class="btn-primary" action=(action "chooseFiles") disabled=uploading}}
-        {{#if uploading}}
-          {{d-icon "spinner" class="loading-icon"}} &nbsp;
-          <span>{{i18n "admin.emoji.uploading"}} {{uploadProgress}}%</span>
-        {{else}}
-          {{d-icon "plus"}} &nbsp;
-          <span>{{i18n "admin.emoji.add"}}</span>
-        {{/if}}
-      {{/d-button}}
+      {{d-button class="btn-primary" computedLabel=buttonLabel icon="plus" action=(action "chooseFiles") disabled=uploading}}
     </div>
   </div>
 </div>

@@ -1,9 +1,10 @@
 import Component from "@ember/component";
+import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { notEmpty } from "@ember/object/computed";
+import { equal, notEmpty } from "@ember/object/computed";
 
 const DEFAULT_GROUP = "default";
 
@@ -23,10 +24,7 @@ export default Component.extend(UppyUploadMixin, {
     this.set("newEmojiGroups", this.emojiGroups);
   },
 
-  @discourseComputed("uploading")
-  addDisabled() {
-    return this.uploading;
-  },
+  addDisabled: equal("uploading", true),
 
   @action
   createEmojiGroup(group) {
@@ -69,5 +67,23 @@ export default Component.extend(UppyUploadMixin, {
   @action
   chooseFiles() {
     this.fileInputEl.click();
+  },
+
+  @discourseComputed("uploading", "uploadProgress")
+  buttonLabel(uploading, uploadProgress) {
+    if (uploading) {
+      return `${I18n.t("admin.emoji.uploading")} ${uploadProgress}%`;
+    } else {
+      return I18n.t("admin.emoji.add");
+    }
+  },
+
+  @discourseComputed("uploading")
+  buttonIcon(uploading) {
+    if (uploading) {
+      return "spinner";
+    } else {
+      return "plus";
+    }
   },
 });
