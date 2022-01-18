@@ -40,12 +40,10 @@ describe TagUser do
 
     it "scopes to notification levels visible by tag group permission" do
       group1 = Fabricate(:group)
-      tag_group1 = Fabricate(:tag_group, tags: [tag1])
-      Fabricate(:tag_group_permission, tag_group: tag_group1, group: group1)
+      tag_group1 = Fabricate(:tag_group, tags: [tag1], permissions: { group1.name => 1 })
 
       group2 = Fabricate(:group)
-      tag_group2 = Fabricate(:tag_group, tags: [tag2])
-      Fabricate(:tag_group_permission, tag_group: tag_group2, group: group2)
+      tag_group2 = Fabricate(:tag_group, tags: [tag2], permissions: { group2.name => 1 })
 
       Fabricate(:group_user, group: group1, user: user1)
 
@@ -56,8 +54,7 @@ describe TagUser do
 
     it "scopes to notification levels visible because user is staff" do
       group2 = Fabricate(:group)
-      tag_group2 = Fabricate(:tag_group, tags: [tag2])
-      Fabricate(:tag_group_permission, tag_group: tag_group2, group: group2)
+      tag_group2 = Fabricate(:tag_group, tags: [tag2], permissions: { group2.name => 1 })
 
       staff_group = Group.find(Group::AUTO_GROUPS[:staff])
       Fabricate(:group_user, group: staff_group, user: user1)
@@ -330,8 +327,7 @@ describe TagUser do
 
       it "does not show a tag is tracked if the user does not belong to the tag group with permissions" do
         group = Fabricate(:group)
-        tag_group = Fabricate(:tag_group, tags: [tag2])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+        tag_group = Fabricate(:tag_group, tags: [tag2], permissions: { group.name => 1 })
 
         expect(TagUser.notification_levels_for(user).keys).to match_array([tag1.name, tag3.name, tag4.name])
       end
