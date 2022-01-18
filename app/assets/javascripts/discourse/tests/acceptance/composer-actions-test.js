@@ -214,15 +214,15 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
     await fillIn(".d-editor-input", quote);
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.strictEqual(
       queryAll(".action-title").text().trim(),
-      "Internationalization / localization"
+      "Short topic with two posts"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
 
@@ -250,7 +250,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(exists(".action-title img.avatar"));
     assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
-      "codinghorror"
+      "tms"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
     assert.strictEqual(
