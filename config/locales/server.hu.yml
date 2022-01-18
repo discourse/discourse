@@ -1355,7 +1355,7 @@ hu:
     reply_by_email: "[Látogass el a témára](%{base_url}%{url}), vagy válaszolj erre az e-mailre a válaszadáshoz."
     only_reply_by_email: "Válaszolj erre az e-mailre a válaszadáshoz!"
     only_reply_by_email_pm: "Válaszolj erre az e-mailre, hogy válaszolj neki: %{participants}."
-    visit_link_to_respond: "[Látogassd meg a témát](%{base_url}%{url}) a válaszadáshoz."
+    visit_link_to_respond: "[Látogasd meg a témát](%{base_url}%{url}) a válaszadáshoz."
     posted_by: "Beküldte: %{username}, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
     user_invited_to_private_message_pm_group:

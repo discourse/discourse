@@ -217,7 +217,7 @@ pl_PL:
 
           - lub, naciśnij przycisk <kbd><b>B</b></kbd> lub <kbd><i>I</i></kbd> w edytorze
         reply: |-
-          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](http://commonmark.org/help) :nerd:
+          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Uuu, nie znalazłem żadnego formatowania tekstu w odpowiedzi. :pencil2:
 

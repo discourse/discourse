@@ -214,7 +214,7 @@ it:
 
           - oppure premi i pulsanti <kbd><b>G</b></kbd> o <kbd><i>I</i></kbd> sull'editor
         reply: |-
-          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](http://commonmark.org/help) :nerd:
+          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Acc! Non ho trovato nessuna formattazione nella tua risposta. :pencil2:
 

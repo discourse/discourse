@@ -214,7 +214,7 @@ fr:
 
           - Ou appuyez sur le bouton<kbd><b>G</b></kbd> ou <kbd><i>I</i></kbd> dans l'éditeur
         reply: |-
-          Bon travail ! Le HTML et le BBCode fonctionnent aussi pour la mise en forme. Pour en savoir plus, [essayez ce tutoriel](http://commonmark.org/help) :nerd:
+          Bon travail ! Le HTML et le BBCode fonctionnent aussi pour la mise en forme. Pour en savoir plus, [essayez ce tutoriel](https://commonmark.org/help) :nerd:
         not_found: |-
           Je regrette, je n'ai pas trouvé de mise en page dans votre réponse. :pencil2:
 

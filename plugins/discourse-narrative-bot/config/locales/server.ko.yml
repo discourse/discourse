@@ -207,7 +207,7 @@ ko:
 
           - 아니면 에디터에서 <kbd><b>B</b></kbd> 또는 <kbd><i>I</i></kbd> 버튼을 눌러도 돼.
         reply: |-
-          훌륭해! HTML 이나 BBCode 로도 글을 꾸밀 수 있어. [이 튜토리얼을 참고해봐.](http://commonmark.org/help) :nerd:
+          훌륭해! HTML 이나 BBCode 로도 글을 꾸밀 수 있어. [이 튜토리얼을 참고해봐.](https://commonmark.org/help) :nerd:
         not_found: |-
           어, 니 답글은 꾸며진 글이 없는 거 같은데. :pencil2:
 
