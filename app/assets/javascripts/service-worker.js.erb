@@ -15,7 +15,8 @@ var externalCacheName = "external-" + cacheVersion;
 
 // Chrome 97 shipped with broken samesite cookie handling when proxying requests through service workers
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1286367
-var isBrokenChrome97 = navigator.userAgent.indexOf("Chrome/97.0") !== -1;
+var chromeVersionMatch = navigator.userAgent.match(/Chrome\/97.0.(\d+)/);
+var isBrokenChrome97 = chromeVersionMatch && parseInt(chromeVersionMatch[1]) <= 4692;
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
