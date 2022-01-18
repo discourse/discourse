@@ -3199,7 +3199,6 @@ export default {
         notification_level: 2,
         bookmarked: false,
         bookmarks: [],
-        bookmarks: [],
         liked: false,
         archetype: "regular",
         like_count: 62,
