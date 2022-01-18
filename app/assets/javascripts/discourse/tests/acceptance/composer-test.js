@@ -234,7 +234,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  skip("Posting on a different topic", async function (assert) {
+  test("Posting on a different topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(
@@ -686,7 +686,7 @@ acceptance("Composer", function (needs) {
     }
   });
 
-  skip("Can switch states without abandon popup", async function (assert) {
+  test("Can switch states without abandon popup", async function (assert) {
     try {
       toggleCheckDraftPopup(true);
 
