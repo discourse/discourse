@@ -246,7 +246,12 @@ export default Component.extend(KeyEnterEscape, {
         left = boundaryPosition.left;
 
         const safeRadius = 50;
-        const viewportEdgeMargin = 10;
+
+        const topicArea = document
+          .querySelector(".topic-area")
+          .getBoundingClientRect();
+        topicArea.x += document.documentElement.scrollLeft;
+        topicArea.y += document.documentElement.scrollTop;
 
         const endHandlePosition = boundaryPosition;
         const width = this.element.clientWidth;
@@ -270,12 +275,9 @@ export default Component.extend(KeyEnterEscape, {
         ];
 
         for (const pos of possiblePositions) {
-          // Ensure buttons are entirely within the viewport
-          pos.left = Math.max(viewportEdgeMargin, pos.left);
-          pos.left = Math.min(
-            window.innerWidth - viewportEdgeMargin - width,
-            pos.left
-          );
+          // Ensure buttons are entirely within the .topic-area
+          pos.left = Math.max(topicArea.left, pos.left);
+          pos.left = Math.min(topicArea.right - width, pos.left);
 
           let clearOfStartHandle = true;
           if (isAndroid) {
