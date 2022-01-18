@@ -1972,8 +1972,7 @@ describe UsersController do
           }
 
           expect(response.status).to eq(200)
-          response_body = JSON.parse(response.body)
-          expect(response_body['user']['watched_tags'].count).to eq(2)
+          expect(response.parsed_body['user']['watched_tags'].count).to eq(2)
 
           user.reload
 
@@ -2015,8 +2014,7 @@ describe UsersController do
           }
 
           expect(response.status).to eq(200)
-          response_body = JSON.parse(response.body)
-          expect(response_body['user']['watched_tags'].count).to eq(2)
+          expect(response.parsed_body['user']['watched_tags'].count).to eq(2)
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
