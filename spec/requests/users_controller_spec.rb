@@ -1972,6 +1972,8 @@ describe UsersController do
           }
 
           expect(response.status).to eq(200)
+          response_body = JSON.parse(response.body)
+          expect(response_body['user']['watched_tags'].count).to eq(2)
 
           user.reload
 
@@ -1998,6 +2000,23 @@ describe UsersController do
           expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
           expect(user.profile_background_upload).to eq(upload)
           expect(user.card_background_upload).to eq(upload)
+        end
+
+        it 'updates watched tags in everyone tag group' do
+          SiteSetting.tagging_enabled = true
+          tags = [Fabricate(:tag), Fabricate(:tag)]
+          group = Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone])
+          tag_group = Fabricate(:tag_group, tags: tags)
+          Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+          tag_synonym = Fabricate(:tag, target_tag: tags[1])
+
+          put "/u/#{user.username}.json", params: {
+            watched_tags: "#{tags[0].name},#{tag_synonym.name}"
+          }
+
+          expect(response.status).to eq(200)
+          response_body = JSON.parse(response.body)
+          expect(response_body['user']['watched_tags'].count).to eq(2)
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
