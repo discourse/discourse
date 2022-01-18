@@ -106,6 +106,14 @@ export default function (elem, siteSettings) {
                 "</a>"
             );
           }
+          src.push(
+            '<a class="image-source-link" href="' +
+              item.src +
+              '">' +
+              renderIcon("string", "search") +
+              I18n.t("lightbox.open") +
+              "</a>"
+          );
           return src.join(" &middot; ");
         },
       },

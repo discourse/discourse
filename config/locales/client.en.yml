@@ -3648,6 +3648,7 @@ en:
 
     lightbox:
       download: "download"
+      open: "original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
