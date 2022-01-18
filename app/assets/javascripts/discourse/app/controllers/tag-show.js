@@ -127,6 +127,13 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       );
     },
 
+    showInserted() {
+      const tracker = this.topicTrackingState;
+      this.list.loadBefore(tracker.get("newIncoming"), true);
+      tracker.resetTracking();
+      return false;
+    },
+
     changeSort(order) {
       if (order === this.order) {
         this.toggleProperty("ascending");
