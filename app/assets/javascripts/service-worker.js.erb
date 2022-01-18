@@ -7,7 +7,7 @@ workbox.setConfig({
   debug: false
 });
 
-var authUrls = ["auth", "session/sso_login"].map(path => `<%= Discourse.base_path %>/${path}`);
+var authUrls = ["auth", "session/sso_login", "session/sso"].map(path => `<%= Discourse.base_path %>/${path}`);
 
 var cacheVersion = "1";
 var discourseCacheName = "discourse-" + cacheVersion;
