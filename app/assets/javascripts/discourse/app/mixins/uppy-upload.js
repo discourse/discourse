@@ -133,9 +133,11 @@ export default Mixin.create(UppyS3Multipart, {
           return false;
         }
 
-        Object.values(files).forEach((file) => {
-          deepMerge(file.meta, this._perFileData());
-        });
+        if (this._perFileData) {
+          Object.values(files).forEach((file) => {
+            deepMerge(file.meta, this._perFileData());
+          });
+        }
       },
     });
 
