@@ -853,6 +853,8 @@ describe PostsController do
     end
 
     describe "when logged in" do
+      fab!(:user) { Fabricate(:user) }
+
       before do
         sign_in(user)
       end
@@ -898,7 +900,7 @@ describe PostsController do
         end
 
         it "doesn't enqueue posts when user first creates a topic" do
-          user.user_stat.update_column(:topic_count, 1)
+          Fabricate(:topic, user: user)
 
           Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
 
