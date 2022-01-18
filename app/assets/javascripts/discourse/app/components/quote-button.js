@@ -46,37 +46,6 @@ function regexSafeStr(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function getRangeBoundaryRect(range, atEnd) {
-  // Don't mess with the original range as it results in weird behaviours
-  // where certain browsers will deselect the selection
-  const clone = range.cloneRange(range);
-
-  // create a marker element containing a single invisible character
-  const markerElement = document.createElement("span");
-  markerElement.appendChild(document.createTextNode("\ufeff"));
-
-  // on mobile, collapse the range at the end of the selection
-  if (atEnd) {
-    clone.collapse();
-  }
-  // insert the marker
-  clone.insertNode(markerElement);
-
-  // retrieve the position of the marker
-  const boundaryRect = markerElement.getBoundingClientRect();
-  boundaryRect.x += document.documentElement.scrollLeft;
-  boundaryRect.y += document.documentElement.scrollTop;
-
-  // remove the marker
-  const parent = markerElement.parentNode;
-  parent.removeChild(markerElement);
-
-  // merge back all text nodes so they don't get messed up
-  parent.normalize();
-
-  return boundaryRect;
-}
-
 export default Component.extend(KeyEnterEscape, {
   classNames: ["quote-button"],
   classNameBindings: [
@@ -111,6 +80,44 @@ export default Component.extend(KeyEnterEscape, {
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitalSelection", null);
     this.set("_fastEditNewSelection", null);
+  },
+
+  _getRangeBoundaryRect(range, atEnd) {
+    // Don't mess with the original range as it results in weird behaviours
+    // where certain browsers will deselect the selection
+    const clone = range.cloneRange(range);
+
+    // create a marker element containing a single invisible character
+    const markerElement = document.createElement("span");
+    markerElement.appendChild(document.createTextNode("\ufeff"));
+
+    // on mobile, collapse the range at the end of the selection
+    if (atEnd) {
+      clone.collapse();
+    }
+    // insert the marker
+    clone.insertNode(markerElement);
+
+    // retrieve the position of the marker
+    const boundaryRect = markerElement.getBoundingClientRect();
+    boundaryRect.x += document.documentElement.scrollLeft;
+    boundaryRect.y += document.documentElement.scrollTop;
+
+    // remove the marker
+    const parent = markerElement.parentNode;
+    parent.removeChild(markerElement);
+
+    // merge back all text nodes so they don't get messed up
+    parent.normalize();
+
+    // work around Safari that would sometimes lose the selection
+    if (this.capabilities.isSafari) {
+      this._reselected = true;
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+
+    return boundaryRect;
   },
 
   _selectionChanged() {
@@ -218,7 +225,7 @@ export default Component.extend(KeyEnterEscape, {
     const { isIOS, isAndroid, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
-    const boundaryPosition = getRangeBoundaryRect(firstRange, showAtEnd);
+    const boundaryPosition = this._getRangeBoundaryRect(firstRange, showAtEnd);
 
     // change the position of the button
     schedule("afterRender", () => {
@@ -273,7 +280,10 @@ export default Component.extend(KeyEnterEscape, {
           let clearOfStartHandle = true;
           if (isAndroid) {
             // On android, the start-selection handle extends below the line, so we need to avoid it as well:
-            const startHandlePosition = getRangeBoundaryRect(firstRange, false);
+            const startHandlePosition = this._getRangeBoundaryRect(
+              firstRange,
+              false
+            );
 
             clearOfStartHandle =
               pos.top - startHandlePosition.bottom >= safeRadius ||
