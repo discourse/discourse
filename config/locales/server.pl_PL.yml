@@ -1438,6 +1438,7 @@ pl_PL:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Użytkownik
+        trust_level: Poziom zaufania
         qtt_like: Polubienia otrzymane
     top_users_by_likes_received_from_a_variety_of_people:
       labels:

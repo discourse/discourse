@@ -4197,6 +4197,7 @@ fa_IR:
       emoji:
         title: "شکلک"
         add: "افزودن شکلک جدید"
+        choose_files: "انتخاب پرونده"
         uploading: "در حال بار گذاری ..."
         name: "نام"
         group: "گروه"

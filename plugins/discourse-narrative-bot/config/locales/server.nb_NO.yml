@@ -214,7 +214,7 @@ nb_NO:
 
           - eller trykk på <kbd><b>F</b></kbd> eller <kbd><i>K</i></kbd> knappene i redigeringsfeltet
         reply: |-
-          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](http://commonmark.org/help):nerd:
+          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](https://commonmark.org/help):nerd:
         not_found: |-
           Uff, jeg fant ingen formatering i svaret ditt. :pencil2:
 

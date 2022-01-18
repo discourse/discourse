@@ -128,6 +128,7 @@ es:
       url: "Copiar y compartir la URL"
     action_codes:
       public_topic: "hizo este tema público %{when}"
+      open_topic: "convirtió esto en un tema %{when}"
       private_topic: "hizo este tema un mensaje personal %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
@@ -1391,9 +1392,11 @@ es:
         every_month: "cada mes"
         every_six_months: "cada seis meses"
       email_level:
+        title: "Enviadme un correo cuando alguien me cite, responda, mencione mi @nombre de usuario o cuando haya nueva actividad en las categorías, etiquetas o temas que vigile"
         always: "siempre"
         only_when_away: "solo cuando no esté en la página"
         never: "nunca"
+      email_messages_level: "Enviadme un correo cuando me manden un mensaje personal"
       include_tl0_in_digests: "Incluir contenido de usuarios nuevos en los correos electrónicos de resumen"
       email_in_reply_to: "Incluir un extracto de la publicación que recibió una respuesta en los correo electrónicos"
       other_settings: "Otros"
@@ -1910,6 +1913,11 @@ es:
       group_mentioned:
         one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> ¿Seguro que quieres hacerlo?"
         other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Seguro de que quieres hacerlo?"
+      cannot_see_mention:
+        category: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no tiene acceso a esta categoría. Tendrás que añadirle a un grupo que sí tenga acceso."
+        private: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no puede ver este mensaje. Tendrás que invitarle al mensaje."
+        muted_topic: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque ha silenciado este tema."
+        not_allowed: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no le han invitado a este tema."
       here_mention:
         one: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuario – ¿quieres continuar?"
         other: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuarios – ¿quieres continuar?"
@@ -5109,7 +5117,6 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade nuevos emojis, que cualquiera podrá usar. Arrastra y suelta varios archivos a la vez sin escribir un nombre para crear emojis en masa y nombrarlos según el nombre de archivo que tengan."
         add: "Añadir emoji nuevo"
         uploading: "Subiendo..."
         name: "Nombre"

@@ -172,6 +172,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
+      open_topic: "przekonwertowano to na temat %{when}"
       private_topic: "przekształcił(a) ten temat w wiadomość prywatną %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
@@ -1593,8 +1594,13 @@ pl_PL:
           expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          restrict: "Ogranicz do"
+          restrict_email: "Ogranicz do e-maila"
+          restrict_domain: "Ogranicz do domeny"
+          email_or_domain_placeholder: "nazwa@example.com lub example.com"
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
+          invite_to_topic: "Przyjedź na temat"
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
@@ -3794,6 +3800,7 @@ pl_PL:
         few: "Jego %{count} synonimy również zostaną usunięte."
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
+      edit_tag: "Edytuj nazwę tagu i opis"
       description: "Opis"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
@@ -4172,6 +4179,10 @@ pl_PL:
               list: Uzyskaj listę użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
+            badges:
+              update: Zaktualizuj odznakę.
+              delete: Usuń odznakę.
+              list_user_badges: Lista odznak użytkownika.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -5408,8 +5419,8 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie, bez wpisywania nazwy, aby utworzyć emotikony za pomocą ich nazw plików."
         add: "Dodaj nowe Emoji"
+        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
