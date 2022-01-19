@@ -309,8 +309,8 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - toggle_topic_bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-anchor"),
@@ -352,8 +352,8 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - whisper and no bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
