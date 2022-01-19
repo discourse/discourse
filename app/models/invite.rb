@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
   validate :valid_domain, if: :will_save_change_to_domain?
-  validate :user_doesnt_already_exist
+  validate :user_doesnt_already_exist, if: :will_save_change_to_email?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
