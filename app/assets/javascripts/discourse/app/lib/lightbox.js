@@ -34,6 +34,7 @@ export default function (elem, siteSettings) {
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,
+      prependTo: Ember.testing && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,
