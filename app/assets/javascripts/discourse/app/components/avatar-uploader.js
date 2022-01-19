@@ -18,7 +18,7 @@ export default Component.extend(UppyUploadMixin, {
       uploadedAvatarId: upload.id,
     });
 
-    this.done();
+    this.done(upload);
   },
 
   @discourseComputed("user_id")
