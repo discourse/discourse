@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",
+  popupId: null,
   hidden: false,
 
   init() {
