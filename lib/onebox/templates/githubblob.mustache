@@ -1,53 +1,59 @@
 <h4><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h4>
 
-{{^has_lines}}
-  {{#model_file}}
-    <iframe class="render-viewer" width="{{width}}" height="{{height}}" src="{{content}}" sandbox="allow-scripts allow-same-origin allow-top-navigation ">
-      Viewer requires iframe.
-    </iframe>
-  {{/model_file}}
+{{^binary}}
+  {{^has_lines}}
+    {{#model_file}}
+      <iframe class="render-viewer" width="{{width}}" height="{{height}}" src="{{content}}" sandbox="allow-scripts allow-same-origin allow-top-navigation ">
+        Viewer requires iframe.
+      </iframe>
+    {{/model_file}}
 
-  {{^model_file}}
-    <pre><code class="{{lang}}">{{content}}</code></pre>
-  {{/model_file}}
-{{/has_lines}}
+    {{^model_file}}
+      <pre><code class="{{lang}}">{{content}}</code></pre>
+    {{/model_file}}
+  {{/has_lines}}
 
-{{#has_lines}}
-  {{! This is a template comment  | Sample rules for this box
-  <style>
-  pre.onebox code ol{
-    margin-left:0px;
-  }
-  pre.onebox code ol .lines{
-    margin-left:30px;
-  }
-  pre.onebox code ol.lines li {
-    list-style-type: decimal;
-    margin-left:45px;
-  }
-  pre.onebox code li{
-    list-style-type: none;
-    background-color:#fff;
-    border-bottom:1px solid #F0F0F0;
-    padding-left:5px;
+  {{#has_lines}}
+    {{! This is a template comment  | Sample rules for this box
+    <style>
+    pre.onebox code ol{
+      margin-left:0px;
+    }
+    pre.onebox code ol .lines{
+      margin-left:30px;
+    }
+    pre.onebox code ol.lines li {
+      list-style-type: decimal;
+      margin-left:45px;
+    }
+    pre.onebox code li{
+      list-style-type: none;
+      background-color:#fff;
+      border-bottom:1px solid #F0F0F0;
+      padding-left:5px;
 
-  }
-  pre.onebox code li.selected{
-    background-color:#cfc
-  }
-  </style>
-  }}
+    }
+    pre.onebox code li.selected{
+      background-color:#cfc
+    }
+    </style>
+    }}
 
-  <pre class="onebox">
-    <code class="{{lang}}">
-      <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
-        {{#lines}}
-          <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
-        {{/lines}}
-      </ol>
-    </code>
-  </pre>
-{{/has_lines}}
+    <pre class="onebox">
+      <code class="{{lang}}">
+        <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
+          {{#lines}}
+            <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
+          {{/lines}}
+        </ol>
+      </code>
+    </pre>
+  {{/has_lines}}
+{{/binary}}
+
+{{#binary}}
+  This file is binary. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+{{/binary}}
 
 {{#truncated}}
   This file has been truncated. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
