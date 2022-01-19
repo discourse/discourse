@@ -113,10 +113,21 @@ function setupTextPostProcessRuler(md) {
 }
 
 function renderHoisted(tokens, idx, options) {
-  const content = tokens[idx].content;
+  const token = tokens[idx];
+  token.discourseOpts = token.discourseOpts || {};
+  const content = token.content;
   if (content && content.length > 0) {
     let id = guid();
-    options.discourse.hoisted[id] = tokens[idx].content;
+    options.discourse.hoisted[id] = {
+      content: token.content,
+      rerender: token.discourseOpts.rerender,
+      featuresOverride: token.discourseOpts.rerender
+        ? token.discourseOpts.featuresOverride || []
+        : [],
+      markdownItRules: token.discourseOpts.rerender
+        ? token.discourseOpts.markdownItRules || []
+        : [],
+    };
     return id;
   } else {
     return "";
@@ -375,32 +386,46 @@ export function setup(opts, siteSettings, state) {
   opts.discourse.limitedSiteSettings = {
     secureMedia: siteSettings.secure_media,
     enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
+    traditionalMarkdownLinebreaks: siteSettings.traditional_markdown_linebreaks,
+    enableMarkdownLinkify: siteSettings.enable_markdown_linkify,
+    enableMarkdownTypographer: siteSettings.enable_markdown_typographer,
+    markdownTypographerQuotationMarks:
+      siteSettings.markdown_typographer_quotation_marks,
+    markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
   };
 
   const markdownitOpts = {
     discourse: opts.discourse,
     html: true,
-    breaks: !siteSettings.traditional_markdown_linebreaks,
+    breaks: !opts.discourse.limitedSiteSettings.traditionalMarkdownLinebreaks,
     xhtmlOut: false,
-    linkify: siteSettings.enable_markdown_linkify,
-    typographer: siteSettings.enable_markdown_typographer,
+    linkify: opts.discourse.limitedSiteSettings.enableMarkdownLinkify,
+    typographer: opts.discourse.limitedSiteSettings.enableMarkdownTypographer,
   };
 
   if (opts.discourse.markdownItRules !== undefined) {
-    opts.engine = window
-      .markdownit("zero", markdownitOpts) // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
-      .enable(opts.discourse.markdownItRules);
+    opts.engine = zeroRuleMarkdownEngine(
+      markdownitOpts,
+      opts.discourse.markdownItRules
+    );
   } else {
     opts.engine = window.markdownit(markdownitOpts);
   }
 
-  const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
+  opts.pluginCallbacks = pluginCallbacks;
+  opts.allowListed = allowListed;
+  setupMarkdownEngine(opts);
+}
+
+function setupMarkdownEngine(opts) {
+  const quotation_marks =
+    opts.discourse.limitedSiteSettings.markdownTypographerQuotationMarks;
   if (quotation_marks) {
     opts.engine.options.quotes = quotation_marks.split("|");
   }
 
   opts.engine.linkify.tlds(
-    (siteSettings.markdown_linkify_tlds || "").split("|")
+    (opts.discourse.limitedSiteSettings.markdownLinkifyTlds || "").split("|")
   );
 
   setupUrlDecoding(opts.engine);
@@ -411,7 +436,7 @@ export function setup(opts, siteSettings, state) {
   setupInlineBBCode(opts.engine);
   setupTextPostProcessRuler(opts.engine);
 
-  pluginCallbacks.forEach(([feature, callback]) => {
+  opts.pluginCallbacks.forEach(([feature, callback]) => {
     if (opts.discourse.features[feature]) {
       opts.engine.use(callback);
     }
@@ -424,7 +449,7 @@ export function setup(opts, siteSettings, state) {
   if (!opts.discourse.sanitizer || !opts.sanitizer) {
     const allowLister = new AllowLister(opts.discourse);
 
-    allowListed.forEach(([feature, info]) => {
+    opts.allowListed.forEach(([feature, info]) => {
       allowLister.allowListFeature(feature, info);
     });
 
@@ -432,6 +457,11 @@ export function setup(opts, siteSettings, state) {
       ? (a) => sanitize(a, allowLister)
       : (a) => a;
   }
+}
+
+function zeroRuleMarkdownEngine(markdownitOpts, markdownItRuleSubset) {
+  // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
+  return window.markdownit("zero", markdownitOpts).enable(markdownItRuleSubset);
 }
 
 export function cook(raw, opts) {
@@ -451,7 +481,46 @@ export function cook(raw, opts) {
     const unhoist = function (key) {
       cooked = cooked.replace(new RegExp(key, "g"), function () {
         found = true;
-        return hoisted[key];
+        const foundHoisted = hoisted[key];
+        const hoistedContent = foundHoisted.content;
+
+        // we only rerender the hoisted content in _very_ rare
+        // cases when we want to use a limited subset of markdown features
+        // and rules to render said content. otherwise we just return
+        // it as is, because it will be html_raw
+        if (foundHoisted.rerender) {
+          Object.keys(opts.discourse.features).forEach((feature) => {
+            opts.discourse.features[
+              feature
+            ] = foundHoisted.featuresOverride.includes(feature);
+          });
+          const oldEngine = opts.engine;
+          const markdownitOpts = {
+            discourse: opts.discourse,
+            html: oldEngine.options.html,
+            breaks: oldEngine.options.breaks,
+            xhtmlOut: oldEngine.options.xhtmlOut,
+            linkify: oldEngine.options.linkify,
+            typographer: oldEngine.options.typographer,
+          };
+          opts.engine = zeroRuleMarkdownEngine(
+            markdownitOpts,
+            foundHoisted.markdownItRules
+          );
+
+          // we have to do this again to make sure plugin callbacks
+          // are run etc.
+          setupMarkdownEngine(opts);
+
+          let renderedHoisted = opts.engine.render(hoistedContent);
+
+          // reset the engine so this does not mess with other rendering
+          opts.engine = oldEngine;
+
+          return opts.discourse.sanitizer(renderedHoisted).trim();
+        } else {
+          return hoistedContent;
+        }
       });
     };
 
