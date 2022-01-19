@@ -99,6 +99,7 @@ class Ruler {
 // block bb code ruler for parsing of quotes / code / polls
 function setupBlockBBCode(md) {
   md.block.bbcode = { ruler: new Ruler() };
+  md.block.bbcodedatchatboi = { ruler: new Ruler() };
 }
 
 function setupInlineBBCode(md) {
@@ -413,6 +414,9 @@ export function setup(opts, siteSettings, state) {
 
   pluginCallbacks.forEach(([feature, callback]) => {
     if (opts.discourse.features[feature]) {
+      if (feature === "discourse-chat-transcript") {
+        // debugger
+      }
       opts.engine.use(callback);
     }
   });
