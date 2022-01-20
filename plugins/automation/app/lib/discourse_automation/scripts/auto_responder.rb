@@ -22,6 +22,9 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
 
     answers = Set.new
     tuples = JSON.load(fields.dig('word_answer_list', 'value'))
+
+    next if tuples.blank?
+
     tuples.each do |tuple|
       if post.raw.match(/\b#{tuple['key']}\b/)
         answers.add(tuple)
