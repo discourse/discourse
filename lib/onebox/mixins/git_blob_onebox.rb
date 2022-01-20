@@ -169,7 +169,7 @@ module Onebox
             else
               contents = URI.parse(self.raw_template(m)).open(read_timeout: timeout).read
 
-              if contents.encoding == Encoding::BINARY
+              if contents.encoding == Encoding::BINARY || contents.bytes.include?(0)
                 @raw = nil
                 @binary = true
                 return
