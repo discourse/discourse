@@ -203,7 +203,7 @@ module ImportScripts::Mbox
 
     def extract_subject(receiver, list_name)
       subject = receiver.subject
-      subject.blank? ? nil : subject.strip
+      subject.blank? ? nil : subject.strip.gsub(/\t+/, ' ')
     end
 
     def ignored_file?(path, checksums)
