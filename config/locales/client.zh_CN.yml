@@ -4926,7 +4926,6 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        help: "添加可供所有人使用的新表情符号。一次拖放多个文件且不输入名称即可使用文件名创建表情符号。"
         add: "添加新表情符号"
         uploading: "正在上传…"
         name: "名称"

@@ -1423,6 +1423,7 @@ ko:
           restrict: "다음으로 제한"
           restrict_email: "이메일로 제한"
           restrict_domain: "도메인으로 제한"
+          email_or_domain_placeholder: "name@example.com 또는 example.com"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
           expires_at: "다음 후 만료"
@@ -1618,6 +1619,7 @@ ko:
       title: "비밀번호 재설정"
       action: "비밀번호를 잊어버렸습니다."
       invite: "사용자명 또는 이메일 주소를 입력하면 비밀번호 재설정 이메일을 보내드립니다."
+      invite_no_username: "이메일 주소를 입력하면 비밀번호 재설정 이메일이 전송됩니다."
       reset: "비밀번호 재설정"
       complete_username: "계정의 사용자명이 <b>%{username}</b>와 일치하면 곧 비밀번호 재설정 방법에 대한 지침이 포함 된 이메일을 받게됩니다."
       complete_email: "<b>%{email}</b>이 계정의 이메일과 일치하면, 비밀번호를 재설정하는 방법에 대한 지침이 포함 된 이메일을 받게됩니다."
@@ -3640,6 +3642,7 @@ ko:
         no_description: (설명 없음)
         all_api_keys: 모든 API 키
         user_mode: 사용자 레벨
+        scope_mode: 범위
         impersonate_all_users: 모든 사용자를 가장
         single_user: "단일 사용자"
         user_placeholder: 사용자 이름을 입력하십시오
@@ -3666,6 +3669,8 @@ ko:
           any_parameter: (모든 매개 변수)
           allowed_urls: 허용된 URL
           descriptions:
+            global:
+              read: API 키를 읽기 전용 엔드포인트로 제한합니다.
             topics:
               read: 글 또는 특정 게시물을 읽으십시오. RSS도 지원됩니다.
               write: 새 글 또는 기존 글에 댓글을 작성합니다.
@@ -3687,6 +3692,7 @@ ko:
               receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
             badges:
               create: 새 배지를 만들기
+              show: 배지에 대한 정보를 얻습니다.
               update: 배지 업데이트
               delete: 배지 삭제
               list_user_badges: 사용자 배지 리스트
@@ -4901,7 +4907,6 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.이름을 입력하지 않고 여러 파일을 한 번에 끌어다 놓아 파일 이름을 사용하여 이모티콘을 만들 수 있습니다."
         add: "새 이모티콘 추가"
         uploading: "업로드 중..."
         name: "이름"

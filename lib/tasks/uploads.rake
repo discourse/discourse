@@ -1010,15 +1010,26 @@ def fix_missing_s3
     next if !upload
 
     tempfile = nil
+    downloaded_from = nil
 
     begin
       tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+      downloaded_from = upload.url
     rescue => e
-      puts "Failed to download #{upload.url} #{e}"
+      if upload.origin.present?
+        begin
+          tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+          downloaded_from = upload.origin
+        rescue => e
+          puts "Failed to download #{upload.origin} #{e}"
+        end
+      else
+        puts "Failed to download #{upload.url} #{e}"
+      end
     end
 
     if tempfile
-      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+      puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload"
 
       fixed_upload = nil
       fix_error = nil

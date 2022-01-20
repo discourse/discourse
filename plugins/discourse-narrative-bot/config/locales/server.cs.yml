@@ -217,7 +217,7 @@ cs:
 
           nebo stiskněte tlačítka <kbd><b>B</b></kbd> nebo <kbd><i>I</i></kbd> v editoru
         reply: |-
-          Dobrá práce! HTML a BBCode fungují také pro formátování - abyste se dozvěděli více, [vyzkoušejte tento návod] (http://commonmark.org/help) :nerd:
+          Dobrá práce! HTML a BBCode fungují také pro formátování - abyste se dozvěděli více, [vyzkoušejte tento návod] (https://commonmark.org/help) :nerd:
         not_found: |-
           Ve vaší odpovědi jsem nenašel žádné formátování. :pencil2:
 

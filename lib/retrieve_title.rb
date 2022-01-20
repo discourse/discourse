@@ -60,6 +60,10 @@ module RetrieveTitle
     encoding = nil
 
     fd.get do |_response, chunk, uri|
+      if (uri.present? && InlineOneboxer.domain_is_blocked?(uri.hostname))
+        throw :done
+      end
+
       unless Net::HTTPRedirection === _response
         if current
           current << chunk

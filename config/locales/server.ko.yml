@@ -836,6 +836,8 @@ ko:
   draft_backup:
     pm_title: "진행중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함 된 주제"
+  user_activity:
+    no_log_search_queries: "검색 로그 쿼리는 현재 비활성화되어 있습니다. (관리자가 사이트 설정에서 활성화할 수 있음)"
   email_settings:
     pop3_authentication_error: "제공된 POP3 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
@@ -4072,8 +4074,10 @@ ko:
             label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
+            label: "짧은 문장으로 커뮤니티를 설명하십시오 (검색 결과 및 소셜 미디어에 사용)"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           short_site_description:
+            label: "커뮤니티를 몇 마디로 설명하십시오 (홈페이지 제목에 사용)"
             placeholder: "최고의 커뮤니티"
       introduction:
         title: "소개"

@@ -214,7 +214,7 @@ fi:
 
           – tai käytä viestieditorin <kbd><b>B</b></kbd>- tai <kbd><i>I</i></kbd>-painiketta
         reply: |-
-          Hyvin tehty! HTML ja BBCode käyvät myös muotoiluun. Jos on puhtia, [tästä johdannosta](http://commonmark.org/help) opit lisää. :nerd:
+          Hyvin tehty! HTML ja BBCode käyvät myös muotoiluun. Jos on puhtia, [tästä johdannosta](https://commonmark.org/help) opit lisää. :nerd:
         not_found: |-
           Pahus, en näe muotoilua viestissäsi. :pencil2:
 

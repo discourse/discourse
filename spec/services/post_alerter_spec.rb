@@ -1429,8 +1429,7 @@ describe PostAlerter do
         end
 
         it "does not notify a user watching a tag with tag group permissions that he does not belong to" do
-          tag_group = Fabricate(:tag_group, tags: [tag])
-          Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+          tag_group = Fabricate(:tag_group, tags: [tag], permissions: { group.name => 1 })
 
           TagUser.change(user.id, tag.id, TagUser.notification_levels[notification_level])
 
