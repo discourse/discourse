@@ -2068,7 +2068,7 @@ describe SessionController do
         post "/session/forgot_password.json",
           params: { login: user.username }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(400)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
 
