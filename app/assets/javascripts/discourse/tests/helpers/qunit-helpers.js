@@ -64,6 +64,16 @@ export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
 }
 
+let _initialized = new Set();
+
+export function testsInitialized() {
+  _initialized.add(QUnit.config.current.testId);
+}
+
+export function testsTornDown() {
+  _initialized.delete(QUnit.config.current.testId);
+}
+
 export function updateCurrentUser(properties) {
   run(() => {
     User.current().setProperties(properties);
@@ -118,7 +128,20 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-function testCleanup() {
+function testCleanup(container, app) {
+  if (_initialized.has(QUnit.config.current.testId)) {
+    if (!app) {
+      app = getApplication();
+    }
+    app._runInitializer("instanceInitializers", (_, initializer) => {
+      initializer.teardown?.();
+    });
+
+    app._runInitializer("initializers", (_, initializer) => {
+      initializer.teardown?.(container);
+    });
+  }
+
   flushMap();
   localStorage.clear();
   User.resetCurrent();
@@ -171,9 +194,7 @@ export function discourseModule(name, options) {
         this.siteSettings = currentSettings();
         clearResolverOptions();
       });
-      hooks.afterEach(function () {
-        testCleanup();
-      });
+      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -199,15 +220,11 @@ export function discourseModule(name, options) {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (options && options.beforeEach) {
-        options.beforeEach.call(this);
-      }
+      options?.beforeEach?.call(this);
     },
     afterEach() {
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
-      testCleanup();
+      options?.afterEach?.call(this);
+      testCleanup(this.container);
     },
   });
 }
@@ -295,18 +312,8 @@ export function acceptance(name, optionsOrCallback) {
     afterEach() {
       resetMobile();
       let app = getApplication();
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
-      testCleanup();
-
-      app._runInitializer("instanceInitializers", (_, initializer) => {
-        initializer.teardown?.();
-      });
-
-      app._runInitializer("initializers", (_, initializer) => {
-        initializer.teardown?.(this.container);
-      });
+      options?.afterEach?.call(this);
+      testCleanup(this.container, app);
 
       if (LEGACY_ENV) {
         app.__registeredObjects__ = false;

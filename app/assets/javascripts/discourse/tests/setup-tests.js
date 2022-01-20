@@ -2,6 +2,8 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testsInitialized,
+  testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender, {
   applyDefaultHandlers,
@@ -98,6 +100,12 @@ function createApplication(config, settings) {
     });
 
   if (!started) {
+    app.instanceInitializer({
+      name: "test-helper",
+      initialize: testsInitialized,
+      teardown: testsTornDown,
+    });
+
     app.start();
     started = true;
   }
@@ -407,6 +415,11 @@ export function setupTestsLegacy(application) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
   setupTestsCommon(application, app.__container__);
 
+  app.instanceInitializer({
+    name: "test-helper",
+    initialize: testsInitialized,
+    teardown: testsTornDown,
+  });
   app.SiteSettings = currentSettings();
   app.start();
 }
