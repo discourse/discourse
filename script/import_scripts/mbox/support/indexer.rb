@@ -55,7 +55,8 @@ module ImportScripts::Mbox
 
       category = {
         name: metadata['name'].presence || File.basename(directory),
-        description: metadata['description']
+        description: metadata['description'],
+        parent_category_id: metadata['parent_category_id'].presence,
       }
 
       @database.insert_category(category)
