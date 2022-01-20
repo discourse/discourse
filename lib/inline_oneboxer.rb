@@ -75,7 +75,7 @@ class InlineOneboxer
 
   def self.domain_is_blocked?(hostname)
     SiteSetting.blocked_onebox_domains&.split('|').any? do |blocked|
-      hostname.match("(^|\\.)#{Regexp.quote(blocked)}$")
+      hostname == blocked || hostname.end_with?(".#{blocked}")
     end
   end
 
