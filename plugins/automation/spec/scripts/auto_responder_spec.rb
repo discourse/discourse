@@ -73,7 +73,7 @@ describe 'AutoResponder' do
 
   context 'post doesn’t contain a keyword' do
     it 'doesn’t create an answer' do
-      post = create_post(topic: topic, raw: 'this is a post with no keyword')
+      post = create_post(topic: topic, raw: 'this is a post bfoo with no keyword fooa')
 
       expect {
         automation.trigger!('post' => post)
