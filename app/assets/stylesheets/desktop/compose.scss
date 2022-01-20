@@ -83,8 +83,8 @@
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
-  width: calc(50% - 8px);
-  top: 8px; // .reply-to margin-top + .reply-area padding-top
+  width: calc(50% - 16px);
+  top: 19px; // grippie (11px) + .reply-area padding (8px)
   bottom: 8px;
   right: 8px;
   overflow-y: auto;
