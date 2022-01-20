@@ -542,12 +542,16 @@ Category.reopenClass({
 
   search(term, opts) {
     let limit = 5;
+    let parentCategoryId;
 
     if (opts) {
       if (opts.limit === 0) {
         return [];
       } else if (opts.limit) {
         limit = opts.limit;
+      }
+      if (opts.parentCategoryId) {
+        parentCategoryId = opts.parentCategoryId;
       }
     }
 
@@ -569,13 +573,21 @@ Category.reopenClass({
       return data.length === limit;
     };
 
+    const validCategoryParent = (category) => {
+      return (
+        !parentCategoryId ||
+        category.get("parent_category_id") === parentCategoryId
+      );
+    };
+
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if (
-        (emptyTerm && !category.get("parent_category_id")) ||
-        (!emptyTerm &&
-          (category.get("name").toLowerCase().indexOf(term) === 0 ||
-            category.get("slug").toLowerCase().indexOf(slugTerm) === 0))
+        ((emptyTerm && !category.get("parent_category_id")) ||
+          (!emptyTerm &&
+            (category.get("name").toLowerCase().indexOf(term) === 0 ||
+              category.get("slug").toLowerCase().indexOf(slugTerm) === 0))) &&
+        validCategoryParent(category)
       ) {
         data.push(category);
       }
@@ -586,9 +598,10 @@ Category.reopenClass({
         const category = categories[i];
 
         if (
-          !emptyTerm &&
-          (category.get("name").toLowerCase().indexOf(term) > 0 ||
-            category.get("slug").toLowerCase().indexOf(slugTerm) > 0)
+          ((!emptyTerm &&
+            category.get("name").toLowerCase().indexOf(term) > 0) ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
+          validCategoryParent(category)
         ) {
           if (data.indexOf(category) === -1) {
             data.push(category);
