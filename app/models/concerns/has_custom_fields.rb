@@ -64,6 +64,8 @@ module HasCustomFields
     has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
     after_save :save_custom_fields
 
+    # TODO (martin) Post 2.8 release, change to attr_reader because this is
+    # set by set_preloaded_custom_fields
     attr_accessor :preloaded_custom_fields
 
     def custom_fields_fk
@@ -114,7 +116,7 @@ module HasCustomFields
 
         objects.each do |obj|
           map[obj.id] = obj
-          obj.preloaded_custom_fields = empty.dup
+          obj.set_preloaded_custom_fields(empty.dup)
         end
 
         fk = (name.underscore << "_id")
@@ -175,6 +177,15 @@ module HasCustomFields
         raise NotPreloadedError, "Attempted to access the non preloaded custom field '#{key}' on the '#{@klass_with_custom_fields}' class. This is disallowed to prevent N+1 queries."
       end
     end
+  end
+
+  def set_preloaded_custom_fields(custom_fields)
+    @preloaded_custom_fields = custom_fields
+
+    # we have to clear this otherwise the fields are cached inside the
+    # already existing proxy and no new ones are added, so when we check
+    # for custom_fields[KEY] an error is likely to occur
+    @preloaded_proxy = nil
   end
 
   def custom_fields
