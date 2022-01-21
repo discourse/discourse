@@ -34,6 +34,7 @@ import { registerObjects } from "discourse/pre-initializers/inject-discourse-obj
 import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { isLegacyEmber } from "discourse-common/config/environment";
+import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
@@ -183,6 +184,8 @@ function writeSummaryLine(message) {
 }
 
 function setupTestsCommon(application, container, config) {
+  disableCloaking();
+
   QUnit.config.hidepassed = true;
 
   application.rootElement = "#ember-testing";
