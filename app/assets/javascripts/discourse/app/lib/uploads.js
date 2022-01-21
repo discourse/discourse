@@ -360,12 +360,5 @@ export function bindFileInputChangeListener(element, fileCallbackFn) {
     });
   }
   element.addEventListener("change", changeListener);
-
-  if (Ember.testing) {
-    // There is no API to simulate a change event with an array of files or to
-    // get event listeners.
-    element.testonchange = changeListener;
-  }
-
   return changeListener;
 }

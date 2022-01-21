@@ -1,29 +1,41 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import pretender from "discourse/tests/helpers/create-pretender";
 import {
   createFile,
   discourseModule,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    pretender.post("/uploads.json", () => {
+      return [200, { "Content-Type": "application/json" }, {}];
+    });
+  });
+
   componentTest("default", {
-    template: hbs`{{avatar-uploader}}`,
+    template: hbs`{{avatar-uploader
+      id="avatar-uploader"
+      done=done
+    }}`,
 
-    test(assert) {
-      const inputElement = query(".hidden-upload-field");
+    async test(assert) {
+      const done = assert.async();
 
-      // simulate change event with custom files array
-      const event = { target: { files: [createFile("avatar.png")] } };
-      inputElement.testonchange(event);
+      this.set("done", () => {
+        assert.ok(true, "action is called after avatar is uploaded");
+        done();
+      });
 
-      // if this point is reached then all before upload logic did not throw
-      // any error
-      assert.ok(true);
+      await this.container
+        .lookup("service:app-events")
+        .trigger("upload-mixin:avatar-uploader:add-files", [
+          createFile("avatar.png"),
+        ]);
     },
   });
 });
