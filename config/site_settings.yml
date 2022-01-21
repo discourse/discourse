@@ -497,6 +497,7 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
+  enable_discourse_connect_external_id_serializers: false
   blocked_email_domains:
     default: "mailinator.com"
     type: list

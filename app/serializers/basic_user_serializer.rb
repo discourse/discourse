@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BasicUserSerializer < ApplicationSerializer
-  attributes :id, :username, :name, :avatar_template
+  attributes :id, :username, :name, :avatar_template, :external_id
 
   def name
     Hash === user ? user[:name] : user.try(:name)
@@ -45,5 +45,13 @@ class BasicUserSerializer < ApplicationSerializer
 
   def tag_user_notification_levels
     @tag_user_notification_levels ||= TagUser.notification_levels_for(user)
+  end
+
+  def external_id
+    user.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    user.respond_to?(:single_sign_on_record) and SiteSetting.enable_discourse_connect_external_id_serializers?
   end
 end

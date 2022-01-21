@@ -470,8 +470,16 @@ class TopicView
 
   def participants
     @participants ||= begin
+      participant_users = User.
+        where(id: post_counts_by_user.keys).
+        includes(:primary_group)
+
+      if SiteSetting.enable_discourse_connect_external_id_serializers?
+        participant_users = participant_users.includes(:single_sign_on_record)
+      end
+
       participants = {}
-      User.where(id: post_counts_by_user.keys).includes(:primary_group).each { |u| participants[u.id] = u }
+      participant_users.each { |u| participants[u.id] = u }
       participants
     end
   end

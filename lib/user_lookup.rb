@@ -37,10 +37,17 @@ class UserLookup
   private
 
   def users
-    @users ||= User
-      .where(id: @user_ids)
-      .select(self.class.lookup_columns)
-      .index_by(&:id)
+    @users ||= begin
+      lookup_users = User.
+        where(id: @user_ids).
+        select(self.class.lookup_columns)
+
+      if SiteSetting.enable_discourse_connect_external_id_serializers?
+        lookup_users = lookup_users.includes(:single_sign_on_record)
+      end
+
+      lookup_users.index_by(&:id)
+    end
   end
 
   def groups

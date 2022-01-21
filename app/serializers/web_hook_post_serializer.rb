@@ -5,7 +5,8 @@ class WebHookPostSerializer < PostSerializer
   attributes :topic_posts_count,
              :topic_filtered_posts_count,
              :topic_archetype,
-             :category_slug
+             :category_slug,
+             :external_id
 
   def include_topic_title?
     true
@@ -60,5 +61,13 @@ class WebHookPostSerializer < PostSerializer
 
   def include_readers_count?
     false
+  end
+
+  def external_id
+    object.user.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_discourse_connect_external_id_serializers?
   end
 end
