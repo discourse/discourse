@@ -16,6 +16,8 @@ import {
 } from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
+let lastBody;
+
 acceptance("Search - Full Page", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
@@ -90,6 +92,11 @@ acceptance("Search - Full Page", function (needs) {
           },
         ],
       });
+    });
+
+    server.put("/topics/bulk", (request) => {
+      lastBody = helper.parsePostData(request.requestBody);
+      return helper.response({ topic_ids: [7] });
     });
   });
 
@@ -579,5 +586,16 @@ acceptance("Search - Full Page", function (needs) {
       visible(".search-advanced-options"),
       "clicking on element expands filters"
     );
+  });
+
+  test("bulk operations work", async function (assert) {
+    await visit("/search");
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+    await click(".bulk-select"); // toggle bulk
+    await click(".bulk-select-visible .btn:nth-child(2)"); // select all
+    await click(".bulk-select-btn"); // show bulk actions
+    await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
+    assert.equal(lastBody["topic_ids[]"], 7);
   });
 });
