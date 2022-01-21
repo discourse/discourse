@@ -160,9 +160,11 @@ module HasCustomFields
     @custom_fields_orig = nil
   end
 
+  class NotPreloadedError < StandardError; end
   class PreloadedProxy
-    def initialize(preloaded)
+    def initialize(preloaded, klass_with_custom_fields)
       @preloaded = preloaded
+      @klass_with_custom_fields = klass_with_custom_fields
     end
 
     def [](key)
@@ -170,14 +172,14 @@ module HasCustomFields
         @preloaded[key]
       else
         # for now you can not mix preload an non preload, it better just to fail
-        raise StandardError, "Attempted to access the non preloaded custom field '#{key}'. This is disallowed to prevent N+1 queries."
+        raise NotPreloadedError, "Attempted to access the non preloaded custom field '#{key}' on the '#{@klass_with_custom_fields}' class. This is disallowed to prevent N+1 queries."
       end
     end
   end
 
   def custom_fields
     if @preloaded_custom_fields
-      return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields)
+      return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields, self.class.to_s)
     end
 
     @custom_fields ||= refresh_custom_fields_from_db.dup
