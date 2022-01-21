@@ -112,6 +112,10 @@ class RemoteTheme < ActiveRecord::Base
     self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
   end
 
+  def out_of_date?
+    commits_behind > 0 || remote_version != local_version
+  end
+
   def update_remote_version
     return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)

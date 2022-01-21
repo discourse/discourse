@@ -58,9 +58,15 @@ def update_themes
       remote_theme = theme.remote_theme
       next if remote_theme.blank? || remote_theme.remote_url.blank?
 
-      puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
-      remote_theme.update_from_remote
-      theme.save!
+      print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
+      remote_theme.update_remote_version
+      if remote_theme.out_of_date?
+        puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+        remote_theme.update_from_remote
+        theme.save!
+      else
+        puts "up to date"
+      end
 
       raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
