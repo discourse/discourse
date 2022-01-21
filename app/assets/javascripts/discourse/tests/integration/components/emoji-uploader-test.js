@@ -17,7 +17,7 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
 
   const template = hbs` {{emoji-uploader
     emojiGroups=emojiGroups
-    done=(action "emojiUploaded")
+    done=doneUpload
     id="emoji-uploader"
   }}`;
 
@@ -25,11 +25,6 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
     requestNumber = 1;
     this.setProperties({
       emojiGroups: ["default", "coolemojis"],
-      actions: {
-        emojiUploaded: (upload, group) => {
-          this.doneUpload(upload, group);
-        },
-      },
     });
 
     pretender.post("/admin/customize/emojis.json", () => {
