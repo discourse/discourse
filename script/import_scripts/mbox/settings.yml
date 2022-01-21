@@ -49,3 +49,7 @@ tags:
 remove_subject_prefixes:
   - "Re: "
   - "Fwd?: "
+
+# For emails that Mailman mislabels as being from the mailing list rather than the actual original sender,
+# attempt to get the sender's address from other available headers
+fix_mailman_via_addresses: false
