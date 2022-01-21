@@ -93,4 +93,11 @@ describe UserSummary do
     expect(summary.top_categories.first[:topic_count]).to eq(1)
     expect(summary.top_categories.first[:post_count]).to eq(1)
   end
+
+  it "does not include summaries with no clicks" do
+    post = Fabricate(:post, raw: "[example](https://example.com)")
+    TopicLink.extract_from(post)
+    summary = UserSummary.new(post.user, Guardian.new)
+    expect(summary.links.length).to eq(0)
+  end
 end

@@ -40,6 +40,7 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where(internal: false, reflection: false, quote: false)
+      .where('clicks > 0')
       .order('clicks DESC, topic_links.created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
   end
