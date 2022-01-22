@@ -4,7 +4,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 
@@ -119,6 +119,34 @@ acceptance("Topic - Bulk Actions", function (needs) {
     assert.ok(
       invisible(".topic-bulk-actions-modal"),
       "it closes the bulk select modal"
+    );
+  });
+
+  test("bulk select - Shift click selection", async function (assert) {
+    updateCurrentUser({ moderator: true });
+    await visit("/latest");
+    await click("button.bulk-select");
+
+    await click(queryAll("input.bulk-select")[0]);
+    await triggerEvent(queryAll("input.bulk-select")[3], "click", {
+      shiftKey: true,
+    });
+    assert.equal(
+      queryAll("input.bulk-select:checked").length,
+      4,
+      "Shift click selects a range"
+    );
+
+    await click("button.bulk-clear-all");
+
+    await click(queryAll("input.bulk-select")[5]);
+    await triggerEvent(queryAll("input.bulk-select")[1], "click", {
+      shiftKey: true,
+    });
+    assert.equal(
+      queryAll("input.bulk-select:checked").length,
+      5,
+      "Bottom-up Shift click range selection works"
     );
   });
 });
