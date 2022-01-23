@@ -85,3 +85,5 @@ he:
           title: "סמלי כותרת עליונה"
         spinners:
           title: "שבשבות"
+        empty_state:
+          title: "מצב ריק"
