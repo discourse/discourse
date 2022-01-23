@@ -85,3 +85,5 @@ hu:
           title: "Fejléc ikonok"
         spinners:
           title: "Forgók"
+        empty_state:
+          title: "Üres állapot"

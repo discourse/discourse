@@ -128,7 +128,7 @@ de:
       url: "URL kopieren und teilen"
     action_codes:
       public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
-      open_topic: "converted this to a topic %{when}"
+      open_topic: "hat dies in ein Thema umgewandelt, %{when}"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
       split_topic: "hat dieses Thema aufgeteilt, %{when}"
       invited_user: "hat %{who} eingeladen, %{when}"

@@ -253,6 +253,7 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   authenticator_not_found: "인증 방법이 존재하지 않거나 비활성화되었습니다."
+  authenticator_no_connect: "이 인증 공급자는 기존 포럼 계정에 대한 연결을 허용하지 않습니다."
   invalid_api_credentials: "요청한 리소스를 볼 수 없습니다. API 사용자 이름 또는 키가 유효하지 않습니다."
   provider_not_enabled: "요청한 리소스를 볼 수 없습니다. 인증 공급자가 활성화되어 있지 않습니다."
   provider_not_found: "요청한 리소스를 볼 수 없습니다. 인증 제공자가 존재하지 않습니다."
@@ -1370,6 +1371,7 @@ ko:
     tl2_post_edit_time_limit: "tl2 + 작성자는 게시 후 (n) 분 동안 게시물을 편집 할 수 있습니다. 영원히 0으로 설정하십시오."
     edit_history_visible_to_public: "모든 사용자가 글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
+    notify_users_after_responses_deleted_on_flagged_post: "게시물이 신고로 삭제되면 게시물에 답글을 작성했거나 댓글이 삭제된 모든 사용자에게 알림이 전송됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
     responsive_post_image_sizes: "라이트 박스 미리보기 이미지의 크기를 조정하여 다음 픽셀 비율의 높은 DPI 화면을 허용합니다. 반응 형 이미지를 비활성화하려면 모든 값을 제거하십시오."
@@ -1873,6 +1875,7 @@ ko:
     global_notice: "모든 방문자에게 긴급, 긴급, 무시할 수없는 글로벌 배너 통지를 표시하고 숨기려면 공백으로 변경하십시오 (HTML 허용)."
     disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
     disable_category_edit_notifications: "글의 카테고리 편집 알림을 비활성화합니다."
+    disable_tags_edit_notifications: "글의 태그 수정 알림을 비활성화합니다."
     notification_consolidation_threshold: "알림이 단일 알림으로 통합되기 전에 수신 된 좋아요 또는 회원 요청 알림 수 비활성화하려면 0으로 설정하십시오."
     likes_notification_consolidation_window_mins: "임계 값에 도달하면 선호 알림이 단일 알림으로 통합되는 시간 (분)입니다. 임계 값은`SiteSetting.notification_consolidation_threshold`를 통해 구성 할 수 있습니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
@@ -2420,6 +2423,8 @@ ko:
   temporarily_closed_due_to_flags:
     other: "이 글은 많은 신고로 인해 최소 %{count}시간 동안 일시적으로 닫힙니다."
   system_messages:
+    reviewables_reminder:
+      subject_template: "검토 대기열에 검토가 필요한 항목이 있습니다."
     private_topic_title: "주제 # %{id}"
     contents_hidden: "내용을 보려면 게시물을 방문하십시오."
     post_hidden:

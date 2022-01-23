@@ -40,6 +40,13 @@ pt_BR:
     user_cant_post_in_topic: "Você não pode votar porque você não pode postar neste tópico."
     topic_must_be_open_to_vote: "O tópico precisa estar aberto para votar."
     poll_must_be_open_to_vote: "A enquete precisa estar aberta para votar."
+    one_vote_per_user: "Apenas um voto é permitido nesta enquete."
+    max_vote_per_user:
+      one: Apenas %{count} voto é permitido para esta enquete.
+      other: No máximo %{count} votos são permitidos para esta enquete.
+    min_vote_per_user:
+      one: No mínimo %{count} voto é permitido para esta enquete.
+      other: No mínimo %{count} votos são permitidos para esta enquete.
     topic_must_be_open_to_toggle_status: "O tópico precisar estar aberto para mudar seu status."
     only_staff_or_op_can_toggle_status: "Somente um membro da equipe ou o autor(a) original pode mudar o status da enquete."
     insufficient_rights_to_create: "Você não tem permissão para criar enquetes."

@@ -106,6 +106,7 @@ zh_CN:
       url: "复制并分享 URL"
     action_codes:
       public_topic: "%{when}将此话题设为公开"
+      open_topic: "将此转换为话题 %{when}"
       private_topic: "%{when}将此话题转换为个人消息"
       split_topic: "%{when}拆分了此话题"
       invited_user: "%{when}邀请了 %{who}"
@@ -149,6 +150,7 @@ zh_CN:
     themes:
       default_description: "默认"
       broken_theme_alert: "因为主题/组件 %{theme} 有错误，您的站点可能无法正常运行，在%{path}下将其禁用。"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您网站上的某个帖子内容修饰器引发了错误。查看浏览器开发者工具获取更多信息。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -1335,9 +1337,11 @@ zh_CN:
         every_month: "每月"
         every_six_months: "每六个月"
       email_level:
+        title: "当我被引用、回复、我的 @用户名 被提及或当我关注的类别、标签或主题有新的活动时给我发送电子邮件"
         always: "始终"
         only_when_away: "只在离开时"
         never: "从不"
+      email_messages_level: "当我收到个人消息时给我发电子邮件"
       include_tl0_in_digests: "在摘要电子邮件中包含来自新用户的内容"
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
@@ -1424,6 +1428,8 @@ zh_CN:
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           restrict: "限制在"
+          restrict_email: "仅限电子邮件"
+          restrict_domain: "仅限网域"
           email_or_domain_placeholder: "name@example.com 或者 example.com"
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
@@ -1831,6 +1837,11 @@ zh_CN:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
         other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
+      cannot_see_mention:
+        category: "您提及了 @%{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
+        private: "您提及了 @%{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
+        muted_topic: "您提到了@%{username} 但他们不会收到通知，因为他们已将这个话题设为免打扰。"
+        not_allowed: "您提到了@%{username} 但他们不会收到通知，因为他们未被邀请至这个话题。"
       here_mention:
         other: "通过提及 <b>@%{here}</b>，您将要通知 %{count} 用户 – 您确定吗？"
       duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
@@ -2081,6 +2092,7 @@ zh_CN:
       enter_hint: "或按 Enter"
       in_posts_by: "搜索 @%{username} 的帖子"
       browser_tip: "%{modifier} + f"
+      browser_tip_description: "再次使用本机浏览器搜索"
       recent: "最近的搜索"
       clear_recent: "清除搜索历史"
       type:
@@ -3324,7 +3336,7 @@ zh_CN:
         other: "您必须至少选择 %{count} 个标签。"
       info: "信息"
       default_info: "该标签不限于任何类别，并且没有同义词。"
-      staff_info: "要添加限制，请将此标签放在 <a href=%{basePath}/tag_groups>标签组</a>。"
+      staff_info: "要添加限制，请将此标签放入 <a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
       synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
@@ -3469,7 +3481,7 @@ zh_CN:
       no_drafts_title: "您还没有写过任何草稿"
       no_drafts_body: "还没准备好发布？每当您开始撰写主题、回复或个人消息时，我们都会自动保存新草稿并在此处列出。选择取消按钮放弃或保存您的草稿以供稍后继续。"
       no_likes_title: "您还没有赞任何话题"
-      no_likes_body: "加入并开始贡献的一个好方法是阅读已有的对话，并在您喜欢的帖子上点击 %{heartIcon}"
+      no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
       no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
       no_read_topics_title: "您还没有阅读任何话题。"
@@ -3619,6 +3631,7 @@ zh_CN:
             automatic_membership_email_domains: "使用与此列表中的电子邮件网域完全匹配的电子邮件网域注册的用户将被自动添加到此群组："
             automatic_membership_user_count:
               other: "%{count} 个用户具有新的电子邮件网域，将被添加到群组中。"
+            automatic_membership_associated_groups: "在这里列出的服务上属于某个组的用户，当他们用此服务登录时，会被自动加入到这个组。"
             primary_group: "自动设置为主要群组"
         name_placeholder: "群组名称，没有空格，与用户名规则相同"
         primary: "主要群组"
@@ -3683,6 +3696,7 @@ zh_CN:
           title: 范围
           read_only: 只读
           global: 全局范围
+          global_description: API 密钥没有限制，所有终端节点均可访问。
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
@@ -3690,6 +3704,8 @@ zh_CN:
           any_parameter: '（任意参数）'
           allowed_urls: 允许的 URL
           descriptions:
+            global:
+              read: 限制 API 密钥到只读终端节点。
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
@@ -3697,6 +3713,8 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
+            uploads:
+              create: 上传一个新文件或启动单个或多个部分直接上传至外部存储。
             users:
               bookmarks: 列出用户书签。使用 ICS 格式时返回书签提醒。
               sync_sso: 使用 DiscourseConnect 同步用户。
@@ -4080,6 +4098,7 @@ zh_CN:
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
           head_tag:
+            text: "头像"
             title: "将在 </head> tag 前插入的 HTML"
           body_tag:
             text: "正文"
@@ -4926,7 +4945,9 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
+        help: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。选定的组将被用于同时添加的所有文件。您还可以单击“添加新表情符号”以打开文件选择器。"
         add: "添加新表情符号"
+        choose_files: "选择文件"
         uploading: "正在上传…"
         name: "名称"
         group: "组"

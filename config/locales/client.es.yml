@@ -1018,7 +1018,7 @@ es:
       no_notifications_title: "No tienes ninguna notificación todavía"
       no_notifications_body: >
         En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
-      no_notifications_page_title: "No tienes ninguna notificación todavía"
+      no_notifications_page_title: "Todavía no tienes notificaciones"
       no_notifications_page_body: >
         Te notificaremos de actividad relevante para ti, como cuando alguien responda a tus temas o mensajes, te <b>@mencione</b> o cite, y también cuando alguien responda a temas que estés vigilando. Además, te mandaremos las notificaciones a tu correo electrónico cuando no te hayamos visto por aquí en un tiempo. <br><br>Busca el icono %{icon} para decidir las categorías o etiquetas sobre las que quieres que mandemos notificaciones. Para más ajustes, pásate por tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a>.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
@@ -1144,7 +1144,7 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
-        read_more: "¿Quieres leer más? Busca otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
+        read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -2595,7 +2595,7 @@ es:
         instructions: "Comparte el enlace a este tema:"
         copied: "Enlace al tema copiado."
         restricted_groups:
-          one: "Sólo visible para los miembros del grupo: %{groupNames}"
+          one: "Solo visible para los miembros del grupo: %{groupNames}"
           other: "Solo visible para los miembros de los grupos: %{groupNames}"
         notify_users:
           title: "Notificar"
@@ -5117,7 +5117,9 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
+        help: "Añade emojis que cualquiera podrá usar. Suelta varios archivos a la vez sin escribir un nombre para crear emojis usando su nombre de archivo. Los archivos que subas a la vez serán parte del grupo seleccionado. También puedes hacer clic en «Añadir nuevo emoji» para abrir el selector de archivos."
         add: "Añadir emoji nuevo"
+        choose_files: "Seleccionar archivos"
         uploading: "Subiendo..."
         name: "Nombre"
         group: "Grupo"
