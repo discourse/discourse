@@ -656,6 +656,14 @@ describe PostsController do
 
       let!(:post) { post_by_user }
 
+      it "returns 400 when wiki parameter is not present" do
+        sign_in(admin)
+
+        put "/posts/#{post.id}/wiki.json", params: {}
+
+        expect(response.status).to eq(400)
+      end
+
       it "raises an error if the user doesn't have permission to wiki the post" do
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
         expect(response).to be_forbidden
@@ -706,18 +714,31 @@ describe PostsController do
 
     describe "when logged in" do
       before do
-        sign_in(user)
+        sign_in(moderator)
       end
 
       let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to change the post type" do
+        sign_in(user)
+
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
         expect(response).to be_forbidden
       end
 
+      it "returns 400 if post_type parameter is not present" do
+        put "/posts/#{post.id}/post_type.json", params: {}
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 400 if post_type parameters is invalid" do
+        put "/posts/#{post.id}/post_type.json", params: { post_type: -1 }
+
+        expect(response.status).to eq(400)
+      end
+
       it "can change the post type" do
-        sign_in(moderator)
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
         post.reload
