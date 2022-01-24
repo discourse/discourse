@@ -474,10 +474,10 @@ blockquote {
 // variables are used to calculate the width of .gap
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
-  float: left;
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
+
   .topic-meta-data {
     padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
@@ -496,7 +496,6 @@ blockquote {
   border-top: 1px solid var(--primary-low);
   padding-top: 15px;
   width: $topic-avatar-width;
-  float: left;
   z-index: z("base") + 1;
 }
 

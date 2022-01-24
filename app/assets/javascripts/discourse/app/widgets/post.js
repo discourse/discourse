@@ -585,7 +585,7 @@ createWidget("post-notice", {
 });
 
 createWidget("post-body", {
-  tagName: "div.topic-body.clearfix",
+  tagName: "div.topic-body",
 
   html(attrs, state) {
     const postContents = this.attach("post-contents", attrs);

@@ -882,10 +882,14 @@ aside.quote {
 }
 
 .topic-body {
-  // this is necessary for ANYTHING that extends past the right edge of
-  // the post body, such as an image in a deeply nested list, image in
-  // a deeply nested blockquote, and so on.. you get the idea.
+  .row {
+    display: flex;
+  }
+
   .cooked {
+    // this is necessary for ANYTHING that extends past the right edge of
+    // the post body, such as an image in a deeply nested list, image in
+    // a deeply nested blockquote, and so on.. you get the idea.
     overflow: hidden;
 
     .button-wrapper {
