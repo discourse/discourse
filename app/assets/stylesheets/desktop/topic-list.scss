@@ -19,13 +19,13 @@
 .topic-list-data {
   &.main-link,
   &.default {
-    flex-grow: 1;
+    flex: 1 1 50%;
   }
   &.posters {
-    width: 146px;
+    flex: 1 1 146px;
   }
   &.num {
-    min-width: 65px;
+    flex: 1 1 65px;
   }
 }
 
@@ -141,7 +141,7 @@
     }
   }
   .age {
-    width: 60px;
+    flex: 1 1 60px;
   }
   .with-year {
     white-space: nowrap;
