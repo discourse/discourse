@@ -6,6 +6,7 @@ const mergeTrees = require("broccoli-merge-trees");
 const MessageFormat = require("messageformat");
 const deepmerge = require("deepmerge");
 const glob = require("glob");
+const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 let built = false;
 
@@ -92,11 +93,15 @@ module.exports = function translatePlugin(...params) {
 };
 
 module.exports.createI18nTree = function (discourseRoot, vendorJs) {
-  let translations = [discourseRoot + "/config/locales"].concat(
-    glob
-      .sync(discourseRoot + "/plugins/*/config/locales/client.en.yml")
-      .map((f) => f.replace(/\/client\.en\.yml$/, ""))
-  );
+  let translations = [discourseRoot + "/config/locales"];
+
+  if (shouldLoadPluginTestJs()) {
+    translations = translations.concat(
+      glob
+        .sync(discourseRoot + "/plugins/*/config/locales/client.en.yml")
+        .map((f) => f.replace(/\/client\.en\.yml$/, ""))
+    );
+  }
 
   let en = new TranslationPlugin(translations, "client.en.yml");
 

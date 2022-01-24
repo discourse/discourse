@@ -40,3 +40,4 @@ pt_BR:
             every_three_months: "A cada tres meses"
             every_six_months: "A cada seis meses"
             every_year: "Todos os anos"
+      default_title: "Evento %{site_name}"

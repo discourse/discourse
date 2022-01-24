@@ -220,6 +220,7 @@ export default Component.extend({
 
   @bind
   _handleLogsNoticeUpdate() {
+    const { logsNoticeService } = this;
     const logNotice = Notice.create({
       text: htmlSafe(this.logsNoticeService.message),
       id: "alert-logs-notice",
@@ -227,13 +228,10 @@ export default Component.extend({
         dismissable: true,
         persistentDismiss: false,
         visibility() {
-          return !this.logsNoticeService.hidden;
+          return !logsNoticeService.hidden;
         },
         onDismiss() {
-          this.logsNoticeService.setProperties({
-            hidden: true,
-            text: "",
-          });
+          logsNoticeService.set("text", "");
         },
       },
     });

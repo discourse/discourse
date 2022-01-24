@@ -153,12 +153,6 @@ describe InlineOneboxer do
       expect(onebox).to be_blank
     end
 
-    it "will not crawl domains that are blocked" do
-      SiteSetting.blocked_onebox_domains = "eviltrout.com"
-      onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
-      expect(onebox).to be_blank
-    end
-
     it "will crawl anything if allowed to" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
@@ -204,6 +198,38 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Evil Trout's Blog")
     end
 
-  end
+    describe "lookups for blocked domains in the hostname" do
+      shared_examples "blocks the domain" do |setting, domain_to_test|
+        it "does not retrieve title" do
+          SiteSetting.blocked_onebox_domains = setting
 
+          onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
+
+          expect(onebox).to be_blank
+        end
+      end
+
+      shared_examples "does not fulfil blocked domain" do |setting, domain_to_test|
+        it "retrieves title" do
+          SiteSetting.blocked_onebox_domains = setting
+
+          onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
+
+          expect(onebox).to be_present
+        end
+      end
+
+      include_examples "blocks the domain", "api.cat.org|kitten.cloud", "https://api.cat.org"
+      include_examples "blocks the domain", "api.cat.org|kitten.cloud", "http://kitten.cloud"
+
+      include_examples "blocks the domain", "kitten.cloud", "http://cat.kitten.cloud"
+
+      include_examples "blocks the domain", "api.cat.org", "https://api.cat.org/subdirectory/moar"
+      include_examples "blocks the domain", "kitten.cloud", "https://cat.kitten.cloud/subd"
+
+      include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.2kitten.cloud"
+      include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.kitten.cloud9"
+      include_examples "does not fulfil blocked domain", "api.cat.org", "https://api-cat.org"
+    end
+  end
 end

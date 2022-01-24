@@ -4574,7 +4574,7 @@ ru:
           <p>С помощью нашей мощной системы тем настроить внешний вид форума очень легко. В качестве примеров просмотрите <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">популярные темы и компоненты</a> на сайте <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Хорошего дня и удачи <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>в создании нового сообщества!</a></p>
   search_logs:
-    graph_title: "Количество поиска"
+    graph_title: "Количество поисковых запросов"
   joined: "Вступил"
   discourse_push_notifications:
     popup:

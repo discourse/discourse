@@ -12,6 +12,11 @@ class FeedItemAccessor
   end
 
   def link
+    if rss_item.respond_to?(:links)
+      link = rss_item.links&.find { |l| l.rel == "alternate" && l.type == "text/html" }
+      return link.href if link.respond_to?(:href)
+    end
+
     try_attribute_or_self(element(:link), :href)
   end
 

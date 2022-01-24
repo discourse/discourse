@@ -116,6 +116,7 @@ nb_NO:
       previous_month: "Forrige måned"
       next_month: "Neste måned"
       placeholder: dato
+      from_placeholder: "fra dato"
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
@@ -127,6 +128,7 @@ nb_NO:
       url: "Kopier og del URL"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
+      open_topic: "konverterte dette til et emne %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
       split_topic: "del opp dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
@@ -158,6 +160,7 @@ nb_NO:
         disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
+    skip_to_main_content: "Gå til hovedinnhold"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:

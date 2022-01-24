@@ -128,7 +128,7 @@ it:
       url: "Copia e condividi l'URL"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
-      open_topic: "convertito in un argomento %{when}"
+      open_topic: "Convertito in un argomento %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "ha invitato %{who} %{when}"
@@ -5039,7 +5039,6 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"
