@@ -754,6 +754,8 @@ en:
             title: "Settings"
             allow_unknown_sender_topic_replies: "Allow unknown sender topic replies."
             allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already invited to the topic will create a new topic."
+            from_alias: "From Alias"
+            from_alias_hint: "Alias to use as the from address when sending group SMTP emails. Note this may not be supported by all mail providers, please consult your mail provider's documentation."
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
