@@ -15,7 +15,7 @@ describe Onebox::DomainChecker do
       it { expect(described_class.is_blocked?("puppy.cloud")).to be(false) }
     end
 
-    describe "returns true when ends with domain with . period" do
+    describe "returns true when ends with .<domain>" do
       it { expect(described_class.is_blocked?("dev.api.cat.org")).to be(true) }
       it { expect(described_class.is_blocked?(".api.cat.org")).to be(true) }
       it { expect(described_class.is_blocked?("dev.kitten.cloud")).to be(true) }
