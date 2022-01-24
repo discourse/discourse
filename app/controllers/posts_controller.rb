@@ -546,6 +546,7 @@ class PostsController < ApplicationController
 
   def wiki
     post = find_post_from_params
+    params.require(:wiki)
     guardian.ensure_can_wiki!(post)
 
     post.revise(current_user, wiki: params[:wiki])
@@ -555,8 +556,10 @@ class PostsController < ApplicationController
 
   def post_type
     guardian.ensure_can_change_post_type!
-
     post = find_post_from_params
+    params.require(:post_type)
+    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+
     post.revise(current_user, post_type: params[:post_type].to_i)
 
     render body: nil
