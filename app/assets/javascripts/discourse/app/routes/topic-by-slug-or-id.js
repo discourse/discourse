@@ -9,7 +9,9 @@ export default DiscourseRoute.extend({
     if (params.slugOrId.match(ID_CONSTRAINT)) {
       return { url: `/t/topic/${params.slugOrId}` };
     } else {
-      return Topic.idForSlug(params.slugOrId);
+      return Topic.idForSlug(params.slugOrId).then((data) => {
+        return { url: `/t/${data.slug}/${data.topic_id}` };
+      });
     }
   },
 
