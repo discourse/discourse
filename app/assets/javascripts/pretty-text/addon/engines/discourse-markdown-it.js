@@ -1,4 +1,6 @@
 import AllowLister from "pretty-text/allow-lister";
+import { cloneJSON } from "discourse-common/lib/object";
+import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
@@ -23,6 +25,7 @@ function createHelper(
   opts,
   optionCallbacks,
   pluginCallbacks,
+  customMarkdownEngineCallbacks,
   getOptions,
   allowListed
 ) {
@@ -56,6 +59,10 @@ function createHelper(
 
   helper.registerPlugin = (callback) => {
     pluginCallbacks.push([featureName, callback]);
+  };
+
+  helper.buildCustomMarkdownEngine = (callback) => {
+    customMarkdownEngineCallbacks.push([featureName, callback]);
   };
 
   return helper;
@@ -113,21 +120,10 @@ function setupTextPostProcessRuler(md) {
 }
 
 function renderHoisted(tokens, idx, options) {
-  const token = tokens[idx];
-  token.discourseOpts = token.discourseOpts || {};
-  const content = token.content;
+  const content = tokens[idx].content;
   if (content && content.length > 0) {
     let id = guid();
-    options.discourse.hoisted[id] = {
-      content: token.content,
-      rerender: token.discourseOpts.rerender,
-      featuresOverride: token.discourseOpts.rerender
-        ? token.discourseOpts.featuresOverride || []
-        : [],
-      markdownItRules: token.discourseOpts.rerender
-        ? token.discourseOpts.markdownItRules || []
-        : [],
-    };
+    options.discourse.hoisted[id] = content;
     return id;
   } else {
     return "";
@@ -313,6 +309,7 @@ export function setup(opts, siteSettings, state) {
 
   let optionCallbacks = [];
   let pluginCallbacks = [];
+  let customMarkdownEngineCallbacks = [];
 
   // ideally I would like to change the top level API a bit, but in the mean time this will do
   let getOptions = {
@@ -343,6 +340,7 @@ export function setup(opts, siteSettings, state) {
           opts,
           optionCallbacks,
           pluginCallbacks,
+          customMarkdownEngineCallbacks,
           getOptions,
           allowListed
         )
@@ -414,10 +412,75 @@ export function setup(opts, siteSettings, state) {
 
   opts.pluginCallbacks = pluginCallbacks;
   opts.allowListed = allowListed;
-  setupMarkdownEngine(opts);
+
+  setupMarkdownEngine(opts, opts.discourse.features);
+
+  customMarkdownEngineCallbacks.forEach(([, callback]) => {
+    callback((engineOpts) => buildCustomMarkdownEngine(engineOpts, opts));
+  });
 }
 
-function setupMarkdownEngine(opts) {
+function buildCustomMarkdownEngine(engineOpts, defaultEngineOpts) {
+  engineOpts.featuresOverride = engineOpts.featuresOverride || [];
+  engineOpts.markdownItRules = engineOpts.markdownItRules || [];
+
+  // everything except the engine for opts can just point to the other
+  // opts references, they do not change and we don't need to worry about
+  // mutating them
+  const newOpts = {};
+  newOpts.allowListed = defaultEngineOpts.allowListed;
+  newOpts.pluginCallbacks = defaultEngineOpts.pluginCallbacks;
+  newOpts.sanitizer = defaultEngineOpts.sanitizer;
+  newOpts.discourse = {};
+  const featureConfig = cloneJSON(defaultEngineOpts.discourse.features);
+
+  // everything from the discourse part of defaultEngineOpts can be cloned except
+  // the features, because these can be a limited subset and we
+  // don't want to change the original object reference
+  for (const [key, value] of Object.entries(defaultEngineOpts.discourse)) {
+    if (key !== "features") {
+      newOpts.discourse[key] = value;
+    }
+  }
+
+  return new Promise((resolve) => {
+    Object.keys(featureConfig).forEach((feature) => {
+      featureConfig[feature] = engineOpts.featuresOverride.includes(feature);
+    });
+    newOpts.discourse.features = featureConfig;
+
+    const markdownitOpts = {
+      discourse: newOpts.discourse,
+      html: defaultEngineOpts.engine.options.html,
+      breaks: defaultEngineOpts.engine.options.breaks,
+      xhtmlOut: defaultEngineOpts.engine.options.xhtmlOut,
+      linkify: defaultEngineOpts.engine.options.linkify,
+      typographer: defaultEngineOpts.engine.options.typographer,
+    };
+    if (engineOpts.markdownItRules.length > 0) {
+      newOpts.engine = zeroRuleMarkdownEngine(
+        markdownitOpts,
+        engineOpts.markdownItRules
+      );
+    } else {
+      newOpts.engine = window.markdownit(markdownitOpts);
+    }
+
+    // we have to do this again to make sure plugin callbacks
+    // are run etc.
+    setupMarkdownEngine(newOpts, featureConfig);
+
+    // we don't need the whole engine as a consumer, just a cook function
+    // will do
+    resolve((contentToRender) => {
+      return newOpts.discourse
+        .sanitizer(newOpts.engine.render(contentToRender))
+        .trim();
+    });
+  });
+}
+
+function setupMarkdownEngine(opts, featureConfig) {
   const quotation_marks =
     opts.discourse.limitedSiteSettings.markdownTypographerQuotationMarks;
   if (quotation_marks) {
@@ -437,7 +500,7 @@ function setupMarkdownEngine(opts) {
   setupTextPostProcessRuler(opts.engine);
 
   opts.pluginCallbacks.forEach(([feature, callback]) => {
-    if (opts.discourse.features[feature]) {
+    if (featureConfig[feature]) {
       opts.engine.use(callback);
     }
   });
@@ -481,46 +544,7 @@ export function cook(raw, opts) {
     const unhoist = function (key) {
       cooked = cooked.replace(new RegExp(key, "g"), function () {
         found = true;
-        const foundHoisted = hoisted[key];
-        const hoistedContent = foundHoisted.content;
-
-        // we only rerender the hoisted content in _very_ rare
-        // cases when we want to use a limited subset of markdown features
-        // and rules to render said content. otherwise we just return
-        // it as is, because it will be html_raw
-        if (foundHoisted.rerender) {
-          Object.keys(opts.discourse.features).forEach((feature) => {
-            opts.discourse.features[
-              feature
-            ] = foundHoisted.featuresOverride.includes(feature);
-          });
-          const oldEngine = opts.engine;
-          const markdownitOpts = {
-            discourse: opts.discourse,
-            html: oldEngine.options.html,
-            breaks: oldEngine.options.breaks,
-            xhtmlOut: oldEngine.options.xhtmlOut,
-            linkify: oldEngine.options.linkify,
-            typographer: oldEngine.options.typographer,
-          };
-          opts.engine = zeroRuleMarkdownEngine(
-            markdownitOpts,
-            foundHoisted.markdownItRules
-          );
-
-          // we have to do this again to make sure plugin callbacks
-          // are run etc.
-          setupMarkdownEngine(opts);
-
-          let renderedHoisted = opts.engine.render(hoistedContent);
-
-          // reset the engine so this does not mess with other rendering
-          opts.engine = oldEngine;
-
-          return opts.discourse.sanitizer(renderedHoisted).trim();
-        } else {
-          return hoistedContent;
-        }
+        return hoisted[key];
       });
     };
 
