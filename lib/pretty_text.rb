@@ -371,6 +371,9 @@ module PrettyText
     # remove href inside quotes & oneboxes & elided part
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
 
+    # remove hotlinked images
+    doc.css("a.onebox > img").each { |img| img.parent.remove }
+
     # extract all links
     doc.css("a").each do |a|
       if a["href"].present? && a["href"][0] != "#"
