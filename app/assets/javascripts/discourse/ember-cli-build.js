@@ -27,7 +27,7 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
-      forbidEval: true,
+      forbidEval: isProduction,
     },
     fingerprint: {
       // Disabled here, but handled manually below when in production mode.
