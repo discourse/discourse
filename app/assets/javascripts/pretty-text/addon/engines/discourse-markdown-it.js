@@ -1,6 +1,5 @@
 import AllowLister from "pretty-text/allow-lister";
 import { cloneJSON } from "discourse-common/lib/object";
-import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
@@ -416,7 +415,9 @@ export function setup(opts, siteSettings, state) {
   setupMarkdownEngine(opts, opts.discourse.features);
 
   customMarkdownEngineCallbacks.forEach(([, callback]) => {
-    callback((engineOpts) => buildCustomMarkdownEngine(engineOpts, opts));
+    callback((engineOpts, afterBuild) =>
+      afterBuild(buildCustomMarkdownEngine(engineOpts, opts))
+    );
   });
 }
 
@@ -443,41 +444,39 @@ function buildCustomMarkdownEngine(engineOpts, defaultEngineOpts) {
     }
   }
 
-  return new Promise((resolve) => {
-    Object.keys(featureConfig).forEach((feature) => {
-      featureConfig[feature] = engineOpts.featuresOverride.includes(feature);
-    });
-    newOpts.discourse.features = featureConfig;
-
-    const markdownitOpts = {
-      discourse: newOpts.discourse,
-      html: defaultEngineOpts.engine.options.html,
-      breaks: defaultEngineOpts.engine.options.breaks,
-      xhtmlOut: defaultEngineOpts.engine.options.xhtmlOut,
-      linkify: defaultEngineOpts.engine.options.linkify,
-      typographer: defaultEngineOpts.engine.options.typographer,
-    };
-    if (engineOpts.markdownItRules.length > 0) {
-      newOpts.engine = zeroRuleMarkdownEngine(
-        markdownitOpts,
-        engineOpts.markdownItRules
-      );
-    } else {
-      newOpts.engine = window.markdownit(markdownitOpts);
-    }
-
-    // we have to do this again to make sure plugin callbacks
-    // are run etc.
-    setupMarkdownEngine(newOpts, featureConfig);
-
-    // we don't need the whole engine as a consumer, just a cook function
-    // will do
-    resolve((contentToRender) => {
-      return newOpts.discourse
-        .sanitizer(newOpts.engine.render(contentToRender))
-        .trim();
-    });
+  Object.keys(featureConfig).forEach((feature) => {
+    featureConfig[feature] = engineOpts.featuresOverride.includes(feature);
   });
+  newOpts.discourse.features = featureConfig;
+
+  const markdownitOpts = {
+    discourse: newOpts.discourse,
+    html: defaultEngineOpts.engine.options.html,
+    breaks: defaultEngineOpts.engine.options.breaks,
+    xhtmlOut: defaultEngineOpts.engine.options.xhtmlOut,
+    linkify: defaultEngineOpts.engine.options.linkify,
+    typographer: defaultEngineOpts.engine.options.typographer,
+  };
+  if (engineOpts.markdownItRules.length > 0) {
+    newOpts.engine = zeroRuleMarkdownEngine(
+      markdownitOpts,
+      engineOpts.markdownItRules
+    );
+  } else {
+    newOpts.engine = window.markdownit(markdownitOpts);
+  }
+
+  // we have to do this again to make sure plugin callbacks
+  // are run etc.
+  setupMarkdownEngine(newOpts, featureConfig);
+
+  // we don't need the whole engine as a consumer, just a cook function
+  // will do
+  return function customRenderFn(contentToRender) {
+    return newOpts.discourse
+      .sanitizer(newOpts.engine.render(contentToRender))
+      .trim();
+  };
 }
 
 function setupMarkdownEngine(opts, featureConfig) {
