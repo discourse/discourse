@@ -123,8 +123,10 @@ describe Email::Sender do
     let(:reply_key) { "abcd" * 8 }
 
     let(:message) do
-      message = Mail::Message.new to: 'eviltrout@test.domain',
-                                  body: '**hello**'
+      message = Mail::Message.new(
+        to: 'eviltrout@test.domain',
+        body: '**hello**'
+      )
       message.stubs(:deliver_now)
       message
     end
@@ -288,7 +290,13 @@ describe Email::Sender do
       end
 
       it "sets the 'References' header with the incoming email Message-ID if it exists on the first post" do
-        incoming = Fabricate(:incoming_email, topic: topic, post: post_1, message_id: "blah1234@someemailprovider.com")
+        incoming = Fabricate(
+          :incoming_email,
+          topic: topic,
+          post: post_1,
+          message_id: "blah1234@someemailprovider.com",
+          created_via: IncomingEmail.created_via_types[:handle_mail]
+        )
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
@@ -331,7 +339,9 @@ describe Email::Sender do
       end
 
       it "uses the incoming_email message_id when available, but always uses a random message-id" do
-        topic_incoming_email  = IncomingEmail.create(topic: topic, post: post_1, message_id: "foo@bar")
+        topic_incoming_email  = IncomingEmail.create(
+          topic: topic, post: post_1, message_id: "foo@bar", created_via: IncomingEmail.created_via_types[:handle_mail]
+        )
         post_2_incoming_email = IncomingEmail.create(topic: topic, post: post_2, message_id: "bar@foo")
         post_4_incoming_email = IncomingEmail.create(topic: topic, post: post_4, message_id: "wat@wat")
 
