@@ -251,7 +251,7 @@ class GroupsController < ApplicationController
       Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0')
       dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     end
-    order = ""
+    order = "NOT group_users.owner"
 
     if params[:requesters]
       guardian.ensure_can_edit!(group)
@@ -308,7 +308,6 @@ class GroupsController < ApplicationController
     users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
 
     members = users
-      .order('NOT group_users.owner')
       .order(order)
       .order(username_lower: dir)
       .limit(limit)

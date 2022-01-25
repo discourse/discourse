@@ -547,6 +547,23 @@ describe GroupsController do
 
       expect(members.last['added_at']).to eq(first_user.created_at.as_json)
     end
+
+    it "can sort items" do
+      sign_in(user)
+      group.update!(visibility_level: Group.visibility_levels[:logged_on_users])
+      other_user = Fabricate(:user)
+      group.add_owner(other_user)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.parsed_body["members"].map { |u| u["id"] }).to contain_exactly(other_user.id, user.id)
+      expect(response.parsed_body["owners"].map { |u| u["id"] }).to contain_exactly(other_user.id)
+
+      get "/groups/#{group.name}/members.json?order=added_at"
+
+      expect(response.parsed_body["members"].map { |u| u["id"] }).to contain_exactly(user.id, other_user.id)
+      expect(response.parsed_body["owners"].map { |u| u["id"] }).to contain_exactly(other_user.id)
+    end
   end
 
   describe '#posts_feed' do
