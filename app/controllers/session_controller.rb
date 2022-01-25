@@ -434,7 +434,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = if SiteSetting.hide_email_address_taken
+    user = if SiteSetting.hide_email_address_taken && !current_user&.staff?
       raise Discourse::InvalidParameters.new(:login) if EmailValidator.email_regex !~ normalized_login_param
       User.real.where(staged: false).find_by_email(Email.downcase(normalized_login_param))
     else
