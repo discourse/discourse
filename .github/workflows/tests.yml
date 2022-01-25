@@ -232,15 +232,15 @@ jobs:
 
       - name: Core QUnit 1
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 2
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 3
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
