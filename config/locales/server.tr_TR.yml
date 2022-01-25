@@ -2073,6 +2073,7 @@ tr_TR:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
+      valid_username: "Bu kullanıcı adına sahip bir kullanıcı var."
       invalid_group: "Bu isme sahip bir grup yok."
       invalid_integer_min_max: "Değer %{min} ile %{max} arasında olmalı."
       invalid_integer_min: "Değer %{min} ya da daha fazla olmalı."
@@ -2115,6 +2116,7 @@ tr_TR:
         leading_trailing_slash: "Normal ifade eğik çizgi ile başlamamalı ve bitmemelidir."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
+      google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.örnek.com"
@@ -2412,6 +2414,8 @@ tr_TR:
     one: "Bu konu, çok sayıda topluluk bayrağı nedeniyle geçici olarak en az %{count} saat kapalı."
     other: "Bu konu, çok sayıda topluluk raporu nedeniyle geçici olarak en az %{count} saat kapalı."
   system_messages:
+    reviewables_reminder:
+      subject_template: "İnceleme kuyruğunda gözden geçirilmesi gereken öğeler var"
     private_topic_title: "Konu # %{id}"
     contents_hidden: "İçeriğini görmek için lütfen gönderiyi ziyaret edin."
     post_hidden:
@@ -3414,6 +3418,7 @@ tr_TR:
     create_multipart_failure: "Harici depoda çok parçalı yükleme oluşturulamadı."
     abort_multipart_failure: "Harici depoda çok parçalı yükleme iptal edilmedi."
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
+    external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
@@ -3815,8 +3820,10 @@ tr_TR:
             label: "Topluluğunuzun adı"
             placeholder: "Ali'nin Yeri"
           site_description:
+            label: "Topluluğunuzu kısa bir cümleyle tanımlayın (arama sonuçlarında ve sosyal medyada kullanılır)"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
           short_site_description:
+            label: "Topluluğunuzu birkaç kelimeyle tanımlayın (ana sayfa başlığı için kullanılır)"
             placeholder: "Şimdiye kadarki en iyi topluluk"
       introduction:
         title: "Tanıtım"
@@ -3976,7 +3983,11 @@ tr_TR:
     missing_version: "Bir sürüm parametresi sağlamalısınız"
     conflict: "Bunu yapmanı önleyen bir güncelleme çatışması oldu."
     reasons:
+      post_count: "Her kullanıcının ilk birkaç gönderisi görevli tarafından onaylanmalıdır. Bkz. %{link}."
+      trust_level: "Düşük güven düzeylerindeki kullanıcıların yanıtları personel tarafından onaylanmalıdır. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven düzeylerindeki kullanıcıların konuları personel tarafından onaylanmalıdır. Bkz. %{link}."
+      fast_typer: "Yeni kullanıcı, ilk gönderisini şüpheli bir şekilde hızlı yazdı. Şüpheli bot veya spam gönderici davranışı. Bkz. %{link}"
+      auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."
       watched_word: "Bu gönderi bir İzlenen Sözcük içeriyordu. Bkz %{link}."
       staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler personel tarafından onaylanmalıdır. Bkz. %{link}."
       category: "Bu kategorideki gönderiler, personel tarafından manuel onay gerektirir. Bkz. %{link}."
@@ -3984,6 +3995,7 @@ tr_TR:
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz. %{link}."
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
       email_spam: "Bu e-posta, %{link} adresinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      suspect_user: "Bu yeni kullanıcı, herhangi bir konuyu veya gönderiyi okumadan profil bilgilerini girdi. Bu spam gönderici olabileceklerinin güçlü bir işareti. Bkz. %{link}"
       contains_media: "Bu yazı gömülü medya içerir. Bkz. %{link}."
       queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
       links:
