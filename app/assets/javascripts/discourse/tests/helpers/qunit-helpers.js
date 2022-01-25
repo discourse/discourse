@@ -19,7 +19,6 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
-import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
@@ -57,6 +56,7 @@ import {
   clearPresenceCallbacks,
   setTestPresence,
 } from "discourse/lib/user-presence";
+import PreloadStore from "discourse/lib/preload-store";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -115,9 +115,9 @@ export function resetSite(siteSettings, extras) {
     siteFixtures["site.json"].site,
     extras || {}
   );
-  siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  return Site.resetCurrent(Site.create(siteAttrs));
+  PreloadStore.store("site", siteAttrs);
+  Site.resetCurrent();
 }
 
 export function applyPretender(name, server, helper) {
