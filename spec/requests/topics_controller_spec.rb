@@ -327,8 +327,10 @@ RSpec.describe TopicsController do
           expect(result['url']).to be_blank
         end
 
-        it 'returns validation error' do
+        it 'returns plugin validation error' do
+          # stub here is to simulate validation added by plugin which would be triggered when post is moved
           PostCreator.any_instance.stubs(:skip_validations?).returns(false)
+
           p1.update_columns(raw: "i", cooked: "")
           post "/t/#{topic.id}/move-posts.json", params: {
             post_ids: [p1.id],
