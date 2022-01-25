@@ -374,7 +374,7 @@ describe Category do
 
         expect(c.errors[:slug]).to be_present
       end
-    end 
+    end
   end
 
   describe 'description_text' do
