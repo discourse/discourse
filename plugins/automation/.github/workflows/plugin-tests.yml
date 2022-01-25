@@ -6,12 +6,16 @@ on:
       - main
   pull_request:
 
+concurrency:
+  group: plugin-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.build_type }}
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim${{ matrix.build_type == 'frontend' && '-browsers' || '' }}
-    timeout-minutes: 60
+    container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
+    timeout-minutes: 30
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
@@ -24,7 +28,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: ["backend", "frontend"]
+        build_type: ["backend", "frontend-legacy", "frontend"]
 
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +50,7 @@ jobs:
       - name: Start redis
         run: |
           redis-server /etc/redis/redis.conf &
-      
+
       - name: Start Postgres
         run: |
           chown -R postgres /var/run/postgresql
@@ -63,6 +67,7 @@ jobs:
 
       - name: Setup gems
         run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
@@ -94,12 +99,9 @@ jobs:
         id: app-cache
         with:
           path: tmp/app-cache
-          key: >- # postgres version, hash of migrations, "parallel?"
-            ${{ runner.os }}-
+          key: >-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
-            ${{ matrix.postgres }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ env.USES_PARALLEL_DATABASES }}
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -144,6 +146,11 @@ jobs:
           fi
 
       - name: Plugin QUnit
+        if: matrix.build_type == 'frontend-legacy' && steps.check_qunit.outputs.files_exist == 'true'
+        run: QUNIT_EMBER_CLI=0 bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
+        timeout-minutes: 10
+
+      - name: Plugin QUnit (Ember CLI)
         if: matrix.build_type == 'frontend' && steps.check_qunit.outputs.files_exist == 'true'
-        run: bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
-        timeout-minutes: 30
+        run: QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
+        timeout-minutes: 10
