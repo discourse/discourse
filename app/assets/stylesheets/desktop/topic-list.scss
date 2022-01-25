@@ -22,10 +22,13 @@
     flex: 1 1 50%;
   }
   &.posters {
-    flex: 1 1 146px;
+    flex: 0 1 146px;
   }
   &.num {
-    flex: 1 1 65px;
+    flex: 0 1 65px;
+  }
+  &.age {
+    flex: 0 1 60px;
   }
 }
 
@@ -139,9 +142,6 @@
     span {
       cursor: pointer;
     }
-  }
-  .age {
-    flex: 1 1 60px;
   }
   .with-year {
     white-space: nowrap;
