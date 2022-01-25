@@ -5121,7 +5121,9 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
+        help: "Lägg till ny emoji som kommer att vara tillgänglig för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn. Den valda gruppen kommer att användas för alla filer som läggs till samtidigt. Du kan också klicka på \"Lägg till ny emoji\" för att öppna filväljaren."
         add: "Lägg till ny emoji"
+        choose_files: "Välj filer"
         uploading: "Laddar upp..."
         name: "Namn"
         group: "Grupp"
