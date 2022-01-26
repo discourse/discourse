@@ -54,6 +54,8 @@ class PostCreator
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
   #     shared_draft          - Is the topic meant to be a shared draft
+  #     skip_draft            - Set to true if topic creation was not triggered by user
+  #                             This is necessary to avoid destroying user's drafts
   #     topic_opts            - Options to be overwritten for topic
   #
   def initialize(user, opts)
@@ -218,7 +220,7 @@ class PostCreator
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
-        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode] && !@opts[:skip_draft]
         @post.save_reply_relationships
       end
     end

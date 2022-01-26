@@ -303,6 +303,19 @@ describe PostCreator do
         end
       end
 
+      it 'clears the draft' do
+        Draft.set(user, Draft::NEW_TOPIC, 0, 'test')
+        expect(Draft.where(user: user).size).to eq(1)
+        expect { creator.create }.to change { Draft.count }.by(-1)
+      end
+
+      it 'does not clear the draft if skip_draft is true' do
+        creator = PostCreator.new(user, basic_topic_params.merge(skip_draft: true))
+        Draft.set(user, Draft::NEW_TOPIC, 0, 'test')
+        expect(Draft.where(user: user).size).to eq(1)
+        expect { creator.create }.to change { Draft.count }.by(0)
+      end
+
       it "updates topic stats" do
         first_post = creator.create
         topic = first_post.topic.reload

@@ -111,7 +111,7 @@ class TopicCreator
       visible: @opts[:visible]
     }
 
-    [:subtype, :archetype, :meta_data, :import_mode].each do |key|
+    [:subtype, :archetype, :meta_data, :import_mode, :skip_draft].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
