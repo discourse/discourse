@@ -584,7 +584,7 @@ users:
     client: true
     default: true
   invite_expiry_days:
-    default: 30
+    default: 90
     client: true
     max: 36500
   invites_per_page:
@@ -2347,6 +2347,10 @@ uncategorized:
   always_include_topic_excerpts:
     default: false
     hidden: true
+
+  allow_bulk_invite:
+    default: false
+    client: true
 
   max_bulk_invites:
     default: 50000
