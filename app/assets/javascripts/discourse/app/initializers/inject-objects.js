@@ -11,7 +11,6 @@ export default {
 
     // Backwards compatibility for Discourse.SiteSettings and Discourse.User
     if (!isLegacyEmber()) {
-      app.yolo = "abc";
       Object.defineProperty(app, "SiteSettings", {
         get() {
           deprecated(
