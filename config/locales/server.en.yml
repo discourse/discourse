@@ -1486,7 +1486,8 @@ en:
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     max_emojis_in_title: "Maximum allowed emojis in topic title"
     min_search_term_length: "Minimum valid search term length in characters"
-    search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
+    search_tokenize_chinese: "Force search to tokenize Chinese even on non Chinese sites"
+    search_tokenize_japanese: "Force search to tokenize Japanese even on non Japanese sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
     search_recent_posts_size: "How many recent posts to keep in the index"
     log_search_queries: "Log search queries performed by users"
@@ -1629,7 +1630,7 @@ en:
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
-    slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the \"slow down crawler rate\" setting. Each value must be at least 3 characters long."
+    slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     content_security_policy: "Enable Content-Security-Policy"
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
@@ -2396,6 +2397,8 @@ en:
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
       list_value_count: "The list must contain exactly %{count} values."
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
+      search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
+      search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
 
     placeholder:
       discourse_connect_provider_secrets:

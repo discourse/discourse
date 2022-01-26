@@ -4,20 +4,6 @@ require 'rails_helper'
 
 describe Search do
 
-  context "#prepare_data" do
-    it "does not remove English stop words in mixed mode" do
-      SiteSetting.search_tokenize_chinese_japanese_korean = true
-
-      tokenized = Search.prepare_data("monkey 吃香蕉 in a loud volume")
-      expect(tokenized).to eq("monkey 吃 香蕉 in a loud volume")
-
-      SiteSetting.default_locale = 'zh_CN'
-
-      tokenized = Search.prepare_data("monkey 吃香蕉 in a loud volume")
-      expect(tokenized).to eq("monkey 吃 香蕉 loud")
-    end
-  end
-
   context "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")

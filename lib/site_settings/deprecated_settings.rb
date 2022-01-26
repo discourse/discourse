@@ -31,6 +31,7 @@ module SiteSettings::DeprecatedSettings
     ['sso_overrides_card_background', 'discourse_connect_overrides_card_background', true, '2.8'],
     ['external_auth_skip_create_confirm', 'auth_skip_create_confirm', true, '2.8'],
     ['external_auth_immediately', 'auth_immediately', true, '2.8'],
+    ['search_tokenize_chinese_japanese_korean', 'search_tokenize_chinese', true, '2.9'],
   ]
 
   def setup_deprecated_methods
