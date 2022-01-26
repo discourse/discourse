@@ -2035,7 +2035,12 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
-  search_tokenize_chinese_japanese_korean: false
+  search_tokenize_chinese:
+    default: false
+    validator: "SearchTokenizeChineseValidator"
+  search_tokenize_japanese:
+    default: false
+    validator: "SearchTokenizeJapaneseValidator"
   search_prefer_recent_posts: false
   search_recent_posts_size:
     default: 1000000
