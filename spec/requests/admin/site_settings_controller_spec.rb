@@ -46,11 +46,12 @@ describe Admin::SiteSettingsController do
       end
 
       it 'works for deprecated settings' do
-        put "/admin/site_settings/sso_url.json", params: {
-          sso_url: "https://example.com"
+        put "/admin/site_settings/search_tokenize_chinese_japanese_korean.json", params: {
+          search_tokenize_chinese_japanese_korean: true
         }
+
         expect(response.status).to eq(200)
-        expect(SiteSetting.discourse_connect_url).to eq("https://example.com")
+        expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
       it 'allows value to be a blank string' do
