@@ -10,6 +10,21 @@ import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 
+let additionalPrettyTextOptions = {};
+
+export function cleanUpAdditionalPrettyTextOptions() {
+  additionalPrettyTextOptions = {};
+}
+
+export function addPrettyTextOptions(pluginNamespace, additionalOptions) {
+  additionalPrettyTextOptions[pluginNamespace] =
+    additionalPrettyTextOptions[pluginNamespace] || {};
+  Object.assign(
+    additionalPrettyTextOptions[pluginNamespace],
+    additionalOptions
+  );
+}
+
 function getOpts(opts) {
   let context = helperContext();
 
@@ -24,7 +39,8 @@ function getOpts(opts) {
       watchedWordsReplace: context.site.watched_words_replace,
       watchedWordsLink: context.site.watched_words_link,
     },
-    opts
+    opts,
+    { additionalOptions: additionalPrettyTextOptions }
   );
 
   return buildOptions(opts);
@@ -83,7 +99,7 @@ function loadMarkdownIt() {
   });
 }
 
-function createPrettyText(options) {
+export function createPrettyText(options) {
   return new PrettyText(getOpts(options));
 }
 

@@ -27,6 +27,7 @@ import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetDecorators } from "discourse/widgets/widget";
+import { cleanUpAdditionalPrettyTextOptions } from "discourse/lib/text";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
@@ -173,6 +174,7 @@ function testCleanup(container, app) {
   clearDesktopNotificationHandlers();
   resetLastEditNotificationClick();
   clearAuthMethods();
+  cleanUpAdditionalPrettyTextOptions();
   setTestPresence(true);
   if (!LEGACY_ENV) {
     clearPresenceCallbacks();

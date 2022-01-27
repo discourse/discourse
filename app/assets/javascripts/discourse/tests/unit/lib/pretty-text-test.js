@@ -1,4 +1,5 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { addPrettyTextOptions, createPrettyText } from "discourse/lib/text";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
@@ -1755,6 +1756,20 @@ var bar = 'bar';
       opts,
       `<p>${"you".repeat(maxMatches)}one</p>`,
       "does not loop infinitely"
+    );
+  });
+
+  test("additionalPrettyTextOptions adds more options under a plugin namespace", function (assert) {
+    addPrettyTextOptions("pluginA", { someOption: "test" });
+    addPrettyTextOptions("pluginB", { doorNumberTwo: "other thing" });
+    const prettyText = createPrettyText();
+    assert.equal(
+      prettyText.opts.discourse.additionalOptions.pluginA.someOption,
+      "test"
+    );
+    assert.equal(
+      prettyText.opts.discourse.additionalOptions.pluginB.doorNumberTwo,
+      "other thing"
     );
   });
 });

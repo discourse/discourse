@@ -7,6 +7,15 @@ in this file..
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2021-01-27
+### Added
+- Adds `addPrettyTextAdditionalOptions`. When writing markdown rules and features,
+additional options not part of the main options payload may be needed for the rule.
+Rules cannot access things like the Site or current User objects which can have
+serialized data which may be useful when rendering markdown rules. These additional
+options are added beneath an `additionalOptions.pluginId` namespace on `opts.discourse` when
+passed to markdown rules.
+
 ## [1.1.0] - 2021-12-15
 ### Added
 - Adds `addPosterIcons`, which allows users to add multiple icons to a poster. The

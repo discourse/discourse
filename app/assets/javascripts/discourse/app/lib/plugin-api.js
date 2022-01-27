@@ -36,6 +36,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
+import { addPrettyTextOptions } from "discourse/lib/text";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -97,7 +98,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 // based on Semantic Versioning 2.0.0. Please up the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.1.0";
+const PLUGIN_API_VERSION = "1.2.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1598,6 +1599,35 @@ class PluginApi {
    */
   customizeComposerText(callbacks) {
     registerCustomizationCallback(callbacks);
+  }
+
+  /**
+   * When writing markdown rules and features, additional options not part of
+   * the main options payload may be needed for the rule. Rules cannot access
+   * things like the Site or current User objects which can have serialized data
+   * which may be useful when rendering markdown rules.
+   *
+   *
+   * ```
+   * const site = api.container.lookup("site:main");
+   * api.addPrettyTextAdditionalOptions({
+   *   someSiteOption: site.some_option
+   * })
+   * ```
+   *
+   * These options are passed down to several of the markdown helper functions
+   * created by discourse-markdown-it extensions, such as registerPlugin and registerOptions,
+   * and can be accessed like so:
+   *
+   * ```
+   * opts.discourse.additionalOptions.someSiteOption
+   * ```
+   *
+   * These options are held in a separate additionalOptions namespace because
+   * they are _not_ meant to override the core pretty-text options.
+   */
+  addPrettyTextAdditionalOptions(pluginId, options) {
+    addPrettyTextOptions(pluginId, options);
   }
 }
 
