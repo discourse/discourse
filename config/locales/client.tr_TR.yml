@@ -1397,6 +1397,7 @@ tr_TR:
         always: "her zaman"
         only_when_away: "yalnızca uzaktayken"
         never: "asla"
+      email_messages_level: "Bana kişisel bir mesaj gönderildiğinde e-posta ile haber ver"
       include_tl0_in_digests: "Yeni kullanıcılardan gelen içeriği özet e-postalarına ekle"
       email_in_reply_to: "Gönderilerinize gelen yanıtların bir örneğini e-postaya ekle"
       other_settings: "Diğer"
@@ -1483,6 +1484,10 @@ tr_TR:
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
+          restrict: "Şununla kısıtla"
+          restrict_email: "E-posta ile kısıtla"
+          restrict_domain: "Alan adıyla sınırla"
+          email_or_domain_placeholder: "name@example.com veya example.com"
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
           expires_at: "Geçerliliğini yitireceği zaman"
@@ -2075,6 +2080,9 @@ tr_TR:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - tamamlandı"
       dismiss_confirmation:
+        body:
+          one: "Emin misiniz? %{count} önemli bildiriminiz var."
+          other: "Emin misiniz? %{count} adet önemli bildiriminiz var."
         dismiss: "Kapat"
         cancel: "İptal"
       group_message_summary:
@@ -2160,6 +2168,9 @@ tr_TR:
       in_topics_posts: "tüm konularda ve gönderilerde"
       enter_hint: "veya Enter tuşuna basın"
       in_posts_by: "@%{username} kullancısına ait gönderilerde"
+      browser_tip: "%{modifier} + f"
+      recent: "Son Aramalar"
+      clear_recent: "Son Aramaları Temizle"
       type:
         default: "Konular/yazılar"
         users: "Kullanıcılar"
@@ -2841,6 +2852,7 @@ tr_TR:
           just_the_post: "Hayır, yalnızca bu gönderi"
         admin: "gönderi yönetici eylemleri"
         permanently_delete: "Kalıcı Olarak Sil"
+        permanently_delete_confirmation: "Bu gönderiyi kalıcı olarak silmek istediğinizden emin misiniz? Geri alınamaz."
         wiki: "Wiki Yap"
         unwiki: "Wiki'yi Kaldır"
         convert_to_moderator: "Görevli Rengi Ekle"
@@ -3398,6 +3410,7 @@ tr_TR:
         title: "Arama Menüsü"
         prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
         insert_url: "%{shortcut} Seçimi açık yazma kutusuna ekle"
+        full_page_search: "%{shortcut} Kısayolu tam sayfa aramayı başlatır"
     badges:
       earned_n_times:
         one: "Bu rozet %{count} defa kazanılmış"
@@ -3458,12 +3471,14 @@ tr_TR:
       category_restricted: "Bu etiket, erişim izniniz olmayan kategorilerle sınırlıdır."
       synonyms: "Eş Anlamlılar"
       synonyms_description: "İlgili etiketler kullanılıyorsa, <b>%{base_tag_name}</b> ile değiştirilecektir."
+      save: "Etiketin adını ve açıklamasını kaydet"
       tag_groups_info:
         one: 'Bu etiket %{tag_groups} grubuna aittir.'
         other: "Bu etiket \"%{tag_groups}\" gruplarına aittir."
       category_restrictions:
         one: "Yalnızca bu kategoride kullanılabilir:"
         other: "Yalnızca bu kategorilerde kullanılabilir:"
+      edit_synonyms: "Eş Anlamlıları Düzenle"
       add_synonyms_label: "Eş anlamlılarını ekle:"
       add_synonyms: "Ekle"
       add_synonyms_explanation:
@@ -3480,6 +3495,7 @@ tr_TR:
       delete_confirm_synonyms:
         one: "Eş anlamlısı da silinecek."
         other: "%{count} tane eşanlamlısı da silinecek."
+      edit_tag: "Etiket adını ve açıklamasını düzenle"
       description: "Açıklama"
       sort_by: "Sırala:"
       sort_by_count: "say"
@@ -3798,6 +3814,7 @@ tr_TR:
         no_description: (açıklama yok)
         all_api_keys: Tüm API Anahtarları
         user_mode: Kullanıcı Düzeyi
+        scope_mode: Kapsam
         impersonate_all_users: Herhangi bir kullanıcı rolüne gir
         single_user: "Tekil kullanıcı"
         user_placeholder: Kullanıcı adı girin
@@ -3812,6 +3829,7 @@ tr_TR:
           description: |
             Kapsamları kullanırken, bir API anahtarını yalnızca belirli bir endpoint grubuyla kullanılacak şekilde kısıtlayabilirsiniz. Hangi parametrelere izin verileceğini de tanımlayabilirsiniz. Birden çok değer kullanacaksanız bunları ayırmak için virgül kullanın.
           title: Kapsamlar
+          read_only: Salt okunur
           resource: Kaynak
           action: Eylem
           allowed_parameters: İzin Verilen Parametreler

@@ -85,3 +85,5 @@ tr_TR:
           title: "Başlık Simgeleri"
         spinners:
           title: "Spinners"
+        empty_state:
+          title: "Boş Durum"
