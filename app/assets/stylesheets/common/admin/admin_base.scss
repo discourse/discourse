@@ -10,9 +10,9 @@ $mobile-breakpoint: 700px;
   display: inline-flex;
   position: relative;
   width: 100%;
-  height: auto;
   overflow: hidden;
   height: 100%;
+
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
     margin-left: -10px;
