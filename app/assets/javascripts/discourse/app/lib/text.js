@@ -40,7 +40,9 @@ function getOpts(opts) {
       watchedWordsLink: context.site.watched_words_link,
     },
     opts,
-    { additionalOptions: additionalPrettyTextOptions }
+    {
+      additionalOptions: additionalPrettyTextOptions,
+    }
   );
 
   return buildOptions(opts);

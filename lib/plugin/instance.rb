@@ -956,6 +956,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_push_notification_filter(block, self)
   end
 
+  # Registers additional options passed to pretty-text at compile time,
+  # companion to additionalOptions in JS.
+  def register_pretty_text_additional_option(namespace, options)
+    DiscoursePluginRegistry.register_pretty_text_additional_option({ namespace => options }, self)
+  end
+
   # Register a ReviewableScore setting_name associated with a reason.
   # We'll use this to build a site setting link and add it to the reason's translation.
   #
