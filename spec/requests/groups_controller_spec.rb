@@ -556,13 +556,13 @@ describe GroupsController do
 
       get "/groups/#{group.name}/members.json"
 
-      expect(response.parsed_body["members"].map { |u| u["id"] }).to contain_exactly(other_user.id, user.id)
-      expect(response.parsed_body["owners"].map { |u| u["id"] }).to contain_exactly(other_user.id)
+      expect(response.parsed_body["members"].map { |u| u["id"] }).to eq([other_user.id, user.id])
+      expect(response.parsed_body["owners"].map { |u| u["id"] }).to eq([other_user.id])
 
-      get "/groups/#{group.name}/members.json?order=added_at"
+      get "/groups/#{group.name}/members.json?order=added_at&asc=1"
 
-      expect(response.parsed_body["members"].map { |u| u["id"] }).to contain_exactly(user.id, other_user.id)
-      expect(response.parsed_body["owners"].map { |u| u["id"] }).to contain_exactly(other_user.id)
+      expect(response.parsed_body["members"].map { |u| u["id"] }).to eq([user.id, other_user.id])
+      expect(response.parsed_body["owners"].map { |u| u["id"] }).to eq([other_user.id])
     end
   end
 

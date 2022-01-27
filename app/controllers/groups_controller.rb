@@ -305,20 +305,15 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
-
-    members = users
+    users = users
+      .includes(:primary_group)
+      .joins(:user_option)
+      .select('users.*, user_options.timezone, group_users.created_at as added_at')
       .order(order)
       .order(username_lower: dir)
-      .limit(limit)
-      .offset(offset)
-      .includes(:primary_group)
 
-    owners = users
-      .order(order)
-      .order(username_lower: dir)
-      .where('group_users.owner')
-      .includes(:primary_group)
+    members = users.limit(limit).offset(offset)
+    owners = users.where('group_users.owner')
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
