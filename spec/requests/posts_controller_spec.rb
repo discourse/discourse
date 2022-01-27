@@ -825,6 +825,18 @@ describe PostsController do
         expect(response.status).to eq(403)
       end
 
+      it 'does not advance draft' do
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        user_key = ApiKey.create!(user: user).key
+
+        post "/posts.json",
+          params: { title: 'this is a test topic', raw: 'this is test whisper' },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(user, Draft::NEW_TOPIC, 0)).to eq("test")
+      end
+
       it 'will raise an error if specified category cannot be found' do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
